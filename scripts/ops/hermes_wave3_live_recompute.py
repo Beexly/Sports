@@ -115,7 +115,7 @@ for m in ORDER:
             edge = sim_p - p_sel
             wlb = wilson_lb(sim_p)
             conf = min(72, max(51, int(round(50 + edge*120))))
-            is_jax_bal = (m == "JAX @ TEN")  # rookie-QB1 uncertainty gate analog: keep strict PASS
+            is_jax_bal = (m == "JAX @ BAL")  # exact generator rule; no such game on this slate
             clears = (not is_jax_bal) and edge >= 0.035 and wlb > p_sel and conf >= 65
             if clears and mkt == "Moneyline" and line_moved_game:
                 row.update({"live_devig": round(p_sel,4), "hold": round(hold,4), "net_edge": round(edge,4),
@@ -129,6 +129,25 @@ for m in ORDER:
                             "gate_reason": "CLEARED_NUMERICALLY_ON_LIVE_PRICE" if clears else
                                 f"LIVE_GATE: edge {edge:.4f} vs 0.035, wilson {wlb:.4f} vs devig {p_sel:.4f}, conf {conf}/100 vs 65/100"})
         evals.append(row)
+    # template-approved plays (Nov-13 board) and their live-market fate
+    tmpl_approved = []
+    for t in tickets:
+        if t.get("decision") != "PLAY": continue
+        ev = next((e for e in evals if e["selection"] == t["selection"]), None)
+        if ev is None:
+            fate = "NOT_REEVALUATED"
+        elif "LINE_MOVED" in ev["gate_reason"]:
+            fate = "INVALIDATED_LINE_MOVED (template benchmark, not a live quote)"
+        elif ev["gate_reason"] == "NO_LIVE_TWO_SIDED_PRICE":
+            fate = "INVALIDATED_NO_LIVE_PRICE"
+        elif "STALE_SIM" in ev["gate_reason"]:
+            fate = "INVALIDATED_STALE_SIM"
+        elif ev["decision"].startswith("PLAY"):
+            fate = "NUMERICALLY_CLEARS_ON_LIVE (full-engine re-run required)"
+        else:
+            fate = "INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price)"
+        tmpl_approved.append({"selection": t["selection"], "template_odds": t["american_odds"],
+                              "template_edge": t["net_edge"], "template_conf": t["confidence_score"], "live_fate": fate})
     # open->current move summary
     moves = {}
     if sp_c and sp_o and sp_c.get("homeSpread") is not None and sp_o.get("homeSpread") is not None:
@@ -141,7 +160,9 @@ for m in ORDER:
                     "book_used_spread": (sp or {}).get("book"), "book_used_total": (tot or {}).get("book"),
                     "book_used_ml": (ml or {}).get("book"),
                     "template_circuit_breaker": s5.get("circuit_breaker_status"),
+                    "template_publish_allowed": s5.get("publishAllowed"),
                     "template_props_two_sided": s5.get("board_summary",{}).get("props_with_two_sided_prices"),
+                    "template_approved_plays": tmpl_approved,
                     "evaluations": evals, "open_to_current": moves})
 
 # ---- inactives ----
@@ -241,7 +262,15 @@ for g in results:
         md.append(f"### {g['matchup']}: {g['error']}"); continue
     md.append(f"### {g['matchup']}")
     md.append("")
-    md.append(f"Template circuit breaker: {g['template_circuit_breaker']} | props two-sided: {g['template_props_two_sided']} | books sp/tot/ml: {g['books_spread']}/{g['books_total']}/{g['books_ml']}")
+    md.append(f"Template circuit breaker: {g['template_circuit_breaker']} | template publishAllowed: {g['template_publish_allowed']} | props two-sided: {g['template_props_two_sided']} | books sp/tot/ml: {g['books_spread']}/{g['books_total']}/{g['books_ml']}")
+    if g["template_approved_plays"]:
+        md.append("")
+        md.append("Overnight template-approved plays and their live-market fate:")
+        md.append("")
+        md.append("| selection | template odds | template edge | template conf | live fate |")
+        md.append("|---|---|---|---|---|")
+        for ta in g["template_approved_plays"]:
+            md.append(f"| {ta['selection']} | {ta['template_odds']} | {ta['template_edge']} | {ta['template_conf']} | {ta['live_fate']} |")
     if g["open_to_current"]:
         md.append("Open -> current: " + json.dumps(g["open_to_current"]))
     md.append("")
@@ -259,10 +288,16 @@ for g in results:
 md.append("## Board verdict")
 md.append("")
 n_clear = sum(1 for g in results if "evaluations" in g for e in g["evaluations"] if e["decision"].startswith("PLAY"))
-md.append(f"Numerical gate clears on live prices (full-engine re-run still required): {n_clear}.")
-md.append("publishAllowed: FALSE. Prop circuit breaker: CONTINUES (0 two-sided prop prices).")
-md.append("Game-line template fallback is replaced by live SBR two-sided prices for evaluation,")
-md.append("but no pick is published or suggested from this watch. PASS is the default.")
+n_tmpl = sum(len(g.get("template_approved_plays",[])) for g in results)
+n_tmpl_invalid = sum(1 for g in results for ta in g.get("template_approved_plays",[]) if ta["live_fate"].startswith("INVALIDATED"))
+n_tmpl_games = sum(1 for g in results if g.get("template_approved_plays"))
+n_halt = sum(1 for g in results if g.get("template_publish_allowed") is False)
+md.append(f"- Overnight template board: {n_tmpl} approved plays across {n_tmpl_games} games, ALL priced against generic template benchmarks (+2.5/-2.5, 44.5, +120/-142), with 0 two-sided prop prices board-wide; {n_halt} games circuit-breaker halted (publishAllowed False).")
+md.append(f"- Live re-verification invalidates {n_tmpl_invalid}/{n_tmpl} of those template approvals (lines moved or prices absent). They were never live-market plays; none may be published.")
+md.append(f"- Numerical gate clears on live prices (full-engine re-run still required): {n_clear}. Moneyline clears on line-moved games are downgraded to PASS (STALE_SIM_LINE_MOVED): a moved line invalidates the sim win probability the ML edge would be measured against.")
+md.append("- publishAllowed: FALSE for this watch output. Prop circuit breaker: CONTINUES (0 two-sided prop prices).")
+md.append("- Game-line template fallback is replaced by live SBR two-sided prices for evaluation,")
+md.append("  but no pick is published or suggested from this watch. PASS is the default; zero fake CLV floors.")
 md.append("")
 md.append("Snapshot errors: " + ("; ".join(snap.get("errors", [])) or "none"))
 

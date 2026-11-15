@@ -1,6 +1,6 @@
 # Sunday Pre-Munich Live Inactives and Prop Delta (2026-11-15)
 
-Generated: 2026-11-15T07:28:16.991312+00:00 | Market snapshot: 20261115T072525Z
+Generated: 2026-11-15T08:21:30.592318+00:00 | Market snapshot: 20261115T081031Z
 Author: Hermes overnight watch, Wave 3. Worktree branch feat/hermes-overnight-mind-and-munich-watch-2026-11-15.
 
 ## Method and discipline
@@ -65,7 +65,7 @@ Munich DFS upload file (data/dfs/week10_munich_ne_det_dk_upload.csv): NOT YET LA
 
 ### NE @ DET
 
-Template circuit breaker: STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES | template publishAllowed: False | props two-sided: 0 | books sp/tot/ml: 8/8/8
 Open -> current: {"spread_home": {"open": 1.5, "current": -2.5, "delta": -4.0}, "total": {"open": 49.5, "current": 49.5, "delta": 0.0}, "ml_home": {"open": 110, "current": -148, "delta": -258}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -81,7 +81,14 @@ Line moved vs template (resim required): Over 44.5, Under 44.5.
 
 ### BUF @ NYJ
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| BUF +2.5 | -110 | 0.1498 | 68/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| BUF ML | 120 | 0.1957 | 72/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": 7.5, "current": 7.5, "delta": 0.0}, "total": {"open": 50.5, "current": 51.5, "delta": 1.0}, "ml_home": {"open": 320, "current": 300, "delta": -20}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -97,7 +104,13 @@ Line moved vs template (resim required): BUF +2.5, NYJ -2.5, Over 44.5, Under 44
 
 ### CAR @ NO
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| Under 44.5 | -110 | 0.1818 | 72/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 Open -> current: {"spread_home": {"open": 1.5, "current": -1.5, "delta": -3.0}, "total": {"open": 47.5, "current": 48.5, "delta": 1.0}, "ml_home": {"open": 105, "current": -130, "delta": -235}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -113,7 +126,14 @@ Line moved vs template (resim required): CAR +2.5, NO -2.5, Over 44.5, Under 44.
 
 ### HOU @ CLE
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| HOU +2.5 | -110 | 0.1467 | 68/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| HOU ML | 120 | 0.1896 | 72/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": 4.5, "current": 4.5, "delta": 0.0}, "total": {"open": 39.5, "current": 40.5, "delta": 1.0}, "ml_home": {"open": 185, "current": 185, "delta": 0}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -129,7 +149,14 @@ Line moved vs template (resim required): HOU +2.5, CLE -2.5, Over 44.5, Under 44
 
 ### JAX @ TEN
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| JAX +2.5 | -110 | 0.1782 | 71/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| JAX ML | 120 | 0.1502 | 68/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": 8.5, "current": 10.5, "delta": 2.0}, "total": {"open": 44.5, "current": 46.5, "delta": 2.0}, "ml_home": {"open": 340, "current": 500, "delta": 160}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -141,11 +168,18 @@ Open -> current: {"spread_home": {"open": 8.5, "current": 10.5, "delta": 2.0}, "
 | JAX ML | ML / -700 | 0.5867 | 0.8400 | -0.2533 | 0.5786 | 51/100 | PASS |
 | TEN ML | ML / 500 | 0.4133 | 0.1600 | 0.2533 | 0.4052 | 72/100 | PASS |
 
-Line moved vs template (resim required): JAX +2.5, TEN -2.5, Over 44.5, Under 44.5.
+Line moved vs template (resim required): JAX +2.5, TEN -2.5, Over 44.5, Under 44.5, TEN ML.
 
 ### KC @ ATL
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| KC +2.5 | -110 | 0.1563 | 69/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| KC ML | 120 | 0.2043 | 72/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": 3, "current": 3.5, "delta": 0.5}, "total": {"open": 46.5, "current": 47.5, "delta": 1.0}, "ml_home": {"open": 145, "current": 140, "delta": -5}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -161,24 +195,36 @@ Line moved vs template (resim required): KC +2.5, ATL -2.5, Over 44.5, Under 44.
 
 ### LAR @ ARI
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
-Open -> current: {"spread_home": {"open": 8.5, "current": 9.5, "delta": 1.0}, "total": {"open": 47.5, "current": 39.5, "delta": -8.0}, "ml_home": {"open": 295, "current": 390, "delta": 95}}
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| LAR ML | 120 | 0.1431 | 67/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
+Open -> current: {"spread_home": {"open": 8.5, "current": 9.5, "delta": 1.0}, "total": {"open": 47.5, "current": 38.5, "delta": -9.0}, "ml_home": {"open": 295, "current": 425, "delta": 130}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
 | LAR +2.5 | -9.5 / -112 | 0.5959 | n/a | n/a | n/a | n/a | PASS |
 | ARI -2.5 | 9.5 / -108 | 0.4041 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 39.5 / -108 | 0.4427 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 39.5 / -123 | 0.5573 | n/a | n/a | n/a | n/a | PASS |
-| LAR ML | ML / -520 | 0.5796 | 0.8043 | -0.2247 | 0.5715 | 51/100 | PASS |
-| ARI ML | ML / 390 | 0.4204 | 0.1957 | 0.2247 | 0.4123 | 72/100 | PASS |
+| Over 44.5 | 38.5 / -118 | 0.4427 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 38.5 / -102 | 0.5573 | n/a | n/a | n/a | n/a | PASS |
+| LAR ML | ML / -575 | 0.5796 | 0.8173 | -0.2377 | 0.5715 | 51/100 | PASS |
+| ARI ML | ML / 425 | 0.4204 | 0.1827 | 0.2377 | 0.4123 | 72/100 | PASS |
 
 Line moved vs template (resim required): LAR +2.5, ARI -2.5, Over 44.5, Under 44.5, ARI ML.
 
 ### MIA @ IND
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
-Open -> current: {"spread_home": {"open": -2.5, "current": -4.5, "delta": -2.0}, "total": {"open": 43.5, "current": 37.5, "delta": -6.0}, "ml_home": {"open": -135, "current": -218, "delta": -83}}
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| Under 44.5 | -110 | 0.1398 | 67/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+Open -> current: {"spread_home": {"open": -2.5, "current": -4.5, "delta": -2.0}, "total": {"open": 43.5, "current": 37.5, "delta": -6.0}, "ml_home": {"open": -135, "current": -225, "delta": -90}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
@@ -186,14 +232,14 @@ Open -> current: {"spread_home": {"open": -2.5, "current": -4.5, "delta": -2.0},
 | IND -2.5 | -4.5 / -108 | 0.5375 | n/a | n/a | n/a | n/a | PASS |
 | Over 44.5 | 37.5 / -110 | 0.3602 | n/a | n/a | n/a | n/a | PASS |
 | Under 44.5 | 37.5 / -110 | 0.6398 | n/a | n/a | n/a | n/a | PASS |
-| MIA ML | ML / 180 | 0.3652 | 0.3425 | 0.0227 | 0.3573 | 53/100 | PASS |
-| IND ML | ML / -218 | 0.6348 | 0.6575 | -0.0227 | 0.6268 | 51/100 | PASS |
+| MIA ML | ML / 185 | 0.3652 | 0.3364 | 0.0288 | 0.3573 | 53/100 | PASS |
+| IND ML | ML / -225 | 0.6348 | 0.6636 | -0.0288 | 0.6268 | 51/100 | PASS |
 
 Line moved vs template (resim required): MIA +2.5, IND -2.5, Over 44.5, Under 44.5.
 
 ### MIN @ GB
 
-Template circuit breaker: STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES | template publishAllowed: False | props two-sided: 0 | books sp/tot/ml: 8/8/8
 Open -> current: {"spread_home": {"open": -2.5, "current": -2.5, "delta": 0.0}, "total": {"open": 41.5, "current": 41.5, "delta": 0.0}, "ml_home": {"open": -148, "current": -148, "delta": 0}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -209,7 +255,14 @@ Line moved vs template (resim required): Over 44.5, Under 44.5.
 
 ### PIT @ CIN
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| CIN -2.5 | -110 | 0.1598 | 69/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| CIN ML | -142 | 0.1476 | 68/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": -4.5, "current": -3.5, "delta": 1.0}, "total": {"open": 47.5, "current": 49.5, "delta": 2.0}, "ml_home": {"open": -198, "current": -185, "delta": 13}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -225,7 +278,13 @@ Line moved vs template (resim required): PIT +2.5, CIN -2.5, Over 44.5, Under 44
 
 ### SEA @ LV
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| Under 44.5 | -110 | 0.1434 | 67/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 Open -> current: {"spread_home": {"open": 6, "current": 6.5, "delta": 0.5}, "total": {"open": 44.5, "current": 40.5, "delta": -4.0}, "ml_home": {"open": 215, "current": 245, "delta": 30}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -241,7 +300,14 @@ Line moved vs template (resim required): SEA +2.5, LV -2.5, Over 44.5, Under 44.
 
 ### SF @ DAL
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 8/8/8
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 8/8/8
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| SF +2.5 | -110 | 0.1831 | 72/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
+| SF ML | 120 | 0.1529 | 68/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
 Open -> current: {"spread_home": {"open": 3.5, "current": 3.5, "delta": 0.0}, "total": {"open": 53.5, "current": 56.5, "delta": 3.0}, "ml_home": {"open": 170, "current": 170, "delta": 0}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
@@ -257,7 +323,14 @@ Line moved vs template (resim required): SF +2.5, DAL -2.5, Over 44.5, Under 44.
 
 ### LAC @ BAL
 
-Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | props two-sided: 0 | books sp/tot/ml: 0/0/0
+Template circuit breaker: STAGE_5_GAME_LINES_ACTIVE_PROP_PRICES_PENDING | template publishAllowed: True | props two-sided: 0 | books sp/tot/ml: 0/0/0
+
+Overnight template-approved plays and their live-market fate:
+
+| selection | template odds | template edge | template conf | live fate |
+|---|---|---|---|---|
+| BAL -2.5 | -110 | 0.1889 | 72/100 | INVALIDATED_NO_LIVE_PRICE |
+| BAL ML | -142 | 0.1513 | 68/100 | INVALIDATED_NO_LIVE_PRICE |
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
@@ -272,9 +345,11 @@ No live two-sided price: LAC +2.5, BAL -2.5, Over 44.5, Under 44.5, LAC ML, BAL 
 
 ## Board verdict
 
-Numerical gate clears on live prices (full-engine re-run still required): 0.
-publishAllowed: FALSE. Prop circuit breaker: CONTINUES (0 two-sided prop prices).
-Game-line template fallback is replaced by live SBR two-sided prices for evaluation,
-but no pick is published or suggested from this watch. PASS is the default.
+- Overnight template board: 18 approved plays across 11 games, ALL priced against generic template benchmarks (+2.5/-2.5, 44.5, +120/-142), with 0 two-sided prop prices board-wide; 2 games circuit-breaker halted (publishAllowed False).
+- Live re-verification invalidates 18/18 of those template approvals (lines moved or prices absent). They were never live-market plays; none may be published.
+- Numerical gate clears on live prices (full-engine re-run still required): 0. Moneyline clears on line-moved games are downgraded to PASS (STALE_SIM_LINE_MOVED): a moved line invalidates the sim win probability the ML edge would be measured against.
+- publishAllowed: FALSE for this watch output. Prop circuit breaker: CONTINUES (0 two-sided prop prices).
+- Game-line template fallback is replaced by live SBR two-sided prices for evaluation,
+  but no pick is published or suggested from this watch. PASS is the default; zero fake CLV floors.
 
 Snapshot errors: none
