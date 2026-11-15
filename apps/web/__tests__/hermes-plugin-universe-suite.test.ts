@@ -3,7 +3,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve } from "node:path";
 import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
-import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 // The settled win rate is the ONE permitted percent on a customer surface; the
 // catalog is its source. Confidence is XX/100, never a percentage.
