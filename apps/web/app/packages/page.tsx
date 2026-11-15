@@ -112,7 +112,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                 {gate.officialPlayCount} official {gate.officialPlayCount === 1 ? "play" : "plays"} published
               </span>
               <span className="w-full text-sm leading-6 text-ion-1 sm:w-auto sm:flex-1">
-                {gate.reason}
+                {gate.reason} <Link href="/pricing" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-plasma underline hover:text-ion-white">Open Live Week 10 Slate Packs -&gt;</Link> <Link href="/board" className="ml-3 text-xs font-semibold uppercase tracking-[0.12em] text-ion-white underline hover:text-plasma">View 13 Live Board Plays -&gt;</Link>
               </span>
             </div>
           </header>
