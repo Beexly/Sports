@@ -1,0 +1,570 @@
+{
+ "book_id": "a6940fd3c052ff20",
+ "source_status": "COMPLETE",
+ "source_note": "W. Ross Ashby, An Introduction to Cybernetics, Chapman and Hall, London, 1956 (first edition). Local file: PDF at ~/workspace/full-library-2026-11-12/library/books-must-have/Ashby-1956-IntroductionToCybernetics.pdf, 2,023,477 bytes, full sha256 over (str(size) + file bytes) = a6940fd3c052ff2011725750852cc0c2c00cfe1a859e0f473c143d9da7840130; book_id is its first 16 hex chars. Text quality: the PDF carries a clean text layer. The shipped extraction at ~/workspace/full-library-2026-11-12/text/books-must-have/ is pdftotext -layout output, which prints the book's two columns side by side on every line, so sentences are not contiguous in that file. All quotes were therefore proven contiguous, after the verify.py normalisation, against a column-sequential pdftotext extraction of the same PDF stored at ~/workspace/motif-foundry/work/ashby-introduction-to-cybernetics/ashby-plain.txt; two quotes also verify against the shipped layout text, the rest being split across its printed columns. A few extraction artifacts are quoted as printed (for example the letter O for 0 in the Markovian machine passage). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "transformation_closure",
+   "name": "A transformation is closed when it creates no element outside the operand set it acts on",
+   "verbatim_quote": "When an operator acts on a set of operands it may happen that the set of transforms obtained contains no element that is not already present in the set of operands, i.e. the transformation creates no new element.",
+   "page": "Ch. 2, S.2/4, printed p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The operand set is fixed and given in advance",
+    "The operator acts uniformly on every element of the set"
+   ],
+   "breakdown_regime": "Closure fails the moment the system is open, i.e. when outside influences inject elements not in the operand set; most real systems need the operand set enlarged until closure is recovered.",
+   "domain": "dynamical systems"
+  },
+  {
+   "primitive_id": "state_vector_phase_space",
+   "name": "A system state is a vector of variable values, representable as a point in a phase space",
+   "verbatim_quote": "If we take axes x and y, we can represent each particular vector, such as (8,4), by the point whose x-co-ordinate is 8",
+   "page": "Ch. 3, S.3/10, printed p. 40",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chosen variables suffice to fix the state",
+    "Each variable takes values on an axis of the space"
+   ],
+   "breakdown_regime": "If a variable with an immediate effect on behaviour is omitted, the point representation collides: distinct real states share one point and prediction fails.",
+   "domain": "dynamical systems"
+  },
+  {
+   "primitive_id": "machine_with_input_canonical_representation",
+   "name": "A machine with input is a set of absolute systems, one per parameter value; that set is its canonical representation",
+   "verbatim_quote": "will be called a transducer or a machine with input (according to the convenience of the context). The set of transformations is its canonical representation. The parameter, as something that can vary, is its input.",
+   "page": "Ch. 4, S.4/1 to S.4/2, printed pp. 43-44",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "For each fixed parameter value the behaviour is a closed single-valued transformation",
+    "The parameter can in principle be held constant while the machine runs"
+   ],
+   "breakdown_regime": "When the input changes the transformation itself mid-trajectory in unrecorded ways, no single canonical set describes the machine; the input history must be carried as part of the state.",
+   "domain": "dynamical systems"
+  },
+  {
+   "primitive_id": "diagram_of_immediate_effects",
+   "name": "The diagram of immediate effects records, for each pair of variables, whether one has an immediate effect on the other",
+   "verbatim_quote": "An arrow is drawn from u to y if and only if u has an immediate effect on y. Such a diagram will be called the diagram of immediate effects.",
+   "page": "Ch. 4, S.4/11, printed p. 57",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Effects are assessed one step at a time, holding the rest of the system as it is",
+    "The variable list is fixed while the diagram is drawn"
+   ],
+   "breakdown_regime": "Immediate effects can vary over the phase space, so one diagram may hold only over a region; delayed or conditional couplings are invisible in a single-step diagram.",
+   "domain": "systems structure"
+  },
+  {
+   "primitive_id": "reducibility_functional_independence",
+   "name": "A whole is reducible when it splits into parts that are functionally independent of one another",
+   "verbatim_quote": "the whole consists really of two parts that are functionally independent. In this case the whole is said to be reducible.",
+   "page": "Ch. 4, S.4/14, printed p. 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The candidate parts can be delimited so that neither has an immediate effect on the other",
+    "Independence is judged on behaviour, not on physical separation"
+   ],
+   "breakdown_regime": "Near-reducible systems with weak coupling are not reducible in the strict sense; treating them as independent discards the weak terms that may dominate over long times.",
+   "domain": "systems structure"
+  },
+  {
+   "primitive_id": "breeding_property_growth_law",
+   "name": "A breeding (autocatalytic) property grows or decays exponentially, at a rate set by the mean number of new cases each case produces",
+   "verbatim_quote": "the history of the system is often acutely dependent on the value of k, particularly in its relation to + 1.",
+   "page": "Ch. 4, S.4/23, printed p. 71",
+   "latex": "n = n_0 e^{(k-1)t}",
+   "symbol_and_unit_ledger": {
+    "n": "number of parts showing the property after t intervals (count, dimensionless)",
+    "n_0": "initial number of parts showing the property (count, dimensionless)",
+    "k": "mean number of new parts acquiring the property per part per interval (per interval)",
+    "t": "elapsed time (number of intervals)",
+    "e": "base of natural logarithms (dimensionless)"
+   },
+   "assumptions": [
+    "Each part showing the property acts independently with the same mean productivity k",
+    "k stays constant over the interval studied",
+    "The system is large and homogeneous enough for the average law to show"
+   ],
+   "breakdown_regime": "Saturation, finite carrying capacity, or interaction between parts breaks the constant-k assumption; near k = 1 small errors in k flip the prediction from growth to decay.",
+   "domain": "dynamical systems"
+  },
+  {
+   "primitive_id": "equilibrium_fixed_point",
+   "name": "A state of equilibrium is a state the transformation does not change: a fixed point of T",
+   "verbatim_quote": "not cause the state to change. Algebraically it occurs when T(x) = x.",
+   "page": "Ch. 5, S.5/2 to S.5/3, printed p. 73",
+   "latex": "T(x) = x",
+   "symbol_and_unit_ledger": {
+    "T": "the transformation of the system (state to state map)",
+    "x": "a state of the system"
+   },
+   "assumptions": [
+    "The transformation is single-valued and time-invariant",
+    "The state description is complete enough that T is well defined"
+   ],
+   "breakdown_regime": "With a time-varying transformation or an input changing at every step, fixed points move or vanish; equilibrium must then be redefined relative to the input.",
+   "domain": "stability theory"
+  },
+  {
+   "primitive_id": "stable_set_under_transformation",
+   "name": "A set of states is stable when the transformation can be applied to it through all its powers without leaving the set",
+   "verbatim_quote": "only when the set is stable can the transformation proceed to all its higher powers unrestrictedly",
+   "page": "Ch. 5, S.5/5, printed p. 75",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stability is predicated of a set, not of any single trajectory",
+    "The transformation is closed over the ambient state set"
+   ],
+   "breakdown_regime": "A set stable under T may lose stability under a coupled partner or a changed parameter, because the effective transformation has changed.",
+   "domain": "stability theory"
+  },
+  {
+   "primitive_id": "stability_under_displacement",
+   "name": "An equilibrium a is stable under a displacement D when repeated application of T after D returns the system to a in the limit",
+   "verbatim_quote": "the state of equilibrium a in the system with transformation T is stable under displacement D if and only if",
+   "page": "Ch. 5, S.5/6, printed p. 77",
+   "latex": "\\lim_{n \\to \\infty} T^n D(a) = a",
+   "symbol_and_unit_ledger": {
+    "T": "the system transformation",
+    "D": "a displacement operator mapping a to a neighbouring state",
+    "a": "the state of equilibrium",
+    "n": "number of transformation steps after the displacement (count)"
+   },
+   "assumptions": [
+    "The displacement is applied once, then T acts undisturbed",
+    "The limit is taken over indefinitely many steps"
+   ],
+   "breakdown_regime": "Stability is relative to the displacement class tested; a state stable under small displacements may be unstable under large ones, and neutral equilibria satisfy the limit for no displacement back to a itself.",
+   "domain": "stability theory"
+  },
+  {
+   "primitive_id": "power_of_veto_over_equilibria",
+   "name": "In a coupled whole, each part holds a power of veto over the states of equilibrium of the whole",
+   "verbatim_quote": "We can thus regard each part as having, as it were, a power of veto over the states of equilibrium of the whole.",
+   "page": "Ch. 5, S.5/13, printed pp. 82-83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The whole is at equilibrium only when every part is at equilibrium in the conditions the others provide",
+    "Parts are coupled so each can change the others' equilibrium sets"
+   ],
+   "breakdown_regime": "If one part's dynamics are vastly faster, its veto is effectively absolute and the slower part's preferences never appear in the whole's equilibria.",
+   "domain": "stability theory"
+  },
+  {
+   "primitive_id": "black_box_protocol_recoding",
+   "name": "Everything knowable about a Black Box is a recoding of its protocol of inputs and outputs",
+   "verbatim_quote": "all knowledge obtainable from a Black Box (of given input and output) is such as can be obtained by re-coding the protocol; all that, and nothing more.",
+   "page": "Ch. 6, S.6/3, printed p. 89",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The experimenter can apply inputs and record outputs over trials",
+    "The Box's behaviour is machine-like, i.e. its protocol shows the constraint characteristic of a machine"
+   ],
+   "breakdown_regime": "States that are inaccessible, or inputs that cannot be applied, leave parts of the protocol permanently missing, so the recoding caps what can ever be known from outside.",
+   "domain": "epistemology of systems"
+  },
+  {
+   "primitive_id": "homomorphism_reduction",
+   "name": "A homomorphism reduces a complex machine many-one to a simpler machine isomorphic with the reduced form",
+   "verbatim_quote": "Two machines may also be related by a \"homomorphism.\" This occurs when a many-one transformation, applied to the more complex, can reduce it to a form that is isomorphic with the simpler.",
+   "page": "Ch. 6, S.6/11, printed p. 102",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The merging map is applied uniformly to states and transforms",
+    "Only distinctions preserved by the merging can be studied in the reduced machine"
+   ],
+   "breakdown_regime": "A homomorphism discards distinctions by construction; any property depending on merged states is unanswerable in the model, however accurate the model is on what it keeps.",
+   "domain": "modelling"
+  },
+  {
+   "primitive_id": "memory_is_observer_relative",
+   "name": "Memory is not an intrinsic property of a system but a relation between a system and an observer who cannot observe all its variables",
+   "verbatim_quote": "Thus the possession of \"memory\" is not a wholly objective property of a system-it is a relation between a system and an observer",
+   "page": "Ch. 6, S.6/22, printed p. 116",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The underlying system is determinate",
+    "The observer's channel to the system omits at least one variable with an immediate effect"
+   ],
+   "breakdown_regime": "To an observer with complete observation the same system shows no memory at all; the concept dissolves, which is the point of the analysis.",
+   "domain": "epistemology of systems"
+  },
+  {
+   "primitive_id": "variety_in_bits",
+   "name": "Variety is measured logarithmically in bits: the log base 2 of the number of distinct elements",
+   "verbatim_quote": "When variety is measured in the logarithmic form its unit is the \"bit\", a contraction of \"BInary digiT\". Thus the variety of the sexes is 1 bit, and the variety of the 52 playing cards is 5.7 bits, because log2 52 = 3.322 log1052 = 3.322 x 1.7160 = 5.7.",
+   "page": "Ch. 7, S.7/7, printed p. 126",
+   "latex": "V = \\log_2 N",
+   "symbol_and_unit_ledger": {
+    "V": "variety of the set (bits)",
+    "N": "number of distinct elements in the set (count)"
+   },
+   "assumptions": [
+    "Distinctness is relative to a stated observer and discrimination",
+    "The set of possibilities is specified before counting"
+   ],
+   "breakdown_regime": "Variety is a property of a set, never of an individual element; applying a bit count to a single message or a single state is a category error the book warns against repeatedly.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "constraint_definition",
+   "name": "A constraint exists when the variety under one condition is less than the variety under another",
+   "verbatim_quote": "It is a relation between two sets, and occurs when the variety that exists under one condition is less than the variety that exists under another.",
+   "page": "Ch. 7, S.7/8, printed p. 127",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both conditions refer to the same underlying components",
+    "The comparison set (what could occur without the condition) is well defined"
+   ],
+   "breakdown_regime": "If the unconstrained comparison set is mis-specified, constraint is over- or under-stated; the book's traffic-light example shows the same object giving different constraints for different sets.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "variety_decay_single_valued",
+   "name": "A single-valued transformation acting on a set can never increase its variety, and usually decreases it",
+   "verbatim_quote": "The reader can easily satisfy himself that such a set, operated on by a single-valued transformation, can never increase in variety, and usually falls.",
+   "page": "Ch. 7, S.7/22, printed p. 134",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The transformation is single-valued (determinate)",
+    "No new elements are injected from outside during the steps considered"
+   ],
+   "breakdown_regime": "A many-valued (stochastic) transformation, or fresh input variety, escapes the law; pipelines that must preserve information need one-one stages, which preserve variety exactly.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "channel_capacity_bits_per_step",
+   "name": "A channel with r states transmits at most log2 r bits per step; total transmission grows with capacity times steps",
+   "verbatim_quote": "a transducer that cannot take more than r states cannot transmit Variety at more than log2r bits per step",
+   "page": "Ch. 8, S.8/13, printed p. 154",
+   "latex": "C = \\log_2 r",
+   "symbol_and_unit_ledger": {
+    "C": "channel capacity (bits per step)",
+    "r": "number of states the channel transducer can take (count)"
+   },
+   "assumptions": [
+    "The bound is per step; sequences of steps form vectors whose variety can exceed any single step's",
+    "Sender and receiver share the coding"
+   ],
+   "breakdown_regime": "Capacity bounds rate, not total: delay can compensate for a narrow channel. The bound says nothing about whether a usable coding has been constructed for a particular source.",
+   "domain": "communication theory"
+  },
+  {
+   "primitive_id": "feedback_no_regenerative_variety",
+   "name": "In a determinate system, feedback does not lead to a regenerative increase in variety",
+   "verbatim_quote": "In a determinate system, feedback does not lead to a regenerative increase in variety.",
+   "page": "Ch. 8, S.8/16, printed p. 157",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The coupled whole is determinate and treated as one absolute system over replicates",
+    "Pairings between the coupled systems' states are tracked exactly, not just their separate variety counts"
+   ],
+   "breakdown_regime": "The result is about variety over a set of replicates; it does not forbid feedback from amplifying a physical quantity such as power, which is a different bookkeeping.",
+   "domain": "communication theory"
+  },
+  {
+   "primitive_id": "stochastic_transformation",
+   "name": "A stochastic transformation assigns each state a fixed probability distribution over successor states, defining a set of trajectories rather than one",
+   "verbatim_quote": "Such a transformation, and especially the set of trajectories that it may produce, is called \"stochastic\", to distinguish it from the single-valued and determinate.",
+   "page": "Ch. 9, S.9/2, printed p. 162",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transition probabilities are constant, in the operational sense that long-run frequencies are stable",
+    "Probability is read as frequency over a set, never as a property of a single event"
+   ],
+   "breakdown_regime": "If the probabilities drift, or depend on unrecorded conditions, the stochastic description fails and the system must be redefined (for example by enlarging the state) before the machinery applies.",
+   "domain": "stochastic processes"
+  },
+  {
+   "primitive_id": "markov_chain_constant_probabilities",
+   "name": "A Markov chain is a sequence of states in which the probability of each transition stays the same over long stretches and does not depend on earlier states",
+   "verbatim_quote": "Such a sequence of states, in which, over various long stretches, the probability of each transition is the same, is known as a Markov chain",
+   "page": "Ch. 9, S.9/4, printed p. 165",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transition probabilities depend only on the current state (the operand), not on the path that reached it",
+    "Probabilities are estimated from long protocols"
+   ],
+   "breakdown_regime": "History-dependent sequences are not Markovian as defined; the book's remedy is to redefine states as vectors of consecutive states until the Markov property holds.",
+   "domain": "stochastic processes"
+  },
+  {
+   "primitive_id": "entropy_of_probability_set",
+   "name": "The entropy of a set of probabilities, H = -sum p log p, measures the variety a Markov source emits per step",
+   "verbatim_quote": "a quantity which he calls the entropy of the set of probabilities and which he denotes by H",
+   "page": "Ch. 9, S.9/11, printed p. 174",
+   "latex": "H = -\\sum_i p_i \\log p_i",
+   "symbol_and_unit_ledger": {
+    "H": "entropy of the set of probabilities (bits when the log is base 2)",
+    "p_i": "probability of the i-th possible outcome (dimensionless; the p_i sum to 1)"
+   },
+   "assumptions": [
+    "The probabilities form a complete set summing to 1",
+    "For a Markov chain the column entropies are averaged with weights from the equilibrium distribution"
+   ],
+   "breakdown_regime": "Entropy cannot be computed over an incomplete set of possibilities; for chains, Shannon's theorems also require the Markov property and that the chain has settled to its equilibrium proportions.",
+   "domain": "information theory"
+  },
+  {
+   "primitive_id": "shannon_capacity_theorem",
+   "name": "A source of H bits per step can be carried by any channel of capacity at least H, with a suitable coding, and by no channel of less capacity",
+   "verbatim_quote": "Shannon's theorem then says that any channel with this capacity can carry the report, and that it cannot be carried by any channel with less than this capacity.",
+   "page": "Ch. 9, S.9/17, printed p. 183",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transmission is incessant, so long-run averages govern",
+    "A coding may be chosen freely; the theorem asserts existence, not a construction"
+   ],
+   "breakdown_regime": "For a single short message the asymptotic guarantee does not bind; finite-length performance can fall short of the capacity bound.",
+   "domain": "communication theory"
+  },
+  {
+   "primitive_id": "equivocation_transmission_rate",
+   "name": "With noise, the rate actually transmitted is the source entropy less the equivocation",
+   "verbatim_quote": "The actual rate at which information is being transmitted, allowance being made for the effect of noise, is the entropy of the source, less the equivocation.",
+   "page": "Ch. 9, S.9/21, printed p. 189",
+   "latex": "R = H - E",
+   "symbol_and_unit_ledger": {
+    "R": "rate of information actually transmitted (bits per symbol)",
+    "H": "entropy of the source (bits per symbol)",
+    "E": "equivocation, in the book's worked example H1 - H2, the joint entropy of (sent, received) less the entropy of the received symbols (bits per symbol)"
+   },
+   "assumptions": [
+    "Sent and received signals form Markov chains, so joint frequencies are well defined",
+    "Error percentage alone is not the measure; equivocation is"
+   ],
+   "breakdown_regime": "Equivocation is defined for the incessant-transmission case; single-shot or non-stationary corruption needs a different accounting.",
+   "domain": "communication theory"
+  },
+  {
+   "primitive_id": "survival_as_set_stability",
+   "name": "Survival of an organism under an operation is exactly the stability of the set of its living states under that operation",
+   "verbatim_quote": "this representation of survival is identical with that of the \"stability\" of a set",
+   "page": "Ch. 10, S.10/4, printed p. 197",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The states corresponding to 'living' can be delimited as a subset of all possible states",
+    "The threatening operation is treated as a transformation on those states"
+   ],
+   "breakdown_regime": "Where the living set cannot be sharply delimited, or the operation changes the state space itself, the identification is a modelling choice rather than a theorem.",
+   "domain": "regulation theory"
+  },
+  {
+   "primitive_id": "good_regulator_blocks_variety",
+   "name": "A good regulator blocks the flow of variety from disturbances to the essential variables",
+   "verbatim_quote": "an essential feature of the good regulator is that it blocks the flow of variety from disturbances to essential variables",
+   "page": "Ch. 10, S.10/6, printed p. 200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Essential variables and their acceptable set are specified in advance",
+    "Success is judged at the essential variables, not at the regulator's own activity"
+   ],
+   "breakdown_regime": "Blocking is judged only at the essential variables; a regulator may pass variety freely to non-essential variables, as the skilled fencer does, and still regulate perfectly.",
+   "domain": "regulation theory"
+  },
+  {
+   "primitive_id": "law_of_requisite_variety",
+   "name": "Outcome variety can be forced down only by regulator variety: in logarithmic measure, V_O is at least V_D minus V_R",
+   "verbatim_quote": "only variety in R can force down the variety due to D; variety can destroy variety.",
+   "page": "Ch. 11, S.11/7, printed p. 206",
+   "latex": "V_O \\ge V_D - V_R",
+   "symbol_and_unit_ledger": {
+    "V_O": "variety of the outcomes (bits)",
+    "V_D": "variety of the disturbances (bits)",
+    "V_R": "variety of the regulator's responses (bits)"
+   },
+   "assumptions": [
+    "The outcome table has no repeated outcome within a column, or the repetition factor k is accounted for as in S.11/9",
+    "The regulator's response may be a determinate function of the disturbance",
+    "Varieties are measured logarithmically"
+   ],
+   "breakdown_regime": "The law gives a floor, not an achievement: a regulator with enough variety can still fail through a badly chosen response function. If the table itself blocks some variety (repetitions in columns), the floor drops by log k.",
+   "domain": "regulation theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The D-R-E table is the same object as a forecast pipeline's situation-response-outcome table: the variety of situations a reasoning engine can hold steady against is bounded by the variety of distinct responses its reasoning can select. Ashby himself maps it onto Shannon's Theorem 10, with disturbance as noise, regulator as correction channel, and constancy at the outcome as the message of entropy zero; in engine terms, sensing plus response repertoire is a channel whose capacity caps achievable control of the outcome distribution.",
+    "source_operator": "law_of_requisite_variety",
+    "telemetry": "Counts, per decision cycle, of distinct disturbance classes arriving, distinct responses the engine actually selects, and the spread of resulting outcome classes, all logged in bits"
+   }
+  },
+  {
+   "primitive_id": "regulator_capacity_equals_channel_capacity",
+   "name": "A regulator's capacity as a regulator cannot exceed its capacity as a channel of communication",
+   "verbatim_quote": "The law of Requisite Variety says that R's capacity as a regulator cannot exceed R's capacity as a channel of communication.",
+   "page": "Ch. 11, S.11/11, printed p. 210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The regulator receives its information about disturbances through identifiable channels",
+    "Regulation is assessed by the outcome variety actually achieved"
+   ],
+   "breakdown_regime": "Internal rearrangement of the regulator cannot beat the bound; only widening the channel, or finding constraint in the disturbances, raises what is achievable.",
+   "domain": "regulation theory"
+  },
+  {
+   "primitive_id": "error_controlled_regulator_self_blocking",
+   "name": "An error-controlled regulator can never be perfect: the better it holds the outcome constant, the more it blocks the channel carrying its own information",
+   "verbatim_quote": "the more successful R is in keeping E constant, the more does R block the channel by which it is receiving its necessary information",
+   "page": "Ch. 12, S.12/5, printed p. 224",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The regulator's only information about the disturbance arrives via the outcome itself (through T and E)",
+    "Continuity of the outcome scale lets small errors carry the information that prevents large ones"
+   ],
+   "breakdown_regime": "If the regulator also receives a direct channel from the disturbance (anticipation), the limit relaxes toward the feedforward case of Ch. 11; pure outcome-only feedback is the hard case.",
+   "domain": "control theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the law of requisite variety applied to the feedback path: a reasoning engine that learns only from graded outcomes faces the same self-blocking, because a policy that suppresses outcome variance also suppresses the error signal it trains on. The kernel prescribes the book's remedy: tolerate small errors deliberately so the feedback channel stays informative, and add disturbance-side sensing wherever a direct channel exists.",
+    "source_operator": "law_of_requisite_variety",
+    "telemetry": "Outcome error magnitudes per cycle, the correlation between outcome deviations and subsequent policy changes, and the measured information rate of the feedback path"
+   }
+  },
+  {
+   "primitive_id": "markovian_machine",
+   "name": "A Markovian machine is an absolute system whose changes follow a matrix of transition probabilities; the determinate machine is its extreme case with probabilities 0 or 1",
+   "verbatim_quote": "determinate absolute system is a special case of a Markovian machine; it is the extreme form of a Markovian machine in which all the probabilities have become either O or 1",
+   "page": "Ch. 12, S.12/8, printed p. 225",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The transition probability matrix is constant while the machine is the same machine",
+    "Whether a real system appears Markovian or determinate can depend on the observer's range of observation"
+   ],
+   "breakdown_regime": "If conditions determining the percentages change, the matrix changes and the machine is a different machine; apparent Markovianness produced by hidden variables disappears when those variables are observed.",
+   "domain": "stochastic processes"
+  },
+  {
+   "primitive_id": "hunt_and_stick_goal_seeking",
+   "name": "A Markovian machine reaches its equilibrium by hunt and stick: wandering until it chances on the absorbing state, then stopping",
+   "verbatim_quote": "\"Hunt and stick\" seems to describe the process both more vividly and more accurately.",
+   "page": "Ch. 12, S.12/11, printed p. 230",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One state (or set) is absorbing: entered, it is not left",
+    "From other states the motion continues with non-zero probabilities"
+   ],
+   "breakdown_regime": "Expected hitting time can be long and its variance large; hunt and stick regulates eventually but with no deadline guarantee, unlike a determinate trajectory.",
+   "domain": "stochastic processes"
+  },
+  {
+   "primitive_id": "homeostat_veto_regulator",
+   "name": "The homeostat's second part is a veto regulator: while the outcome is bad it keeps re-randomising the first part's parameters, and when the outcome is good it freezes them",
+   "verbatim_quote": "B has been built so that, with the relay energised, none of B's states is equilibrial (i.e. the switches keep moving), while, with the relay not energised, all are equilibrial (i.e. all switches stay where they are).",
+   "page": "Ch. 5, S.5/14, printed p. 83; generalised Ch. 12, S.12/14",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The vetoing part receives a two-valued signal: outcome inside or outside the acceptable set",
+    "The vetoing part's bad-state matrix is richly connected, so trapping in an unacceptable stable region can be made improbable",
+    "The homeostat's part B has 2 x 25 x 25 x 25 x 25, i.e. 781250, states by the book's count"
+   ],
+   "breakdown_regime": "If the acceptable set is empty for the parameter ranges available, the search never sticks; if the veto signal is delayed or misclassified, the machine freezes bad configurations.",
+   "domain": "control theory"
+  },
+  {
+   "primitive_id": "very_large_system_absolute_bound",
+   "name": "In a very large system, a regulator of fixed channel capacity faces an absolute limit on achievable regulation, however it is rearranged internally",
+   "verbatim_quote": "if R is fixed in its channel capacity, the law places an absolute limit to the amount of regulation (or control) that can be achieved by R, no matter how R is re-arranged internally",
+   "page": "Ch. 13, S.13/2, printed p. 245",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Difficulty scales with the variety of disturbances, not with size as such",
+    "Size matters chiefly because more parts and more unstandardised initial states add variety to the disturbance vector"
+   ],
+   "breakdown_regime": "The escapes are exactly three: widen the regulator's channel, lower the standard of what counts as acceptable, or discover constraint in the disturbances so their true variety is smaller than first estimated.",
+   "domain": "regulation theory"
+  },
+  {
+   "primitive_id": "design_as_communication",
+   "name": "Designing or making a machine is an act of communication from maker to made, and its cost is measurable as selection in bits",
+   "verbatim_quote": "the act of \"designing\" or \"making\" a machine is essentially an act of communication from Maker to Made, and the principles of communication theory apply to it",
+   "page": "Ch. 13, S.13/11, printed p. 252",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Design is predicated of a set of possible machines, never of a single machine in isolation",
+    "Selection among machines is equivalent to fixing values at a parameter of a larger machine"
+   ],
+   "breakdown_regime": "The measure prices the act of selecting, not the finished machine; asking how much design a machine contains without reference to what it might have been is, on this account, meaningless.",
+   "domain": "design theory"
+  },
+  {
+   "primitive_id": "selection_by_dichotomy",
+   "name": "Selection among groups (successive dichotomy) is incomparably faster than searching item by item: about log2 N steps instead of N",
+   "verbatim_quote": "the method of selection by groups is very much faster than the method of searching item by item",
+   "page": "Ch. 13, S.13/20, printed p. 261",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The selector can test set membership: whether the wanted element is in a given set",
+    "The candidate set can be partitioned repeatedly",
+    "The book's scale example: one atom in about 10^73 takes just over four minutes at one dichotomy per second"
+   ],
+   "breakdown_regime": "Without a membership oracle or a partitionable structure, dichotomy is unavailable and serial search costs return; for machines, reducibility is what supplies the grouping.",
+   "domain": "search and selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the book's selection accounting (total selection is the sum of staged selections, measured by the fall in variety): a reasoning engine choosing among candidate models, plays of a situation, or explanations should spend its selection budget hierarchically, testing group against group before item against item, because the cost per resolved bit is logarithmic in the group method and linear in the serial method.",
+    "source_operator": "selection_by_dichotomy",
+    "telemetry": "Number of candidates before and after each selection stage, stage durations, and the bits of selection each stage actually delivers"
+   }
+  },
+  {
+   "primitive_id": "amplifying_regulation_supplementation",
+   "name": "Regulation can be amplified in stages because requisite variety forbids direct magnification but not supplementation from an abundant source",
+   "verbatim_quote": "The law of Requisite Variety, like the law of Conservation of Energy, absolutely prohibits any direct and simple magnification but it does not prohibit supplementation.",
+   "page": "Ch. 14, S.14/4, printed p. 267",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A first-stage regulator can select or build a second-stage regulator of larger capacity",
+    "An abundant external source (energy, random variety, the environment itself) supplies what the first stage lacks",
+    "The book's worked case: a thermostat costing about 1000 bits of selection performs 36,500 one-bit corrections a year, an amplification of about 36 times on the logarithmic scale"
+   ],
+   "breakdown_regime": "Amplification is apparent, not free: audited over both stages, no law is beaten, and if the supplementing source dries up the amplified capacity collapses to the first stage's own.",
+   "domain": "regulation theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the law of requisite variety plus staged selection: a small, cheap reasoning component can govern a much larger one it has selected and configured, provided the larger component draws its working variety from the environment (fresh data) rather than from the small component. This is the book's account of how a limited specification produces an adult regulator of far greater capacity, and it prices the arrangement in bits of selection at each stage.",
+    "source_operator": "law_of_requisite_variety",
+    "telemetry": "Selection bits spent at each stage, the downstream regulator's measured channel capacity, and the volume of environment-supplied variety the downstream stage consumes"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "a6940fd3c052ff20-t1",
+   "think": "This book builds the whole of cybernetics from one move: stop describing a thing and start describing the set of changes it can undergo. Part I defines the machine as a closed, single-valued transformation. Closure says the transforms stay inside the operand set; single-valuedness says each state has exactly one successor, so the whole future is a trajectory generated by powers of one map. A state is a vector of variable values, drawn as a point in phase space, and repeated application sorts every state into basins that end at equilibria or cycles. A machine with input is then a family of such machines, one for each parameter value, and the family itself, the canonical representation, is the complete description. Coupling parts produces a new absolute system whose transformation can be deduced from the parts; the diagram of immediate effects records which variables touch which at one step, and where no arrows run between two groups the whole is reducible and can be analysed in pieces. Chapter 4 ends by noting that very large systems are mostly sparse in immediate effects, homogeneous, and repetitive, which is why the simple theory reaches so far. Chapter 5 turns to stability: an equilibrium is a fixed point T(x) = x; a set is stable when the transformation never leaves it; an equilibrium is stable under a displacement when iteration after the displacement returns to it in the limit. Coupled parts hold a power of veto over one another's equilibria, so the whole can rest only where every part accepts the conditions the others provide, and the homeostat shows a built machine exploiting exactly this: one part re-rolls the other's parameters until the joint state is one both can keep. Part II changes the question from what a machine does to how much variety it has and where that variety goes. Variety is counted over sets and measured in bits, as log base 2 of the number of distinct elements. Constraint is any shortfall of actual variety below possible variety, and every law of nature is a constraint in this sense. A single-valued transformation can never increase the variety of a set it acts on, which is why isolated systems run down to equilibria and why information stored in a state decays. Transmission is then bookkeeping: a channel of r states passes at most log2 r bits per step, sequences of steps can carry more than any one step, feedback inside a determinate whole creates no new variety, and delay is the signature of hidden intermediate stages between sender and receiver. Chapter 9 makes transmission incessant. The stochastic transformation replaces the single successor with constant transition probabilities; a Markov chain is the resulting sequence; populations governed by the matrix nevertheless move determinately to an equilibrium distribution, and Shannon's entropy, the equilibrium-weighted average of minus p log p, measures the variety emitted per step. Noise is not a physical category but a recipient-relative one, equivocation measures what noise destroys, and Shannon's two theorems close the part: a channel of capacity at least the source entropy can carry the source with a suitable coding, and over a noisy channel, extra capacity at least equal to the equivocation buys arbitrarily reliable transmission. Part III spends the machinery. Survival is set stability under the operations the world applies; a regulator is whatever sits between disturbances D and essential variables E and blocks variety from reaching them; and the law of requisite variety prices the blocking exactly, V_O at least V_D minus V_R in bits, so a regulator's capacity as a regulator cannot exceed its capacity as a channel of communication. When the regulator can only watch the outcome, the error-controlled case, perfection is impossible in principle, because holding E constant strangles the very channel that informs R; small tolerated errors are what keep the channel open. Markovian machines widen the design space: with transition probabilities instead of certainties, regulation becomes hunt and stick toward an absorbing state, and a veto part that randomises parameters while the outcome is bad and freezes them when it is good gives the homeostat pattern, regulation by directed search rather than by trajectory. The last chapters scale everything. In very large systems the binding quantity is disturbance variety, not size; a fixed-capacity regulator faces an absolute limit, escaped only by widening the channel, lowering the standard, or discovering constraint in the disturbances. Design itself is communication, selection measured in bits; selection decomposes into stages, supplementation by uncorrelated sources is legitimate, group-wise dichotomy finds one in 10^73 in minutes where serial search fails cosmologically, and reducibility is what makes staged selection fast for machines. Finally, staged selection amplifies: a small regulator that builds or configures a bigger one, supplemented by variety from the environment, ends with regulatory capacity far beyond its own channel, which is the book's explanation of how a gene pattern of limited capacity produces an adult brain, and its closing conjecture that intellectual power, being power of appropriate selection, can be amplified the same way. For a reasoning engine the book contributes hard budget laws rather than heuristics: every module is a transducer with a priced capacity, every many-one stage destroys variety that no later stage can recreate, every feedback path degrades as control succeeds, and every claim to know a component is capped at a recoding of its observed protocol. Its limits are equally clear: the step is discrete and uniform, probabilities must be constant for the Markov machinery, entropy results need equilibrium proportions, equilibrium thinking fits badly where the target itself moves, and the book names but does not solve the problem of where the veto signal's standard comes from.",
+   "retrocausal_genealogy": "The lineage runs Gibbs to Shannon to Ashby. Gibbs supplied the phase space and the ensemble way of thinking about a system as a set of possibilities. Cannon's homeostasis gave the biological target: essential variables held within limits. Von Neumann and Morgenstern's payoff table reappears, recognised by Ashby himself, as the disturbance-regulator-outcome table of Chapter 11. Shannon's 1948 communication theory is the book's load-bearing import: variety, entropy, channel capacity, equivocation, and the two coding theorems are all taken over and re-founded on the transformation machinery of Part I. Wiener's cybernetics named the field, but Ashby's version is deliberately independent of Wiener's mathematics, built instead on finite transformations any biologist can check by hand. His own Design for a Brain (1952) precedes the book: ultrastability and the homeostat come from there, here generalised into the veto construction.",
+   "theory_of_mind": "Ashby writes for the working biologist or psychologist who keeps identifying a system with a physical object and then arguing about words. His model of the reader is someone willing to trade intuition for operational definitions: a system is the set of variables the observer chooses, a machine is the constraint visible in a protocol, probability is frequency over a stated set, and memory is a confession that some variables are unobserved. He believes most classic problems in brain science are badly posed rather than hard, and that once the sets, transformations, and channels are stated exactly, the theorems follow almost mechanically and the pseudo-problems dissolve. The exercises after every section are his enforcement mechanism: the reader must compute, not merely nod.",
+   "cross_layer_veto": "Three results in this book veto whole classes of designs elsewhere. The law of requisite variety vetoes any controller, model, or organisation whose response variety and channel capacity are smaller than the disturbance variety it claims to govern; no internal cleverness compensates. The error-controlled limit vetoes any architecture that reads only outcomes and promises exact regulation, because success destroys its own information supply. The variety-decay result vetoes every pipeline of many-one recodings that expects the original distinctions to survive at the far end. A fourth, quieter veto comes from the Black Box analysis: any component claim that is not a recoding of an observed protocol is out of bounds, and any attribution of memory to a component is a marker for unobserved state that should be made explicit instead."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says: describe any system as a transformation on a state set; count what it can do in bits; find where variety is created, blocked, or destroyed; and never ask a component to regulate more variety than its channels carry. The same accounting prices communication, control, design, search, and learning, because each is selection among possibilities under a capacity limit. Its deepest habit is definitional honesty: sets before individuals, protocols before mechanisms, observer-relative terms flagged as observer-relative. Any field that manages complex adaptive systems, from ecology to organisations to software platforms, can run its problems through this accounting and get back exact statements about what is impossible, what is merely expensive, and where the one exploitable constraint must be hiding.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book supplies the founding measurement discipline for studying competitive systems as systems. Contestants, teams, and leagues become transducers with priced variety: the range of distinct situations they can generate, the range of responses they can select, and the channels, coaching, scouting, preparation, through which information about an opponent can actually flow. Requisite variety gives the Institute a hard way to state why preparation breadth caps competitive control, why an outcome-only review process cannot fully correct performance, and why apparent memory or intelligence in an athlete or a model usually marks unobserved state that should be measured directly. The homeostat pattern and selection by dichotomy become research instruments: staged search with a veto signal, and group-wise testing of hypotheses instead of one-at-a-time case work.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the book is a budget law for architecture. Each signal family is a channel with a measurable capacity in bits per decision cycle, and the law of requisite variety caps how much situational variety the engine's outputs can be stabilised against: enriching the response repertoire and the sensing channels is the only way to raise the cap, never rearranging the same components. Variety decay warns that every many-one feature compression destroys distinctions no downstream layer can recover, so compression points must be chosen deliberately. The error-controlled limit is a design rule for calibration: a system tuned only on graded outcomes must keep tolerated error alive or it blinds its own feedback. The Black Box cap disciplines model claims about opponents and about the engine's own modules: only protocol recodings are knowledge."
+}

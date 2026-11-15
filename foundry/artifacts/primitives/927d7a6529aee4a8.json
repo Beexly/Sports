@@ -1,0 +1,622 @@
+{
+ "book_id": "927d7a6529aee4a8",
+ "source_status": "COMPLETE",
+ "source_note": "True source: Solon Barocas, Moritz Hardt, and Arvind Narayanan, 'Fairness and Machine Learning: Limitations and Opportunities', MIT Press, 2023; the authors' open manuscript is maintained at fairmlbook.org. The local file is that fairmlbook.org compiled PDF: its title page reads 'https://fairmlbook.org/ Compiled on Wed Dec 13 14:44:57 CET 2023'. PDF size 2220375 bytes; full sha256 of the scan digest input (str(size) followed by the PDF bytes) is 927d7a6529aee4a800e0c0329e59645946f391b5694a297b0cb78c1f1cdc6ec7; book_id is its first 16 hex characters. Extracted text is clean born-digital text (911,773 characters, 13,849 lines) with minor glyph artifacts typical of the extraction: the classifier symbol Y-hat renders as 'Y b', footnote numerals appear inline after punctuation, and displayed formulas are linearized with spaced symbols. All verbatim quotes were taken as contiguous spans of a single printed page of this text and avoid the garbled glyph spans. Catalog corrections: the filename's 2023 date is correct for both the compiled manuscript and the MIT Press publication; the work is a book-length treatment (nine chapters plus references), not a paper. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "bhn-01",
+   "name": "The target variable is an invented construct, not an intrinsic property of people",
+   "verbatim_quote": "\"creditworthiness\" is a construct that was created in the context of the problem of how to successfully extend credit to consumers;9 it is not an intrinsic property that people either possess or lack.",
+   "page": "Ch 1 Introduction, printed p.8",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "A prediction problem begins by choosing a target variable, and that choice is a modeling decision made by people, not a fact found in the world. Proxies such as arrests for crime or spending for need inherit the measurement process that produced them.",
+   "breakdown_regime": "Breaks when the construct is treated as ground truth: once the proxy is optimized directly, the gap between the construct and the real quantity of interest stops being measured at all, and every downstream fairness or accuracy claim silently becomes a claim about the proxy.",
+   "domain": "measurement and problem formulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine target (win probability, player performance, team strength) is a construct defined by a chosen operationalization. The primitive forces an explicit construct registry: for each predicted quantity, record what real-world thing it stands for, what observable stands in for it, and where the two diverge.",
+    "source_operator": "target_variable_construction",
+    "telemetry": "construct name; chosen observable proxy; known divergence modes between proxy and construct; who chose the proxy and when"
+   }
+  },
+  {
+   "primitive_id": "bhn-02",
+   "name": "Feedback loops amplify an initial disparity even when underlying rates are equal (PredPol)",
+   "verbatim_quote": "the authors found that Black people would be targeted for predictive policing of drug crimes at roughly twice the rate of White people, even though the two groups have roughly equal rates of drug use.",
+   "page": "Ch 1 Introduction, printed p.14",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The Oakland records Lum and Isaac used reflect where police were sent and what they recorded, not an unbiased sample of drug crime. Their simulation holds the underlying drug-use rates roughly equal across groups, so the doubling is produced by the deployment and recording loop itself.",
+   "breakdown_regime": "Breaks as a diagnostic when outcome data are collected independently of the system's own past decisions; with deployment-independent measurement, the loop has no channel through which to amplify. It also cannot be detected from a single snapshot, only from the trajectory over repeated deployments.",
+   "domain": "feedback loops in deployed prediction systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine whose outputs change what data get collected next (which games get attention, which players get tracked, which situations get logged) is inside the same loop. The audit is longitudinal: compare group-conditional error and coverage trajectories across deployment rounds, not a one-time snapshot.",
+    "source_operator": "feedback_loop_amplification_audit",
+    "telemetry": "per-round selection rates by group; per-round outcome rates by group; ratio trajectory across rounds; data-collection policy changes between rounds"
+   }
+  },
+  {
+   "primitive_id": "bhn-03",
+   "name": "Published predictions can be self-fulfilling: the prediction changes the outcome it predicts",
+   "verbatim_quote": "Any system that predicts a home's future sale price (and publicizes these predictions) is likely to create a self-fulfilling feedback loop in which homes predicted to have lower sale prices deter future buyers, suppressing demand and lowering the final sale price.",
+   "page": "Ch 1 Introduction, printed p.7",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The prediction is publicized and the audience can act on it (buyers see the estimate and change their behavior). The outcome variable (final sale price) is causally downstream of audience beliefs, not fixed in advance.",
+   "breakdown_regime": "Breaks when predictions are kept private, when the audience cannot act on them, or when the outcome is causally insulated from belief (a physical measurement, a settled past event). It strengthens with audience size and with how mechanically the audience follows the number.",
+   "domain": "performative prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A published projection is an intervention in the environment it describes. Before publication, classify each output by whether its audience can move the outcome; for movable outcomes, the engine must model its own publication as an input to the next round rather than treating the outcome as exogenous.",
+    "source_operator": "performativity_classification",
+    "telemetry": "publication reach; audience action channel; lag between publication and outcome; outcome sensitivity to the published number in past rounds"
+   }
+  },
+  {
+   "primitive_id": "bhn-04",
+   "name": "Legitimacy is prior to distributive fairness: whether to deploy at all comes first",
+   "verbatim_quote": "whether it is fair to deploy such a system at all in a given scenario. That question, in turn, affects the legitimacy of the organization deploying it.",
+   "page": "Ch 2 Legitimacy, printed p.23",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The deploying institution depends on being regarded as legitimate by the people subject to its decisions. Fairness criteria applied to outputs cannot rescue a system whose very deployment lacks a defensible basis.",
+   "breakdown_regime": "Breaks as a framing when deployment is not optional (a court-ordered or safety-critical system), where the live question collapses back to distributive and procedural fairness inside a fixed mandate. It also weakens where subjects have genuine exit options and consent.",
+   "domain": "governance of automated decision systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gate order for any new engine surface: first a deployment decision with a stated basis (what decision is being automated, why this institution, why now), and only then output-level criteria. A surface that cannot state its basis does not proceed to metric tuning.",
+    "source_operator": "legitimacy_first_gate",
+    "telemetry": "decision being automated; deploying institution; stated basis for deployment; affected population; exit and appeal options"
+   }
+  },
+  {
+   "primitive_id": "bhn-05",
+   "name": "Two flavors of arbitrariness: inconsistency, and consistency without a reasoned basis (Creel and Hellman)",
+   "verbatim_quote": "arbitrariness might refer to decisions made on an inconsistent or ad hoc basis. Second, arbitrariness might refer to the basis for decision making lacking reasoning, even if the decisions are made consistently on that basis.",
+   "page": "Ch 2 Legitimacy, printed p.25",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Decision subjects can in principle ask two different questions: was I treated the same as similar others, and is there a reasoned basis for the rule that was applied to me. A system can pass the first test perfectly while failing the second.",
+   "breakdown_regime": "Breaks when consistency itself is the harm (a consistently applied rule with a bad basis looks procedurally clean), and when the demand for reasons is applied to genuinely stochastic processes where the honest answer is a distribution, not a reason per case.",
+   "domain": "procedural fairness and reason-giving",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine outputs need both audits: a consistency audit (same inputs, same outputs, no ad hoc variation across runs or operators) and a basis audit (the reasoning trail states what was weighed and why). Passing only the consistency audit is the failure mode this primitive names.",
+    "source_operator": "dual_arbitrariness_audit",
+    "telemetry": "output variance under repeated identical inputs; reasoning-trail completeness rate; fraction of outputs with a stated basis; drift of the basis over time"
+   }
+  },
+  {
+   "primitive_id": "bhn-06",
+   "name": "Three forms of automation; only predictive optimization derives the rule itself from data",
+   "verbatim_quote": "form of automation, which we'll call predictive optimization, speaks directly to concerns with reasoned decision making. Note that neither of the first two forms of automation does so.",
+   "page": "Ch 2 Legitimacy, printed p.31",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Automating pre-existing rules and learning to replicate human judgment both inherit their rule from outside the system. Predictive optimization is different in kind: the rule is whatever the learned predictor implies, so no human ever stated the rule that is actually being applied.",
+   "breakdown_regime": "Breaks at the boundaries: a replicated-judgment system trained on enough human decisions becomes de facto predictive optimization, and a rule system whose parameters are tuned on outcomes quietly crosses the same line. The category follows where the effective rule comes from, not the label on the project.",
+   "domain": "taxonomy of automated decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Classify every engine component by where its effective rule originates: hand-stated rule, imitation of human judgment, or learned optimization against a target. Scrutiny, explanation duties, and audit depth scale with the third category, because no one can state its rule in advance.",
+    "source_operator": "automation_form_classification",
+    "telemetry": "component inventory; rule origin per component; target variable per learned component; date the effective rule last changed"
+   }
+  },
+  {
+   "primitive_id": "bhn-07",
+   "name": "Schauer's problem: statistically sound but nonuniversal generalizations wrong the atypical individual",
+   "verbatim_quote": "the problem of \"statistically sound but nonuniversal generalizations\": when an individual fulfills all the criteria for inclusion in a particular group, but fails to possess the quality that these criteria are expected to predict.",
+   "page": "Ch 2 Legitimacy, printed p.36",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Group-level criteria can be genuinely predictive on average while failing for the individual who meets every inclusion criterion but lacks the quality the criteria were chosen to predict. The wrong is not statistical error; the generalization can be sound and still nonuniversal.",
+   "breakdown_regime": "Breaks when decisions are about populations rather than individuals (aggregate planning, capacity sizing), where nonuniversality averages out by design. It bites hardest for one-shot, high-stakes, individual-level decisions with no appeal channel.",
+   "domain": "generalization, stereotyping, and individuation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For individual-level outputs, the engine must carry an atypicality flag: how much of this case's evidence is the case itself versus the group pattern it was matched to. Outputs driven mostly by group pattern get wider uncertainty and a stated basis, exactly the individuation demand Schauer's problem creates.",
+    "source_operator": "individuation_weight",
+    "telemetry": "share of evidence from the individual case versus the reference class; reference class size; within-class variance; appeal or override rate"
+   }
+  },
+  {
+   "primitive_id": "bhn-08",
+   "name": "Target-goal mismatch: predicting cost as a proxy for need systematically underrates the underserved (Obermeyer et al.)",
+   "verbatim_quote": "That's because the developers adopted healthcare costs as the target of prediction, on the apparent belief that it would serve as a reasonable proxy for healthcare needs.",
+   "page": "Ch 2 Legitimacy, printed p.35",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Healthcare cost is generated jointly by need and by access: groups with poorer access spend less at the same level of sickness. Any proxy generated by a process that itself responds to group membership will import that process's disparities into the target.",
+   "breakdown_regime": "Breaks when the proxy is generated by a process independent of group membership, or when the access gap is measured and corrected before training. It is undetectable from predictive accuracy on the proxy itself, since the model can predict cost superbly while failing at need.",
+   "domain": "proxy targets and label choice",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For every engine target, run the Obermeyer test: name the process that generated the label, ask whether that process responds to group membership or to the system's own past outputs, and validate against a second label closer to the real construct on a sample. Accuracy on the proxy is not evidence about the construct.",
+    "source_operator": "label_generation_audit",
+    "telemetry": "label-generating process description; group-conditional label rates at fixed construct level; second-label validation sample size; proxy-versus-construct error gap by group"
+   }
+  },
+  {
+   "primitive_id": "bhn-09",
+   "name": "Gaming: changing feature values to change the decision without changing the expected outcome",
+   "verbatim_quote": "By gaming we mean changing the value of features in order to change the decision without changing the expected outcome that the features are meant to predict.",
+   "page": "Ch 2 Legitimacy, printed p.42",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Decision subjects know or learn which features drive decisions and can alter some of them more cheaply than they can alter the underlying outcome. Preventing gaming therefore requires knowing which features cause the outcome and which merely correlate with it.",
+   "breakdown_regime": "Breaks when features are causally upstream of the outcome (improving them genuinely improves the outcome, which is recourse rather than gaming), and when feature manipulation is more expensive than the decision is worth. The gaming-versus-recourse line is a causal question, not a statistical one.",
+   "domain": "strategic behavior and causal feature selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any published criterion teaches its audience what to optimize. The engine should track which of its input features are cheaply manipulable by the people being evaluated, and prefer causally upstream features for high-stakes outputs, because correlation-only features invite gaming the moment the criterion is known.",
+    "source_operator": "feature_manipulability_audit",
+    "telemetry": "feature list with manipulation cost estimates; causal-versus-correlational status per feature; post-publication feature distribution shifts"
+   }
+  },
+  {
+   "primitive_id": "bhn-10",
+   "name": "Fact 1: the error-minimizing classifier thresholds the conditional probability at one half",
+   "verbatim_quote": "The optimal classifier checks if the propensity of positive outcomes given the observed covariates X is greater than 1/2. If so, it makes the guess that the outcome is 1. Otherwise, it guesses that the outcome is 0. The optimal predictor above is specific to classification error. If our loss function were different, the threshold 1/2 in the definition above would need to change.",
+   "page": "Ch 3 Classification, printed p.48",
+   "latex": "\\hat{Y} = f(X), \\quad f(x) = 1 \\text{ if } P\\{Y=1 \\mid X=x\\} > 1/2, \\text{ else } 0",
+   "symbol_and_unit_ledger": "Y: binary outcome, unitless class label in {0,1}. X: covariate vector, mixed units per feature. P{Y=1|X=x}: conditional probability, dimensionless, in [0,1]. Threshold 1/2: dimensionless, valid only for symmetric 0-1 loss. Y-hat: predicted class, unitless.",
+   "assumptions": "The loss is classification error with equal costs for the two error types, the true conditional distribution P{Y|X} is available, and a single threshold decision is required. The book states the result for the population distribution, before any estimation from finite data.",
+   "breakdown_regime": "Breaks the moment error costs are asymmetric (the threshold moves off 1/2 by the cost ratio), when the conditional probability is estimated rather than known, and when the decision is not forced to be binary. Any fairness constraint also moves the operating point off this optimum by construction.",
+   "domain": "statistical decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's decision kernel in its purest form: a probability first, a threshold second, and the threshold is a policy choice set by the loss structure, not a property of the model. Keep the probability and the threshold as separate artifacts so the threshold can be audited and changed without retraining.",
+    "source_operator": "bayes_threshold_rule",
+    "telemetry": "conditional probability estimates; active threshold value; loss ratio that implies it; fraction of cases within a small margin of the threshold"
+   }
+  },
+  {
+   "primitive_id": "bhn-11",
+   "name": "The risk score r(x) = P{Y=1|X=x} = E[Y|X=x] is the Bayes optimal score and minimizes squared loss",
+   "verbatim_quote": "Statistical decision theory tells us that optimal classifiers can generally be written as a threshold applied to this risk score. The risk score we see here is a particularly important and natural one. We can think of it as taking the available evidence X = x and calculating the expected outcome given the observed information. This is called the posterior probability of the outcome Y given X.",
+   "page": "Ch 3 Classification, printed p.48",
+   "latex": "r(x) = P\\{Y=1 \\mid X=x\\} = E[Y \\mid X=x], \\quad r = \\arg\\min_{s} E[(Y - s(X))^2]",
+   "symbol_and_unit_ledger": "r(x): risk score, a probability, dimensionless, in [0,1]. Y: binary outcome in {0,1}, so E[Y|X=x] equals the conditional probability. X: covariates. Squared loss E[(Y - s(X))^2]: expected squared error in probability units squared, minimized over all measurable score functions s.",
+   "assumptions": "Y is binary (or bounded so the conditional expectation is interpretable as a probability), squared loss is the scoring rule, and r is the true conditional expectation rather than a finite-sample estimate of it.",
+   "breakdown_regime": "Breaks under estimation error: a learned score only approximates r, and its optimality properties (including the group calibration of Fact 3 in the same chapter) hold for the true r, not automatically for the estimate. Also breaks when the deployment distribution shifts away from the training distribution.",
+   "domain": "scoring rules and Bayes optimality",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's core object is a conditional expectation, and every guarantee in this book is stated for the true one. That makes calibration checking of the estimated score against realized outcomes a first-class, continuous duty, not a launch-time test: the guarantees are inherited only to the extent the estimate tracks the truth.",
+    "source_operator": "risk_score_as_conditional_expectation",
+    "telemetry": "score distribution; realized outcome rate by score decile; squared loss on held-out data; drift of the score-versus-outcome curve over time"
+   }
+  },
+  {
+   "primitive_id": "bhn-12",
+   "name": "AUC is a ranking probability: P(score of a random positive exceeds score of a random negative)",
+   "verbatim_quote": "A common measure of predictiveness is the area under the curve (AUC), which equals the probability that a random positive instance gets a score higher than a random negative instance. An area of 1/2 corresponds to random guessing, and an area of 1 corresponds to perfect classification.",
+   "page": "Ch 3 Classification, printed p.50",
+   "latex": "\\mathrm{AUC} = P\\{r(X^{+}) > r(X^{-})\\}, \\quad X^{+} \\sim P(\\cdot \\mid Y=1), \\; X^{-} \\sim P(\\cdot \\mid Y=0)",
+   "symbol_and_unit_ledger": "AUC: dimensionless, in [0,1]; 1/2 is random guessing, 1 is perfect ranking. r(X+): score of a randomly drawn positive instance. r(X-): score of a randomly drawn negative instance. Both scores are probabilities in [0,1].",
+   "assumptions": "Pairs are drawn independently from the positive and negative populations, ties are handled by the usual convention, and ranking quality is what is being measured: AUC says nothing about whether score values are calibrated probabilities.",
+   "breakdown_regime": "Breaks as a quality certificate when base rates differ across groups (the same AUC can hide very different error compositions), when calibration matters for the decision, and under distribution shift between the evaluation sample and deployment.",
+   "domain": "ranking metrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Report ranking quality and calibration as separate numbers, always. A model can rank beautifully while its probabilities are systematically off, and threshold decisions consume the probabilities, not the ranking. Per-group AUC plus per-group calibration curves is the minimum honest summary.",
+    "source_operator": "auc_ranking_probability",
+    "telemetry": "overall and per-group AUC; calibration curve by group; base rates by group; score tie rate"
+   }
+  },
+  {
+   "primitive_id": "bhn-13",
+   "name": "Redundant encodings: a removed sensitive attribute is reconstructible from the remaining features",
+   "verbatim_quote": "Redundant encodings typically abound in large feature spaces. For example, gender can be predicted from retinal photographs with very high accuracy",
+   "page": "Ch 3 Classification, printed p.54",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The feature space is rich enough that the sensitive attribute is a near-deterministic function of combinations of innocuous features. The retinal photograph result (gender predictable from fundus images) is the book's existence proof that the encoding can hide in features no human would name as proxies.",
+   "breakdown_regime": "Breaks in small, hand-curated feature spaces designed to be mutually independent, where the attribute may have no good encoding. But the burden of proof flips: absence of an encoding must be demonstrated by trying to predict the attribute, not assumed from feature names.",
+   "domain": "proxy discrimination and feature auditing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deleting a sensitive column is not a fairness intervention. The audit is a prediction task: train a model to recover the sensitive attribute (or any protected grouping) from the production feature set; its accuracy is the leakage measurement, and it belongs in the model card for every release.",
+    "source_operator": "attribute_reconstruction_audit",
+    "telemetry": "attribute prediction AUC from production features; top contributing features to the reconstruction; leakage trend across feature-set changes"
+   }
+  },
+  {
+   "primitive_id": "bhn-14",
+   "name": "Independence (demographic parity): the score is statistically independent of the sensitive attribute",
+   "verbatim_quote": "Definition 1. Random variables ( A, R) satisfy independence if A ⊥ R. If R is a score function that satisfies independence, then any classifier Y b = 1{ R > t} that thresholds the score a value t also satisfies independence. This is true so long as the threshold is independent of group membership.",
+   "page": "Ch 3 Classification, printed p.55",
+   "latex": "R \\perp A",
+   "symbol_and_unit_ledger": "R: score, a probability in [0,1] or a derived decision. A: sensitive attribute, categorical, unitless. Independence symbol: full statistical independence of the joint distribution of (A, R); every derived threshold classifier with a group-independent threshold inherits it.",
+   "assumptions": "Groups are well defined and membership is observed, the joint distribution of (A, R) is the object of interest, and equal outcome rates across groups is the normative target. The book notes group-specific thresholds generally break the property for thresholded classifiers.",
+   "breakdown_regime": "Breaks normatively when base rates legitimately differ and equal rates force either random decisions or knowingly worse decisions for one group (the book's diligent-versus-careless employer case), and mechanically when a single global threshold is replaced by group-specific ones.",
+   "domain": "observational fairness criteria: independence family",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independence is the criterion a regulator or a headline sees: raw outcome rates by group. The engine should compute it continuously as an exposure metric while remembering the book's warning that satisfying it can require deliberately degrading decisions; it is a diagnostic with a known price, not a free constraint.",
+    "source_operator": "independence_criterion",
+    "telemetry": "outcome rate by group; rate ratios and differences; threshold policy per group; accuracy cost of enforcing parity"
+   }
+  },
+  {
+   "primitive_id": "bhn-15",
+   "name": "Separation (equalized odds): the score is independent of the attribute given the true outcome",
+   "verbatim_quote": "Definition 2. Random variables ( R, A, Y ) satisfy separation if R ⊥ A | Y. The conditional independence statement applies even if the variables take on more than two values each. For example, the target variable might partition the population into many different types of individuals.",
+   "page": "Ch 3 Classification, printed p.57",
+   "latex": "R \\perp A \\mid Y",
+   "symbol_and_unit_ledger": "R: score in [0,1]. A: sensitive attribute, categorical. Y: true outcome in {0,1} (the definition extends to multi-valued Y). Conditioning on Y: within each outcome class, score distributions must match across groups; for binary classifiers this is equality of true positive and false positive rates.",
+   "assumptions": "The true outcome Y is observed for the evaluated population, groups are well defined, and conditioning on the realized outcome is normatively the right reference class (the middle view of equality of opportunity in the book's Chapter 4 mapping).",
+   "breakdown_regime": "Breaks under selective labels: when Y is only observed for favorably decided cases, the conditional distributions cannot be estimated from observational data at all. It also conflicts provably with sufficiency and with independence whenever base rates differ.",
+   "domain": "observational fairness criteria: separation family",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Separation is the error-parity view: among cases that truly resolve each way, does the engine err at the same rate for every group. It is the right audit for projection quality across subgroups, and the selective-labels caveat means the audit is only as good as the outcome coverage behind it.",
+    "source_operator": "separation_criterion",
+    "telemetry": "true positive and false positive rates by group; outcome coverage rate (share of cases with observed Y); sample sizes per group-outcome cell"
+   }
+  },
+  {
+   "primitive_id": "bhn-16",
+   "name": "Sufficiency: the outcome is independent of the attribute given the score",
+   "verbatim_quote": "Definition 3. We say the random variables ( R, A, Y ) satisfy sufficiency if Y ⊥ A | R. We can display sufficiency as a graphical model as we did with separation before.",
+   "page": "Ch 3 Classification, printed p.60",
+   "latex": "Y \\perp A \\mid R",
+   "symbol_and_unit_ledger": "Y: true outcome in {0,1}. A: sensitive attribute, categorical. R: score in [0,1]. Conditioning on R: at any fixed score value, the realized outcome rate must be the same for every group; equivalent to parity of predictive values across the score range.",
+   "assumptions": "Scores are compared at equal values across groups, outcomes are observed across the score range (not only for accepted cases), and the score means the same thing for everyone is the normative demand being tested.",
+   "breakdown_regime": "Breaks under selective labels on the low-score side (outcomes for rejected cases are missing, so sufficiency there is untestable), and it is provably incompatible with separation when base rates differ and prediction is imperfect.",
+   "domain": "observational fairness criteria: sufficiency family",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sufficiency is the consumer-side criterion: a score of 0.7 must mean a 70 percent realized rate for every group, or the number is a different promise to different people. For published projections this is the criterion the audience experiences directly, so it anchors the public calibration report.",
+    "source_operator": "sufficiency_criterion",
+    "telemetry": "realized outcome rate by score band and group; maximum cross-group gap per band; coverage of low-score bands with observed outcomes"
+   }
+  },
+  {
+   "primitive_id": "bhn-17",
+   "name": "Calibration: at every score value r, the realized positive fraction equals r; group calibration strengthens it per group",
+   "verbatim_quote": "we say that a score R is calibrated with respect to an outcome variable Y if for all score values r ∈ [0, 1], we have P {Y = 1 | R = r } = r . This condition means that the set of all instances assigned a score value r has an r fraction of positive instances among them.",
+   "page": "Ch 3 Classification, printed p.61",
+   "latex": "P\\{Y=1 \\mid R=r\\} = r, \\qquad P\\{Y=1 \\mid R=r, A=a\\} = r \\ \\forall a",
+   "symbol_and_unit_ledger": "R: score in [0,1]. r: a specific score value, dimensionless probability. Y: binary outcome. A: sensitive attribute; a ranges over its groups. Both sides of each equation are probabilities in [0,1]; the second equation is calibration by group.",
+   "assumptions": "Enough instances land at or near each score value to estimate the realized fraction, and the evaluation population matches the deployment population. The book's Fact 2: calibration by group implies sufficiency, and sufficiency is only a monotone renaming away from it.",
+   "breakdown_regime": "Breaks as a fairness certificate in a specific way the book stresses: a constant predictor that always outputs the base rate is perfectly calibrated while saying nothing. Calibration is a sanity condition on meaning, not evidence of usefulness or of fair treatment.",
+   "domain": "calibration and score semantics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Calibration gives published numbers their meaning: a projection the audience reads as a probability must behave like one, overall and per group. Track it per group, and pair it with a sharpness or resolution measure so the constant-predictor degenerate case cannot pass silently.",
+    "source_operator": "group_calibration_check",
+    "telemetry": "realized rate versus stated score by band and group; calibration error summary; score distribution sharpness; band sample sizes"
+   }
+  },
+  {
+   "primitive_id": "bhn-18",
+   "name": "Impossibility: with different base rates and any false positives, separation and sufficiency cannot both hold",
+   "verbatim_quote": "Proposition 5. Assume Y is not independent of A and assume Y b is a binary classifier with nonzero false positive rate. Then, separation and sufficiency cannot both hold.",
+   "page": "Ch 3 Classification, printed p.67",
+   "latex": "\\mathrm{PPV}_a = \\frac{\\mathrm{TPR} \\cdot p_a}{\\mathrm{TPR} \\cdot p_a + \\mathrm{FPR} \\cdot (1 - p_a)}",
+   "symbol_and_unit_ledger": "PPV_a: positive predictive value in group a, a probability in [0,1]. TPR, FPR: true and false positive rates, shared across groups under separation. p_a: base rate P{Y=1|A=a} in group a, a probability. If p_a differs across groups and FPR is nonzero, PPV_a must differ, contradicting sufficiency.",
+   "assumptions": "Binary classifier, Y not independent of A (base rates differ across groups), nonzero false positive rate, and the positivity conditions the book states for the companion Proposition 4. The result is about the joint distribution, not about any particular algorithm.",
+   "breakdown_regime": "The incompatibility dissolves only at the edges: perfect prediction, equal base rates, or a degenerate classifier with zero false positives (or zero true positives). Outside those edges, choosing which criterion to satisfy is a normative decision that no amount of modeling can evade.",
+   "domain": "impossibility results for fairness criteria",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is a hard constraint on engine governance: when subgroup base rates differ, the audit dashboard cannot show all criteria green, and pretending otherwise means one criterion is being violated silently. Force an explicit, recorded choice of which criterion governs each surface, with the violated ones reported rather than hidden.",
+    "source_operator": "criterion_conflict_register",
+    "telemetry": "base rates by group; which criterion is governing per surface; measured violation of the non-governing criteria; date and rationale of the choice"
+   }
+  },
+  {
+   "primitive_id": "bhn-19",
+   "name": "Post-processing the Bayes optimal score for separation is optimal among all separation-satisfying classifiers (Hardt, Price, Srebro)",
+   "verbatim_quote": "If we postprocess the Bayes optimal score to achieve separation, then the resulting classifier will be optimal among all classifiers satisfying separation.",
+   "page": "Ch 3 Classification, printed p.64",
+   "latex": "\\hat{Y} = F(R, A), \\qquad R = E[Y \\mid X]",
+   "symbol_and_unit_ledger": "R: Bayes optimal score, a probability in [0,1]. F: possibly randomized post-processing function of the score and the group attribute A. Y-hat: derived classifier. Optimality is with respect to the same loss used to define R, among all classifiers satisfying separation.",
+   "assumptions": "The starting score is (near) Bayes optimal, group membership is available at decision time, and randomized derived classifiers are acceptable. The book notes the standard objection: the derived classifier uses group membership explicitly.",
+   "breakdown_regime": "Breaks when group membership cannot be used at decision time (legal or product constraints), when the base score is far from optimal so the guarantee is vacuous, and when the criterion to satisfy is independence rather than separation, where the construction differs.",
+   "domain": "fairness intervention points: post-processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Intervention placement is an engineering decision with a theorem attached: adjusting outputs downstream of a strong score dominates retraining under constraint, when the constraint is separation-like. Keep the base model unconstrained and excellent; put group-conditional corrections in an explicit, auditable post-processing layer.",
+    "source_operator": "postprocessing_layer_design",
+    "telemetry": "base score quality (loss, AUC); post-processing rule per group; utility delta versus in-training constraint; explicit-use-of-group flag for legal review"
+   }
+  },
+  {
+   "primitive_id": "bhn-20",
+   "name": "Credit scoring case study: profit ordering is single threshold above separation above independence (Federal Reserve data)",
+   "verbatim_quote": "'single threshold' achieves higher profit than 'separation', which in turn achieves higher profit than 'independence'.",
+   "page": "Ch 3 Classification, printed p.70",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The study uses Federal Reserve aggregate statistics from 2003: 174,047 individuals (White 133,165, Black 18,274, Hispanic 14,702, Asian 7,906) with a TransRisk-based score renormalized to 0 to 100 and performance defined as avoiding 90-plus days delinquency. The book's analysis prices a false positive at six times the reward of a true positive and declines to state absolute profit numbers because the profit function was rather arbitrary.",
+   "breakdown_regime": "The ordering is empirical, not a theorem: it depends on this score's group ROC curves, this profit function, and these base rates. With a different cost ratio or a score whose group curves cross differently, the gaps shrink or the ordering can change; the case study prices fairness criteria, it does not rank them for all settings.",
+   "domain": "cost of fairness criteria, measured",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Fairness criteria have measurable utility prices, and the prices are computable before deployment from group ROC curves and a stated profit or loss function. The engine should ship every fairness intervention with its measured price attached, so the governance choice in the impossibility register is made with the cost visible.",
+    "source_operator": "fairness_price_measurement",
+    "telemetry": "group ROC curves; loss or profit function used; utility under each criterion; false positive rate by group under each criterion (in the study, independence pushed the Black group's false positive rate to more than three times the Asian group's)"
+   }
+  },
+  {
+   "primitive_id": "bhn-21",
+   "name": "The middle view made policy: within-context ranking (Texas top 10 percent rule) discounts circumstances, keeps effort",
+   "verbatim_quote": "has a law guaranteeing admission to state-funded universities to all students who graduate in the top 10% of their high school class. This can be seen as in keeping with the middle view.",
+   "page": "Ch 4 Relative notions of fairness, printed p.84",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Roemer's framework partitions people into types defined by circumstances beyond their control, and compares effort within type. The Texas rule operationalizes type as the high school attended: rank within school stands in for effort quantile within circumstance.",
+   "breakdown_regime": "Breaks when the circumstance partition is wrong or gameable (families moving to weaker schools), when within-type ranking destroys information the decision legitimately needs, and when the relevant circumstance is continuous or unobserved so no clean types exist.",
+   "domain": "equality of opportunity: narrow, middle, and broad views",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Raw cross-context comparisons punish whoever had the harder context. Where the engine ranks entities drawn from unequal environments (players across teams and systems, teams across schedules), a within-context normalized view should be computed alongside the raw view, and divergences between the two should be surfaced rather than averaged away.",
+    "source_operator": "within_context_normalization",
+    "telemetry": "context partition used; raw versus within-context rank correlation; rank changes attributable to normalization; gaming indicators for the partition"
+   }
+  },
+  {
+   "primitive_id": "bhn-22",
+   "name": "Structural causal model: each variable is a function of its parents and an independent noise term",
+   "verbatim_quote": "Definition 4. A structural causal model M is given by a set of variables X1 , ..., Xd and corresponding assignments of the form Xi := f i ( Pi , Ui ), i = 1, ..., d . Here, Pi ⊆ { X1 , ..., Xd } is a subset of the variables that we call the parents of Xi . The random variables U1 , ..., Ud are called noise variables, which we require to be jointly independent.",
+   "page": "Ch 5 Causality, printed p.110",
+   "latex": "X_i := f_i(P_i, U_i), \\quad i = 1, \\dots, d, \\qquad U_1, \\dots, U_d \\text{ jointly independent}",
+   "symbol_and_unit_ledger": "X_i: endogenous variables, units inherited from the modeled quantities. P_i: parents of X_i, a subset of the other variables, forming the causal graph's incoming edges. f_i: structural function, deterministic given parents and noise. U_i: exogenous noise variables, jointly independent by assumption, units matched to X_i.",
+   "assumptions": "The variable set is closed enough that all common causes are either included as variables or absorbed into independent noise, the graph is acyclic, and each structural function is stable under interventions on other variables (modularity).",
+   "breakdown_regime": "Breaks under unobserved confounding (correlated noise), feedback cycles that violate acyclicity at the modeled time grain, and ontological instability: when the variables themselves are social constructs whose meaning shifts with the intervention, the functions f_i do not stay put.",
+   "domain": "causal modeling formalism",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's situational layer should be stored as an explicit graph with named parents per variable, not as an unstructured feature bag. The graph is what makes intervention questions (what changes if this player is out, if this coach leaves) well posed instead of matters of correlation vibes.",
+    "source_operator": "structural_model_registry",
+    "telemetry": "variable inventory; parent sets; noise-independence justifications; known unobserved confounders list; graph version history"
+   }
+  },
+  {
+   "primitive_id": "bhn-23",
+   "name": "Average treatment effect: the expected outcome difference between doing X:=1 and doing X:=0",
+   "verbatim_quote": "This quantity is called the average treatment effect. It tells us how much treatment (action X := 1) increases the expectation of Y relative to no treatment (action X := 0). Causal effects are population quantities.",
+   "page": "Ch 5 Causality, printed p.114",
+   "latex": "\\mathrm{ATE} = E^{M[X := 1]}[Y] - E^{M[X := 0]}[Y]",
+   "symbol_and_unit_ledger": "M[X:=x]: the structural model after substituting the constant x for X and removing X's incoming edges. E with the model superscript: expectation under the intervened distribution. Y: outcome, units of the modeled quantity. ATE: same units as Y; a population average, not an individual effect.",
+   "assumptions": "The structural model is correct, the intervention is well defined (a manipulation that sets X while leaving other mechanisms intact), and the population over which the expectation is taken is the population of interest.",
+   "breakdown_regime": "Breaks under interference between units (one unit's treatment changes another's outcome, violating the stable unit treatment value assumption), under ill-defined interventions on non-manipulable attributes, and when effect heterogeneity is the real question, since the average can hide opposite-signed effects across subgroups.",
+   "domain": "interventional causal inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every what-if the engine publishes should be an ATE-style object: the intervention named, the population named, the expectation taken under the intervened model rather than under a conditioned observational slice. Conditioning on X=x in historical data is not the same number, and the book's Berkeley case is the standing warning.",
+    "source_operator": "intervention_effect_estimator",
+    "telemetry": "intervention definition; target population; identification strategy used; subgroup effect spread around the average; interference risks"
+   }
+  },
+  {
+   "primitive_id": "bhn-24",
+   "name": "The adjustment formula: a do-effect computed from observational conditionals by averaging over the parents",
+   "verbatim_quote": "This formula is called the adjustment formula. It gives us one way of estimating the effect of a do-intervention in terms of conditional probabilities.",
+   "page": "Ch 5 Causality, printed p.115",
+   "latex": "P\\{Y=y \\mid do(X:=x)\\} = \\sum_z P\\{Y=y \\mid X=x, PA=z\\} \\, P\\{PA=z\\}",
+   "symbol_and_unit_ledger": "PA: the parent set of X in the causal graph, with values z. P{Y=y|X=x, PA=z}: observational conditional probability within a parent stratum, dimensionless. P{PA=z}: marginal probability of the stratum. The sum is over all parent configurations; result is a probability in [0,1].",
+   "assumptions": "The parent set satisfies the backdoor criterion relative to X and Y (it blocks all non-causal paths and contains no descendants of X), all parent configurations have positive probability, and the causal graph is right about the parent structure.",
+   "breakdown_regime": "Breaks under unobserved confounding, where no observed adjustment set exists and the effect is unidentifiable from observational data at any sample size. Also breaks under positivity violations: strata where X=x never occurs contribute no information and the formula silently extrapolates.",
+   "domain": "identification of causal effects",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Adjustment is the disciplined version of controlling for variables: the graph decides what belongs in the control set, and controlling for the wrong node (a mediator, a collider) manufactures bias instead of removing it. Engine analyses should name their adjustment set and the graph that justifies it, every time.",
+    "source_operator": "backdoor_adjustment",
+    "telemetry": "adjustment set per analysis; graph version; stratum sample sizes and positivity flags; sensitivity to alternative adjustment sets"
+   }
+  },
+  {
+   "primitive_id": "bhn-25",
+   "name": "Counterfactual fairness: a predictor is fair if it is invariant to counterfactually changing A; using only non-descendants of A suffices",
+   "verbatim_quote": "to only use non-descendants of A in the causal graph. This is analogous to the statistical condition of only using features that are independent of A.",
+   "page": "Ch 5 Causality, printed p.129",
+   "latex": "\\hat{Y}_{A := a}(u) = \\hat{Y}_{A := a'}(u) \\quad \\forall a, a', u",
+   "symbol_and_unit_ledger": "Y-hat with subscript A:=a: the counterfactual prediction for unit u had the sensitive attribute been set to a, computed by abduction, action, and prediction in the structural model. u: the unit's inferred noise terms. Equality must hold for all attribute values and all units.",
+   "assumptions": "A full structural causal model is available and trusted, including which variables are descendants of A. The book's own caution applies: the construction inherits every validity problem of the causal model, and attributes like race resist the manipulation framing the notation suggests.",
+   "breakdown_regime": "Breaks when the causal model is wrong about A's descendants (the Harvard admissions dispute in the same chapter turns exactly on which variables belong in the model), and when A is not manipulable even in principle, where the counterfactual may be undefined rather than merely unknown.",
+   "domain": "counterfactual fairness criteria",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The operational core is a feature-provenance rule: for any attribute the engine must not effectively use, features causally downstream of it are contaminated channels, while non-descendants are clean. Maintain a descendant map for sensitive attributes in the feature store; leakage audits should test the descendant channels specifically.",
+    "source_operator": "descendant_channel_audit",
+    "telemetry": "descendant map per sensitive attribute; features flagged as descendants; predictor output shift under attribute counterfactuals on a test sample"
+   }
+  },
+  {
+   "primitive_id": "bhn-26",
+   "name": "Disparate treatment: intentional discrimination, adjudicated through a burden-shifting framework",
+   "verbatim_quote": "Disparate treatment refers to intentional discrimination and roughly matches the average person's conception of discriminatory behavior. It subsumes the straightforward case described in the previous paragraph.",
+   "page": "Ch 6 Anti-discrimination law, printed p.151",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "United States employment law under Title VII is the book's running example. The plaintiff first establishes a prima facie case (protected class, qualified, denied, position filled by someone outside the class), the employer must then produce a legitimate nondiscriminatory reason, and the plaintiff must then show the reason is pretext.",
+   "breakdown_regime": "Breaks as an audit concept for algorithmic systems because intent has no obvious locus in a learned model: the doctrine's reasoning about what the decision maker would have done with a different attribute leans on attribute-flipping counterfactuals that the book's causality chapter shows are technically brittle.",
+   "domain": "legal doctrine: process-based discrimination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Keep two separate compliance questions for any automated surface: was any protected attribute (or its descendant channel) used as an input, which is the treatment question; and do outcomes differ disproportionately without justification, which is the impact question. Conflating them produces audits that answer neither.",
+    "source_operator": "treatment_vs_impact_split",
+    "telemetry": "input feature inventory with protected-attribute flags; decision logs sufficient to reconstruct individual decisions; stated reasons per adverse decision class"
+   }
+  },
+  {
+   "primitive_id": "bhn-27",
+   "name": "Disparate impact: a facially neutral practice with disproportionate effect is unlawful unless justified and unavoidable",
+   "verbatim_quote": "disparate impact must be both unjustified and avoidable. This is again operationalized through a burden-shifting framework. First, the plaintiff must establish that there is a disproportionate difference in selection rates between different groups.",
+   "page": "Ch 6 Anti-discrimination law, printed p.152",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The burden shifts in three steps: the plaintiff shows a disproportionate difference in selection rates between groups; the decision maker may show a business justification for the practice; the plaintiff may then show an alternative practice that achieves the same aim with less disparity. The EEOC's four-fifths guideline (a selection-rate difference beyond roughly 20 percent) is a guideline, not a strict rule.",
+   "breakdown_regime": "Breaks down where no less-discriminatory alternative exists at comparable effectiveness (the practice is justified and unavoidable), and it has no equivalent against state actors under the Equal Protection Clause, where discriminatory purpose must be shown. Statistical significance fights replace substance when samples are small.",
+   "domain": "legal doctrine: outcome-based discrimination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The three-step structure is a ready-made audit protocol for engine surfaces: measure the group selection-rate gap, require a written justification tied to the actual goal, then run an explicit search for an alternative configuration with a smaller gap at comparable quality. The alternative search is the step most internal audits skip.",
+    "source_operator": "disparate_impact_protocol",
+    "telemetry": "selection rates by group and rate ratios; justification document per flagged practice; alternative configurations evaluated with their quality and gap"
+   }
+  },
+  {
+   "primitive_id": "bhn-28",
+   "name": "Audit studies test blindness: matched testers differing only in the signaled attribute, run as field experiments",
+   "verbatim_quote": "In our view, most audit studies, including the ones we'll describe, are best seen as attempts to test blindness: whether a decision maker directly uses a sensitive attribute.",
+   "page": "Ch 7 Testing discrimination, printed p.172",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The researcher can signal the attribute (names on resumes, tester appearance) while holding everything else constant by script and training. What is measured is the effect of the signal as perceived by the decision maker, which the book stresses is not automatically a counterfactual in a valid causal model of the attribute itself.",
+   "breakdown_regime": "Breaks when the attribute cannot be signaled without changing its descendants (accent, attire, behavior), forcing contested design choices about what counts as part of the attribute; the book notes the thin-conception design yields lower bounds on discrimination. It also cannot see mechanisms upstream of the tested decision point.",
+   "domain": "experimental discrimination testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The matched-pair design ports directly to model auditing: submit paired inputs that differ only in a signaled attribute or its proxies and compare outputs. Treat the result as a blindness test with a lower-bound interpretation, and pair it with outcome-level tests, because passing blindness says nothing about disparate impact through proxies.",
+    "source_operator": "matched_pair_blindness_test",
+    "telemetry": "pair count; attribute signaled and signaling channel; output difference distribution across pairs; channels deliberately held constant"
+   }
+  },
+  {
+   "primitive_id": "bhn-29",
+   "name": "Bertrand and Mullainathan: White-sounding names drew 50 percent more callbacks, worth eight years of experience",
+   "verbatim_quote": "By creating pairs of resumes that were identical except for the name, they found that White names were 50% more likely to result in a callback than Black names. The magnitude of the effect was equivalent to an additional eight years of experience on a resume.",
+   "page": "Ch 7 Testing discrimination, printed p.174",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Names signal race to employers (Emily and Greg versus Lakisha and Jamal in the study), resumes within a pair are identical apart from the name, and callback is the measured decision. The book records the standing interpretive debates: name familiarity and inferred socioeconomic status as rival explanations the authors argue against.",
+   "breakdown_regime": "Breaks as a measurement when the signal is weak or ambiguous (employers may not register the name), and the effect size does not transport across labor markets, decades, or decision types. The study measures the callback margin only, not hiring, pay, or retention.",
+   "domain": "empirical discrimination measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Effect sizes should be reported in decision-relevant units, the way this study converts a callback gap into years of experience. When the engine's audits find a disparity, translate it into the units the decision actually trades in, so its size can be weighed against other model changes competing for the same fix budget.",
+    "source_operator": "effect_size_translation",
+    "telemetry": "raw disparity; translated equivalent in decision units; decision margin measured; rival explanations considered and their status"
+   }
+  },
+  {
+   "primitive_id": "bhn-30",
+   "name": "Infra-marginality: outcome tests aggregate far from the margin, so predictive parity can fail while sufficiency holds",
+   "verbatim_quote": "This phenomenon is called infra-marginality, i.e., the measurement is aggregated over samples that are far from the decision threshold (margin). If we are indeed interested in testing sufficiency (equivalently, whether the bank applied the same threshold to all groups",
+   "page": "Ch 7 Testing discrimination, printed p.181",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The outcome test compares realized outcome rates among favorably classified members of each group. The book's counterexample runs a single Bayes optimal threshold for everyone: because the score distributions differ in shape, the accepted pools sit at different average distances from the threshold, and their outcome rates differ without any difference in the bar applied.",
+   "breakdown_regime": "The fallacy dissolves only with score access: the threshold test restores a margin-focused comparison but requires features and a model of the joint distribution, giving up the outcome test's model-free character. Without scores, infra-marginality is not correctable from outcomes alone.",
+   "domain": "validity of outcome-based fairness tests",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Never read a group gap in average outcomes among accepted cases as evidence of different standards. The engine's fairness reports must condition near the decision margin (score bands close to the threshold) when the question is whether the same bar was applied, and reserve pooled comparisons for questions about total impact.",
+    "source_operator": "margin_conditioned_comparison",
+    "telemetry": "score band definitions around the threshold; per-band outcome rates by group; distance-to-threshold distribution of accepted cases by group"
+   }
+  },
+  {
+   "primitive_id": "bhn-31",
+   "name": "Selective labels: outcomes are observed only for favorably decided cases, biasing every downstream evaluation",
+   "verbatim_quote": "the selective labels problem is the issue of selection bias in evaluating decision making systems due to the fact that the very selection process we wish to study determines the sample of instances that are observed. It is not specific to the issue of testing separation or error rates: it affects the measurement of other fundamental metrics such as accuracy as well. It is a serious and often overlooked issue",
+   "page": "Ch 7 Testing discrimination, printed p.182",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The decision gates outcome observation: loans reveal repayment only when granted, hires reveal performance only when hired. The missingness is caused by the prediction itself, so it is not missing at random and cannot be fixed by reweighting the observed sample alone.",
+   "breakdown_regime": "Breaks only where outcome observation is decoupled from the decision (randomized approvals, outcomes that materialize regardless of the decision, or domains like content moderation where the label is a judgment rather than a future event). The book notes deliberate experimentation is the clean fix and is often ethically or practically blocked.",
+   "domain": "evaluation validity and selection bias",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine evaluation inherits this: projections are graded only on events that happened and were recorded, and the recording is downstream of past outputs and attention. Evaluation reports must state the outcome coverage rate and treat unobserved regions of the input space as unknown, not as successes.",
+    "source_operator": "selective_labels_coverage",
+    "telemetry": "outcome coverage rate overall and by score band; share of decisions with no observable outcome; exploration or randomization budget if any"
+   }
+  },
+  {
+   "primitive_id": "bhn-32",
+   "name": "Statistical discrimination: optimal prediction using the protected attribute when group distributions differ and signals are imperfect",
+   "verbatim_quote": "A statistical discriminator, in contrast, aims to make optimal predictions about the target variable using all available information, including the protected attribute. This theory was developed in the early 1970s by Edmund Phelps and Kenneth Arrow among others.",
+   "page": "Ch 7 Testing discrimination, printed p.184",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Two conditions from the book's simplest model: the target variable's distribution differs by group, and observable characteristics do not perfectly predict the target. Under both, the accuracy-optimal prediction differs by group even for individuals with identical relevant characteristics. Taste-based discrimination (Becker, 1957) is the contrasting animus model.",
+   "breakdown_regime": "Breaks as an explanation when the group difference in the target is itself produced by earlier discrimination (the model then launders upstream injustice into apparent optimality), and the taste-versus-statistical distinction is often empirically inseparable without knowing the decision maker's full information set.",
+   "domain": "mechanisms of discrimination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A learned model is a statistical discriminator by construction whenever group-conditional distributions differ and it can see the attribute or its encodings. That is not an accusation; it is the default physics of optimization, which is why the fairness question must be posed at the level of criteria and constraints, not at the level of whether the model means well.",
+    "source_operator": "statistical_discrimination_default",
+    "telemetry": "group-conditional target distributions; attribute visibility (direct and via encodings); accuracy gain attributable to group information"
+   }
+  },
+  {
+   "primitive_id": "bhn-33",
+   "name": "Uber earnings gap decomposition: a 7 percent hourly gap fully routed through experience, location, and speed, with a 2.7x participation gap beside it",
+   "verbatim_quote": "female drivers earn 7% less on Uber per active hour than male drivers do. They conclude that this gap can be explained by three factors: gender differences in drivers' choices of where to drive, men's greater experience on the platform, and men's tendency to drive faster. They find that customer discrimination and algorithmic discrimination do not contribute to the gap.",
+   "page": "Ch 8 A broader view, printed p.205",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "The study's decomposition (Gelbach) attributes the hourly earnings gap to three paths: where drivers choose to drive, men's greater platform experience, and men's higher driving speed. The book accepts the technical claims arguendo and attacks the interpretation: the study's narrow definition counts only rider cancellation as discrimination and ignores differential dropout.",
+   "breakdown_regime": "Breaks as a fairness clearance precisely where it looks strongest: a gap fully explained by mediators says nothing about whether the mediators themselves are discriminatory (safety-driven location choice, harassment-driven dropout). Decomposition answers where the gap flows, never whether it is just.",
+   "domain": "mechanism decomposition and structural discrimination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Explained is not excused. When an engine disparity decomposes cleanly into intermediate variables, the audit moves one level up: each mediator gets its own fairness question. The participation margin also matters: a small per-event gap beside a large participation gap means the headline metric is looking at the smaller harm.",
+    "source_operator": "mediator_level_audit",
+    "telemetry": "gap decomposition by path; per-mediator disparity measures; participation or coverage rates by group alongside per-event rates"
+   }
+  },
+  {
+   "primitive_id": "bhn-34",
+   "name": "Representational harms: systems reinforce the subordination of groups, and the harm can be inherent in the dataset itself",
+   "verbatim_quote": "Representational harms occur when systems reinforce the subordination of some groups along the lines of identity. Representational harms could be downstream harms - such as when models apply offensive labels to people from some groups - but they could be inherent in the dataset.",
+   "page": "Ch 9 Datasets, printed p.251",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Distinct from downstream harms (bad models trained on bad data): a dataset can carry the harm in its own labels and categories, as with ImageNet's slurs and offensive categories inherited from WordNet and non-consensual images. The harm does not require any particular model to be trained.",
+   "breakdown_regime": "Breaks as a category when the contested label is the task itself rather than a stereotype attached to it; the line between an offensive categorization and a legitimately predictive one is a normative judgment that dataset documentation can expose but not settle.",
+   "domain": "data harms taxonomy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dataset review needs two separate passes: a downstream pass (what will models trained on this learn) and an inherent pass (what do the labels, categories, and collection circumstances themselves say and do). The inherent pass reads the schema and label inventory directly, before any training run exists to blame.",
+    "source_operator": "dataset_inherent_harm_review",
+    "telemetry": "label and category inventory; provenance and consent status per source; stereotype association checks; documentation completeness (datasheet fields)"
+   }
+  },
+  {
+   "primitive_id": "bhn-35",
+   "name": "Separate benchmark datasets from production datasets: the same data cannot serve both masters when harms are found",
+   "verbatim_quote": "Better tradeoffs are possible if there is a clear separation between scientific benchmarks and production-oriented datasets. In cases where the same dataset can be potentially useful for both purposes, creators should consider making two versions or forks of the data",
+   "page": "Ch 9 Datasets, printed p.252",
+   "latex": "",
+   "symbol_and_unit_ledger": "",
+   "assumptions": "Benchmarks derive most scientific value from relative model rankings and need long-term stability to stay comparable; production data needs the freedom to be modified when harms surface. One dataset asked to do both will either freeze known harms in place or break comparability when fixed.",
+   "breakdown_regime": "Breaks when the benchmark is the production distribution by definition (live evaluation on real traffic), and for small fields where maintaining two forks exceeds available curation capacity. The book's fallback is terms of use that prohibit production use of the benchmark version.",
+   "domain": "dataset governance and benchmarking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's evaluation sets and training corpora should be separate artifacts with separate change rules: evaluation sets change rarely and version-pin every reported number, training data changes freely as problems are found. A harm fix must never silently rewrite the yardstick that past results were measured with.",
+    "source_operator": "benchmark_production_separation",
+    "telemetry": "dataset role registry (benchmark versus production); version pins on reported metrics; change log per role; terms governing cross-role use"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "bhn-trace-1",
+   "think": "Start from the book's architecture, because the architecture is the argument. Barocas, Hardt, and Narayanan refuse to begin with metrics. They begin with the machine learning loop and with measurement: a target variable is chosen, data are collected under an existing social order, a model is fit, decisions are taken, and the decisions change the world that the next round of data describes. Only after legitimacy (should this system exist, and who says so) and after the philosophy of equality of opportunity do they allow the famous criteria onto the stage, and when the criteria arrive they arrive as three families of conditional independence statements about one joint distribution: independence of score and attribute, separation given the outcome, sufficiency given the score. The decisive move is to prove that these are not three dialects of one idea. With different base rates and imperfect prediction they are mutually incompatible, and the incompatibility is arithmetic, not political: the positive predictive value formula forces a choice. That single result reorganizes everything downstream. If no classifier can satisfy all criteria at once, then fairness work is not optimization but governance: someone must choose which criterion governs which surface, record the choice, and report the criteria being violated instead of hiding them. The causality chapter then explains why the observational criteria, however carefully chosen, cannot finish the job. They are properties of a joint distribution, and the same joint distribution is consistent with many causal structures, some discriminatory and some not. Berkeley admissions is the canonical demonstration: the aggregate gap reverses within departments, and whether the department pathway counts as discrimination is a question about the graph and about social meaning, not about the numbers. The legal chapters add a third discipline: the law cares about process, intent, and justification in ways that map only partially onto any statistical criterion, and its burden-shifting structure is itself a usable audit protocol. The testing chapter closes the loop back to measurement: audit studies test blindness, outcome tests are corrupted by infra-marginality, separation tests are corrupted by selective labels, and every test answers a narrower question than its users typically claim. So the extraction strategy for this book is to take the primitives as a stack: construct validity at the bottom, then the decision-theoretic core (threshold rule, risk score, calibration), then the three criteria and their impossibility, then causal identification, then legal and empirical test design. Each layer constrains the ones above it, and the reasoning traces record where a higher layer's demand is vetoed by a lower layer's fact.",
+   "retrocausal_genealogy": "The genealogy runs backward as much as forward. The 2016 impossibility results retroactively changed the meaning of work from 2011 and 2012: demographic parity and individual fairness stopped reading as candidate definitions of fairness and became positions in a forced trade-off. The COMPAS controversy, which the book treats through the ProPublica false positive analysis, is the public moment where that trade-off became undeniable, because both sides were arithmetically correct about different criteria. Further back, the legal doctrine of disparate impact from Griggs in 1971 already contained the seed of the independence family, and the EEOC's four-fifths guideline survives inside the book as the ratio relaxation of independence with slack set to 0.2. The causal turn of the last decade then reinterpreted the older observational criteria as shadows of structural questions, and counterfactual fairness reinterpreted blindness, the oldest legal intuition, as an invariance property inside a structural model. Each generation did not replace the previous one; it revealed which question the previous one had actually been answering.",
+   "theory_of_mind": "The authors write for machine learning practitioners who arrive believing fairness is a metric to add to a dashboard, and their pedagogy is designed to dismantle that belief in stages. They assume the reader trusts formalism, so they meet the reader inside the formalism first, proving the impossibility results with the reader's own tools before asking for any normative commitment. They also model the decision maker as an institution that needs legitimacy, not merely accuracy, which is why the legitimacy chapter precedes the mathematics. A second modeled mind is the regulator or judge, who thinks in process and precedent and will not be persuaded by a criterion satisfaction report. A third is the affected decision subject, whose questions are about reasons, recourse, and whether someone like them was treated consistently. The book's refusal to crown a single criterion is itself a theory-of-mind move: it predicts that any single crowned criterion would be gamed, litigated, and Goodharted, and it tries to leave the reader with judgment instead of a checkbox.",
+   "cross_layer_veto": "The layers veto each other in specific, named places. Mathematics vetoes law: the disparate treatment doctrine's attribute-flipping counterfactual is not a valid counterfactual once the attribute has descendants, so a legally standard test can be causally meaningless. Law vetoes mathematics: post-processing that achieves separation optimally does so by using group membership explicitly, which is exactly what disparate treatment doctrine is built to suspect, so the optimal statistical fix can be the legally riskiest object in the system. Measurement vetoes both: if the target variable is a bad construct, if arrests stand in for crime or cost stands in for need, then satisfying any criterion on the measured variables certifies fairness with respect to a fiction. Causality vetoes the observational layer: identical joint distributions with different graphs demand different interventions, so a clean criteria report cannot distinguish a system that needs rescoring from a system that needs restructuring. Any deployment review that lets one layer overrule the others silently will produce exactly the failure that layer was built to catch."
+  },
+  {
+   "trace_id": "bhn-trace-2",
+   "think": "The second pass through the book reads it as a manual for evaluating any predictive system that ranks or scores people and things, which is the situation of a reasoning engine that publishes projections. The first operational lesson is the construct registry. Every predicted quantity in the book that goes wrong goes wrong at the target: cost for need, arrests for crime, test scores for performance. An engine that cannot state, for each output, what real quantity it stands for and what observable was actually used has not yet reached the starting line of the fairness discussion, or of the accuracy discussion either. The second lesson is that the score and the threshold are different artifacts with different owners. The threshold rule and the Bayes score belong to modeling; the threshold value belongs to policy, because it encodes the loss ratio and, under any fairness constraint, the chosen criterion. Keeping them separate is what makes the impossibility result manageable in practice: the model can stay excellent while the governance layer moves thresholds, applies post-processing, and records which criterion each move serves. The third lesson is calibration as semantics. A published number that audiences read as a probability incurs a debt: at every value, for every group, the realized frequency must match. The book's warning that a constant predictor is perfectly calibrated pairs with this: calibration reporting must travel with sharpness and with per-group curves, or the report can be passed by a model that says nothing. The fourth lesson concerns evaluation honesty. Selective labels mean the engine's grades are computed on a sample its own past decisions selected; infra-marginality means pooled outcome gaps cannot be read as evidence about the bar that was applied; feedback loops mean today's evaluation distribution is partly a product of yesterday's publications. An evaluation harness built on this book therefore reports coverage, conditions near the margin, and tracks trajectories over deployment rounds rather than certifying a single snapshot. The fifth lesson is dataset governance: separate the yardstick from the fuel. Benchmark sets must be stable enough that yesterday's reported numbers remain interpretable, while production data must be free to change the moment a harm is found, and confusing the two either freezes harms in place or quietly rewrites history. Taken together, the book specifies less a fairness module than an operating discipline: name your constructs, separate scores from thresholds, choose criteria explicitly and publish the violations, identify effects causally before intervening, and audit with tests whose known failure modes are printed on the label. The sixth lesson is about who bears the cost, a question the relative fairness chapter insists is part of the technical work rather than an afterthought: every criterion choice redistributes errors among groups and between the institution and its subjects, and the credit scoring case study shows those redistributions can be measured in advance. An engine that publishes its numbers without publishing its error distribution has hidden its real policy inside its arithmetic.",
+   "retrocausal_genealogy": "Read retrocausally, the later chapters explain the earlier ones' data. The datasets chapter explains why the classification chapter's clean joint distribution is a fiction in practice: the (X, A, R, Y) table arrives pre-filtered by collection decisions, benchmark reuse, and labeling labor that the formalism never sees. The broader-view chapter explains the Uber decomposition's limits: a gap that decomposes entirely into mediators looks solved until structural analysis asks why the mediators are group-patterned in the first place, and the participation gap, a factor of 2.7 against a 7 percent hourly gap, shows the headline metric was aimed at the smaller harm. The testing chapter retroactively disciplines the legal chapters: doctrines built for human decision makers assume an intent and a process that can be interrogated, and the audit-study literature shows how much design work is needed to make even the simplest blindness question answerable. And the legitimacy chapter, placed second, reads differently after the impossibility results: choosing a criterion is revealed as an exercise of institutional power, which is precisely why it cannot be delegated to a default in a software library.",
+   "theory_of_mind": "The book models its practitioner reader as someone who will reach for the nearest implementable criterion, so it repeatedly shows the implementation succeeding and the goal failing: unawareness defeated by redundant encodings, outcome tests defeated by infra-marginality, calibration satisfied by a constant predictor. It models the institution as an actor that optimizes what it can defend, which is why the burden-shifting protocol matters: each side must produce the next artifact, a prima facie gap, a justification, a less discriminatory alternative. It models affected people as reason-demanding agents who can also adapt strategically, hence the gaming analysis: any published criterion becomes a target, and feature choice must anticipate the response. Finally it models the research community itself, in the datasets chapter, as an institution whose benchmarks quietly govern what counts as progress, and whose convenience choices become production harms when the same artifacts are reused downstream. Designing for all four minds at once is the book's actual engineering specification.",
+   "cross_layer_veto": "Cross-layer vetoes for an operating engine, stated as rules. The measurement layer vetoes the criteria layer: no fairness sign-off is valid for a target whose construct audit has not been run, because criteria computed on a proxy certify the proxy. The causal layer vetoes the intervention layer: no mediator may be controlled, adjusted, or post-processed away until the graph says whether it is a confounder, a mediator of discrimination, or a collider, since the same variable can be any of the three and each demands the opposite handling. The legal layer vetoes the optimization layer: a configuration that wins on utility while using a protected attribute or its descendant channels carries a distinct risk class and needs its own review, regardless of its score. The evaluation layer vetoes the publication layer: where outcome coverage is too thin to test separation or sufficiency, the honest output is an unknown, and publishing a confident number anyway is the failure the selective labels analysis exists to prevent. And the governance layer vetoes all of them jointly when legitimacy fails: a system that should not be making the decision does not become acceptable by passing every statistical test."
+  }
+ ],
+ "universal_lens": "Every predictive system is a chain of choices disguised as a pipeline: a construct is invented and given a proxy, a score is fit to the proxy, a threshold converts the score into action, and the action reshapes the population the next score is fit on. Fairness failures can enter at every link, and the links are governed by different disciplines: measurement theory at the construct, decision theory at the score and threshold, causal inference at the intervention, law at the process, and sociology at the structure the whole chain sits inside. The book's universal claim is that no single-link audit can certify the chain, because the criteria that audits use are provably incompatible with each other and blind to mechanism. The transferable discipline is to make each link's choice explicit, priced, and revisable: name the construct, separate the score from the threshold, declare the governing criterion and report the violated ones, identify effects before intervening, and keep the benchmark that judges the system separate from the data that feeds it.",
+ "gsi_mapping": "For the institute side, this book is core curriculum and core method. As curriculum, it supplies the shared vocabulary (independence, separation, sufficiency, calibration, selective labels, infra-marginality, counterfactual fairness) without which cross-team discussion of model behavior degenerates into competing intuitions. As method, it supplies four reusable research instruments: the construct audit for any new dataset or target, the criterion conflict register for any system that reports subgroup performance, the adjustment-set discipline for any causal claim, and the benchmark-versus-production separation for the institute's own evaluation assets. Its impossibility results also set the institute's publication standard: any paper or report claiming a system is fair must name the criterion, the base rates, and the criteria knowingly left unsatisfied, and any causal claim must name its graph and its adjustment set. The legal chapters give the institute its external literacy: disparate treatment and disparate impact are different questions with different evidence, and the burden-shifting sequence is the template for responding to either.",
+ "gse_mapping": "For the prediction and reasoning engine, the book's value is operational discipline rather than any single formula. First, a construct registry for every published projection: what quantity is being projected, what observable stands in for it, and where the two are known to diverge. Second, calibration with semantics: published probabilities must realize at their stated rates overall and within major subgroups, reported with sharpness so a timid model cannot pass by predicting near the base rate everywhere. Third, subgroup error parity treated as a model quality audit under the separation family, with the selective labels caveat printed on every evaluation: projections are only graded where outcomes were actually observed, and coverage is reported beside accuracy. Fourth, feedback awareness: published projections change audience behavior and future data, so evaluation tracks trajectories across publication rounds, not snapshots. Fifth, governance of trade-offs: where subgroup base rates differ, the impossibility result guarantees that not every fairness diagnostic can be green at once, so the engine records which diagnostic governs each surface and reports the rest instead of hiding them."
+}

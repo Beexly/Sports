@@ -1,6 +1,6 @@
 {
   "schema_version": "gse_python_intelligence_and_datasets_v2.1",
-  "generated_at_utc": "2026-11-13T19:19:13.074349+00:00",
+  "generated_at_utc": "2026-11-15T04:59:27.106939+00:00",
   "datasets_connected_count": 33,
   "datasets_report": {
     "ftn_charting_2026": {
@@ -768,16 +768,16 @@
         "qb_questionable_conditional_dropoff": 0.1159,
         "team_load_scaling": {
           "JAX": {
-            "target_hhi": 0.1428,
-            "effective_n": 7.0,
-            "load_multiplier": 1.0285,
-            "scaled_qb_q_dropoff": 0.0974
+            "target_hhi": 0.1525,
+            "effective_n": 6.56,
+            "load_multiplier": 1.0629,
+            "scaled_qb_q_dropoff": 0.1007
           },
           "BAL": {
-            "target_hhi": 0.1472,
-            "effective_n": 6.8,
-            "load_multiplier": 1.044,
-            "scaled_qb_q_dropoff": 0.0989
+            "target_hhi": 0.1467,
+            "effective_n": 6.82,
+            "load_multiplier": 1.0425,
+            "scaled_qb_q_dropoff": 0.0987
           },
           "DET_reference": {
             "target_hhi": 0.159,
@@ -1333,16 +1333,16 @@
       "qb_questionable_conditional_dropoff": 0.1159,
       "team_load_scaling": {
         "JAX": {
-          "target_hhi": 0.1428,
-          "effective_n": 7.0,
-          "load_multiplier": 1.0285,
-          "scaled_qb_q_dropoff": 0.0974
+          "target_hhi": 0.1525,
+          "effective_n": 6.56,
+          "load_multiplier": 1.0629,
+          "scaled_qb_q_dropoff": 0.1007
         },
         "BAL": {
-          "target_hhi": 0.1472,
-          "effective_n": 6.8,
-          "load_multiplier": 1.044,
-          "scaled_qb_q_dropoff": 0.0989
+          "target_hhi": 0.1467,
+          "effective_n": 6.82,
+          "load_multiplier": 1.0425,
+          "scaled_qb_q_dropoff": 0.0987
         },
         "DET_reference": {
           "target_hhi": 0.159,
@@ -1692,8 +1692,8 @@
     }
   },
   "intelligence_31_subpackages": {
-    "subpackages_connected_count": 81,
-    "total_intelligence_python_files": 742,
+    "subpackages_connected_count": 84,
+    "total_intelligence_python_files": 804,
     "subpackage_inventory": {
       "adjustment-layer": {
         "python_files": 5,
@@ -1714,9 +1714,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "calibration": {
-        "python_files": 2,
-        "top_level_functions": 3,
-        "top_level_classes": 1,
+        "python_files": 3,
+        "top_level_functions": 13,
+        "top_level_classes": 7,
         "status": "CONNECTED_AND_AUDITED"
       },
       "cloud_and_enterprise_skills": {
@@ -1797,6 +1797,12 @@
         "top_level_classes": 1,
         "status": "CONNECTED_AND_AUDITED"
       },
+      "decisions": {
+        "python_files": 2,
+        "top_level_functions": 7,
+        "top_level_classes": 3,
+        "status": "CONNECTED_AND_AUDITED"
+      },
       "dfs": {
         "python_files": 12,
         "top_level_functions": 62,
@@ -1849,6 +1855,12 @@
         "python_files": 2,
         "top_level_functions": 1,
         "top_level_classes": 0,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "foundry_bridge": {
+        "python_files": 13,
+        "top_level_functions": 137,
+        "top_level_classes": 3,
         "status": "CONNECTED_AND_AUDITED"
       },
       "funnel": {
@@ -1990,9 +2002,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "ops": {
-        "python_files": 7,
-        "top_level_functions": 39,
-        "top_level_classes": 4,
+        "python_files": 12,
+        "top_level_functions": 77,
+        "top_level_classes": 6,
         "status": "CONNECTED_AND_AUDITED"
       },
       "optimizer": {
@@ -2026,9 +2038,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "providers": {
-        "python_files": 6,
-        "top_level_functions": 17,
-        "top_level_classes": 1,
+        "python_files": 7,
+        "top_level_functions": 29,
+        "top_level_classes": 5,
         "status": "CONNECTED_AND_AUDITED"
       },
       "qb": {
@@ -2146,9 +2158,9 @@
         "status": "CONNECTED_AND_AUDITED"
       },
       "tests": {
-        "python_files": 36,
-        "top_level_functions": 142,
-        "top_level_classes": 90,
+        "python_files": 53,
+        "top_level_functions": 212,
+        "top_level_classes": 94,
         "status": "CONNECTED_AND_AUDITED"
       },
       "trends": {
@@ -2179,6 +2191,12 @@
         "python_files": 9,
         "top_level_functions": 43,
         "top_level_classes": 11,
+        "status": "CONNECTED_AND_AUDITED"
+      },
+      "week10_engines_2026_11_13": {
+        "python_files": 23,
+        "top_level_functions": 315,
+        "top_level_classes": 208,
         "status": "CONNECTED_AND_AUDITED"
       }
     },

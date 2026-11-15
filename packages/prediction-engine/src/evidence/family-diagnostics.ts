@@ -33,6 +33,12 @@ export interface FamilyDiagnostic {
   /** REAL when measured, MISSING when an input was absent. */
   readonly status: "REAL" | "MISSING";
   readonly note: string;
+  /** Corpus support for this family's facet, 0..1. Null when no facet maps. */
+  readonly corpusSupport: number | null;
+  /** Shrink multiplier from corpus support, in [0.5, 1]. 1 = untouched. */
+  readonly corpusMultiplier: number;
+  /** deviation after the corpus shrink. Equals `deviation` when untouched. */
+  readonly shrunkDeviation: number | null;
 }
 
 function diff(a: number | null, b: number | null): number | null {
@@ -40,7 +46,8 @@ function diff(a: number | null, b: number | null): number | null {
 }
 
 export function computeFamilyDiagnostics(bundle: GameEvidenceBundle): FamilyDiagnostic[] {
-  const out: FamilyDiagnostic[] = [];
+  type Base = Omit<FamilyDiagnostic, "corpusSupport" | "corpusMultiplier" | "shrunkDeviation">;
+  const out: Base[] = [];
 
   // rest — away rest days minus home rest days. Positive favours the away team.
   const restValue = isPresent(bundle.rest) ? bundle.rest.value.awayRestDays : null;
@@ -171,5 +178,13 @@ export function computeFamilyDiagnostics(bundle: GameEvidenceBundle): FamilyDiag
     note: "nfl-farm cycle ledger is not wired into the bundle",
   });
 
-  return out;
+  // Corpus shrink is applied later, by applyCorpusShrink, once the grounding is
+  // available. Until then every family is untouched: multiplier 1, shrunk
+  // deviation equal to the measured deviation.
+  return out.map((d) => ({
+    ...d,
+    corpusSupport: null,
+    corpusMultiplier: 1,
+    shrunkDeviation: d.deviation,
+  }));
 }

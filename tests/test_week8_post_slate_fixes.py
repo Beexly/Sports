@@ -254,8 +254,8 @@ def test_pbp_conservation_coupling_and_jev_degraded_and_showdown_floor():
     assert live_jev_confidence(0.20, 0.25, 0.80) == 22
     assert live_jev_confidence(0.85, 0.80, 0.15) == 83
 
-    assert showdown_salary_floor(25000) == 48000
-    assert showdown_salary_floor(None) == 48000
+    assert showdown_salary_floor(25000) == 48500
+    assert showdown_salary_floor(None) == 48500
     assert showdown_salary_floor(49200) == 49200
 
     with pytest.raises(ValueError, match="draw shape"):

@@ -9,8 +9,8 @@ Builds and exports:
   2. `docs/dfs/research/2026-11-06/WEEK9_PLAYS_DFS_VIDEO_AND_REVENUE_EXECUTION_PACKET.md`
 
 Strictly enforces:
-  - Official New Engine Verified Record: `47-19-1` (`72.9%`, `+26.50 Units` entering Week 9:
-    `16-5` `+10.45u` pre-Week 8 + `46-18-1` `+16.05u` Week 8 audited settlement).
+  - Official New Engine Verified Record: `47-19-1` (`71.21%`, `+24.92 Units` entering Week 9:
+    `16-5` `+10.45u` pre-Week 8 + `31-14-1` `+14.47u` Week 8 audited settlement).
   - Customer-Facing Human Copy Doctrine: Zero internal pipeline/math jargon on public video/social scripts.
   - Paywall Protection Doctrine: Public content shares game-environment film & matchup analytics
     (trench pressure rates, neutral pace, coverage shells, red-zone tendencies, weather), while

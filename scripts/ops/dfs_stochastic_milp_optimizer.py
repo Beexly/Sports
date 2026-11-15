@@ -281,9 +281,11 @@ def optimize_dfs_portfolio(
                 integrality=integrality,
                 bounds=Bounds(lb, ub_k),
                 constraints=constraints,
-                options={"mip_rel_gap": 0.005, "time_limit": 10.0},
+                options={"mip_rel_gap": 0.005, "time_limit": 25.0},
             )
-            if not res.success or res.x is None:
+            # HiGHS status == 1 means time limit reached; if an integer-feasible
+            # incumbent exists (res.x is not None), accept it rather than dropping lineups.
+            if res.x is None or (not res.success and getattr(res, "status", 0) != 1):
                 break
             selected = [i for i in range(n) if res.x[i] >= 0.5]
             obj_val = float(-res.fun)
@@ -431,6 +433,13 @@ def optimize_dfs_portfolio(
 
                         if not (min_salary <= tot_s <= salary_cap):
                             continue
+                        if len({tm_list[i] for i in cand}) < min_teams:
+                            continue
+                        if max_per_team is not None and any(
+                            sum(1 for i in cand if tm_list[i] == t) > max_per_team
+                            for t in {tm_list[i] for i in cand}
+                        ):
+                            continue
                         if any(len(set(cand) & set(prev)) > max_overlap for prev in past_lineup_indices):
                             continue
                         cand_obj = float(sum(projs[i] for i in cand))
@@ -556,6 +565,7 @@ class GSEFullSlateSimulator:
         wind_baseline_mph: float = 8.0,
         td_vmr: float = 1.87,
         copula_nu: int = 4,
+        strict_projections: bool = False,
     ) -> None:
         self.players = players_df.copy().reset_index(drop=True)
         self.games = games_df.copy()
@@ -565,6 +575,7 @@ class GSEFullSlateSimulator:
         self.wind_baseline_mph = float(wind_baseline_mph)
         self.td_vmr = float(td_vmr)
         self.copula_nu = int(copula_nu)
+        self.strict_projections = bool(strict_projections)
 
     def _build_game_correlation_matrix(self, game_players: pd.DataFrame) -> np.ndarray:
         n = len(game_players)
@@ -613,11 +624,25 @@ class GSEFullSlateSimulator:
 
     def _proj(self, row, col, default):
         val = row.get(col, None)
-        if val is None or (isinstance(val, float) and np.isnan(val)):
+        if val is None:
             if self.strict_projections:
                 raise ValueError(f"missing {col} for {row.get('name', '?')} ({row.get('position', '?')}); refusing generic default")
             return float(default)
-        return float(val)
+        try:
+            fval = float(val)
+        except (TypeError, ValueError) as exc:
+            if self.strict_projections:
+                raise ValueError(f"missing {col}={val!r} for {row.get('name', '?')} ({row.get('position', '?')}); refusing generic default") from exc
+            return float(default)
+        if np.isnan(fval):
+            if self.strict_projections:
+                raise ValueError(f"missing {col} for {row.get('name', '?')} ({row.get('position', '?')}); refusing generic default")
+            return float(default)
+        if not np.isfinite(fval):
+            if self.strict_projections:
+                raise ValueError(f"non-finite {col}={val!r} for {row.get('name', '?')} ({row.get('position', '?')}); refusing generic default")
+            return float(default)
+        return fval
 
     def simulate_slate(self) -> Tuple[np.ndarray, np.ndarray]:
         k_players = len(self.players)
@@ -656,10 +681,15 @@ class GSEFullSlateSimulator:
                     sigma_py = mu_py * 0.32
                     pass_yds = gamma.ppf(u, a=(mu_py / sigma_py) ** 2, scale=(sigma_py ** 2) / mu_py)
                     bonus_300 = 3.0 * (pass_yds >= 300.0)
-                    mu_ry = max(1.0, float(row.get("proj_rush_yds", 15)))
+                    mu_ry = max(1.0, self._proj(row, "proj_rush_yds", 15.0))
                     rush_yds = gamma.ppf(self.rng.uniform(0, 1, self.S), a=1.5, scale=mu_ry / 1.5)
                     bonus_100 = 3.0 * (rush_yds >= 100.0)
-                    ints = self.rng.poisson(0.75, size=self.S)
+                    lam_ints = (
+                        max(0.05, self._proj(row, "proj_ints", 0.75))
+                        if ("proj_ints" in row and row.get("proj_ints") is not None)
+                        else 0.75
+                    )
+                    ints = self.rng.poisson(lam_ints, size=self.S)
                     fpts_matrix[:, global_k] = 0.04 * pass_yds + bonus_300 + 4.0 * tds - 1.0 * ints + 0.10 * rush_yds + bonus_100
                 elif p_pos in ("RB", "WR", "TE"):
                     wind_factor = 0.35 * self.wind_pass_penalty * wind_mph if p_pos in ("WR", "TE") else 0.0
@@ -674,10 +704,13 @@ class GSEFullSlateSimulator:
                         n=r_rec,
                         p=r_rec / (r_rec + mu_rec),
                     )
-                    mu_rush = max(0.5, float(row.get("proj_rush_yds", 10 if p_pos == "RB" else 0)))
                     if p_pos == "RB":
+                        mu_rush = max(0.5, self._proj(row, "proj_rush_yds", 10.0))
                         sigma_rush = mu_rush * 0.44
                         rush_yds = gamma.ppf(u, a=(mu_rush / sigma_rush) ** 2, scale=(sigma_rush ** 2) / mu_rush)
+                    elif "proj_rush_yds" in row and row.get("proj_rush_yds") is not None:
+                        _ = self._proj(row, "proj_rush_yds", 0.0)
+                        rush_yds = np.zeros(self.S)
                     else:
                         rush_yds = np.zeros(self.S)
                     bonus_rush_100 = 3.0 * (rush_yds >= 100.0)
@@ -722,31 +755,68 @@ def simulate_dirichlet_multinomial_field(
 
     pos_specs = [("QB", 1), ("RB", 2), ("WR", 3), ("TE", 1), ("DST", 1)]
     for o in range(int(num_opponents)):
-        theta_o = theta_field[o].copy()
-        selected: List[int] = []
-        for pos, count in pos_specs:
-            idxs = pos_map[pos]
-            w_sub = theta_o[idxs]
-            probs = w_sub / np.sum(w_sub)
-            chosen = rng.choice(idxs, size=count, replace=False, p=probs)
-            if count == 1:
-                c0 = int(chosen[0])
-                selected.append(c0)
-                if pos == "QB":
-                    tm_idxs = teammates_by_qb_idx.get(c0)
-                    if tm_idxs is not None and tm_idxs.size > 0:
-                        theta_o[tm_idxs] *= 2.5
-            else:
-                selected.extend(chosen.tolist())
+        selected: Optional[List[int]] = None
+        for _attempt in range(64):
+            theta_o = theta_field[o].copy()
+            cand: List[int] = []
+            for pos, count in pos_specs:
+                idxs = pos_map[pos]
+                w_sub = theta_o[idxs]
+                probs = w_sub / np.sum(w_sub)
+                chosen = rng.choice(idxs, size=count, replace=False, p=probs)
+                if count == 1:
+                    c0 = int(chosen[0])
+                    cand.append(c0)
+                    if pos == "QB":
+                        tm_idxs = teammates_by_qb_idx.get(c0)
+                        if tm_idxs is not None and tm_idxs.size > 0:
+                            theta_o[tm_idxs] *= 2.5
+                else:
+                    cand.extend(chosen.tolist())
 
-        rem_mask = is_flex_mask_base.copy()
-        rem_mask[selected] = False
-        rem_flex = np.nonzero(rem_mask)[0]
-        w_flex = theta_o[rem_flex]
-        flex_pick = int(rng.choice(rem_flex, size=1, p=w_flex / np.sum(w_flex))[0])
-        selected.append(flex_pick)
-        if int(salaries[selected].sum()) <= int(salary_cap) or True:
-            field_rosters[o, selected] = 1
+            rem_mask = is_flex_mask_base.copy()
+            rem_mask[cand] = False
+            rem_flex = np.nonzero(rem_mask)[0]
+            w_flex = theta_o[rem_flex]
+            flex_pick = int(rng.choice(rem_flex, size=1, p=w_flex / np.sum(w_flex))[0])
+            cand.append(flex_pick)
+            if int(salaries[cand].sum()) <= int(salary_cap):
+                selected = cand
+                break
+
+        if selected is None:
+            # Start from the last sampled lineup and swap down slot-by-slot until under salary_cap
+            selected = list(cand)
+            selected_set = set(selected)
+            slot_positions: List[Tuple[str, ...]] = [
+                ("QB",), ("RB",), ("RB",), ("WR",), ("WR",), ("WR",), ("TE",), ("DST",), ("RB", "WR", "TE"),
+            ]
+            while int(salaries[selected].sum()) > int(salary_cap):
+                best_swap: Optional[Tuple[int, int, int]] = None
+                for slot_idx in sorted(range(9), key=lambda k: -int(salaries[selected[k]])):
+                    cur_i = selected[slot_idx]
+                    valid_pos = slot_positions[slot_idx]
+                    cheaper = [
+                        ci for ci in range(k_players)
+                        if ci not in selected_set
+                        and pos_arr[ci] in valid_pos
+                        and int(salaries[ci]) < int(salaries[cur_i])
+                    ]
+                    if cheaper:
+                        cheap_i = min(cheaper, key=lambda ci: int(salaries[ci]))
+                        saving = int(salaries[cur_i]) - int(salaries[cheap_i])
+                        if best_swap is None or saving > best_swap[2]:
+                            best_swap = (slot_idx, cheap_i, saving)
+                if best_swap is None:
+                    break
+                slot_idx, cheap_i, _ = best_swap
+                selected_set.remove(selected[slot_idx])
+                selected[slot_idx] = cheap_i
+                selected_set.add(cheap_i)
+
+        if int(salaries[selected].sum()) > int(salary_cap):
+            raise ValueError("Cannot construct valid 9-player field roster under salary_cap")
+        field_rosters[o, selected] = 1
     return field_rosters
 
 

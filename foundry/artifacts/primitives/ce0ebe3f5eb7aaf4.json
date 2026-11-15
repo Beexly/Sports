@@ -1,0 +1,864 @@
+{
+ "book_id": "ce0ebe3f5eb7aaf4",
+ "source_status": "COMPLETE",
+ "source_note": "Sheldon Axler, Linear Algebra Done Right, fourth edition. The local file is the open-access PDF of the fourth edition: its title page reads 'Linear Algebra Done Right, fourth edition, 30 October 2026' with copyright 2024 Sheldon Axler, the print version is published by Springer, and the PDF is distributed under CC BY-NC 4.0 (PDF metadata: producer LuaTeX-1.25.7, 404 pages). It is cataloged as Axler-2023-LinearAlgebraDoneRight4.pdf in bucket books-must-have; the filename's 2023 does not match the edition, which is the fourth edition as just described. PDF size 2814065 bytes; sha256 over (str(size) + full file bytes) = ce0ebe3f5eb7aaf4ac636bc95bac29d0e6eba2713582e828f49e73ee7325e573; book_id = ce0ebe3f5eb7aaf4. The extracted text at the matching path under text/books-must-have is 1096223 bytes of clean real text layer, not a scan; mathematical symbols appear as Unicode math-italic glyphs and are quoted exactly as extracted. All 35 verbatim quotes were machine-checked as contiguous substrings of the extracted text under the gatekeeper normalization; the two quotes crossing a line-break hyphen (results 3.21 and 5.44) are stored in the normalized surface form that the checker itself produces. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "vector_space_axioms",
+   "name": "Definition 1.20: a vector space is a set V with an addition and a scalar multiplication satisfying commutativity, associativity, additive identity and inverses, multiplicative identity, and both distributive laws",
+   "verbatim_quote": "A vector space is a set 𝑉 along with an addition on 𝑉 and a scalar multiplication on 𝑉 such that the following properties hold.",
+   "page": "Chapter 1, Section 1B, definition 1.20 (extracted text line 1078)",
+   "latex": "u + v = v + u, \\quad (u + v) + w = u + (v + w), \\quad (\\lambda + \\mu) v = \\lambda v + \\mu v, \\quad \\lambda (u + v) = \\lambda u + \\lambda v",
+   "symbol_and_unit_ledger": {
+    "u, v, w": "vectors in V, dimensionless elements of the space",
+    "lambda, mu": "scalars in the field F, unitless field elements",
+    "+": "the given addition operation on V",
+    "scalar multiplication": "the given action of F on V"
+   },
+   "assumptions": [
+    "V is a set equipped with an addition and a scalar multiplication that take values in V, so closure is built into the definition",
+    "F is a field, either R or C throughout this book",
+    "The axiom list includes an additive identity, additive inverses for every element, and 1v = v"
+   ],
+   "breakdown_regime": "The axioms fix how elements combine but say nothing about size or structure: they hold for function spaces and sequence spaces as well as for F^n, so no finite basis, no coordinates, and no dimension follow from the axioms alone. If scalars form only a ring instead of a field, the object is a module and the basis arguments built later collapse.",
+   "domain": "foundations / abstract algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every object the engine reasons about has to pass this gate first: a state, a feature history, or a signal panel is only addable, scalable, and combinable because it lives in a vector space. The kernel rule is that any representation the engine builds must be closed under addition and scalar multiplication before geometry, spectra, or decompositions are computed on it.",
+    "source_operator": "vector_space_axioms",
+    "telemetry": "Representation schemas in the engine: which objects are declared as vector spaces with explicit addition and scaling operations."
+   }
+  },
+  {
+   "primitive_id": "subspace_conditions",
+   "name": "Subspace criterion 1.34: a subset U of V is a subspace if and only if it contains 0, is closed under addition, and is closed under scalar multiplication",
+   "verbatim_quote": "A subset 𝑈 of 𝑉 is a subspace of 𝑉 if and only if 𝑈 satisfies the following three conditions.",
+   "page": "Chapter 1, Section 1B, result 1.34 (extracted text line 1368)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "U is a subset of a vector space V over F",
+    "The three conditions are exactly: 0 in U; u + w in U for all u, w in U; a u in U for all a in F and u in U"
+   ],
+   "breakdown_regime": "The criterion verifies the subspace property but constructs nothing: it yields no basis and no dimension. It also presumes the ambient operations are the ones being tested; a subset closed under some other operation is not a subspace, and a nonempty subset missing 0 fails immediately.",
+   "domain": "foundations / linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the admissibility test for any restricted state space the engine proposes: a candidate subspace is usable only if it contains the zero state and is closed under the engine's own combination operations. Otherwise projections onto it and decompositions relative to it are meaningless, and the engine rejects the restriction before building on it.",
+    "source_operator": "subspace_conditions",
+    "telemetry": "Candidate subspaces from feature selection: zero membership and closure checks under the declared operations."
+   }
+  },
+  {
+   "primitive_id": "direct_sum_condition",
+   "name": "Direct sum criterion 1.45 and 1.46: a sum of subspaces is a direct sum if and only if the only way to write 0 as a sum of component vectors is the trivial way; for two subspaces, if and only if their intersection is {0}",
+   "verbatim_quote": "Suppose 𝑉1 , … , 𝑉𝑚 are subspaces of 𝑉. Then 𝑉1 + ⋯ + 𝑉𝑚 is a direct sum if and only if the only way to write 0 as a sum 𝑣1 + ⋯ + 𝑣𝑚 , where each 𝑣𝑘 ∈ 𝑉𝑘 , is by taking each 𝑣𝑘 equal to 0.",
+   "page": "Chapter 1, Section 1C, results 1.45 and 1.46 (extracted text line 1598)",
+   "latex": "U \\cap W = \\{0\\}",
+   "symbol_and_unit_ledger": {
+    "U, W": "subspaces of V",
+    "U cap W": "the set of vectors lying in both U and W",
+    "{0}": "the zero subspace"
+   },
+   "assumptions": [
+    "V1, ..., Vm are subspaces of one ambient space V",
+    "For the two-subspace form, the criterion is: U + W is a direct sum if and only if U intersect W equals {0}"
+   ],
+   "breakdown_regime": "Pairwise trivial intersections do not suffice for three or more subspaces; the general criterion must be checked through the zero-representation condition on the whole family. In infinite dimensions a direct sum decomposition also need not come with well behaved projections, so the algebraic uniqueness here should not be read as analytic stability.",
+   "domain": "foundations / decomposition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Direct sum is the engine's non-overlap certificate: when evidence channels decompose a state into components whose overlaps are trivial, their contributions add without double counting. The reasoning layer uses exactly this certificate before it sums independent pieces of evidence into one conclusion.",
+    "source_operator": "direct_sum_condition",
+    "telemetry": "Overlap audits between evidence channels: shared components measured by intersection dimension."
+   }
+  },
+  {
+   "primitive_id": "span_smallest_subspace",
+   "name": "Span 2.4 and 2.6: the span of a list is the set of all its linear combinations, and it is the smallest subspace of V containing the list",
+   "verbatim_quote": "The set of all linear combinations of a list of vectors 𝑣1 , … , 𝑣𝑚 in 𝑉 is called the span of 𝑣1 , … , 𝑣𝑚 , denoted by span(𝑣1 , … , 𝑣𝑚 ).",
+   "page": "Chapter 2, Section 2A, definition 2.4 and result 2.6 (extracted text line 1838)",
+   "latex": "\\operatorname{span}(v_1, \\dots, v_m) = \\{a_1 v_1 + \\cdots + a_m v_m : a_1, \\dots, a_m \\in \\mathbf{F}\\}",
+   "symbol_and_unit_ledger": {
+    "v_k": "vectors in V",
+    "a_k": "scalar coefficients in F",
+    "span": "the set of all finite linear combinations of the list"
+   },
+   "assumptions": [
+    "The empty list is allowed, and its span is {0} by the book's convention",
+    "Only finite linear combinations are taken, even when the list is long"
+   ],
+   "breakdown_regime": "Span records reachability, not efficiency: a spanning list can be heavily redundant, and span alone does not identify a minimal generating set. In infinite-dimensional spaces, the finite-combination span of an infinite list is typically a proper subset of the space, because limits are not finite combinations; closure under limits is a separate, topological ingredient.",
+   "domain": "foundations / linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Span is the engine's reachable-set operator: given a stock of primitive signals or moves, the span is everything synthesizable from them by linear combination. The smallest-subspace clause makes span a closure operator, so coverage questions become membership questions in a well defined subspace rather than open-ended searches.",
+    "source_operator": "span_smallest_subspace",
+    "telemetry": "Signal inventories and synthesized coverage: which target quantities lie in the span of the available inputs."
+   }
+  },
+  {
+   "primitive_id": "linear_independence",
+   "name": "Linear independence 2.15: a list of vectors is linearly independent if the only choice of scalars making a linear combination equal 0 is the all-zero choice",
+   "verbatim_quote": "A list 𝑣1 , … , 𝑣𝑚 of vectors in 𝑉 is called linearly independent if the only choice of 𝑎1 , … , 𝑎𝑚 ∈ 𝐅 that makes 𝑎1 𝑣1 + ⋯ + 𝑎𝑚 𝑣𝑚 = 0 is 𝑎1 = ⋯ = 𝑎𝑚 = 0.",
+   "page": "Chapter 2, Section 2A, definition 2.15 (extracted text line 1994)",
+   "latex": "a_1 v_1 + \\cdots + a_m v_m = 0 \\implies a_1 = \\cdots = a_m = 0",
+   "symbol_and_unit_ledger": {
+    "a_k": "scalars in F",
+    "v_k": "vectors in V",
+    "0": "the zero vector of V"
+   },
+   "assumptions": [
+    "The empty list is linearly independent by convention",
+    "Independence is a property of the list as given; repeating a vector makes a list dependent"
+   ],
+   "breakdown_regime": "Independence is all or nothing for a finite list and is destroyed by adjoining any vector from the list's own span. For infinite families the definition is applied to finite sublists, which is weaker than the basis-like independence used together with topological closure in analysis.",
+   "domain": "foundations / linear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independence is the engine's redundancy test for evidence: features that are linear combinations of other features carry no new directional information. This definition is the exact algebraic test the engine applies before it lets a set of signals vote as separate pieces of evidence.",
+    "source_operator": "linear_independence",
+    "telemetry": "Feature sets and signal panels: rank checks on the matrix formed by the collected signals."
+   }
+  },
+  {
+   "primitive_id": "linear_dependence_lemma",
+   "name": "Linear dependence lemma 2.19: in a linearly dependent list, some vector lies in the span of the vectors before it, and deleting that vector does not change the span of the list",
+   "verbatim_quote": "Suppose 𝑣1 , … , 𝑣𝑚 is a linearly dependent list in 𝑉. Then there exists 𝑘 ∈ {1, 2, … , 𝑚} such that",
+   "page": "Chapter 2, Section 2A, result 2.19 (extracted text line 2061)",
+   "latex": "v_k \\in \\operatorname{span}(v_1, \\dots, v_{k-1})",
+   "symbol_and_unit_ledger": {
+    "v_k": "the first vector in the list that depends on its predecessors",
+    "span(v_1, ..., v_{k-1})": "all linear combinations of the preceding vectors",
+    "k": "an index in {1, 2, ..., m}"
+   },
+   "assumptions": [
+    "The list v_1, ..., v_m is linearly dependent",
+    "The index k can be taken minimal, so the preceding list is still independent"
+   ],
+   "breakdown_regime": "The lemma exposes one redundant vector at a time and depends on the ordering of the list; a different order can expose a different redundant vector. It gives a reduction path, not a canonical basis, and it does not measure near-dependence, which is the numerically important case.",
+   "domain": "foundations / algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's pruning rule with a proof attached: when a reasoning trace finds a signal already implied by earlier signals, the lemma licenses deleting it while guaranteeing the reachable conclusions, the span, are unchanged. Evidence panels stay minimal without losing content.",
+    "source_operator": "linear_dependence_lemma",
+    "telemetry": "Ordered evidence lists with dependency flags: which entries are linear consequences of their predecessors."
+   }
+  },
+  {
+   "primitive_id": "basis_unique_representation",
+   "name": "Basis 2.26 and basis criterion 2.28: a basis is a list that is linearly independent and spans V, equivalently a list in terms of which every vector has a unique representation as a linear combination",
+   "verbatim_quote": "A list 𝑣1 , … , 𝑣𝑛 of vectors in 𝑉 is a basis of 𝑉 if and only if every 𝑣 ∈ 𝑉 can be written uniquely in the form",
+   "page": "Chapter 2, Section 2A, definition 2.26 and result 2.28 (extracted text line 2350)",
+   "latex": "v = a_1 v_1 + \\cdots + a_n v_n",
+   "symbol_and_unit_ledger": {
+    "v": "an arbitrary vector in V",
+    "a_k": "the unique coordinates of v in this basis",
+    "v_k": "the basis vectors"
+   },
+   "assumptions": [
+    "The list spans V, so representations exist",
+    "Uniqueness of the representation is equivalent to linear independence together with spanning"
+   ],
+   "breakdown_regime": "Uniqueness is relative to the chosen basis: change the basis and every coordinate changes, so coordinates are an encoding, not an intrinsic property of the vector. Infinite-dimensional Hamel bases exist only through the axiom of choice and carry no usable coordinate formulas, so the constructive content of this criterion is finite-dimensional.",
+   "domain": "foundations / coordinates",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A basis is the engine's coordinate contract: once a basis is fixed, every state has exactly one coordinate vector, so states can be stored, compared, and transmitted as coefficient lists. The uniqueness clause is what makes those coordinates a faithful encoding rather than a lossy sketch.",
+    "source_operator": "basis_unique_representation",
+    "telemetry": "Basis declarations for each state space: coordinate vectors assigned to observed states."
+   }
+  },
+  {
+   "primitive_id": "dimension_well_defined",
+   "name": "Dimension 2.34 and 2.35: any two bases of a finite-dimensional vector space have the same length, proved through the length inequality 2.22, so the dimension of V is defined as the length of any basis of V",
+   "verbatim_quote": "Any two bases of a finite-dimensional vector space have the same length.",
+   "page": "Chapter 2, Section 2B, results 2.34 and 2.35 (extracted text line 2576)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "V is finite-dimensional, meaning some finite list spans V",
+    "The length inequality 2.22 says a linearly independent list is never longer than a spanning list, which forces all bases to one common length",
+    "A consequence recorded at 2.37: every subspace of a finite-dimensional space is finite-dimensional with dimension at most dim V"
+   ],
+   "breakdown_regime": "Dimension counts algebraic degrees of freedom only: it is blind to geometry, scale, and importance, and two spaces of equal dimension are isomorphic as vector spaces even when their contents are entirely different. Infinite-dimensional spaces fall outside this definition and need cardinal arithmetic.",
+   "domain": "foundations / invariants",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dimension is the engine's capacity invariant: it bounds how many independent signals a representation can carry and certifies when two encodings have the same information capacity. The well-definedness proof is the guarantee that this capacity does not depend on which basis an analyst happened to choose.",
+    "source_operator": "dimension_well_defined",
+    "telemetry": "Declared dimensions of state and feature spaces; basis length audits across competing encodings."
+   }
+  },
+  {
+   "primitive_id": "linear_map_definition",
+   "name": "Linear map 3.1: a function T from V to W is linear if it satisfies additivity, T(u + v) = Tu + Tv, and homogeneity, T(lambda v) = lambda (Tv)",
+   "verbatim_quote": "A linear map from 𝑉 to 𝑊 is a function 𝑇 ∶ 𝑉 → 𝑊 with the following properties.",
+   "page": "Chapter 3, Section 3A, definition 3.1 (extracted text line 2932)",
+   "latex": "T(u + v) = Tu + Tv, \\qquad T(\\lambda v) = \\lambda (Tv)",
+   "symbol_and_unit_ledger": {
+    "T": "the linear map from V to W",
+    "u, v": "vectors in V",
+    "lambda": "a scalar in F",
+    "Tu": "the image of u in W"
+   },
+   "assumptions": [
+    "V and W are vector spaces over the same field F",
+    "Both properties must hold for all vectors and all scalars; additivity alone or homogeneity alone does not give linearity in general"
+   ],
+   "breakdown_regime": "Linearity is rigid: it forces T0 = 0 and forbids thresholds, saturation, and coordinate interactions. A genuinely nonlinear phenomenon must be embedded into a space where the map of interest becomes linear, or handled outside this framework entirely.",
+   "domain": "foundations / maps",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Linearity is the engine's composition contract: transformations satisfying additivity and homogeneity can be chained, represented by matrices, inverted on subspaces, and analyzed spectrally. This definition is the test applied before the engine treats any transformation as matrix-representable.",
+    "source_operator": "linear_map_definition",
+    "telemetry": "Transformation registry: which engine maps are certified linear, and on which spaces."
+   }
+  },
+  {
+   "primitive_id": "fundamental_theorem_of_linear_maps",
+   "name": "Fundamental theorem of linear maps 3.21 (rank-nullity): if V is finite-dimensional and T is a linear map from V to W, then dim V = dim null T + dim range T",
+   "verbatim_quote": "Suppose 𝑉 is finite-dimensional and 𝑇 ∈ ℒ(𝑉, 𝑊). Then range 𝑇 is finite dimensional and dim 𝑉 = dim null 𝑇 + dim range 𝑇.",
+   "page": "Chapter 3, Section 3B, result 3.21 (extracted text line 3425)",
+   "latex": "\\dim V = \\dim \\operatorname{null} T + \\dim \\operatorname{range} T",
+   "symbol_and_unit_ledger": {
+    "dim V": "dimension of the domain",
+    "null T": "the kernel, the subspace of V mapped to 0",
+    "range T": "the image subspace in W"
+   },
+   "assumptions": [
+    "V is finite-dimensional",
+    "T is a linear map from V to W; the statement as given does not require W to be finite-dimensional"
+   ],
+   "breakdown_regime": "The identity is a counting law, not a construction: it does not exhibit the destroyed directions or an image basis. In infinite dimensions the arithmetic collapses, since a shift operator has nullity 0 and a proper range of the same infinite dimension, so the finite-dimensional hypothesis is essential.",
+   "domain": "invariants / maps",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rank-nullity is the engine's information budget for any linear transformation: the input dimension splits exactly into what the map destroys, the null space, and what it preserves, the range. Every compression, projection, or aggregation in a pipeline can be audited against this budget to expose what it silently discards.",
+    "source_operator": "fundamental_theorem_of_linear_maps",
+    "telemetry": "Per-transform dimension audits: domain dimension, rank, and nullity reported for each linear stage."
+   }
+  },
+  {
+   "primitive_id": "matrix_representation_and_multiplication",
+   "name": "Matrix of a linear map 3.31, matrix multiplication 3.41, and 3.43: the entries of M(T) are defined by expanding T v_k in the output basis, matrix product entries are sums over the inner index, and the matrix of a composition is the product of the matrices, M(ST) = M(S) M(T)",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉, 𝑊) and 𝑣1 , … , 𝑣𝑛 is a basis of 𝑉 and 𝑤1 , … , 𝑤𝑚 is a basis of 𝑊. The matrix of 𝑇 with respect to these bases is the 𝑚-by-𝑛 matrix ℳ(𝑇) whose entries 𝐴𝑗,𝑘 are defined by",
+   "page": "Chapter 3, Sections 3C and 3D, definitions 3.31 and 3.41 and result 3.43 (extracted text line 3749)",
+   "latex": "T v_k = A_{1,k} w_1 + \\cdots + A_{m,k} w_m, \\qquad (AB)_{j,k} = \\sum_{r=1}^{n} A_{j,r} B_{r,k}",
+   "symbol_and_unit_ledger": {
+    "A_{j,k}": "entry of the matrix in row j, column k",
+    "v_k": "k-th basis vector of the domain",
+    "w_j": "j-th basis vector of the codomain",
+    "M(T)": "matrix of T with respect to the chosen bases",
+    "r": "the summed inner index"
+   },
+   "assumptions": [
+    "Bases of the domain and codomain are fixed before any matrix is written",
+    "For the product formula, the output basis of T is the input basis of S, so the matrices are conformable"
+   ],
+   "breakdown_regime": "A matrix is meaningless without its two bases: the same operator has different matrices in different bases, and the product rule fails silently if the middle bases do not match. The finite matrix picture also does not extend to infinite-dimensional operators without additional analytic structure.",
+   "domain": "coordinates / computation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's compilation step: abstract reasoning about transformations becomes arithmetic on arrays, and composition of reasoning steps becomes matrix multiplication in the correct order. The basis dependence is operational, not pedantic: every stored matrix must carry its basis metadata, or downstream products are invalid.",
+    "source_operator": "matrix_representation_and_multiplication",
+    "telemetry": "Matrix stores with basis identifiers; composition chains in the computation graph."
+   }
+  },
+  {
+   "primitive_id": "rank_column_equals_row",
+   "name": "Rank 3.57 and 3.58: the column rank of a matrix equals its row rank; this common value is the rank of the matrix, and it equals the dimension of the range of the associated linear map",
+   "verbatim_quote": "Suppose 𝐴 ∈ 𝐅𝑚,𝑛. Then the column rank of 𝐴 equals the row rank of 𝐴.",
+   "page": "Chapter 3, Section 3D, results 3.57 and 3.58 (extracted text line 4278)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A is an m-by-n matrix over F",
+    "Column rank is the dimension of the span of the columns in F^m, and row rank is the dimension of the span of the rows, with rows read as vectors in F^n via their coordinates"
+   ],
+   "breakdown_regime": "Rank is an exact-arithmetic invariant: with noisy or floating point data it is numerically unstable, and arbitrarily small perturbations can raise it to full rank. The theorem equates two counts but says nothing about which columns or rows carry the information, and it does not by itself produce a low-rank approximation.",
+   "domain": "invariants / matrices",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rank is the engine's effective-information measure for a data matrix: it counts the independent directions actually present in a table of signals, computable from whichever side, observations or features, is cheaper, and the equality of the two ranks guarantees that both audits agree.",
+    "source_operator": "rank_column_equals_row",
+    "telemetry": "Data matrices assembled from sweeps and tables: computed rank reported against nominal row and column counts."
+   }
+  },
+  {
+   "primitive_id": "polynomial_division_algorithm",
+   "name": "Division algorithm for polynomials 4.9: if s is a nonzero polynomial, then for every p there exist unique polynomials q and r with p = s q + r and deg r < deg s",
+   "verbatim_quote": "Suppose that 𝑝, 𝑠 ∈ 𝒫(𝐅), with 𝑠 ≠ 0. Then there exist unique polynomials 𝑞, 𝑟 ∈ 𝒫(𝐅) such that 𝑝 = 𝑠𝑞 + 𝑟 and deg 𝑟 < deg 𝑠.",
+   "page": "Chapter 4, result 4.9 (extracted text line 6494)",
+   "latex": "p = sq + r, \\qquad \\deg r < \\deg s",
+   "symbol_and_unit_ledger": {
+    "p, s, q, r": "polynomials over F",
+    "deg": "degree of a polynomial",
+    "s": "the divisor, required nonzero"
+   },
+   "assumptions": [
+    "s is not the zero polynomial",
+    "Coefficients lie in a field, so leading coefficients can be inverted during the division steps"
+   ],
+   "breakdown_regime": "Existence and uniqueness both rest on field coefficients: over a general ring the divisor's leading coefficient may fail to be invertible and division can fail. The algorithm is also the wrong tool when only a value is needed, since evaluation has its own cheaper route through the same remainder idea with s = z - a.",
+   "domain": "algebra / algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Division with remainder is the engine's reduction primitive for polynomial models: any polynomial hypothesis can be reduced modulo a constraint polynomial to a canonical remainder of bounded degree, which is how competing polynomial explanations are normalized before they are compared.",
+    "source_operator": "polynomial_division_algorithm",
+    "telemetry": "Polynomial model registry: degrees of hypotheses and of remainders after reduction modulo constraints."
+   }
+  },
+  {
+   "primitive_id": "fundamental_theorem_of_algebra",
+   "name": "Fundamental theorem of algebra 4.12 and 4.13: every nonconstant polynomial with complex coefficients has a zero in C, and hence every polynomial over C factors into linear factors according to multiplicity; over R the factors are linear or irreducible quadratics (4.16)",
+   "verbatim_quote": "Every nonconstant polynomial with complex coefficients has a zero in 𝐂 .",
+   "page": "Chapter 4, results 4.12, 4.13 and 4.16 (extracted text line 6553)",
+   "latex": "p(z) = c\\,(z - \\lambda_1) \\cdots (z - \\lambda_m)",
+   "symbol_and_unit_ledger": {
+    "p": "a nonconstant polynomial of degree m",
+    "c": "its leading coefficient, nonzero",
+    "lambda_k": "zeros of p in C, listed with multiplicity"
+   },
+   "assumptions": [
+    "The coefficient field is C for the splitting version; the real version needs the extra irreducible-quadratic clause",
+    "Axler's proof uses an analytic input, the minimum modulus principle for |p| on C, rather than pure algebra"
+   ],
+   "breakdown_regime": "This is an existence theorem over C only: over R a polynomial such as z^2 + 1 has no zero, and over Q most polynomials do not factor at all. It gives multiplicities but no locations and no algorithm, so it licenses spectral decompositions without computing them.",
+   "domain": "algebra / spectral foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This theorem is the completeness guarantee behind the engine's spectral layer: over C every characteristic and minimal polynomial splits, so eigenvalue-based decompositions never fail for lack of roots. The real-field clause tells the engine exactly which extra objects, irreducible quadratic blocks, to expect when it stays over R.",
+    "source_operator": "fundamental_theorem_of_algebra",
+    "telemetry": "Field declarations per model: complex splitting assumed, or real quadratic blocks tracked."
+   }
+  },
+  {
+   "primitive_id": "eigenvalue_eigenvector_definition",
+   "name": "Eigenvalues 5.5 and 5.7: lambda is an eigenvalue of T if T v = lambda v for some nonzero v; equivalently, T - lambda I fails to be injective, fails to be surjective, or fails to be invertible",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉). A number 𝜆 ∈ 𝐅 is called an eigenvalue of 𝑇 if there exists 𝑣 ∈ 𝑉 such that 𝑣 ≠ 0 and 𝑇𝑣 = 𝜆𝑣.",
+   "page": "Chapter 5, Section 5A, definition 5.5 and result 5.7 (extracted text line 6971)",
+   "latex": "Tv = \\lambda v, \\qquad v \\ne 0",
+   "symbol_and_unit_ledger": {
+    "T": "an operator on V, a linear map from V to itself",
+    "lambda": "a scalar in F",
+    "v": "an eigenvector, required nonzero",
+    "I": "the identity operator on V"
+   },
+   "assumptions": [
+    "T maps V to itself, so Tv and lambda v can be compared",
+    "In finite dimensions the three failures, injective, surjective, invertible, coincide; in infinite dimensions they separate"
+   ],
+   "breakdown_regime": "An operator may have no eigenvalues at all: a rotation of the plane has none over R, and a shift has none even over C in infinite dimensions. The definition also concerns exact eigenvectors only; approximate and generalized spectral behavior needs the machinery of Chapter 8.",
+   "domain": "spectral theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Eigenvalues are the engine's invariant-direction detector: directions a transformation merely rescales are the ones that survive iteration unchanged in form, so they anchor long-run behavior analysis. The equivalent conditions give three independent tests for the same event, which the engine can cross-check against each other.",
+    "source_operator": "eigenvalue_eigenvector_definition",
+    "telemetry": "Operator registry: computed eigenvalues with eigenvector residuals for each stored transformation."
+   }
+  },
+  {
+   "primitive_id": "minimal_polynomial",
+   "name": "Minimal polynomial 5.22, 5.24, 5.27 and 5.29: there is a unique monic polynomial p of smallest degree with p(T) = 0 and deg p at most dim V; the zeros of p are exactly the eigenvalues of T, and q(T) = 0 if and only if p divides q",
+   "verbatim_quote": "Suppose 𝑉 is finite-dimensional and 𝑇 ∈ ℒ(𝑉). Then there is a unique monic polynomial 𝑝 ∈ 𝒫(𝐅) of smallest degree such that 𝑝(𝑇) = 0. Furthermore, deg 𝑝 ≤ dim 𝑉.",
+   "page": "Chapter 5, Section 5B, results 5.22, 5.27 and 5.29, definition 5.24 (extracted text line 7424)",
+   "latex": "p(T) = 0, \\qquad \\deg p \\le \\dim V",
+   "symbol_and_unit_ledger": {
+    "p": "the minimal polynomial of T, monic by definition",
+    "p(T)": "the operator obtained by substituting T into p",
+    "deg p": "degree of p, at most dim V",
+    "q": "any polynomial annihilating T"
+   },
+   "assumptions": [
+    "V is finite-dimensional, which forces a nonzero annihilating polynomial by dimension counting on the operators I, T, T^2, ...",
+    "The minimal polynomial is required to be monic, which is what makes it unique"
+   ],
+   "breakdown_regime": "The minimal polynomial records distinct eigenvalues and Jordan block sizes but not algebraic multiplicities, so operators with the same minimal polynomial can still differ in characteristic polynomial and geometry. Over R it may have irreducible quadratic factors, in which case no eigenvalue reading is available without complexifying.",
+   "domain": "spectral theory / algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The minimal polynomial is the smallest complete fingerprint of an operator's dynamics that the engine stores: its zeros list the true modes, its factor exponents record the deepest coupling at each mode, and the divisibility clause turns consistency checks between two models of the same process into polynomial division.",
+    "source_operator": "minimal_polynomial",
+    "telemetry": "Per-operator fingerprints: factorized minimal polynomials stored beside eigenvalue lists for cross-checking."
+   }
+  },
+  {
+   "primitive_id": "upper_triangular_iff_minpoly_splits",
+   "name": "Upper-triangular criterion 5.44 and 5.45: T has an upper-triangular matrix with respect to some basis if and only if the minimal polynomial of T splits into linear factors over F; over C this is always possible, and the diagonal entries of the triangular matrix are the eigenvalues",
+   "verbatim_quote": "Suppose 𝑉 is finite-dimensional and 𝑇 ∈ ℒ(𝑉). Then 𝑇 has an upper triangular matrix with respect to some basis of 𝑉 if and only if the minimal polynomial of 𝑇 equals (𝑧 − 𝜆1 ) ⋯ (𝑧 − 𝜆𝑚 ) for some 𝜆1 , … , 𝜆𝑚 ∈ 𝐅.",
+   "page": "Chapter 5, Section 5C, results 5.44 and 5.45 (extracted text line 8205)",
+   "latex": "(z - \\lambda_1) \\cdots (z - \\lambda_m)",
+   "symbol_and_unit_ledger": {
+    "lambda_k": "eigenvalues of T in F",
+    "the product": "the minimal polynomial factored into linear factors",
+    "z": "the polynomial indeterminate"
+   },
+   "assumptions": [
+    "V is finite-dimensional",
+    "The field must contain the eigenvalues; over C the fundamental theorem of algebra supplies them automatically"
+   ],
+   "breakdown_regime": "Upper-triangular is not diagonal: the strict upper part encodes coupling between eigenspaces that the triangular form displays but does not remove. The criterion is existential about the basis, so it does not say that a basis already in use triangularizes T, and over R the conclusion fails whenever an eigenvalue leaves the field.",
+   "domain": "spectral theory / normal forms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Triangularization is the engine's fallback normal form: when a transformation cannot be fully decoupled into independent modes, a triangular basis still orders the modes so each one feeds only later ones, turning a coupled system into a solvable cascade. The splitting criterion states exactly when that fallback exists.",
+    "source_operator": "upper_triangular_iff_minpoly_splits",
+    "telemetry": "Operator diagnostics: whether the minimal polynomial splits over the working field, and the diagonal of the triangular form."
+   }
+  },
+  {
+   "primitive_id": "diagonalizability_conditions",
+   "name": "Diagonalizability 5.55 with 5.11: the following are equivalent: T is diagonalizable; V has a basis of eigenvectors of T; V is the direct sum of the eigenspaces of T; dim V equals the sum of the eigenspace dimensions. Eigenvectors for distinct eigenvalues are linearly independent (5.11)",
+   "verbatim_quote": "Suppose 𝑉 is finite-dimensional and 𝑇 ∈ ℒ(𝑉). Let 𝜆1 , … , 𝜆𝑚 denote the distinct eigenvalues of 𝑇. Then the following are equivalent. (a) 𝑇 is diagonalizable. (b) 𝑉 has a basis consisting of eigenvectors of 𝑇. (c) 𝑉 = 𝐸(𝜆1 , 𝑇) ⊕ ⋯ ⊕ 𝐸(𝜆𝑚 , 𝑇). (d) dim 𝑉 = dim 𝐸(𝜆1 , 𝑇) + ⋯ + dim 𝐸(𝜆𝑚 , 𝑇).",
+   "page": "Chapter 5, Section 5D, results 5.55 and 5.11 (extracted text line 8491)",
+   "latex": "V = E(\\lambda_1, T) \\oplus \\cdots \\oplus E(\\lambda_m, T)",
+   "symbol_and_unit_ledger": {
+    "E(lambda_k, T)": "the eigenspace for lambda_k, equal to null (T - lambda_k I)",
+    "direct sum": "independent subspaces whose sum is V",
+    "lambda_k": "the distinct eigenvalues of T"
+   },
+   "assumptions": [
+    "V is finite-dimensional and lambda_1, ..., lambda_m are all the distinct eigenvalues of T",
+    "Each eigenspace is nonzero by the definition of an eigenvalue"
+   ],
+   "breakdown_regime": "Diagonalizability is fragile: one defective eigenvalue, whose geometric multiplicity is below its algebraic multiplicity, destroys it, and perturbations of a defective operator move its eigenvalues discontinuously. The conditions are also silent about conditioning; an eigenbasis can exist and still be numerically useless if it is nearly dependent.",
+   "domain": "spectral theory / decomposition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Diagonalizability is the engine's full-decoupling certificate: when it holds, a transformation acts as independent scalar rescalings on separate channels, so powers, exponentials, and long-run behavior decompose channel by channel. The four equivalent conditions give four independent ways to verify the certificate before the decomposition is trusted.",
+    "source_operator": "diagonalizability_conditions",
+    "telemetry": "Eigenspace dimension audits: the sum of geometric multiplicities compared against the space dimension for each operator."
+   }
+  },
+  {
+   "primitive_id": "gershgorin_disk_theorem",
+   "name": "Gershgorin disks 5.66 and disk theorem 5.67: the Gershgorin disk for row j is the disk in C centered at the diagonal entry A_{j,j} with radius the sum of the absolute values of the off-diagonal entries in row j, and every eigenvalue of T lies in at least one Gershgorin disk",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉) and 𝑣1 , … , 𝑣𝑛 is a basis of 𝑉 . Then each eigenvalue of 𝑇 is contained in some Gershgorin disk of 𝑇 with respect to the basis 𝑣1 , … , 𝑣𝑛 .",
+   "page": "Chapter 5, Section 5D, definition 5.66 and result 5.67 (extracted text line 8802)",
+   "latex": "|z - A_{j,j}| \\le \\sum_{k \\ne j} |A_{j,k}|",
+   "symbol_and_unit_ledger": {
+    "z": "a point of C, a candidate eigenvalue location",
+    "A_{j,j}": "the j-th diagonal entry of the matrix of T in the chosen basis",
+    "A_{j,k}": "off-diagonal entries in row j",
+    "the radius": "the sum of the absolute values of the off-diagonal entries in the row"
+   },
+   "assumptions": [
+    "A basis is fixed and A is the matrix of T with respect to that basis",
+    "The disks are computed row by row; a column version follows by applying the theorem to the transpose"
+   ],
+   "breakdown_regime": "The theorem localizes but does not count: the union of the disks contains the spectrum, yet one disk can hold several eigenvalues and the bare statement assigns no eigenvalue count per disk. The bounds degrade when off-diagonal mass is large and are basis-dependent, unlike the eigenvalues themselves.",
+   "domain": "spectral bounds / numerical analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gershgorin disks are the engine's cheap spectral bounds: from a matrix alone, with no iteration, they fence in where eigenvalues can live. The engine uses them to sanity-check computed spectra and to bound the growth rates of iterated transformations before committing to a full eigendecomposition.",
+    "source_operator": "gershgorin_disk_theorem",
+    "telemetry": "Matrix stores: diagonal entries and row off-diagonal absolute sums reported for each stored operator."
+   }
+  },
+  {
+   "primitive_id": "inner_product_and_norm",
+   "name": "Inner product 6.2 and norm 6.7: an inner product on V takes each ordered pair (u, v) to a scalar <u, v> and is positive, definite, additive and homogeneous in the first slot, and conjugate symmetric; the norm of v is ||v|| = sqrt(<v, v>)",
+   "verbatim_quote": "An inner product on 𝑉 is a function that takes each ordered pair (𝑢, 𝑣) of elements of 𝑉 to a number ⟨𝑢, 𝑣⟩ ∈ 𝐅 and has the following properties.",
+   "page": "Chapter 6, Section 6A, definitions 6.2 and 6.7 (extracted text line 9413)",
+   "latex": "\\|v\\| = \\sqrt{\\langle v, v \\rangle}",
+   "symbol_and_unit_ledger": {
+    "<u, v>": "the inner product of u and v, a scalar in F",
+    "||v||": "the norm of v, a nonnegative real number",
+    "v": "a vector in V"
+   },
+   "assumptions": [
+    "V is a vector space over R or C",
+    "Linearity is in the first slot in this book's convention, and conjugate symmetry supplies conjugate linearity in the second slot"
+   ],
+   "breakdown_regime": "The inner product is extra structure, not a consequence of the vector space axioms: one space carries many inner products with different angles, distances, and orthogonality relations. Positive definiteness is essential; without it the putative norm can vanish on nonzero vectors and Cauchy-Schwarz and the triangle inequality fail.",
+   "domain": "geometry / inner product spaces",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The inner product is where the engine's geometry comes from: similarity, distance, angle, and projection are all derived quantities once an inner product is declared. Keeping it an explicit, replaceable input forces the engine to record which similarity notion each conclusion depends on instead of smuggling one in.",
+    "source_operator": "inner_product_and_norm",
+    "telemetry": "Declared inner products per space, including weights and kernels; pairwise inner products of stored signal vectors."
+   }
+  },
+  {
+   "primitive_id": "cauchy_schwarz_inequality",
+   "name": "Cauchy-Schwarz inequality 6.14: |<u, v>| is at most ||u|| ||v||, and equality holds if and only if one of u, v is a scalar multiple of the other; the triangle inequality 6.19 follows from it",
+   "verbatim_quote": "Suppose 𝑢, 𝑣 ∈ 𝑉. Then |⟨𝑢, 𝑣⟩| ≤ ‖𝑢‖ ‖𝑣‖. This inequality is an equality if and only if one of 𝑢, 𝑣 is a scalar multiple of the other.",
+   "page": "Chapter 6, Section 6A, results 6.14 and 6.19 (extracted text line 9670)",
+   "latex": "|\\langle u, v \\rangle| \\le \\|u\\| \\, \\|v\\|",
+   "symbol_and_unit_ledger": {
+    "u, v": "vectors in an inner product space",
+    "<u, v>": "their inner product",
+    "||.||": "the norm induced by the inner product",
+    "|.|": "absolute value or modulus in F"
+   },
+   "assumptions": [
+    "The ambient structure is an inner product space; positive definiteness is used in the proof",
+    "The case v = 0 is trivial and is handled separately in the proof"
+   ],
+   "breakdown_regime": "Cauchy-Schwarz bounds alignment by the product of scales; it cannot detect dependence beyond the linear alignment of the two vectors. The equality case is exact collinearity, so near-equality indicates near-collinearity, but the inequality alone does not quantify the distance to equality.",
+   "domain": "geometry / inequalities",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cauchy-Schwarz is the engine's universal correlation bound: normalized inner products, the cosine similarities used across signal panels, live in [-1, 1] because of it. The equality clause identifies exactly when two signals are the same signal up to scale, which is the engine's duplicate-evidence alarm.",
+    "source_operator": "cauchy_schwarz_inequality",
+    "telemetry": "Pairwise normalized inner products across signal panels; near-unit values flagged as collinear duplicates."
+   }
+  },
+  {
+   "primitive_id": "gram_schmidt_procedure",
+   "name": "Gram-Schmidt procedure 6.32: an explicit recursion subtracts from each v_k its projections onto the previous orthogonal vectors and normalizes, producing an orthonormal list e_1, ..., e_m with span(v_1, ..., v_k) = span(e_1, ..., e_k) for every k",
+   "verbatim_quote": "Suppose 𝑣1 , … , 𝑣𝑚 is a linearly independent list of vectors in 𝑉. Let 𝑓1 = 𝑣1 . For 𝑘 = 2, … , 𝑚, define 𝑓𝑘 inductively by",
+   "page": "Chapter 6, Section 6B, result 6.32 (extracted text line 10246)",
+   "latex": "f_k = v_k - \\frac{\\langle v_k, f_1 \\rangle}{\\|f_1\\|^2} f_1 - \\cdots - \\frac{\\langle v_k, f_{k-1} \\rangle}{\\|f_{k-1}\\|^2} f_{k-1}, \\qquad e_k = \\frac{f_k}{\\|f_k\\|}",
+   "symbol_and_unit_ledger": {
+    "v_k": "the k-th input vector",
+    "f_k": "the k-th orthogonalized vector before normalization",
+    "e_k": "the normalized output vector",
+    "<., .>": "the inner product",
+    "||f_j||^2": "the squared norm of an earlier orthogonal vector"
+   },
+   "assumptions": [
+    "The input list is linearly independent, which is exactly what keeps every f_k nonzero so that normalization is legal",
+    "An inner product on V is fixed in advance"
+   ],
+   "breakdown_regime": "The output depends on the input order: permuting the list produces a different orthonormal basis of the same span. The theorem is an exact-arithmetic statement; in floating point the classical recursion loses orthogonality when the inputs are nearly dependent, and the result says nothing about that stability question.",
+   "domain": "algorithms / orthogonalization",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gram-Schmidt is the engine's orthogonalization routine: it converts a redundant, correlated evidence list into an orthonormal basis of the same information space while preserving the span at every prefix. Incremental updates therefore never change what a panel can express, only how cleanly it expresses it.",
+    "source_operator": "gram_schmidt_procedure",
+    "telemetry": "Signal panels submitted for orthogonalization: input order, output norms, and orthogonality residuals."
+   }
+  },
+  {
+   "primitive_id": "riesz_representation_theorem",
+   "name": "Riesz representation theorem 6.42: if V is finite-dimensional and phi is a linear functional on V, then there is a unique vector v in V such that phi(u) = <u, v> for every u in V",
+   "verbatim_quote": "Suppose 𝑉 is finite-dimensional and 𝜑 is a linear functional on 𝑉. Then there is a unique vector 𝑣 ∈ 𝑉 such that 𝜑(𝑢) = ⟨𝑢, 𝑣⟩ for every 𝑢 ∈ 𝑉.",
+   "page": "Chapter 6, Section 6C, result 6.42 (extracted text line 10488)",
+   "latex": "\\varphi(u) = \\langle u, v \\rangle",
+   "symbol_and_unit_ledger": {
+    "phi": "a linear functional on V, that is, a linear map from V to F",
+    "v": "the unique representing vector in V",
+    "u": "an arbitrary vector in V"
+   },
+   "assumptions": [
+    "V is finite-dimensional in this book's version",
+    "The inner product is fixed; the representing vector depends on it"
+   ],
+   "breakdown_regime": "Existence and uniqueness both lean on the inner product and, as stated here, on finite dimensionality: in infinite dimensions the theorem survives only for continuous functionals on Hilbert spaces, and a discontinuous functional has no representing vector. Change the inner product and the same functional is represented by a different vector.",
+   "domain": "duality / inner product spaces",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Riesz representation is the engine's score-to-vector converter: every linear scoring rule over a state space is an inner product against one prototype vector. The engine can therefore store a scoring rule as a point in the very space it scores, compare scoring rules geometrically, and read off which prototype a rule is really using.",
+    "source_operator": "riesz_representation_theorem",
+    "telemetry": "Linear scoring rules in the engine, each stored with its representing vector under the declared inner product."
+   }
+  },
+  {
+   "primitive_id": "orthogonal_projection_best_approximation",
+   "name": "Orthogonal projection 6.49, 6.55 and 6.61: V is the direct sum of U and its orthogonal complement, the orthogonal projection P_U onto U is the operator with range U and null space U-perp, and P_U v is the unique point of U closest to v",
+   "verbatim_quote": "Suppose 𝑈 is a finite-dimensional subspace of 𝑉, 𝑣 ∈ 𝑉, and 𝑢 ∈ 𝑈 . Then ‖𝑣 − 𝑃𝑈 𝑣‖ ≤ ‖𝑣 − 𝑢‖. Furthermore, the inequality above is an equality if and only if 𝑢 = 𝑃𝑈 𝑣.",
+   "page": "Chapter 6, Section 6C, results 6.49, 6.55 and 6.61 (extracted text line 11100)",
+   "latex": "\\|v - P_U v\\| \\le \\|v - u\\| \\quad \\text{for all } u \\in U",
+   "symbol_and_unit_ledger": {
+    "U": "a finite-dimensional subspace of V",
+    "P_U": "the orthogonal projection onto U",
+    "v": "the vector being approximated",
+    "u": "an arbitrary competitor in U",
+    "||.||": "the norm induced by the inner product"
+   },
+   "assumptions": [
+    "U is finite-dimensional, automatic when V is, which guarantees that U-perp complements U",
+    "Closest means closest in the norm induced by the fixed inner product"
+   ],
+   "breakdown_regime": "Best approximation is norm-relative: change the inner product and the projection of the same vector onto the same subspace moves. Approximation by general convex sets obeys a different theory, and in infinite dimensions the needed hypothesis on U is closedness rather than finite dimensionality.",
+   "domain": "geometry / approximation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Orthogonal projection is the engine's approximation operator: projecting a state onto the subspace spanned by the available evidence gives the best reconstruction that evidence supports, and the residual v - P_U v is exactly the unexplained component. That residual is an honest, measurable quantity the reasoning layer can report instead of hiding.",
+    "source_operator": "orthogonal_projection_best_approximation",
+    "telemetry": "Projection residuals per state: the norm of the unexplained component reported beside the explained component."
+   }
+  },
+  {
+   "primitive_id": "pseudoinverse",
+   "name": "Pseudoinverse 6.68 and 6.69: the pseudoinverse T-dagger of T is the linear map that inverts T on the orthogonal complement of null T after projecting onto range T; consequently T-dagger w is the minimum-norm least-squares solution, the unique vector in (null T)-perp minimizing ||T u - w||",
+   "verbatim_quote": "Suppose that 𝑉 is finite-dimensional and 𝑇 ∈ ℒ(𝑉, 𝑊). The pseudoinverse 𝑇 † ∈ ℒ(𝑊, 𝑉) of 𝑇 is the linear map from 𝑊 to 𝑉 defined by 𝑇 † 𝑤 = (𝑇|(null 𝑇)⟂ )−1 𝑃range 𝑇 𝑤 for each 𝑤 ∈ 𝑊.",
+   "page": "Chapter 6, Section 6D, definition 6.68 and result 6.69 (extracted text line 11264)",
+   "latex": "T^\\dagger w = \\big(T|_{(\\operatorname{null} T)^\\perp}\\big)^{-1} P_{\\operatorname{range} T}\\, w",
+   "symbol_and_unit_ledger": {
+    "T-dagger": "the pseudoinverse, a linear map from W to V",
+    "(null T)-perp": "the orthogonal complement of the kernel in V",
+    "P_{range T}": "the orthogonal projection onto the range in W",
+    "the restricted map": "T restricted to (null T)-perp, which is invertible onto range T"
+   },
+   "assumptions": [
+    "V is finite-dimensional, so the orthogonal decompositions and the restricted inverse exist",
+    "The inner products on V and W are fixed; the pseudoinverse depends on both"
+   ],
+   "breakdown_regime": "The pseudoinverse answers two questions at once, best fit and then smallest norm, and it silently discards the component of w outside range T. It is also discontinuous as a function of T when the rank changes, so near-rank-deficient maps have unstable pseudoinverses even though the definition is exact.",
+   "domain": "least squares / generalized inverses",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The pseudoinverse is the engine's canonical solver for underdetermined and overdetermined linear inference: given observations w, it returns the smallest state that fits them as closely as possible, and the discarded component, the range-projection residual, stays visible as the misfit the model could not explain.",
+    "source_operator": "pseudoinverse",
+    "telemetry": "Inference requests as (T, w) pairs; returned solutions logged with their norms and range-projection residuals."
+   }
+  },
+  {
+   "primitive_id": "adjoint",
+   "name": "Adjoint 7.1 and 7.2: the adjoint T* of a linear map between inner product spaces is the unique linear map satisfying <Tv, w> = <v, T* w> for all v and w; also (S + T)* = S* + T*, (lambda T)* = conjugate(lambda) T*, (ST)* = T* S*, and (T*)* = T",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉, 𝑊). The adjoint of 𝑇 is the function 𝑇 ∗ ∶ 𝑊 → 𝑉 such that ⟨𝑇𝑣, 𝑤⟩ = ⟨𝑣, 𝑇 ∗ 𝑤⟩ for every 𝑣 ∈ 𝑉 and every 𝑤 ∈ 𝑊.",
+   "page": "Chapter 7, Section 7A, definition 7.1 and result 7.2 (extracted text line 11585)",
+   "latex": "\\langle Tv, w \\rangle = \\langle v, T^* w \\rangle",
+   "symbol_and_unit_ledger": {
+    "T*": "the adjoint of T, a linear map from W back to V",
+    "T": "a linear map from V to W",
+    "v, w": "vectors in V and W respectively",
+    "<., .>": "the inner products on the two spaces"
+   },
+   "assumptions": [
+    "The spaces are finite-dimensional inner product spaces, so Riesz representation supplies the representing vectors that define T*",
+    "In an orthonormal basis, the matrix of T* is the conjugate transpose of the matrix of T (7.10)"
+   ],
+   "breakdown_regime": "The adjoint depends on the inner products: the same linear map has different adjoints under different inner products. Without an inner product there is no adjoint at all, only the dual map acting on dual spaces, which lives in a different space and supports strictly less computation.",
+   "domain": "duality / operators",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The adjoint is the engine's reverse channel: it moves information about outputs back into input space with the geometry preserved, which is what sensitivity analysis, gradient computation, and credit assignment reduce to in the linear setting. The reversal rule (ST)* = T* S* dictates the exact order in which chained transformations are unwound.",
+    "source_operator": "adjoint",
+    "telemetry": "Transformation chains with their adjoints; sensitivity vectors computed as adjoints applied to output residuals."
+   }
+  },
+  {
+   "primitive_id": "normal_operator_characterization",
+   "name": "Normal operators 7.18, 7.20 and 7.23: T is normal if T commutes with its adjoint, T T* = T* T; this is equivalent to ||Tv|| = ||T* v|| for every v, and to T and T* having the same eigenvectors with conjugate eigenvalues",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉). Then 𝑇 is normal ⟺ ‖𝑇𝑣‖ = ‖𝑇 ∗ 𝑣‖ for every 𝑣 ∈ 𝑉.",
+   "page": "Chapter 7, Section 7B, definition 7.18 and results 7.20 and 7.23 (extracted text line 11986)",
+   "latex": "TT^* = T^*T, \\qquad \\|Tv\\| = \\|T^* v\\| \\ \\text{for all } v",
+   "symbol_and_unit_ledger": {
+    "T*": "the adjoint of T",
+    "TT* and T*T": "the two compositions of T with its adjoint on V",
+    "||Tv||": "the norm of the forward image of v",
+    "||T* v||": "the norm of the adjoint image of v"
+   },
+   "assumptions": [
+    "T is an operator on one inner product space V, so both T and T* act on the same space",
+    "The treatment in this book is finite-dimensional"
+   ],
+   "breakdown_regime": "Normality is a strong symmetry and most operators fail it; for non-normal operators the eigenvectors can be far from orthogonal and spectral conclusions degrade accordingly. The norm characterization is an infinite family of conditions, one per vector, so in practice normality is verified through the commuting equation instead.",
+   "domain": "spectral theory / operators",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Normality is the engine's symmetry certificate for a transformation: when the forward and adjoint actions have identical norms on every input, the transformation neither amplifies nor hides information asymmetrically. That is the precondition for trusting its spectral decomposition as a faithful summary of its behavior.",
+    "source_operator": "normal_operator_characterization",
+    "telemetry": "Per-operator commutator norms, the norm of TT* - T*T, reported beside computed spectra."
+   }
+  },
+  {
+   "primitive_id": "spectral_theorem",
+   "name": "Spectral theorem 7.29 and 7.31: over R, T is self-adjoint if and only if it has a diagonal matrix with respect to some orthonormal basis, equivalently V has an orthonormal basis of eigenvectors; over C, T is normal if and only if it has an orthonormal basis of eigenvectors",
+   "verbatim_quote": "Suppose 𝐅 = 𝐑 and 𝑇 ∈ ℒ(𝑉). Then the following are equivalent. (a) 𝑇 is self-adjoint. (b) 𝑇 has a diagonal matrix with respect to some orthonormal basis of 𝑉. (c) 𝑉 has an orthonormal basis consisting of eigenvectors of 𝑇.",
+   "page": "Chapter 7, Section 7C, results 7.29 and 7.31 (extracted text line 12393)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The space is a finite-dimensional inner product space",
+    "Over R the operator must be self-adjoint; over C normality is the exact hypothesis; eigenvalues of self-adjoint operators are real (7.12)"
+   ],
+   "breakdown_regime": "The hypotheses are sharp: a real rotation is not self-adjoint and has no real eigenbasis, and a complex nilpotent Jordan block is not normal and has no orthonormal eigenbasis. The theorem promises existence, not an algorithm, and it says nothing about eigenvalue separation or the stability of the eigenbasis.",
+   "domain": "spectral theory / decomposition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The spectral theorem is the engine's master decomposition: a self-adjoint or normal transformation is exactly a set of independent scalar modes written in an orthonormal coordinate system, so storage, powers, and long-run behavior factor over modes with no cross-talk. It defines the class of transformations the engine can summarize losslessly by a spectrum plus an eigenbasis.",
+    "source_operator": "spectral_theorem",
+    "telemetry": "Operators certified self-adjoint or normal, each stored as eigenvalues plus an orthonormal eigenbasis."
+   }
+  },
+  {
+   "primitive_id": "positive_operator_characterizations",
+   "name": "Positive operators 7.38 and 7.39: the following are equivalent: T is positive; T is self-adjoint with all eigenvalues nonnegative; T has a diagonal matrix with nonnegative entries in some orthonormal basis; T has a positive square root; T has a self-adjoint square root; T = R* R for some R. The positive square root is unique",
+   "verbatim_quote": "Let 𝑇 ∈ ℒ(𝑉). Then the following are equivalent. (a) 𝑇 is a positive operator. (b) 𝑇 is self-adjoint and all eigenvalues of 𝑇 are nonnegative.",
+   "page": "Chapter 7, Section 7D, results 7.38 and 7.39 (extracted text line 12729)",
+   "latex": "T = R^* R",
+   "symbol_and_unit_ledger": {
+    "T": "an operator on V",
+    "R": "an operator with T = R* R",
+    "R*": "the adjoint of R",
+    "positive square root": "the unique positive operator whose square is T"
+   },
+   "assumptions": [
+    "T is an operator on a finite-dimensional inner product space",
+    "Positive means self-adjoint with <Tv, v> nonnegative for all v; over C the inequality alone forces self-adjointness (7.35)"
+   ],
+   "breakdown_regime": "Positivity is a cone condition, not a generic property: sums and positive scalings of positive operators stay positive, but products of positive operators need not be positive. The factorization T = R* R is highly non-unique, since R is determined only up to a unitary factor, while the positive square root is the unique canonical factor.",
+   "domain": "operators / order structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Positive operators are the engine's covariance-like objects: every Gram-style construction R* R is automatically positive, and the characterizations let the engine move freely between a quadratic form, its spectrum, and a factor R, choosing whichever representation a computation needs while the theorem guarantees they describe the same object.",
+    "source_operator": "positive_operator_characterizations",
+    "telemetry": "Quadratic-form objects stored with a factor R and checked against the spectral characterization."
+   }
+  },
+  {
+   "primitive_id": "singular_value_decomposition",
+   "name": "Singular values and SVD 7.65, 7.70 and 7.93: the singular values of T are the nonnegative square roots of the eigenvalues of T* T in decreasing order, and there exist orthonormal lists e_1, ..., e_m in V and f_1, ..., f_m in W with T v = s_1 <v, e_1> f_1 + ... + s_m <v, e_m> f_m for every v; polar decomposition writes T = S sqrt(T* T) with S an isometry",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉, 𝑊) and the positive singular values of 𝑇 are 𝑠1 , … , 𝑠𝑚 . Then there exist orthonormal lists 𝑒1 , … , 𝑒𝑚 in 𝑉 and 𝑓1 , … , 𝑓𝑚 in 𝑊 such that",
+   "page": "Chapter 7, Section 7E, definition 7.65 and results 7.70 and 7.93 (extracted text line 13809)",
+   "latex": "Tv = s_1 \\langle v, e_1 \\rangle f_1 + \\cdots + s_m \\langle v, e_m \\rangle f_m",
+   "symbol_and_unit_ledger": {
+    "s_k": "the singular values, in decreasing order",
+    "e_k": "an orthonormal list in V, eigenvectors of T* T",
+    "f_k": "an orthonormal list in W",
+    "T* T": "a positive operator whose eigenvalues are the squares s_k^2"
+   },
+   "assumptions": [
+    "T maps between finite-dimensional inner product spaces V and W; squareness and invertibility are not assumed",
+    "m is the number of positive singular values, which equals the rank of T"
+   ],
+   "breakdown_regime": "The SVD always exists, which makes it the robust substitute where eigendecomposition fails; its costs are that the two sides use different bases, so it does not describe an operator's own dynamics, and that small singular values are noise-sensitive, so truncating them is a modeling decision rather than a theorem. The best rank-k approximation fact (7.92) quantifies exactly what truncation keeps.",
+   "domain": "decomposition / numerical analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The SVD is the engine's universal factorization for rectangular, non-symmetric evidence maps: it ranks the channels between two different spaces by gain, the singular values, and supplies orthonormal bases on both sides. Its truncation is the optimal compression used when only the strongest channels can be kept, and polar decomposition then splits any map into a rotation-like part and a positive stretch.",
+    "source_operator": "singular_value_decomposition",
+    "telemetry": "Evidence maps between distinct spaces stored as singular values with left and right orthonormal lists; truncation levels logged."
+   }
+  },
+  {
+   "primitive_id": "operator_norm",
+   "name": "Operator norm 7.86 and 7.88: the norm of T is ||T|| = max{||Tv|| : ||v|| at most 1}; it equals the largest singular value of T and also the smallest nonnegative constant c such that ||Tv|| is at most c ||v|| for all v",
+   "verbatim_quote": "Suppose 𝑇 ∈ ℒ(𝑉, 𝑊). Then the norm of 𝑇 , denoted by ‖𝑇‖, is defined by ‖𝑇‖ = max{‖𝑇𝑣‖ ∶ 𝑣 ∈ 𝑉 and ‖𝑣‖ ≤ 1}.",
+   "page": "Chapter 7, Section 7E, definition 7.86 and result 7.88 (extracted text line 14185)",
+   "latex": "\\|T\\| = \\max\\{\\|Tv\\| : v \\in V, \\ \\|v\\| \\le 1\\}",
+   "symbol_and_unit_ledger": {
+    "||T||": "the operator norm of T, a nonnegative real number",
+    "the maximum": "taken over the closed unit ball of V",
+    "largest singular value": "s_1, the first singular value of T"
+   },
+   "assumptions": [
+    "V is finite-dimensional, so the maximum is attained; in infinite dimensions the corresponding quantity is a supremum",
+    "The norms on V and W come from their inner products"
+   ],
+   "breakdown_regime": "The operator norm measures worst-case gain only: it is blind to average behavior and to direction-specific gains below the maximum. It also depends on the chosen norms on both spaces, so one map carries different operator norms under different geometries.",
+   "domain": "operators / bounds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The operator norm is the engine's worst-case amplification gauge for a transformation: it caps how much any input perturbation can be magnified, and its identity with the largest singular value means the gauge is readable directly from the SVD the engine already stores.",
+    "source_operator": "operator_norm",
+    "telemetry": "Per-transformation gain caps: the largest singular value reported as the certified worst-case amplification."
+   }
+  },
+  {
+   "primitive_id": "generalized_eigenspace_decomposition",
+   "name": "Generalized eigenspace decomposition 8.22, with Jordan form 8.46: over C, each generalized eigenspace G(lambda_k, T) is invariant under T, the restriction of T - lambda_k I to it is nilpotent, and V is the direct sum of the G(lambda_k, T); a Jordan basis then puts T in Jordan form",
+   "verbatim_quote": "Suppose 𝐅 = 𝐂 and 𝑇 ∈ ℒ(𝑉). Let 𝜆1 , … , 𝜆𝑚 be the distinct eigenvalues of 𝑇. Then (a) 𝐺(𝜆𝑘 , 𝑇) is invariant under 𝑇 for each 𝑘 = 1, … , 𝑚; (b) (𝑇 − 𝜆𝑘 𝐼)|𝐺( 𝜆𝑘 ,𝑇) is nilpotent for each 𝑘 = 1, … , 𝑚; (c) 𝑉 = 𝐺(𝜆1 , 𝑇) ⊕ ⋯ ⊕ 𝐺(𝜆𝑚 , 𝑇).",
+   "page": "Chapter 8, Section 8B, results 8.22 and 8.46 (extracted text line 15539)",
+   "latex": "V = G(\\lambda_1, T) \\oplus \\cdots \\oplus G(\\lambda_m, T)",
+   "symbol_and_unit_ledger": {
+    "G(lambda_k, T)": "the generalized eigenspace, the set of v with (T - lambda_k I)^j v = 0 for some j",
+    "nilpotent": "some power of the operator is the zero operator",
+    "the direct sum": "taken over the distinct eigenvalues lambda_1, ..., lambda_m"
+   },
+   "assumptions": [
+    "The field is C, so the minimal polynomial splits into linear factors",
+    "V is finite-dimensional, which bounds the exponents needed by dim V"
+   ],
+   "breakdown_regime": "This is the end of the decomposition road over C: nothing splits a Jordan block further, and block sizes are discrete invariants that jump under perturbation, so the decomposition is structurally unstable even though it always exists. Over R, irreducible quadratic factors produce real Jordan blocks with rotation structure that the complex statement hides.",
+   "domain": "spectral theory / normal forms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The generalized eigenspace decomposition is the engine's failure-tolerant spectral picture: when modes cannot be separated cleanly because an eigenvalue is defective, the decomposition still isolates each mode's invariant subspace and names the nilpotent coupling inside it. The reasoning layer can therefore report coupled modes honestly instead of forcing a diagonal story.",
+    "source_operator": "generalized_eigenspace_decomposition",
+    "telemetry": "Per-operator block structure: generalized eigenspace dimensions and nilpotency indices stored with the spectrum."
+   }
+  },
+  {
+   "primitive_id": "characteristic_polynomial_and_cayley_hamilton",
+   "name": "Characteristic polynomial 8.26, its determinant form 9.62, and Cayley-Hamilton 8.29: the characteristic polynomial of T is the product of the factors (z - lambda_k) raised to their algebraic multiplicities, it equals det(zI - T) when F = C, and T satisfies its own characteristic polynomial, q(T) = 0",
+   "verbatim_quote": "Suppose 𝐅 = 𝐂 , 𝑇 ∈ ℒ(𝑉), and 𝑞 is the characteristic polynomial of 𝑇. Then 𝑞(𝑇) = 0.",
+   "page": "Chapter 8, Section 8C, definition 8.26 and result 8.29 (extracted text line 15693)",
+   "latex": "q(T) = 0",
+   "symbol_and_unit_ledger": {
+    "q": "the characteristic polynomial of T, of degree dim V",
+    "lambda_k": "the eigenvalues of T",
+    "multiplicities": "the dimensions of the generalized eigenspaces, summing to dim V (8.30)",
+    "q(T)": "the operator obtained by substituting T into q"
+   },
+   "assumptions": [
+    "The definition as stated is over C; the determinant form det(zI - T) is the version that extends the definition to a general field",
+    "The degree of the characteristic polynomial is dim V, matching the size of any matrix of T"
+   ],
+   "breakdown_regime": "Cayley-Hamilton supplies an annihilating polynomial, not the smallest one: the minimal polynomial can be a proper divisor, so using q as a spectral fingerprint overstates coupling. The characteristic polynomial also does not determine an operator up to similarity; the Jordan block structure is strictly finer information.",
+   "domain": "spectral theory / invariants",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cayley-Hamilton is the engine's self-consistency law for iterated transformations: every power T^k with k at least dim V reduces to a combination of lower powers, so the long-horizon behavior of a linear process lives in a fixed finite span. The characteristic polynomial is the computable certificate, a determinant, that packages the full spectrum with multiplicities for storage and comparison.",
+    "source_operator": "characteristic_polynomial_and_cayley_hamilton",
+    "telemetry": "Per-operator characteristic polynomials; power reduction of iterated maps checked against degree dim V."
+   }
+  },
+  {
+   "primitive_id": "trace_equals_sum_of_eigenvalues",
+   "name": "Trace 8.51 and 8.52: the trace of T is the sum of the diagonal entries of the matrix of T in any basis, which is independent of the basis; over C it equals the sum of the eigenvalues of T, each counted with its algebraic multiplicity",
+   "verbatim_quote": "Suppose 𝐅 = 𝐂 and 𝑇 ∈ ℒ(𝑉). Then tr 𝑇 equals the sum of the eigenvalues of 𝑇 , with each eigenvalue included as many times as its multiplicity.",
+   "page": "Chapter 8, Section 8D, definition 8.51 and result 8.52 (extracted text line 16533)",
+   "latex": "\\operatorname{tr} T = d_1 \\lambda_1 + \\cdots + d_m \\lambda_m",
+   "symbol_and_unit_ledger": {
+    "tr T": "the trace of the operator T",
+    "d_k": "the algebraic multiplicity of the eigenvalue lambda_k",
+    "lambda_k": "the distinct eigenvalues of T"
+   },
+   "assumptions": [
+    "Basis-independence runs through the matrix identity tr(AB) = tr(BA) (8.50)",
+    "The eigenvalue form is stated over C; over R the trace is still defined by the matrix formula and equals the corresponding coefficient of the characteristic polynomial"
+   ],
+   "breakdown_regime": "The trace is a single linear summary: it cannot distinguish operators whose eigenvalues have the same sum, it is not multiplicative, and over R the eigenvalue reading requires complexification before it is even meaningful. It is a checksum, not a description.",
+   "domain": "invariants / operators",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The trace is the engine's cheapest spectral invariant: one basis-independent number that aggregates the whole spectrum with multiplicity, computable from whatever matrix representation is at hand. It serves as a checksum when representations change: recompute the trace after a basis change and any mismatch exposes an error.",
+    "source_operator": "trace_equals_sum_of_eigenvalues",
+    "telemetry": "Checksum values per operator: the trace computed in the working basis compared against the stored eigenvalue sum."
+   }
+  },
+  {
+   "primitive_id": "determinant_multiplicative_and_invertibility",
+   "name": "Determinant 9.41, 9.49 and 9.50: det T is the unique scalar such that pulling any alternating form on V back along T multiplies it by det T; det(ST) = (det S)(det T) and det(AB) = (det A)(det B); T is invertible if and only if det T is nonzero, and then det(T^{-1}) = 1 / det T; also lambda is an eigenvalue if and only if det(lambda I - T) = 0 (9.51)",
+   "verbatim_quote": "Suppose 𝑆, 𝑇 ∈ ℒ(𝑉). Then det(𝑆𝑇) = (det 𝑆)(det 𝑇).",
+   "page": "Chapter 9, Section 9C, definitions 9.41 and 9.43 and results 9.49, 9.50 and 9.51 (extracted text line 17996)",
+   "latex": "\\det(ST) = (\\det S)(\\det T)",
+   "symbol_and_unit_ledger": {
+    "det T": "the determinant of the operator T, a scalar in F",
+    "S, T": "operators on V",
+    "alternating form": "a multilinear form on V that vanishes when two arguments are equal; the space of such forms is one-dimensional, which makes det T well defined"
+   },
+   "assumptions": [
+    "V is finite-dimensional, so the space of alternating forms on V in dim V arguments is one-dimensional and the defining scalar is unique",
+    "The matrix determinant (9.43) is the determinant of the associated operator on F^n in the standard basis, and the permutation formula (9.46) computes it"
+   ],
+   "breakdown_regime": "The determinant compresses an operator to one scalar: it detects invertibility and volume scaling and nothing else, and it is numerically treacherous, since very small determinants arise from both well-conditioned and ill-conditioned maps. The permutation formula is also a matrix formula tied to coordinates, unlike the basis-free operator definition.",
+   "domain": "invariants / multilinear algebra",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The determinant is the engine's volume and invertibility gauge: its absolute value is the factor by which a transformation scales volumes, the change-of-variables factor, its vanishing is the exact singularity test, and multiplicativity makes the gauge compose across chained transformations, so a pipeline's total volume distortion is the product of its stages.",
+    "source_operator": "determinant_multiplicative_and_invertibility",
+    "telemetry": "Per-transformation determinants with singularity flags; pipeline volume-distortion products across stages."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ce0ebe3f5eb7aaf4-t1",
+   "think": "This book builds all of finite-dimensional linear algebra from one refusal: nothing is allowed to be a matter of coordinates until the coordinate-free statement has been proved. The architecture is a chain of compressions. Chapter 1 fixes the arena, vector spaces and subspaces, and the idea of a sum of subspaces with unique representation. Chapter 2 adds counting: linear independence, span, bases, and then the length inequality, which is the quiet engine of the whole book, because it forces every basis to have the same length and thereby makes dimension a property of the space rather than of a chosen description. Chapter 3 studies maps between spaces. The fundamental theorem of linear maps, dim V equals dim null T plus dim range T, is a conservation law: a linear map cannot create dimension and cannot destroy it without recording the loss in its null space. Matrices enter only after that, as bookkeeping devices tied to bases, with the warning built into the theory that the matrix is not the map. Chapter 4 develops polynomials as an operator calculus in waiting, proving the division algorithm and the fundamental theorem of algebra, because the spectral theory of Chapter 5 needs roots. Eigenvalues are then defined without determinants, as the scalars where T minus lambda I stops being invertible, and the minimal polynomial appears as the smallest algebraic fingerprint of an operator: its zeros are the eigenvalues, its factor exponents measure Jordan coupling, and it divides every annihilating polynomial. Triangularization is proved before diagonalization is even asked about, which reverses the usual textbook order and is more honest: triangular form always exists over C, diagonal form exists exactly when the eigenspaces are large enough to fill the space, and the four equivalent conditions in 5.55 say precisely what filling means. Gershgorin disks close the chapter as the computable shadow of the spectrum, bounds obtainable from a matrix by inspection. Chapter 6 changes the question from algebra to geometry by adding an inner product. Now length, angle, and orthogonality exist, and with them the three workhorses of applied reasoning: orthogonal projection as best approximation with an explicit residual, Gram-Schmidt as a span-preserving orthogonalization algorithm, and the Riesz representation theorem, which says every linear score is secretly an inner product against a single prototype vector. The pseudoinverse extends the same geometry to maps that cannot be inverted, returning the smallest least-squares solution and honestly discarding the component of the data that lies outside the range. Chapter 7 studies operators on one space through the adjoint. Self-adjoint and normal operators receive the spectral theorem, a complete decoupling into orthonormal eigenmodes; positive operators receive six equivalent characterizations that let a quadratic form, a spectrum, and a factorization R-star R be used interchangeably; and the singular value decomposition handles every map whatsoever, symmetric or not, square or not, at the price of using two different orthonormal bases. The operator norm is then identified with the largest singular value, closing the loop between geometry and worst-case gain. Chapters 8 and 9 are the reconciliation. When diagonalization fails, generalized eigenspaces and the Jordan form give the finest decomposition that exists, the characteristic polynomial packages the spectrum with multiplicities and Cayley-Hamilton shows the operator obeys its own polynomial, and the trace and determinant emerge as the two cheapest basis-independent summaries, one additive over the spectrum, one multiplicative over composition. Determinants themselves are defined last and basis-free, through alternating forms, which makes multiplicativity a three-line proof instead of a permutation computation, and closes the circle back to eigenvalues through det(lambda I minus T). For a reasoning engine, the transfer is direct. The book supplies a typed ontology: states live in vector spaces, transformations are linear maps with a dimension budget, coordinates are contracts that must name their basis, and every summary of a transformation is one of a small set of invariants, spectrum, minimal polynomial, trace, determinant, singular values, each with a theorem stating exactly what it does and does not capture. It also supplies the failure language: defective eigenvalues, non-normal operators, field obstructions over R, rank instability. An engine built on this vocabulary can state not only what it computed but which theorem licenses the computation and which hypothesis would void it. The limits are equally clear. The machinery is finite-dimensional and exact; it assumes linearity rather than discovering it, it is silent about noise, probability, and approximation error except where projections and singular values quantify them, and its canonical forms can be structurally unstable under perturbation. Used inside those limits, it is the load-bearing grammar underneath any system that represents, transforms, compresses, and audits structured information. Two design choices deserve emphasis because they generalize beyond the subject. The first is the treatment of multilinear algebra in the final chapter: the tensor product of two spaces is defined basis-free, as the space of bilinear functionals on the product of the dual spaces, so the object exists before any coordinates do, and the dimension formula, dim of the tensor product equals the product of the dimensions, falls out of the definition rather than being imposed on it. The engine-facing lesson is that pairwise interaction structure should be modeled as a new space with its own basis and its own dimension budget, not as an unstructured bag of products appended to a feature list. The second is the book's standard of understanding: central concepts are stated through several equivalent conditions whenever possible, four for diagonalizability, six for positive operators, because a concept is only mastered when it can be recognized from independent directions and each recognition has been proved to coincide with the others. A reasoning engine should hold its own concepts to the same standard: a signal that can be detected in only one way is a signal that cannot be cross-validated. The book is equally a standing warning against summaries that outrun their theorems: a trace is not a spectrum, a determinant is not a condition number, and a triangular form is not a decoupling.",
+   "retrocausal_genealogy": "The lineage runs from nineteenth-century matrix algebra and the Cayley-Hamilton identity through Jordan's canonical form work, which showed that a complex operator decomposes into near-diagonal blocks, and through the function-space period in which Hilbert and his school turned inner products into a geometry of infinite-dimensional spaces. Riesz's representation theorem came out of that period's study of linear functionals, Gram-Schmidt orthogonalization out of integral-equation computations, and the generalized inverse out of Moore's and later Penrose's work on solving inconsistent linear systems. Gershgorin's disks came from numerical practice, where eigenvalue locations had to be certified from a matrix by hand. Axler's own contribution to the lineage is pedagogical and structural: beginning with the first edition in the 1990s, the book rebuilt the standard course so that determinants, traditionally the definition-heavy entrance, become a final corollary of alternating forms.",
+   "theory_of_mind": "Axler writes as if the reader's real obstacle is not technique but premature coordinates: students compute with matrices before knowing what the entries mean, so the book delays matrices, delays determinants even longer, and insists that every concept first exist as a property of spaces and maps. His model of the domain is that linear algebra is a small number of structural facts, dimension counting, invariant subspaces, duality through inner products, wearing many computational costumes. The margin notes, biographies, and jokes model a second belief: that the subject is a human artifact with a history, and that a reader who sees why a definition was forced will remember it longer than a reader who memorizes it. Proofs are kept short and conceptual on purpose, because in his model a long computation in a proof is a sign that the wrong definition was chosen earlier.",
+   "cross_layer_veto": "Several results in this book act as vetoes on claims other layers might want to make. The length inequality and rank-nullity veto any transformation story that creates dimension from nothing: preserved directions plus destroyed directions must equal the input dimension. The field sensitivity of the spectral theory vetoes eigenvalue claims over R for operators whose minimal polynomial has irreducible quadratic factors, and the diagonalizability conditions veto decoupled-mode stories whenever an eigenspace is too small. Cauchy-Schwarz vetoes any reported correlation whose normalized inner product exceeds one, and the determinant vetoes invertibility claims exactly when it vanishes. The operator norm caps every amplification claim a pipeline makes about a transformation. A reasoning layer that imports this book must accept these as hard constraints, not as heuristics to be averaged against other signals."
+  }
+ ],
+ "universal_lens": "Stripped of its subject matter, this book is a template for taming any domain of composable transformations: first fix the space of states and the legal ways to combine them, then certify coordinate systems with uniqueness guarantees, then impose a conservation law on every transformation, then classify transformations by invariants that survive redescription, and finally build canonical decompositions that separate what decouples cleanly from what is irreducibly coupled. The recurring move is to replace a computation with a characterization: many equivalent conditions for one concept, so that whichever condition is cheapest to check in a given situation becomes the working definition. That pattern, plus the discipline of naming the residual whenever something is approximated, transfers to any field where complex objects must be summarized without being misrepresented.",
+ "gsi_mapping": "For the Galaxy Sports Institute, this book is foundational curriculum and research grammar at once. It defines the mathematical objects the Institute's reasoning research manipulates: state spaces, linear evidence maps, invariant summaries, and canonical decompositions, together with the exact hypotheses under which each manipulation is licensed. Its equivalent-condition style is also the Institute's house standard for a mature concept: a notion is understood when it can be recognized from several independent directions and each recognition has been proved to coincide with the others. The failure taxonomy matters as much as the theorems: defective modes, non-normal asymmetry, and field obstructions are the Institute's model for how a clean decomposition can be unavailable in principle rather than merely uncomputed, which disciplines any claim the Institute publishes about structure in data.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, this book is the linear-algebra substrate of the reasoning layer. State representations are vector spaces with declared bases; evidence transforms carry rank-nullity budgets so silent information loss is measured, not assumed; projections supply best reconstructions with explicit residuals that the engine reports as unexplained components; the pseudoinverse is the default solver for inconsistent linear inference; spectra, minimal polynomials, traces, determinants, and singular values form the certified summary set for any transformation, with Gershgorin disks as cheap pre-checks and the operator norm as a worst-case gain cap. Equally important are the refusal rules the book proves: no diagonal story for defective operators, no real spectrum for operators whose polynomial does not split over R, no invertibility when the determinant is zero."
+}

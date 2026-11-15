@@ -1,0 +1,181 @@
+{
+  "schema_version": "2026-11-15.week10.orchestration_receipt.v1",
+  "generated_at_utc": "2026-11-15T13:47:00Z",
+  "branch": "feat/ethos-overnight-week10-sunday-launch-2026-11-15",
+  "slate": {
+    "nfl_season": 2026,
+    "nfl_week": 10,
+    "remaining_games": 13,
+    "dossiers_completed": 13,
+    "sim_files_verified": 13,
+    "slate_packet_sha256": "3f3c0b0eb4feff196730862b20a11565ac76f95f3ba90d31a4e40dfe484cf139",
+    "opening_kickoff_utc": "2026-11-15T14:30:00Z",
+    "opening_game": {
+      "matchup": "NE @ DET",
+      "venue": "Munich",
+      "espn_event_id": "401873053",
+      "live_checked_utc": "2026-11-15T13:24:17.086692+00:00",
+      "espn_status": "Sun, November 15th at 9:30 AM EST",
+      "market_spread": "DET -2.5",
+      "market_over_under": 50.5,
+      "official_out_injuries_count": 10
+    }
+  },
+  "wire_first_governance": {
+    "PUBLIC_PICKS_ENABLED": false,
+    "LIVE_BOARD": false,
+    "PERFORMANCE_STATS_ENABLED": false,
+    "PUBLISH_LEDGER": false,
+    "CALIBRATION_ADJUSTMENTS_ENABLED": false,
+    "publishAllowed": false,
+    "auto_email_sent": false,
+    "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+    "untouchables_clean": true
+  },
+  "degraded_channels": [
+    {
+      "tag": "[DEGRADED: advisor]",
+      "channel": "Advisor Consult #2",
+      "reason": "timeout during overnight/morning taste pass",
+      "mitigation": "Dual isolated read-only Santa Reviewer B4 and Santa Reviewer C4 adversarial convergence both returned VERDICT: PASS (0 HIGH, 0 MEDIUM)."
+    }
+  ],
+  "santa_reviews": {
+    "reviewer_b4": {
+      "role": "Santa Reviewer B4 (Code, Conservation Math, WIRE-FIRST, Untouchables)",
+      "verdict": "PASS",
+      "high_findings": 0,
+      "medium_findings": 0,
+      "low_findings": 2,
+      "info_findings": 5
+    },
+    "reviewer_c4": {
+      "role": "Santa Reviewer C4 (13 Dossiers, .sim.json, 5 DFS Packets, CSVs, Call Sheet, Copy Guardrails)",
+      "verdict": "PASS",
+      "high_findings": 0,
+      "medium_findings": 0,
+      "low_findings": 3,
+      "info_findings": 2,
+      "idp_tackles_metrics": {
+        "athletes_checked": 117,
+        "min_std": 1.68,
+        "max_std": 4.98,
+        "max_solo_ast_conservation_delta": 0.01,
+        "std_ceiling": 8.0,
+        "std_floor": 1.15
+      },
+      "stage0_spot_checks": {
+        "jax_ten_bhayshul_tuten_rush_yds_mean": 55.17,
+        "hou_cle_deshaun_watson_dfs_showdown_leaks": 0,
+        "dfs_slates_verified": 5,
+        "dfs_total_lineups_verified": 105
+      }
+    }
+  },
+  "dfs_packets": {
+    "munich_ne_det": {
+      "draft_group_id": 156422,
+      "contest_type": "DK_SHOWDOWN",
+      "cash_salary": 49000,
+      "cash_median_dk_pts": 101.22,
+      "cash_p90_dk_pts": 198.8,
+      "gpp_count": 20,
+      "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+      "publish_allowed": false,
+      "auto_email_sent": false,
+      "sha256": "4a3b3a3a22bdd62305db40fe4490fa6e23ad5b3f0d66b2d0bca5410c32e76e0a"
+    },
+    "sun_main_classic": {
+      "draft_group_id": 156416,
+      "contest_type": "DK_CLASSIC",
+      "cash_salary": 49900,
+      "cash_median_dk_pts": 140.3,
+      "cash_p90_dk_pts": 337.94,
+      "gpp_count": 20,
+      "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+      "publish_allowed": false,
+      "auto_email_sent": false,
+      "sha256": "3755f44f88c3160a15805cd4cddaa155a76d17cdc046bf8a657c1eef7633723e"
+    },
+    "sun_mon_expanded": {
+      "draft_group_id": 156418,
+      "contest_type": "DK_CLASSIC",
+      "cash_salary": 50000,
+      "cash_median_dk_pts": 142.8,
+      "cash_p90_dk_pts": 330.35,
+      "gpp_count": 20,
+      "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+      "publish_allowed": false,
+      "auto_email_sent": false,
+      "sha256": "1feff24194a69ed7408cfb56f1b915f1f68628a436ba797d73e978525579c9a6"
+    },
+    "snf_pit_cin": {
+      "draft_group_id": 156433,
+      "contest_type": "DK_SHOWDOWN",
+      "cash_salary": 49100,
+      "cash_median_dk_pts": 99.57,
+      "cash_p90_dk_pts": 189.86,
+      "gpp_count": 20,
+      "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+      "publish_allowed": false,
+      "auto_email_sent": false,
+      "sha256": "c677437053e862a7fac9eafd97453353892b750fda0c2b146a3bc933dc08851e"
+    },
+    "mnf_lac_bal": {
+      "draft_group_id": 156434,
+      "contest_type": "DK_SHOWDOWN",
+      "cash_salary": 49800,
+      "cash_median_dk_pts": 91.89,
+      "cash_p90_dk_pts": 190.35,
+      "gpp_count": 20,
+      "release_status": "HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER",
+      "publish_allowed": false,
+      "auto_email_sent": false,
+      "sha256": "4ca9a49d1b768c82109ff877bdd8d4cdc2e41b0e955616c1d24a2a6e79e0ffa1"
+    }
+  },
+  "cloud_vm_posture": {
+    "workflow_cloud_spend_usd_per_hr": 0.0,
+    "gcp_project": "galaxysportsedge",
+    "gcp_running_instances": [],
+    "aws_describe_instances_result": "UnauthorizedOperation: explicit deny in org SCP arn:aws:organizations::979179610522:policy/o-1x2tqxhman/service_control_policy/p-tc2pk760 (account 034220092205)"
+  },
+  "verified_artifact_digests": {
+    "data/engine/week10_full_slate_connected_dossiers_2026_11_13.json": {
+      "sha256": "db07cdb30730561ad27f26d6d55ed7897140e0a01b58682ccc82bd69566ff4bc",
+      "bytes": 2780482
+    },
+    "data/engine/week10_complete_360_all_games_verified_call_sheet.json": {
+      "sha256": "2666725c3805e2351c95e9364dfcd7305be026bf6c6d9e40b7de0abb67695c28",
+      "bytes": 66556
+    },
+    "data/engine/week10_coverage_audit_2026.json": {
+      "sha256": "ecf61b32ab5bfc5afe050d7fa2454c1361eb613404665a04387996448eaa562d",
+      "bytes": 667
+    },
+    "docs/predictions/research/2026-11-15/week10-sunday-monday-360-verified-call-sheet.md": {
+      "sha256": "29b06d06523faf4d12f8a1447e988fd2d11a69098dcc495ba21492541236c3a5",
+      "bytes": 20044
+    },
+    "docs/dfs/research/2026-11-15/week10-munich-main-primetime-dfs-packet.md": {
+      "sha256": "87196ccb727276f6c2688cddf99aebd47a7d80e0ff08e8a7354a698183a304f7",
+      "bytes": 9386
+    },
+    "scripts/ops/week8_forensic_kernels.py": {
+      "sha256": "a19d555d3c1d5f9f06a9b879f98afaa08c11118eb6084013f9856810580507d9",
+      "bytes": 46997
+    },
+    "scripts/ops/gse_connected_game_workflow.py": {
+      "sha256": "699c92682cf03bc17ee7ccfd00c6dfc95a0a0a930f950c70c60d7592c5065912",
+      "bytes": 309908
+    },
+    "scripts/dfs/build_week10_all_slates_dfs_packets.py": {
+      "sha256": "a338a3ea14b48b335ad57400cb4f968022d86dd8860667ad549adbecf4d152b5",
+      "bytes": 54706
+    },
+    "packages/prediction-engine/src/__tests__/evidence/corpus-adapter.test.ts": {
+      "sha256": "dbcde3b240227fb49d5be4716d9f26aa5af76f514885d2b35ddae778304c0cca",
+      "bytes": 8380
+    }
+  }
+}

@@ -169,6 +169,9 @@ export interface CorpusCitation {
 }
 
 export interface CorpusGroundingRecord {
+  /** The situational family this facet belongs to, e.g. "restFatigue". */
+  readonly family: string;
+  /** The facet query that produced it. */
   readonly facet: string;
   readonly support: number;
   readonly citations: readonly CorpusCitation[];

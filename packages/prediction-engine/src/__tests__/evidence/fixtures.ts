@@ -147,7 +147,7 @@ export function freshBundle(overrides: Partial<GameEvidenceBundle> = {}): GameEv
       iso(10000),
     ),
     corpus: real(
-      [{ facet: "pressure_vs_play_action", support: 0.82, citations: [] }],
+      [{ family: "pressure", facet: "pressure_vs_play_action", support: 0.82, citations: [] }],
       "lit.corpus_chunk",
       iso(120),
     ),
