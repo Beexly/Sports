@@ -1,0 +1,3268 @@
+{
+ "report_type": "CADENCE_V3_0_FRIDAY_FINAL_OVERLAY",
+ "cadence": "v3.0",
+ "phase": "FINAL_PRE_KICKOFF_OVERLAY",
+ "week": 10,
+ "season": 2026,
+ "generated_at_utc": "2026-11-13T22:42:15.048633+00:00",
+ "seal": {
+  "sealed_center_path": "candidates/sealed-center.json",
+  "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+  "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+  "sealed_at": "2026-10-25T04:00:00-05:00",
+  "tau": 0.42,
+  "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+  "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+  "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+  "checks": {
+   "sealed_center_merkle_matches_recorded": true,
+   "candidate_parent_seal_hash_matches_center": true,
+   "candidate_tau_rating_recorded": true,
+   "coach_mind_tau_is_0_42": true,
+   "epa_dropoff_table_unmodified": true,
+   "qb_questionable_ev_dropoff_is_0_0947": true
+  },
+  "unchanged": true,
+  "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+ },
+ "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+ "no_reestimation": "tau, costMatrixC, teamRatings, and epaDropoffTable were read from the sealed object; nothing was re-estimated, re-simulated, or resealed.",
+ "injuries": {
+  "path": "data/nflverse/injuries_2026.csv",
+  "source_url": "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2026.csv",
+  "prior_sha256": "04b6d6fd1bffd32b123d32b9c4f200520270cde1ce2b0e1f26e11f26e08bca1f",
+  "prior_rows": 3097,
+  "backup": "data/nflverse/injuries_2026.csv.bak-pre-v30-20261113",
+  "downloaded": true,
+  "bytes": 355094,
+  "sha256": "40d98f1fa0a07159c9271ecb167611876e234f643e33ff55358d3d81adb34edb",
+  "rows": 3121,
+  "week_rows": 300,
+  "week": 10
+ },
+ "espn_scoreboard": {
+  "http_status": 200,
+  "date": "20261115",
+  "events": 12,
+  "slot_counts": {
+   "SUN_EARLY": 8,
+   "SUN_LATE": 3,
+   "SNF": 1
+  }
+ },
+ "totals": {
+  "games": 12,
+  "designations_applied": 99,
+  "designations_unpriceable_by_sealed_table": 43,
+  "max_abs_total_delta_points": 7.2215
+ },
+ "mint": {
+  "tickets_minted": 0,
+  "status": "BLOCKED_NO_SEALED_BUILD",
+  "blocked_reason": "no sealed call build for this week: the only writeup package on disk is the Week-8 build (generatedAt 2026-10-29T23:30:08Z) and its gameIds do not cover any Week 10 game",
+  "evidence": {
+   "available": false,
+   "source_path": "data/packages/live-slate-writeups.json",
+   "source_sha256": "9223b484666a14ea08a0e7e4d6b8ba70590aef1aa3882c1c1fadc29cd696e3d8",
+   "source_generated_at": "2026-10-29T23:30:08Z",
+   "source_week": 8,
+   "source_writeup_count": 14,
+   "reason": "no sealed call build for this week: the only writeup package on disk is the Week-8 build (generatedAt 2026-10-29T23:30:08Z) and its gameIds do not cover any Week 10 game",
+   "game_id_intersection": 0
+  },
+  "note": "Overlay deltas are reported per game; no ticket is created, no call is priced, and no pass/play disposition is invented without sealed call rows."
+ },
+ "games": [
+  {
+   "game_id": "401873053",
+   "matchup": "NE @ DET",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T14:30Z",
+   "venue": "FC Bayern Munich Stadium",
+   "indoor": false,
+   "neutral_site": true,
+   "designations": {
+    "NE": {
+     "applied": [
+      {
+       "player": "Kevin Byard",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Rhamondre Stevenson",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "A.J. Brown",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "TreVeyon Henderson",
+       "position": "RB",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Charles Woods",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    },
+    "DET": {
+     "applied": [
+      {
+       "player": "Sione Vaki",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Amon-Ra St. Brown",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Cade Mays",
+       "position": "C",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "D.J. Reed",
+       "position": "CB",
+       "status": "Out",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Kerby Joseph",
+       "position": "S",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "NE": {
+     "team": "NE",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "RB1",
+      "WR1"
+     ],
+     "unmapped_role_keys": [
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "RB1",
+       "WR1"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0166666667,
+      "WR2": 0.35,
+      "WR3": 0.2833333333,
+      "TE1": 0.3333333333,
+      "RB1": 0.0166666667
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9945,
+     "mass_delta": -0.0055,
+     "mass_moved": 0.3866666667,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0166666667,
+       "WR2": 0.35,
+       "WR3": 0.2833333333,
+       "TE1": 0.3333333333,
+       "RB1": 0.0166666667
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0136666667,
+       "WR2": 0.308,
+       "WR3": 0.2833333333,
+       "TE1": 0.28,
+       "RB1": 0.0141666667
+      },
+      "mass_loss": 0.1008333333,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 3.059468095256701e-07,
+       "col_residual": 1.1102230246251565e-16,
+       "converged": true,
+       "objective": 0.208493471091
+      }
+     },
+     "nflverse_week_rows": [
+      {
+       "player": "Greg Van Roten",
+       "position": "G",
+       "status": "Questionable"
+      },
+      {
+       "player": "Kevin Byard",
+       "position": "S",
+       "status": "Questionable"
+      },
+      {
+       "player": "Carlton Davis III",
+       "position": "CB",
+       "status": "Out"
+      },
+      {
+       "player": "A.J. Brown",
+       "position": "WR",
+       "status": "Questionable"
+      },
+      {
+       "player": "Reggie Gilliam",
+       "position": "FB",
+       "status": "Questionable"
+      },
+      {
+       "player": "Rhamondre Stevenson",
+       "position": "RB",
+       "status": "Questionable"
+      },
+      {
+       "player": "Brenden Schooler",
+       "position": "S",
+       "status": "Questionable"
+      },
+      {
+       "player": "Ben Brown",
+       "position": "C",
+       "status": "Out"
+      },
+      {
+       "player": "Cameron Latu",
+       "position": "TE",
+       "status": "Questionable"
+      },
+      {
+       "player": "Charles Woods",
+       "position": "CB",
+       "status": "Questionable"
+      },
+      {
+       "player": "Walter Rouse",
+       "position": "T",
+       "status": "Questionable"
+      },
+      {
+       "player": "TreVeyon Henderson",
+       "position": "RB",
+       "status": "Out"
+      }
+     ]
+    },
+    "DET": {
+     "team": "DET",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0441,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "RB1",
+      "WR1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "RB1",
+       "WR1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0166666667,
+      "WR2": 0.35,
+      "WR3": 0.2833333333,
+      "TE1": 0.3333333333,
+      "RB1": 0.0166666667
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9945,
+     "mass_delta": -0.0055,
+     "mass_moved": 0.3866666667,
+     "off_epa_per_play": 0.118,
+     "pace_sec_per_play": 26.5,
+     "plays_derived": 68,
+     "points_delta": -0.0441,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0166666667,
+       "WR2": 0.35,
+       "WR3": 0.2833333333,
+       "TE1": 0.3333333333,
+       "RB1": 0.0166666667
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0136666667,
+       "WR2": 0.308,
+       "WR3": 0.2833333333,
+       "TE1": 0.28,
+       "RB1": 0.0141666667
+      },
+      "mass_loss": 0.1008333333,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 3.059468095256701e-07,
+       "col_residual": 1.1102230246251565e-16,
+       "converged": true,
+       "objective": 0.208493471091
+      }
+     },
+     "nflverse_week_rows": [
+      {
+       "player": "D.J. Reed",
+       "position": "CB",
+       "status": "Out"
+      },
+      {
+       "player": "Cade Mays",
+       "position": "C",
+       "status": "Out"
+      },
+      {
+       "player": "Kerby Joseph",
+       "position": "S",
+       "status": "Out"
+      }
+     ]
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": "2026-11-15T14:00",
+    "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    "wind_mph": 1.4,
+    "gust_mph": 3.8,
+    "precip_prob_pct": 5.0,
+    "temp_f": 42.5,
+    "flags": [],
+    "points_adjustment": 0.0,
+    "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+   },
+   "total_delta_points": -0.0441,
+   "margin_delta_home_points": -0.0441,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873058",
+   "matchup": "KC @ ATL",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Mercedes-Benz Stadium",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "KC": {
+     "applied": [
+      {
+       "player": "Kenneth Walker III",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Peter Woods",
+       "position": "DT",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Jaylon Moore",
+       "position": "OT",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Mansoor Delane",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Jaydn Ott",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    },
+    "ATL": {
+     "applied": [
+      {
+       "player": "Zachariah Branch",
+       "position": "WR",
+       "status": "Out",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Divine Deablo",
+       "position": "LB",
+       "status": "Doubtful",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Josh Woods",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "James Pearce Jr.",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Gervon Dexter Sr.",
+       "position": "DT",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "KC": {
+     "team": "KC",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "RB1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "RB1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.3058823529,
+      "WR2": 0.2470588235,
+      "WR3": 0.2,
+      "TE1": 0.2352941176,
+      "RB1": 0.0117647059
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9982352941,
+     "mass_delta": -0.0017647059,
+     "mass_moved": 0.1482352941,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3058823529,
+       "WR2": 0.2470588235,
+       "WR3": 0.2,
+       "TE1": 0.2352941176,
+       "RB1": 0.0117647059
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2508235294,
+       "WR2": 0.2174117647,
+       "WR3": 0.2,
+       "TE1": 0.1976470588,
+       "RB1": 0.01
+      },
+      "mass_loss": 0.1241176471,
+      "sinkhorn": {
+       "iterations": 143,
+       "row_residual": 1.2907230839687145e-11,
+       "col_residual": 2.7755575615628914e-17,
+       "converged": true,
+       "objective": 0.152861075717
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "ATL": {
+     "team": "ATL",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1"
+     ],
+     "unmapped_role_keys": [
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.0133333333,
+      "WR2": 0.28,
+      "WR3": 0.2266666667,
+      "TE1": 0.2666666667,
+      "RB1": 0.2133333333
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9976,
+     "mass_delta": -0.0024,
+     "mass_moved": 0.2466666667,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0133333333,
+       "WR2": 0.28,
+       "WR3": 0.2266666667,
+       "TE1": 0.2666666667,
+       "RB1": 0.2133333333
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0109333333,
+       "WR2": 0.2464,
+       "WR3": 0.2266666667,
+       "TE1": 0.224,
+       "RB1": 0.1813333333
+      },
+      "mass_loss": 0.1106666667,
+      "sinkhorn": {
+       "iterations": 91,
+       "row_residual": 1.4125686731425446e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.195288850767
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873056",
+   "matchup": "HOU @ CLE",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Huntington Bank Field",
+   "indoor": false,
+   "neutral_site": false,
+   "designations": {
+    "HOU": {
+     "applied": [
+      {
+       "player": "Wyatt Teller",
+       "position": "G",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Keylan Rutledge",
+       "position": "G",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Trent Brown",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Marvin Harrison Jr.",
+       "position": "WR",
+       "status": "Out",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "David Montgomery",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      }
+     ],
+     "not_applied": []
+    },
+    "CLE": {
+     "applied": [
+      {
+       "player": "Denzel Boston",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Ronnie Hickman",
+       "position": "S",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Michael Burton",
+       "position": "FB",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Kalia Davis",
+       "position": "DT",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Teven Jenkins",
+       "position": "G",
+       "status": "Injured Reserve"
+      }
+     ]
+    }
+   },
+   "overlay": {
+    "HOU": {
+     "team": "HOU",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1",
+      "RB1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1",
+       "RB1"
+      ],
+      "ol_lt_unreachable": 2,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0166666667,
+      "WR2": 0.35,
+      "WR3": 0.2833333333,
+      "TE1": 0.3333333333,
+      "RB1": 0.0166666667
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9945,
+     "mass_delta": -0.0055,
+     "mass_moved": 0.3866666667,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0166666667,
+       "WR2": 0.35,
+       "WR3": 0.2833333333,
+       "TE1": 0.3333333333,
+       "RB1": 0.0166666667
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0136666667,
+       "WR2": 0.308,
+       "WR3": 0.2833333333,
+       "TE1": 0.28,
+       "RB1": 0.0141666667
+      },
+      "mass_loss": 0.1008333333,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 3.059468095256701e-07,
+       "col_residual": 1.1102230246251565e-16,
+       "converged": true,
+       "objective": 0.208493471091
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "CLE": {
+     "team": "CLE",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0153,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1"
+     ],
+     "unmapped_role_keys": [],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0133333333,
+      "WR2": 0.28,
+      "WR3": 0.2266666667,
+      "TE1": 0.2666666667,
+      "RB1": 0.2133333333
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9976,
+     "mass_delta": -0.0024,
+     "mass_moved": 0.2466666667,
+     "off_epa_per_play": -0.095,
+     "pace_sec_per_play": 26.8,
+     "plays_derived": 67,
+     "points_delta": 0.0153,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way.",
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0133333333,
+       "WR2": 0.28,
+       "WR3": 0.2266666667,
+       "TE1": 0.2666666667,
+       "RB1": 0.2133333333
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0109333333,
+       "WR2": 0.2464,
+       "WR3": 0.2266666667,
+       "TE1": 0.224,
+       "RB1": 0.1813333333
+      },
+      "mass_loss": 0.1106666667,
+      "sinkhorn": {
+       "iterations": 91,
+       "row_residual": 1.4125686731425446e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.195288850767
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": "2026-11-15T18:00",
+    "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    "wind_mph": 12.5,
+    "gust_mph": 14.7,
+    "precip_prob_pct": 42.0,
+    "temp_f": 45.9,
+    "flags": [
+     "PRECIP"
+    ],
+    "points_adjustment": 0.0,
+    "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+   },
+   "total_delta_points": 0.0153,
+   "margin_delta_home_points": 0.0153,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873060",
+   "matchup": "MIN @ GB",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Lambeau Field",
+   "indoor": false,
+   "neutral_site": false,
+   "designations": {
+    "MIN": {
+     "applied": [
+      {
+       "player": "Jauan Jennings",
+       "position": "WR",
+       "status": "Out",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Kyler Murray",
+       "position": "QB",
+       "status": "Out",
+       "role_key": "QB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Jordan Addison",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR2",
+       "sealed_table_match": true
+      },
+      {
+       "player": "T.J. Hockenson",
+       "position": "TE",
+       "status": "Out",
+       "role_key": "TE1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Blake Cashman",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    },
+    "GB": {
+     "applied": [
+      {
+       "player": "Micah Parsons",
+       "position": "DE",
+       "status": "Out",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Josh Whyle",
+       "position": "TE",
+       "status": "Out",
+       "role_key": "TE1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Xavier McKinney",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Kevin Zeitler",
+       "position": "G",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Travis Glover",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "MIN": {
+     "team": "MIN",
+     "epa_table_keys_applied": [
+      "QB1"
+     ],
+     "epa_table_drop_per_play": 0.11,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0295,
+     "epa_table_points_delta": 7.26,
+     "scratched_skill_roles": [
+      "WR1",
+      "WR2",
+      "TE1"
+     ],
+     "unmapped_role_keys": [
+      "QB1",
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1",
+       "WR2",
+       "TE1"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.0277777778,
+      "WR2": 0.0277777778,
+      "WR3": 0.4722222222,
+      "TE1": 0.0277777778,
+      "RB1": 0.4444444444
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 0.88,
+      "WR3": 1.0,
+      "TE1": 0.84,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9872222222,
+     "mass_delta": -0.0127777778,
+     "mass_moved": 0.5866666667,
+     "off_epa_per_play": 0.035,
+     "pace_sec_per_play": 27.2,
+     "plays_derived": 66,
+     "points_delta": 7.2305,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0277777778,
+       "WR2": 0.0277777778,
+       "WR3": 0.4722222222,
+       "TE1": 0.0277777778,
+       "RB1": 0.4444444444
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0227777778,
+       "WR2": 0.0244444444,
+       "WR3": 0.4722222222,
+       "TE1": 0.0233333333,
+       "RB1": 0.3777777778
+      },
+      "mass_loss": 0.0794444444,
+      "sinkhorn": {
+       "iterations": 76,
+       "row_residual": 2.8800628548708573e-11,
+       "col_residual": 3.469446951953614e-18,
+       "converged": true,
+       "objective": 0.323566871793
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "GB": {
+     "team": "GB",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.009,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "TE1"
+     ],
+     "unmapped_role_keys": [
+      "EDGE1",
+      "LT",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "TE1"
+      ],
+      "ol_lt_unreachable": 2,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.3209876543,
+      "WR2": 0.2592592593,
+      "WR3": 0.2098765432,
+      "TE1": 0.012345679,
+      "RB1": 0.1975308642
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 0.84,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9980246914,
+     "mass_delta": -0.0019753086,
+     "mass_moved": 0.187654321,
+     "off_epa_per_play": 0.068,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": -0.009,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3209876543,
+       "WR2": 0.2592592593,
+       "WR3": 0.2098765432,
+       "TE1": 0.012345679,
+       "RB1": 0.1975308642
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2632098765,
+       "WR2": 0.2281481481,
+       "WR3": 0.2098765432,
+       "TE1": 0.0103703704,
+       "RB1": 0.1679012346
+      },
+      "mass_loss": 0.1204938272,
+      "sinkhorn": {
+       "iterations": 117,
+       "row_residual": 1.767696544696662e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.149296036877
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": "2026-11-15T18:00",
+    "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    "wind_mph": 3.3,
+    "gust_mph": 3.5,
+    "precip_prob_pct": 0.0,
+    "temp_f": 41.1,
+    "flags": [],
+    "points_adjustment": 0.0,
+    "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+   },
+   "total_delta_points": 7.2215,
+   "margin_delta_home_points": -7.2395,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873057",
+   "matchup": "JAX @ TEN",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Nissan Stadium",
+   "indoor": false,
+   "neutral_site": false,
+   "designations": {
+    "JAX": {
+     "applied": [
+      {
+       "player": "Jessie Bates III",
+       "position": "S",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Branson Combs",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Robert Hainsey",
+       "position": "C",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Ezra Cleveland",
+       "position": "G",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "B.J. Green II",
+       "position": "DE",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "TEN": {
+     "applied": [
+      {
+       "player": "Anthony Hill Jr.",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Tyjae Spears",
+       "position": "RB",
+       "status": "Questionable",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Tommy Townsend",
+       "position": "P",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Cody Barton",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Peter Skoronski",
+       "position": "G",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "JAX": {
+     "team": "JAX",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [
+      "EDGE1",
+      "LT",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 2,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "TEN": {
+     "team": "TEN",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0093,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "RB1"
+     ],
+     "unmapped_role_keys": [
+      "EDGE1",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "RB1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.3058823529,
+      "WR2": 0.2470588235,
+      "WR3": 0.2,
+      "TE1": 0.2352941176,
+      "RB1": 0.0117647059
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9982352941,
+     "mass_delta": -0.0017647059,
+     "mass_moved": 0.1482352941,
+     "off_epa_per_play": -0.082,
+     "pace_sec_per_play": 28.3,
+     "plays_derived": 64,
+     "points_delta": 0.0093,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way.",
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3058823529,
+       "WR2": 0.2470588235,
+       "WR3": 0.2,
+       "TE1": 0.2352941176,
+       "RB1": 0.0117647059
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2508235294,
+       "WR2": 0.2174117647,
+       "WR3": 0.2,
+       "TE1": 0.1976470588,
+       "RB1": 0.01
+      },
+      "mass_loss": 0.1241176471,
+      "sinkhorn": {
+       "iterations": 143,
+       "row_residual": 1.2907230839687145e-11,
+       "col_residual": 2.7755575615628914e-17,
+       "converged": true,
+       "objective": 0.152861075717
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": "2026-11-15T18:00",
+    "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    "wind_mph": 5.1,
+    "gust_mph": 7.3,
+    "precip_prob_pct": 0.0,
+    "temp_f": 52.6,
+    "flags": [],
+    "points_adjustment": 0.0,
+    "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+   },
+   "total_delta_points": 0.0093,
+   "margin_delta_home_points": 0.0093,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873059",
+   "matchup": "MIA @ IND",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Lucas Oil Stadium",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "MIA": {
+     "applied": [
+      {
+       "player": "Chris Bell",
+       "position": "WR",
+       "status": "Doubtful",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Jared Wayne",
+       "position": "WR",
+       "status": "Out",
+       "role_key": "WR2",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Aaron Brewer",
+       "position": "C",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Darrell Baker Jr.",
+       "position": "CB",
+       "status": "Out",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Malik Willis",
+       "position": "QB",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "IND": {
+     "applied": [
+      {
+       "player": "Will Mallory",
+       "position": "TE",
+       "status": "Questionable",
+       "role_key": "TE1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Jalen Travis",
+       "position": "OT",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Luke Rhodes",
+       "position": "LS",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Jerry Tillery",
+       "position": "DT",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Jaylon Carlies",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "MIA": {
+     "team": "MIA",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1",
+      "WR2"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1",
+       "WR2"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0181818182,
+      "WR2": 0.0181818182,
+      "WR3": 0.3090909091,
+      "TE1": 0.3636363636,
+      "RB1": 0.2909090909
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 0.88,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9945454545,
+     "mass_delta": -0.0054545455,
+     "mass_moved": 0.4336363636,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0181818182,
+       "WR2": 0.0181818182,
+       "WR3": 0.3090909091,
+       "TE1": 0.3636363636,
+       "RB1": 0.2909090909
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0149090909,
+       "WR2": 0.016,
+       "WR3": 0.3090909091,
+       "TE1": 0.3054545455,
+       "RB1": 0.2472727273
+      },
+      "mass_loss": 0.1072727273,
+      "sinkhorn": {
+       "iterations": 59,
+       "row_residual": 3.482242272312419e-12,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.299564615661
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "IND": {
+     "team": "IND",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "TE1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "TE1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.3209876543,
+      "WR2": 0.2592592593,
+      "WR3": 0.2098765432,
+      "TE1": 0.012345679,
+      "RB1": 0.1975308642
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 0.84,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9980246914,
+     "mass_delta": -0.0019753086,
+     "mass_moved": 0.187654321,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3209876543,
+       "WR2": 0.2592592593,
+       "WR3": 0.2098765432,
+       "TE1": 0.012345679,
+       "RB1": 0.1975308642
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2632098765,
+       "WR2": 0.2281481481,
+       "WR3": 0.2098765432,
+       "TE1": 0.0103703704,
+       "RB1": 0.1679012346
+      },
+      "mass_loss": 0.1204938272,
+      "sinkhorn": {
+       "iterations": 117,
+       "row_residual": 1.767696544696662e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.149296036877
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873055",
+   "matchup": "CAR @ NO",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "Caesars Superdome",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "CAR": {
+     "applied": [
+      {
+       "player": "Jaelan Phillips",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Will Lee III",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Bobby Okereke",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Xavier Legette",
+       "position": "WR",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Jonathon Brooks",
+       "position": "RB",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "NO": {
+     "applied": [
+      {
+       "player": "CJ Donaldson",
+       "position": "RB",
+       "status": "Out",
+       "role_key": "RB1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Christen Miller",
+       "position": "DT",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Erik McCoy",
+       "position": "C",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Taliese Fuaga",
+       "position": "OT",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Travis Etienne Jr.",
+       "position": "RB",
+       "status": "Injured Reserve"
+      }
+     ]
+    }
+   },
+   "overlay": {
+    "CAR": {
+     "team": "CAR",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [
+      "EDGE1",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": -0.105,
+     "pace_sec_per_play": 27.6,
+     "plays_derived": 65,
+     "points_delta": -0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "NO": {
+     "team": "NO",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "RB1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "RB1"
+      ],
+      "ol_lt_unreachable": 2,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.3058823529,
+      "WR2": 0.2470588235,
+      "WR3": 0.2,
+      "TE1": 0.2352941176,
+      "RB1": 0.0117647059
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 0.85
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9982352941,
+     "mass_delta": -0.0017647059,
+     "mass_moved": 0.1482352941,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3058823529,
+       "WR2": 0.2470588235,
+       "WR3": 0.2,
+       "TE1": 0.2352941176,
+       "RB1": 0.0117647059
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2508235294,
+       "WR2": 0.2174117647,
+       "WR3": 0.2,
+       "TE1": 0.1976470588,
+       "RB1": 0.01
+      },
+      "mass_loss": 0.1241176471,
+      "sinkhorn": {
+       "iterations": 143,
+       "row_residual": 1.2907230839687145e-11,
+       "col_residual": 2.7755575615628914e-17,
+       "converged": true,
+       "objective": 0.152861075717
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873054",
+   "matchup": "BUF @ NYJ",
+   "slot": "SUN_EARLY",
+   "kickoff_utc": "2026-11-15T18:00Z",
+   "venue": "MetLife Stadium",
+   "indoor": false,
+   "neutral_site": false,
+   "designations": {
+    "BUF": {
+     "applied": [
+      {
+       "player": "Sam Franklin Jr.",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Dion Dawkins",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Christian Benford",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Spencer Brown",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Connor McGovern",
+       "position": "C",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    },
+    "NYJ": {
+     "applied": [
+      {
+       "player": "Jarvis Brownlee Jr.",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Omar Cooper Jr.",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Adonai Mitchell",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR2",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Garrett Wilson",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR3",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Trevin Wallace",
+       "position": "LB",
+       "status": "Out",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "BUF": {
+     "team": "BUF",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [
+      "LT",
+      "CB1",
+      "LT"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 2,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.112,
+     "pace_sec_per_play": 26.6,
+     "plays_derived": 68,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "NYJ": {
+     "team": "NYJ",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0407,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1",
+      "WR2",
+      "WR3"
+     ],
+     "unmapped_role_keys": [
+      "CB1",
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1",
+       "WR2",
+       "WR3"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.0256410256,
+      "WR2": 0.0256410256,
+      "WR3": 0.0256410256,
+      "TE1": 0.5128205128,
+      "RB1": 0.4102564103
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 0.88,
+      "WR3": 0.9,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9897435897,
+     "mass_delta": -0.0102564103,
+     "mass_moved": 0.5630769231,
+     "off_epa_per_play": -0.062,
+     "pace_sec_per_play": 28.1,
+     "plays_derived": 64,
+     "points_delta": 0.0407,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way.",
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0256410256,
+       "WR2": 0.0256410256,
+       "WR3": 0.0256410256,
+       "TE1": 0.5128205128,
+       "RB1": 0.4102564103
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.021025641,
+       "WR2": 0.0225641026,
+       "WR3": 0.0256410256,
+       "TE1": 0.4307692308,
+       "RB1": 0.3487179487
+      },
+      "mass_loss": 0.1512820513,
+      "sinkhorn": {
+       "iterations": 43,
+       "row_residual": 8.492095915357822e-13,
+       "col_residual": 3.469446951953614e-18,
+       "converged": true,
+       "objective": 0.397001095431
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": "2026-11-15T18:00",
+    "attribution": "Weather data by Open-Meteo.com (CC-BY-4.0)",
+    "wind_mph": 12.1,
+    "gust_mph": 17.3,
+    "precip_prob_pct": 0.0,
+    "temp_f": 48.8,
+    "flags": [],
+    "points_adjustment": 0.0,
+    "rule": "WIND>=15.0mph, GUSTS>=25.0mph, PRECIP>=40.0%, COLD<=35.0F. Flags are advisory; no numeric points coefficient is applied."
+   },
+   "total_delta_points": 0.0407,
+   "margin_delta_home_points": 0.0407,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873062",
+   "matchup": "SEA @ LV",
+   "slot": "SUN_LATE",
+   "kickoff_utc": "2026-11-15T21:05Z",
+   "venue": "Allegiant Stadium",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "SEA": {
+     "applied": [
+      {
+       "player": "Charles Cross",
+       "position": "OT",
+       "status": "Doubtful",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Derick Hall",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Leonard Williams",
+       "position": "DT",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Connor O'Toole",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Patrick O'Connell",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    },
+    "LV": {
+     "applied": [
+      {
+       "player": "Dont'e Thornton Jr.",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Thomas Booker IV",
+       "position": "DT",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Patrick Johnson",
+       "position": "DE",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Keyron Crawford",
+       "position": "DE",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Chigozie Anusiem",
+       "position": "CB",
+       "status": "Injured Reserve"
+      }
+     ]
+    }
+   },
+   "overlay": {
+    "SEA": {
+     "team": "SEA",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [
+      "LT",
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.029,
+     "pace_sec_per_play": 26.2,
+     "plays_derived": 69,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "LV": {
+     "team": "LV",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0077,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1"
+     ],
+     "unmapped_role_keys": [],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0133333333,
+      "WR2": 0.28,
+      "WR3": 0.2266666667,
+      "TE1": 0.2666666667,
+      "RB1": 0.2133333333
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9976,
+     "mass_delta": -0.0024,
+     "mass_moved": 0.2466666667,
+     "off_epa_per_play": -0.048,
+     "pace_sec_per_play": 26.9,
+     "plays_derived": 67,
+     "points_delta": 0.0077,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": "off_epa is negative for this team, so a negative mass delta multiplies to a small positive points figure; the magnitude is inside the noise band either way.",
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0133333333,
+       "WR2": 0.28,
+       "WR3": 0.2266666667,
+       "TE1": 0.2666666667,
+       "RB1": 0.2133333333
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0109333333,
+       "WR2": 0.2464,
+       "WR3": 0.2266666667,
+       "TE1": 0.224,
+       "RB1": 0.1813333333
+      },
+      "mass_loss": 0.1106666667,
+      "sinkhorn": {
+       "iterations": 91,
+       "row_residual": 1.4125686731425446e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.195288850767
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0077,
+   "margin_delta_home_points": 0.0077,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873061",
+   "matchup": "LAR @ ARI",
+   "slot": "SUN_LATE",
+   "kickoff_utc": "2026-11-15T21:05Z",
+   "venue": "State Farm Stadium",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "LAR": {
+     "applied": [
+      {
+       "player": "Steve Avila",
+       "position": "G",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Myles Garrett",
+       "position": "DE",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Trent McDuffie",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Davis Allen",
+       "position": "TE",
+       "status": "Questionable",
+       "role_key": "TE1",
+       "sealed_table_match": true
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Puka Nacua",
+       "position": "WR",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "ARI": {
+     "applied": [
+      {
+       "player": "Jon Gaines II",
+       "position": "G",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Hjalte Froholdt",
+       "position": "C",
+       "status": "Out",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Jayden Williams",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Andrew Wingard",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Darius Robinson",
+       "position": "DE",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "LAR": {
+     "team": "LAR",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "TE1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "EDGE1",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "TE1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.3209876543,
+      "WR2": 0.2592592593,
+      "WR3": 0.2098765432,
+      "TE1": 0.012345679,
+      "RB1": 0.1975308642
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 0.84,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9980246914,
+     "mass_delta": -0.0019753086,
+     "mass_moved": 0.187654321,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.3209876543,
+       "WR2": 0.2592592593,
+       "WR3": 0.2098765432,
+       "TE1": 0.012345679,
+       "RB1": 0.1975308642
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2632098765,
+       "WR2": 0.2281481481,
+       "WR3": 0.2098765432,
+       "TE1": 0.0103703704,
+       "RB1": 0.1679012346
+      },
+      "mass_loss": 0.1204938272,
+      "sinkhorn": {
+       "iterations": 117,
+       "row_residual": 1.767696544696662e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.149296036877
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "ARI": {
+     "team": "ARI",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [
+      "LT",
+      "LT",
+      "LT",
+      "EDGE1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 3,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873063",
+   "matchup": "SF @ DAL",
+   "slot": "SUN_LATE",
+   "kickoff_utc": "2026-11-15T21:25Z",
+   "venue": "AT&T Stadium",
+   "indoor": true,
+   "neutral_site": false,
+   "designations": {
+    "SF": {
+     "applied": [
+      {
+       "player": "Mike Evans",
+       "position": "WR",
+       "status": "Out",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Trent Williams",
+       "position": "OT",
+       "status": "Questionable",
+       "role_key": "LT",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Dre Greenlaw",
+       "position": "LB",
+       "status": "Questionable",
+       "role_key": "EDGE1",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Deommodore Lenoir",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "C.J. West",
+       "position": "DT",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "DAL": {
+     "applied": [
+      {
+       "player": "Jonathan Mingo",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR1",
+       "sealed_table_match": true
+      },
+      {
+       "player": "KaVontae Turpin",
+       "position": "WR",
+       "status": "Questionable",
+       "role_key": "WR2",
+       "sealed_table_match": true
+      },
+      {
+       "player": "Juanyeh Thomas",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Alijah Clark",
+       "position": "S",
+       "status": "Questionable",
+       "role_key": "",
+       "sealed_table_match": false
+      },
+      {
+       "player": "Joey Porter Jr.",
+       "position": "CB",
+       "status": "Questionable",
+       "role_key": "CB1",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": []
+    }
+   },
+   "overlay": {
+    "SF": {
+     "team": "SF",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1"
+     ],
+     "unmapped_role_keys": [
+      "LT",
+      "EDGE1",
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1"
+      ],
+      "ol_lt_unreachable": 1,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 1
+     },
+     "feasible_shares": {
+      "WR1": 0.0133333333,
+      "WR2": 0.28,
+      "WR3": 0.2266666667,
+      "TE1": 0.2666666667,
+      "RB1": 0.2133333333
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9976,
+     "mass_delta": -0.0024,
+     "mass_moved": 0.2466666667,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0133333333,
+       "WR2": 0.28,
+       "WR3": 0.2266666667,
+       "TE1": 0.2666666667,
+       "RB1": 0.2133333333
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0109333333,
+       "WR2": 0.2464,
+       "WR3": 0.2266666667,
+       "TE1": 0.224,
+       "RB1": 0.1813333333
+      },
+      "mass_loss": 0.1106666667,
+      "sinkhorn": {
+       "iterations": 91,
+       "row_residual": 1.4125686731425446e-10,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.195288850767
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "DAL": {
+     "team": "DAL",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": -0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [
+      "WR1",
+      "WR2"
+     ],
+     "unmapped_role_keys": [
+      "CB1"
+     ],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [
+       "WR1",
+       "WR2"
+      ],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 1,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.0181818182,
+      "WR2": 0.0181818182,
+      "WR3": 0.3090909091,
+      "TE1": 0.3636363636,
+      "RB1": 0.2909090909
+     },
+     "execution_multipliers": {
+      "WR1": 0.82,
+      "WR2": 0.88,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 0.9945454545,
+     "mass_delta": -0.0054545455,
+     "mass_moved": 0.4336363636,
+     "off_epa_per_play": 0.0,
+     "pace_sec_per_play": 27.0,
+     "plays_derived": 67,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.0181818182,
+       "WR2": 0.0181818182,
+       "WR3": 0.3090909091,
+       "TE1": 0.3636363636,
+       "RB1": 0.2909090909
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.0149090909,
+       "WR2": 0.016,
+       "WR3": 0.3090909091,
+       "TE1": 0.3054545455,
+       "RB1": 0.2472727273
+      },
+      "mass_loss": 0.1072727273,
+      "sinkhorn": {
+       "iterations": 59,
+       "row_residual": 3.482242272312419e-12,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.299564615661
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "espn-venue",
+    "indoor": true,
+    "points_adjustment": 0.0,
+    "flags": [],
+    "note": "roofed venue; no weather effect modeled"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  },
+  {
+   "game_id": "401873064",
+   "matchup": "PIT @ CIN",
+   "slot": "SNF",
+   "kickoff_utc": "2026-11-16T01:20Z",
+   "venue": "Paycor Stadium",
+   "indoor": false,
+   "neutral_site": false,
+   "designations": {
+    "PIT": {
+     "applied": [],
+     "not_applied": [
+      {
+       "player": "Michael Pittman Jr.",
+       "position": "WR",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Derrick Harmon",
+       "position": "DT",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Sebastian Joseph-Day",
+       "position": "DT",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Roman Wilson",
+       "position": "WR",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Gennings Dunker",
+       "position": "G",
+       "status": "Injured Reserve"
+      }
+     ]
+    },
+    "CIN": {
+     "applied": [
+      {
+       "player": "Kyle Dugger",
+       "position": "S",
+       "status": "Out",
+       "role_key": "",
+       "sealed_table_match": false
+      }
+     ],
+     "not_applied": [
+      {
+       "player": "Andrei Iosivas",
+       "position": "WR",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Brian Parker II",
+       "position": "OT",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Jalen Davis",
+       "position": "CB",
+       "status": "Injured Reserve"
+      },
+      {
+       "player": "Cashius Howell",
+       "position": "DE",
+       "status": "Injured Reserve"
+      }
+     ]
+    }
+   },
+   "overlay": {
+    "PIT": {
+     "team": "PIT",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.042,
+     "pace_sec_per_play": 27.4,
+     "plays_derived": 66,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    },
+    "CIN": {
+     "team": "CIN",
+     "epa_table_keys_applied": [],
+     "epa_table_drop_per_play": 0.0,
+     "epa_table_unreachable_keys_seen": [],
+     "execution_points_delta": 0.0,
+     "epa_table_points_delta": 0.0,
+     "scratched_skill_roles": [],
+     "unmapped_role_keys": [],
+     "unpriced_designation_counts": {
+      "skill_roles_priced_by_multiplier_only": [],
+      "ol_lt_unreachable": 0,
+      "cb1_unreachable": 0,
+      "edge1_unreachable": 0
+     },
+     "feasible_shares": {
+      "WR1": 0.26,
+      "WR2": 0.21,
+      "WR3": 0.17,
+      "TE1": 0.2,
+      "RB1": 0.16
+     },
+     "execution_multipliers": {
+      "WR1": 1.0,
+      "WR2": 1.0,
+      "WR3": 1.0,
+      "TE1": 1.0,
+      "RB1": 1.0
+     },
+     "total_mass_before": 1.0,
+     "total_mass_after": 1.0,
+     "mass_delta": 0.0,
+     "mass_moved": 0.0,
+     "off_epa_per_play": 0.074,
+     "pace_sec_per_play": 26.4,
+     "plays_derived": 68,
+     "points_delta": 0.0,
+     "derivation": "points_delta = execution_points + epa_table_points, where execution_points = (sum_i feasible_i * sealed multiplier_i - 1.0) * sealed off_epa * round(1800 / sealed pace_sec), and epa_table_points = sum(sealed epaDropoffTable[k] for applied QB keys) * plays. Even possession split (1800 s per team). No parameter re-estimated.",
+     "sign_note": null,
+     "cross_check": {
+      "feasible_shares": {
+       "WR1": 0.26,
+       "WR2": 0.21,
+       "WR3": 0.17,
+       "TE1": 0.2,
+       "RB1": 0.16
+      },
+      "retention_factors": {
+       "WR1": 0.82,
+       "WR2": 0.88,
+       "WR3": 1.0,
+       "TE1": 0.84,
+       "RB1": 0.85
+      },
+      "effective_shares": {
+       "WR1": 0.2132,
+       "WR2": 0.1848,
+       "WR3": 0.17,
+       "TE1": 0.168,
+       "RB1": 0.136
+      },
+      "mass_loss": 0.128,
+      "sinkhorn": {
+       "iterations": 200,
+       "row_residual": 4.4392012333915876e-05,
+       "col_residual": 5.551115123125783e-17,
+       "converged": true,
+       "objective": 0.051353823658
+      }
+     },
+     "nflverse_week_rows": []
+    }
+   },
+   "weather": {
+    "source": "open-meteo",
+    "http_status": 200,
+    "hour_matched": null,
+    "unavailable_reason": "no hourly bucket for 2026-11-16T01 in returned window"
+   },
+   "total_delta_points": 0.0,
+   "margin_delta_home_points": 0.0,
+   "ticket_status": "BLOCKED_NO_SEALED_BUILD"
+  }
+ ]
+}
