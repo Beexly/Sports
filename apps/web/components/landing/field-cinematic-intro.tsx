@@ -186,7 +186,7 @@ export function FieldCinematicIntro() {
           )}
         </h1>
         <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
-          We detect. You decide.
+          Built for Sunday.
         </p>
         <button
           type="button"
