@@ -3,7 +3,6 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve } from "node:path";
 import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
-import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 // The settled win rate is the ONE permitted percent on a customer surface; the
 // catalog is its source. Confidence is XX/100, never a percentage.
@@ -134,6 +133,7 @@ describe("Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Installer", () => {
 
   it("grounds every plugin tab in real GSE/GSI data: verified ledger, Geno Smith NYJ, Mike Evans SF, 257 PDFs, 25 books, 12,304 equations", () => {
     expect(componentSrc).toContain("PUBLIC_RECORD_LINE");
+    expect(componentSrc).toContain("from \"@/lib/ledger/public-record\"");
     expect(componentSrc).toContain("Geno Smith = NYJ QB");
     expect(componentSrc).toContain("Mike Evans = SF WR");
     expect(componentSrc).toContain("257 Unique PDFs / 503 Files");
