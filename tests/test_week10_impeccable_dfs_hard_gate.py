@@ -145,9 +145,8 @@ def validate_pool_and_lineups(
             ]
             if flex_players and non_flex_rwt:
                 has_late_non_flex = any(_norm(s.get("team")).upper() in LATE_WINDOW_TEAMS for s in non_flex_rwt)
-                has_early_non_flex = any(_norm(s.get("team")).upper() not in LATE_WINDOW_TEAMS for s in non_flex_rwt)
                 flex_is_late = _norm(flex_players[0].get("team")).upper() in LATE_WINDOW_TEAMS
-                if has_late_non_flex and has_early_non_flex and not flex_is_late:
+                if has_late_non_flex and not flex_is_late:
                     errors.append(f"Lineup {idx} violates late-swap FLEX ordering (early player in FLEX)")
         elif slate_type == "showdown":
             if len(slots) != 6:
