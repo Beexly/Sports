@@ -29,6 +29,26 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
+# ---------------------------------------------------------------------------
+# HISTORICAL SESSION AUDIT — NOT A CI GATE.
+#
+# This module is the record of one session (`3cd84455`) on the antigravity
+# dev box. Its assertions read the literal host image (/shared/user/.gemini,
+# /opt/antigravity, /home/antigravity/Beexly/agent-bus) and the ledger snapshot
+# as it stood on 2026-11-09, before the Nov 13 settlement drain recomputed the
+# record. Neither is true of a GitHub runner or of main today, so leaving it in
+# the pytest run makes the gate permanently red and buries real regressions.
+#
+# The durable rules it carried now live in tests/test_writeup_and_surface_invariants.py.
+# Replay this audit deliberately on the host that has that layout:
+#     GSE_SESSION_AUDIT_REPLAY=1 python -m pytest tests/e2e/<this file>
+# ---------------------------------------------------------------------------
+if os.environ.get("GSE_SESSION_AUDIT_REPLAY") != "1":
+    raise unittest.SkipTest(
+        "historical session audit for the antigravity dev-box image; "
+        "set GSE_SESSION_AUDIT_REPLAY=1 to replay it"
+    )
+
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
