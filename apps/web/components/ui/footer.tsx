@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
+import { BRAND_NAME, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 
 /** Condensed footer — five destinations, not a sitemap. */
 const FOOTER_LINKS = [
@@ -105,9 +105,9 @@ export function Footer() {
         <div className="bottom flex flex-wrap items-center gap-x-4 gap-y-2 pb-6">
           <span>
             © {new Date().getFullYear()} {BRAND_NAME} · {GSN_NAME}
-          </span>
+          </span> {" "}
           <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-            {CLOSING_LINE}
+            Built for Sunday.
           </span>
         </div>
       </div>
