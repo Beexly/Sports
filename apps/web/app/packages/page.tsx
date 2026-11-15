@@ -4,8 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
   TWO_DOOR_PACK_OFFERS,
-  MEMBERSHIP_PRICING,
-  FOUNDING_SEAT_COPY,
   singleSlateCheckoutAvailability,
   membershipCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
