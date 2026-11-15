@@ -116,10 +116,14 @@ interface MongoClientLike {
 
 export type DriverLoader = () => Promise<{ MongoClient: new (uri: string) => MongoClientLike }>;
 
-/** Default lazy driver loader — only called when the gate is open. */
+/** Default lazy driver loader - only called when the gate is open. */
 const defaultDriverLoader: DriverLoader = async () => {
-  // Dynamic import keeps `mongodb` an optional dependency.
-  const mod = (await import("mongodb")) as unknown as { MongoClient: new (uri: string) => MongoClientLike };
+  // Non-literal specifier keeps `mongodb` optional for tsc and webpack when
+  // MONGODB_URI is unset and the driver is not installed.
+  const moduleName = String("mongodb");
+  const mod = (await import(/* webpackIgnore: true */ moduleName)) as unknown as {
+    MongoClient: new (uri: string) => MongoClientLike;
+  };
   return { MongoClient: mod.MongoClient };
 };
 
