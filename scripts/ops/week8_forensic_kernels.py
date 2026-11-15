@@ -429,11 +429,16 @@ def allocate_stochastic_conserved_box_score(
     rng_eff = rng if hasattr(rng, "dirichlet") else np.random.default_rng(seed)
     share_vec = raw_w[active_indices]
     share_vec = share_vec / float(np.sum(share_vec))
-    alpha = np.maximum(0.35, kappa_eff * share_vec)
+    fam_lower = stat_family.lower()
+    if fam_lower == "tackles":
+        alpha = np.maximum(0.80, max(kappa_eff, 48.0) * share_vec)
+        gamma_shape = 9.0
+    else:
+        alpha = np.maximum(0.35, kappa_eff * share_vec)
+        gamma_shape = 1.45 if "yd" in fam_lower else 1.85
 
     dir_draws = rng_eff.dirichlet(alpha, size=n_worlds_eff)
     # Compound Gamma overdispersion (Negative-Binomial continuous mixture)
-    gamma_shape = 1.45 if "yd" in stat_family.lower() else 1.85
     gamma_noise = rng_eff.gamma(shape=gamma_shape, scale=1.0, size=(n_worlds_eff, k_act))
     weights = dir_draws * gamma_noise
     row_sums = np.maximum(1e-12, np.sum(weights, axis=1, keepdims=True))
@@ -441,7 +446,6 @@ def allocate_stochastic_conserved_box_score(
 
     alloc = team_arr[:, None] * weights
 
-    fam_lower = stat_family.lower()
     if any(tok in fam_lower for tok in ("receiving_yds", "rushing_yds", "rec_yds", "rush_yds", "pass_yds", "yards", "yds")):
         min_std_floor = 12.25
     elif any(tok in fam_lower for tok in ("tackle", "reception", "receptions", "carries", "attempts", "targets")):
@@ -453,13 +457,17 @@ def allocate_stochastic_conserved_box_score(
 
     # Identify absorber column (OTHER / OTHER_DEF if present, else highest-share active player)
     absorber_local_idx = int(np.argmax(share_vec))
+    is_aggregate_absorber = False
     for local_i, orig_i in enumerate(active_indices):
         if keys[orig_i].upper() in {"OTHER", "OTHER_DEF", "TEAM_RESIDUAL"}:
             absorber_local_idx = local_i
+            is_aggregate_absorber = True
             break
 
     if n_worlds_eff >= 4 and float(np.std(team_arr)) + float(np.mean(np.abs(team_arr))) > 0.0:
         for j in range(k_act):
+            if fam_lower == "tackles" and j == absorber_local_idx:
+                continue
             col = alloc[:, j]
             cur_mean = max(1e-6, float(np.mean(np.abs(col))))
             cur_std = float(np.std(col))
@@ -479,24 +487,44 @@ def allocate_stochastic_conserved_box_score(
                 alloc[:, j] = col + delta
                 alloc[:, partner] = alloc[:, partner] - delta
 
-        # Second pass: ensure absorber didn't collapse below floor
-        abs_col = alloc[:, absorber_local_idx]
-        abs_mean = max(1e-6, float(np.mean(np.abs(abs_col))))
-        abs_std = float(np.std(abs_col))
-        req_abs_std = max(min_std_floor, 0.36 * abs_mean)
-        if abs_std < req_abs_std and k_act > 1:
-            alt_partner = 0 if absorber_local_idx != 0 else 1
-            z_raw = rng_eff.standard_normal(n_worlds_eff)
-            z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
-            if float(np.mean((abs_col - float(np.mean(abs_col))) * z_unit)) < 0.0:
-                z_unit = -z_unit
-            delta = z_unit * (req_abs_std * 1.08)
-            alloc[:, absorber_local_idx] = abs_col + delta
-            alloc[:, alt_partner] = alloc[:, alt_partner] - delta
+        # Second pass: ensure absorber didn't collapse below floor (skip aggregate tackle sinks)
+        if not (fam_lower == "tackles" and is_aggregate_absorber):
+            abs_col = alloc[:, absorber_local_idx]
+            abs_mean = max(1e-6, float(np.mean(np.abs(abs_col))))
+            abs_std = float(np.std(abs_col))
+            req_abs_std = max(min_std_floor, 0.36 * abs_mean)
+            if abs_std < req_abs_std and k_act > 1:
+                non_abs_indices = [i for i in range(k_act) if i != absorber_local_idx]
+                z_raw = rng_eff.standard_normal(n_worlds_eff)
+                z_unit = (z_raw - float(np.mean(z_raw))) / max(1e-9, float(np.std(z_raw)))
+                if float(np.mean((abs_col - float(np.mean(abs_col))) * z_unit)) < 0.0:
+                    z_unit = -z_unit
+                if fam_lower == "tackles" and non_abs_indices:
+                    add_abs_std = math.sqrt(max(0.25, req_abs_std * req_abs_std - abs_std * abs_std))
+                    delta = z_unit * (add_abs_std * 1.08)
+                    alloc[:, absorber_local_idx] = abs_col + delta
+                    na_shares = np.maximum(1e-6, share_vec[non_abs_indices])
+                    na_shares = na_shares / float(np.sum(na_shares))
+                    alloc[:, non_abs_indices] = alloc[:, non_abs_indices] - delta[:, None] * na_shares[None, :]
+                else:
+                    delta = z_unit * (req_abs_std * 1.08)
+                    alloc[:, absorber_local_idx] = abs_col + delta
+                    alt_partner = 0 if absorber_local_idx != 0 else 1
+                    alloc[:, alt_partner] = alloc[:, alt_partner] - delta
 
     # Exact world-by-world conservation on the absorber column
     non_abs = [i for i in range(k_act) if i != absorber_local_idx]
-    if non_abs:
+    if fam_lower == "tackles":
+        team_pos = np.maximum(0.0, team_arr)
+        if non_abs:
+            alloc[:, non_abs] = np.maximum(0.0, alloc[:, non_abs])
+            row_sum = np.sum(alloc[:, non_abs], axis=1)
+            scale = np.where(row_sum > team_pos, team_pos / np.maximum(1e-9, row_sum), 1.0)
+            alloc[:, non_abs] = alloc[:, non_abs] * scale[:, None]
+            alloc[:, absorber_local_idx] = np.maximum(0.0, team_pos - np.sum(alloc[:, non_abs], axis=1))
+        else:
+            alloc[:, 0] = team_pos
+    elif non_abs:
         alloc[:, absorber_local_idx] = team_arr - np.sum(alloc[:, non_abs], axis=1)
     else:
         alloc[:, 0] = team_arr

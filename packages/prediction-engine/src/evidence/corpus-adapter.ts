@@ -43,6 +43,20 @@ export const DEFAULT_FAMILY_MAP: Readonly<Record<string, SituationalFamily>> = {
   weather: "weather",
 };
 
+const VALID_SITUATIONAL_FAMILIES: ReadonlySet<string> = new Set<SituationalFamily>([
+  "pressure",
+  "weather",
+  "restFatigue",
+  "coveragePersonnel",
+  "qbSkillScript",
+  "marketMicrostructure",
+  "other",
+]);
+
+function isSituationalFamily(value: string): value is SituationalFamily {
+  return VALID_SITUATIONAL_FAMILIES.has(value);
+}
+
 /**
  * Rebuild a `GameGrounding` from the flattened records.
  *
@@ -55,22 +69,28 @@ export function toGameGrounding(
   records: readonly CorpusGroundingRecord[],
   gameId: string | null,
 ): GameGrounding {
-  const facets: FacetGrounding[] = records.map((r) => ({
-    family: r.family as SituationalFamily,
-    query: r.facet,
-    // Equal weight: the record does not carry the original facet weight.
-    facetWeight: 1,
-    support: r.support,
-    // Citations are carried on the record, not as GroundingEvidence. The shrink
-    // reads `support` and `layerErrors` only, so an empty evidence array here
-    // changes nothing it computes.
-    evidence: [],
-    chunkMode: "none",
-    layerErrors: [],
-  }));
+  const facets: FacetGrounding[] = [];
+  let covered = 0;
+  for (const r of records) {
+    if (!isSituationalFamily(r.family) || !Number.isFinite(r.support)) continue;
+    if (r.citations.length > 0) covered += 1;
+    const clampedSupport = Math.min(1, Math.max(0, r.support));
+    facets.push({
+      family: r.family,
+      query: r.facet,
+      // Equal weight: the record does not carry the original facet weight.
+      facetWeight: 1,
+      support: clampedSupport,
+      // Citations are carried on the record, not as GroundingEvidence. The shrink
+      // reads `support` and `layerErrors` only, so an empty evidence array here
+      // changes nothing it computes.
+      evidence: [],
+      chunkMode: "none",
+      layerErrors: [],
+    });
+  }
   const n = facets.length;
   const overall = n === 0 ? 0 : facets.reduce((s, f) => s + f.support, 0) / n;
-  const covered = records.filter((r) => r.citations.length > 0).length;
   return {
     gameId,
     facets,
@@ -125,12 +145,12 @@ export function applyCorpusShrink(
   const collisions: string[] = [];
   const corpusKeyFor = new Map<string, string>();
   for (const d of diagnostics) {
-    const corpusFamily = familyMap[d.family];
-    if (corpusFamily === undefined || d.deviation === null) {
+    const corpusFamily = Object.hasOwn(familyMap, d.family) ? familyMap[d.family] : undefined;
+    if (corpusFamily === undefined || d.deviation === null || !Number.isFinite(d.deviation)) {
       unmapped.push(d.family);
       continue;
     }
-    if (deltas[corpusFamily] !== undefined) {
+    if (Object.hasOwn(deltas, corpusFamily)) {
       collisions.push(`${d.family}->${corpusFamily}`);
       unmapped.push(d.family);
       continue;
@@ -150,12 +170,26 @@ export function applyCorpusShrink(
     if (corpusFamily === undefined) return d;
     const adj = byCorpusFamily.get(corpusFamily);
     if (adj === undefined) return d;
+    const rawMultiplier = adj.multiplier;
+    const isFiniteMult = Number.isFinite(rawMultiplier);
+    const clampedMultiplier = !isFiniteMult
+      ? 1
+      : rawMultiplier < CORPUS_SHRINK_FLOOR
+        ? CORPUS_SHRINK_FLOOR
+        : rawMultiplier;
     const value = shrunk[corpusFamily];
-    const shrunkDeviation = typeof value === "number" ? value : d.deviation;
+    const shrunkDeviation =
+      !isFiniteMult
+        ? d.deviation
+        : d.deviation !== null && rawMultiplier < CORPUS_SHRINK_FLOOR
+          ? d.deviation * clampedMultiplier
+          : typeof value === "number" && Number.isFinite(value)
+            ? value
+            : d.deviation;
     return {
       ...d,
-      corpusSupport: adj.support,
-      corpusMultiplier: adj.multiplier,
+      corpusSupport: Number.isFinite(adj.support) ? adj.support : 0,
+      corpusMultiplier: clampedMultiplier,
       shrunkDeviation,
     };
   });

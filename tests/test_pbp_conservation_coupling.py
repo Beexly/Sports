@@ -47,8 +47,8 @@ def test_jev_miss_does_not_stamp_lock_or_86():
 
 
 def test_showdown_floor_rejects_25000():
-    assert showdown_salary_floor(25000) == 48000
-    assert showdown_salary_floor(24000) == 48000
+    assert showdown_salary_floor(25000) == 48500
+    assert showdown_salary_floor(24000) == 48500
     assert showdown_salary_floor(49000) == 49000
 
 

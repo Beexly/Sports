@@ -125,4 +125,69 @@ describe("applyCorpusShrink", () => {
     expect(coaching?.corpusMultiplier).toBeCloseTo(0.9, 6);
     expect(res.appliedFamilies).toEqual(["coaching"]);
   });
+
+  it("ignores prototype keys in familyMap and skips non-finite deviations or support", () => {
+    const base = computeFamilyDiagnostics(freshBundle());
+    const malicious = [
+      ...base,
+      { ...base[0], family: "constructor" as unknown as typeof base[0]["family"], deviation: 2 },
+      { ...base[0], family: "coaching" as const, deviation: Number.NaN },
+    ];
+    const g = toGameGrounding(
+      [record("restFatigue", 0), record("weather", Number.NaN)],
+      null,
+    );
+    expect(g.facets.map((f) => f.family)).toEqual(["restFatigue"]);
+    const res = applyCorpusShrink(malicious, g, { ...DEFAULT_FAMILY_MAP, coaching: "qbSkillScript" });
+    expect(res.unmappedFamilies).toContain("constructor");
+    expect(res.unmappedFamilies).toContain("coaching");
+    const rest = res.diagnostics.find((d) => d.family === "rest");
+    expect(rest?.corpusMultiplier).toBeCloseTo(CORPUS_SHRINK_FLOOR, 6);
+    expect(rest?.shrunkDeviation).toBeCloseTo((rest?.deviation ?? 0) * CORPUS_SHRINK_FLOOR, 6);
+  });
+
+  it("retains 'other' family facets in toGameGrounding and ignores non-finite adjustment multipliers", () => {
+    const g = toGameGrounding([record("other", 0.7), record("restFatigue", 0.6)], "g-other");
+    expect(g.facets.map((f) => f.family)).toEqual(["other", "restFatigue"]);
+
+    const diags = computeFamilyDiagnostics(freshBundle());
+    const corruptedGrounding = {
+      ...g,
+      facets: [
+        {
+          family: "restFatigue" as const,
+          query: "nan check",
+          facetWeight: 1,
+          support: Number.NaN,
+          evidence: [],
+          chunkMode: "none" as const,
+          layerErrors: [],
+        },
+      ],
+    };
+    const res = applyCorpusShrink(diags, corruptedGrounding);
+    const rest = res.diagnostics.find((d) => d.family === "rest");
+    expect(rest?.corpusMultiplier).toBe(1);
+    expect(rest?.shrunkDeviation).toBe(rest?.deviation);
+    expect(Number.isFinite(rest?.corpusSupport ?? Number.NaN)).toBe(true);
+  });
+
+  it("clamps out-of-range support values in toGameGrounding to [0, 1]", () => {
+    const g = toGameGrounding([record("restFatigue", 1.5), record("weather", -0.2)], "g-clamp");
+    expect(g.facets.map((f) => f.support)).toEqual([1, 0]);
+    expect(g.overallSupport).toBeCloseTo(0.5, 6);
+
+    const diags = computeFamilyDiagnostics(freshBundle());
+    const res = applyCorpusShrink(diags, g);
+    const rest = res.diagnostics.find((d) => d.family === "rest");
+    const weather = res.diagnostics.find((d) => d.family === "weather");
+    expect(rest?.corpusMultiplier).toBeCloseTo(1, 6);
+    expect(Math.abs(rest?.shrunkDeviation ?? 0)).toBeLessThanOrEqual(Math.abs(rest?.deviation ?? 0));
+    expect(weather?.corpusMultiplier).toBe(1);
+
+    const gLow = toGameGrounding([record("restFatigue", -0.2)], "g-clamp-low");
+    const resLow = applyCorpusShrink(diags, gLow);
+    const restLow = resLow.diagnostics.find((d) => d.family === "rest");
+    expect(restLow?.corpusMultiplier).toBeCloseTo(CORPUS_SHRINK_FLOOR, 6);
+  });
 });

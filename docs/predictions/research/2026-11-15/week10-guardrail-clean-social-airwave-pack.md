@@ -38,14 +38,14 @@ Detroit's offensive engine runs through balance and play-action timing. Jahmyr G
 When Jared Goff works from clean pockets, his efficiency ranks among the league's sharpest (+0.140 offensive EPA per play). With Sam LaPorta working the intermediate seam and Jameson Williams stretching the top off coverage shells, Detroit consistently forces safeties into two-high looks, creating room for Gibbs underneath.
 
 #### Post 3: New England's Counter-Punch & Trench Test
-The matchup test for New England lies in pass protection against Aaron Glenn's Detroit defense. Detroit brings heat on 27.1% of dropbacks and runs man coverage at a 35.7% clip.
+The matchup test for New England lies in pass protection against Kelvin Sheppard's Detroit defense. Detroit brings heat on 27.1% of dropbacks and runs man coverage at a 35.7% clip.
 
 Drake Maye (+0.057 offensive EPA) has shown steady poise against pressure, leaning heavily on A.J. Brown on perimeter isolations and Hunter Henry in quick-release relief. When Maye extends plays with his legs, New England's passing offense creates off-schedule explosive opportunities. DeMario Douglas provides reliable separation on underneath option routes.
 
 #### Post 4: Red-Zone Efficiency & Special Teams
 In international games, field position and red-zone finishing decide momentum swings. Detroit's defense has tightened inside the 20-yard line, while New England's defensive front (bringing a 39.7% blitz rate) will test Detroit's offensive line protection rules.
 
-Kicking conditions inside Allianz Arena are pristine. Detroit placekicker Jake Bates provides exceptional range, giving Detroit scoring capability from distance if New England bends without breaking in the red zone.
+Kicking conditions at Allianz Arena on the neutral outdoor hybrid grass field are manageable (46F, 6 mph light wind). Detroit placekicker Jake Bates provides exceptional range, giving Detroit scoring capability from distance if New England bends without breaking in the red zone.
 
 #### Post 5: The Member Gateway
 Opening kickoff in Munich is just the beginning of a 13-game Week 10 slate across Sunday and Monday.
@@ -69,7 +69,7 @@ Trench battle in Indianapolis: Jonathan Taylor anchors the Colts ground attack a
 ---
 
 ### 2. HOU @ CLE (12:00 PM CST)
-- Confirmed Starters: C.J. Stroud (HOU) vs Deshaun Watson (CLE)
+- Confirmed Starters: C.J. Stroud (HOU) vs Deshaun Watson (CLE, with Shedeur Sanders backup depth)
 - Matchup Dynamic: Explosive Aerial Attack vs Dawg Pound Pressure
 - Film Note: C.J. Stroud brings Houston's potent passing scheme (+0.027 offensive EPA) to Cleveland, showcasing Nico Collins outside and Dalton Schultz working the seam. Woody Marks provides balance out of the backfield. Cleveland counters with Deshaun Watson leaning on workhorse running back Quinshon Judkins and perimeter targets KC Concepcion and Denzel Boston. The decisive battle happens along the line of scrimmage, where Houston's pass protection must hold up against Cleveland's edge rush.
 
@@ -242,7 +242,7 @@ Access all official call sheets, defensive matchup tiers, and member cards at ga
     - DET Neutral Pace: 26.6s | DET PROE: +1.7%
     - NE Neutral Pace: 27.7s | NE Blitz Rate: 39.7%
   * Player Focus: Jahmyr Gibbs vs Drake Maye
-  * Takeaway: Early start, pristine turf, and explosive backfield play-calling in Munich.
+  * Takeaway: Early start, outdoor hybrid grass in Munich, and explosive backfield play-calling.
 
 - Slide 3: Trench Warfare & Blitz Radar
   * Headline: TRENCH PRESSURE: WHO BRINGS THE HEAT?
@@ -280,7 +280,7 @@ Access all official call sheets, defensive matchup tiers, and member cards at ga
 - Slide 7: Climate & Venue Context
   * Headline: WEATHER & VENUE DYNAMICS
   * Indoor Climate: SF @ DAL at AT&T Stadium (Roof Closed -- 70F, 0 mph wind, ideal passing track).
-  * International Turf: NE @ DET at Allianz Arena (Munich, Germany -- pristine stadium turf).
+  * Allianz Arena Hybrid Grass, Neutral Site: NE @ DET in Munich, Germany (46F, 6 mph wind, outdoor hybrid grass).
   * Outdoor Autumn Tracks: Paycor Stadium (Cincinnati) & M&T Bank Stadium (Baltimore) hosting primetime autumn clashes.
 
 - Slide 8: Primetime Spotlight

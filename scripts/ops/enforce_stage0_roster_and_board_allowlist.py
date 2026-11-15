@@ -18,6 +18,7 @@ import csv
 import gzip
 import hashlib
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -198,7 +199,7 @@ _ACTIVE_2026_TEAM_EXEMPTIONS: dict[str, str] = {
 
 def _strip_name_suffix(name_low: str) -> str:
     """Strip common generational suffixes when matching duplicate roster rows."""
-    for suffix in (" jr.", " sr.", " iii", " ii", " iv"):
+    for suffix in (" jr.", " sr.", " iii", " ii", " iv", " jr", " sr", " v"):
         if name_low.endswith(suffix):
             return name_low[: -len(suffix)].strip()
     return name_low
@@ -261,8 +262,10 @@ def apply_stage0_qb1_live_starter_resolutions(
         return stage0_cfg
     try:
         preflight = json.loads(preflight_path.read_text(encoding="utf-8"))
-    except Exception:
-        return stage0_cfg
+    except (OSError, ValueError, TypeError) as exc:
+        raise Stage0RosterContaminationError(
+            f"STAGE0_FAIL: Malformed preflight config {preflight_path}: {exc}"
+        ) from exc
     conflicts = preflight.get("qb1_ban_conflicts") or []
     if not conflicts:
         return stage0_cfg
@@ -325,12 +328,13 @@ def build_dynamic_league_wide_denylist_for_matchup(
     """
     cache_key = (away.upper(), home.upper(), int(week))
     if cache_key in _DYNAMIC_DENYLIST_CACHE:
-        return _DYNAMIC_DENYLIST_CACHE[cache_key]
+        return dict(_DYNAMIC_DENYLIST_CACHE[cache_key])
 
     denylist: dict[str, str] = _effective_hallucination_denylist(away, home, week)
     try:
         stage0_cfg = require_week(week)
-    except Exception:
+        stage0_cfg = apply_stage0_qb1_live_starter_resolutions(stage0_cfg, week)
+    except (FileNotFoundError, OSError, ValueError, TypeError, KeyError, RuntimeError):
         stage0_cfg = {}
 
     traded_to_matchup = {
@@ -347,7 +351,20 @@ def build_dynamic_league_wide_denylist_for_matchup(
     inactive_statuses = {"CUT", "TRD", "RES", "INA", "RET", "DEV"}
     if rosters_path.is_file():
         with rosters_path.open("r", encoding="utf-8") as fh:
-            roster_rows = list(csv.DictReader(fh))
+            raw_roster_rows = list(csv.DictReader(fh))
+        latest_by_name: dict[str, tuple[int, dict[str, str]]] = {}
+        for r in raw_roster_rows:
+            fn_k = str(r.get("full_name") or r.get("player_name") or "").strip().lower()
+            if not fn_k:
+                continue
+            try:
+                wk_r = int(float(r.get("week") or 0))
+            except (TypeError, ValueError):
+                wk_r = 0
+            prev = latest_by_name.get(fn_k)
+            if prev is None or wk_r >= prev[0]:
+                latest_by_name[fn_k] = (wk_r, r)
+        roster_rows = [item[1] for item in latest_by_name.values()]
         active_matchup_base_names = {
             _strip_name_suffix(str(r.get("full_name") or r.get("player_name") or "").strip().lower())
             for r in roster_rows
@@ -391,21 +408,33 @@ def build_dynamic_league_wide_denylist_for_matchup(
                     f"Injury report {rep_st} on {tm} (week {wk_num}, {r.get('report_primary_injury') or 'injury'})"
                 )
 
-    _DYNAMIC_DENYLIST_CACHE[cache_key] = denylist
-    return denylist
+    _DYNAMIC_DENYLIST_CACHE[cache_key] = dict(denylist)
+    return dict(denylist)
 
 
 def _match_pbp_short_name(full_name: str) -> list[str]:
     """Generate candidate nflverse PBP abbreviated names (e.g., 'Trevor Lawrence' -> ['T.Lawrence'])."""
-    clean = full_name.replace(" Jr.", "").replace(" Sr.", "").replace(" III", "").replace(" II", "").strip()
+    clean = re.sub(r"\s+(?:Jr\.?|Sr\.?|III|IV|II|V)$", "", str(full_name).strip(), flags=re.IGNORECASE).strip()
     parts = clean.split()
     if len(parts) < 2:
         return [clean]
     first, last = parts[0], parts[-1]
-    cands = [f"{first[0]}.{last}", f"{first[:2]}.{last}", f"{first[:3]}.{last}"]
+    cands: list[str] = []
+    if len(parts) >= 3:
+        comp_last = " ".join(parts[1:])
+        comp_nospace = "".join(parts[1:])
+        cands.extend([
+            f"{first[0]}.{comp_last}",
+            f"{first[0]}.{comp_nospace}",
+            f"{first[:2]}.{comp_last}",
+            f"{first[:2]}.{comp_nospace}",
+            f"{first[:3]}.{comp_last}",
+        ])
+    cands.extend([f"{first[0]}.{last}", f"{first[:2]}.{last}", f"{first[:3]}.{last}"])
+    deduped = list(dict.fromkeys(cands))
     if full_name == "Brian Thomas Jr.":
-        cands.insert(0, "Bri.Thomas")
-    return cands
+        deduped.insert(0, "Bri.Thomas")
+    return deduped
 
 
 def _round_half(val: float, floor_val: float = 0.5) -> float:
@@ -706,8 +735,11 @@ def load_stage0_game_roster_allowlist(
     if inj_path.is_file():
         with inj_path.open("r", encoding="utf-8") as fh:
             rows = list(csv.DictReader(fh))
-        rows.sort(key=lambda r: int(r.get("week") or 0))
+        rows.sort(key=lambda r: int(float(r.get("week") or 0)))
         for r in rows:
+            wk_inj = int(float(r.get("week") or 0))
+            if int(week) >= 10 and wk_inj != int(week):
+                continue
             tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
             fn = str(r.get("full_name") or "").strip()
             if tm in (away, home) and fn:
@@ -742,6 +774,11 @@ def load_stage0_game_roster_allowlist(
             "practice_status": "Full Participation in Practice",
             "primary_injury": "Ankle (FP, no game designation; confirmed Week 9 QB1 starter)",
         }
+
+    inj_stripped_map: dict[tuple[str, str], dict[str, str]] = {
+        (i_tm, _strip_name_suffix(i_nm)): dict(i_val)
+        for (i_tm, i_nm), i_val in injury_map.items()
+    }
 
     # nflverse/Neon store the Rams as 'LA'; canonical display stays 'LAR'
     # (same alias T-00 uses). Resolve QB1 + exclusions through both forms.
@@ -793,7 +830,14 @@ def load_stage0_game_roster_allowlist(
             raise Stage0RosterContaminationError(
                 f"STAGE0_FAIL: Off-roster player {name} appeared on live board allowlist!"
             )
-        tm = str(p.get("team") or "").strip()
+        tm = _normalize_team_abbr(str(p.get("team") or "").strip(), away, home)
+        if int(week) >= 10:
+            inj_chk = injury_map.get((tm, name.lower())) or inj_stripped_map.get((tm, _strip_name_suffix(name.lower()))) or {}
+            inj_st_low = str(inj_chk.get("report_status") or "").strip().lower()
+            if inj_st_low in {"out", "doubtful", "ir", "injured reserve"}:
+                raise Stage0RosterContaminationError(
+                    f"STAGE0_FAIL: Injured ({inj_chk.get('report_status')}) player {name} appeared on live board allowlist!"
+                )
         pos = str(p.get("position") or "").strip()
         rec = athletes.setdefault(
             name,
@@ -814,6 +858,215 @@ def load_stage0_game_roster_allowlist(
             rec["core_lines"][mkt] = float(line)
             if open_line is not None:
                 rec["open_lines"][mkt] = float(open_line)
+
+    # Ensure each resolved live starting QB1 appears in verified athletes (fail-closed on Stage-0 contradictions)
+    ath_lower_keys = {k.lower() for k in athletes}
+    ath_stripped_keys = {_strip_name_suffix(k.lower()): k for k in athletes}
+    excl_stripped = {_strip_name_suffix(k.lower()) for k in excluded_names_lower}
+    deny_stripped = {_strip_name_suffix(k.lower()) for k in matchup_denylist}
+
+    for tm_side in (away, home):
+        qb_name = str(confirmed_qb1.get(tm_side) or "").strip()
+        if not qb_name:
+            continue
+        qb_low = qb_name.lower()
+        qb_strp = _strip_name_suffix(qb_low)
+        if (
+            qb_low in excluded_names_lower
+            or qb_strp in excl_stripped
+            or qb_low in matchup_denylist
+            or qb_strp in deny_stripped
+        ):
+            raise Stage0RosterContaminationError(
+                f"STAGE0_QB1_CONTRADICTION: {tm_side} confirmed_qb1 '{qb_name}' is blocked by Stage-0 exclusion/denylist without resolution"
+            )
+        if int(week) >= 10:
+            qb_inj = injury_map.get((tm_side, qb_low)) or inj_stripped_map.get((tm_side, qb_strp)) or {}
+            qb_inj_low = str(qb_inj.get("report_status") or "").strip().lower()
+            if qb_inj_low in {"out", "doubtful", "ir", "injured reserve"}:
+                raise Stage0RosterContaminationError(
+                    f"STAGE0_QB1_CONTRADICTION: {tm_side} confirmed_qb1 '{qb_name}' carries blocked injury status ({qb_inj.get('report_status')})"
+                )
+        if qb_name not in athletes and qb_low not in ath_lower_keys and qb_strp not in ath_stripped_keys:
+            athletes[qb_name] = {
+                "athlete": qb_name,
+                "team": tm_side,
+                "position": "QB",
+                "prop_count": 0,
+                "core_lines": {},
+                "open_lines": {},
+            }
+            ath_lower_keys.add(qb_low)
+            ath_stripped_keys[qb_strp] = qb_name
+
+    # Hydrate missing active 2026 PBP skill/kicker/IDP contributors for Week 10+ partial sportsbook boards
+    if int(week) >= 10:
+        rosters_path = REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv"
+        if rosters_path.is_file():
+            latest_roster: dict[str, tuple[int, str, str, str]] = {}
+            pos_alias = {
+                "K": "PK",
+                "ILB": "LB",
+                "MLB": "LB",
+                "OLB": "LB",
+                "FS": "S",
+                "SAF": "S",
+            }
+            with rosters_path.open("r", encoding="utf-8") as rf:
+                for r in csv.DictReader(rf):
+                    fn = str(r.get("full_name") or "").strip()
+                    if not fn:
+                        continue
+                    try:
+                        wk_r = int(r.get("week") or 0)
+                    except (TypeError, ValueError):
+                        wk_r = 0
+                    tm_r = _normalize_team_abbr(r.get("team") or "", away, home)
+                    pos_r = str(r.get("position") or "").strip().upper()
+                    pos_r = pos_alias.get(pos_r, pos_r)
+                    st_r = str(r.get("status") or "").strip().upper()
+                    prev = latest_roster.get(fn)
+                    if prev is None or wk_r >= prev[0]:
+                        latest_roster[fn] = (wk_r, tm_r, pos_r, st_r)
+
+            traded_away_stripped = set()
+            for tp in (stage0_cfg.get("traded_players") or []):
+                t_name = str(tp.get("name") or "").strip().lower()
+                t_from = _normalize_team_abbr(tp.get("from") or "", away, home)
+                t_to = _normalize_team_abbr(tp.get("to") or "", away, home)
+                if t_name and t_from in (away, home) and t_to != t_from:
+                    traded_away_stripped.add(_strip_name_suffix(t_name))
+
+            tgt_cnts: dict[str, dict[str, int]] = {away: {}, home: {}}
+            car_cnts: dict[str, dict[str, int]] = {away: {}, home: {}}
+            kck_cnts: dict[str, dict[str, int]] = {away: {}, home: {}}
+            tkl_cnts: dict[str, dict[str, int]] = {away: {}, home: {}}
+
+            def _bump(bucket: dict[str, dict[str, int]], tm_k: str, p_nm: Any) -> None:
+                if tm_k not in bucket or p_nm is None:
+                    return
+                ps = str(p_nm).strip()
+                if ps and ps != "nan":
+                    d_tm = bucket[tm_k]
+                    d_tm[ps] = d_tm.get(ps, 0) + 1
+
+            pbp_rows_raw = getattr(pbp_teams, "_rows", None)
+            if pbp_rows_raw is not None:
+                for row_p in pbp_rows_raw:
+                    p_tm = str(row_p.get("posteam") or "").strip().upper()
+                    d_tm = str(row_p.get("defteam") or "").strip().upper()
+                    _bump(tgt_cnts, p_tm, row_p.get("receiver_player_name"))
+                    _bump(car_cnts, p_tm, row_p.get("rusher_player_name"))
+                    _bump(kck_cnts, p_tm, row_p.get("kicker_player_name"))
+                    _bump(tkl_cnts, d_tm, row_p.get("solo_tackle_1_player_name"))
+                    _bump(tkl_cnts, d_tm, row_p.get("assist_tackle_1_player_name"))
+                    _bump(tkl_cnts, d_tm, row_p.get("assist_tackle_2_player_name"))
+            else:
+                pbp_cols = list(getattr(pbp_teams, "columns", []))
+                want_cols = [
+                    "posteam", "defteam", "receiver_player_name", "rusher_player_name",
+                    "kicker_player_name", "solo_tackle_1_player_name",
+                    "assist_tackle_1_player_name", "assist_tackle_2_player_name",
+                ]
+                col_vecs = [
+                    pbp_teams[c].tolist() if c in pbp_cols else [None] * len(pbp_teams)
+                    for c in want_cols
+                ]
+                for p_tm_r, d_tm_r, rec_n, rus_n, kck_n, st_n, at1_n, at2_n in zip(*col_vecs):
+                    p_tm = str(p_tm_r or "").strip().upper()
+                    d_tm = str(d_tm_r or "").strip().upper()
+                    _bump(tgt_cnts, p_tm, rec_n)
+                    _bump(car_cnts, p_tm, rus_n)
+                    _bump(kck_cnts, p_tm, kck_n)
+                    _bump(tkl_cnts, d_tm, st_n)
+                    _bump(tkl_cnts, d_tm, at1_n)
+                    _bump(tkl_cnts, d_tm, at2_n)
+
+            def _pbp_sum(bucket: dict[str, dict[str, int]], tm_k: str, full_n: str) -> int:
+                d_tm = bucket.get(tm_k) or {}
+                return sum(d_tm.get(c, 0) for c in _match_pbp_short_name(full_n))
+
+            blocked_inj = {"out", "doubtful", "ir", "injured reserve"}
+            pk_cands: dict[str, list[tuple[int, str]]] = {away: [], home: []}
+            def_cands: dict[str, list[tuple[int, str, str]]] = {away: [], home: []}
+
+            for fn, (_wk_r, tm_r, pos_r, st_r) in sorted(latest_roster.items()):
+                if tm_r not in (away, home) or st_r not in ("ACT", "ACTIVE", ""):
+                    continue
+                if pos_r not in ("RB", "WR", "TE", "PK", "LB", "S", "DE"):
+                    continue
+                fn_low = fn.lower()
+                fn_strp = _strip_name_suffix(fn_low)
+                if (
+                    fn in athletes
+                    or fn_low in ath_lower_keys
+                    or fn_strp in ath_stripped_keys
+                    or fn_low in excluded_names_lower
+                    or fn_strp in excl_stripped
+                    or fn_low in matchup_denylist
+                    or fn_strp in deny_stripped
+                    or fn_strp in traded_away_stripped
+                ):
+                    continue
+                inj_rec = injury_map.get((tm_r, fn_low)) or inj_stripped_map.get((tm_r, fn_strp)) or {}
+                if str(inj_rec.get("report_status") or "").strip().lower() in blocked_inj:
+                    continue
+
+                n_tgt = _pbp_sum(tgt_cnts, tm_r, fn)
+                n_car = _pbp_sum(car_cnts, tm_r, fn)
+                n_kck = _pbp_sum(kck_cnts, tm_r, fn)
+                n_tkl = _pbp_sum(tkl_cnts, tm_r, fn)
+
+                qualify_skill = (
+                    (pos_r in ("WR", "TE") and n_tgt >= 6)
+                    or (pos_r == "RB" and (n_car >= 8 or n_tgt >= 6))
+                )
+                if qualify_skill:
+                    athletes[fn] = {
+                        "athlete": fn,
+                        "team": tm_r,
+                        "position": pos_r,
+                        "prop_count": 0,
+                        "core_lines": {},
+                        "open_lines": {},
+                    }
+                    ath_lower_keys.add(fn_low)
+                    ath_stripped_keys[fn_strp] = fn
+                elif pos_r == "PK":
+                    pk_cands[tm_r].append((n_kck, fn))
+                elif pos_r in ("LB", "S", "DE") and n_tkl >= 20:
+                    def_cands[tm_r].append((n_tkl, fn, pos_r))
+
+            for tm_r in (away, home):
+                has_pk = any(v["team"] == tm_r and v["position"] == "PK" for v in athletes.values())
+                if not has_pk and pk_cands[tm_r]:
+                    pk_cands[tm_r].sort(key=lambda x: (-x[0], x[1]))
+                    _, best_pk = pk_cands[tm_r][0]
+                    athletes[best_pk] = {
+                        "athlete": best_pk,
+                        "team": tm_r,
+                        "position": "PK",
+                        "prop_count": 0,
+                        "core_lines": {},
+                        "open_lines": {},
+                    }
+                    ath_lower_keys.add(best_pk.lower())
+                    ath_stripped_keys[_strip_name_suffix(best_pk.lower())] = best_pk
+
+                def_count = sum(1 for v in athletes.values() if v["team"] == tm_r and v["position"] in ("LB", "S", "DE"))
+                if def_count < 2 and def_cands[tm_r]:
+                    def_cands[tm_r].sort(key=lambda x: (-x[0], x[1]))
+                    for _tkl, d_fn, d_pos in def_cands[tm_r][: max(0, 2 - def_count)]:
+                        athletes[d_fn] = {
+                            "athlete": d_fn,
+                            "team": tm_r,
+                            "position": d_pos,
+                            "prop_count": 0,
+                            "core_lines": {},
+                            "open_lines": {},
+                        }
+                        ath_lower_keys.add(d_fn.lower())
+                        ath_stripped_keys[_strip_name_suffix(d_fn.lower())] = d_fn
 
     # Enrich each verified board athlete with empirical 2026 PBP stats & per-player active GP
     team_totals: dict[str, dict[str, float]] = {}
@@ -881,12 +1134,16 @@ def load_stage0_game_roster_allowlist(
         xp_att = int(len(xp_rows))
         xp_made = int((xp_rows["extra_point_result"] == "good").sum()) if len(xp_rows) else 0
 
-        inj_info = injury_map.get((tm, name.lower()), {
-            "week": str(week),
-            "report_status": "Active",
-            "practice_status": "Full Participation in Practice",
-            "primary_injury": "",
-        })
+        inj_info = (
+            injury_map.get((tm, name.lower()))
+            or inj_stripped_map.get((tm, _strip_name_suffix(name.lower())))
+            or {
+                "week": str(week),
+                "report_status": "Active",
+                "practice_status": "Full Participation in Practice",
+                "primary_injury": "",
+            }
+        )
 
         # Apply unfitted situational multiplier from Stage-0 config if present
         pos_key = f"{tm} {info['position']}"
@@ -939,7 +1196,7 @@ def load_stage0_game_roster_allowlist(
     allowlist_payload = {
         "schema": "gse_stage0_game_roster_allowlist_v1",
         "week": week,
-        "matchup": f"{away} @ {home}",
+        "matchup": matchup_key,
         "away": away,
         "home": home,
         "confirmed_qb1": confirmed_qb1,
@@ -952,12 +1209,11 @@ def load_stage0_game_roster_allowlist(
         "team_totals_2026_pbp": team_totals,
         "verified_board_athletes_count": len(athletes),
         "verified_board_athletes": athletes,
+        "allowed_players": list(athletes.keys()),
+        "roster": list(athletes.values()),
     }
     canonical = json.dumps(allowlist_payload, sort_keys=True)
     allowlist_payload["stage0_receipt_sha256"] = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    allowlist_payload["matchup"] = matchup_key
-    allowlist_payload["allowed_players"] = list(athletes.keys())
-    allowlist_payload["roster"] = list(athletes.values())
     return allowlist_payload
 
 
@@ -1005,6 +1261,8 @@ def assert_zero_roster_contamination(
                         "not on",
                         "off-roster",
                         "blocked",
+                        "dfs ban retained",
+                        "ban retained",
                         "ir",
                         "out for season",
                         "inactive",

@@ -45,7 +45,6 @@ def test_madr_architecture_decision_records_complete() -> None:
         "0006-multi-channel-video-social-follower-growth-and-ad-affiliate-revenue-engine.md",
     ]
     required_sections = (
-        "## Status",
         "## Context",
         "## Decision Drivers",
         "## Considered Options",
@@ -60,6 +59,7 @@ def test_madr_architecture_decision_records_complete() -> None:
         p = adr_dir / fname
         assert p.is_file(), f"Missing ADR {fname}"
         txt = p.read_text(encoding="utf-8")
+        assert "**Status:**" in txt or "## Status" in txt, f"Missing Status header in {fname}"
         for sec in required_sections:
             assert sec in txt, f"Missing section {sec} in {fname}"
         assert not ETC_RE.search(txt), f"Forbidden literal found in {fname}"
@@ -79,10 +79,10 @@ def test_video_social_dfs_and_revenue_engine_and_paywall_guardrails() -> None:
     packet = build_week9_video_social_dfs_and_revenue_packet()
     rec = packet["official_verified_record"]
     assert rec["record"] == "47-19-1"
-    assert rec["win_pct"] == 72.9
-    assert rec["net_units"] == 26.50
+    assert rec["win_pct"] == 71.21
+    assert rec["net_units"] == 24.92
     assert rec["pre_week_8_segment"]["record"] == "16-5-0"
-    assert rec["week_8_audited_settlement"]["record"] == "46-18-1"
+    assert rec["week_8_audited_settlement"]["record"] == "31-14-1"
 
     guard = packet["paywall_and_copy_guardrails"]
     assert guard["public_free_picks_leaked"] == 0

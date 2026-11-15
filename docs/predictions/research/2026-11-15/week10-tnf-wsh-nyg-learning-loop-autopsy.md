@@ -35,8 +35,8 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
    - Despite a scoreless first quarter and methodical ball-control sequences (including a 16-play, 7:48 Giants touchdown march), the game cleared the closing total by 4.5 points (45 points) driven by explosive second-half passing touchdowns (66-yard McCarthy to Likely bomb, 31-yard Daniels to Antonio Williams, 32-yard Daniels to Diggs).
 
 3. **Division Underdog Resilience & Net Efficiency**:
-   - The New York Giants (+1.5 underdog / -125 ML home favorite) outgained Washington in total yardage (399 yards to 340 yards) and yards per play (6.2 YPP to 5.1 YPP), winning first downs 21 to 20.
-   - Washington won on high-leverage execution: going 1-for-1 on red-zone touchdowns, producing 3 touchdowns from outside the 20-yard line, converting 7-of-14 on 3rd down (50.0%), and executing two clutch two-minute touchdown drives (0:05 before half, 0:57 before end of regulation).
+   - The New York Giants (-1.5 home favorite / -125 ML) outgained Washington in total yardage (399 yards to 340 yards) and yards per play (6.2 YPP to 5.1 YPP), winning first downs 21 to 20.
+   - Washington (+1.5 road underdog / +105 ML) won on high-leverage execution: going 1-for-1 on red-zone touchdowns, producing 2 touchdowns from outside the 20-yard line (while NYG added 1 outside the 20 for 3 combined), converting 7-of-14 on 3rd down (50.0%), and executing two clutch two-minute touchdown drives (0:05 before half, 0:57 before end of regulation).
 
 ---
 
@@ -45,7 +45,7 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
 ### First Quarter: Trench Standoff (WSH 0, NYG 0)
 - **Drive 01 (NYG, 15:00 - 11:18)**: Giants open with a 7-play, 33-yard drive to the WAS 48. Skattebo carries 3 times for 11 yards; J.J. McCarthy completes passes of 15 yards to Malik Nabers and 7 yards to Cam Skattebo. Drive stalls on 3rd-and-4 with a 1-yard completion to Theo Johnson. Jordan Stout punts 39 yards to WAS 9.
 - **Drive 02 (WSH, 11:18 - 7:33)**: Washington mounts a 6-play, 12-yard drive. Jayden Daniels completes short passes to Stefon Diggs (7 yds) and Austin Ekeler (8 yds), but a 3rd-and-7 scramble nets only 2 yards. Tress Way punts 55 yards to the NYG 24.
-- **Drive 03 (NYG, 7:33 - 4:04)**: Giants drive 43 yards in 7 plays. McCarthy hits Isaiah Likely for 11 yards and Skattebo breaks a 34-yard catch-and-run down the right sideline to the WAS 21. Drive stalls after two incomplete passes; Dominic Zvada pushes a 43-yard field goal attempt wide right.
+- **Drive 03 (NYG, 7:33 - 4:04)**: Giants drive 43 yards in 7 plays. McCarthy hits Isaiah Likely for 6 yards and Skattebo breaks a 34-yard catch-and-run down the right sideline to the WAS 21, then a 6-yard pass to Malik Nabers moves the offense to the WAS 15. Drive stalls after an incomplete pass; Dominic Zvada pushes a 33-yard field goal attempt wide left.
 - **Drive 04 (WSH, 4:04 - 14:07 Q2)**: Washington moves 49 yards in 11 plays, bleeding the remainder of Q1 behind balanced rushes by Rachaad White (7 yds, 4 yds) and Jayden Daniels (8-yard scramble).
 
 ### Second Quarter: Clock Grinders & Late-Half Strike (WSH 10, NYG 7)
@@ -57,9 +57,9 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
 
 ### Third Quarter: Momentum Shifts & Turnover Exchange (WSH 17, NYG 14)
 - **Drive 10 (WSH, 15:00 - 12:24)**: Washington starts the second half with disastrous field position. Austin Ekeler loses 1 yard, followed by a delay of game and an incomplete pass. Way punts 50 yards, but a 10-yard return sets New York up at the WAS 45.
-- **Drive 11 (NYG, 12:24 - 10:22)**: Giants strike swiftly: 5 plays, 55 yards in 2:02. McCarthy scrambles for 23 yards to the WAS 22. Two plays later, Cam Skattebo bursts off right tackle for a 13-yard touchdown. Zvada extra point is good. Giants lead 14-10.
+- **Drive 11 (NYG, 12:24 - 10:22)**: Giants strike swiftly: 5 plays, 55 yards in 2:02. J.J. McCarthy hits Malachi Fields deep left for 25 yards to the WAS 30, then connects short middle with Isaiah Likely for 10 yards to the WAS 20. After a 7-yard Skattebo run to the WAS 13, Cam Skattebo bursts off right end for a 13-yard touchdown. Zvada extra point is good. Giants lead 14-10.
 - **Drive 12 (WSH, 10:22 - 6:56)**: Commanders respond immediately: 6 plays, 77 yards in 3:26. Daniels hits Ben Sinnott for 24 yards over the middle, followed by a 14-yard Diggs reception. On 2nd-and-7 from the NYG 31, Daniels delivers a perfect 31-yard touchdown pass to Antonio Williams down the right sideline. Stevens extra point is good. Washington leads 17-14.
-- **Drive 13 (NYG, 6:56 - 4:06)**: Giants march 53 yards in 5 plays down to the WAS 27, highlighted by a 37-yard strike from McCarthy to Malik Nabers. On the next play, Nabers catches a short pass but is stripped by Frankie Luvu; safety Jeremy Reaves recovers at the WAS 27.
+- **Drive 13 (NYG, 6:56 - 4:06)**: Giants march 53 yards from NYG 27 down to the WAS 19, highlighted by a 37-yard strike from McCarthy to Malik Nabers and a 16-yard grab by Malachi Fields to the WAS 17. On 3rd-and-12 from the WAS 19, Nabers catches a short pass to the WAS 16 but is stripped by Frankie Luvu; safety Jeremy Reaves recovers at the WAS 20.
 - **Drives 14 & 15 (4:06 - 14:07 Q4)**: Commanders go 3-and-out (3 plays, 3 yards). Giants respond with a 7-play, 31-yard drive that carries into Q4 before stalling at the WAS 49 on an Odafe Oweh third-down pressure.
 
 ### Fourth Quarter: Deep Shots, Interception Frenzy & Game-Winner (WSH 24, NYG 21)
@@ -117,10 +117,11 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
   - Austin Ekeler: 9 carries, 26 yards, 2.9 YPC, Long 7, 0 TD.
   - Robert Henry Jr.: 2 carries, 4 yards, 2.0 YPC, Long 4, 0 TD.
 - **New York Giants**:
-  - Cam Skattebo: 18 carries, 78 yards, 4.3 YPC, Long 13, 2 TD (1-yard, 13-yard).
-  - J.J. McCarthy: 4 carries, 33 yards, 8.3 YPC, Long 23, 0 TD.
-  - Greg Desrosiers Jr.: 4 carries, 4 yards, 1.0 YPC, Long 3, 0 TD.
-  - Devin Singletary: 1 carry, 1 yard, 1.0 YPC, Long 1, 0 TD.
+  - Cam Skattebo: 18 carries, 78 yards, 4.3 YPC, Long 14, 2 TD (1-yard, 13-yard).
+  - J.J. McCarthy: 6 carries, 34 yards, 5.7 YPC, Long 12, 0 TD.
+  - Devin Singletary: 1 carry, 3 yards, 3.0 YPC, Long 3, 0 TD.
+  - Jameis Winston: 2 carries, 1 yard, 0.5 YPC, Long 1, 0 TD.
+  - (Special Teams Note: Greg Desrosiers Jr. recorded kickoff returns including two 24-yard returns on Drives 01 and 13 plus a recovered late-game kickoff fumble, with 0 offensive rushing attempts.)
 
 #### Receiving
 - **Washington Commanders**:
@@ -148,20 +149,21 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
   - Odafe Oweh: 4 total tackles (3 solo), 1 sack (10 yards), 1 TFL, 1 QB hit.
   - Rasul Douglas: Game-sealing interception (0:25 remaining), 1 pass defended.
   - Charles Omenihu: 2 QB hits.
-  - Total Washington Pressure: 1 sack, 6 QB hits, 5 tackles for loss.
+  - Total Washington Pressure: 1 sack, 6 QB hits, 4 tackles for loss.
 - **New York Giants Defense**:
   - Arvell Reese: 13 total tackles (4 solo).
   - Micah McFadden: 10 total tackles (5 solo), 1 TFL.
   - Kayvon Thibodeaux: 8 total tackles (5 solo).
   - Ar'Darius Washington: 7 total tackles (5 solo), 1 interception, 2 passes defended.
   - Shelby Harris: 4 total tackles (3 solo), 1 sack (14 yards), 1 TFL, 1 QB hit.
+  - Deonte Banks: 3 total tackles (2 solo), 1 TFL, 1 pass defended.
   - J. Holland: 3 total tackles (1 solo), 1 interception, 1 pass defended.
   - Abdul Carter: 3 total tackles (1 solo), 1 TFL, 1 QB hit.
-  - Total Giants Pressure: 1 sack, 2 QB hits, 5 tackles for loss.
+  - Total Giants Pressure: 1 sack, 2 QB hits, 4 tackles for loss.
 
 #### Kicking & Punting
 - **Drew Stevens (WSH)**: 1/1 FG (46 yards), 3/3 XP, 6 kicking points.
-- **Dominic Zvada (NYG)**: 0/1 FG (missed 43-yarder in Q1), 3/3 XP, 3 kicking points.
+- **Dominic Zvada (NYG)**: 0/1 FG (missed 33-yarder wide left in Q1), 3/3 XP, 3 kicking points.
 - **Tress Way (WSH)**: 4 punts, 198 yards, 49.5 gross average, Long 55, 0 touchbacks.
 - **Jordan Stout (NYG)**: 5 punts, 224 yards, 44.8 gross average, Long 68, 1 touchback, 2 inside 20, 1 critical 12-yard shank at 1:46 Q4.
 
@@ -173,18 +175,18 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
 |---|---|---|---|
 | Active Status (NYG RB1) | Cam Skattebo designated Out (Neon injury report via ESPN API); role mass redistributed to backup committees. | Skattebo commanded 18 carries (78 yds, 2 TD) and 3 catches (44 yds) on a heavy 80%+ snap share. | Severe designation reporting lag on Thursday mornings. Inactive lists lock 90 minutes pregame, not at 10:00 AM. |
 | Active Status (WSH WR1) | Stefon Diggs held under restriction flags; Treylon Burks designated Out. | Diggs led WSH with 10 targets, 6 rec, 83 yds, and game-winner; Burks logged 2 rec, 27 yds, and drew 33-yd DPI. | Early-week injury reports create false distribution voids when veteran players are cleared after warmups. |
-| Game Pace & Total | Market steamed total from 47.5 to 40.5 (drop of 7.0 pts); prior models expected sub-40 trench crawl. | Combined 45 points scored, clearing close total by 4.5 pts. 6 passing plays of 20+ yards and 4 explosive TDs. | Market overreacted to missing skill pieces, ignoring defensive secondary fatigue in short-week coverages. |
+| Game Pace & Total | Market steamed total from 47.5 to 40.5 (drop of 7.0 pts); prior models expected sub-40 trench crawl. | Combined 45 points scored, clearing close total by 4.5 pts. Explosive second-half plays and 3 outside-RZ passing TDs (WSH 2, NYG 1). | Market overreacted to missing skill pieces, ignoring defensive secondary fatigue in short-week coverages. |
 | Pass Protection & Sacks | High pressure rates projected to generate 5-7 combined sacks in NFC East rivalry matchup. | Only 2 combined sacks allowed (1 each); QBs utilized quick releases (Daniels 2.4s, McCarthy 2.6s) and rollout escape lanes. | Quick-game ball distribution and mobile QBs neutralized edge rushes despite 8 total QB hits. |
-| Red Zone Realization | Expected 60%+ red-zone touchdown conversion based on season baseline averages. | NYG converted only 2-of-4 red zone opportunities (lost fumble by Nabers, missed 43-yd FG); WSH scored 3 TDs outside RZ. | High volatility in goal-line execution; perimeter touchdowns outside the 20 bypass red-zone efficiency models entirely. |
+| Red Zone Realization | Expected 60%+ red-zone touchdown conversion based on season baseline averages. | NYG converted only 2-of-4 red zone opportunities (Nabers lost fumble from WAS 19 to 16 recovered at WAS 20, missed 33-yd FG Wide Left); WSH went 1-of-1 in RZ and added 2 TDs outside RZ. | High volatility in goal-line execution; perimeter touchdowns outside the 20 bypass red-zone efficiency models entirely. |
 | Fourth Down Aggression | Model projected standard field goal attempt on 4th-and-2 at NYG 31 with 9:04 remaining (17-14 lead). | Washington went for it and failed (incomplete to Diggs broken up by Washington), sparking immediate 66-yard NYG TD drive. | Coaching aggression in opponent territory can flip momentum by 7 points in 51 seconds. |
 
 ---
 
 ## 5. Calibration Lessons for Sunday-Monday Week 10 Slate
 
-### Lesson A: Road Favorites in Division Clashes Face Underdog Resistance Floors
-- Washington entered as a road favorite (-1.5) facing a division rival with a rookie quarterback. New York outgained Washington 399 to 340 and controlled the line of scrimmage for large stretches (6.2 YPP vs 5.1 YPP).
-- **Calibration Transfer**: For Sunday-Monday division matchups (e.g. MIN @ GB, BUF @ NYJ, PIT @ CIN, SF @ DAL, CAR @ NO), road favorites should carry a conservative spread-cover penalty of 0.8 to 1.2 points unless the net EPA differential exceeds +0.18 per play. Division underdogs at home consistently display resilience exceeding season-long power ratings.
+### Lesson A: Division Underdogs Outgain & Push Short-Rest Favorites
+- New York entered as a slight home favorite (-1.5, -125 ML) against a division rival and outgained Washington 399 to 340 (6.2 YPP vs 5.1 YPP), yet Washington (+1.5 road underdog, +105 ML) still won 24-21 on 3rd-down efficiency (7-14) and two-minute execution.
+- **Calibration Transfer**: For Sunday-Monday division matchups (e.g. MIN @ GB, BUF @ NYJ, PIT @ CIN, SF @ DAL, CAR @ NO), narrow divisional spreads require extra scrutiny on third-down conversion edges and late-game red-zone finishing because yardage edges alone do not guarantee straight-up or spread separation.
 
 ### Lesson B: Inactive Designation Verification Protocol (No Premature Mass Pruning)
 - Pre-game pipeline runs that stripped mass from Cam Skattebo and Stefon Diggs produced distorted usage priors.
@@ -212,9 +214,9 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
    - *Predicate*: A player marked "Questionable" or "Out" on preliminary weekday practice reports who participates in pregame warmups must not have their target or carry projection zeroed out in the primary engine.
    - *Adjustment*: Retain a baseline 60% workload prior until final inactive lists are ingested within 90 minutes of kickoff.
 
-2. **Rule REF-W10-02 (Division Short-Week Home Underdog Spread Elasticity)**:
-   - *Predicate*: Home division underdogs (+1.0 to +3.5) on short rest (TNF or Thanksgiving) facing a division rival.
-   - *Adjustment*: Apply a +1.1 point synthetic boost to the home underdog's projected margin, reflecting higher familiarity, shortened preparation advantages, and crowd disruption in high-leverage late downs.
+2. **Rule REF-W10-02 (Division Short-Week Margin Compression Guard)**:
+   - *Predicate*: Divisional matchups on short rest (TNF or Thanksgiving) with spreads inside a field goal (-3.0 to +3.0).
+   - *Adjustment*: Avoid laying minus-money favorites on boxscore yardage priors alone; require clear third-down and red-zone finishing advantages before backing short divisional favorites.
 
 3. **Rule REF-W10-03 (Closing Total Compression Threshold Protection)**:
    - *Predicate*: Game totals that drop by 4.0 or more points from open to close based primarily on skill player injury reports.
@@ -232,4 +234,4 @@ Week 10 Thursday Night Football delivered a high-volatility NFC East division ba
 - Trainer Feed Generated: brain/feeds/2026-11-15/week10_tnf_wsh_nyg_learning_loop.jsonl
 - Verified Boxscore Source: C:/c/scratch/week10-sunday-launch/espn_summary_401873052.json
 - Pregame Call-Sheet Ticket Status: NO_PREGAME_TICKET_LOGGED (fully verified and confirmed)
-- Copy Restrictions Confirmed: Zero Unicode dashes (strictly ASCII - or --), zero banned strings, zero confidence percentages, zero modifications outside the two designated files.
+- Copy Restrictions Confirmed: Zero Unicode dashes (strictly ASCII - or --), zero banned strings, zero confidence percentages, and all game metrics verified directly against espn_summary_401873052.json.
