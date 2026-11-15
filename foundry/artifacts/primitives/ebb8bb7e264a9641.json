@@ -1,0 +1,729 @@
+{
+ "book_id": "ebb8bb7e264a9641",
+ "source_status": "COMPLETE",
+ "source_note": "James Aspnes, Notes on Theory of Distributed Systems. Lecture notes for the Yale distributed computing course, copyright 2002 to 2027 by the author, distributed under a Creative Commons Attribution-ShareAlike 4.0 International license, continuously updated with many chapters marked Last updated 2026 in this copy. Local file is the complete notes PDF cataloged as the 2025 edition at library/books-c-systems/Aspnes-2025-NotesOnTheoryOfDistributedSystems.pdf, size 2564151 bytes, full sha256 ebb8bb7e264a9641119c1dae05d37411ecea83aaeb7bc307297052c6bf7ec380, book_id is the first 16 hex characters of the scan digest sha256 of str(size) followed by the full PDF bytes. Extracted text at text/books-c-systems/Aspnes-2025-NotesOnTheoryOfDistributedSystems.pdf.txt is clean born digital text with 588 page chunks and 22298 lines; mathematical glyphs are occasionally flattened in extraction, so quoted passages were chosen from clean prose inside single pages. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "safety_liveness_dichotomy",
+   "name": "Correctness splits into safety properties (nothing bad ever happens) and liveness properties (something good eventually happens)",
+   "verbatim_quote": "Safety properties, of the form “nothing bad ever happens” or, more precisely, “there are no bad reachable configurations.”",
+   "page": "Chapter 1, Section 1.2 (printed p. 5)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Executions are sequences of configurations and transitions",
+    "Bad configurations are definable independently of timing"
+   ],
+   "breakdown_regime": "Safety alone permits a dead system that never does anything; the dichotomy gives no quantitative bound on how long liveness may be delayed.",
+   "domain": "correctness specification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine specification layer adopts the same split: safety invariants state which joint states of signals, health, and market context may never be asserted together, while liveness conditions state which pending evaluations must eventually resolve to a projection, a pass, or an explicit refusal with its reason retained.",
+    "source_operator": "safety_liveness_dichotomy",
+    "telemetry": "safety_liveness_dichotomy"
+   }
+  },
+  {
+   "primitive_id": "liveness_as_execution_property",
+   "name": "Liveness is a property of whole executions with a finite witness time, not of single states",
+   "verbatim_quote": "These are not properties of particular states (I might unhappily await the eventual delivery of my email for decades without violating the liveness property just described), but of executions, where the property must hold starting at some finite time.",
+   "page": "Chapter 1, Section 1.2 (printed p. 5)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A finite deadline or progress metric is supplied externally",
+    "Underlying delivery liveness holds"
+   ],
+   "breakdown_regime": "Without an explicit deadline the property is unfalsifiable in finite observation, so operational use always needs the timer argument the text describes.",
+   "domain": "correctness specification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for staleness accounting: a feed or signal family is judged over an execution window, and a liveness violation is recorded only when the finite deadline attached to that family passes without the promised update, which separates slow inputs from dead inputs.",
+    "source_operator": "liveness_as_execution_property",
+    "telemetry": "liveness_as_execution_property"
+   }
+  },
+  {
+   "primitive_id": "asynchronous_delay_model",
+   "name": "Asynchronous model: messages are delivered eventually after unknown delay, with no timing bound",
+   "verbatim_quote": "Such systems are difficult to build when the components become too numerous or too widely dispersed, but they are often easier to analyze than asynchronous systems, where messages are only delivered eventually after some unknown delay.",
+   "page": "Chapter 1, Section 1.1 (printed pp. 3 to 4)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every message is eventually delivered",
+    "Processes do not fail unless a failure model is added"
+   ],
+   "breakdown_regime": "Any protocol that needs bounded response time fails in this model; results proved here are timing independent and therefore conservative.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The ingestion layer is modeled asynchronously: injury reports, lineup news, and market updates arrive with unknown delay and no ordering guarantee, so no reasoning step may assume that the freshest known state is the true current state.",
+    "source_operator": "asynchronous_delay_model",
+    "telemetry": "asynchronous_delay_model"
+   }
+  },
+  {
+   "primitive_id": "time_complexity_measure",
+   "name": "Time complexity of a terminating protocol is the time of the last event at any process",
+   "verbatim_quote": "The time complexity of a protocol (that terminates) is the time of the last event at any process.",
+   "page": "Chapter 2, Section 2.5 (printed p. 15)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Asynchronous time is normalized so each message takes at most one time unit",
+    "The protocol terminates"
+   ],
+   "breakdown_regime": "The measure hides constant factors and says nothing about nonterminating or streaming protocols.",
+   "domain": "complexity measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for pipeline latency budgeting: the cost of a full pregame evaluation is the completion time of its slowest required stage rather than the sum of stage times, which directs optimization at the critical path stage.",
+    "source_operator": "time_complexity_measure",
+    "telemetry": "time_complexity_measure"
+   }
+  },
+  {
+   "primitive_id": "message_complexity_measure",
+   "name": "Message complexity of a terminating protocol is the total number of messages sent",
+   "verbatim_quote": "For a protocol that terminates, the message complexity is the total number of messages sent.",
+   "page": "Chapter 2, Section 2.5 (printed p. 15)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Messages are countable discrete units",
+    "Message size is ignored unless bit complexity is used instead"
+   ],
+   "breakdown_regime": "Counting messages ignores message size and local computation, so a low message protocol can still be expensive in bits or compute.",
+   "domain": "complexity measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for data acquisition cost: each external source call, scrape, and feed poll is counted as a message, so candidate signal families are compared by total acquisition messages per decision as well as by predictive value.",
+    "source_operator": "message_complexity_measure",
+    "telemetry": "message_complexity_measure"
+   }
+  },
+  {
+   "primitive_id": "flooding_forwarding_rule",
+   "name": "Flooding: forward a message to all neighbors unless it has been seen before, tracked with one seen bit",
+   "verbatim_quote": "The idea is that when a process receives a message M , it forwards it to all of its neighbors unless it has seen it before, which it tracks using a single bit seen-message.",
+   "page": "Chapter 3, Section 3.1.1 (printed p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The network is connected",
+    "Processes remember one bit per distinct message"
+   ],
+   "breakdown_regime": "Naive flooding costs one message per edge per broadcast and the seen state grows with the number of distinct messages unless time to live or epochs are added.",
+   "domain": "broadcast algorithm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signal propagation inside the engine uses the same rule: a new fact is forwarded to every dependent module exactly once, and a seen marker per fact prevents reprocessing loops when the same report arrives through several sources.",
+    "source_operator": "flooding_forwarding_rule",
+    "telemetry": "flooding_forwarding_rule"
+   }
+  },
+  {
+   "primitive_id": "flooding_time_message_bounds",
+   "name": "Flooding reaches every process within diameter time D and at most one message per edge",
+   "verbatim_quote": "Theorem 3.1.1. Every process receives M after at most D time and at most |E| messages, where D is the diameter of the network and E is the set of (directed) edges in the network.",
+   "page": "Chapter 3, Section 3.1.1 (printed p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unit maximum message delay",
+    "Static connected network with diameter D"
+   ],
+   "breakdown_regime": "The bound is tight only for worst case delay; churn, failures, or directed links with no return path break the spanning tree usefulness.",
+   "domain": "broadcast bound",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for propagation deadlines: the worst case delay for a fact to reach all consumers is bounded by the diameter of the dependency graph, so freshness service levels are set from graph diameter rather than from average path length.",
+    "source_operator": "flooding_time_message_bounds",
+    "telemetry": "flooding_time_message_bounds"
+   }
+  },
+  {
+   "primitive_id": "convergecast_aggregation",
+   "name": "Convergecast inverts broadcast: data flows from all nodes up a spanning tree to the root under a summary function",
+   "verbatim_quote": "A convergecast is the inverse of broadcast: instead of a message propagating down from a single root to all nodes, data is collected from outlying nodes to the root.",
+   "page": "Chapter 3, Section 3.2 (printed p. 22)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A spanning tree rooted at the initiator already exists",
+    "The summary function is applied incrementally at each node"
+   ],
+   "breakdown_regime": "The root is a bottleneck and a single point of failure, and non decomposable summaries cannot be computed by local incremental application.",
+   "domain": "aggregation algorithm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Leaf level observations such as snap counts, route shares, and pressure rates are convergecast upward through player, unit, and team levels under explicit summary functions, so every aggregate the reasoning layer cites can be unfolded back to its leaves.",
+    "source_operator": "convergecast_aggregation",
+    "telemetry": "convergecast_aggregation"
+   }
+  },
+  {
+   "primitive_id": "synchronizer_transformation",
+   "name": "A synchronizer transforms synchronous protocols into asynchronous protocols at small complexity cost",
+   "verbatim_quote": "Sometimes this can be dealt with by applying a synchronizer (Chapter 7), which transforms synchronous protocols into asynchronous protocols at a small cost in complexity.",
+   "page": "Chapter 2, Section 2.3 (printed p. 12)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The synchronous protocol is round based",
+    "Processes can detect round completion locally or through a spanning tree"
+   ],
+   "breakdown_regime": "The text proves synchronizers cannot be fault tolerant under crash failures, because a fault tolerant synchronizer plus synchronous agreement would contradict asynchronous impossibility.",
+   "domain": "model transformation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Weekly cycle stages that are designed as if in lockstep, usage then health then matchups then situations, are run over asynchronous real world arrivals through an explicit synchronizer stage that holds each round until its required inputs for that round are present or declared missing.",
+    "source_operator": "synchronizer_transformation",
+    "telemetry": "synchronizer_transformation"
+   }
+  },
+  {
+   "primitive_id": "leader_election_symmetry_barrier",
+   "name": "Angluin barrier: leader election in a ring is impossible without distinct starting identities",
+   "verbatim_quote": "A classic result of Angluin [Ang80] shows that leader election in a ring is impossible if the processes do not start with distinct identities.",
+   "page": "Chapter 5, Section 5.1 (printed p. 33)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Processes run identical code",
+    "No distinct identities or random coins are available"
+   ],
+   "breakdown_regime": "Distinct identities, randomization, or knowledge of the ring size each break the barrier, so the result constrains anonymous deterministic settings only.",
+   "domain": "impossibility result",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for tie breaking discipline: any selection among symmetric candidates, such as choosing a primary signal family or a lead explanation, requires an explicit symmetry breaking key; identical inputs with no distinguishing identity must produce an explicit tie status rather than an arbitrary winner.",
+    "source_operator": "leader_election_symmetry_barrier",
+    "telemetry": "leader_election_symmetry_barrier"
+   }
+  },
+  {
+   "primitive_id": "causal_shuffle_characterization",
+   "name": "Causal shuffles, permutations consistent with happens before, are exactly the schedules indistinguishable from the original",
+   "verbatim_quote": "A causal shuffle S 0 of a schedule S is a permutation of S that is consistent with the happens-before relation on S; that is, if e happens-before e0 in S, then e precedes e0 in S 0 .",
+   "page": "Chapter 6, Section 6.1 (printed p. 48)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Happens before is the transitive closure of process order and message order",
+    "Processes observe only their local projections of the schedule"
+   ],
+   "breakdown_regime": "Concurrent events with no causal relation remain unordered, so causal order alone cannot supply a single global timeline.",
+   "domain": "causal ordering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Event histories for a game week, transactions, injuries, and coaching statements, are stored with their causal dependencies, and any replay or audit ordering that respects those dependencies is accepted as an equivalent history for grading what the engine could have known at decision time.",
+    "source_operator": "causal_shuffle_characterization",
+    "telemetry": "causal_shuffle_characterization"
+   }
+  },
+  {
+   "primitive_id": "lamport_clock_rule",
+   "name": "Lamport clock: increment on local events, piggyback on messages, and on receipt set clock to max of local and received plus one",
+   "verbatim_quote": "Lamport’s logical clock [Lam78] runs on top of any other message-passing protocol, adding additional state at each process and additional content to the messages (which is invisible to the underlying protocol).",
+   "page": "Chapter 6, Section 6.2.1 (printed p. 50)",
+   "latex": "\\mathrm{clock} \\leftarrow \\max(\\mathrm{clock}, t) + 1",
+   "symbol_and_unit_ledger": {
+    "clock": "local Lamport clock value at the receiving process, dimensionless count",
+    "t": "timestamp piggybacked on the received message, dimensionless count"
+   },
+   "assumptions": [
+    "Each process increments its clock on every send or internal step",
+    "Messages carry the sender clock value"
+   ],
+   "breakdown_regime": "Lamport order extends causality but also orders causally unrelated events arbitrarily, and clock values can jump by large amounts after a single message.",
+   "domain": "logical clock",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every ingested record carries a Lamport style logical timestamp assigned by the same update rule, giving a cheap total order consistent with causality for merging streams from sources whose wall clocks cannot be trusted or compared.",
+    "source_operator": "lamport_clock_rule",
+    "telemetry": "lamport_clock_rule"
+   }
+  },
+  {
+   "primitive_id": "chandy_lamport_snapshot",
+   "name": "Chandy Lamport snapshot: initiator broadcasts a snap marker, each process records state on first receipt and forwards the marker",
+   "verbatim_quote": "Here some central initiator broadcasts a snap message, and each process records its state and immediately forwards the snap message to all neighbors when it first receives a snap message.",
+   "page": "Chapter 6, Section 6.3 (printed p. 53)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Channels are FIFO for the simple correctness argument",
+    "Processes record state atomically on marker receipt"
+   ],
+   "breakdown_regime": "The captured configuration is consistent but need not equal the real configuration at any single real time, and in transit messages need a second sweep or logging to reconstruct.",
+   "domain": "consistent snapshot",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pregame state capture follows the marker pattern: when a decision snapshot is triggered, each data family records its current state on first trigger and forwards the trigger, producing a causally consistent bundle rather than a mix of states from unrelated times.",
+    "source_operator": "chandy_lamport_snapshot",
+    "telemetry": "chandy_lamport_snapshot"
+   }
+  },
+  {
+   "primitive_id": "coordinated_attack_impossibility",
+   "name": "Coordinated attack: with lossy channels no protocol guarantees agreement unless the outcome is predetermined",
+   "verbatim_quote": "The interesting property of the problem is that if carrier pigeons can become lost, there is no protocol that guarantees agreement in all cases unless the outcome is predetermined (e.g., the generals always attack no matter what happens).",
+   "page": "Chapter 8, introduction (printed p. 64)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Channels can lose messages",
+    "Decisions are irrevocable once taken"
+   ],
+   "breakdown_regime": "Randomized variants trade certainty for high probability agreement, and reliable channels remove the impossibility entirely.",
+   "domain": "impossibility result",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for common knowledge checks: when two modules must act on the same fact, such as a player ruled out, the engine requires an acknowledgment chain rather than assuming that a sent update created common knowledge, because unreliable delivery makes guaranteed joint knowledge unattainable.",
+    "source_operator": "coordinated_attack_impossibility",
+    "telemetry": "coordinated_attack_impossibility"
+   }
+  },
+  {
+   "primitive_id": "synchronous_agreement_by_flooding",
+   "name": "Synchronous agreement by flooding sets for f plus 1 rounds, then decide by a fixed function of the common set",
+   "verbatim_quote": "At round f + 1, I decide on f (S), where f is some fixed function from sets of process-input pairs to outputs that picks some input in S: for example, f might take the input with the smallest process-id attached to it, take the max of all known input values, or take the majority of all known input values.",
+   "page": "Chapter 9, Section 9.2 (printed p. 71)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Synchrony with at most f crash failures",
+    "At least one round with no failures occurs within f plus 1 rounds"
+   ],
+   "breakdown_regime": "The protocol needs f plus 1 rounds and full set flooding, so message size grows with the number of distinct reported values.",
+   "domain": "agreement algorithm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Conflicting reports about the same fact are resolved by collecting the full attributed report set over a bounded number of propagation rounds and then applying one fixed, published resolution function, so every consumer decides from the same set with the same rule.",
+    "source_operator": "synchronous_agreement_by_flooding",
+    "telemetry": "synchronous_agreement_by_flooding"
+   }
+  },
+  {
+   "primitive_id": "exponential_information_gathering",
+   "name": "Exponential information gathering: state is a tree of who heard what from whom, decided after f plus 1 rounds",
+   "verbatim_quote": "The idea of exponential information gathering is that each process will do a lot of gossiping, but now its state is no longer just a flat set of inputs, but a tree describing who it heard what from.",
+   "page": "Chapter 10, Section 10.2.1 (printed p. 81)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At most f Byzantine processes with n at least 3f plus 1",
+    "Signed or relay path information is preserved in messages"
+   ],
+   "breakdown_regime": "State and message size grow exponentially in the number of rounds, which is why constant size alternatives such as phase king exist.",
+   "domain": "Byzantine agreement algorithm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Provenance trees are kept for contested facts: instead of a flat list of reports, the engine stores the relay structure of who reported what from whom, which lets the reasoning layer discount echo chains where many apparent sources collapse to one origin.",
+    "source_operator": "exponential_information_gathering",
+    "telemetry": "exponential_information_gathering"
+   }
+  },
+  {
+   "primitive_id": "phase_king_byzantine_agreement",
+   "name": "Phase king: run f plus 1 voted phases, each coordinated by a preselected king, so at least one phase has an honest king",
+   "verbatim_quote": "The main idea of the algorithm is that we avoid the recursive majority voting of EIG by running a vote in each of f + 1 phases through a phase king, some process chosen in advance to run the phase.",
+   "page": "Chapter 10, Section 10.2.2.1 (printed p. 84)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Number of phases exceeds the number of faulty processes",
+    "The presented version assumes n at least 4f plus 1"
+   ],
+   "breakdown_regime": "Each phase still needs a majority vote, and a faulty king can waste its phase, so latency grows linearly in the fault bound.",
+   "domain": "Byzantine agreement algorithm",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for rotating arbitration: when sources conflict, arbitration rotates through a fixed sequence of arbiters with different biases and data access, and a decision needs only one honest arbiter phase to lock, which bounds the damage any single captured or broken source can do.",
+    "source_operator": "phase_king_byzantine_agreement",
+    "telemetry": "phase_king_byzantine_agreement"
+   }
+  },
+  {
+   "primitive_id": "flp_impossibility",
+   "name": "FLP impossibility: no agreement protocol in an asynchronous message passing system tolerates even one crash failure",
+   "verbatim_quote": "The Fischer-Lynch-Paterson (FLP) result [FLP85] says something much stronger: you can’t do agreement in an asynchronous message-passing system if even one crash failure is allowed.",
+   "page": "Chapter 11, introduction (printed p. 88)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pure asynchrony with no timing assumptions",
+    "At least one process may crash",
+    "Protocols must terminate in all fair executions"
+   ],
+   "breakdown_regime": "The result is escaped by augmenting the model with randomization or failure detectors, exactly the routes the later chapters develop.",
+   "domain": "impossibility result",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel that vetoes any design requiring guaranteed consensus among asynchronous feed consumers under possible stalls: the engine instead uses failure detection style suspicion, timeouts, and randomized or partial synchrony escapes, and labels any claimed hard guarantee as a design error.",
+    "source_operator": "flp_impossibility",
+    "telemetry": "flp_impossibility"
+   }
+  },
+  {
+   "primitive_id": "bivalence_method",
+   "name": "Bivalence method: a configuration is bivalent when executions from it can still decide either value, and impossibility keeps the system bivalent forever",
+   "verbatim_quote": "A configuration that is not bivalent is univalent, or more specifically 0-valent or 1-valent depending on whether all executions starting in the configuration produce 0 or 1 as the decision value.",
+   "page": "Chapter 11, Section 11.4 (printed p. 90)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decision values are binary in the basic presentation",
+    "Successors of an x valent configuration remain x valent"
+   ],
+   "breakdown_regime": "The method proves impossibility for deterministic protocols; randomized protocols are analyzed by probability of remaining bivalent instead.",
+   "domain": "proof method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Undecided states in the reasoning engine are treated as bivalent configurations: while both outcomes remain reachable from the current evidence state, the correct output is an explicit undecided status with the deciding missing input named, not a forced lean.",
+    "source_operator": "bivalence_method",
+    "telemetry": "bivalence_method"
+   }
+  },
+  {
+   "primitive_id": "paxos_prepare_promise",
+   "name": "Paxos two phase voting: prepare extracts a promise and the highest accepted proposal, then accept with majority wins",
+   "verbatim_quote": "An accepter responds to this with a promise never to accept any proposal with a number less than r (so that old proposals don’t suddenly get ratified) together with the highest-numbered proposal that the accepter has accepted (so that the proposer can substitute this value for its own, in case the previous value was in fact ratified).",
+   "page": "Chapter 12, Section 12.1 (printed pp. 94 to 98)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fewer than n over 2 crash failures",
+    "Proposal numbers are totally ordered with proposer tie breaking",
+    "Accepters persist promises and accepted proposals"
+   ],
+   "breakdown_regime": "Safety holds asynchronously but liveness needs eventual stable leadership or failure detection; competing proposers can livelock by repeatedly raising proposal numbers.",
+   "domain": "consensus algorithm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Corrections to established facts follow the Paxos discipline: a correction proposal must first survey the current accepted state and adopt any already ratified value it finds, and only a majority of independent confirmations can ratify a replacement, so late stale updates cannot overwrite settled facts.",
+    "source_operator": "paxos_prepare_promise",
+    "telemetry": "paxos_prepare_promise"
+   }
+  },
+  {
+   "primitive_id": "multipaxos_replicated_state_machine",
+   "name": "Multi Paxos: repeated one shot Paxos instances implement a replicated state machine log",
+   "verbatim_quote": "The version that is more typically used, called multi-Paxos, uses repeated executions of the basic Paxos algorithm to implement a replicated state machine; we’ll describe this in §12.7.",
+   "page": "Chapter 12, introduction and Section 12.7 (printed pp. 94 and 102)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each log position runs an independent consensus instance",
+    "A stable leader amortizes the prepare phase across positions"
+   ],
+   "breakdown_regime": "Log growth needs snapshotting and compaction, and leader changes reintroduce prepare cost and possible stalls.",
+   "domain": "replicated state machine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine event log is a replicated state machine: every state change, from roster moves to revised projections, is one decided log entry applied in order by all consumers, so any two consumers that have applied the same prefix hold identical state.",
+    "source_operator": "multipaxos_replicated_state_machine",
+    "telemetry": "multipaxos_replicated_state_machine"
+   }
+  },
+  {
+   "primitive_id": "failure_detector_completeness",
+   "name": "Failure detector taxonomy: suspicion of faulty processes is graded as completeness, suspicion of correct processes as accuracy",
+   "verbatim_quote": "Suspicion of faulty processes comes under the heading of completeness; of non-faulty processes, accuracy.",
+   "page": "Chapter 13, Section 13.2.1 (printed p. 105)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Suspicion is eventually permanent once raised",
+    "Completeness says nothing about suspecting correct processes"
+   ],
+   "breakdown_regime": "A paranoid detector that suspects everyone has strong completeness, so completeness alone is vacuous without an accuracy condition.",
+   "domain": "failure detector",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for source health monitoring: each data source gets a completeness grade, whether its failures are eventually detected by all consumers or only some, tracked separately from its accuracy grade, whether it cries wolf on healthy data, because the fixes for the two failures are different.",
+    "source_operator": "failure_detector_completeness",
+    "telemetry": "failure_detector_completeness"
+   }
+  },
+  {
+   "primitive_id": "quorum_intersection",
+   "name": "Quorum system: a family of subsets of processes with pairwise intersection, turning coordination into combinatorics",
+   "verbatim_quote": "This is a special case of a quorum system, a family of subsets of the set of processes with the property that any two subsets in the family overlap.",
+   "page": "Chapter 14, Section 14.1 (printed p. 116)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Quorum membership is defined over a known process set",
+    "Intersecting quorums contain at least one correct witness for safety arguments"
+   ],
+   "breakdown_regime": "Majority quorums load every member heavily; structured quorums trade lower load against availability and fault assumptions.",
+   "domain": "quorum system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Confirmation rules are designed as quorum systems: a fact is accepted only after a quorum of independent sources confirms it, and the quorum family is chosen so any two acceptance quorums intersect, which guarantees two accepted facts share a witness who would have flagged a contradiction.",
+    "source_operator": "quorum_intersection",
+    "telemetry": "quorum_intersection"
+   }
+  },
+  {
+   "primitive_id": "sybil_attack",
+   "name": "Sybil attack: one faulty participant overwhelms minority fault assumptions with an army of virtual clones",
+   "verbatim_quote": "But this possibility allows for a Sybil attack [Dou02], where an algorithm naively implemented on the assumption that faulty processes form a small minority is suddenly overwhelmed by a single faulty machine backed by an army of virtual clones.",
+   "page": "Chapter 15, Section 15.1 (printed p. 124)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Identities are cheap to create",
+    "The protocol counts identities rather than resources"
+   ],
+   "breakdown_regime": "Resource based defenses raise clone cost but cannot fully restore identity counting, and they import plutocracy and energy costs of their own.",
+   "domain": "permissionless systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for source independence auditing: apparent source counts are discounted when the sources share an origin, syndication chain, or generation process, because correlated clones must count as one witness in any majority or quorum calculation.",
+    "source_operator": "sybil_attack",
+    "telemetry": "sybil_attack"
+   }
+  },
+  {
+   "primitive_id": "abd_majority_register",
+   "name": "Attiya Bar Noy Dolev register: writes and reads complete after majority acknowledgment with timestamps picking the newest value",
+   "verbatim_quote": "To write a value, the writer increments its timestamp, updates its value and sends write(value, timestamp) to all other processes.",
+   "page": "Chapter 17, Section 17.2 (printed p. 146)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fewer than n over 2 crash failures",
+    "Timestamps increase monotonically per writer"
+   ],
+   "breakdown_regime": "Every read costs a write back round, and Byzantine writers can poison single writer registers with garbage values.",
+   "domain": "distributed shared memory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shared engine state such as current rosters and depth charts is maintained with majority write and read repair: an update is visible only after a majority of stores hold it, and a read returns the newest timestamped value and writes it back, so stale replicas heal on contact.",
+    "source_operator": "abd_majority_register",
+    "telemetry": "abd_majority_register"
+   }
+  },
+  {
+   "primitive_id": "linearizability",
+   "name": "Linearizability: every concurrent execution has a sequential linearization respecting real time order of non overlapping operations",
+   "verbatim_quote": "The strongest consistency property generally used is linearizability [HW90], which says roughly that an implementation of an object is linearizable if, for any complete concurrent execution of the object, there is a sequential execution of the object with the same operations and return values, where the (total) order of operations in the sequential execution is a linearization of the (partial) order of operations in the concurrent execution.",
+   "page": "Chapter 16, Section 16.5 (printed p. 139)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Operations have invoke and response events defining the real time partial order",
+    "Incomplete operations are handled by completion or removal in the full definition"
+   ],
+   "breakdown_regime": "Linearizability is a local safety property with no liveness content, and enforcing it under partitions forces availability tradeoffs.",
+   "domain": "consistency property",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Published engine outputs must be linearizable against the underlying event log: every projection a reader sees must correspond to some single sequential point in the log, never to a torn mix where half an update is visible and half is not.",
+    "source_operator": "linearizability",
+    "telemetry": "linearizability"
+   }
+  },
+  {
+   "primitive_id": "rmw_registers",
+   "name": "Read modify write registers apply a function to state and write it back as one atomic action, including test and set, fetch and add, and compare and swap",
+   "verbatim_quote": "These usually go by the name of read-modify-write (RMW) registers, since the additional operations consist of reading the state, applying some function to it, and writing the state back, all as a single atomic action.",
+   "page": "Chapter 16, Section 16.7 (printed p. 143)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hardware or runtime supplies the atomicity",
+    "The applied function is evaluated on the current state"
+   ],
+   "breakdown_regime": "Plain read write registers cannot emulate strong read modify write operations wait free for many processes, as the hierarchy results show.",
+   "domain": "shared memory primitive",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for atomic counters and claims: operations such as incrementing an exposure count or claiming a work item are implemented as single atomic read modify write steps, never as separate read then write steps that another process can interleave into.",
+    "source_operator": "rmw_registers",
+    "telemetry": "rmw_registers"
+   }
+  },
+  {
+   "primitive_id": "mutual_exclusion_purpose",
+   "name": "Mutual exclusion primitives exist so at most one process at a time works on a shared data structure",
+   "verbatim_quote": "These are all designed to solve various forms of mutual exclusion or locking, where we want at most one process at a time to work on some shared data structure.",
+   "page": "Chapter 16, Section 16.7 (printed p. 143)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Processes request entry before touching shared state",
+    "A process that enters eventually exits unless it fails"
+   ],
+   "breakdown_regime": "Crash inside the critical section breaks naive locks, and fairness needs extra machinery beyond bare exclusion.",
+   "domain": "mutual exclusion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Single writer discipline for shared artifacts, ledgers, and published boards is mutual exclusion with the same statement: at most one writer holds the artifact at a time, and every other writer queues, so concurrent edits cannot interleave into a corrupted composite.",
+    "source_operator": "mutual_exclusion_purpose",
+    "telemetry": "mutual_exclusion_purpose"
+   }
+  },
+  {
+   "primitive_id": "splitter_fast_path",
+   "name": "Splitter: arriving processes are diverted right, down, or stop, giving a solo process a fast path into mutual exclusion",
+   "verbatim_quote": "A splitter assigns to each processes that arrives at it the value right, down, or stop.",
+   "page": "Chapter 18, Section 18.5.2 (printed p. 162)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At most one process can receive stop when run solo properties hold",
+    "Splitters compose in grids for renaming and exclusion constructions"
+   ],
+   "breakdown_regime": "Under heavy contention most processes take the slow path, so the splitter optimizes the uncontended case rather than worst case throughput.",
+   "domain": "mutual exclusion building block",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for contention handling: incoming work first passes a splitter that sends uncontended items straight through a fast path and diverts only genuinely contended items into the heavy arbitration path, keeping the common solo case cheap.",
+    "source_operator": "splitter_fast_path",
+    "telemetry": "splitter_fast_path"
+   }
+  },
+  {
+   "primitive_id": "consensus_number_hierarchy",
+   "name": "Wait free hierarchy: object types are classified by consensus number, the largest n for which they solve wait free consensus",
+   "verbatim_quote": "The wait-free hierarchy hrm classifies asynchronous shared-memory object types T by consensus number, where a type T has consensus number n if with objects of type T and atomic registers (all initialized to appropriate values1 ) it is possible to solve wait-free consensus (i.e., agreement, validity, wait-free termination) for n processes but not for n + 1 processes.",
+   "page": "Chapter 19, Section 19.2 (printed p. 178)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Base objects are supplemented with atomic registers",
+    "Consensus must be wait free, not merely lock free"
+   ],
+   "breakdown_regime": "The hierarchy classifies worst case power for n processes and does not measure practical performance, which often favors weaker primitives.",
+   "domain": "wait free hierarchy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for primitive selection: coordination tools are ranked by the strength actually needed, registers at level 1, interfering read modify write at level 2, consensus powerful objects at infinity, and no design may assume a weak primitive can do a stronger job under contention.",
+    "source_operator": "consensus_number_hierarchy",
+    "telemetry": "consensus_number_hierarchy"
+   }
+  },
+  {
+   "primitive_id": "double_collect_snapshot",
+   "name": "Atomic snapshot by double collect: if two successive collects agree exactly, no write intervened and the vector is a valid snapshot",
+   "verbatim_quote": "We can now detect if a new write has occurred between two reads of the same variable.",
+   "page": "Chapter 20, Section 20.1 (printed p. 195)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Written values carry increasing sequence numbers",
+    "Writers keep updating sequence numbers on every write"
+   ],
+   "breakdown_regime": "Under continuous writes the retry loop may never observe two equal collects without helping mechanisms, and sequence number wraparound needs a guard mechanism.",
+   "domain": "atomic snapshot",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Consistency checking for multi source state uses double collect: read the full state vector twice, and accept it as one coherent snapshot only when both reads agree exactly, otherwise retry, which prevents reasoning over a vector assembled across an update.",
+    "source_operator": "double_collect_snapshot",
+    "telemetry": "double_collect_snapshot"
+   }
+  },
+  {
+   "primitive_id": "renaming_problem",
+   "name": "Renaming: processes starting with names from a huge namespace must acquire unique names from a much smaller namespace",
+   "verbatim_quote": "In the renaming problem, we have n processes, each starts with a name from some huge namespace, and we’d like to assign them each unique names from a much smaller namespace.",
+   "page": "Chapter 25, Section 25.1 (printed p. 258)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Original names are distinct",
+    "The target namespace is smaller than the source namespace but at least n"
+   ],
+   "breakdown_regime": "Wait free renaming needs at least 2n minus 1 names in the worst case, and adaptive bounds depend on actual participation.",
+   "domain": "renaming",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Entity resolution is renaming under the same contract: players, teams, and sources arriving with arbitrary external identifiers must acquire unique compact internal identifiers, with collisions resolved by protocol rather than by ad hoc string matching.",
+    "source_operator": "renaming_problem",
+    "telemetry": "renaming_problem"
+   }
+  },
+  {
+   "primitive_id": "self_stabilizing_recovery",
+   "name": "Self stabilization: from any arbitrary starting configuration the system eventually reaches a legal configuration and stays there",
+   "verbatim_quote": "A self-stabilizing algorithm has the property that, starting from any arbitrary configuration, it eventually reaches a legal configuration, and this property is stable in the sense that it remains in a legal configuration thereafter.",
+   "page": "Chapter 32, introduction (printed p. 333)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Faults stop occurring after some point",
+    "The legal configuration set is closed under the algorithm steps"
+   ],
+   "breakdown_regime": "Convergence time can be linear in network diameter or worse, and processes cannot internally detect that stabilization has occurred.",
+   "domain": "self stabilization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Derived state such as depth charts, usage baselines, and aggregated tables is maintained self stabilizingly: recomputation rules run continuously from whatever state exists, so a corrupted or half migrated table converges back to the legal value defined by the source data without a manual reset.",
+    "source_operator": "self_stabilizing_recovery",
+    "telemetry": "self_stabilizing_recovery"
+   }
+  },
+  {
+   "primitive_id": "population_protocol_computation",
+   "name": "Population protocols compute by pairwise interactions of finite state agents under global fairness, converging to the output without termination detection",
+   "verbatim_quote": "Computation by population protocols usually consists of computing some function of the initial states of the population and propagating the output of this function to all agents.",
+   "page": "Chapter 36, Section 36.1 (printed p. 370)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interactions are pairwise and governed by a joint transition function",
+    "Global fairness ensures infinitely repeated configurations make progress"
+   ],
+   "breakdown_regime": "Stably computable predicates are exactly the semilinear Presburger definable ones, so multiplication like predicates are beyond the basic model.",
+   "domain": "population protocols",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived kernel for weak signal aggregation: many individually weak and unreliable indicators are combined through repeated pairwise style interactions, counts, thresholds, and leader absorption, rather than through one central estimator, when the indicators are numerous and individually noisy.",
+    "source_operator": "population_protocol_computation",
+    "telemetry": "population_protocol_computation"
+   }
+  },
+  {
+   "primitive_id": "approximate_agreement_validity",
+   "name": "Approximate agreement relaxes consensus to outputs within epsilon of each other and inside the input range, and is wait free solvable",
+   "verbatim_quote": "Validity Every process returns an output within the range of inputs.",
+   "page": "Chapter 30, introduction (printed p. 326)",
+   "latex": "\\min_j x_j \\le y_i \\le \\max_j x_j",
+   "symbol_and_unit_ledger": {
+    "x_j": "input value held by process j, real number in input units",
+    "y_i": "output value decided by process i, same units as inputs",
+    "i, j": "process indices ranging over all participants"
+   },
+   "assumptions": [
+    "Inputs and outputs are real numbers",
+    "Every non faulty process eventually decides"
+   ],
+   "breakdown_regime": "Solvable wait free but with no bounded step algorithm even for two processes, so convergence rate guarantees need extra assumptions.",
+   "domain": "approximate agreement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Numeric estimates from independent models are reconciled by approximate agreement rather than forced exact consensus: each model moves toward the group range, outputs must stay inside the observed input range, and agreement means landing within a stated epsilon band.",
+    "source_operator": "approximate_agreement_validity",
+    "telemetry": "approximate_agreement_validity"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ebb8bb7e264a9641-t1",
+   "think": "This book is a complete theory of what can and cannot be computed when many processes must act together without a shared clock, a shared memory they can trust, or reliable communication, and its value for a reasoning engine is that it supplies the coordination physics underneath every multi source, multi module system. The architecture of the notes moves in three great arcs. The first arc is message passing. It begins by fixing the model with unusual care: processes, channels, executions, safety and liveness, and the two complexity currencies of time and messages. On that foundation it builds the elementary circulation patterns, flooding for broadcast and convergecast for aggregation, then breadth first search, then leader election, where Angluin symmetry barrier already teaches that identical agents with identical inputs cannot break symmetry without identities or randomness. Causal ordering and logical clocks follow, because once messages can be delayed arbitrarily the system needs its own notion of time: happens before, Lamport clocks that extend causality cheaply, vector clocks that capture it exactly at linear cost, and consistent snapshots that define what a global state can even mean when no two processes observe simultaneously. Synchronizers then show how to import synchronous designs into asynchronous reality, and immediately the limits appear: coordinated attack shows common knowledge is unattainable over lossy channels, synchronous agreement works by flooding for f plus 1 rounds, Byzantine agreement separates what gossip trees and phase kings can achieve at n above 3f or 4f, and the FLP result closes the arc by proving that pure asynchrony with one crash makes agreement impossible, with bivalence as the proof engine that keeps a system forever undecided. Paxos, failure detectors, quorum systems, and permissionless systems are the engineered escapes from that impossibility: majority intersection, suspicion with graded completeness and accuracy, rotating proposers with promises, and finally resource majorities when identities themselves cannot be trusted. The second arc is shared memory, and it replays the same questions with registers instead of messages. The Attiya Bar Noy Dolev construction shows message passing can simulate atomic registers with majorities, and linearizability states the correctness contract precisely. Mutual exclusion, from test and set through Peterson and the Bakery algorithm to splitters and fast paths, is the study of admitting one process at a time without starvation. The wait free hierarchy then ranks every object by consensus number, which is the deepest classification in the book: it says exactly how much coordination power a primitive contains, why registers sit at level 1, why interfering read modify write operations sit at level 2, and why consensus objects sit at infinity. Atomic snapshots, max registers, common2 constructions, randomized consensus with adopt commit objects, conciliators, shared coins and sifters, renaming, software transactional memory, obstruction freedom, BG simulation, and the topological methods with the asynchronous computability theorem complete the picture: solvability itself becomes a geometric property of simplicial complexes, and k set agreement and renaming lower bounds fall out of holes in those complexes. Two middle developments deserve separate weight because they recur everywhere else. Failure detectors turn the FLP wall into a graded engineering dial: completeness says faulty processes are eventually suspected, accuracy says correct processes are not, and the eight Chandra Toueg classes, from perfect P down to eventually strong diamond S, mark exactly how much suspicion quality consensus needs, with diamond S the weakest sufficient class when fewer than half the processes fail. Quorum systems do the complementary job on the data side: once acceptance requires an intersecting family of witness sets, load, availability, and Byzantine resilience become combinatorial choices that can be optimized on paper before any code runs. Randomized consensus then shows the third escape route in detail: adopt commit objects isolate the agreement core, conciliators and shared coins supply the symmetry breaking that determinism cannot, and sifters discard contenders fast enough to make the whole construction efficient, while the space lower bounds warn that this power is not free. The third arc widens the model zoo: self stabilization demands recovery from arbitrary corruption, LOCAL and CONGEST formalize local graph computation, mobile robots, beeping, and population protocols push communication down to almost nothing, and population protocols still characterize their power exactly, as the semilinear Presburger predicates. Approximate agreement deserves emphasis as the bridge to numeric work: by relaxing exact consensus to outputs within epsilon inside the input range, the problem becomes wait free solvable, yet the matching lower bound, no bounded wait free algorithm even for two processes, shows that solvability and predictable convergence cost are different goods that must be bought separately. Renaming plays the same bridging role for identity: the 2n minus 1 lower bound prices the conversion from arbitrary names to compact names, and splitters convert that theory into fast paths that real mutual exclusion algorithms actually use. For a reasoning engine the transfer is direct. Ingestion is an asynchronous message passing system and inherits FLP discipline: never design a step that needs guaranteed consensus among stalled participants. Provenance is exponential information gathering made practical: keep the relay tree, not the flat set. Confirmation is a quorum system and must intersect. Corrections are Paxos: survey before proposing, adopt ratified values, ratify by majority. Aggregation is convergecast with explicit summary functions, and publication is linearizability against an event log. Weak indicators are population protocols, numeric reconciliation is approximate agreement, corrupted derived state is handled self stabilizingly, and undecided is a first class bivalent status rather than a failure to be hidden. The book also disciplines cost accounting: every design is charged in rounds, messages, bits, steps, and space, and impossibility results are treated as assets that veto whole families of naive designs before they are built.",
+   "retrocausal_genealogy": "The lineage runs from Lamport time and Chandy Lamport snapshots in the late 1970s and 1980s, through the Fischer Lynch Paterson impossibility of 1985 and the Chandra Toueg failure detector program of the 1990s, to Herlihy wait free hierarchy of 1991 and the Herlihy Shavit topological synthesis, with Paxos traveling from a 1990 technical report to practical dominance, and Bitcoin in 2008 reopening the permissionless question the classical model had assumed away. Aspnes notes stand in the textbook line of Lynch and of Attiya and Welch, updated continuously from 2002 onward, absorbing each new model, from population protocols to beeping and mobile robots, into the same model first framework.",
+   "theory_of_mind": "The author believes the reader learns distributed computing by holding a precise model in mind and then pushing algorithms and impossibility proofs against each other inside that model. Every chapter trusts the reader with the adversary: schedules, failures, and message delays are chosen adversarially unless the model says otherwise, and an algorithm earns belief only by surviving the worst case or by a stated probabilistic relaxation. The author also believes informality is a tool rather than a shortcut: intuition and pictures come first, but each is cashed out in definitions, invariants, and counting arguments, and the notes repeatedly flag where the local copy may be out of date.",
+   "cross_layer_veto": "This work vetoes several tempting engine designs at once. It vetoes any step that assumes simultaneous observation of distributed state, because consistent snapshots are causal artifacts, not real time photographs. It vetoes counting cloned or syndicated sources as independent votes, because Sybil reasoning shows identity counts collapse under duplication. It vetoes read then write implementations of counters and claims, because the hierarchy shows interleavings defeat them under contention. It vetoes forced decisions from bivalent evidence states, because FLP and the bivalence method show undecidability can be a property of the state itself, so the veto output is an explicit undecided with the missing decider named."
+  }
+ ],
+ "universal_lens": "Any system of many semi independent actors with delayed, lossy, or adversarial communication faces the same physics: symmetry must be broken explicitly, agreement costs rounds and majorities, global state is a causal construction rather than an observation, primitives differ in coordination power by strict levels, and recovery from arbitrary corruption must be designed in rather than patched on. The notes give a reusable checklist for such systems in any domain: fix the model, name the adversary, charge every operation, prove the invariant, and treat impossibility results as design boundaries.",
+ "gsi_mapping": "The Institute takes the teaching skeleton of the notes as a curriculum template for distributed reasoning: model first, then circulation patterns, clocks and snapshots, agreement and its impossibility, engineered escapes through quorums and failure detectors, shared memory power rankings, and exotic weak models. Each primitive here doubles as a lesson unit with its own assumptions and breakdown regime, and the bivalence and hierarchy material trains researchers to state what a method cannot do before claiming what it can.",
+ "gse_mapping": "The engine takes coordination machinery, not predictions: asynchronous ingestion discipline from FLP, provenance trees from exponential information gathering, intersecting confirmation quorums, Paxos style correction ratification, convergecast aggregation with explicit summary functions, linearizable publication against an event log, atomic counters from read modify write discipline, self stabilizing derived tables, approximate agreement for numeric reconciliation, and bivalent undecided as a first class output state with the missing input named."
+}
