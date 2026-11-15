@@ -11,6 +11,7 @@ import {
   classifyAppliedVsRepo,
   backoffMs,
   MAX_MIGRATE_ATTEMPTS,
+  resolveAutoRecoverableFailedMigration,
 } from "../../../scripts/deploy/migrate-if-configured.mjs";
 
 describe("isTransientDbError", () => {
@@ -124,5 +125,39 @@ describe("Neon HTTP parity module resolve", () => {
     const dbPkg = join(dirname(fileURLToPath(import.meta.url)), "../../../packages/db/package.json");
     const req = createRequire(dbPkg);
     expect(typeof req("@neondatabase/serverless").neon).toBe("function");
+  });
+});
+
+describe("resolveAutoRecoverableFailedMigration", () => {
+  it("maps P3009 on 20261104_purge_stale_packages to db:migrate:resolve-stale", () => {
+    expect(
+      resolveAutoRecoverableFailedMigration(
+        "Error: P3009 migrate found failed migrations: `20261104_purge_stale_packages`"
+      )
+    ).toBe("db:migrate:resolve-stale");
+  });
+
+  it("maps P3009 on 20261113_board_quarantine_and_hnsw_fix to db:migrate:resolve-quarantine", () => {
+    expect(
+      resolveAutoRecoverableFailedMigration(
+        "Error: P3009 migrate found failed migrations: `20261113_board_quarantine_and_hnsw_fix`"
+      )
+    ).toBe("db:migrate:resolve-quarantine");
+  });
+
+  it("returns null for unrelated P3009 migrations or non-P3009 errors (fail-closed)", () => {
+    expect(
+      resolveAutoRecoverableFailedMigration(
+        "Error: P3009 migrate found failed migrations: `20260101000000_baseline`"
+      )
+    ).toBeNull();
+    expect(
+      resolveAutoRecoverableFailedMigration(
+        "Error: P3018 A migration failed: `20261113_board_quarantine_and_hnsw_fix`"
+      )
+    ).toBeNull();
+    expect(resolveAutoRecoverableFailedMigration("")).toBeNull();
+    // @ts-expect-error — guards the null/undefined path
+    expect(resolveAutoRecoverableFailedMigration(undefined)).toBeNull();
   });
 });

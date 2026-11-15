@@ -86,6 +86,24 @@ export function backoffMs(attempt) {
 export const MAX_MIGRATE_ATTEMPTS = 4;
 
 /**
+ * Map a P3009 failed-migration error message to the package script that marks
+ * a known safe, idempotent data-only migration rolled back so `prisma migrate
+ * deploy` can re-apply it. Fail-closed (`null`) for any other migration.
+ * @param {string} text combined stdout+stderr of the migrate attempt
+ * @returns {string | null}
+ */
+export function resolveAutoRecoverableFailedMigration(text) {
+  if (typeof text !== "string" || !text.includes("P3009")) return null;
+  if (text.includes("20261104_purge_stale_packages")) {
+    return "db:migrate:resolve-stale";
+  }
+  if (text.includes("20261113_board_quarantine_and_hnsw_fix")) {
+    return "db:migrate:resolve-quarantine";
+  }
+  return null;
+}
+
+/**
  * Classify `prisma migrate status` output. TEXT-primary, not exit-code-primary:
  * older Prisma versions exit 0 even with pending migrations, and an exit-code
  * misread here would reopen the fail-open hole. Anything unrecognizable is
@@ -219,17 +237,15 @@ function runMigrateWithRetry() {
     if ((result.status ?? 1) === 0) return 0;
 
     const combined = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-    if (
-      attempt === 1 &&
-      combined.includes("P3009") &&
-      combined.includes("20261104_purge_stale_packages")
-    ) {
+    const resolveScript =
+      attempt === 1 ? resolveAutoRecoverableFailedMigration(combined) : null;
+    if (resolveScript) {
       console.warn(
-        "[migrate-if-configured] Resolving failed data-only migration 20261104_purge_stale_packages (--rolled-back) before re-applying safe idempotent SQL..."
+        `[migrate-if-configured] Resolving failed data-only migration (${resolveScript}) before re-applying safe idempotent SQL...`
       );
       const resolveResult = spawnSync(
         "npm",
-        ["run", "db:migrate:resolve-stale", "--workspace=packages/db"],
+        ["run", resolveScript, "--workspace=packages/db"],
         { encoding: "utf8" }
       );
       if (resolveResult.stdout) process.stdout.write(resolveResult.stdout);

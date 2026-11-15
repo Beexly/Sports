@@ -134,7 +134,8 @@ export interface PublicPick {
   game: PickGame;
   pickType: PickType;
   selection: string;
-  line: number;
+  /** WP-22: null when the API withheld the unpriced `line: 0` sentinel. */
+  line: number | null;
   lineMovement?: { opening: number; current: number } | null;
   hasBookPrice?: boolean;
   /** @deprecated Phase 1 shape. Read `winProbability`. */

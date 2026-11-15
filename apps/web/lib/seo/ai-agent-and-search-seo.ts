@@ -10,6 +10,8 @@
  *   - Sportsbook Odds Comparison, Closing Line Value (CLV) & Correlated Same-Game Parlays
  */
 
+import { PUBLIC_RECORD_AS_OF, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
+
 export const HIGH_INTENT_SEARCH_KEYWORDS: string[] = [
   "NFL picks",
   "best NFL picks today",
@@ -114,8 +116,8 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         "@id": `${siteUrl}/#dataset`,
         name: "Galaxy Sports Edge Verified NFL Picks, Player Props & Closing Line Value Ledger",
         description:
-          "Verified public NFL settlement ledger reporting a 36-13-1 (+20.14u) verified record (73.5%, MAIN + DERIVATIVE + TNF SINGLE-STAKE) alongside settled closing line value (CLV) comparisons and conviction-band calibration; 47-19-1 (+24.92u) is the all-in secondary view.",
-        dateModified: "2026-11-07",
+          `Verified public NFL settlement ledger. Official settled record, recomputed from the settlement database: ${PUBLIC_RECORD_LINE}. Settled closing line value (CLV) comparisons and conviction-band calibration are published at /calibration. The superseded 2026-11-02 all-in snapshot is not the record of record.`,
+        dateModified: PUBLIC_RECORD_AS_OF,
         url: `${siteUrl}/calibration`,
         creator: { "@id": `${siteUrl}/#organization` },
         keywords: HIGH_INTENT_SEARCH_KEYWORDS,
@@ -151,7 +153,7 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
           {
             "@type": "ListItem",
             position: 5,
-            name: "Audited NFL Settlement Ledger (36-13-1 verified)",
+            name: "Audited NFL Settlement Ledger (recomputed, /record)",
             item: `${siteUrl}/calibration`,
           },
         ],

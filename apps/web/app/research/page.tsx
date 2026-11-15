@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import {
+  PUBLIC_CALIBRATION_PROGRESS,
+  PUBLIC_PIPELINE_SETTLED,
+  PUBLIC_RECORD_COUNTS,
+  PUBLIC_RECORD_UNITS,
+} from "@/lib/ledger/public-record";
 
 export const metadata: Metadata = {
   title: { absolute: "Football Film, Trench & Matchup Research | Galaxy Sports Edge" },
@@ -105,10 +111,9 @@ export default function ResearchPortalPage(): JSX.Element {
   ];
 
   const processMetrics = [
-    { label: "Official Verified Record", value: "47-19-1", sub: "71.2% · +24.92u · with gated props" },
-    { label: "TNF CAR@GB Wedge", value: "14-6-1", sub: "+7.19u on the official TNF card" },
+    { label: "Official Settled Record", value: PUBLIC_RECORD_COUNTS, sub: `${PUBLIC_RECORD_UNITS} verified · win rate locked until 200 CLV-backed settled plays (${PUBLIC_CALIBRATION_PROGRESS})` },
+    { label: "Settled Pipeline Plays", value: `${PUBLIC_PIPELINE_SETTLED}`, sub: "every pick carrying an official settlement event" },
     { label: "Main Slate Evaluated", value: "573", sub: "295 published · 278 abstained/passed" },
-    { label: "Graded Plays", value: "50", sub: "36 wins · 13 losses · 1 push" },
     { label: "32-Team Roster Checks", value: "100%", sub: "Verified Starters & Injury Tags" },
   ];
 

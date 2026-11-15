@@ -926,7 +926,14 @@ export interface PublicPick {
   };
   pickType: PickType;
   selection: string;
-  line: number;
+  /**
+   * WP-22: the point-spread/total number, or the stored odds on a MONEYLINE.
+   * `null` when there is no real number to ship: an unpriced (book-less) row
+   * stores the non-null DB sentinel `0`, and serializing that beside
+   * `hasBookPrice: false` hands a consumer a quote no book ever made. Zero is
+   * kept only when a book actually priced the row (a pick'em spread).
+   */
+  line: number | null;
   /**
    * C-354: the publish-time LOCK captured when the bet terms were frozen
    * write-once at creation. `clvLockPrice` is the locked odds (MONEYLINE),

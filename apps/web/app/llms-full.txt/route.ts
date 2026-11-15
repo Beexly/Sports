@@ -1,4 +1,9 @@
 import { NextResponse } from "next/server";
+import {
+  PUBLIC_RECORD_LINE,
+  PUBLIC_RECORD_POLICY,
+  SUPERSEDED_RECORD_NOTE,
+} from "@/lib/ledger/public-record";
 
 /**
  * `/llms-full.txt` — Extended Football Matchup, Props, Parlays & DFS Reference
@@ -15,7 +20,9 @@ Galaxy Sports Edge (${siteUrl}) provides plain-English, film-backed NFL analysis
 - **DraftKings & FanDuel NFL DFS:** Showdown captain-mode lineups, main-slate cash-game cores, and correlated tournament stacks.
 - **Correlated Same-Game Parlays (SGPs):** Multi-leg tickets built around connected on-field game scripts rather than disconnected box-score guesses.
 
-Official Verified Record: **47-19-1 (71.2% · +24.92u (with gated props))**.
+Official Settled Record (recomputed from the settlement database): **${PUBLIC_RECORD_LINE}**
+Calibration law: ${PUBLIC_RECORD_POLICY}
+Superseded snapshot: ${SUPERSEDED_RECORD_NOTE}
 
 ## 2. Our 5-Step Football Breakdown Process (GSE & GSI)
 1. **Step 1 — Active 32-Team Roster, Beat-Writer & GSI Sports Medicine Verification:**

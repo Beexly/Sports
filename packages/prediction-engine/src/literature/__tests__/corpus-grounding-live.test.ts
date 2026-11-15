@@ -16,8 +16,11 @@ import { CHUNK_SEEDED_SQL, seedKeyExists } from "../corpus-grounding.js";
 import { pgBatchSqlClient, runSeededInTransaction, SET_HNSW_EF_SQL, type BatchSqlClient } from "../sql-batch.js";
 
 const url = process.env.DATABASE_URL;
+const isEphemeralCiPostgres = Boolean(
+  url && /@(?:localhost|127\.0\.0\.1)(?::\d+)?\/sports_test\b/.test(url),
+);
 
-describe.skipIf(!url)("live Neon: T-02 seeded HNSW grounding (read-only)", () => {
+describe.skipIf(!url || isEphemeralCiPostgres)("live Neon: T-02 seeded HNSW grounding (read-only)", () => {
   let client: InstanceType<typeof pg.Client>;
   let db: BatchSqlClient;
   let seed: { corpus_key: string; chunk_index: number };

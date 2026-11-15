@@ -108,10 +108,24 @@ const NUMERIC_SAFE_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|public-claim approval)\b/i;
 
 // Official New Engine Verified Ledger Doctrine (AGENTS.md 2026-11-05):
-// Recognizes our audited 47-19-1 (+24.92u) | Base 38-13-1 (+22.85u) record, Week 8 settled sweep (22-8-1, +12.40u / 46-18-1, +16.05u),
-// and the calibration education note ("Why we render 74/100, never 74%: ... conflate 74% win probability").
+// recognises the Week 8 settled sweep units (22-8-1, +12.40u / 46-18-1,
+// +16.05u) and the calibration education note ("Why we render 74/100, never
+// 74%: ... conflate 74% win probability").
+//
+// What it no longer recognises: the 2026-11-02 all-in snapshot 47-19-1
+// (+24.92u) and its base view, which used to be exempted outright. That blank
+// cheque is why "Verified Official NFL Record: 47-19-1 (71.2%)" survived on
+// /llms.txt, /.well-known/ai-plugin.json, /props and /research: the literal
+// number was exempt from every claim check no matter what was printed around
+// it. The recomputed ledger (verified-ledger.json -> /record) supersedes that
+// snapshot and files it under secondary_views, so the number may now appear
+// only on a line that labels it (all-in / superseded / historical / audited /
+// snapshot / prior / legacy / retired).
 const OFFICIAL_VERIFIED_LEDGER_EXEMPTION =
-  /(?:\b(?:47-19-1|26\.50\s*u(?:nits)?|22-8-1|12\.40\s*u(?:nits)?|46-18-1|16\.05\s*u(?:nits)?|why we render 74\/100|conflate 74% win probability)\b|72\.9%)/i;
+  /(?:\b(?:26\.50\s*u(?:nits)?|22-8-1|12\.40\s*u(?:nits)?|46-18-1|16\.05\s*u(?:nits)?|why we render 74\/100|conflate 74% win probability)\b|72\.9%)/i;
+const SUPERSEDED_SNAPSHOT_NUMBER = /\b(?:47-19-1|38-13-1)\b/i;
+const SUPERSEDED_SNAPSHOT_LABEL =
+  /\b(?:all-?in|superseded|historical|anchor|audited|snapshot|prior|legacy|retired|demoted|secondary)\b/i;
 
 // O-3.x remainder (ported from commercial-copy-scan.mjs's safeContextNear):
 // the numeric-pass exemption must be CLAUSE-scoped around the match, not
@@ -214,8 +228,15 @@ export function scanLine(rawLines, i, relPath) {
   // statements (false positive on the verified-ledger-view import, 2026-11-13).
   if (/^(import|export)\b/.test(normalized) && /\bfrom\s+["']/.test(normalized)) return [];
   if (/^import\s+["']/.test(normalized)) return [];
-  if (OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(normalized)) return [];
   const pairSubject = pairSubjectOf(rawLines, i);
+  // Superseded snapshots (47-19-1 / its 38-13-1 base view) are exempt ONLY
+  // when the line names them as superseded. Unlabelled, they are claims.
+  const labelledSnapshot = SUPERSEDED_SNAPSHOT_NUMBER.test(normalized)
+    ? SUPERSEDED_SNAPSHOT_LABEL.test(normalized) ||
+      (pairSubject !== null && SUPERSEDED_SNAPSHOT_LABEL.test(pairSubject))
+    : false;
+  if (labelledSnapshot) return [];
+  if (OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(normalized)) return [];
   if (pairSubject && OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(pairSubject)) return [];
   const hits = [];
   for (const claim of CLAIMS) {
@@ -241,8 +262,13 @@ export function scanNumericClaimLine(rawLines, i, relPath) {
   const subjects = viewsOf(line);
   const normalized = subjects[0];
   if (normalized.length === 0) return [];
-  if (OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(normalized)) return [];
   const pairSubject = pairSubjectOf(rawLines, i);
+  const labelledSnapshot = SUPERSEDED_SNAPSHOT_NUMBER.test(normalized)
+    ? SUPERSEDED_SNAPSHOT_LABEL.test(normalized) ||
+      (pairSubject !== null && SUPERSEDED_SNAPSHOT_LABEL.test(pairSubject))
+    : false;
+  if (labelledSnapshot) return [];
+  if (OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(normalized)) return [];
   if (pairSubject && OFFICIAL_VERIFIED_LEDGER_EXEMPTION.test(pairSubject)) return [];
   const hits = [];
   for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {
