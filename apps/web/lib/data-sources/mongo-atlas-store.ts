@@ -119,7 +119,8 @@ export type DriverLoader = () => Promise<{ MongoClient: new (uri: string) => Mon
 /** Default lazy driver loader — only called when the gate is open. */
 const defaultDriverLoader: DriverLoader = async () => {
   // Dynamic import keeps `mongodb` an optional dependency.
-  const mod = (await import("mongodb")) as unknown as { MongoClient: new (uri: string) => MongoClientLike };
+    const mongoPkg = "mongodb";
+  const mod = (await import(/* webpackIgnore: true */ mongoPkg)) as unknown as { MongoClient: new (uri: string) => MongoClientLike };
   return { MongoClient: mod.MongoClient };
 };
 
