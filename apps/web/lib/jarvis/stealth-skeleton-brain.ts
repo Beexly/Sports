@@ -10,7 +10,9 @@
  *   - `gse/skeleton-flash` (Low-Latency Vectorless PageIndex Tree RAG & Creative Engine)
  *
  * Standing Guardrails Enforced:
- *   1. Official Season Ledger of Record: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).
+ *   1. Public record is derived, never typed: read `@/lib/ledger/public-record`
+ *      for counts and units. Superseded snapshots (the pre-Nov-13 ledger and the
+ *      Nov-02 all-in view) may appear only with their superseded label attached.
  *   2. Standing Roster Ruling: Geno Smith = NYJ QB, Mike Evans = SF WR.
  *   3. Nov 1 08:01 CT Pull List Enforced: All 6 Oct 30 identity-contaminated plays/exposures
  *       remain strictly PULLED and STRICKEN — never revived as active plays.

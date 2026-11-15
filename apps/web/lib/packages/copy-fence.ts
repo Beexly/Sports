@@ -12,7 +12,7 @@
  * Confidence is always an integer XX/100, never a percentage.
  */
 
-/** W-L-P record strings like "36-13-1" or "47-19-1". */
+/** W-L-P record strings (three hyphen/slash-separated integers). */
 const RECORD_PATTERN = /\b\d{1,3}\s*-\s*\d{1,3}\s*-\s*\d{1,3}\b/;
 /** Any percentage (win rates, stake sizing, etc.). */
 const PERCENT_PATTERN = /\d{1,3}(?:\.\d+)?\s*%/;
