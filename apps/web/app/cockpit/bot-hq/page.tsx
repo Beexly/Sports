@@ -1,4 +1,5 @@
 import { CockpitOffice3dBotHq } from "@/components/cockpit/cockpit-office-3d-bot-hq";
+import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +20,7 @@ export default function CockpitBotHqPage() {
           Live spatial workstation telemetry for all 6 autonomous GSE desks,
           universal API &amp; MCP plugin routing across 5 native stealth-skeleton
           models (86.12/100 Composite Scale), and real-time inter-agent bus
-          dispatch. Official Season Ledger: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1
-          (+24.92u) · Roster Ruling: Geno Smith = NYJ QB · Mike Evans = SF WR.
+          dispatch. Official Season Ledger: {PUBLIC_RECORD_LINE} · Roster Ruling: Geno Smith = NYJ QB · Mike Evans = SF WR.
         </p>
       </header>
 

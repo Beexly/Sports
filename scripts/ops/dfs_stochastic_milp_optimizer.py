@@ -231,6 +231,15 @@ def optimize_dfs_portfolio(
         for d_idx in opp_dsts:
             add_constraint({qb_idx: 1.0, d_idx: 1.0}, -np.inf, 1.0)
 
+    # Never pair offensive skill/QB players with their own team's DST on full slates
+    if len(dsts) >= 4:
+        off_idxs = [i for i in range(n) if str(df.loc[i, "position"]) != "DST"]
+        for d_idx in dsts:
+            d_team = str(df.loc[d_idx, "team"])
+            for off_idx in off_idxs:
+                if str(df.loc[off_idx, "team"]) == d_team:
+                    add_constraint({off_idx: 1.0, d_idx: 1.0}, -np.inf, 1.0)
+
     # 6. Team diversification: y_t <= sum_{i in Team t} x_i, and sum_t y_t >= min_teams
     eff_min_teams = min(int(min_teams), num_teams)
     for t_idx, t_name in enumerate(teams):

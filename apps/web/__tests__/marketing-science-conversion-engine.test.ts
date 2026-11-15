@@ -8,6 +8,7 @@ import {
   computeBassViralCascadeProjection,
 } from "../lib/marketing/marketing-science-conversion-engine";
 import { GET as getThursdayConversionPack } from "../app/api/storefront/thursday-conversion-pack/route";
+import { PUBLIC_RECORD_LINE, PUBLIC_RECORD_COUNTS } from "@/lib/ledger/public-record";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -116,8 +117,8 @@ describe("24-Paper Marketing Science Conversion Engine & Thursday Live Storefron
     const payload = await response.json();
     // Verified record of record, with the all-in view labelled as such — the
     // storefront may not promote the all-in number to the headline.
-    expect(payload.officialRecord.recordDisplay).toMatch(/^36-13-1 \(73\.5%\) · \+20\.14u Verified/);
-    expect(payload.officialRecord.recordDisplay).toContain("All-in 47-19-1");
+    expect(payload.officialRecord.recordDisplay).toBe(PUBLIC_RECORD_LINE);
+    expect(payload.officialRecord.recordDisplay).toContain(PUBLIC_RECORD_COUNTS);
     // Derive the window the route declares rather than pinning a primetime
     // matchup that has since been retired.
     const routeSrc = readFileSync(

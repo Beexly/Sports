@@ -1225,7 +1225,7 @@ def student_t_upper_tail_dependence(rho: float, nu: float = 4.0) -> float:
     grid = np.linspace(x, x + 80.0, 2001)
     coeff = math.gamma(0.5 * (df + 1.0)) / (math.sqrt(df * math.pi) * math.gamma(0.5 * df))
     pdf = coeff * ((1.0 + (grid * grid) / df) ** (-0.5 * (df + 1.0)))
-    surv = float(np.trapz(pdf, grid))
+    surv = float(getattr(np, "trapezoid", getattr(np, "trapz", None))(pdf, grid))
     return max(0.0, min(1.0, 2.0 * surv))
 
 

@@ -10,19 +10,22 @@
  *  - Paywall Protection Doctrine (public previews share game-environment analytics; official plays & full DFS lineups stay behind `/packages` and `/fantasy/dfs`).
  */
 
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_UNITS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
+import { verifiedLedger } from "@/lib/ledger/verified-ledger-view";
+
 export interface OfficialVerifiedRecordSummary {
-  readonly record: "36-13-1";
-  readonly wins: 36;
-  readonly losses: 13;
-  readonly pushes: 1;
-  readonly winRateLabel: "73.5%";
-  readonly netUnits: 20.14;
-  readonly preWeek8Record: "16-5-0";
-  readonly preWeek8Units: 10.45;
-  readonly tnfRecord: "14-6-1";
-  readonly tnfUnits: 7.19;
-  readonly sundayRecord: "6-2-0";
-  readonly sundayUnits: 2.5;
+  readonly record: string;
+  readonly wins: number;
+  readonly losses: number;
+  readonly pushes: number;
+  readonly winRateLabel: string;
+  readonly netUnits: number;
+  readonly preWeek8Record: string;
+  readonly preWeek8Units: number;
+  readonly tnfRecord: string;
+  readonly tnfUnits: number;
+  readonly sundayRecord: string;
+  readonly sundayUnits: number;
   readonly paywallCheckoutUrl: "https://www.galaxysportsedge.com/packages";
   readonly dfsHubUrl: "https://www.galaxysportsedge.com/fantasy/dfs";
 }
@@ -61,12 +64,12 @@ export interface DfsAndPlaysCommercialPosture {
 }
 
 const VERIFIED_RECORD_SUMMARY: OfficialVerifiedRecordSummary = {
-  record: "36-13-1",
-  wins: 36,
-  losses: 13,
-  pushes: 1,
-  winRateLabel: "73.5%",
-  netUnits: 20.14,
+  record: PUBLIC_RECORD_COUNTS,
+  wins: verifiedLedger.official.wlp.wins,
+  losses: verifiedLedger.official.wlp.losses,
+  pushes: verifiedLedger.official.wlp.pushes,
+  winRateLabel: "win rate locked until 200 CLV-backed settled plays",
+  netUnits: verifiedLedger.official.units.total,
   preWeek8Record: "16-5-0",
   preWeek8Units: 10.45,
   tnfRecord: "14-6-1",
@@ -91,7 +94,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "When an offensive tackle loses that initial half-step against a wide-9 speed rusher, the quarterback must get the ball out in under 2.4 seconds to his slot receiver or tight end.",
     ctaPaywallAndFollow45To60s:
-      "We broke down every Week 10 trench matchup for our verified 36-13-1 (+20.14u) card. Follow now and unlock the full Week 10 board at galaxysportsedge.com/packages.",
+      `We broke down every Week 10 trench matchup for our verified ${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS}) card. Follow now and unlock the full Week 10 board at galaxysportsedge.com/packages.`,
     remotionCompositionId: "GseVerticalFilmBreakdownV1",
     paywallSafe: true,
   },
@@ -108,7 +111,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Against disguised post-snap safety rotations, running back checkdowns and underneath tight end option routes spike while deep boundary throws stall.",
     ctaPaywallAndFollow45To60s:
-      "Our verified engine is 36-13-1 (73.5%, +20.14u) entering Week 10. Follow for daily film analysis and unlock every official Week 10 play at galaxysportsedge.com/packages.",
+      `Our verified engine is ${PUBLIC_RECORD_LINE}. Follow for daily film analysis and unlock every official Week 10 play at galaxysportsedge.com/packages.`,
     remotionCompositionId: "GseVerticalSafetySpinV1",
     paywallSafe: true,
   },
@@ -125,7 +128,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "Offenses that script high early-down pass rates in the opening quarter create concentrated early receiving volume before defensive adjustments at halftime.",
     ctaPaywallAndFollow45To60s:
-      "We review all 77 market types on every game—backed by our verified 36-13-1 (+20.14u) record. Unlock full Week 10 access at galaxysportsedge.com/packages.",
+      `We review all 77 market types on every game—backed by our verified ${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS}) record. Unlock full Week 10 access at galaxysportsedge.com/packages.`,
     remotionCompositionId: "GseVerticalFirstQuarterScriptV1",
     paywallSafe: true,
   },
@@ -159,7 +162,7 @@ const MULTI_CHANNEL_VIDEO_SCRIPTS: readonly ShortFormVideoScriptPacket[] = [
     matchupOverlay25To45s:
       "On the defensive side, when a premier edge rusher faces a backup tackle against a pass-heavy game script, half-sack clearance opportunities climb sharply.",
     ctaPaywallAndFollow45To60s:
-      "Our 360-degree Week 10 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the verified 36-13-1 (+20.14u) card at galaxysportsedge.com/packages.",
+      `Our 360-degree Week 10 board review covers kicking, defensive sacks, quarters, halves, and player props. Unlock the verified ${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS}) card at galaxysportsedge.com/packages.`,
     remotionCompositionId: "GseVerticalKickingAndIdpEdgeV1",
     paywallSafe: true,
   },
@@ -209,7 +212,7 @@ const REVENUE_ATTRIBUTION_MATRIX: readonly RevenueStreamAttributionItem[] = [
   {
     streamId: "REV-06",
     channel: "CapperTek Verified Leaderboard Funnel",
-    identifierOrUrl: "CapperTek Verified Tracker (36-13-1, +20.14u)",
+    identifierOrUrl: `CapperTek Verified Tracker (${PUBLIC_RECORD_COUNTS}, ${PUBLIC_RECORD_UNITS})`,
     monetizationRole: "Verified third-party record distribution driving high-intent subscribers to /packages.",
     posthogEvents: ["cappertek_referral_landed", "package_checkout_started"],
     active: true,
@@ -263,7 +266,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "X Thread",
     headline: "Week 10 Flagship 12-Post Film & Matchup Environment Thread",
     copy:
-      "NFL Week 10 Film & Matchup Environment Thread: NE @ DET slot/motion duel, LV @ SF (Brock Purdy + Mike Evans red-zone leverage), NYJ @ KC (Geno Smith hot-read timing vs Spagnuolo blitz), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and LAC @ BAL (Josh Allen vs Carson Wentz & Flores simulated pressure). Verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
+      `NFL Week 10 Film & Matchup Environment Thread: SF @ DAL (Brock Purdy red-zone leverage), PIT @ CIN (trench pressure rates vs quick release), ARI @ SEA (Sam Darnold slot volume vs Gardner Minshew II checkdowns), LAR @ WAS (Jayden Daniels + Stefon Diggs tempo), and LAC @ BAL (Justin Herbert vs Lamar Jackson containment). Verified ledger: ${PUBLIC_RECORD_LINE}.`,
     ctaUrl: "https://www.galaxysportsedge.com/packages",
     paywallSafe: true,
   },
@@ -290,7 +293,7 @@ const WEEK9_SOCIAL_ENGAGEMENT_PACK: readonly SocialEngagementItem[] = [
     channel: "IG / Threads Carousel",
     headline: "8-Slide Week 10 Film & Matchup Blueprint Carousel",
     copy:
-      "8-Slide Carousel covering NE @ DET, LV @ SF (Mike Evans), NYJ @ KC (Geno Smith), ARI @ SEA (Sam Darnold), LAR @ WAS (Jayden Daniels + Stefon Diggs), 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 10 DraftKings/FanDuel Stacking Rules.",
+      "8-Slide Carousel covering SF @ DAL, PIT @ CIN, ARI @ SEA, LAR @ WAS, LAC @ BAL, 1Q Scripted Touches, Kicking/Sack Pricing Gaps, and Week 10 DraftKings/FanDuel Stacking Rules.",
     ctaUrl: "https://www.galaxysportsedge.com/fantasy/dfs",
     paywallSafe: true,
   },

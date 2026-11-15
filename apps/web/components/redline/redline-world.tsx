@@ -202,7 +202,7 @@ export function RedlineWorld({
   const [panel, setPanel] = useState<Panel>(initialPanel);
   const [selectedSlug, setSelectedSlug] = useState(activePacks[0]?.slug ?? "");
   const [selectedFixture, setSelectedFixture] = useState<CoachGameWriteup | null>(null);
-  const [userStatic, setUserStatic] = useState(false);
+  const [userStatic, setUserStatic] = useState(true);
   const [systemReduced, setSystemReduced] = useState(false);
   const [query, setQuery] = useState("");
   const [slot, setSlot] = useState("all");
@@ -578,7 +578,7 @@ export function RedlineWorld({
 
         {panel === "packs" && (
           <PanelFrame eyebrow="RedZone Storefront · One-time purchase" title="Choose your pack" close={closePanel} className="pack-panel">
-            <p className="panel-intro">Unified Week 9 Sunday Main Slate &amp; MNF packs, including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
+            <p className="panel-intro">Unified Week 10 Sunday Main Slate, SNF &amp; MNF packs, including our standalone $39.99 RedZone DFS Pro Pack. Select any pack to review and unlock.</p>
             <div className="edition-list">
               {activePacks.map((pack, index) => (
                 <div className={`edition-row${selectedSlug === pack.slug ? " selected" : ""}`} key={pack.slug}>
@@ -597,17 +597,17 @@ export function RedlineWorld({
         )}
 
         {panel === "dfs" && (
-          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 9 Sunday Main Slate & MNF DFS Lineups" close={closePanel} className="dfs-panel">
+          <PanelFrame eyebrow="RedZone Standalone DFS Pro Pack · $39.99" title="Week 10 Sunday Main Slate & MNF DFS Lineups" close={closePanel} className="dfs-panel">
             <p className="panel-intro">
-              Integrated directly into the unified RedZone site. Includes 2 Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF (TB @ CHI) and MNF (BUF @ MIN) builds, and our 14-Player Core Pool with coaching and injury replacement notes.
+              Integrated directly into the unified RedZone site. Includes Sunday Main Slate Optimal Lineups (Cash High-Floor &amp; GPP Tournament Stack), SNF (PIT @ CIN) and MNF (LAC @ BAL) Showdown builds, and our Verified Core Pool with coaching and injury replacement notes.
             </p>
 
-            <h3 className="sub-heading">Free Week 9 Sunday &amp; MNF Matchup Environment Setup</h3>
+            <h3 className="sub-heading">Free Week 10 Sunday &amp; MNF Matchup Environment Setup</h3>
             <div className="fixture-list">
               <div className="fixture-row">
                 <span className="fixture-week">SUN-MON</span>
-                <div className="fixture-match">DET @ MIA · GB @ NE · TB @ CHI · BUF @ MIN <small>Week 9 Sunday Main Slate &amp; Primetime</small></div>
-                <span className="fixture-angle">Detroit slot efficiency in Miami, Green Bay two-TE seam leverage at New England, Soldier Field lakefront pressure in TB @ CHI, and indoor track speed in BUF @ MIN shape our Week 9 optimal lineups. Official cash and GPP builds are locked below.</span>
+                <div className="fixture-match">BUF @ NYJ · KC @ ATL · SF @ DAL · PIT @ CIN · LAC @ BAL <small>Week 10 Sunday Main Slate &amp; Primetime</small></div>
+                <span className="fixture-angle">Buffalo at Meadowlands pace, Kansas City interior pressure test in Atlanta, SF @ DAL indoor track volume, SNF division clash in Cincinnati, and MNF at Baltimore shape our Week 10 optimal lineups. Official cash and GPP builds unlock below.</span>
               </div>
             </div>
 

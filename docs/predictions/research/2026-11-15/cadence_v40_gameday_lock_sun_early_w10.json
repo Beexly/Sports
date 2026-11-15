@@ -1,0 +1,1214 @@
+{
+  "report_type": "CADENCE_V4_0_T90_GAMEDAY_LOCK_AND_CONFORMAL_DIAGNOSTIC",
+  "version": "v4.0",
+  "phase": "T90_GAMEDAY_LOCK_REFRESH",
+  "slot": "SUN_EARLY",
+  "week": 10,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "10:30",
+    "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
+  },
+  "generated_at_utc": "2026-11-15T16:38:22.962127+00:00",
+  "inputs": {
+    "full_slate_path": "data/engine/week10_full_slate_connected_dossiers_2026_11_13.json",
+    "full_slate_sha256": "7c46c463cb6152fe087f415cd7ba90ec45488aeacd51edc1977e4497a5d61636",
+    "full_slate_generated_at_utc": "2026-11-15T16:21:56.910455+00:00",
+    "full_slate_packet_sha256": "7ec31d87c4907bba8598d966c2c6636e8b0d362bd111a454c544860148f62071",
+    "full_slate_dossiers_completed": 13,
+    "full_slate_sims_per_game": 10000,
+    "espn_scoreboard_path": "data/engine/espn_2026_week10_scoreboard.json",
+    "espn_scoreboard_sha256": "02dbf2f2937a77a9a471dace7f879b9a607db6d25374ff905102cad9b7a97915",
+    "friday_overlay_path": "docs/predictions/research/2026-11-13/cadence_v30_friday_overlay_w10.json",
+    "friday_overlay_sha256": "ddc9555760429ccb2a5b938694ad92c25fafccee698aa99dab83e187275862c8"
+  },
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "no_mutation": {
+    "sealed_state_written": false,
+    "candidate_written": false,
+    "seal_function_called": false,
+    "note": "This run wrote exactly one file: this report. candidates/, dossiers and every sealed artifact were opened read-only."
+  },
+  "observation_exclusions": {
+    "skipped": {},
+    "excluded_in_progress": {
+      "NE @ DET": {
+        "game": "NE @ DET",
+        "gameId": "401873053",
+        "slot": "MUNICH_IN_PROGRESS",
+        "kickoff": "2026-11-15T14:30Z",
+        "kickoff_raw": "2026-11-15 14:30:00",
+        "marketTotal": 50.5,
+        "pOver": 0.571,
+        "modelTotal": 52.7898,
+        "residual": 2.2898,
+        "marketPOverDevig": 0.5108,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      }
+    },
+    "owned_by_other_slot": {
+      "LAR @ ARI": {
+        "game": "LAR @ ARI",
+        "gameId": "401873061",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-15T21:05Z",
+        "kickoff_raw": "2026-11-15 21:05:00",
+        "marketTotal": 38.5,
+        "pOver": 0.4829,
+        "modelTotal": 37.9513,
+        "residual": -0.5487,
+        "marketPOverDevig": 0.4957,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      "SEA @ LV": {
+        "game": "SEA @ LV",
+        "gameId": "401873062",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-15T21:05Z",
+        "kickoff_raw": "2026-11-15 21:05:00",
+        "marketTotal": 40.5,
+        "pOver": 0.4872,
+        "modelTotal": 40.0893,
+        "residual": -0.4107,
+        "marketPOverDevig": 0.4957,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      "SF @ DAL": {
+        "game": "SF @ DAL",
+        "gameId": "401873063",
+        "slot": "SUN_LATE",
+        "kickoff": "2026-11-15T21:25Z",
+        "kickoff_raw": "2026-11-15 21:25:00",
+        "marketTotal": 55.5,
+        "pOver": 0.4799,
+        "modelTotal": 54.8549,
+        "residual": -0.6451,
+        "marketPOverDevig": 0.5174,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      "PIT @ CIN": {
+        "game": "PIT @ CIN",
+        "gameId": "401873064",
+        "slot": "SNF",
+        "kickoff": "2026-11-16T01:20Z",
+        "kickoff_raw": "2026-11-16 01:20:00",
+        "marketTotal": 49.5,
+        "pOver": 0.4847,
+        "modelTotal": 49.0091,
+        "residual": -0.4909,
+        "marketPOverDevig": 0.4892,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      "LAC @ BAL": {
+        "game": "LAC @ BAL",
+        "gameId": "401873065",
+        "slot": "MNF",
+        "kickoff": "2026-11-17T01:15Z",
+        "kickoff_raw": "2026-11-17 01:15:00",
+        "marketTotal": 38.5,
+        "pOver": 0.5861,
+        "modelTotal": 41.2839,
+        "residual": 2.7839,
+        "marketPOverDevig": 0.5,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      }
+    },
+    "exclusion_note": "NE @ DET (14:30Z) is in progress at this run's T-90 timestamp, so its ESPN designations are no longer a pre-kickoff lock input. Games at 21:05Z/21:25Z/01:20Z belong to the 13:35 CT SUN_LATE run and the SNF/MNF slots; they are listed here for completeness and are NOT part of this slot's conformal band."
+  },
+  "availability_refresh": {
+    "slot": "SUN_EARLY",
+    "stored_snapshot": {
+      "source": "docs/predictions/research/2026-11-13/cadence_v30_friday_overlay_w10.json",
+      "generated_at_utc": "2026-11-13T22:42:15.048633+00:00",
+      "sha256": "ddc9555760429ccb2a5b938694ad92c25fafccee698aa99dab83e187275862c8",
+      "designation_count": 63
+    },
+    "fetched_at_utc": "2026-11-15T16:38:21.679611+00:00",
+    "games": [
+      {
+        "game": "BUF @ NYJ",
+        "gameId": "401873054",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "NYJ",
+            "player": "Garrett Wilson",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "NYJ",
+            "player": "VJ Payne",
+            "position": "S",
+            "status": "Questionable"
+          },
+          {
+            "team": "NYJ",
+            "player": "Adonai Mitchell",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "NYJ",
+            "player": "Omar Cooper Jr.",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "NYJ",
+            "player": "Nahshon Wright",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "BUF",
+            "player": "Ar'maj Reed-Adams",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "BUF",
+            "player": "Jalon Kilgore",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "BUF",
+            "player": "Jude Bowry",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "BUF",
+            "player": "Shane Buechele",
+            "position": "QB",
+            "status": "Out"
+          },
+          {
+            "team": "BUF",
+            "player": "Mike Danna",
+            "position": "DE",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": []
+      },
+      {
+        "game": "CAR @ NO",
+        "gameId": "401873055",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "NO",
+            "player": "Zach Wilson",
+            "position": "QB",
+            "status": "Out"
+          },
+          {
+            "team": "NO",
+            "player": "Mike Reid",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "NO",
+            "player": "Erik McCoy",
+            "position": "C",
+            "status": "Out"
+          },
+          {
+            "team": "NO",
+            "player": "CJ Donaldson",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "NO",
+            "player": "Jaylan Ford",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "CAR",
+            "player": "Jaelan Phillips",
+            "position": "LB",
+            "status": "Questionable"
+          },
+          {
+            "team": "CAR",
+            "player": "Xavier Legette",
+            "position": "WR",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "CAR",
+            "player": "Brady Christensen",
+            "position": "G",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "CAR",
+            "player": "Mike Jackson",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "CAR",
+            "player": "Jonathon Brooks",
+            "position": "RB",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "HOU @ CLE",
+        "gameId": "401873056",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "CLE",
+            "player": "Denzel Boston",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "CLE",
+            "player": "Ronnie Hickman",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "Will Anderson Jr.",
+            "position": "DE",
+            "status": "Questionable"
+          },
+          {
+            "team": "HOU",
+            "player": "Jake Hummel",
+            "position": "LB",
+            "status": "Questionable"
+          },
+          {
+            "team": "HOU",
+            "player": "Braden Smith",
+            "position": "OT",
+            "status": "Questionable"
+          },
+          {
+            "team": "HOU",
+            "player": "David Montgomery",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "Keylan Rutledge",
+            "position": "G",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "CLE",
+            "player": "Michael Burton",
+            "position": "FB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "CLE",
+            "player": "Kalia Davis",
+            "position": "DT",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "CLE",
+            "player": "Teven Jenkins",
+            "position": "G",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "JAX @ TEN",
+        "gameId": "401873057",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "TEN",
+            "player": "Tyjae Spears",
+            "position": "RB",
+            "status": "Questionable"
+          },
+          {
+            "team": "TEN",
+            "player": "Cody Barton",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "TEN",
+            "player": "Anthony Hill Jr.",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "JAX",
+            "player": "Jessie Bates III",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "JAX",
+            "player": "Cam'Ron Silmon-Craig",
+            "position": "S",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "TEN",
+            "player": "Tommy Townsend",
+            "position": "P",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "TEN",
+            "player": "Peter Skoronski",
+            "position": "G",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "JAX",
+            "player": "B.J. Green II",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "JAX",
+            "player": "Eric Murray",
+            "position": "S",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "JAX",
+            "player": "DaVon Hamilton",
+            "position": "DT",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "KC @ ATL",
+        "gameId": "401873058",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "ATL",
+            "player": "Divine Deablo",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "ATL",
+            "player": "Zachariah Branch",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "ATL",
+            "player": "Josh Woods",
+            "position": "LB",
+            "status": "Questionable"
+          },
+          {
+            "team": "ATL",
+            "player": "James Pearce Jr.",
+            "position": "LB",
+            "status": "Questionable"
+          },
+          {
+            "team": "ATL",
+            "player": "Gervon Dexter Sr.",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "KC",
+            "player": "Kenneth Walker III",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "KC",
+            "player": "Jaylon Moore",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "KC",
+            "player": "Peter Woods",
+            "position": "DT",
+            "status": "Out"
+          },
+          {
+            "team": "KC",
+            "player": "Jaydn Ott",
+            "position": "RB",
+            "status": "Questionable"
+          },
+          {
+            "team": "KC",
+            "player": "Mansoor Delane",
+            "position": "CB",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": []
+      },
+      {
+        "game": "MIA @ IND",
+        "gameId": "401873059",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "IND",
+            "player": "Will Mallory",
+            "position": "TE",
+            "status": "Out"
+          },
+          {
+            "team": "IND",
+            "player": "Jalen Travis",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "IND",
+            "player": "Jaylon Carlies",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "MIA",
+            "player": "Darrell Baker Jr.",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "MIA",
+            "player": "Aaron Brewer",
+            "position": "C",
+            "status": "Out"
+          },
+          {
+            "team": "MIA",
+            "player": "Jared Wayne",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "MIA",
+            "player": "Chris Bell",
+            "position": "WR",
+            "status": "Doubtful"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "IND",
+            "player": "Akeem Davis-Gaither",
+            "position": "LB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "IND",
+            "player": "Mo Alie-Cox",
+            "position": "TE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "MIA",
+            "player": "Malik Willis",
+            "position": "QB",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "MIN @ GB",
+        "gameId": "401873060",
+        "kickoff": "2026-11-15T18:00Z",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "GB",
+            "player": "Chris Brooks",
+            "position": "RB",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Skyy Moore",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Josh Jacobs",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "GB",
+            "player": "Kevin Zeitler",
+            "position": "G",
+            "status": "Questionable"
+          },
+          {
+            "team": "MIN",
+            "player": "Jordan Addison",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "MIN",
+            "player": "Kyler Murray",
+            "position": "QB",
+            "status": "Out"
+          },
+          {
+            "team": "MIN",
+            "player": "Tyrion Ingram-Dawkins",
+            "position": "DE",
+            "status": "Out"
+          },
+          {
+            "team": "MIN",
+            "player": "Joshua Metellus",
+            "position": "S",
+            "status": "Questionable"
+          },
+          {
+            "team": "MIN",
+            "player": "Blake Cashman",
+            "position": "LB",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "GB",
+            "player": "Josh Whyle",
+            "position": "TE",
+            "status": "Injured Reserve"
+          }
+        ]
+      }
+    ],
+    "offline": false,
+    "summary": {
+      "games_polled": 7,
+      "games_with_error": 0,
+      "designations_applied": 55,
+      "statuses_not_applied": 15,
+      "stored_designations": 63,
+      "newly_listed_not_in_stored_subset": [
+        "Ar'maj Reed-Adams",
+        "Braden Smith",
+        "Cam'Ron Silmon-Craig",
+        "Chris Brooks",
+        "Jake Hummel",
+        "Jalon Kilgore",
+        "Jaylan Ford",
+        "Josh Jacobs",
+        "Joshua Metellus",
+        "Jude Bowry",
+        "Mike Danna",
+        "Mike Reid",
+        "Nahshon Wright",
+        "Shane Buechele",
+        "Skyy Moore",
+        "Tyrion Ingram-Dawkins",
+        "VJ Payne",
+        "Will Anderson Jr.",
+        "Xavier Legette",
+        "Zach Wilson"
+      ],
+      "newly_listed_detail": [
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Ar'maj Reed-Adams",
+          "position": "G",
+          "status": "Out"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Jalon Kilgore",
+          "position": "S",
+          "status": "Out"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Jude Bowry",
+          "position": "OT",
+          "status": "Out"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Mike Danna",
+          "position": "DE",
+          "status": "Out"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "NYJ",
+          "player": "Nahshon Wright",
+          "position": "CB",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Shane Buechele",
+          "position": "QB",
+          "status": "Out"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "NYJ",
+          "player": "VJ Payne",
+          "position": "S",
+          "status": "Questionable"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "NO",
+          "player": "Jaylan Ford",
+          "position": "LB",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "NO",
+          "player": "Mike Reid",
+          "position": "CB",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "CAR",
+          "player": "Xavier Legette",
+          "position": "WR",
+          "status": "Questionable"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "NO",
+          "player": "Zach Wilson",
+          "position": "QB",
+          "status": "Out"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Braden Smith",
+          "position": "OT",
+          "status": "Questionable"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Jake Hummel",
+          "position": "LB",
+          "status": "Questionable"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Will Anderson Jr.",
+          "position": "DE",
+          "status": "Questionable"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "JAX",
+          "player": "Cam'Ron Silmon-Craig",
+          "position": "S",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Chris Brooks",
+          "position": "RB",
+          "status": "Questionable"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Josh Jacobs",
+          "position": "RB",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "MIN",
+          "player": "Joshua Metellus",
+          "position": "S",
+          "status": "Questionable"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Skyy Moore",
+          "position": "WR",
+          "status": "Questionable"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "MIN",
+          "player": "Tyrion Ingram-Dawkins",
+          "position": "DE",
+          "status": "Out"
+        }
+      ],
+      "stored_names_absent_from_refresh": [
+        "Bobby Okereke",
+        "Branson Combs",
+        "Christen Miller",
+        "Christian Benford",
+        "Connor McGovern",
+        "Dion Dawkins",
+        "Ezra Cleveland",
+        "Jarvis Brownlee Jr.",
+        "Jauan Jennings",
+        "Jerry Tillery",
+        "Josh Whyle",
+        "Luke Rhodes",
+        "Marvin Harrison Jr.",
+        "Micah Parsons",
+        "Michael Burton",
+        "Peter Skoronski",
+        "Robert Hainsey",
+        "Sam Franklin Jr.",
+        "Spencer Brown",
+        "T.J. Hockenson",
+        "Taliese Fuaga",
+        "Tommy Townsend",
+        "Travis Glover",
+        "Trent Brown",
+        "Trevin Wallace",
+        "Will Lee III",
+        "Wyatt Teller",
+        "Xavier McKinney"
+      ],
+      "stored_names_absent_detail": [
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Christian Benford",
+          "position": "CB",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Connor McGovern",
+          "position": "C",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Dion Dawkins",
+          "position": "OT",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "NYJ",
+          "player": "Jarvis Brownlee Jr.",
+          "position": "CB",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Sam Franklin Jr.",
+          "position": "S",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "BUF",
+          "player": "Spencer Brown",
+          "position": "OT",
+          "status": "Questionable"
+        },
+        {
+          "game": "BUF @ NYJ",
+          "team": "NYJ",
+          "player": "Trevin Wallace",
+          "position": "LB",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "CAR",
+          "player": "Bobby Okereke",
+          "position": "LB",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "NO",
+          "player": "Christen Miller",
+          "position": "DT",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "NO",
+          "player": "Taliese Fuaga",
+          "position": "OT",
+          "status": "Out"
+        },
+        {
+          "game": "CAR @ NO",
+          "team": "CAR",
+          "player": "Will Lee III",
+          "position": "CB",
+          "status": "Questionable"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Marvin Harrison Jr.",
+          "position": "WR",
+          "status": "Out"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "CLE",
+          "player": "Michael Burton",
+          "position": "FB",
+          "status": "Out"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Trent Brown",
+          "position": "OT",
+          "status": "Questionable"
+        },
+        {
+          "game": "HOU @ CLE",
+          "team": "HOU",
+          "player": "Wyatt Teller",
+          "position": "G",
+          "status": "Questionable"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "JAX",
+          "player": "Branson Combs",
+          "position": "LB",
+          "status": "Questionable"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "JAX",
+          "player": "Ezra Cleveland",
+          "position": "G",
+          "status": "Questionable"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "TEN",
+          "player": "Peter Skoronski",
+          "position": "G",
+          "status": "Out"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "JAX",
+          "player": "Robert Hainsey",
+          "position": "C",
+          "status": "Questionable"
+        },
+        {
+          "game": "JAX @ TEN",
+          "team": "TEN",
+          "player": "Tommy Townsend",
+          "position": "P",
+          "status": "Out"
+        },
+        {
+          "game": "MIA @ IND",
+          "team": "IND",
+          "player": "Jerry Tillery",
+          "position": "DT",
+          "status": "Out"
+        },
+        {
+          "game": "MIA @ IND",
+          "team": "IND",
+          "player": "Luke Rhodes",
+          "position": "LS",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "MIN",
+          "player": "Jauan Jennings",
+          "position": "WR",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Josh Whyle",
+          "position": "TE",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Micah Parsons",
+          "position": "DE",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "MIN",
+          "player": "T.J. Hockenson",
+          "position": "TE",
+          "status": "Out"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Travis Glover",
+          "position": "OT",
+          "status": "Questionable"
+        },
+        {
+          "game": "MIN @ GB",
+          "team": "GB",
+          "player": "Xavier McKinney",
+          "position": "S",
+          "status": "Questionable"
+        }
+      ],
+      "absence_semantics_caveat": "A Friday designation that no longer appears in the ESPN summary feed is NOT evidence the player is active: ESPN drops players from the injury list once a designation lapses, and official inactives are published 90 minutes before kickoff, not inside the injury feed. Read stored_names_absent_detail as 'designation resolved or withdrawn, needs owner confirmation', never as 'cleared to play'.",
+      "diff_caveat": "Stored side is the Friday v3.0 overlay's applied designations for these games. The T-90 ESPN pull is the full league designation list, so newly_listed names include players the Friday materiality filter never carried \u2014 scope difference, not all status flips. The signal that matters is stored_names_absent_from_refresh: curated Friday names no longer Out/Doubtful/Questionable at T-90. A newly-listed name on a sealed ticket is a flag for the owner, never a silent reprice."
+    }
+  },
+  "conformal": {
+    "sigma_total": 12.798,
+    "sigma_total_calibration": {
+      "source": "artifacts/slate/2026-10-25-week7-master-slate.json",
+      "n": 13,
+      "sd": 0.134,
+      "relation": "modelTotal = marketTotal + sigma * Phi^-1(pOver_model)",
+      "reestimated_this_run": false
+    },
+    "alpha": 0.1,
+    "path": "single-total; Week-10 packet dossiers persist posted_total plus devigged Over/Under pair, so pOver_model is Stage-5 post_sim_prob and the external total is the posted line",
+    "observations": [
+      {
+        "game": "BUF @ NYJ",
+        "gameId": "401873054",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 50.5,
+        "pOver": 0.5511,
+        "modelTotal": 52.1438,
+        "residual": 1.6438,
+        "marketPOverDevig": 0.5108,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "CAR @ NO",
+        "gameId": "401873055",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 48.5,
+        "pOver": 0.404,
+        "modelTotal": 45.39,
+        "residual": -3.11,
+        "marketPOverDevig": 0.5174,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "HOU @ CLE",
+        "gameId": "401873056",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 40.5,
+        "pOver": 0.5152,
+        "modelTotal": 40.9877,
+        "residual": 0.4877,
+        "marketPOverDevig": 0.5043,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "JAX @ TEN",
+        "gameId": "401873057",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 46.5,
+        "pOver": 0.4294,
+        "modelTotal": 44.2232,
+        "residual": -2.2768,
+        "marketPOverDevig": 0.5,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "KC @ ATL",
+        "gameId": "401873058",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 47.5,
+        "pOver": 0.4764,
+        "modelTotal": 46.7425,
+        "residual": -0.7575,
+        "marketPOverDevig": 0.4892,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "MIA @ IND",
+        "gameId": "401873059",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 37.5,
+        "pOver": 0.5121,
+        "modelTotal": 37.8882,
+        "residual": 0.3882,
+        "marketPOverDevig": 0.5,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      },
+      {
+        "game": "MIN @ GB",
+        "gameId": "401873060",
+        "slot": "SUN_EARLY",
+        "kickoff": "2026-11-15T18:00Z",
+        "kickoff_raw": "2026-11-15 18:00:00",
+        "marketTotal": 42.5,
+        "pOver": 0.5175,
+        "modelTotal": 43.0616,
+        "residual": 0.5616,
+        "marketPOverDevig": 0.4892,
+        "proxy": false,
+        "devig": true,
+        "model_pOver_source": "dossier Stage-5 post_sim_prob (Over total)",
+        "market_pOver_source": "dossier Stage-5 market_prob_devig (Over total)"
+      }
+    ],
+    "band": {
+      "lower": -3.11,
+      "upper": 3.11
+    },
+    "residuals": [
+      1.6438,
+      -3.11,
+      0.4877,
+      -2.2768,
+      -0.7575,
+      0.3882,
+      0.5616
+    ],
+    "flagged": [],
+    "n": 7,
+    "coverage": 1.0,
+    "qLevel": 1.0,
+    "degenerate": true,
+    "degeneracy_note": "qLevel saturates at 1.0 for n<=18 at alpha=0.1; the band equals max|residual| and no flag is possible by construction. This is a property of the estimator at this sample size, not evidence of calibration."
+  },
+  "publication": {
+    "published": false,
+    "reason": "Flag-only diagnostic. Nothing here is a publication."
+  }
+}

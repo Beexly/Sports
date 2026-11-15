@@ -1,0 +1,720 @@
+{
+  "book_id": "ece4891e1c0ca8e3",
+  "source_status": "COMPLETE",
+  "source_note": "Pavel Brazdil, Jan N. van Rijn, Carlos Soares and Joaquin Vanschoren, Metalearning: Applications to Automated Machine Learning and Data Mining, Second Edition, Springer Cognitive Technologies, 2022, open access. Local file is the publisher PDF, 8382827 bytes, full sha256 ece4891e1c0ca8e30829cd21062f939e48878151732998dab18dea72a9c82106. Extracted text is complete and readable across 350 text blocks covering all 18 chapters. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "metalearning_across_tasks",
+      "name": "Metalearning is learning across tasks from prior experience",
+      "verbatim_quote": "This process of learning across tasks has generally been called metalearning.",
+      "page": "extracted text page block 14, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metalearning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metalearning_across_tasks",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "no_single_best_algorithm",
+      "name": "No single algorithm works for all data; each has an area of expertise",
+      "verbatim_quote": "Role of metalearning As was shown, we cannot assume that there is one algorithm that works for all sorts of data, as each algorithm has its own area of expertise.",
+      "page": "extracted text page block 14, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metalearning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "no_single_best_algorithm",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "metalearning_general_aim",
+      "name": "Metalearning systems learn from how prior models were built and how they performed",
+      "verbatim_quote": "The general aim of metalearning systems is to learn from the usage of prior models (how they were constructed and how well they performed) in order to to model a target dataset better.",
+      "page": "extracted text page block 16, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metalearning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metalearning_general_aim",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "metalearning_improves_automl",
+      "name": "Exploiting metalearning to improve AutoML is a central question",
+      "verbatim_quote": "The issue of how one can exploit metalearning to improve AutoML systems is one of the crucial questions that many researchers are trying to answer nowadays.",
+      "page": "extracted text page block 6, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "automl",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metalearning_improves_automl",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "as_discrete_vs_continuous",
+      "name": "Algorithm selection is discrete while HPO and CASH live on continuous or heterogeneous spaces",
+      "verbatim_quote": "We note that algorithm selection problems are defined on a discrete set of algorithms, while the hyperparameter optimization problem and CASH problem are typically defined on continuous configuration spaces, or heterogeneous spaces with both discrete",
+      "page": "extracted text page block 16, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "algorithm_selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "as_discrete_vs_continuous",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "meta_model_recommendation",
+      "name": "A meta-model recommends algorithms for a target task from its characteristics",
+      "verbatim_quote": "Based on the characteristics of a novel \"target\" task, the meta-model could construct or recommend new algorithms to try, and use the observed performance to update the",
+      "page": "extracted text page block 17, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metalearning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "meta_model_recommendation",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "configuration_space_definition",
+      "name": "All alternative workflows and their configurations constitute the configuration space",
+      "verbatim_quote": "All alternative workflows and their configurations (including all possible hyperparameter settings) constitute the so-called configuration space.",
+      "page": "extracted text page block 21, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "configuration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "configuration_space_definition",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "ranking_meta_model",
+      "name": "A ranking of algorithms built from historical performance is a meta-model",
+      "verbatim_quote": "The ranking helps users by suggesting an order of algorithms to apply when confronted with a new dataset.",
+      "page": "extracted text page block 28, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "algorithm_selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "ranking_meta_model",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "ranking_robust_missing_metadata",
+      "name": "Average ranking with accuracy and runtime is robust to 50 percent missing metadata",
+      "verbatim_quote": "The authors have shown that the performance of the average ranking method AR* that uses the combined measure of accuracy and runtime (discussed in Section 2.4), is not affected even by 50% of omissions in the metadata.",
+      "page": "extracted text page block 43, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "algorithm_selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "ranking_robust_missing_metadata",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "similar_datasets_metadata",
+      "name": "Use dataset characteristics to select the most similar prior datasets and their metadata only",
+      "verbatim_quote": "One common approach involves using dataset characteristics to identify a subset of the most similar datasets to the target dataset and use the metadata associated with these datasets only.",
+      "page": "extracted text page block 43, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "algorithm_selection",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "similar_datasets_metadata",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "metafeature_goal",
+      "name": "Metalearning relates algorithm performance to data characteristics called metafeatures",
+      "verbatim_quote": "4.1 Introduction One of the goals of metalearning is to relate the performance of learning algorithms to data characteristics, i.e., metafeatures.",
+      "page": "extracted text page block 61, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metafeature_goal",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "metafeature_types",
+      "name": "Metafeatures include simple, statistical, information theoretic, model based, complexity and performance types",
+      "verbatim_quote": "These are of different types, and include so-called simple, statistical, information-theoretic, model-based, complexitybased, and performance-based metafeatures.",
+      "page": "extracted text page block 61, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metafeature_types",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "metafeature_overfitting",
+      "name": "Too many metafeatures relative to available metadata causes overfitting",
+      "verbatim_quote": "The number of metafeatures should not be too large compared with the amount of available metadata; otherwise overfitting may occur.",
+      "page": "extracted text page block 62, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "metafeature_overfitting",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "landmarker_definition",
+      "name": "Landmarkers are performance of simplified algorithms on the data, such as a decision stump",
+      "verbatim_quote": "They can be obtained by running simplified versions of the algorithms.4 For instance, a decision stump, i.e., the root node of a decision tree, can be the landmarker for decision trees.",
+      "page": "extracted text page block 65, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "landmarker_definition",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "relative_landmarkers",
+      "name": "Relative landmarkers use a difference or ratio of performance of two algorithms",
+      "verbatim_quote": "Relative landmarkers are based on a difference (or a ratio) of the performance of two algorithms.",
+      "page": "extracted text page block 65, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "relative_landmarkers",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "subsampling_landmarkers",
+      "name": "An ordered sequence of subsampling landmarkers traces part of a learning curve",
+      "verbatim_quote": "A more informative characteristic is obtained by considering an ordered sequence of subsampling landmarkers for a single algorithm, representing, in effect, a part of its learning curve (Leite and Brazdil, 2005).",
+      "page": "extracted text page block 66, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "subsampling_landmarkers",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "dynamic_characterization",
+      "name": "Metafeatures can be gathered iteratively, stopping when a decision is already possible",
+      "verbatim_quote": "An alternative approach consists of gathering the metafeatures in an iterative fashion (Leite and Brazdil, 2005, 2007).",
+      "page": "extracted text page block 76, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metafeatures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "dynamic_characterization",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "surrogate_model_hpo",
+      "name": "A surrogate meta-model predicts which unseen configurations may work better",
+      "verbatim_quote": "This knowledge is used to build a meta-model (surrogate model) that can be used to predict which unseen configurations may work better on that task.",
+      "page": "extracted text page block 110, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "surrogate_model_hpo",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "warm_start_transfer_hpo",
+      "name": "HPO search can be warm started or transferred from prior similar tasks",
+      "verbatim_quote": "This includes techniques such as warm-starting the search, or transferring previously learned meta-models that were trained on prior (similar) tasks.",
+      "page": "extracted text page block 110, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "warm_start_transfer_hpo",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "hpo_basic_methods",
+      "name": "Basic HPO includes grid search, random search, racing, successive halving and Hyperband",
+      "verbatim_quote": "It starts by presenting some basic hyperparameter optimization methods, including grid search, random search, racing strategies, successive halving and hyperband.",
+      "page": "extracted text page block 110, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "hpo_basic_methods",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "sh_budget_drawback",
+      "name": "Successive halving outcome depends on the choice of initial budget",
+      "verbatim_quote": "Hyperband and extensions to successive halving (SH) One drawback of SH is that the outcome depends on the selection of an initial budget.",
+      "page": "extracted text page block 116, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "sh_budget_drawback",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "hyperband_guarantee",
+      "name": "Hyperband spends at most a log factor more time than random search for the same result",
+      "verbatim_quote": "Hyperband is accompanied with several theoretical guarantees: one will never spend more than a log-factor of time more than random search to obtain the same result.",
+      "page": "extracted text page block 117, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "hyperband_guarantee",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "bohb",
+      "name": "BOHB combines Bayesian optimization with Hyperband",
+      "verbatim_quote": "This method is called Bayesian Optimization with HyperBand (BOHB) and combines good properties of both paradigms.",
+      "page": "extracted text page block 117, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "bohb",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "acquisition_function",
+      "name": "An acquisition function selects the configuration with highest expected utility",
+      "verbatim_quote": "98 5 Metalearning Approaches for Algorithm Selection II acquisition function evaluates hyperparameter configurations based on their expected utility and selects the one with the highest utility.",
+      "page": "extracted text page block 105, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "acquisition_function",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "hpo_progression",
+      "name": "HPO progresses from uninformed search to successive halving, Hyperband and Bayesian optimization",
+      "verbatim_quote": "We have started the exposition with simple uninformed search methods (grid search and random search) and then continued with more intelligent approaches, such as hill-climbing, best-first methods, successive halving, Hyperband and Bayesian optimization.",
+      "page": "extracted text page block 125, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "hyperparameter_optimization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "hpo_progression",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "ensemble_combination",
+      "name": "An ensemble prediction combines predictions of multiple and diverse models",
+      "verbatim_quote": "Typically, the prediction of an ensemble is generated by combining the predictions of multiple and diverse models.",
+      "page": "extracted text page block 195, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "ensemble_combination",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "bagging_boosting_stacking",
+      "name": "Bagging, boosting, stacking and cascade generalization are core ensemble organizations",
+      "verbatim_quote": "We start by introducing ensemble learning and present an overview of some of its most well-known methods, including bagging, boosting, stacking, and cascade generalization, among others.",
+      "page": "extracted text page block 22, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "bagging_boosting_stacking",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "bagging_vs_boosting",
+      "name": "Bagging and boosting both vary training data systematically from a single learner",
+      "verbatim_quote": "Both bagging and boosting combine multiple models built from a single learning algorithm by systematically varying the training data.",
+      "page": "extracted text page block 176, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "bagging_vs_boosting",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "stacking_vs_bagging",
+      "name": "Stacking and cascade generalization exploit differences among learners rather than data variation",
+      "verbatim_quote": "9.3 Stacking and Cascade Generalization While bagging and boosting exploit variation in the data, stacking and cascade generalization exploit differences among learners.",
+      "page": "extracted text page block 179, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "ensembles",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "stacking_vs_bagging",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "streams_interval_metafeatures",
+      "name": "For streams, compute metafeatures per interval and select a classifier per interval with a meta-model",
+      "verbatim_quote": "First, we discuss metalearning approaches that divide the streams into various intervals, calculate metafeatures over these parts, and use a meta-model for each part of the stream to select which classifier to use.",
+      "page": "extracted text page block 22, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "data_streams",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "streams_interval_metafeatures",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "transfer_types",
+      "name": "Transfer learning is instance based, feature based, or parameter based",
+      "verbatim_quote": "The authors address the question regarding what exactly can be transferred across tasks and distinguish instance-, feature-, and parameter-based transfer learning (see Section 12.3).",
+      "page": "extracted text page block 23, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "transfer_learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "transfer_types",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "parameter_transfer",
+      "name": "Parameter transfer initializes target search with parameters found on the source domain",
+      "verbatim_quote": "Parameter-based transfer learning describes a case when the parameters found on the source domain can be used to initialize the search on the target domain.",
+      "page": "extracted text page block 23, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "transfer_learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "parameter_transfer",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "deep_metalearning_categories",
+      "name": "Deep metalearning is grouped as metric based, model based, and optimization based",
+      "verbatim_quote": "The authors categorize this field of metalearning in three groups: metric-, model-, and optimization-based techniques, following previous work.",
+      "page": "extracted text page block 24, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "deep_learning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "deep_metalearning_categories",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "openml_repository",
+      "name": "OpenML holds thousands of datasets and algorithms and millions of experimental results",
+      "verbatim_quote": "OpenML contains thousands of datasets and algorithms, and millions of experimental results on these experiments.",
+      "page": "extracted text page block 26, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metadata_repositories",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "openml_repository",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    },
+    {
+      "primitive_id": "openml_task_coverage",
+      "name": "OpenML covers classification, regression, clustering, learning curves, streams, survival and subgroup discovery",
+      "verbatim_quote": "OpenML currently covers supervised classification, supervised regression, clustering, learning curve analysis, data stream classification, survival analysis, and subgroup discovery.",
+      "page": "extracted text page block 304, Chapter section as printed in the text file",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Prior tasks and their performance metadata are available and comparable to the target task.",
+        "The target task can be characterized in the same terms used for prior tasks."
+      ],
+      "breakdown_regime": "Fails when prior tasks are unlike the target, metadata are sparse or biased, or the target distribution shifts so prior performance no longer predicts current performance.",
+      "domain": "metadata_repositories",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps onto the engine meta layer that stores prior task outcomes, characterizes a new task, and recommends which model family or configuration to try first, with the recommendation treated as a prior to be tested rather than a decision.",
+        "source_operator": "openml_task_coverage",
+        "telemetry": "Prior task descriptors, prior model performance records, target task characteristics, and observed performance after each trial."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ece4891e1c0ca8e3-t1",
+      "think": "This book is a systematic account of learning about learning. Its central move is to treat every past modelling episode as data. A dataset, an algorithm, a pipeline, a set of hyperparameters, a run time and a score are not discarded after a project ends. They are stored as metadata, characterized in a common language, and reused when a new task arrives. That reuse is metalearning. The book builds the idea in layers. First it separates the problems that are often confused with each other. Algorithm selection chooses among discrete algorithms for a target dataset. Hyperparameter optimization chooses continuous or mixed settings for one algorithm. The combined problem chooses both at once, and workflow synthesis chooses a whole sequence of operations. Keeping those problems distinct matters because their search spaces, their costs and their failure modes are different, and a method that is sound for a discrete portfolio can be wasteful or misleading on a continuous space.\n\nSecond, the book explains how a new task is described so that past experience can be matched to it. Metafeatures are that description language. Some are simple counts and proportions. Some are statistical summaries and information theoretic measures. Some come from fitting a cheap model and reading its structure. Some, the landmarkers, come from running a simplified algorithm and recording how well it does. Relative landmarkers record differences between two cheap algorithms, and subsampling landmarkers record how performance grows with sample size, which is a fragment of a learning curve. The book is careful about cost and about overfitting at the meta level. A metafeature set that is large compared with the amount of metadata will fit noise, and a metafeature that is expensive to compute can erase the saving that metalearning was meant to create. Dynamic characterization answers that tension by gathering characteristics iteratively and stopping as soon as a decision is already supported.\n\nThird, the book shows several ways to turn metadata into a recommendation. The simplest is a ranking. Average performance across prior datasets, adjusted for runtime, gives a static ordered list, and the list is then tried from the top on the new task. That method is strikingly robust to missing metadata, which matters because real metadata collections are always incomplete. More expressive meta-models predict performance, predict pairwise preferences, or predict which algorithm suits a task with given characteristics. Similarity is the other organizing idea. Instead of using all history, retrieve the prior datasets most similar to the target and use only their results. That localizes the recommendation and avoids averaging over tasks that have nothing in common with the present one.\n\nFourth, the book treats search itself as a learning problem. Grid and random search are uninformed baselines. Racing and successive halving allocate more budget to promising configurations and cut the rest early, at the price of sensitivity to the initial budget. Hyperband hedges that choice across budgets and carries a guarantee relative to random search. Bayesian optimization builds a surrogate model of performance over configurations and uses an acquisition function to pick the next trial by expected utility, balancing exploration and exploitation. Combining the two families gives BOHB. Metalearning enters search by warm starting it, by transferring a surrogate or a ranking learned on similar prior tasks, and by shrinking the configuration space using configuration metaknowledge about which parts of the space are admissible or promising for tasks of this kind.\n\nFifth, the book extends the same logic beyond single models. Ensembles combine diverse models, and the choice among bagging, boosting, stacking and cascade forms is itself a selection problem with a large configuration space. Data streams force the recommendation to be remade over time, interval by interval, under concept drift. Transfer learning asks what exactly moves from a source task to a target task, instances, features or parameters, and deep metalearning reorganizes those questions for neural networks as metric based, model based and optimization based methods, including few shot settings where almost no target data exists.\n\nFinally, the book insists on infrastructure. None of this works without repositories that record experiments in machine usable form. OpenML is presented as that memory, with thousands of datasets and millions of results, organized by task type and accessible through common toolboxes. The repository is not an appendix to the method. It is a precondition for it, because a meta-model is only as good as the breadth, honesty and comparability of the metadata it was trained on. For a reasoning engine, the lesson is direct. Keep a permanent, structured record of what was tried, on what, with what characteristics and with what outcome. Characterize every new problem before choosing a method. Treat recommendations as ranked, testable priors. Spend search budget adaptively. And record every new outcome back into the same memory so the next recommendation is better than the last. The limits are equally direct. History misleads when the new task is unlike anything in the record, when metadata were collected under different evaluation rules, or when the world has drifted since the record was made. The book also makes a methodological point that is easy to miss. A metalearning system must itself be evaluated as carefully as any base model, on many datasets, with the cost of testing counted, and against simple baselines such as the average ranking and the single best algorithm overall. Without that discipline, a sophisticated meta-model can look better than it is because it was tuned on the same collections it is judged on, or because the time spent characterizing and searching is left out of the account. Honest evaluation, complete metadata and a shared repository are therefore not separate topics in this work. They are the conditions that make every other claim in it believable, and they are the first things an engine should copy.",
+      "retrocausal_genealogy": "The lineage starts with Rice in 1976 formulating algorithm selection as a formal problem, then Rendell and others in the 1980s using dataset characterization and a variable bias management system that could perform meta-learning. European projects in the 1990s built the first ranking and characterization systems, Brazdil and collaborators turned pairwise comparisons and learning curves into practical recommenders, and the AutoML movement after 2013 industrialized the search side with Bayesian optimization, successive halving and Hyperband. OpenML then supplied the shared experimental memory that earlier systems lacked.",
+      "theory_of_mind": "The authors model the reader as a practitioner or researcher who already trains models and now wastes time and compute choosing among them by habit or folklore. Their model of the domain is that expertise is empirical and transferable: what worked, on tasks described in the right terms, is evidence about what to try next. They assume the reader will accept a recommendation only if its evaluation methodology, its cost accounting and its failure cases are shown, so the book spends as much space on evaluation and on configuration space design as on the recommenders themselves.",
+      "cross_layer_veto": "This work vetoes any layer that chooses a model, a pipeline or a hyperparameter setting from a single global default without characterizing the task and consulting prior outcomes. It also vetoes meta-models whose metafeature count is large relative to the available metadata, whose characterization cost exceeds the search saving, and whose recommendations are treated as final decisions rather than ranked trials. Where prior tasks are dissimilar, where evaluation protocols differ, or where concept drift is present, it constrains the engine to fall back on direct testing on the target task itself."
+    }
+  ],
+  "universal_lens": "Any skilled practice can be improved by recording past episodes in a common descriptive language, characterizing each new problem before acting, retrieving the most similar past episodes, and turning their outcomes into a ranked, testable plan. The template applies wherever choices are repeated under varying conditions and trials are costly: describe, remember, match, recommend, test, and write the result back into memory.",
+  "gsi_mapping": "The Galaxy Sports Institute takes the metadata discipline: a shared, machine usable repository of past modelling episodes with task characterizations and outcomes, explicit evaluation methodology for any recommender, and configuration metaknowledge that records which search spaces are admissible for which kinds of problem. It also takes the caution that meta-level overfitting and incomparable evaluation protocols corrupt the whole memory if they are not policed.",
+  "gse_mapping": "The Galaxy Sports Edge engine takes a meta layer over its own modelling choices: characterize each new prediction task, store every prior model run with its characteristics and outcome, recommend model families and configurations as ranked priors from similar prior tasks, allocate evaluation budget adaptively with early stopping of weak configurations, warm start search from transferred surrogates, and feed every new result back into the same record so recommendations improve over time."
+}

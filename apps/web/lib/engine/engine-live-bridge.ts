@@ -60,10 +60,10 @@ export const THALER_SEGREGATED_BUNDLE_VALUATION = {
   transactionUtilitySurplusUsd: 68,
   savingsRatioLabel: "58 out of 100",
   itemizedGains: [
-    { label: "Week 9 Sunday Main Slate & MNF Best Bets Pack (#sunday-nfl-5pct-slate)", standaloneUsd: 39 },
-    { label: "Week 9 Player Props, Anytime TD, Defense/IDP & Correlated Parlay/SGP Pack (#sgp-correlation-basket)", standaloneUsd: 29 },
-    { label: "RedZone Standalone Week 9 Sunday & MNF DFS Pro Pack (#redzone-dfs-pro-pack)", standaloneUsd: 40 },
-    { label: "Monday Night Football (BUF @ MIN) Showdown Captain & Conserved Box-Score Packet", standaloneUsd: 9 },
+    { label: "Week 10 Sunday Main Slate & MNF Best Bets Pack (#sunday-nfl-5pct-slate)", standaloneUsd: 39 },
+    { label: "Week 10 Player Props, Anytime TD, Defense/IDP & Correlated Parlay/SGP Pack (#sgp-correlation-basket)", standaloneUsd: 29 },
+    { label: "RedZone Standalone Week 10 Sunday & MNF DFS Pro Pack (#redzone-dfs-pro-pack)", standaloneUsd: 40 },
+    { label: "Monday Night Football (LAC @ BAL) Showdown Captain & Conserved Box-Score Packet", standaloneUsd: 9 },
   ],
 } as const;
 
@@ -99,152 +99,224 @@ export interface DfsCorePoolRow {
 
 export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
   {
-    pos: "QB",
-    player: "C.J. Stroud (HOU)",
-    sal: "$5,900",
-    proj: "27.76 pts",
-    why: "#1 overall value ceiling QB in HOU@LAC stacked with Nico Collins and Dalton Schultz.",
+    "pos": "QB",
+    "player": "C.J. Stroud",
+    "sal": "$5,900",
+    "proj": "22.5",
+    "why": "Active Week 10 HOU contributor vs CLE projecting 22.5 DK points on a $5,900 salary."
   },
   {
-    pos: "QB",
-    player: "Jared Goff (DET)",
-    sal: "$6,600",
-    proj: "29.91 pts",
-    why: "Play-action efficiency leader in DET@MIA stacked with Jameson Williams and Sam LaPorta.",
+    "pos": "RB",
+    "player": "James Cook III",
+    "sal": "$7,400",
+    "proj": "22.4",
+    "why": "Active Week 10 BUF contributor vs NYJ projecting 22.4 DK points on a $7,400 salary."
   },
   {
-    pos: "RB",
-    player: "Josh Jacobs (GB)",
-    sal: "$6,800",
-    proj: "26.83 pts",
-    why: "Bellcow three-down workload and goal-line anchor for Green Bay in GB@NE.",
+    "pos": "RB",
+    "player": "Christian McCaffrey",
+    "sal": "$8,500",
+    "proj": "21.1",
+    "why": "Active Week 10 SF contributor vs DAL projecting 21.1 DK points on a $8,500 salary."
   },
   {
-    pos: "RB",
-    player: "Jahmyr Gibbs (DET)",
-    sal: "$10,000",
-    proj: "28.40 pts",
-    why: "Explosive perimeter and screen usage in DET@MIA high-tempo track.",
+    "pos": "WR",
+    "player": "CeeDee Lamb",
+    "sal": "$8,800",
+    "proj": "17.0",
+    "why": "Active Week 10 DAL contributor vs SF projecting 17.0 DK points on a $8,800 salary."
   },
   {
-    pos: "RB",
-    player: "Javonte Williams (DAL)",
-    sal: "$5,800",
-    proj: "15.20 pts",
-    why: "Lead Dallas early-down and goal-line back in DAL@IND indoor dome matchup.",
+    "pos": "WR",
+    "player": "Xavier Hutchinson",
+    "sal": "$4,000",
+    "proj": "11.6",
+    "why": "Active Week 10 HOU contributor vs CLE projecting 11.6 DK points on a $4,000 salary."
   },
   {
-    pos: "RB",
-    player: "Rhamondre Stevenson (NE)",
-    sal: "$6,100",
-    proj: "15.40 pts",
-    why: "Lead early-down back in GB@NE with TreVeyon Henderson OUT (Illness).",
+    "pos": "WR",
+    "player": "Xavier Worthy",
+    "sal": "$4,300",
+    "proj": "10.9",
+    "why": "Active Week 10 KC contributor vs ATL projecting 10.9 DK points on a $4,300 salary."
   },
   {
-    pos: "WR",
-    player: "Jaxon Smith-Njigba (SEA)",
-    sal: "$9,300",
-    proj: "29.11 pts",
-    why: "29 out of 100 slot target funnel share for Sam Darnold in ARI@SEA.",
+    "pos": "TE",
+    "player": "Dalton Schultz",
+    "sal": "$3,400",
+    "proj": "12.9",
+    "why": "Active Week 10 HOU contributor vs CLE projecting 12.9 DK points on a $3,400 salary."
   },
   {
-    pos: "WR",
-    player: "Puka Nacua (LAR)",
-    sal: "$8,800",
-    proj: "25.74 pts",
-    why: "Primary intermediate motion target for Matthew Stafford in LAR@WAS with Davante Adams on IR.",
+    "pos": "RB",
+    "player": "Ashton Jeanty",
+    "sal": "$5,400",
+    "proj": "16.6",
+    "why": "Active Week 10 LV contributor vs SEA projecting 16.6 DK points on a $5,400 salary."
   },
   {
-    pos: "WR",
-    player: "Malik Nabers (NYG)",
-    sal: "$7,300",
-    proj: "23.64 pts",
-    why: "Quick-game and perimeter isolation alpha for J.J. McCarthy in NYG@PHI.",
+    "pos": "DST",
+    "player": "Cardinals",
+    "sal": "$2,200",
+    "proj": "5.6",
+    "why": "Active Week 10 ARI contributor vs LAR projecting 5.6 DK points on a $2,200 salary."
   },
   {
-    pos: "WR",
-    player: "Nico Collins (HOU)",
-    sal: "$7,200",
-    proj: "19.26 pts",
-    why: "Red-zone and play-action alpha for C.J. Stroud in HOU@LAC.",
+    "pos": "WR",
+    "player": "Nico Collins",
+    "sal": "$6,900",
+    "proj": "13.7",
+    "why": "Active Week 10 HOU contributor vs CLE projecting 13.7 DK points on a $6,900 salary."
   },
   {
-    pos: "TE",
-    player: "Sam LaPorta (DET)",
-    sal: "$5,100",
-    proj: "19.45 pts",
-    why: "High-volume middle-field security blanket for Jared Goff in DET@MIA.",
+    "pos": "WR",
+    "player": "KC Concepcion Jr.",
+    "sal": "$4,800",
+    "proj": "9.6",
+    "why": "Active Week 10 CLE contributor vs HOU projecting 9.6 DK points on a $4,800 salary."
   },
   {
-    pos: "TE",
-    player: "Tucker Kraft (GB)",
-    sal: "$5,000",
-    proj: "14.20 pts",
-    why: "Primary play-action seam and red-zone target in GB@NE.",
+    "pos": "DST",
+    "player": "Vikings",
+    "sal": "$2,800",
+    "proj": "7.6",
+    "why": "Active Week 10 MIN contributor vs GB projecting 7.6 DK points on a $2,800 salary."
   },
   {
-    pos: "DST",
-    player: "Saints DST (NO)",
-    sal: "$2,900",
-    proj: "10.48 pts",
-    why: "Home Superdome pass-rush pressure and sack floor in CLE@NO.",
+    "pos": "RB",
+    "player": "Quinshon Judkins",
+    "sal": "$5,500",
+    "proj": "14.1",
+    "why": "Active Week 10 CLE contributor vs HOU projecting 14.1 DK points on a $5,500 salary."
   },
   {
-    pos: "DST",
-    player: "Packers DST (GB)",
-    sal: "$2,400",
-    proj: "9.80 pts",
-    why: "Simulated pressure and turnover upside in GB@NE matchup.",
-  },
+    "pos": "WR",
+    "player": "Parker Washington",
+    "sal": "$6,200",
+    "proj": "13.8",
+    "why": "Active Week 10 JAX contributor vs TEN projecting 13.8 DK points on a $6,200 salary."
+  }
 ] as const;
 
 export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
-  cashFlagship: {
-    tag: "OPTIMAL LINEUP #1 · 2A CASH FLAGSHIP ($49,700 · 174.65 MEAN PTS)",
-    salary: "$49,700",
-    projectedPts: "174.65 Projected Points",
-    slots: [
-      { pos: "QB", player: "Jared Goff (DET)", detail: "$6,600 · 29.91 pts · 14.2 own · +4.52 edge" },
-      { pos: "RB1", player: "Josh Jacobs (GB)", detail: "$6,800 · 26.83 pts · 18.4 own · +3.95 edge" },
-      { pos: "RB2", player: "Javonte Williams (DAL)", detail: "$5,800 · 15.20 pts · 12.5 own · +3.10 edge" },
-      { pos: "WR1", player: "Malik Nabers (NYG)", detail: "$7,300 · 23.64 pts · 16.0 own · +3.85 edge" },
-      { pos: "WR2", player: "Jameson Williams (DET)", detail: "$6,100 · 17.46 pts · 13.8 own · +3.45 edge" },
-      { pos: "WR3", player: "Ladd McConkey (LAC)", detail: "$5,500 · 15.68 pts · 14.5 own · +3.10 edge" },
-      { pos: "TE", player: "Sam LaPorta (DET)", detail: "$5,100 · 19.45 pts · 15.2 own · +3.80 edge" },
-      { pos: "FLEX", player: "Josh Downs (IND)", detail: "$4,600 · 16.00 pts · 11.4 own · +3.40 edge" },
-      { pos: "DST", player: "Saints DST (NO)", detail: "$2,900 · 10.48 pts · 9.4 own · +3.61 edge" },
-    ],
+  "cashFlagship": {
+    "tag": "Week 10 Sunday Main Classic Cash Anchor",
+    "salary": "$49,900 / $50,000",
+    "projectedPts": "140.6 med (335.3 p90)",
+    "slots": [
+      {
+        "pos": "QB",
+        "player": "C.J. Stroud (HOU)",
+        "detail": "$5,900 - 22.5 pts"
+      },
+      {
+        "pos": "RB",
+        "player": "James Cook III (BUF)",
+        "detail": "$7,400 - 22.4 pts"
+      },
+      {
+        "pos": "RB",
+        "player": "Christian McCaffrey (SF)",
+        "detail": "$8,500 - 21.1 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "CeeDee Lamb (DAL)",
+        "detail": "$8,800 - 17.0 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "Xavier Hutchinson (HOU)",
+        "detail": "$4,000 - 11.6 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "Xavier Worthy (KC)",
+        "detail": "$4,300 - 10.9 pts"
+      },
+      {
+        "pos": "TE",
+        "player": "Dalton Schultz (HOU)",
+        "detail": "$3,400 - 12.9 pts"
+      },
+      {
+        "pos": "FLEX",
+        "player": "Ashton Jeanty (LV)",
+        "detail": "$5,400 - 16.6 pts"
+      },
+      {
+        "pos": "DST",
+        "player": "Cardinals (ARI)",
+        "detail": "$2,200 - 5.6 pts"
+      }
+    ]
   },
-  gppTournament: {
-    tag: "OPTIMAL LINEUP #2 · 2B GPP TOURNAMENT ($49,800 · 172.40 MEAN / 254.80 P99 PTS)",
-    salary: "$49,800",
-    projectedPts: "172.40 Mean / 254.80 P99 Points (Correlated Stack)",
-    slots: [
-      { pos: "QB", player: "C.J. Stroud (HOU)", detail: "$5,900 · 27.76 pts · 9.4 own · +4.70 leverage" },
-      { pos: "RB1", player: "Josh Jacobs (GB)", detail: "$6,800 · 26.83 pts · 15.8 own · +3.95 edge" },
-      { pos: "RB2", player: "Javonte Williams (DAL)", detail: "$5,800 · 15.20 pts · 12.2 own · +3.10 edge" },
-      { pos: "WR1", player: "Jaxon Smith-Njigba (SEA)", detail: "$9,300 · 29.11 pts · 21.0 own · +4.85 edge" },
-      { pos: "WR2", player: "Nico Collins (HOU)", detail: "$7,200 · 19.26 pts · 14.5 own · +4.10 leverage" },
-      { pos: "WR3", player: "Ladd McConkey (LAC)", detail: "$5,500 · 15.68 pts · 14.0 own · +3.75 leverage" },
-      { pos: "TE", player: "Dalton Schultz (HOU)", detail: "$3,200 · 12.76 pts · 8.2 own · +3.99 leverage" },
-      { pos: "FLEX", player: "Josh Downs (IND)", detail: "$4,600 · 16.00 pts · 10.8 own · +3.40 leverage" },
-      { pos: "DST", player: "Packers DST (GB)", detail: "$2,400 · 9.80 pts · 8.2 own · +4.08 leverage" },
-    ],
+  "gppTournament": {
+    "tag": "Week 10 Sunday Main Classic GPP #1",
+    "salary": "$49,100 / $50,000",
+    "projectedPts": "137.9 med (337.0 p90)",
+    "slots": [
+      {
+        "pos": "QB",
+        "player": "C.J. Stroud (HOU)",
+        "detail": "$5,900 - 22.5 pts"
+      },
+      {
+        "pos": "RB",
+        "player": "James Cook III (BUF)",
+        "detail": "$7,400 - 22.4 pts"
+      },
+      {
+        "pos": "RB",
+        "player": "Christian McCaffrey (SF)",
+        "detail": "$8,500 - 21.1 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "Nico Collins (HOU)",
+        "detail": "$6,900 - 13.7 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "Xavier Hutchinson (HOU)",
+        "detail": "$4,000 - 11.6 pts"
+      },
+      {
+        "pos": "WR",
+        "player": "KC Concepcion Jr. (CLE)",
+        "detail": "$4,800 - 9.6 pts"
+      },
+      {
+        "pos": "TE",
+        "player": "Dalton Schultz (HOU)",
+        "detail": "$3,400 - 12.9 pts"
+      },
+      {
+        "pos": "FLEX",
+        "player": "Ashton Jeanty (LV)",
+        "detail": "$5,400 - 16.6 pts"
+      },
+      {
+        "pos": "DST",
+        "player": "Vikings (MIN)",
+        "detail": "$2,800 - 7.6 pts"
+      }
+    ]
   },
-  showdownCaptains: [
+  "showdownCaptains": [
     {
-      player: "Josh Allen (BUF QB)",
-      detail: "MNF Captain $16,500 · 1.5x Multiplier: 26.43 pts (17.62 base, q90 26.08) · 237.1 proj pass yds + 27.2 rush yds vs MIN",
+      "player": "Joe Burrow (PIT @ CIN SNF)",
+      "detail": "CPT $15,900 - 33.6 median pts"
     },
     {
-      player: "James Cook (BUF RB)",
-      detail: "MNF Captain $14,400 · 1.5x Multiplier: 20.79 pts (13.86 base, q90 22.45) · 15.6 proj carries (63.3 rush yds, 0.76 TD) + 14.0 rec yds",
+      "player": "Jacoby Brissett (LAC @ BAL MNF)",
+      "detail": "CPT $13,800 - 31.7 median pts"
     },
     {
-      player: "Aaron Jones (MIN RB)",
-      detail: "MNF Captain $13,200 · 1.5x Multiplier: 17.10 pts (11.40 base, q90 18.47) · Lead MIN RB1 (41.6 rush yds + 20.7 rec yds) with Carson Wentz at QB",
-    },
-  ],
+      "player": "Chase Brown (PIT @ CIN GPP)",
+      "detail": "CPT $12,600 - 28.7 median pts"
+    }
+  ]
 } as const;
 
 export interface VerifiedSgpRow {
@@ -260,137 +332,145 @@ export interface VerifiedSgpRow {
 
 export const STAGE0_VERIFIED_WEEK9_SGPS: readonly VerifiedSgpRow[] = [
   {
-    matchup: "JAX @ BAL",
-    legs: "Derrick Henry Over 82.5 Rush Yds · Mark Andrews Over 2.5 Receptions · Brenton Strange Over 2.5 Receptions",
-    fairOdds: "+385",
-    bookOdds: "+525",
-    edge: "26 out of 100",
-    conf: "88/100",
-    free: false,
-    correlation:
-      "Week 9 TNF Game Script: Baltimore leans on Derrick Henry (18.6 projected carries) and Mark Andrews hot-read targets against Jacksonville's 30.9 out of 100 blitz rate, while Brenton Strange collects underneath completions against Baltimore's 59.5 out of 100 two-high shell.",
+    "matchup": "WSH @ NYG",
+    "legs": "WSH @ NYG PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - WSH @ NYG stayed below release correlation edge threshold."
   },
   {
-    matchup: "DET @ MIA",
-    legs: "DET -7.0 · Amon-Ra St. Brown 70+ Rec Yds · Jahmyr Gibbs 70+ Rush Yds",
-    fairOdds: "+205",
-    bookOdds: "+285",
-    edge: "25 out of 100",
-    conf: "81/100",
-    free: false,
-    correlation:
-      "Hard Rock Track Script: Detroit intermediate slot conversions build early separation while Jahmyr Gibbs controls second-half clock against Miami's front.",
+    "matchup": "NE @ DET",
+    "legs": "NE @ DET PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - NE @ DET stayed below release correlation edge threshold."
   },
   {
-    matchup: "GB @ NE",
-    legs: "GB -3.0 · Tucker Kraft Over 34.5 Rec Yds · Rhamondre Stevenson Over 52.5 Rush Yds",
-    fairOdds: "+168",
-    bookOdds: "+235",
-    edge: "24 out of 100",
-    conf: "79/100",
-    free: false,
-    correlation:
-      "Gillette Two-TE & Ground Script: Green Bay play-action seam answers via Tucker Kraft pair with New England early-down ground control.",
+    "matchup": "BUF @ NYJ",
+    "legs": "Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime) \u00b7 Geno Smith OVER 221.5 Total Passing Yards (incl. overtime)",
+    "fairOdds": "+130",
+    "bookOdds": "+239",
+    "edge": "14 out of 100",
+    "conf": "76/100",
+    "free": false,
+    "correlation": "Positively correlated 2-leg script across Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime), Geno Smith OVER 221.5 Total Passing Yards (incl. overtime) (correlation lift 1.04x, joint hit 0.4349 vs market SGP implied 0.2950)."
   },
   {
-    matchup: "LAR @ WAS",
-    legs: "WAS +1.5 · Jayden Daniels Over 42.5 Rush Yds · Puka Nacua Over 64.5 Rec Yds",
-    fairOdds: "+174",
-    bookOdds: "+245",
-    edge: "25 out of 100",
-    conf: "78/100",
-    free: false,
-    correlation:
-      "High-Pace NFC Showdown: Jayden Daniels scramble conversions paired with Matthew Stafford intermediate motion targets to Puka Nacua.",
+    "matchup": "CAR @ NO",
+    "legs": "Tyler Shough UNDER 24.5 Total Pass Completions (incl. overtime) \u00b7 Bryce Young OVER 36.5 Total Passing Attempts (incl. overtime)",
+    "fairOdds": "+136",
+    "bookOdds": "+232",
+    "edge": "12 out of 100",
+    "conf": "73/100",
+    "free": false,
+    "correlation": "Positively correlated 2-leg script across Tyler Shough UNDER 24.5 Total Pass Completions (incl. overtime), Bryce Young OVER 36.5 Total Passing Attempts (incl. overtime) (correlation lift 1.06x, joint hit 0.4238 vs market SGP implied 0.3010)."
   },
   {
-    matchup: "ARI @ SEA",
-    legs: "SEA -6.5 · Jaxon Smith-Njigba Over 5.5 Receptions · Trey McBride (ARI) Over 5.5 Receptions",
-    fairOdds: "+182",
-    bookOdds: "+255",
-    edge: "25 out of 100",
-    conf: "77/100",
-    free: false,
-    correlation:
-      "Arizona Backup QB Checkdown Funnel: With Kyler Murray on IR and Jacoby Brissett on BAL, Gardner Minshew II funnels short targets to Trey McBride while Sam Darnold feeds Jaxon Smith-Njigba.",
+    "matchup": "HOU @ CLE",
+    "legs": "HOU @ CLE PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - HOU @ CLE stayed below release correlation edge threshold."
   },
   {
-    matchup: "BUF @ MIN",
-    legs: "James Cook Under 100.5 Rush Yds · Justin Jefferson Under 55.5 Rec Yds · Dalton Kincaid Under 57.5 Rec Yds",
-    fairOdds: "+164",
-    bookOdds: "+475",
-    edge: "22 out of 100",
-    conf: "78/100",
-    free: false,
-    correlation:
-      "MNF Conserved-Volume & Two-High Shell Script: Buffalo (237.1 pass yds / 113.3 rush yds) and Minnesota (177.2 pass yds / 97.0 rush yds) distribute volume across deep rotations, keeping James Cook (proj 63.3 rush yds), Justin Jefferson (proj 39.7 rec yds), and Dalton Kincaid (proj 39.8 rec yds) below inflated standalone lines.",
+    "matchup": "JAX @ TEN",
+    "legs": "JAX @ TEN PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - JAX @ TEN stayed below release correlation edge threshold."
   },
   {
-    matchup: "DAL @ IND",
-    legs: "IND -1.5 · Jonathan Taylor 80+ Rush Yds · CeeDee Lamb Over 6.5 Receptions",
-    fairOdds: "+152",
-    bookOdds: "+215",
-    edge: "23 out of 100",
-    conf: "76/100",
-    free: false,
-    correlation:
-      "Lucas Oil Dome Pace: Jonathan Taylor positive script volume forces Dak Prescott into high-volume CeeDee Lamb slot targets.",
+    "matchup": "KC @ ATL",
+    "legs": "KC @ ATL PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - KC @ ATL stayed below release correlation edge threshold."
   },
   {
-    matchup: "LV @ SF",
-    legs: "SF -7.5 · Brock Purdy Over 242.5 Pass Yds · Brock Bowers Over 5.5 Receptions",
-    fairOdds: "+178",
-    bookOdds: "+250",
-    edge: "25 out of 100",
-    conf: "75/100",
-    free: false,
-    correlation:
-      "Shanahan Motion & Trailing Tight End Funnel: San Francisco early lead forces Las Vegas into high-volume underneath targets to Brock Bowers.",
+    "matchup": "MIA @ IND",
+    "legs": "MIA @ IND PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - MIA @ IND stayed below release correlation edge threshold."
   },
   {
-    matchup: "HOU @ LAC",
-    legs: "LAC -2.5 · Justin Herbert Over 218.5 Pass Yds · Ladd McConkey Over 52.5 Rec Yds",
-    fairOdds: "+165",
-    bookOdds: "+230",
-    edge: "23 out of 100",
-    conf: "75/100",
-    free: false,
-    correlation:
-      "Option-Route Man Beaters: Ladd McConkey separation against Houston coverage drives Chargers home control.",
+    "matchup": "MIN @ GB",
+    "legs": "Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime) \u00b7 Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime)",
+    "fairOdds": "+151",
+    "bookOdds": "+219",
+    "edge": "9 out of 100",
+    "conf": "68/100",
+    "free": false,
+    "correlation": "Positively correlated 2-leg script across Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime), Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime) (correlation lift 1.05x, joint hit 0.3990 vs market SGP implied 0.3131)."
   },
   {
-    matchup: "CIN @ ATL",
-    legs: "ATL +1.5 · Bijan Robinson 80+ Rush+Rec Yds · Tee Higgins Over 58.5 Rec Yds",
-    fairOdds: "+148",
-    bookOdds: "+210",
-    edge: "24 out of 100",
-    conf: "76/100",
-    free: false,
-    correlation:
-      "Madrid International Showcase: Bijan Robinson three-down workload pairs with Cincinnati perimeter passing to Tee Higgins.",
+    "matchup": "LAR @ ARI",
+    "legs": "LAR @ ARI PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - LAR @ ARI stayed below release correlation edge threshold."
   },
   {
-    matchup: "CLE @ NO",
-    legs: "NO -2.5 · Alvin Kamara Over 78.5 Rush+Rec Yds · David Njoku Over 4.5 Receptions",
-    fairOdds: "+170",
-    bookOdds: "+240",
-    edge: "24 out of 100",
-    conf: "74/100",
-    free: false,
-    correlation:
-      "Superdome Checkdown & Clock Control: New Orleans leans on Alvin Kamara while Cleveland funnels short targets to David Njoku.",
+    "matchup": "SEA @ LV",
+    "legs": "SEA @ LV PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - SEA @ LV stayed below release correlation edge threshold."
   },
   {
-    matchup: "DEN @ CAR",
-    legs: "DEN -5.5 · Bo Nix Over 24.5 Rush Yds · Courtland Sutton Over 54.5 Rec Yds",
-    fairOdds: "+185",
-    bookOdds: "+260",
-    edge: "25 out of 100",
-    conf: "73/100",
-    free: false,
-    correlation:
-      "Bootleg & Perimeter Isolation: Bo Nix scramble extensions pair with Courtland Sutton boundary targets against Carolina.",
+    "matchup": "SF @ DAL",
+    "legs": "Brock Purdy OVER 21.5 Total Pass Completions (incl. overtime) \u00b7 Dak Prescott UNDER 24.5 Total Pass Completions (incl. overtime)",
+    "fairOdds": "+141",
+    "bookOdds": "+219",
+    "edge": "10 out of 100",
+    "conf": "70/100",
+    "free": false,
+    "correlation": "Positively correlated 2-leg script across Brock Purdy OVER 21.5 Total Pass Completions (incl. overtime), Dak Prescott UNDER 24.5 Total Pass Completions (incl. overtime) (correlation lift 1.04x, joint hit 0.4151 vs market SGP implied 0.3131)."
   },
+  {
+    "matchup": "PIT @ CIN",
+    "legs": "PIT @ CIN PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - PIT @ CIN stayed below release correlation edge threshold."
+  },
+  {
+    "matchup": "LAC @ BAL",
+    "legs": "LAC @ BAL PASS - No approved correlated combination at posted prices",
+    "fairOdds": "n/a",
+    "bookOdds": "n/a",
+    "edge": "0 out of 100",
+    "conf": "52/100",
+    "free": false,
+    "correlation": "PASS - LAC @ BAL stayed below release correlation edge threshold."
+  }
 ] as const;
 
 /**

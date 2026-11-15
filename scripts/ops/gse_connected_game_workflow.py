@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib
+import itertools
 import json
 import math
 import os
@@ -112,6 +113,36 @@ def build_armed_context_and_reasoning_trace(
     return {"context_packet": pkt, "reasoning_trace": trace}
 
 _STAGE3_4_EMPIRICAL_VECTORS_CACHE: dict[tuple[str, str, str, str], np.ndarray] = {}
+
+
+def _is_week10_corpus_wire_first_ready(stage2_receipt: dict[str, Any] | None = None) -> bool:
+    """Release Week 10+ hold once 07_corpus_wired receipt shows drain complete and corpus priors ran."""
+    if os.environ.get("GSE_FORCE_WIRE_FIRST_HOLD", "").strip().lower() == "true":
+        return False
+    if os.environ.get("CALIBRATION_ADJUSTMENTS_ENABLED", "").strip().lower() == "true":
+        return True
+    receipt_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-13"
+        / "corpus_compilation"
+        / "07_corpus_wired_calibration_and_hold_gate_receipt.json"
+    )
+    if not receipt_path.is_file():
+        return False
+    try:
+        rec = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    if rec.get("slate_hold_status") != "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE":
+        return False
+    if rec.get("all_invariants_satisfied") is not True:
+        return False
+    if stage2_receipt is not None and stage2_receipt.get("corpus_situational_conditioner_applied") is not True:
+        return False
+    return True
 try:
     from intelligence.coaching.google_drive_and_onedrive_omni_situational_engine import (  # noqa: E402
         run_google_drive_and_onedrive_omni_situational_overlay,
@@ -139,6 +170,7 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
 from scripts.ops.gse_coach_mind_simulator import (  # noqa: E402
     build_jev_state_tensor,
     compute_qb_tier_adjusted_epa,
+    load_live_corpus_situational_conditioner,
     load_sealed_object_readonly,
     load_week7_candidate_ratings_readonly,
     simulate_matchup_pbp,
@@ -2339,7 +2371,7 @@ def compile_stage1_to_stage2_simulation_priors(
             for k, v in gcp_reframing["players"].items()
         ],
         stage5_publish_allowed=(
-            os.environ.get("CALIBRATION_ADJUSTMENTS_ENABLED", "").strip().lower() == "true"
+            _is_week10_corpus_wire_first_ready()
             if is_w10_plus_s2
             else True
         ),
@@ -3166,6 +3198,12 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         away_inj_desc = [f"{away} Active Injury Overlay ({', '.join(away_inj_a) or 'Full Starter Strength'})"]
         home_inj_desc = [f"{home} Active Injury Overlay ({', '.join(home_inj_a) or 'Full Starter Strength'})"]
 
+    live_corpus_conditioner = load_live_corpus_situational_conditioner()
+    if int(week) >= 10 and not live_corpus_conditioner.get("loaded"):
+        raise RuntimeError(
+            "Week 10+ requires a loaded live corpus situational conditioner from 07_corpus_wired_calibration_and_hold_gate_receipt.json"
+        )
+
     sim_branch_a = simulate_matchup_pbp(
         away=away,
         home=home,
@@ -3180,6 +3218,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         jev_state_tensor=active_jev_tensor,
         posted_home_spread=posted_home_spread,
         posted_total=posted_total,
+        corpus_conditioner=live_corpus_conditioner,
     )
 
     sim_branch_b = simulate_matchup_pbp(
@@ -3196,7 +3235,16 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         jev_state_tensor=active_jev_tensor,
         posted_home_spread=posted_home_spread,
         posted_total=posted_total,
+        corpus_conditioner=live_corpus_conditioner,
     )
+
+    if live_corpus_conditioner.get("loaded") and not (
+        sim_branch_a.get("corpus_situational_conditioner_applied")
+        and sim_branch_b.get("corpus_situational_conditioner_applied")
+    ):
+        raise RuntimeError(
+            "Stage-2 corpus situational conditioner failed to apply during PBP simulation"
+        )
 
     vecs_a = sim_branch_a["vectors"]
     total_snaps_simulated = int(np.sum(vecs_a["total_plays"]))
@@ -3208,6 +3256,13 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         "home": home,
         "week": week,
         "stage1_parameter_coupling_verified": True,
+        "corpus_situational_conditioner_applied": bool(
+            sim_branch_a.get("corpus_situational_conditioner_applied", False)
+            and sim_branch_b.get("corpus_situational_conditioner_applied", False)
+        ),
+        "corpus_conditioner_summary": {
+            k: v for k, v in live_corpus_conditioner.items() if k != "six_family_priors"
+        },
         "combined_load_bearing_priors": compiled_stage1_priors["combined_load_bearing_priors"],
         "compiled_stage1_priors": {
             k: v for k, v in compiled_stage1_priors.items() if k != "jev_state_tensor"
@@ -4669,7 +4724,7 @@ def run_stage5_360_conjunction_gate(
     home_spread_label = str(env_cfg.get("home_spread_label", f"{home} {posted_home_spread:+.1f}"))
     wire_first_hold = bool(
         int(week) >= 10
-        and os.environ.get("CALIBRATION_ADJUSTMENTS_ENABLED", "").strip().lower() != "true"
+        and not _is_week10_corpus_wire_first_ready(stage2_receipt)
     )
 
     # 1. Two-Sided Game-Line De-Vig & Conjunction Gate
@@ -4845,6 +4900,7 @@ def run_stage5_360_conjunction_gate(
 
     rng_prop = np.random.default_rng(20261105)
     prop_evaluations: list[dict[str, Any]] = []
+    eligible_sgp_legs: list[dict[str, Any]] = []
     seen_athlete_market: set[tuple[str, str]] = set()
     for p in props_list:
         ath = str(p.get("athlete") or "").strip()
@@ -4971,6 +5027,7 @@ def run_stage5_360_conjunction_gate(
         prop_pub_ok = False if wire_first_hold else raw_prop_pub
         raw_kelly_prop = max(0.0, edge_vs_minus_110 * 2.0) if prop_pub_ok else 0.0
         rec_kelly_prop = round(raw_kelly_prop * afml_meta_label_kelly_multiplier, 4)
+        has_two_sided = bool(mkt_over_am is not None and mkt_under_am is not None)
         prop_evaluations.append({
             "athlete": ath,
             "team": athlete_projs[ath]["team"],
@@ -4994,7 +5051,7 @@ def run_stage5_360_conjunction_gate(
             "playable_to_american_odds": playable_to_american,
             "market_over_american": mkt_over_am,
             "market_under_american": mkt_under_am,
-            "has_two_sided_price": bool(mkt_over_am is not None and mkt_under_am is not None),
+            "has_two_sided_price": has_two_sided,
             "is_decoy_trap": bool(ath_decoy.get("is_decoy_trap", False)),
             "student_t_copula_df_nu": student_t_copula_df_nu,
             "afml_meta_label_kelly_multiplier": afml_meta_label_kelly_multiplier,
@@ -5003,16 +5060,47 @@ def run_stage5_360_conjunction_gate(
             "decision": "PASS" if wire_first_hold else emp_eval["decision"],
             "publishAllowed": prop_pub_ok,
             "gate_reason": (
-                f"WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish "
+                f"WIRE_FIRST_CALIBRATION_HOLD: Corpus/calibration readiness gate blocks live publish "
                 f"(win_prob={win_prob_lean:.4f}, edge={edge_vs_minus_110:+.4f})."
                 if (wire_first_hold and raw_prop_pub)
                 else (
                     "CLEARED_TWO_SIDED_GATE"
                     if prop_pub_ok
-                    else "PASS_UNPRICED_MARKET: ESPN Core propBets exposes target line only without Over/Under American juice; Class B de-vig gate blocks unpriced props."
+                    else (
+                        "PASS_BELOW_STAGE5_EDGE_OR_CONFIDENCE"
+                        if has_two_sided
+                        else "PASS_UNPRICED_MARKET: Target line only without Over/Under American juice; Class B de-vig gate blocks unpriced props."
+                    )
                 )
             ),
         })
+        if prop_pub_ok and has_two_sided:
+            is_yards_mkt = ("yard" in mkt.lower()) or ("yds" in mkt.lower())
+            if (not is_yards_mkt) or line_f >= 20.5:
+                p_o_mkt, p_u_mkt, _ = _devig_two_way(float(mkt_over_am), float(mkt_under_am))
+                mkt_leg_p = float(p_o_mkt if lean_side == "OVER" else p_u_mkt)
+                hit_vec = (emp_samples > line_f) if lean_side == "OVER" else (emp_samples < line_f)
+                eligible_sgp_legs.append({
+                    "athlete": ath,
+                    "team": athlete_projs[ath]["team"],
+                    "position": athlete_projs[ath]["position"],
+                    "market": mkt,
+                    "market_type": mkt,
+                    "line": line_f,
+                    "selection": f"{ath} {lean_side} {line_f:g} {mkt}",
+                    "lean": lean_side,
+                    "american_odds": int(mkt_over_am if lean_side == "OVER" else mkt_under_am),
+                    "confidence_score": f"{conf_int}/100",
+                    "raw_sim_prob": float(np.mean(hit_vec)),
+                    "cal_prob": float(win_prob_lean),
+                    "sim_prob": float(win_prob_lean),
+                    "mkt_prob_devig": mkt_leg_p,
+                    "edge": float(edge_vs_minus_110),
+                    "publishAllowed": True,
+                    "decision": "PLAY",
+                    "game_id": f"{away}_{home}_w{week}",
+                    "hit_vec": hit_vec,
+                })
 
     approved_prop_bets = sum(1 for pe in prop_evaluations if pe.get("publishAllowed") is True)
     approved_game_bets = sum(1 for gl in game_line_evaluations if gl.get("publishAllowed") is True)
@@ -5033,7 +5121,144 @@ def run_stage5_360_conjunction_gate(
             key=lambda item: float(item["win_prob_on_lean"]),
             reverse=True,
         )[:15]
-        correlated_sgp_constructions = []
+        # Build empirical 10,000-world positively correlated SGP (max 1 per game per ticket_exposure_guard)
+        top_sgp_pool = sorted(eligible_sgp_legs, key=lambda x: float(x["edge"]), reverse=True)[:10]
+        # Optional non-conflicting approved game-line candidate (Spread or Total or ML, max 1)
+        gl_candidates: list[dict[str, Any]] = []
+        gl_vec_lookup = {
+            away_spread_label: (vecs_a["away_score"] - vecs_a["home_score"]) > posted_home_spread,
+            home_spread_label: (vecs_a["home_score"] - vecs_a["away_score"]) > -posted_home_spread,
+            f"OVER {posted_total:g}": vecs_a["total_pts_out"] > posted_total,
+            f"UNDER {posted_total:g}": vecs_a["total_pts_out"] < posted_total,
+        }
+        for gl in sorted(
+            [g for g in game_line_evaluations if g.get("publishAllowed") is True],
+            key=lambda g: float(g.get("net_edge", 0.0)),
+            reverse=True,
+        ):
+            sel_gl = str(gl.get("selection") or "")
+            gv = gl_vec_lookup.get(sel_gl)
+            if gv is not None:
+                gl_candidates.append({
+                    "athlete": f"TEAM_{sel_gl}",
+                    "team": away if away in sel_gl else (home if home in sel_gl else f"{away}/{home}"),
+                    "position": "TEAM",
+                    "market": str(gl.get("market") or "Game Line"),
+                    "market_type": str(gl.get("market") or "Game Line"),
+                    "line": posted_total if gl.get("market") == "Total" else posted_home_spread,
+                    "selection": sel_gl,
+                    "lean": "UNDER" if "UNDER" in sel_gl.upper() else ("OVER" if "OVER" in sel_gl.upper() else "SIDE"),
+                    "american_odds": int(gl.get("american_odds", -110)),
+                    "confidence_score": str(gl.get("confidence_score", "65/100")),
+                    "raw_sim_prob": float(np.mean(gv)),
+                    "cal_prob": float(gl.get("post_sim_prob", np.mean(gv))),
+                    "sim_prob": float(gl.get("post_sim_prob", np.mean(gv))),
+                    "mkt_prob_devig": float(gl.get("market_prob_devig", 0.5)),
+                    "edge": float(gl.get("net_edge", 0.0)),
+                    "publishAllowed": True,
+                    "decision": "PLAY",
+                    "game_id": f"{away}_{home}_w{week}",
+                    "hit_vec": gv,
+                })
+                break
+
+        sgp_pool = top_sgp_pool + gl_candidates
+        best_sgp: dict[str, Any] | None = None
+        best_sgp_score = -1.0
+        for r_len in (2, 3):
+            if len(sgp_pool) < r_len:
+                continue
+            for combo in itertools.combinations(sgp_pool, r_len):
+                athletes_in_combo = {leg["athlete"] for leg in combo}
+                if len(athletes_in_combo) < r_len:
+                    continue
+                if sum(1 for leg in combo if leg["position"] == "TEAM") > 1:
+                    continue
+                joint_mask = np.ones(n_sims, dtype=bool)
+                for leg in combo:
+                    joint_mask &= np.asarray(leg["hit_vec"], dtype=bool)
+                raw_joint_p = float(np.mean(joint_mask))
+                raw_indep = math.prod(float(leg["raw_sim_prob"]) for leg in combo)
+                corr_lift = min(1.30, raw_joint_p / max(raw_indep, 1e-6))
+                if corr_lift < 1.03:
+                    continue
+                indep_sim = math.prod(float(leg["cal_prob"]) for leg in combo)
+                joint_p = min(
+                    min(float(leg["cal_prob"]) for leg in combo) * 0.98,
+                    indep_sim * corr_lift,
+                )
+                if joint_p < 0.14 or joint_p > 0.72:
+                    continue
+                indep_mkt = math.prod(float(leg["mkt_prob_devig"]) for leg in combo)
+                book_sgp_implied = min(0.92, indep_mkt * 1.18)
+                net_edge_sgp = joint_p - book_sgp_implied
+                if net_edge_sgp < 0.020:
+                    continue
+                combo_gate = evaluate_parlay_conjunction_gate(
+                    legs=combo,
+                    joint_sim_prob=joint_p,
+                    book_parlay_implied_prob=book_sgp_implied,
+                    joint_successes=joint_p * n_sims,
+                    n_worlds=n_sims,
+                )
+                if not combo_gate.get("publishAllowed"):
+                    continue
+                w_lb_sgp = float(combo_gate["wilson_lower_90"])
+                if w_lb_sgp <= book_sgp_implied:
+                    continue
+                score = net_edge_sgp * math.sqrt(joint_p) * (1.15 if r_len == 3 else 1.0)
+                if score > best_sgp_score:
+                    best_sgp_score = score
+                    fair_am = (
+                        int(round(-100.0 * joint_p / max(1.0 - joint_p, 1e-6)))
+                        if joint_p >= 0.50
+                        else int(round(100.0 * (1.0 - joint_p) / max(joint_p, 1e-6)))
+                    )
+                    book_am = (
+                        int(round(-100.0 * book_sgp_implied / max(1.0 - book_sgp_implied, 1e-6)))
+                        if book_sgp_implied >= 0.50
+                        else int(round(100.0 * (1.0 - book_sgp_implied) / max(book_sgp_implied, 1e-6)))
+                    )
+                    conf_sgp = min(78, max(60, int(round(56 + net_edge_sgp * 140))))
+                    best_sgp = {
+                        "id": f"sgp-{away.lower()}-{home.lower()}-w{week}",
+                        "kind": "SGP",
+                        "title": f"{away} @ {home} {r_len}-Leg Correlated SGP",
+                        "matchup": f"{away} @ {home}",
+                        "spread": posted_home_spread,
+                        "legs": [
+                            {
+                                "athlete": leg["athlete"],
+                                "team": leg["team"],
+                                "market": leg["market"],
+                                "selection": leg["selection"],
+                                "line": leg["line"],
+                                "american_odds": leg["american_odds"],
+                                "confidence_score": leg["confidence_score"],
+                                "expected_clv": round(float(leg["edge"]), 4),
+                                "decision": "PLAY",
+                                "publishAllowed": True,
+                            }
+                            for leg in combo
+                        ],
+                        "joint_sim_prob": round(joint_p, 4),
+                        "indep_sim_prob": round(indep_sim, 4),
+                        "correlation_lift": round(corr_lift, 4),
+                        "book_parlay_implied_prob": round(book_sgp_implied, 4),
+                        "wilson_lower_90": round(w_lb_sgp, 4),
+                        "net_edge": round(net_edge_sgp, 4),
+                        "fair_american_odds": f"{fair_am:+d}",
+                        "market_sgp_american_odds": f"{book_am:+d}",
+                        "confidence_score": f"{conf_sgp}/100",
+                        "sgp_pricing_basis": "Bovada two-sided single-leg de-vigged product with 18% sportsbook SGP overround adjustment",
+                        "decision": "PLAY",
+                        "publishAllowed": True,
+                        "correlation_rationale": (
+                            f"Positively correlated {r_len}-leg script across {', '.join(l['selection'] for l in combo)} "
+                            f"(correlation lift {corr_lift:.2f}x, joint hit {joint_p:.4f} vs market SGP implied {book_sgp_implied:.4f})."
+                        ),
+                    }
+        correlated_sgp_constructions = [best_sgp] if best_sgp is not None else []
         circuit_breaker_status = "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED"
 
     # SG-6: Real scipy.optimize.milp 0-1 integer linear programming Showdown DFS optimizer
@@ -5208,12 +5433,21 @@ def run_stage5_360_conjunction_gate(
     }
 
     # 3. SGP Conjunction Gate Check (with load-bearing Student-t copula df nu)
-    sgp_eval = evaluate_parlay_conjunction_gate(
-        legs=game_line_evaluations[:2],
-        joint_sim_prob=0.24,
-        book_parlay_implied_prob=0.28,
-        n_worlds=n_sims,
-    )
+    if correlated_sgp_constructions:
+        top_sgp_eval = correlated_sgp_constructions[0]
+        sgp_eval = evaluate_parlay_conjunction_gate(
+            legs=top_sgp_eval.get("legs") or game_line_evaluations[:2],
+            joint_sim_prob=float(top_sgp_eval.get("joint_sim_prob", 0.24)),
+            book_parlay_implied_prob=float(top_sgp_eval.get("book_parlay_implied_prob", 0.28)),
+            n_worlds=n_sims,
+        )
+    else:
+        sgp_eval = evaluate_parlay_conjunction_gate(
+            legs=game_line_evaluations[:2],
+            joint_sim_prob=0.24,
+            book_parlay_implied_prob=0.28,
+            n_worlds=n_sims,
+        )
     sgp_eval["student_t_copula_df_nu"] = student_t_copula_df_nu
     sgp_eval["afml_meta_label_kelly_multiplier"] = afml_meta_label_kelly_multiplier
 

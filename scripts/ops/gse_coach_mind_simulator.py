@@ -1806,9 +1806,10 @@ def simulate_matchup_pbp(
     if posted_home_spread is not None and posted_total is not None:
         market_margin = -float(posted_home_spread)
         market_total = float(posted_total)
-        lambda_margin = 0.25 if has_emergency_qb3 else 0.70
-        lambda_total = 0.45 if has_emergency_qb3 else 0.65
-        margin_bound = 10.5 if has_emergency_qb3 else 6.0
+        lambda_margin = 0.25 if has_emergency_qb3 else 0.85
+        lambda_total = 0.45 if has_emergency_qb3 else 0.84
+        margin_bound = 10.5 if has_emergency_qb3 else 2.85
+        total_bound = 5.5 if has_emergency_qb3 else 2.85
         shrunk_margin = float(
             np.clip(
                 market_margin + (1.0 - lambda_margin) * (raw_margin - market_margin),
@@ -1819,8 +1820,8 @@ def simulate_matchup_pbp(
         shrunk_total = float(
             np.clip(
                 market_total + (1.0 - lambda_total) * (raw_total - market_total),
-                market_total - 5.5,
-                market_total + 5.5,
+                market_total - total_bound,
+                market_total + total_bound,
             )
         )
     else:

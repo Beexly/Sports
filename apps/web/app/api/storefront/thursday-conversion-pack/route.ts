@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
+import { verifiedLedger } from "@/lib/ledger/verified-ledger-view";
 import {
   computeThalerHedonicBundleFraming,
   buildSahniPersonalizedEmailDispatch,
@@ -27,7 +29,7 @@ export async function GET() {
   const emailDispatch = buildSahniPersonalizedEmailDispatch(
     "Member",
     "WSH @ NYG",
-    "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+    PUBLIC_RECORD_LINE,
     "Mark Andrews OVER 2.5 Receptions (88/100 Free Teaser) + 9 Locked TNF Plays & 3-Leg SGP",
   );
 
@@ -35,12 +37,12 @@ export async function GET() {
     status: "LIVE_READY",
     generatedAt: "2026-11-05T16:55:00-06:00",
     officialRecord: {
-      wins: 47,
-      losses: 19,
-      pushes: 1,
-      winRatePct: 71.2,
-      netUnits: 24.92,
-      recordDisplay: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+      wins: verifiedLedger.official.wlp.wins,
+      losses: verifiedLedger.official.wlp.losses,
+      pushes: verifiedLedger.official.wlp.pushes,
+      winRatePct: verifiedLedger.official.gate.winRate,
+      netUnits: verifiedLedger.official.units.total,
+      recordDisplay: PUBLIC_RECORD_LINE,
     },
     tnfMatchup: "WSH @ NYG",
     stage0ActiveStarters: {

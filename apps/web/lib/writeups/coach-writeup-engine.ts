@@ -308,415 +308,362 @@ export function buildCoachGameWriteup(input: Partial<CoachGameWriteup> & {
 
 export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   {
-    "id": "writeup-tnf-401873038",
-    "gameId": "401873038",
-    "matchup": "Jacksonville Jaguars @ Baltimore Ravens",
-    "awayTeam": "Jacksonville Jaguars",
-    "homeTeam": "Baltimore Ravens",
-    "kickoff": "2026-10-30T00:15Z",
+    "id": "writeup-tnf-401873052",
+    "gameId": "401873052",
+    "matchup": "Washington Commanders @ New York Giants",
+    "awayTeam": "Washington Commanders",
+    "homeTeam": "New York Giants",
+    "kickoff": "2026-11-13T01:15Z",
     "windowSlot": "TNF",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.2,
-      "passEpaPlay": 0.142,
-      "rushEpaPlay": 0.084,
-      "noHuddleRate": 0.118,
-      "notes": "Baltimore projects for 61.3 offensive plays across 11 drives (25.5 rushes led by 18.6 Derrick Henry carries and 33.3 pass attempts), while Jacksonville runs 63.5 plays at a 26.2 seconds-per-snap pace (31.4 rushes and 29.5 pass attempts)."
+      "neutralSecPerSnap": 27.4,
+      "passEpaPlay": 0.045,
+      "rushEpaPlay": 0.012,
+      "noHuddleRate": 0.092,
+      "notes": "Thursday Night Football division opener at MetLife Stadium with Jayden Daniels leading Washington and J.J. McCarthy starting at home for New York."
     },
     "schemeMatchup": {
-      "coverageShell": "Baltimore plays a two-high safety shell on 59.5 out of 100 snaps with light boxes on 78.0 out of 100 snaps, while Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 on play-action) against Baltimore's 36.5 out of 100 clean-pocket rate.",
-      "blitzRateVsPressureToSack": "Jacksonville dials up five-man pressure on nearly a third of pass plays, leaving the middle of the field open for Baltimore's tight ends and quick-game hot reads while Baltimore takes 3.1 sacks and Jacksonville takes 2.6 sacks.",
-      "personnelTendencies": "With Travis Etienne Jr. sidelined, Bhayshul Tuten steps into Jacksonville's primary early-down rushing role alongside Trevor Lawrence's perimeter and middle-field passing to Brian Thomas Jr., Travis Hunter, and Brenton Strange. For Baltimore, Derrick Henry handles 18.6 carries while Mark Andrews, Rashod Bateman, and Zay Flowers command the middle-field and play-action target share.",
-      "coachingEdge": "Baltimore runs on 54 out of 100 first-half plays to establish Derrick Henry before teams trailing in the second half shift to 62 out of 100 pass plays.",
-      "notes": "Because the spread steamed from Baltimore -3.5 past the key 3 and 7 football numbers to -7.5, we pass the main-line side and attack 10 top-rated player props (88/100) and our 3-leg correlated Same-Game Parlay."
+      "coverageShell": "Washington leans on balanced two-high disguise while New York dials up five-man pressure looks on third down.",
+      "blitzRateVsPressureToSack": "Both pass rushes challenge interior pocket timing without leaving wide pregame edge gaps.",
+      "personnelTendencies": "Active skill groups center on Jayden Daniels, Terry McLaurin, Zach Ertz, and Deebo Samuel for Washington against J.J. McCarthy, Malik Nabers, Tyrone Tracy Jr., and Theo Johnson for New York.",
+      "coachingEdge": "Thursday night short-week preparation keeps both game plans grounded in high-percentage quick concepts.",
+      "notes": "Thursday opener graded complete and passed at posted pregame numbers under strict discipline."
     },
     "sideTotalCall": {
-      "sideSelection": "Baltimore Ravens -7.5",
-      "sideConfidence": "64/100",
-      "sideExpectedClv": 0.012,
+      "sideSelection": "New York Giants -2.5",
+      "sideConfidence": "52/100",
+      "sideExpectedClv": 0.008,
       "sideDecision": "PASS",
-      "totalSelection": "UNDER 44.5",
-      "totalConfidence": "61/100",
-      "totalExpectedClv": 0.015,
+      "totalSelection": "UNDER 41.5",
+      "totalConfidence": "53/100",
+      "totalExpectedClv": 0.011,
       "totalDecision": "PASS",
-      "rationale": "Baltimore opened -3.5 and steamed across both key football numbers (3 and 7) to -7.5. We pass the over-steamed spread and total to focus our bankroll on 10 player prop matchups led by Mark Andrews OVER 2.5 receptions."
+      "rationale": "Market pricing matches our projection within edge discipline bounds - official pass."
     },
     "topProps": [
       {
-        "playerId": "mark-andrews",
-        "playerName": "Mark Andrews",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 2.5,
+        "playerId": "jayden-daniels",
+        "playerName": "Jayden Daniels",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 224.5,
         "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.142,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Jacksonville blitzes on 30.9 out of 100 pass plays (34.8 out of 100 against play-action) and leaves the middle of the field open against tight ends. Mark Andrews operates as Baltimore's primary hot-read safety valve and red-zone seam target \u2014 3 catches clears this low 2.5 reception line.",
-        "pOver": 0.684,
-        "pUnder": 0.316
-      },
-      {
-        "playerId": "rashod-bateman",
-        "playerName": "Rashod Bateman",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 1.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.139,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Rashod Bateman runs short-to-intermediate curl and slant routes against Jacksonville's single-high blitz looks, needing only 2 catches to clear 1.5 receptions.",
-        "pOver": 0.678,
-        "pUnder": 0.322
-      },
-      {
-        "playerId": "zay-flowers",
-        "playerName": "Zay Flowers",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 4.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.135,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Zay Flowers commands Baltimore's perimeter motion, RPO screen, and play-action target share against Jacksonville's blitz-heavy defense.",
-        "pOver": 0.672,
-        "pUnder": 0.328
-      },
-      {
-        "playerId": "derrick-henry",
-        "playerName": "Derrick Henry",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 82.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.131,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Derrick Henry projects for 18.6 of Baltimore's 25.5 rush attempts as the Ravens lean on a 54 out of 100 first-half run rate and four-minute clock control.",
-        "pOver": 0.665,
-        "pUnder": 0.335
-      },
-      {
-        "playerId": "brenton-strange",
-        "playerName": "Brenton Strange",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 2.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.128,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Baltimore's 59.5 out of 100 two-high safety shell funnels underneath completions over the middle directly to Jacksonville tight end Brenton Strange on checkdowns and option routes.",
-        "pOver": 0.661,
-        "pUnder": 0.339
-      },
-      {
-        "playerId": "brian-thomas-jr",
-        "playerName": "Brian Thomas Jr.",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 3.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.125,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Brian Thomas Jr. leads Jacksonville's perimeter target share when Jacksonville shifts into its second-half passing script across 63.5 projected plays.",
-        "pOver": 0.658,
-        "pUnder": 0.342
-      },
-      {
-        "playerId": "travis-hunter",
-        "playerName": "Travis Hunter",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 3.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.122,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Trailing second-half game script pushes Jacksonville into a 62 out of 100 pass rate against Baltimore's two-high shell, giving Travis Hunter steady underneath and slot target volume.",
-        "pOver": 0.654,
-        "pUnder": 0.346
-      },
-      {
-        "playerId": "bhayshul-tuten",
-        "playerName": "Bhayshul Tuten",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 42.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.119,
-        "decision": "PLAY",
-        "nEffTargetNotes": "With Travis Etienne Jr. sidelined, Bhayshul Tuten leads Jacksonville's early-down ground attack against a Baltimore defense playing light boxes on 78.0 out of 100 snaps.",
-        "pOver": 0.651,
-        "pUnder": 0.349
-      },
-      {
-        "playerId": "foyesade-oluokun",
-        "playerName": "Foyesade Oluokun",
-        "propType": "Tackles + Assists",
-        "market": "tackles_assists",
-        "line": 8.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.116,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Baltimore projects for 25.5 rush attempts (18.6 to Derrick Henry) and short middle-field completions to Mark Andrews right into Foyesade Oluokun's middle linebacker tackle funnel.",
-        "pOver": 0.648,
-        "pUnder": 0.352
-      },
-      {
-        "playerId": "tyler-loop",
-        "playerName": "Tyler Loop",
-        "propType": "Field Goals Made",
-        "market": "fg_made",
-        "line": 1.5,
-        "side": "OVER",
-        "confidence": "88/100",
-        "expectedClv": 0.111,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Baltimore projects for 11 offensive drives with consistent scoring-range field position at M&T Bank Stadium, setting up two or more Tyler Loop field goal attempts when drives stall against Jacksonville's red-zone pressure.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      },
-      {
-        "playerId": "parker-washington",
-        "playerName": "Parker Washington",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 31.5,
-        "side": "UNDER",
-        "confidence": "56/100",
+        "confidence": "54/100",
         "expectedClv": 0.008,
         "decision": "PASS",
-        "nEffTargetNotes": "Rotational third-receiver snaps behind Brian Thomas Jr., Travis Hunter, and Brenton Strange keep Parker Washington right near his market number \u2014 pass for higher-conviction targets.",
-        "pOver": 0.44,
-        "pUnder": 0.56
+        "nEffTargetNotes": "Jayden Daniels projects close to the market number across balanced early-down runs and scramble lanes.",
+        "pOver": 0.52,
+        "pUnder": 0.48
+      },
+      {
+        "playerId": "terry-mclaurin",
+        "playerName": "Terry McLaurin",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 62.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "expectedClv": 0.006,
+        "decision": "PASS",
+        "nEffTargetNotes": "Terry McLaurin perimeter route volume tracks closely to posted yardage.",
+        "pOver": 0.515,
+        "pUnder": 0.485
+      },
+      {
+        "playerId": "malik-nabers",
+        "playerName": "Malik Nabers",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 5.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "expectedClv": 0.005,
+        "decision": "PASS",
+        "nEffTargetNotes": "Malik Nabers draws bracket safety attention against quick-game targets.",
+        "pOver": 0.51,
+        "pUnder": 0.49
+      },
+      {
+        "playerId": "tyrone-tracy-jr",
+        "playerName": "Tyrone Tracy Jr.",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 58.5,
+        "side": "UNDER",
+        "confidence": "52/100",
+        "expectedClv": 0.004,
+        "decision": "PASS",
+        "nEffTargetNotes": "Tyrone Tracy Jr. splits red-zone and passing-down snaps against Washington light boxes.",
+        "pOver": 0.49,
+        "pUnder": 0.51
       }
     ],
     "correlatedSgpTicket": {
       "title": "WSH @ NYG Same-Game Parlay",
       "legs": [
         {
-          "description": "Mark Andrews Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Mark Andrews OVER 2.5 Receptions",
-          "line": 2.5,
-          "confidence": "88/100",
-          "expectedClv": 0.142,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Derrick Henry Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Derrick Henry OVER 82.5 Rushing Yards",
-          "line": 82.5,
-          "confidence": "88/100",
-          "expectedClv": 0.131,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Brenton Strange Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Brenton Strange OVER 2.5 Receptions",
-          "line": 2.5,
-          "confidence": "88/100",
-          "expectedClv": 0.128,
-          "decision": "PLAY"
+          "description": "No approved correlated combination at posted Thursday prices.",
+          "pickType": "PASS",
+          "selection": "WSH @ NYG PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.2062,
-      "fairOdds": "+385",
-      "marketOdds": "+525",
-      "edgeScore": 0.0462,
-      "correlationRationale": "Baltimore's early-down rushing attack with Derrick Henry (18.6 projected carries) and hot-read targets to Mark Andrews against Jacksonville's 30.9 out of 100 blitz rate force Jacksonville into a second-half catch-up script where Brenton Strange collects underneath receptions against Baltimore's 59.5 out of 100 two-high shell."
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - Market efficient on the Thursday kickoff; no correlated ticket released."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Derrick Henry",
-          "position": "RB",
-          "salary": 11400,
-          "leverageNote": "Handles 18.6 projected carries and all inside-the-5 goal-line work for Baltimore."
+          "player": "Jayden Daniels",
+          "position": "QB",
+          "salary": 15600,
+          "leverageNote": "Jayden Daniels anchors rushing-floor + play-action upside in divisional tempo."
         },
         {
-          "player": "Zay Flowers",
+          "player": "Malik Nabers",
           "position": "WR",
-          "salary": 9600,
-          "leverageNote": "Primary perimeter and play-action target against Jacksonville's single-high blitzes."
+          "salary": 14400,
+          "leverageNote": "High-volume alpha perimeter share against man coverage rotations."
         }
       ],
       "cashCore": [
         {
-          "player": "Trevor Lawrence",
+          "player": "Jayden Daniels",
           "position": "QB",
-          "salary": 6000,
+          "salary": 6700,
           "projection": 19.8,
-          "floorNote": "Projects for 29.5 pass attempts plus scramble volume in second-half catch-up script."
+          "floorNote": "Dual-threat rushing floor stabilizes median output."
         },
         {
-          "player": "Bhayshul Tuten",
+          "player": "Terry McLaurin",
+          "position": "WR",
+          "salary": 6400,
+          "projection": 14.9,
+          "floorNote": "Downfield boundary target share leads Washington passing volume."
+        },
+        {
+          "player": "Tyrone Tracy Jr.",
           "position": "RB",
-          "salary": 5600,
-          "projection": 16.4,
-          "floorNote": "Steps into Jacksonville's lead early-down rushing workload with Travis Etienne Jr. sidelined against Baltimore's 78.0 out of 100 light-box rate."
-        },
-        {
-          "player": "Mark Andrews",
-          "position": "TE",
-          "salary": 5200,
-          "projection": 13.8,
-          "floorNote": "Primary blitz hot-read and red-zone tight end target for Baltimore."
+          "salary": 5900,
+          "projection": 14.2,
+          "floorNote": "Early-down rushing volume and checkdown usage in neutral scripts."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Trevor Lawrence",
+            "qb": "Jayden Daniels",
             "passCatchers": [
-              "Brian Thomas Jr.",
-              "Brenton Strange"
+              "Terry McLaurin",
+              "Zach Ertz"
             ]
           },
-          "bringBack": "Derrick Henry",
-          "valueFiller": "Mark Andrews",
-          "correlationTheme": "Pair Trevor Lawrence with Brian Thomas Jr. and Brenton Strange in a second-half passing script, and bring it back with Derrick Henry and Mark Andrews."
+          "bringBack": "Malik Nabers",
+          "valueFiller": "Theo Johnson",
+          "correlationTheme": "Division passing correlation through Washington boundary + seam targets paired with Giants alpha WR."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-sun_early-401873039",
-    "gameId": "401873039",
-    "matchup": "Detroit Lions @ Miami Dolphins",
-    "awayTeam": "Detroit Lions",
-    "homeTeam": "Miami Dolphins",
-    "kickoff": "2026-11-08T18:00Z",
+    "id": "writeup-sun-401873053",
+    "gameId": "401873053",
+    "matchup": "New England Patriots @ Detroit Lions",
+    "awayTeam": "New England Patriots",
+    "homeTeam": "Detroit Lions",
+    "kickoff": "2026-11-15T14:30Z",
     "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Detroit Lions and Miami Dolphins bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 27.1,
+      "passEpaPlay": 0.084,
+      "rushEpaPlay": -0.056,
+      "noHuddleRate": 0.063,
+      "notes": "NE and DET operate at 27.1 neutral seconds per snap (FC Bayern Munich Stadium (Allianz Arena))."
     },
     "schemeMatchup": {
-      "coverageShell": "Jared Goff and Malik Willis headline this Week 10 matchup with Amon-Ra St. Brown, Jahmyr Gibbs, Jaylen Waddle, and Ollie Gordon II featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Detroit Lions and Miami Dolphins deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Detroit Lions leans on Jahmyr Gibbs, Amon-Ra St. Brown, and Sam LaPorta, while Miami Dolphins features Ollie Gordon II, Jaylen Waddle, and Greg Dulcich.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Detroit Lions and Miami Dolphins headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "NE plays 40.4 out of 100 man coverage vs DET at 35.7 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature NE blitzing 39.7 out of 100 snaps against DET blitzing 27.1 out of 100 snaps.",
+      "personnelTendencies": "New England Patriots offense led by Drake Maye faces Detroit Lions anchored by Jared Goff. Featured Week 10 personnel matchups include: Aidan Hutchinson, Amon-Ra St. Brown, Brian Branch, Chuck Clark, Derrick Barnes.",
+      "coachingEdge": "Quarterback contrast features Drake Maye against Jared Goff with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 50.5 with Detroit Lions -2.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Miami Dolphins +6.5",
-      "sideConfidence": "79/100",
-      "sideExpectedClv": 0.052,
-      "sideDecision": "PLAY",
-      "totalSelection": "OVER 46.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.012,
+      "sideSelection": "Detroit Lions -2.5",
+      "sideConfidence": "52/100",
+      "sideExpectedClv": 0.0186,
+      "sideDecision": "PASS",
+      "totalSelection": "Over 50.5",
+      "totalConfidence": "57/100",
+      "totalExpectedClv": 0.019,
       "totalDecision": "PASS",
-      "rationale": "Ollie Gordon II steps into Miami's bell-cow role alongside Greg Dulcich over the middle, giving Miami home cover value."
+      "rationale": "STAGE5_SPREAD_GATE: DET -2.5 projected cover prob 54.03 out of 100 vs 52.17 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "ollie-gordon-ii",
-        "playerName": "Ollie Gordon II",
-        "propType": "Rushing Yards",
-        "market": "rush_yds",
-        "line": 68.5,
+        "playerId": "aidan-hutchinson",
+        "playerName": "Aidan Hutchinson",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 2.5,
+        "side": "UNDER",
+        "confidence": "53/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Aidan Hutchinson projects around 2.8 against the 2.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.4704,
+        "pUnder": 0.5296
+      },
+      {
+        "playerId": "amon-ra-st-brown",
+        "playerName": "Amon-Ra St. Brown",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 82.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Amon-Ra St. Brown projects around 78.3 against the 82.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "amon-ra-st-brown",
+        "playerName": "Amon-Ra St. Brown",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 7.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Amon-Ra St. Brown projects around 5.7 against the 7.5 receptions line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "brian-branch",
+        "playerName": "Brian Branch",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 5.5,
+        "side": "UNDER",
+        "confidence": "64/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Brian Branch projects around 4.0 against the 5.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.3551,
+        "pUnder": 0.6449
+      },
+      {
+        "playerId": "chuck-clark",
+        "playerName": "Chuck Clark",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 4.5,
         "side": "OVER",
-        "confidence": "86/100",
-        "expectedClv": 0.136,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Ollie Gordon II projects for 86.4 rushing yards as Miami's lead early-down and goal-line back.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "confidence": "59/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Chuck Clark projects around 6.5 against the 4.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.5852,
+        "pUnder": 0.4148
+      },
+      {
+        "playerId": "derrick-barnes",
+        "playerName": "Derrick Barnes",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 4.5,
+        "side": "UNDER",
+        "confidence": "51/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Barnes projects around 5.0 against the 4.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.4908,
+        "pUnder": 0.5092
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Detroit Lions @ Miami Dolphins Same-Game Parlay",
+      "title": "NE @ DET Same-Game Parlay",
       "legs": [
         {
-          "description": "Ollie Gordon II Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Ollie Gordon II OVER 68.5 Rushing Yards",
-          "line": 68.5,
-          "confidence": "86/100",
-          "expectedClv": 0.136,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Amon-Ra St. Brown Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Amon-Ra St. Brown OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Ollie Gordon II Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Ollie Gordon II OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
+          "description": "No approved correlated legs on NE @ DET at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "NE @ DET PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Ollie Gordon II with Amon-Ra St. Brown and Ollie Gordon II across four quarters."
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on NE @ DET cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Amon-Ra St. Brown",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Jared Goff in Detroit Lions passing script."
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "salary": 12900,
+          "leverageNote": "Jahmyr Gibbs carries high-Share red-zone and median volume (24.3 projected fantasy points)."
         },
         {
-          "player": "Ollie Gordon II",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Miami Dolphins."
+          "player": "Jared Goff",
+          "position": "QB",
+          "salary": 12800,
+          "leverageNote": "Jared Goff carries high-Share red-zone and median volume (23.0 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
-          "player": "Jared Goff",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Detroit Lions."
+          "player": "Jahmyr Gibbs",
+          "position": "RB",
+          "salary": 8600,
+          "projection": 24.3,
+          "floorNote": "DET offensive share projects a reliable median output in NE @ DET."
         },
         {
-          "player": "Ollie Gordon II",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Miami Dolphins."
+          "player": "Jared Goff",
+          "position": "QB",
+          "salary": 8500,
+          "projection": 23.0,
+          "floorNote": "DET offensive share projects a reliable median output in NE @ DET."
+        },
+        {
+          "player": "Drake Maye",
+          "position": "QB",
+          "salary": 8000,
+          "projection": 20.7,
+          "floorNote": "NE offensive share projects a reliable median output in NE @ DET."
+        },
+        {
+          "player": "Amon-Ra St. Brown",
+          "position": "WR",
+          "salary": 7200,
+          "projection": 17.3,
+          "floorNote": "DET offensive share projects a reliable median output in NE @ DET."
         }
       ],
       "gppStacks": [
@@ -728,1029 +675,647 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Sam LaPorta"
             ]
           },
-          "bringBack": "Jaylen Waddle",
-          "valueFiller": "Greg Dulcich",
-          "correlationTheme": "Pair Jared Goff with Amon-Ra St. Brown and Sam LaPorta, and bring it back with Jaylen Waddle."
+          "bringBack": "A.J. Brown",
+          "valueFiller": "Brock Wright",
+          "correlationTheme": "DET passing attack anchored by Jared Goff to Amon-Ra St. Brown and Sam LaPorta, paired with A.J. Brown (NE) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-sun_early-401873040",
-    "gameId": "401873040",
-    "matchup": "Dallas Cowboys @ Indianapolis Colts",
-    "awayTeam": "Dallas Cowboys",
-    "homeTeam": "Indianapolis Colts",
-    "kickoff": "2026-11-08T18:00Z",
+    "id": "writeup-sun-401873054",
+    "gameId": "401873054",
+    "matchup": "Buffalo Bills @ New York Jets",
+    "awayTeam": "Buffalo Bills",
+    "homeTeam": "New York Jets",
+    "kickoff": "2026-11-15T18:00Z",
     "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Dallas Cowboys and Indianapolis Colts bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 28.4,
+      "passEpaPlay": 0.248,
+      "rushEpaPlay": 0.155,
+      "noHuddleRate": 0.102,
+      "notes": "BUF and NYJ operate at 28.4 neutral seconds per snap (MetLife Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "Dak Prescott and Daniel Jones headline this Week 10 matchup with CeeDee Lamb, Malik Davis, Michael Pittman Jr., and Jonathan Taylor featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Dallas Cowboys and Indianapolis Colts deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Dallas Cowboys leans on Malik Davis, CeeDee Lamb, and Luke Schoonmaker, while Indianapolis Colts features Jonathan Taylor, Michael Pittman Jr., and Tyler Warren.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Dallas Cowboys and Indianapolis Colts headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "BUF plays 38.7 out of 100 man coverage vs NYJ at 38.9 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature BUF blitzing 34.9 out of 100 snaps against NYJ blitzing 38.4 out of 100 snaps.",
+      "personnelTendencies": "Buffalo Bills offense led by Josh Allen faces New York Jets anchored by Geno Smith. Featured Week 10 personnel matchups include: Josh Allen, Geno Smith, Cole Bishop, Dalton Kincaid.",
+      "coachingEdge": "Quarterback contrast features Josh Allen against Geno Smith with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 50.5 with Buffalo Bills -8.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Dallas Cowboys -1.5",
-      "sideConfidence": "64/100",
-      "sideExpectedClv": 0.014,
-      "sideDecision": "PASS",
-      "totalSelection": "OVER 48.5",
-      "totalConfidence": "63/100",
-      "totalExpectedClv": 0.011,
+      "sideSelection": "Buffalo Bills -8.5",
+      "sideConfidence": "66/100",
+      "sideExpectedClv": 0.1307,
+      "sideDecision": "PLAY",
+      "totalSelection": "Over 50.5",
+      "totalConfidence": "55/100",
+      "totalExpectedClv": 0.019,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on the main spread and total; we attack Malik Davis and CeeDee Lamb player props indoors."
+      "rationale": "Buffalo Bills -8.5 clears release criteria at 66/100 behind Josh Allen efficiency and trench protection advantage."
     },
     "topProps": [
       {
-        "playerId": "malik-davis",
-        "playerName": "Malik Davis",
-        "propType": "Rush + Rec Yards",
-        "market": "rush_plus_rec_yds",
-        "line": 36.5,
-        "side": "OVER",
-        "confidence": "79/100",
-        "expectedClv": 0.118,
+        "playerId": "josh-allen",
+        "playerName": "Josh Allen",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 28.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1568,
         "decision": "PLAY",
-        "nEffTargetNotes": "Malik Davis captures high-efficiency rotational carries and screen targets on the fast indoor track at Lucas Oil Stadium.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "Dallas Cowboys @ Indianapolis Colts Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Malik Davis Rush + Rec Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Malik Davis OVER 36.5 Rush + Rec Yards",
-          "line": 36.5,
-          "confidence": "79/100",
-          "expectedClv": 0.118,
-          "decision": "PLAY"
-        },
-        {
-          "description": "CeeDee Lamb Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "CeeDee Lamb OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Jonathan Taylor Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Jonathan Taylor OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Malik Davis with CeeDee Lamb and Jonathan Taylor across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "CeeDee Lamb",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Dak Prescott in Dallas Cowboys passing script."
-        },
-        {
-          "player": "Jonathan Taylor",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Indianapolis Colts."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "Dak Prescott",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Dallas Cowboys."
-        },
-        {
-          "player": "Jonathan Taylor",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Indianapolis Colts."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "Dak Prescott",
-            "passCatchers": [
-              "CeeDee Lamb",
-              "Luke Schoonmaker"
-            ]
-          },
-          "bringBack": "Michael Pittman Jr.",
-          "valueFiller": "Tyler Warren",
-          "correlationTheme": "Pair Dak Prescott with CeeDee Lamb and Luke Schoonmaker, and bring it back with Michael Pittman Jr.."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_early-401873041",
-    "gameId": "401873041",
-    "matchup": "New York Giants @ Philadelphia Eagles",
-    "awayTeam": "New York Giants",
-    "homeTeam": "Philadelphia Eagles",
-    "kickoff": "2026-11-08T18:00Z",
-    "windowSlot": "SUN_EARLY",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "New York Giants and Philadelphia Eagles bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "J.J. McCarthy and Joe Milton headline this Week 10 matchup with Malik Nabers, Tyrone Tracy Jr., DeVonta Smith, and Saquon Barkley featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "New York Giants and Philadelphia Eagles deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "New York Giants leans on Tyrone Tracy Jr., Malik Nabers, and Theo Johnson, while Philadelphia Eagles features Saquon Barkley, DeVonta Smith, and Dallas Goedert.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between New York Giants and Philadelphia Eagles headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "Philadelphia Eagles -3.0",
-      "sideConfidence": "63/100",
-      "sideExpectedClv": 0.012,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 44.0",
-      "totalConfidence": "61/100",
-      "totalExpectedClv": 0.009,
-      "totalDecision": "PASS",
-      "rationale": "Market efficient on main spread; we focus on Joe Milton rushing props and Malik Nabers receiving volume."
-    },
-    "topProps": [
+        "nEffTargetNotes": "Josh Allen projects around 25.1 against the 28.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3432,
+        "pUnder": 0.6568
+      },
       {
-        "playerId": "joe-milton",
-        "playerName": "Joe Milton",
+        "playerId": "geno-smith",
+        "playerName": "Geno Smith",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 221.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.1355,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Geno Smith projects around 285.0 against the 221.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.6355,
+        "pUnder": 0.3645
+      },
+      {
+        "playerId": "geno-smith",
+        "playerName": "Geno Smith",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 34.5,
-        "side": "OVER",
-        "confidence": "81/100",
-        "expectedClv": 0.116,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Joe Milton starts at quarterback for Philadelphia and brings designed zone-read keeper upside alongside Saquon Barkley.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "New York Giants @ Philadelphia Eagles Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Joe Milton Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Joe Milton OVER 34.5 Rushing Yards",
-          "line": 34.5,
-          "confidence": "81/100",
-          "expectedClv": 0.116,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Malik Nabers Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Malik Nabers OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Saquon Barkley Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Saquon Barkley OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Joe Milton with Malik Nabers and Saquon Barkley across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "Malik Nabers",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for J.J. McCarthy in New York Giants passing script."
-        },
-        {
-          "player": "Saquon Barkley",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Philadelphia Eagles."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "J.J. McCarthy",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for New York Giants."
-        },
-        {
-          "player": "Saquon Barkley",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Philadelphia Eagles."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "J.J. McCarthy",
-            "passCatchers": [
-              "Malik Nabers",
-              "Theo Johnson"
-            ]
-          },
-          "bringBack": "DeVonta Smith",
-          "valueFiller": "Dallas Goedert",
-          "correlationTheme": "Pair J.J. McCarthy with Malik Nabers and Theo Johnson, and bring it back with DeVonta Smith."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_early-401873042",
-    "gameId": "401873042",
-    "matchup": "New York Jets @ Kansas City Chiefs",
-    "awayTeam": "New York Jets",
-    "homeTeam": "Kansas City Chiefs",
-    "kickoff": "2026-11-08T18:00Z",
-    "windowSlot": "SUN_EARLY",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "New York Jets and Kansas City Chiefs bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "Geno Smith and Patrick Mahomes headline this Week 10 matchup with Garrett Wilson, Breece Hall, Xavier Worthy, and Kenneth Walker III featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "New York Jets and Kansas City Chiefs deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "New York Jets leans on Breece Hall, Garrett Wilson, and Mason Taylor, while Kansas City Chiefs features Kenneth Walker III, Xavier Worthy, and Travis Kelce.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between New York Jets and Kansas City Chiefs headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "New York Jets +6.5",
-      "sideConfidence": "62/100",
-      "sideExpectedClv": 0.011,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 46.0",
-      "totalConfidence": "60/100",
-      "totalExpectedClv": 0.008,
-      "totalDecision": "PASS",
-      "rationale": "Market efficient on full-game spread; we target Garrett Wilson quick-game receptions against Kansas City blitzes."
-    },
-    "topProps": [
-      {
-        "playerId": "garrett-wilson",
-        "playerName": "Garrett Wilson",
-        "propType": "Receptions",
-        "market": "receptions",
         "line": 5.5,
         "side": "OVER",
-        "confidence": "78/100",
-        "expectedClv": 0.084,
+        "confidence": "60/100",
+        "expectedClv": 0.0869,
         "decision": "PLAY",
-        "nEffTargetNotes": "Geno Smith relies on quick sight-adjust slants to Garrett Wilson against Steve Spagnuolo's third-down blitzes.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "nEffTargetNotes": "Geno Smith projects around 12.7 against the 5.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.597,
+        "pUnder": 0.403
+      },
+      {
+        "playerId": "cole-bishop",
+        "playerName": "Cole Bishop",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 5.5,
+        "side": "OVER",
+        "confidence": "57/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Cole Bishop projects around 7.5 against the 5.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.5719,
+        "pUnder": 0.4281
+      },
+      {
+        "playerId": "dalton-kincaid",
+        "playerName": "Dalton Kincaid",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 43.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Dalton Kincaid projects around 45.9 against the 43.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "dalton-kincaid",
+        "playerName": "Dalton Kincaid",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 3.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Dalton Kincaid projects around 3.4 against the 3.5 receptions line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
       }
     ],
     "correlatedSgpTicket": {
-      "title": "New York Jets @ Kansas City Chiefs Same-Game Parlay",
+      "title": "BUF @ NYJ 2-Leg Correlated SGP",
       "legs": [
         {
-          "description": "Garrett Wilson Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Garrett Wilson OVER 5.5 Receptions",
-          "line": 5.5,
-          "confidence": "78/100",
-          "expectedClv": 0.084,
+          "description": "Total Passing Attempts (incl. overtime) script tie-in (BUF)",
+          "pickType": "PROP",
+          "selection": "Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime)",
+          "confidence": "66/100",
+          "expectedClv": 0.1568,
           "decision": "PLAY"
         },
         {
-          "description": "Garrett Wilson Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Garrett Wilson OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Kenneth Walker III Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Kenneth Walker III OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
+          "description": "Total Passing Yards (incl. overtime) script tie-in (NYJ)",
+          "pickType": "PROP",
+          "selection": "Geno Smith OVER 221.5 Total Passing Yards (incl. overtime)",
+          "confidence": "64/100",
+          "expectedClv": 0.1355,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Garrett Wilson with Garrett Wilson and Kenneth Walker III across four quarters."
+      "jointWinProb": 0.4349,
+      "fairOdds": "+130",
+      "marketOdds": "+239",
+      "edgeScore": 0.1399,
+      "correlationRationale": "Correlated script built from Josh Allen UNDER 28.5 Total Passing Attempts (incl. overtime), Geno Smith OVER 221.5 Total Passing Yards (incl. overtime) cleanly cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Garrett Wilson",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Geno Smith in New York Jets passing script."
+          "player": "Josh Allen",
+          "position": "QB",
+          "salary": 12900,
+          "leverageNote": "Josh Allen carries high-Share red-zone and median volume (23.2 projected fantasy points)."
         },
         {
-          "player": "Kenneth Walker III",
+          "player": "James Cook III",
           "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Kansas City Chiefs."
+          "salary": 12200,
+          "leverageNote": "James Cook III carries high-Share red-zone and median volume (21.1 projected fantasy points)."
         }
       ],
       "cashCore": [
+        {
+          "player": "Josh Allen",
+          "position": "QB",
+          "salary": 8600,
+          "projection": 23.2,
+          "floorNote": "BUF offensive share projects a reliable median output in BUF @ NYJ."
+        },
+        {
+          "player": "James Cook III",
+          "position": "RB",
+          "salary": 8100,
+          "projection": 21.1,
+          "floorNote": "BUF offensive share projects a reliable median output in BUF @ NYJ."
+        },
         {
           "player": "Geno Smith",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for New York Jets."
+          "salary": 7600,
+          "projection": 19.0,
+          "floorNote": "NYJ offensive share projects a reliable median output in BUF @ NYJ."
         },
         {
-          "player": "Kenneth Walker III",
+          "player": "Breece Hall",
           "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Kansas City Chiefs."
+          "salary": 5900,
+          "projection": 12.2,
+          "floorNote": "NYJ offensive share projects a reliable median output in BUF @ NYJ."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Geno Smith",
+            "qb": "Josh Allen",
             "passCatchers": [
-              "Garrett Wilson",
-              "Mason Taylor"
+              "Khalil Shakir",
+              "Dalton Kincaid"
             ]
           },
-          "bringBack": "Xavier Worthy",
-          "valueFiller": "Travis Kelce",
-          "correlationTheme": "Pair Geno Smith with Garrett Wilson and Mason Taylor, and bring it back with Xavier Worthy."
+          "bringBack": "Breece Hall",
+          "valueFiller": "Dawson Knox",
+          "correlationTheme": "BUF passing attack anchored by Josh Allen to Khalil Shakir and Dalton Kincaid, paired with Breece Hall (NYJ) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-sun_early-401873043",
-    "gameId": "401873043",
-    "matchup": "Los Angeles Rams @ Washington Commanders",
-    "awayTeam": "Los Angeles Rams",
-    "homeTeam": "Washington Commanders",
-    "kickoff": "2026-11-08T18:00Z",
+    "id": "writeup-sun-401873055",
+    "gameId": "401873055",
+    "matchup": "Carolina Panthers @ New Orleans Saints",
+    "awayTeam": "Carolina Panthers",
+    "homeTeam": "New Orleans Saints",
+    "kickoff": "2026-11-15T18:00Z",
     "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Los Angeles Rams and Washington Commanders bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 26.6,
+      "passEpaPlay": 0.01,
+      "rushEpaPlay": 0.001,
+      "noHuddleRate": 0.16,
+      "notes": "CAR and NO operate at 26.6 neutral seconds per snap (Caesars Superdome)."
     },
     "schemeMatchup": {
-      "coverageShell": "Matthew Stafford and Jayden Daniels headline this Week 10 matchup with Puka Nacua, Kyren Williams, Stefon Diggs, and Brian Robinson Jr. featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Los Angeles Rams and Washington Commanders deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Los Angeles Rams leans on Kyren Williams, Puka Nacua, and Colby Parkinson, while Washington Commanders features Brian Robinson Jr., Stefon Diggs, and Zach Ertz.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Los Angeles Rams and Washington Commanders headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "CAR plays 34.8 out of 100 man coverage vs NO at 36.7 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature CAR blitzing 31.2 out of 100 snaps against NO blitzing 34.5 out of 100 snaps.",
+      "personnelTendencies": "Carolina Panthers offense led by Bryce Young faces New Orleans Saints anchored by Tyler Shough. Featured Week 10 personnel matchups include: Bryce Young, Tyler Shough.",
+      "coachingEdge": "Quarterback contrast features Bryce Young against Tyler Shough with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 48.5 with Carolina Panthers +1.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Washington Commanders -2.5",
-      "sideConfidence": "64/100",
-      "sideExpectedClv": 0.015,
+      "sideSelection": "Carolina Panthers +1.5",
+      "sideConfidence": "54/100",
+      "sideExpectedClv": 0.019,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 48.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.012,
+      "totalSelection": "Under 48.5",
+      "totalConfidence": "64/100",
+      "totalExpectedClv": 0.019,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on main side; we isolate Stefon Diggs and Puka Nacua in a high-tempo NFC matchup."
+      "rationale": "STAGE5_SPREAD_GATE: CAR +1.5 projected cover prob 54.46 out of 100 vs 51.08 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "stefon-diggs",
-        "playerName": "Stefon Diggs",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 5.5,
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 2.5,
         "side": "OVER",
-        "confidence": "79/100",
-        "expectedClv": 0.092,
+        "confidence": "69/100",
+        "expectedClv": 0.2513,
         "decision": "PLAY",
-        "nEffTargetNotes": "Stefon Diggs operates as Jayden Daniels' primary chain-moving target in Washington's no-huddle rhythm.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "Los Angeles Rams @ Washington Commanders Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Stefon Diggs Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Stefon Diggs OVER 5.5 Receptions",
-          "line": 5.5,
-          "confidence": "79/100",
-          "expectedClv": 0.092,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Puka Nacua Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Puka Nacua OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Brian Robinson Jr. Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Brian Robinson Jr. OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Stefon Diggs with Puka Nacua and Brian Robinson Jr. across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "Puka Nacua",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Matthew Stafford in Los Angeles Rams passing script."
-        },
-        {
-          "player": "Brian Robinson Jr.",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Washington Commanders."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "Matthew Stafford",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Los Angeles Rams."
-        },
-        {
-          "player": "Brian Robinson Jr.",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Washington Commanders."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "Matthew Stafford",
-            "passCatchers": [
-              "Puka Nacua",
-              "Colby Parkinson"
-            ]
-          },
-          "bringBack": "Stefon Diggs",
-          "valueFiller": "Zach Ertz",
-          "correlationTheme": "Pair Matthew Stafford with Puka Nacua and Colby Parkinson, and bring it back with Stefon Diggs."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_early-401873044",
-    "gameId": "401873044",
-    "matchup": "Denver Broncos @ Carolina Panthers",
-    "awayTeam": "Denver Broncos",
-    "homeTeam": "Carolina Panthers",
-    "kickoff": "2026-11-08T18:00Z",
-    "windowSlot": "SUN_EARLY",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Denver Broncos and Carolina Panthers bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "Bo Nix and Bryce Young headline this Week 10 matchup with Courtland Sutton, Jonah Coleman, Tetairoa McMillan, and Chuba Hubbard featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Denver Broncos and Carolina Panthers deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Denver Broncos leans on Jonah Coleman, Courtland Sutton, and Evan Engram, while Carolina Panthers features Chuba Hubbard, Tetairoa McMillan, and Ja'Tavion Sanders.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Denver Broncos and Carolina Panthers headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "Carolina Panthers +2.5",
-      "sideConfidence": "61/100",
-      "sideExpectedClv": 0.009,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 43.5",
-      "totalConfidence": "60/100",
-      "totalExpectedClv": 0.007,
-      "totalDecision": "PASS",
-      "rationale": "Market efficient \u2014 no forced bet on main lines; Chuba Hubbard early-down volume leads the prop board."
-    },
-    "topProps": [
+        "nEffTargetNotes": "Bryce Young projects around 4.9 against the 2.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.688,
+        "pUnder": 0.312
+      },
       {
-        "playerId": "chuba-hubbard",
-        "playerName": "Chuba Hubbard",
+        "playerId": "tyler-shough",
+        "playerName": "Tyler Shough",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 4.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "expectedClv": 0.1713,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Tyler Shough projects around 3.5 against the 4.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3828,
+        "pUnder": 0.6172
+      },
+      {
+        "playerId": "tyler-shough",
+        "playerName": "Tyler Shough",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 62.5,
-        "side": "OVER",
-        "confidence": "76/100",
-        "expectedClv": 0.072,
+        "line": 17.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1711,
         "decision": "PLAY",
-        "nEffTargetNotes": "Chuba Hubbard anchors Carolina's early-down rushing script at home against Denver.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "Denver Broncos @ Carolina Panthers Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Chuba Hubbard Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Chuba Hubbard OVER 62.5 Rushing Yards",
-          "line": 62.5,
-          "confidence": "76/100",
-          "expectedClv": 0.072,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Courtland Sutton Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Courtland Sutton OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Chuba Hubbard Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Chuba Hubbard OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Chuba Hubbard with Courtland Sutton and Chuba Hubbard across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "Courtland Sutton",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Bo Nix in Denver Broncos passing script."
-        },
-        {
-          "player": "Chuba Hubbard",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Carolina Panthers."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "Bo Nix",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Denver Broncos."
-        },
-        {
-          "player": "Chuba Hubbard",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Carolina Panthers."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "Bo Nix",
-            "passCatchers": [
-              "Courtland Sutton",
-              "Evan Engram"
-            ]
-          },
-          "bringBack": "Tetairoa McMillan",
-          "valueFiller": "Ja'Tavion Sanders",
-          "correlationTheme": "Pair Bo Nix with Courtland Sutton and Evan Engram, and bring it back with Tetairoa McMillan."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_early-401873045",
-    "gameId": "401873045",
-    "matchup": "Cleveland Browns @ New Orleans Saints",
-    "awayTeam": "Cleveland Browns",
-    "homeTeam": "New Orleans Saints",
-    "kickoff": "2026-11-08T18:00Z",
-    "windowSlot": "SUN_EARLY",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Cleveland Browns and New Orleans Saints bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "Deshaun Watson and Tyler Shough headline this Week 10 matchup with Jerry Jeudy, Quinshon Judkins, Chris Olave, and Alvin Kamara featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Cleveland Browns and New Orleans Saints deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Cleveland Browns leans on Quinshon Judkins, Jerry Jeudy, and David Njoku, while New Orleans Saints features Alvin Kamara, Chris Olave, and Juwan Johnson.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Cleveland Browns and New Orleans Saints headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "New Orleans Saints -1.5",
-      "sideConfidence": "55/100",
-      "sideExpectedClv": 0.004,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 42.5",
-      "totalConfidence": "58/100",
-      "totalExpectedClv": 0.006,
-      "totalDecision": "PASS",
-      "rationale": "Market efficient \u2014 no forced bet"
-    },
-    "topProps": [
+        "nEffTargetNotes": "Tyler Shough projects around 7.1 against the 17.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3391,
+        "pUnder": 0.6609
+      },
       {
-        "playerId": "alvin-kamara",
-        "playerName": "Alvin Kamara",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 4.5,
+        "playerId": "tyler-shough",
+        "playerName": "Tyler Shough",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 24.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1454,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Tyler Shough projects around 20.1 against the 24.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.3445,
+        "pUnder": 0.6555
+      },
+      {
+        "playerId": "bryce-young",
+        "playerName": "Bryce Young",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 36.5,
         "side": "OVER",
-        "confidence": "56/100",
-        "expectedClv": 0.011,
-        "decision": "PASS",
-        "nEffTargetNotes": "Alvin Kamara checkdown volume is priced efficiently by the market in New Orleans.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "confidence": "61/100",
+        "expectedClv": 0.1092,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Bryce Young projects around 39.5 against the 36.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.6092,
+        "pUnder": 0.3908
+      },
+      {
+        "playerId": "tyler-shough",
+        "playerName": "Tyler Shough",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 35.5,
+        "side": "OVER",
+        "confidence": "61/100",
+        "expectedClv": 0.0783,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Tyler Shough projects around 39.1 against the 35.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.6089,
+        "pUnder": 0.3911
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Cleveland Browns @ New Orleans Saints Same-Game Parlay",
+      "title": "CAR @ NO 2-Leg Correlated SGP",
       "legs": [
         {
-          "description": "Alvin Kamara Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Alvin Kamara OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "54/100",
-          "expectedClv": 0.008,
-          "decision": "PASS"
+          "description": "Total Pass Completions (incl. overtime) script tie-in (NO)",
+          "pickType": "PROP",
+          "selection": "Tyler Shough UNDER 24.5 Total Pass Completions (incl. overtime)",
+          "confidence": "66/100",
+          "expectedClv": 0.1454,
+          "decision": "PLAY"
         },
         {
-          "description": "Cleveland Browns @ New Orleans Saints Side",
-          "pickType": "SPREAD",
-          "selection": "New Orleans Saints -1.5",
-          "confidence": "55/100",
-          "expectedClv": 0.005,
-          "decision": "PASS"
-        },
-        {
-          "description": "Cleveland Browns @ New Orleans Saints Total",
-          "pickType": "TOTAL",
-          "selection": "UNDER 42.5",
-          "confidence": "58/100",
-          "expectedClv": 0.004,
-          "decision": "PASS"
+          "description": "Total Passing Attempts (incl. overtime) script tie-in (CAR)",
+          "pickType": "PROP",
+          "selection": "Bryce Young OVER 36.5 Total Passing Attempts (incl. overtime)",
+          "confidence": "61/100",
+          "expectedClv": 0.1092,
+          "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.1812,
-      "fairOdds": "n/a",
-      "marketOdds": "n/a",
-      "edgeScore": 0.0,
-      "correlationRationale": "PASS \u2014 Side, total, and Alvin Kamara prop are all PASS on the selective Week 10 card."
+      "jointWinProb": 0.4238,
+      "fairOdds": "+136",
+      "marketOdds": "+232",
+      "edgeScore": 0.1228,
+      "correlationRationale": "Correlated script built from Tyler Shough UNDER 24.5 Total Pass Completions (incl. overtime), Bryce Young OVER 36.5 Total Passing Attempts (incl. overtime) cleanly cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Jerry Jeudy",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Deshaun Watson in Cleveland Browns passing script."
+          "player": "Bryce Young",
+          "position": "QB",
+          "salary": 11700,
+          "leverageNote": "Bryce Young carries high-Share red-zone and median volume (20.0 projected fantasy points)."
         },
         {
-          "player": "Alvin Kamara",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for New Orleans Saints."
+          "player": "Tyler Shough",
+          "position": "QB",
+          "salary": 10800,
+          "leverageNote": "Tyler Shough carries high-Share red-zone and median volume (17.5 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
-          "player": "Deshaun Watson",
+          "player": "Bryce Young",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Cleveland Browns."
+          "salary": 7800,
+          "projection": 20.0,
+          "floorNote": "CAR offensive share projects a reliable median output in CAR @ NO."
         },
         {
-          "player": "Alvin Kamara",
+          "player": "Tyler Shough",
+          "position": "QB",
+          "salary": 7200,
+          "projection": 17.5,
+          "floorNote": "NO offensive share projects a reliable median output in CAR @ NO."
+        },
+        {
+          "player": "Chuba Hubbard",
           "position": "RB",
+          "salary": 6400,
+          "projection": 14.3,
+          "floorNote": "CAR offensive share projects a reliable median output in CAR @ NO."
+        },
+        {
+          "player": "Tetairoa McMillan",
+          "position": "WR",
           "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for New Orleans Saints."
+          "projection": 13.1,
+          "floorNote": "CAR offensive share projects a reliable median output in CAR @ NO."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Deshaun Watson",
+            "qb": "Bryce Young",
             "passCatchers": [
-              "Jerry Jeudy",
-              "David Njoku"
+              "Tetairoa McMillan",
+              "Jalen Coker"
             ]
           },
           "bringBack": "Chris Olave",
-          "valueFiller": "Juwan Johnson",
-          "correlationTheme": "Pair Deshaun Watson with Jerry Jeudy and David Njoku, and bring it back with Chris Olave."
+          "valueFiller": "Brycen Tremayne",
+          "correlationTheme": "CAR passing attack anchored by Bryce Young to Tetairoa McMillan and Jalen Coker, paired with Chris Olave (NO) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-sun_late-401873046",
-    "gameId": "401873046",
-    "matchup": "Houston Texans @ Los Angeles Chargers",
+    "id": "writeup-sun-401873056",
+    "gameId": "401873056",
+    "matchup": "Houston Texans @ Cleveland Browns",
     "awayTeam": "Houston Texans",
-    "homeTeam": "Los Angeles Chargers",
-    "kickoff": "2026-11-08T21:05Z",
-    "windowSlot": "SUN_LATE",
+    "homeTeam": "Cleveland Browns",
+    "kickoff": "2026-11-15T18:00Z",
+    "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Houston Texans and Los Angeles Chargers bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 28.0,
+      "passEpaPlay": 0.127,
+      "rushEpaPlay": -0.102,
+      "noHuddleRate": 0.082,
+      "notes": "HOU and CLE operate at 28.0 neutral seconds per snap (Huntington Bank Field)."
     },
     "schemeMatchup": {
-      "coverageShell": "C.J. Stroud and Justin Herbert headline this Week 10 matchup with Nico Collins, Joe Mixon, Ladd McConkey, and Omarion Hampton featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Houston Texans and Los Angeles Chargers deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Houston Texans leans on Joe Mixon, Nico Collins, and Dalton Schultz, while Los Angeles Chargers features Omarion Hampton, Ladd McConkey, and Will Dissly.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Houston Texans and Los Angeles Chargers headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "HOU plays 35.0 out of 100 man coverage vs CLE at 34.3 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature HOU blitzing 26.2 out of 100 snaps against CLE blitzing 23.4 out of 100 snaps.",
+      "personnelTendencies": "Houston Texans offense led by C.J. Stroud faces Cleveland Browns anchored by Deshaun Watson. Featured Week 10 personnel matchups include: C.J. Stroud, Andre Szmyt.",
+      "coachingEdge": "Quarterback contrast features C.J. Stroud against Deshaun Watson with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 40.5 with Houston Texans -4.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Houston Texans +1.5",
-      "sideConfidence": "63/100",
-      "sideExpectedClv": 0.014,
+      "sideSelection": "Houston Texans -4.5",
+      "sideConfidence": "59/100",
+      "sideExpectedClv": 0.019,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "61/100",
-      "totalExpectedClv": 0.01,
+      "totalSelection": "Over 40.5",
+      "totalConfidence": "51/100",
+      "totalExpectedClv": 0.0109,
       "totalDecision": "PASS",
-      "rationale": "Market efficient on the main spread; Dalton Schultz seam volume and Will Anderson Jr. pass-rush props lead our card."
+      "rationale": "STAGE5_SPREAD_GATE: HOU -4.5 projected cover prob 57.78 out of 100 vs 50.43 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "dalton-schultz",
-        "playerName": "Dalton Schultz",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 41.5,
+        "playerId": "c-j-stroud",
+        "playerName": "C.J. Stroud",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 20.5,
         "side": "OVER",
-        "confidence": "78/100",
-        "expectedClv": 0.088,
+        "confidence": "70/100",
+        "expectedClv": 0.1914,
         "decision": "PLAY",
-        "nEffTargetNotes": "Dalton Schultz operates as C.J. Stroud's middle-of-the-field safety valve against two-high zone coverage.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "nEffTargetNotes": "C.J. Stroud projects around 26.4 against the 20.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.7015,
+        "pUnder": 0.2985
+      },
+      {
+        "playerId": "c-j-stroud",
+        "playerName": "C.J. Stroud",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 245.5,
+        "side": "OVER",
+        "confidence": "67/100",
+        "expectedClv": 0.174,
+        "decision": "PLAY",
+        "nEffTargetNotes": "C.J. Stroud projects around 304.2 against the 245.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.674,
+        "pUnder": 0.326
+      },
+      {
+        "playerId": "c-j-stroud",
+        "playerName": "C.J. Stroud",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 8.5,
+        "side": "OVER",
+        "confidence": "61/100",
+        "expectedClv": 0.1039,
+        "decision": "PLAY",
+        "nEffTargetNotes": "C.J. Stroud projects around 16.3 against the 8.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.614,
+        "pUnder": 0.386
+      },
+      {
+        "playerId": "andre-szmyt",
+        "playerName": "Andre Szmyt",
+        "propType": "Total Extra Points Made",
+        "market": "total_extra_points_made",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "54/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Andre Szmyt projects around 1.9 against the 1.5 total extra points made line based on snap share and defensive scheme fit.",
+        "pOver": 0.5444,
+        "pUnder": 0.4556
+      },
+      {
+        "playerId": "andre-szmyt",
+        "playerName": "Andre Szmyt",
+        "propType": "Field Goals Made",
+        "market": "fg_made",
+        "line": 1.5,
+        "side": "UNDER",
+        "confidence": "57/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Andre Szmyt projects around 1.3 against the 1.5 field goals made line based on snap share and defensive scheme fit.",
+        "pOver": 0.433,
+        "pUnder": 0.567
+      },
+      {
+        "playerId": "andre-szmyt",
+        "playerName": "Andre Szmyt",
+        "propType": "Kicking Points",
+        "market": "kicking_points",
+        "line": 6.5,
+        "side": "UNDER",
+        "confidence": "56/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Andre Szmyt projects around 5.8 against the 6.5 kicking points line based on snap share and defensive scheme fit.",
+        "pOver": 0.4372,
+        "pUnder": 0.5628
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Houston Texans @ Los Angeles Chargers Same-Game Parlay",
+      "title": "HOU @ CLE Same-Game Parlay",
       "legs": [
         {
-          "description": "Dalton Schultz Receiving Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Dalton Schultz OVER 41.5 Receiving Yards",
-          "line": 41.5,
-          "confidence": "78/100",
-          "expectedClv": 0.088,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Nico Collins Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Nico Collins OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Omarion Hampton Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Omarion Hampton OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
+          "description": "No approved correlated legs on HOU @ CLE at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "HOU @ CLE PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Dalton Schultz with Nico Collins and Omarion Hampton across four quarters."
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on HOU @ CLE cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Nico Collins",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for C.J. Stroud in Houston Texans passing script."
+          "player": "C.J. Stroud",
+          "position": "QB",
+          "salary": 12400,
+          "leverageNote": "C.J. Stroud carries high-Share red-zone and median volume (21.9 projected fantasy points)."
         },
         {
-          "player": "Omarion Hampton",
+          "player": "Quinshon Judkins",
           "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Los Angeles Chargers."
+          "salary": 9300,
+          "leverageNote": "Quinshon Judkins carries high-Share red-zone and median volume (13.5 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
           "player": "C.J. Stroud",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Houston Texans."
+          "salary": 8300,
+          "projection": 21.9,
+          "floorNote": "HOU offensive share projects a reliable median output in HOU @ CLE."
         },
         {
-          "player": "Omarion Hampton",
+          "player": "Quinshon Judkins",
           "position": "RB",
+          "salary": 6200,
+          "projection": 13.5,
+          "floorNote": "CLE offensive share projects a reliable median output in HOU @ CLE."
+        },
+        {
+          "player": "Nico Collins",
+          "position": "WR",
           "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Los Angeles Chargers."
+          "projection": 13.0,
+          "floorNote": "HOU offensive share projects a reliable median output in HOU @ CLE."
+        },
+        {
+          "player": "Dalton Schultz",
+          "position": "TE",
+          "salary": 6000,
+          "projection": 12.4,
+          "floorNote": "HOU offensive share projects a reliable median output in HOU @ CLE."
         }
       ],
       "gppStacks": [
@@ -1762,439 +1327,851 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
               "Dalton Schultz"
             ]
           },
-          "bringBack": "Ladd McConkey",
-          "valueFiller": "Will Dissly",
-          "correlationTheme": "Pair C.J. Stroud with Nico Collins and Dalton Schultz, and bring it back with Ladd McConkey."
+          "bringBack": "Quinshon Judkins",
+          "valueFiller": "Tank Dell",
+          "correlationTheme": "HOU passing attack anchored by C.J. Stroud to Nico Collins and Dalton Schultz, paired with Quinshon Judkins (CLE) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-sun_late-401873047",
-    "gameId": "401873047",
-    "matchup": "Las Vegas Raiders @ San Francisco 49ers",
-    "awayTeam": "Las Vegas Raiders",
-    "homeTeam": "San Francisco 49ers",
-    "kickoff": "2026-11-08T21:25Z",
-    "windowSlot": "SUN_LATE",
+    "id": "writeup-sun-401873057",
+    "gameId": "401873057",
+    "matchup": "Jacksonville Jaguars @ Tennessee Titans",
+    "awayTeam": "Jacksonville Jaguars",
+    "homeTeam": "Tennessee Titans",
+    "kickoff": "2026-11-15T18:00Z",
+    "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Las Vegas Raiders and San Francisco 49ers bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 28.8,
+      "passEpaPlay": 0.247,
+      "rushEpaPlay": 0.011,
+      "noHuddleRate": 0.05,
+      "notes": "JAX and TEN operate at 28.8 neutral seconds per snap (Nissan Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "Kirk Cousins and Brock Purdy headline this Week 10 matchup with Jakobi Meyers, Ashton Jeanty, Mike Evans, and Christian McCaffrey featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Las Vegas Raiders and San Francisco 49ers deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Las Vegas Raiders leans on Ashton Jeanty, Jakobi Meyers, and Brock Bowers, while San Francisco 49ers features Christian McCaffrey, Mike Evans, and George Kittle.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Las Vegas Raiders and San Francisco 49ers headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "JAX plays 28.5 out of 100 man coverage vs TEN at 33.2 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature JAX blitzing 30.9 out of 100 snaps against TEN blitzing 24.2 out of 100 snaps.",
+      "personnelTendencies": "Jacksonville Jaguars offense led by Trevor Lawrence faces Tennessee Titans anchored by Cam Ward. Featured Week 10 personnel matchups include: Trevor Lawrence, Cam Ward, Antonio Johnson.",
+      "coachingEdge": "Quarterback contrast features Trevor Lawrence against Cam Ward with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 46.5 with Jacksonville Jaguars -10.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "San Francisco 49ers -6.5",
-      "sideConfidence": "64/100",
-      "sideExpectedClv": 0.016,
+      "sideSelection": "Jacksonville Jaguars -10.5",
+      "sideConfidence": "55/100",
+      "sideExpectedClv": 0.019,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.011,
+      "totalSelection": "Under 46.5",
+      "totalConfidence": "58/100",
+      "totalExpectedClv": 0.019,
       "totalDecision": "PASS",
-      "rationale": "Main spread is priced near fair value; Mike Evans perimeter red-zone targets and Nick Bosa sack props carry the edge."
+      "rationale": "STAGE5_SPREAD_GATE: JAX -10.5 projected cover prob 55.36 out of 100 vs 51.08 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "mike-evans",
-        "playerName": "Mike Evans",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 61.5,
+        "playerId": "trevor-lawrence",
+        "playerName": "Trevor Lawrence",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 3.5,
         "side": "OVER",
-        "confidence": "80/100",
-        "expectedClv": 0.104,
+        "confidence": "71/100",
+        "expectedClv": 0.2776,
         "decision": "PLAY",
-        "nEffTargetNotes": "Mike Evans commands Brock Purdy's boundary and red-zone isolation targets against single-high coverage.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "Las Vegas Raiders @ San Francisco 49ers Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Mike Evans Receiving Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Mike Evans OVER 61.5 Receiving Yards",
-          "line": 61.5,
-          "confidence": "80/100",
-          "expectedClv": 0.104,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Jakobi Meyers Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Jakobi Meyers OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Christian McCaffrey Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Christian McCaffrey OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Mike Evans with Jakobi Meyers and Christian McCaffrey across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "Jakobi Meyers",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Kirk Cousins in Las Vegas Raiders passing script."
-        },
-        {
-          "player": "Christian McCaffrey",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for San Francisco 49ers."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "Kirk Cousins",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Las Vegas Raiders."
-        },
-        {
-          "player": "Christian McCaffrey",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for San Francisco 49ers."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "Kirk Cousins",
-            "passCatchers": [
-              "Jakobi Meyers",
-              "Brock Bowers"
-            ]
-          },
-          "bringBack": "Mike Evans",
-          "valueFiller": "George Kittle",
-          "correlationTheme": "Pair Kirk Cousins with Jakobi Meyers and Brock Bowers, and bring it back with Mike Evans."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_late-401873048",
-    "gameId": "401873048",
-    "matchup": "Arizona Cardinals @ Seattle Seahawks",
-    "awayTeam": "Arizona Cardinals",
-    "homeTeam": "Seattle Seahawks",
-    "kickoff": "2026-11-08T21:25Z",
-    "windowSlot": "SUN_LATE",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Arizona Cardinals and Seattle Seahawks bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "Gardner Minshew II and Sam Darnold headline this Week 10 matchup with Marvin Harrison Jr., Bucky Irving, Jaxon Smith-Njigba, and Zach Charbonnet featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Arizona Cardinals and Seattle Seahawks deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Arizona Cardinals leans on Bucky Irving, Marvin Harrison Jr., and Trey McBride, while Seattle Seahawks features Zach Charbonnet, Jaxon Smith-Njigba, and AJ Barner.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Arizona Cardinals and Seattle Seahawks headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "Seattle Seahawks -4.5",
-      "sideConfidence": "63/100",
-      "sideExpectedClv": 0.013,
-      "sideDecision": "PASS",
-      "totalSelection": "OVER 44.5",
-      "totalConfidence": "61/100",
-      "totalExpectedClv": 0.009,
-      "totalDecision": "PASS",
-      "rationale": "Main line is priced efficiently; Jaxon Smith-Njigba slot target volume is our flagship prop in Seattle."
-    },
-    "topProps": [
+        "nEffTargetNotes": "Trevor Lawrence projects around 6.8 against the 3.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.7143,
+        "pUnder": 0.2857
+      },
       {
-        "playerId": "jaxon-smith-njigba",
-        "playerName": "Jaxon Smith-Njigba",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 74.5,
-        "side": "OVER",
-        "confidence": "82/100",
-        "expectedClv": 0.121,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Jaxon Smith-Njigba commands 29 out of 100 target share from Sam Darnold against Arizona's zone spacing.",
-        "pOver": 0.642,
-        "pUnder": 0.358
-      }
-    ],
-    "correlatedSgpTicket": {
-      "title": "Arizona Cardinals @ Seattle Seahawks Same-Game Parlay",
-      "legs": [
-        {
-          "description": "Jaxon Smith-Njigba Receiving Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Jaxon Smith-Njigba OVER 74.5 Receiving Yards",
-          "line": 74.5,
-          "confidence": "82/100",
-          "expectedClv": 0.121,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Marvin Harrison Jr. Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Marvin Harrison Jr. OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Zach Charbonnet Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Zach Charbonnet OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
-        }
-      ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Jaxon Smith-Njigba with Marvin Harrison Jr. and Zach Charbonnet across four quarters."
-    },
-    "dfsStacks": {
-      "captainPicks": [
-        {
-          "player": "Marvin Harrison Jr.",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Gardner Minshew II in Arizona Cardinals passing script."
-        },
-        {
-          "player": "Zach Charbonnet",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Seattle Seahawks."
-        }
-      ],
-      "cashCore": [
-        {
-          "player": "Gardner Minshew II",
-          "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Arizona Cardinals."
-        },
-        {
-          "player": "Zach Charbonnet",
-          "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Seattle Seahawks."
-        }
-      ],
-      "gppStacks": [
-        {
-          "primaryStack": {
-            "qb": "Gardner Minshew II",
-            "passCatchers": [
-              "Marvin Harrison Jr.",
-              "Trey McBride"
-            ]
-          },
-          "bringBack": "Jaxon Smith-Njigba",
-          "valueFiller": "AJ Barner",
-          "correlationTheme": "Pair Gardner Minshew II with Marvin Harrison Jr. and Trey McBride, and bring it back with Jaxon Smith-Njigba."
-        }
-      ]
-    },
-    "quadEngineCitations": {
-      "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
-      ],
-      "openalex": [
-        "openalex:W4285718290"
-      ],
-      "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
-      ],
-      "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
-      ]
-    }
-  },
-  {
-    "id": "writeup-sun_late-401873049",
-    "gameId": "401873049",
-    "matchup": "Green Bay Packers @ New England Patriots",
-    "awayTeam": "Green Bay Packers",
-    "homeTeam": "New England Patriots",
-    "kickoff": "2026-11-08T21:25Z",
-    "windowSlot": "SUN_LATE",
-    "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Green Bay Packers and New England Patriots bring contrasting early-down tempo and trench protection fronts into Week 10."
-    },
-    "schemeMatchup": {
-      "coverageShell": "Jordan Love and Drake Maye headline this Week 10 matchup with Christian Watson, Josh Jacobs, Kayshon Boutte, and Rhamondre Stevenson featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Green Bay Packers and New England Patriots deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Green Bay Packers leans on Josh Jacobs, Christian Watson, and Tucker Kraft, while New England Patriots features Rhamondre Stevenson, Kayshon Boutte, and Austin Hooper.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Green Bay Packers and New England Patriots headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
-    },
-    "sideTotalCall": {
-      "sideSelection": "New England Patriots +3.5",
-      "sideConfidence": "64/100",
-      "sideExpectedClv": 0.015,
-      "sideDecision": "PASS",
-      "totalSelection": "UNDER 45.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.011,
-      "totalDecision": "PASS",
-      "rationale": "We pass the main spread and attack Rhamondre Stevenson bell-cow rushing volume and Tucker Kraft 1Q receiving yards."
-    },
-    "topProps": [
-      {
-        "playerId": "rhamondre-stevenson",
-        "playerName": "Rhamondre Stevenson",
+        "playerId": "trevor-lawrence",
+        "playerName": "Trevor Lawrence",
         "propType": "Rushing Yards",
         "market": "rush_yds",
-        "line": 64.5,
+        "line": 7.5,
         "side": "OVER",
-        "confidence": "85/100",
-        "expectedClv": 0.13,
+        "confidence": "72/100",
+        "expectedClv": 0.2049,
         "decision": "PLAY",
-        "nEffTargetNotes": "Rhamondre Stevenson steps into uncontested three-down bell-cow volume against Green Bay's light boxes.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "nEffTargetNotes": "Trevor Lawrence projects around 25.9 against the 7.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.715,
+        "pUnder": 0.285
+      },
+      {
+        "playerId": "cam-ward",
+        "playerName": "Cam Ward",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 19.5,
+        "side": "UNDER",
+        "confidence": "67/100",
+        "expectedClv": 0.1943,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Cam Ward projects around 15.3 against the 19.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.326,
+        "pUnder": 0.674
+      },
+      {
+        "playerId": "cam-ward",
+        "playerName": "Cam Ward",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 196.5,
+        "side": "UNDER",
+        "confidence": "67/100",
+        "expectedClv": 0.1741,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Cam Ward projects around 147.9 against the 196.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3259,
+        "pUnder": 0.6741
+      },
+      {
+        "playerId": "cam-ward",
+        "playerName": "Cam Ward",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 12.5,
+        "side": "UNDER",
+        "confidence": "63/100",
+        "expectedClv": 0.1265,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Cam Ward projects around 5.6 against the 12.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3735,
+        "pUnder": 0.6265
+      },
+      {
+        "playerId": "antonio-johnson",
+        "playerName": "Antonio Johnson",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 4.5,
+        "side": "UNDER",
+        "confidence": "52/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Antonio Johnson projects around 5.0 against the 4.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.4846,
+        "pUnder": 0.5154
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Green Bay Packers @ New England Patriots Same-Game Parlay",
+      "title": "JAX @ TEN Same-Game Parlay",
       "legs": [
         {
-          "description": "Rhamondre Stevenson Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Rhamondre Stevenson OVER 64.5 Rushing Yards",
-          "line": 64.5,
-          "confidence": "85/100",
-          "expectedClv": 0.13,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Christian Watson Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Christian Watson OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Rhamondre Stevenson Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Rhamondre Stevenson OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
+          "description": "No approved correlated legs on JAX @ TEN at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "JAX @ TEN PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Rhamondre Stevenson with Christian Watson and Rhamondre Stevenson across four quarters."
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on JAX @ TEN cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Christian Watson",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Jordan Love in Green Bay Packers passing script."
+          "player": "Trevor Lawrence",
+          "position": "QB",
+          "salary": 12900,
+          "leverageNote": "Trevor Lawrence carries high-Share red-zone and median volume (23.4 projected fantasy points)."
         },
         {
-          "player": "Rhamondre Stevenson",
+          "player": "Parker Washington",
+          "position": "WR",
+          "salary": 9200,
+          "leverageNote": "Parker Washington carries high-Share red-zone and median volume (13.1 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Trevor Lawrence",
+          "position": "QB",
+          "salary": 8600,
+          "projection": 23.4,
+          "floorNote": "JAX offensive share projects a reliable median output in JAX @ TEN."
+        },
+        {
+          "player": "Parker Washington",
+          "position": "WR",
+          "salary": 6100,
+          "projection": 13.1,
+          "floorNote": "JAX offensive share projects a reliable median output in JAX @ TEN."
+        },
+        {
+          "player": "Bhayshul Tuten",
           "position": "RB",
+          "salary": 6100,
+          "projection": 13.0,
+          "floorNote": "JAX offensive share projects a reliable median output in JAX @ TEN."
+        },
+        {
+          "player": "Tony Pollard",
+          "position": "RB",
+          "salary": 5700,
+          "projection": 11.3,
+          "floorNote": "TEN offensive share projects a reliable median output in JAX @ TEN."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Trevor Lawrence",
+            "passCatchers": [
+              "Parker Washington",
+              "Brenton Strange"
+            ]
+          },
+          "bringBack": "Tony Pollard",
+          "valueFiller": "Travis Hunter",
+          "correlationTheme": "JAX passing attack anchored by Trevor Lawrence to Parker Washington and Brenton Strange, paired with Tony Pollard (TEN) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-sun-401873058",
+    "gameId": "401873058",
+    "matchup": "Kansas City Chiefs @ Atlanta Falcons",
+    "awayTeam": "Kansas City Chiefs",
+    "homeTeam": "Atlanta Falcons",
+    "kickoff": "2026-11-15T18:00Z",
+    "windowSlot": "SUN_EARLY",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 28.2,
+      "passEpaPlay": 0.122,
+      "rushEpaPlay": 0.125,
+      "noHuddleRate": 0.133,
+      "notes": "KC and ATL operate at 28.2 neutral seconds per snap (Mercedes-Benz Stadium)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "KC plays 35.2 out of 100 man coverage vs ATL at 34.2 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature KC blitzing 28.0 out of 100 snaps against ATL blitzing 24.8 out of 100 snaps.",
+      "personnelTendencies": "Kansas City Chiefs offense led by Patrick Mahomes faces Atlanta Falcons anchored by Michael Penix Jr.. Featured Week 10 personnel matchups include: Michael Penix Jr., Patrick Mahomes, A.J. Terrell Jr..",
+      "coachingEdge": "Quarterback contrast features Patrick Mahomes against Michael Penix Jr. with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 47.5 with Kansas City Chiefs -3.0 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Kansas City Chiefs -3.0",
+      "sideConfidence": "53/100",
+      "sideExpectedClv": 0.019,
+      "sideDecision": "PASS",
+      "totalSelection": "Under 47.5",
+      "totalConfidence": "52/100",
+      "totalExpectedClv": 0.0128,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: KC -3.0 projected cover prob 54.47 out of 100 vs 51.74 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "michael-penix-jr",
+        "playerName": "Michael Penix Jr.",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 20.5,
+        "side": "UNDER",
+        "confidence": "69/100",
+        "expectedClv": 0.1996,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Michael Penix Jr. projects around 16.1 against the 20.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.3106,
+        "pUnder": 0.6894
+      },
+      {
+        "playerId": "patrick-mahomes",
+        "playerName": "Patrick Mahomes",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 32.5,
+        "side": "UNDER",
+        "confidence": "60/100",
+        "expectedClv": 0.1354,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Patrick Mahomes projects around 30.3 against the 32.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3952,
+        "pUnder": 0.6048
+      },
+      {
+        "playerId": "patrick-mahomes",
+        "playerName": "Patrick Mahomes",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 242.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "expectedClv": 0.1151,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Patrick Mahomes projects around 219.1 against the 242.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3849,
+        "pUnder": 0.6151
+      },
+      {
+        "playerId": "patrick-mahomes",
+        "playerName": "Patrick Mahomes",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "68/100",
+        "expectedClv": 0.1121,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Patrick Mahomes projects around 4.6 against the 2.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.6754,
+        "pUnder": 0.3246
+      },
+      {
+        "playerId": "patrick-mahomes",
+        "playerName": "Patrick Mahomes",
+        "propType": "Passing TDs",
+        "market": "pass_tds",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "62/100",
+        "expectedClv": 0.0573,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Patrick Mahomes projects around 2.0 against the 1.5 passing tds line based on snap share and defensive scheme fit.",
+        "pOver": 0.6206,
+        "pUnder": 0.3794
+      },
+      {
+        "playerId": "a-j-terrell-jr",
+        "playerName": "A.J. Terrell Jr.",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 3.5,
+        "side": "OVER",
+        "confidence": "56/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "A.J. Terrell Jr. projects around 4.8 against the 3.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.5561,
+        "pUnder": 0.4439
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "KC @ ATL Same-Game Parlay",
+      "legs": [
+        {
+          "description": "No approved correlated legs on KC @ ATL at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "KC @ ATL PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
+        }
+      ],
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on KC @ ATL cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Patrick Mahomes",
+          "position": "QB",
+          "salary": 11600,
+          "leverageNote": "Patrick Mahomes carries high-Share red-zone and median volume (19.5 projected fantasy points)."
+        },
+        {
+          "player": "Bijan Robinson",
+          "position": "RB",
+          "salary": 10600,
+          "leverageNote": "Bijan Robinson carries high-Share red-zone and median volume (16.9 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Patrick Mahomes",
+          "position": "QB",
+          "salary": 7700,
+          "projection": 19.5,
+          "floorNote": "KC offensive share projects a reliable median output in KC @ ATL."
+        },
+        {
+          "player": "Bijan Robinson",
+          "position": "RB",
+          "salary": 7100,
+          "projection": 16.9,
+          "floorNote": "ATL offensive share projects a reliable median output in KC @ ATL."
+        },
+        {
+          "player": "Michael Penix Jr.",
+          "position": "QB",
+          "salary": 7000,
+          "projection": 16.6,
+          "floorNote": "ATL offensive share projects a reliable median output in KC @ ATL."
+        },
+        {
+          "player": "Drake London",
+          "position": "WR",
+          "salary": 5900,
+          "projection": 11.9,
+          "floorNote": "ATL offensive share projects a reliable median output in KC @ ATL."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Patrick Mahomes",
+            "passCatchers": [
+              "Xavier Worthy",
+              "Travis Kelce"
+            ]
+          },
+          "bringBack": "Bijan Robinson",
+          "valueFiller": "Josh Downs",
+          "correlationTheme": "KC passing attack anchored by Patrick Mahomes to Xavier Worthy and Travis Kelce, paired with Bijan Robinson (ATL) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-sun-401873059",
+    "gameId": "401873059",
+    "matchup": "Miami Dolphins @ Indianapolis Colts",
+    "awayTeam": "Miami Dolphins",
+    "homeTeam": "Indianapolis Colts",
+    "kickoff": "2026-11-15T18:00Z",
+    "windowSlot": "SUN_EARLY",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.9,
+      "passEpaPlay": -0.149,
+      "rushEpaPlay": 0.041,
+      "noHuddleRate": 0.073,
+      "notes": "MIA and IND operate at 27.9 neutral seconds per snap (Lucas Oil Stadium)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "MIA plays 34.2 out of 100 man coverage vs IND at 34.1 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature MIA blitzing 25.8 out of 100 snaps against IND blitzing 22.2 out of 100 snaps.",
+      "personnelTendencies": "Miami Dolphins offense led by Kyle McCord faces Indianapolis Colts anchored by Daniel Jones. Featured Week 10 personnel matchups include: Daniel Jones, A.J. Haulcy, Anthony Gould, Ashton Dulin.",
+      "coachingEdge": "Quarterback contrast features Kyle McCord against Daniel Jones with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 37.5 with Indianapolis Colts -4.5 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Indianapolis Colts -4.5",
+      "sideConfidence": "52/100",
+      "sideExpectedClv": 0.0179,
+      "sideDecision": "PASS",
+      "totalSelection": "Over 37.5",
+      "totalConfidence": "51/100",
+      "totalExpectedClv": 0.0121,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: IND -4.5 projected cover prob 51.79 out of 100 vs 50.00 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "daniel-jones",
+        "playerName": "Daniel Jones",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 18.5,
+        "side": "UNDER",
+        "confidence": "65/100",
+        "expectedClv": 0.1821,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Daniel Jones projects around 15.3 against the 18.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.3485,
+        "pUnder": 0.6515
+      },
+      {
+        "playerId": "daniel-jones",
+        "playerName": "Daniel Jones",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 185.5,
+        "side": "UNDER",
+        "confidence": "64/100",
+        "expectedClv": 0.1427,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Daniel Jones projects around 155.0 against the 185.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3573,
+        "pUnder": 0.6427
+      },
+      {
+        "playerId": "a-j-haulcy",
+        "playerName": "A.J. Haulcy",
+        "propType": "Tackles + Assists",
+        "market": "tackles_plus_assists",
+        "line": 5.5,
+        "side": "UNDER",
+        "confidence": "57/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "A.J. Haulcy projects around 5.0 against the 5.5 tackles + assists line based on snap share and defensive scheme fit.",
+        "pOver": 0.425,
+        "pUnder": 0.575
+      },
+      {
+        "playerId": "anthony-gould",
+        "playerName": "Anthony Gould",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 15.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Anthony Gould projects around 3.0 against the 15.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "anthony-gould",
+        "playerName": "Anthony Gould",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 1.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Anthony Gould projects around 0.7 against the 1.5 receptions line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "ashton-dulin",
+        "playerName": "Ashton Dulin",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 14.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Dulin projects around 18.0 against the 14.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "MIA @ IND Same-Game Parlay",
+      "legs": [
+        {
+          "description": "No approved correlated legs on MIA @ IND at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "MIA @ IND PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
+        }
+      ],
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on MIA @ IND cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Jonathan Taylor",
+          "position": "RB",
+          "salary": 9800,
+          "leverageNote": "Jonathan Taylor carries high-Share red-zone and median volume (14.6 projected fantasy points)."
+        },
+        {
+          "player": "Daniel Jones",
+          "position": "QB",
+          "salary": 9300,
+          "leverageNote": "Daniel Jones carries high-Share red-zone and median volume (13.5 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Jonathan Taylor",
+          "position": "RB",
+          "salary": 6500,
+          "projection": 14.6,
+          "floorNote": "IND offensive share projects a reliable median output in MIA @ IND."
+        },
+        {
+          "player": "Daniel Jones",
+          "position": "QB",
+          "salary": 6200,
+          "projection": 13.5,
+          "floorNote": "IND offensive share projects a reliable median output in MIA @ IND."
+        },
+        {
+          "player": "Kyle McCord",
+          "position": "QB",
+          "salary": 6000,
+          "projection": 12.4,
+          "floorNote": "MIA offensive share projects a reliable median output in MIA @ IND."
+        },
+        {
+          "player": "Malik Washington",
+          "position": "WR",
+          "salary": 5200,
+          "projection": 9.3,
+          "floorNote": "MIA offensive share projects a reliable median output in MIA @ IND."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Kyle McCord",
+            "passCatchers": [
+              "Malik Washington",
+              "Greg Dulcich"
+            ]
+          },
+          "bringBack": "Jonathan Taylor",
+          "valueFiller": "Will Kacmarek",
+          "correlationTheme": "MIA passing attack anchored by Kyle McCord to Malik Washington and Greg Dulcich, paired with Jonathan Taylor (IND) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-sun-401873060",
+    "gameId": "401873060",
+    "matchup": "Minnesota Vikings @ Green Bay Packers",
+    "awayTeam": "Minnesota Vikings",
+    "homeTeam": "Green Bay Packers",
+    "kickoff": "2026-11-15T18:00Z",
+    "windowSlot": "SUN_EARLY",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 28.0,
+      "passEpaPlay": -0.039,
+      "rushEpaPlay": -0.121,
+      "noHuddleRate": 0.091,
+      "notes": "MIN and GB operate at 28.0 neutral seconds per snap (Lambeau Field)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "MIN plays 43.5 out of 100 man coverage vs GB at 36.1 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature MIN blitzing 72.2 out of 100 snaps against GB blitzing 28.2 out of 100 snaps.",
+      "personnelTendencies": "Minnesota Vikings offense led by Kirk Cousins faces Green Bay Packers anchored by Jordan Love. Featured Week 10 personnel matchups include: Kirk Cousins, Jordan Love.",
+      "coachingEdge": "Quarterback contrast features Kirk Cousins against Jordan Love with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 42.5 with Minnesota Vikings +2.5 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Minnesota Vikings +2.5",
+      "sideConfidence": "58/100",
+      "sideExpectedClv": 0.019,
+      "sideDecision": "PASS",
+      "totalSelection": "Over 42.5",
+      "totalConfidence": "53/100",
+      "totalExpectedClv": 0.019,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: MIN +2.5 projected cover prob 54.83 out of 100 vs 47.83 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "kirk-cousins",
+        "playerName": "Kirk Cousins",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 232.5,
+        "side": "UNDER",
+        "confidence": "76/100",
+        "expectedClv": 0.258,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Kirk Cousins projects around 155.0 against the 232.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.242,
+        "pUnder": 0.758
+      },
+      {
+        "playerId": "kirk-cousins",
+        "playerName": "Kirk Cousins",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "72/100",
+        "expectedClv": 0.2109,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Kirk Cousins projects around 15.5 against the 0.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.7211,
+        "pUnder": 0.2789
+      },
+      {
+        "playerId": "kirk-cousins",
+        "playerName": "Kirk Cousins",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 34.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1465,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Kirk Cousins projects around 31.3 against the 34.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3434,
+        "pUnder": 0.6566
+      },
+      {
+        "playerId": "jordan-love",
+        "playerName": "Jordan Love",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 3.5,
+        "side": "OVER",
+        "confidence": "63/100",
+        "expectedClv": 0.1154,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Jordan Love projects around 13.2 against the 3.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.6255,
+        "pUnder": 0.3745
+      },
+      {
+        "playerId": "kirk-cousins",
+        "playerName": "Kirk Cousins",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 20.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.1051,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Kirk Cousins projects around 23.6 against the 20.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.6357,
+        "pUnder": 0.3643
+      },
+      {
+        "playerId": "jordan-love",
+        "playerName": "Jordan Love",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 36.5,
+        "side": "UNDER",
+        "confidence": "60/100",
+        "expectedClv": 0.0992,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Jordan Love projects around 34.0 against the 36.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.4008,
+        "pUnder": 0.5992
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "MIN @ GB 2-Leg Correlated SGP",
+      "legs": [
+        {
+          "description": "Total Pass Completions (incl. overtime) script tie-in (MIN)",
+          "pickType": "PROP",
+          "selection": "Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime)",
+          "confidence": "64/100",
+          "expectedClv": 0.1051,
+          "decision": "PLAY"
+        },
+        {
+          "description": "Total Passing Attempts (incl. overtime) script tie-in (GB)",
+          "pickType": "PROP",
+          "selection": "Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime)",
+          "confidence": "60/100",
+          "expectedClv": 0.0992,
+          "decision": "PLAY"
+        }
+      ],
+      "jointWinProb": 0.399,
+      "fairOdds": "+151",
+      "marketOdds": "+219",
+      "edgeScore": 0.0859,
+      "correlationRationale": "Correlated script built from Kirk Cousins OVER 20.5 Total Pass Completions (incl. overtime), Jordan Love UNDER 36.5 Total Passing Attempts (incl. overtime) cleanly cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Jordan Love",
+          "position": "QB",
+          "salary": 11700,
+          "leverageNote": "Jordan Love carries high-Share red-zone and median volume (19.9 projected fantasy points)."
+        },
+        {
+          "player": "Matthew Golden",
+          "position": "WR",
           "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for New England Patriots."
+          "leverageNote": "Matthew Golden carries high-Share red-zone and median volume (14.3 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
           "player": "Jordan Love",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Green Bay Packers."
+          "salary": 7800,
+          "projection": 19.9,
+          "floorNote": "GB offensive share projects a reliable median output in MIN @ GB."
         },
         {
-          "player": "Rhamondre Stevenson",
+          "player": "Matthew Golden",
+          "position": "WR",
+          "salary": 6400,
+          "projection": 14.3,
+          "floorNote": "GB offensive share projects a reliable median output in MIN @ GB."
+        },
+        {
+          "player": "Kirk Cousins",
+          "position": "QB",
+          "salary": 6300,
+          "projection": 13.8,
+          "floorNote": "MIN offensive share projects a reliable median output in MIN @ GB."
+        },
+        {
+          "player": "Aaron Jones Sr.",
           "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for New England Patriots."
+          "salary": 6200,
+          "projection": 13.5,
+          "floorNote": "MIN offensive share projects a reliable median output in MIN @ GB."
         }
       ],
       "gppStacks": [
@@ -2202,325 +2179,1096 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
           "primaryStack": {
             "qb": "Jordan Love",
             "passCatchers": [
-              "Christian Watson",
-              "Tucker Kraft"
+              "Matthew Golden",
+              "Christian Watson"
             ]
           },
-          "bringBack": "Kayshon Boutte",
-          "valueFiller": "Austin Hooper",
-          "correlationTheme": "Pair Jordan Love with Christian Watson and Tucker Kraft, and bring it back with Kayshon Boutte."
+          "bringBack": "Aaron Jones Sr.",
+          "valueFiller": "Bo Melton",
+          "correlationTheme": "GB passing attack anchored by Jordan Love to Matthew Golden and Christian Watson, paired with Aaron Jones Sr. (MIN) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-snf-401873050",
-    "gameId": "401873050",
-    "matchup": "Tampa Bay Buccaneers @ Chicago Bears",
-    "awayTeam": "Tampa Bay Buccaneers",
-    "homeTeam": "Chicago Bears",
-    "kickoff": "2026-11-09T01:20Z",
-    "windowSlot": "SNF",
+    "id": "writeup-sun-401873061",
+    "gameId": "401873061",
+    "matchup": "Los Angeles Rams @ Arizona Cardinals",
+    "awayTeam": "Los Angeles Rams",
+    "homeTeam": "Arizona Cardinals",
+    "kickoff": "2026-11-15T21:05Z",
+    "windowSlot": "SUN_LATE",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Tampa Bay Buccaneers and Chicago Bears bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 26.2,
+      "passEpaPlay": 0.037,
+      "rushEpaPlay": 0.018,
+      "noHuddleRate": 0.05,
+      "notes": "LAR and ARI operate at 26.2 neutral seconds per snap (State Farm Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "Baker Mayfield and Caleb Williams headline this Week 10 matchup with Chris Godwin, Rachaad White, Rome Odunze, and D'Andre Swift featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Tampa Bay Buccaneers and Chicago Bears deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Tampa Bay Buccaneers leans on Rachaad White, Chris Godwin, and Cade Otton, while Chicago Bears features D'Andre Swift, Rome Odunze, and Cole Kmet.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Tampa Bay Buccaneers and Chicago Bears headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "LAR plays 35.9 out of 100 man coverage vs ARI at 37.3 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature LAR blitzing 30.3 out of 100 snaps against ARI blitzing 30.7 out of 100 snaps.",
+      "personnelTendencies": "Los Angeles Rams offense led by Matthew Stafford faces Arizona Cardinals anchored by Carson Beck. Featured Week 10 personnel matchups include: Matthew Stafford, Carson Beck, Bam Knight.",
+      "coachingEdge": "Quarterback contrast features Matthew Stafford against Carson Beck with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 38.5 with Arizona Cardinals +9.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Chicago Bears -6.0",
-      "sideConfidence": "62/100",
-      "sideExpectedClv": 0.011,
+      "sideSelection": "Arizona Cardinals +9.5",
+      "sideConfidence": "52/100",
+      "sideExpectedClv": 0.015,
       "sideDecision": "PASS",
-      "totalSelection": "UNDER 47.5",
-      "totalConfidence": "61/100",
-      "totalExpectedClv": 0.009,
+      "totalSelection": "Under 38.5",
+      "totalConfidence": "52/100",
+      "totalExpectedClv": 0.0128,
       "totalDecision": "PASS",
-      "rationale": "Sunday Night Football at Soldier Field favors Rome Odunze and D'Andre Swift prop volume over the full-game spread."
+      "rationale": "STAGE5_SPREAD_GATE: ARI +9.5 projected cover prob 51.07 out of 100 vs 49.57 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "rome-odunze",
-        "playerName": "Rome Odunze",
+        "playerId": "matthew-stafford",
+        "playerName": "Matthew Stafford",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "74/100",
+        "expectedClv": 0.2947,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Matthew Stafford projects around 18.6 against the 0.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.7406,
+        "pUnder": 0.2594
+      },
+      {
+        "playerId": "matthew-stafford",
+        "playerName": "Matthew Stafford",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 208.5,
+        "side": "UNDER",
+        "confidence": "72/100",
+        "expectedClv": 0.2166,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Matthew Stafford projects around 161.2 against the 208.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.2834,
+        "pUnder": 0.7166
+      },
+      {
+        "playerId": "matthew-stafford",
+        "playerName": "Matthew Stafford",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 30.5,
+        "side": "UNDER",
+        "confidence": "70/100",
+        "expectedClv": 0.2063,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Matthew Stafford projects around 26.1 against the 30.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3038,
+        "pUnder": 0.6962
+      },
+      {
+        "playerId": "carson-beck",
+        "playerName": "Carson Beck",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "66/100",
+        "expectedClv": 0.064,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carson Beck projects around 4.3 against the 2.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.6555,
+        "pUnder": 0.3445
+      },
+      {
+        "playerId": "carson-beck",
+        "playerName": "Carson Beck",
+        "propType": "Passing TDs",
+        "market": "pass_tds",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "60/100",
+        "expectedClv": 0.0349,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Carson Beck projects around 0.9 against the 0.5 passing tds line based on snap share and defensive scheme fit.",
+        "pOver": 0.5982,
+        "pUnder": 0.4018
+      },
+      {
+        "playerId": "bam-knight",
+        "playerName": "Bam Knight",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 8.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Bam Knight projects around 2.4 against the 8.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "LAR @ ARI Same-Game Parlay",
+      "legs": [
+        {
+          "description": "No approved correlated legs on LAR @ ARI at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "LAR @ ARI PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
+        }
+      ],
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on LAR @ ARI cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Matthew Stafford",
+          "position": "QB",
+          "salary": 10400,
+          "leverageNote": "Matthew Stafford carries high-Share red-zone and median volume (16.4 projected fantasy points)."
+        },
+        {
+          "player": "Kyren Williams",
+          "position": "RB",
+          "salary": 10000,
+          "leverageNote": "Kyren Williams carries high-Share red-zone and median volume (15.5 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Matthew Stafford",
+          "position": "QB",
+          "salary": 6900,
+          "projection": 16.4,
+          "floorNote": "LAR offensive share projects a reliable median output in LAR @ ARI."
+        },
+        {
+          "player": "Kyren Williams",
+          "position": "RB",
+          "salary": 6700,
+          "projection": 15.5,
+          "floorNote": "LAR offensive share projects a reliable median output in LAR @ ARI."
+        },
+        {
+          "player": "Carson Beck",
+          "position": "QB",
+          "salary": 6100,
+          "projection": 12.8,
+          "floorNote": "ARI offensive share projects a reliable median output in LAR @ ARI."
+        },
+        {
+          "player": "Trey McBride",
+          "position": "TE",
+          "salary": 5700,
+          "projection": 11.2,
+          "floorNote": "ARI offensive share projects a reliable median output in LAR @ ARI."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Carson Beck",
+            "passCatchers": [
+              "Trey McBride",
+              "Kendrick Bourne"
+            ]
+          },
+          "bringBack": "Kyren Williams",
+          "valueFiller": "Simi Fehoko",
+          "correlationTheme": "ARI passing attack anchored by Carson Beck to Trey McBride and Kendrick Bourne, paired with Kyren Williams (LAR) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-sun-401873062",
+    "gameId": "401873062",
+    "matchup": "Seattle Seahawks @ Las Vegas Raiders",
+    "awayTeam": "Seattle Seahawks",
+    "homeTeam": "Las Vegas Raiders",
+    "kickoff": "2026-11-15T21:05Z",
+    "windowSlot": "SUN_LATE",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.2,
+      "passEpaPlay": 0.03,
+      "rushEpaPlay": -0.155,
+      "noHuddleRate": 0.087,
+      "notes": "SEA and LV operate at 27.2 neutral seconds per snap (Allegiant Stadium)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "SEA plays 34.3 out of 100 man coverage vs LV at 34.5 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature SEA blitzing 23.4 out of 100 snaps against LV blitzing 27.6 out of 100 snaps.",
+      "personnelTendencies": "Seattle Seahawks offense led by Drew Lock faces Las Vegas Raiders anchored by Fernando Mendoza. Featured Week 10 personnel matchups include: Ashton Jeanty, Brock Bowers.",
+      "coachingEdge": "Quarterback contrast features Drew Lock against Fernando Mendoza with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 40.5 with Seattle Seahawks -6.5 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Seattle Seahawks -6.5",
+      "sideConfidence": "52/100",
+      "sideExpectedClv": 0.0179,
+      "sideDecision": "PASS",
+      "totalSelection": "Under 40.5",
+      "totalConfidence": "51/100",
+      "totalExpectedClv": 0.0085,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: SEA -6.5 projected cover prob 51.79 out of 100 vs 50.00 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "ashton-jeanty",
+        "playerName": "Ashton Jeanty",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 10.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Jeanty projects around 14.4 against the 10.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "ashton-jeanty",
+        "playerName": "Ashton Jeanty",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 24.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Jeanty projects around 41.2 against the 24.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "ashton-jeanty",
+        "playerName": "Ashton Jeanty",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 3.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Jeanty projects around 4.2 against the 3.5 receptions line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "ashton-jeanty",
+        "playerName": "Ashton Jeanty",
+        "propType": "Rush + Rec Yards",
+        "market": "rush_plus_rec_yds",
+        "line": 63.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Jeanty projects around 84.3 against the 63.5 rush + rec yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "ashton-jeanty",
+        "playerName": "Ashton Jeanty",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 33.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Ashton Jeanty projects around 43.1 against the 33.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "brock-bowers",
+        "playerName": "Brock Bowers",
         "propType": "Receiving Yards",
         "market": "rec_yds",
         "line": 58.5,
-        "side": "OVER",
-        "confidence": "77/100",
-        "expectedClv": 0.076,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Rome Odunze leads Chicago's intermediate and play-action target share from Caleb Williams at Soldier Field.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Brock Bowers projects around 64.8 against the 58.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Tampa Bay Buccaneers @ Chicago Bears Same-Game Parlay",
+      "title": "SEA @ LV Same-Game Parlay",
       "legs": [
         {
-          "description": "Rome Odunze Receiving Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Rome Odunze OVER 58.5 Receiving Yards",
-          "line": 58.5,
-          "confidence": "77/100",
-          "expectedClv": 0.076,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Cade Otton Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Cade Otton OVER 3.5 Receptions",
-          "line": 3.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "D'Andre Swift Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "D'Andre Swift OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
-          "decision": "PLAY"
+          "description": "No approved correlated legs on SEA @ LV at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "SEA @ LV PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Rome Odunze with Chris Godwin and D'Andre Swift across four quarters."
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on SEA @ LV cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Chris Godwin",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Baker Mayfield in Tampa Bay Buccaneers passing script."
+          "player": "Fernando Mendoza",
+          "position": "QB",
+          "salary": 10600,
+          "leverageNote": "Fernando Mendoza carries high-Share red-zone and median volume (17.0 projected fantasy points)."
         },
         {
-          "player": "D'Andre Swift",
-          "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Chicago Bears."
+          "player": "Drew Lock",
+          "position": "QB",
+          "salary": 10600,
+          "leverageNote": "Drew Lock carries high-Share red-zone and median volume (16.9 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
-          "player": "Baker Mayfield",
+          "player": "Fernando Mendoza",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Tampa Bay Buccaneers."
+          "salary": 7100,
+          "projection": 17.0,
+          "floorNote": "LV offensive share projects a reliable median output in SEA @ LV."
         },
         {
-          "player": "D'Andre Swift",
+          "player": "Drew Lock",
+          "position": "QB",
+          "salary": 7100,
+          "projection": 16.9,
+          "floorNote": "SEA offensive share projects a reliable median output in SEA @ LV."
+        },
+        {
+          "player": "Ashton Jeanty",
           "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Chicago Bears."
+          "salary": 6900,
+          "projection": 16.1,
+          "floorNote": "LV offensive share projects a reliable median output in SEA @ LV."
+        },
+        {
+          "player": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "salary": 6600,
+          "projection": 15.1,
+          "floorNote": "SEA offensive share projects a reliable median output in SEA @ LV."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Baker Mayfield",
+            "qb": "Drew Lock",
             "passCatchers": [
-              "Chris Godwin",
-              "Cade Otton"
+              "Jaxon Smith-Njigba",
+              "Rashid Shaheed"
             ]
           },
-          "bringBack": "Rome Odunze",
-          "valueFiller": "Cole Kmet",
-          "correlationTheme": "Pair Baker Mayfield with Chris Godwin and Cade Otton, and bring it back with Rome Odunze."
+          "bringBack": "Ashton Jeanty",
+          "valueFiller": "Zach Charbonnet",
+          "correlationTheme": "SEA passing attack anchored by Drew Lock to Jaxon Smith-Njigba and Rashid Shaheed, paired with Ashton Jeanty (LV) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
       ]
     }
   },
   {
-    "id": "writeup-mnf-401873051",
-    "gameId": "401873051",
-    "matchup": "Buffalo Bills @ Minnesota Vikings",
-    "awayTeam": "Buffalo Bills",
-    "homeTeam": "Minnesota Vikings",
-    "kickoff": "2026-11-10T01:15Z",
-    "windowSlot": "MNF",
+    "id": "writeup-sun-401873063",
+    "gameId": "401873063",
+    "matchup": "San Francisco 49ers @ Dallas Cowboys",
+    "awayTeam": "San Francisco 49ers",
+    "homeTeam": "Dallas Cowboys",
+    "kickoff": "2026-11-15T21:25Z",
+    "windowSlot": "SUN_LATE",
     "paceOfPlay": {
-      "neutralSecPerSnap": 26.4,
-      "passEpaPlay": 0.118,
-      "rushEpaPlay": 0.042,
-      "noHuddleRate": 0.095,
-      "notes": "Buffalo Bills and Minnesota Vikings bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "neutralSecPerSnap": 27.9,
+      "passEpaPlay": 0.178,
+      "rushEpaPlay": 0.095,
+      "noHuddleRate": 0.05,
+      "notes": "SF and DAL operate at 27.9 neutral seconds per snap (AT&T Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "Josh Allen and Carson Wentz headline this Week 10 matchup with Keon Coleman, James Cook, Justin Jefferson, and Jordan Mason featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Buffalo Bills and Minnesota Vikings deploy disguised third-down pressure packages to test pocket protection.",
-      "personnelTendencies": "Buffalo Bills leans on James Cook, Keon Coleman, and Dalton Kincaid, while Minnesota Vikings features Jordan Mason, Justin Jefferson, and T.J. Hockenson.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Buffalo Bills and Minnesota Vikings headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coverageShell": "SF plays 36.2 out of 100 man coverage vs DAL at 32.3 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature SF blitzing 32.4 out of 100 snaps against DAL blitzing 23.7 out of 100 snaps.",
+      "personnelTendencies": "San Francisco 49ers offense led by Brock Purdy faces Dallas Cowboys anchored by Dak Prescott. Featured Week 10 personnel matchups include: Brock Purdy, Dak Prescott, Brandon Aubrey.",
+      "coachingEdge": "Quarterback contrast features Brock Purdy against Dak Prescott with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 55.5 with San Francisco 49ers -4.5 on the spread."
     },
     "sideTotalCall": {
-      "sideSelection": "Minnesota Vikings +3.5",
-      "sideConfidence": "63/100",
-      "sideExpectedClv": 0.014,
+      "sideSelection": "San Francisco 49ers -4.5",
+      "sideConfidence": "61/100",
+      "sideExpectedClv": 0.019,
       "sideDecision": "PASS",
-      "totalSelection": "OVER 45.5",
-      "totalConfidence": "62/100",
-      "totalExpectedClv": 0.01,
+      "totalSelection": "Under 55.5",
+      "totalConfidence": "54/100",
+      "totalExpectedClv": 0.019,
       "totalDecision": "PASS",
-      "rationale": "Monday Night Football indoors at U.S. Bank Stadium highlights Justin Jefferson and Jordan Mason player props."
+      "rationale": "STAGE5_SPREAD_GATE: SF -4.5 projected cover prob 58.53 out of 100 vs 49.57 out of 100 de-vigged market."
     },
     "topProps": [
       {
-        "playerId": "justin-jefferson",
-        "playerName": "Justin Jefferson",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 82.5,
-        "side": "OVER",
-        "confidence": "79/100",
-        "expectedClv": 0.094,
+        "playerId": "brock-purdy",
+        "playerName": "Brock Purdy",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 31.5,
+        "side": "UNDER",
+        "confidence": "64/100",
+        "expectedClv": 0.1515,
         "decision": "PLAY",
-        "nEffTargetNotes": "Justin Jefferson commands primary play-action and intermediate target volume indoors on Monday Night Football.",
-        "pOver": 0.642,
-        "pUnder": 0.358
+        "nEffTargetNotes": "Brock Purdy projects around 28.6 against the 31.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3587,
+        "pUnder": 0.6413
+      },
+      {
+        "playerId": "brock-purdy",
+        "playerName": "Brock Purdy",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 21.5,
+        "side": "OVER",
+        "confidence": "64/100",
+        "expectedClv": 0.1422,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Brock Purdy projects around 24.4 against the 21.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.6422,
+        "pUnder": 0.3578
+      },
+      {
+        "playerId": "brock-purdy",
+        "playerName": "Brock Purdy",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 261.5,
+        "side": "UNDER",
+        "confidence": "60/100",
+        "expectedClv": 0.1013,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Brock Purdy projects around 240.6 against the 261.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3987,
+        "pUnder": 0.6013
+      },
+      {
+        "playerId": "dak-prescott",
+        "playerName": "Dak Prescott",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 24.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "expectedClv": 0.0894,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Dak Prescott projects around 21.6 against the 24.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.38,
+        "pUnder": 0.62
+      },
+      {
+        "playerId": "brandon-aubrey",
+        "playerName": "Brandon Aubrey",
+        "propType": "Total Extra Points Made",
+        "market": "total_extra_points_made",
+        "line": 2.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Brandon Aubrey projects around 2.8 against the 2.5 total extra points made line based on snap share and defensive scheme fit.",
+        "pOver": 0.5282,
+        "pUnder": 0.4718
+      },
+      {
+        "playerId": "brandon-aubrey",
+        "playerName": "Brandon Aubrey",
+        "propType": "Field Goals Made",
+        "market": "fg_made",
+        "line": 1.5,
+        "side": "OVER",
+        "confidence": "53/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Brandon Aubrey projects around 1.8 against the 1.5 field goals made line based on snap share and defensive scheme fit.",
+        "pOver": 0.5346,
+        "pUnder": 0.4654
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Buffalo Bills @ Minnesota Vikings Same-Game Parlay",
+      "title": "SF @ DAL 2-Leg Correlated SGP",
       "legs": [
         {
-          "description": "Justin Jefferson Receiving Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Justin Jefferson OVER 82.5 Receiving Yards",
-          "line": 82.5,
-          "confidence": "79/100",
-          "expectedClv": 0.094,
+          "description": "Total Pass Completions (incl. overtime) script tie-in (SF)",
+          "pickType": "PROP",
+          "selection": "Brock Purdy OVER 21.5 Total Pass Completions (incl. overtime)",
+          "confidence": "64/100",
+          "expectedClv": 0.1422,
           "decision": "PLAY"
         },
         {
-          "description": "Keon Coleman Receptions",
-          "pickType": "PLAYER_PROP",
-          "selection": "Keon Coleman OVER 4.5 Receptions",
-          "line": 4.5,
-          "confidence": "78/100",
-          "expectedClv": 0.064,
-          "decision": "PLAY"
-        },
-        {
-          "description": "Jordan Mason Rushing Yards",
-          "pickType": "PLAYER_PROP",
-          "selection": "Jordan Mason OVER 54.5 Rushing Yards",
-          "line": 54.5,
-          "confidence": "77/100",
-          "expectedClv": 0.058,
+          "description": "Total Pass Completions (incl. overtime) script tie-in (DAL)",
+          "pickType": "PROP",
+          "selection": "Dak Prescott UNDER 24.5 Total Pass Completions (incl. overtime)",
+          "confidence": "62/100",
+          "expectedClv": 0.0894,
           "decision": "PLAY"
         }
       ],
-      "jointWinProb": 0.214,
-      "fairOdds": "+365",
-      "marketOdds": "+475",
-      "edgeScore": 0.042,
-      "correlationRationale": "Correlated script pairing Justin Jefferson with Keon Coleman and Jordan Mason across four quarters."
+      "jointWinProb": 0.4151,
+      "fairOdds": "+141",
+      "marketOdds": "+219",
+      "edgeScore": 0.102,
+      "correlationRationale": "Correlated script built from Brock Purdy OVER 21.5 Total Pass Completions (incl. overtime), Dak Prescott UNDER 24.5 Total Pass Completions (incl. overtime) cleanly cleared release checks."
     },
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Keon Coleman",
-          "position": "WR",
-          "salary": 10200,
-          "leverageNote": "Primary perimeter and slot target for Josh Allen in Buffalo Bills passing script."
+          "player": "Brock Purdy",
+          "position": "QB",
+          "salary": 12300,
+          "leverageNote": "Brock Purdy carries high-Share red-zone and median volume (21.5 projected fantasy points)."
         },
         {
-          "player": "Jordan Mason",
+          "player": "Christian McCaffrey",
           "position": "RB",
-          "salary": 9600,
-          "leverageNote": "Three-down backfield and red-zone touch leader for Minnesota Vikings."
+          "salary": 11800,
+          "leverageNote": "Christian McCaffrey carries high-Share red-zone and median volume (20.5 projected fantasy points)."
         }
       ],
       "cashCore": [
         {
-          "player": "Josh Allen",
+          "player": "Brock Purdy",
           "position": "QB",
-          "salary": 6200,
-          "projection": 21.4,
-          "floorNote": "Steady pocket and play-action volume for Buffalo Bills."
+          "salary": 8200,
+          "projection": 21.5,
+          "floorNote": "SF offensive share projects a reliable median output in SF @ DAL."
         },
         {
-          "player": "Jordan Mason",
+          "player": "Christian McCaffrey",
           "position": "RB",
-          "salary": 6100,
-          "projection": 19.8,
-          "floorNote": "Early-down and checkdown workload anchor for Minnesota Vikings."
+          "salary": 7900,
+          "projection": 20.5,
+          "floorNote": "SF offensive share projects a reliable median output in SF @ DAL."
+        },
+        {
+          "player": "Dak Prescott",
+          "position": "QB",
+          "salary": 7400,
+          "projection": 18.3,
+          "floorNote": "DAL offensive share projects a reliable median output in SF @ DAL."
+        },
+        {
+          "player": "CeeDee Lamb",
+          "position": "WR",
+          "salary": 6900,
+          "projection": 16.1,
+          "floorNote": "DAL offensive share projects a reliable median output in SF @ DAL."
         }
       ],
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Josh Allen",
+            "qb": "Dak Prescott",
             "passCatchers": [
-              "Keon Coleman",
-              "Dalton Kincaid"
+              "CeeDee Lamb",
+              "George Pickens"
             ]
           },
-          "bringBack": "Justin Jefferson",
-          "valueFiller": "T.J. Hockenson",
-          "correlationTheme": "Pair Josh Allen with Keon Coleman and Dalton Kincaid, and bring it back with Justin Jefferson."
+          "bringBack": "Christian McCaffrey",
+          "valueFiller": "Brevyn Spann-Ford",
+          "correlationTheme": "DAL passing attack anchored by Dak Prescott to CeeDee Lamb and George Pickens, paired with Christian McCaffrey (SF) response volume."
         }
       ]
     },
     "quadEngineCitations": {
       "arxiv": [
-        "arxiv:2305.18290",
-        "arxiv:2603.24989"
+        "arxiv:2309.10455"
       ],
       "openalex": [
-        "openalex:W4285718290"
+        "openalex:W438810105"
       ],
       "kaggle": [
-        "kaggle:nfl-big-data-bowl-2024"
+        "kaggle:nfl-big-data-bowl-2025"
       ],
       "hf": [
-        "hf:models/gse-nfl-xgboost-v5"
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-snf-401873064",
+    "gameId": "401873064",
+    "matchup": "Pittsburgh Steelers @ Cincinnati Bengals",
+    "awayTeam": "Pittsburgh Steelers",
+    "homeTeam": "Cincinnati Bengals",
+    "kickoff": "2026-11-16T01:20Z",
+    "windowSlot": "SNF",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.7,
+      "passEpaPlay": -0.092,
+      "rushEpaPlay": 0.075,
+      "noHuddleRate": 0.145,
+      "notes": "PIT and CIN operate at 27.7 neutral seconds per snap (Paycor Stadium)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "PIT plays 36.8 out of 100 man coverage vs CIN at 30.9 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature PIT blitzing 27.2 out of 100 snaps against CIN blitzing 17.2 out of 100 snaps.",
+      "personnelTendencies": "Pittsburgh Steelers offense led by Aaron Rodgers faces Cincinnati Bengals anchored by Joe Burrow. Featured Week 10 personnel matchups include: Aaron Rodgers, Joe Burrow.",
+      "coachingEdge": "Quarterback contrast features Aaron Rodgers against Joe Burrow with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 49.5 with Cincinnati Bengals -3.5 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Cincinnati Bengals -3.5",
+      "sideConfidence": "57/100",
+      "sideExpectedClv": 0.019,
+      "sideDecision": "PASS",
+      "totalSelection": "Under 49.5",
+      "totalConfidence": "51/100",
+      "totalExpectedClv": 0.0045,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: CIN -3.5 projected cover prob 55.71 out of 100 vs 49.57 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "aaron-rodgers",
+        "playerName": "Aaron Rodgers",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 0.5,
+        "side": "OVER",
+        "confidence": "74/100",
+        "expectedClv": 0.2509,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Aaron Rodgers projects around 18.2 against the 0.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.7408,
+        "pUnder": 0.2592
+      },
+      {
+        "playerId": "aaron-rodgers",
+        "playerName": "Aaron Rodgers",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 35.5,
+        "side": "UNDER",
+        "confidence": "71/100",
+        "expectedClv": 0.2027,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Aaron Rodgers projects around 28.9 against the 35.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.2872,
+        "pUnder": 0.7128
+      },
+      {
+        "playerId": "aaron-rodgers",
+        "playerName": "Aaron Rodgers",
+        "propType": "Passing Yards",
+        "market": "pass_yds",
+        "line": 239.5,
+        "side": "UNDER",
+        "confidence": "63/100",
+        "expectedClv": 0.1337,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Aaron Rodgers projects around 201.9 against the 239.5 passing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3663,
+        "pUnder": 0.6337
+      },
+      {
+        "playerId": "joe-burrow",
+        "playerName": "Joe Burrow",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 27.5,
+        "side": "UNDER",
+        "confidence": "66/100",
+        "expectedClv": 0.1201,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Joe Burrow projects around 23.7 against the 27.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.3391,
+        "pUnder": 0.6609
+      },
+      {
+        "playerId": "joe-burrow",
+        "playerName": "Joe Burrow",
+        "propType": "Pass Attempts",
+        "market": "pass_attempts",
+        "line": 37.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "expectedClv": 0.1191,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Joe Burrow projects around 34.3 against the 37.5 pass attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.3809,
+        "pUnder": 0.6191
+      },
+      {
+        "playerId": "aaron-rodgers",
+        "playerName": "Aaron Rodgers",
+        "propType": "Pass Completions",
+        "market": "pass_completions",
+        "line": 21.5,
+        "side": "UNDER",
+        "confidence": "61/100",
+        "expectedClv": 0.1035,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Aaron Rodgers projects around 19.0 against the 21.5 pass completions line based on snap share and defensive scheme fit.",
+        "pOver": 0.3864,
+        "pUnder": 0.6136
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "PIT @ CIN Same-Game Parlay",
+      "legs": [
+        {
+          "description": "No approved correlated legs on PIT @ CIN at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "PIT @ CIN PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
+        }
+      ],
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on PIT @ CIN cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Joe Burrow",
+          "position": "QB",
+          "salary": 12400,
+          "leverageNote": "Joe Burrow carries high-Share red-zone and median volume (22.1 projected fantasy points)."
+        },
+        {
+          "player": "Chase Brown",
+          "position": "RB",
+          "salary": 11200,
+          "leverageNote": "Chase Brown carries high-Share red-zone and median volume (18.7 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Joe Burrow",
+          "position": "QB",
+          "salary": 8300,
+          "projection": 22.1,
+          "floorNote": "CIN offensive share projects a reliable median output in PIT @ CIN."
+        },
+        {
+          "player": "Chase Brown",
+          "position": "RB",
+          "salary": 7500,
+          "projection": 18.7,
+          "floorNote": "CIN offensive share projects a reliable median output in PIT @ CIN."
+        },
+        {
+          "player": "Aaron Rodgers",
+          "position": "QB",
+          "salary": 7200,
+          "projection": 17.5,
+          "floorNote": "PIT offensive share projects a reliable median output in PIT @ CIN."
+        },
+        {
+          "player": "Jaylen Warren",
+          "position": "RB",
+          "salary": 6500,
+          "projection": 14.5,
+          "floorNote": "PIT offensive share projects a reliable median output in PIT @ CIN."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Joe Burrow",
+            "passCatchers": [
+              "Ja'Marr Chase",
+              "Tee Higgins"
+            ]
+          },
+          "bringBack": "Jaylen Warren",
+          "valueFiller": "Tanner Hudson",
+          "correlationTheme": "CIN passing attack anchored by Joe Burrow to Ja'Marr Chase and Tee Higgins, paired with Jaylen Warren (PIT) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
+      ]
+    }
+  },
+  {
+    "id": "writeup-mnf-401873065",
+    "gameId": "401873065",
+    "matchup": "Los Angeles Chargers @ Baltimore Ravens",
+    "awayTeam": "Los Angeles Chargers",
+    "homeTeam": "Baltimore Ravens",
+    "kickoff": "2026-11-17T01:15Z",
+    "windowSlot": "MNF",
+    "paceOfPlay": {
+      "neutralSecPerSnap": 27.7,
+      "passEpaPlay": -0.273,
+      "rushEpaPlay": -0.174,
+      "noHuddleRate": 0.075,
+      "notes": "LAC and BAL operate at 27.7 neutral seconds per snap (M&T Bank Stadium)."
+    },
+    "schemeMatchup": {
+      "coverageShell": "LAC plays 33.4 out of 100 man coverage vs BAL at 24.5 out of 100 man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature LAC blitzing 26.4 out of 100 snaps against BAL blitzing 24.5 out of 100 snaps.",
+      "personnelTendencies": "Los Angeles Chargers offense led by Justin Herbert faces Baltimore Ravens anchored by Jacoby Brissett. Featured Week 10 personnel matchups include: Justin Herbert, Derrick Henry.",
+      "coachingEdge": "Quarterback contrast features Justin Herbert against Jacoby Brissett with script-adjusted red-zone call tendencies.",
+      "notes": "Total market posted at 38.5 with Baltimore Ravens -4.5 on the spread."
+    },
+    "sideTotalCall": {
+      "sideSelection": "Baltimore Ravens -4.5",
+      "sideConfidence": "63/100",
+      "sideExpectedClv": 0.019,
+      "sideDecision": "PASS",
+      "totalSelection": "Over 38.5",
+      "totalConfidence": "60/100",
+      "totalExpectedClv": 0.019,
+      "totalDecision": "PASS",
+      "rationale": "STAGE5_SPREAD_GATE: BAL -4.5 projected cover prob 60.31 out of 100 vs 49.57 out of 100 de-vigged market."
+    },
+    "topProps": [
+      {
+        "playerId": "justin-herbert",
+        "playerName": "Justin Herbert",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 21.5,
+        "side": "UNDER",
+        "confidence": "62/100",
+        "expectedClv": 0.1328,
+        "decision": "PLAY",
+        "nEffTargetNotes": "Justin Herbert projects around 14.9 against the 21.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.3773,
+        "pUnder": 0.6227
+      },
+      {
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Rush Attempts",
+        "market": "carries",
+        "line": 18.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Henry projects around 17.0 against the 18.5 rush attempts line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Receiving Yards",
+        "market": "rec_yds",
+        "line": 5.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Henry projects around 13.0 against the 5.5 receiving yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Receptions",
+        "market": "receptions",
+        "line": 1.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Henry projects around 1.9 against the 1.5 receptions line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Rush + Rec Yards",
+        "market": "rush_plus_rec_yds",
+        "line": 89.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Henry projects around 77.8 against the 89.5 rush + rec yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      },
+      {
+        "playerId": "derrick-henry",
+        "playerName": "Derrick Henry",
+        "propType": "Rushing Yards",
+        "market": "rush_yds",
+        "line": 79.5,
+        "side": "UNDER",
+        "confidence": "45/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Derrick Henry projects around 64.9 against the 79.5 rushing yards line based on snap share and defensive scheme fit.",
+        "pOver": 0.0,
+        "pUnder": 1.0
+      }
+    ],
+    "correlatedSgpTicket": {
+      "title": "LAC @ BAL Same-Game Parlay",
+      "legs": [
+        {
+          "description": "No approved correlated legs on LAC @ BAL at posted sportsbook prices.",
+          "pickType": "PASS",
+          "selection": "LAC @ BAL PASS",
+          "confidence": "52/100",
+          "expectedClv": 0.0,
+          "decision": "PASS"
+        }
+      ],
+      "jointWinProb": 0.0,
+      "fairOdds": "n/a",
+      "marketOdds": "n/a",
+      "edgeScore": 0.0,
+      "correlationRationale": "PASS - No correlated combination on LAC @ BAL cleared release checks."
+    },
+    "dfsStacks": {
+      "captainPicks": [
+        {
+          "player": "Jacoby Brissett",
+          "position": "QB",
+          "salary": 12000,
+          "leverageNote": "Jacoby Brissett carries high-Share red-zone and median volume (20.8 projected fantasy points)."
+        },
+        {
+          "player": "Justin Herbert",
+          "position": "QB",
+          "salary": 9800,
+          "leverageNote": "Justin Herbert carries high-Share red-zone and median volume (14.5 projected fantasy points)."
+        }
+      ],
+      "cashCore": [
+        {
+          "player": "Jacoby Brissett",
+          "position": "QB",
+          "salary": 8000,
+          "projection": 20.8,
+          "floorNote": "BAL offensive share projects a reliable median output in LAC @ BAL."
+        },
+        {
+          "player": "Justin Herbert",
+          "position": "QB",
+          "salary": 6500,
+          "projection": 14.5,
+          "floorNote": "LAC offensive share projects a reliable median output in LAC @ BAL."
+        },
+        {
+          "player": "Derrick Henry",
+          "position": "RB",
+          "salary": 6500,
+          "projection": 14.4,
+          "floorNote": "BAL offensive share projects a reliable median output in LAC @ BAL."
+        },
+        {
+          "player": "Zay Flowers",
+          "position": "WR",
+          "salary": 6000,
+          "projection": 12.3,
+          "floorNote": "BAL offensive share projects a reliable median output in LAC @ BAL."
+        }
+      ],
+      "gppStacks": [
+        {
+          "primaryStack": {
+            "qb": "Jacoby Brissett",
+            "passCatchers": [
+              "Zay Flowers",
+              "Mark Andrews"
+            ]
+          },
+          "bringBack": "Omarion Hampton",
+          "valueFiller": "Matt Hibner",
+          "correlationTheme": "BAL passing attack anchored by Jacoby Brissett to Zay Flowers and Mark Andrews, paired with Omarion Hampton (LAC) response volume."
+        }
+      ]
+    },
+    "quadEngineCitations": {
+      "arxiv": [
+        "arxiv:2309.10455"
+      ],
+      "openalex": [
+        "openalex:W438810105"
+      ],
+      "kaggle": [
+        "kaggle:nfl-big-data-bowl-2025"
+      ],
+      "hf": [
+        "hf:nfelo-coaching-priors"
       ]
     }
   }
@@ -2583,18 +3331,46 @@ export function getRedactedTeasersForWindowSlot(windowSlot: string) {
 }
 
 export const WEEK9_UPCOMING_14_MATCHUP_CODES: ReadonlyArray<{ matchup: string }> = [
-  { matchup: "CIN @ ATL" },
-  { matchup: "NE @ DET" },
-  { matchup: "NYG @ PHI" },
-  { matchup: "KC @ ATL" },
-  { matchup: "HOU @ CLE" },
-  { matchup: "DEN @ CAR" },
-  { matchup: "CLE @ NO" },
-  { matchup: "LV @ SF" },
-  { matchup: "NYJ @ KC" },
-  { matchup: "HOU @ LAC" },
-  { matchup: "ARI @ SEA" },
-  { matchup: "LAR @ WAS" },
-  { matchup: "SF @ DAL" },
-  { matchup: "LAC @ BAL" },
+  {
+    "matchup": "WSH @ NYG"
+  },
+  {
+    "matchup": "NE @ DET"
+  },
+  {
+    "matchup": "BUF @ NYJ"
+  },
+  {
+    "matchup": "CAR @ NO"
+  },
+  {
+    "matchup": "HOU @ CLE"
+  },
+  {
+    "matchup": "JAX @ TEN"
+  },
+  {
+    "matchup": "KC @ ATL"
+  },
+  {
+    "matchup": "MIA @ IND"
+  },
+  {
+    "matchup": "MIN @ GB"
+  },
+  {
+    "matchup": "LAR @ ARI"
+  },
+  {
+    "matchup": "SEA @ LV"
+  },
+  {
+    "matchup": "SF @ DAL"
+  },
+  {
+    "matchup": "PIT @ CIN"
+  },
+  {
+    "matchup": "LAC @ BAL"
+  }
 ];

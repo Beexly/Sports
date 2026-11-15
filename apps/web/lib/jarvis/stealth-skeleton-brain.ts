@@ -22,6 +22,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_UNITS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 import {
   WEEK8_GAME_DAY_CATALOG_METADATA,
   LIVE_PACKAGE_CATALOG,
@@ -497,7 +498,7 @@ export interface JarvisJynxAutonomousResponse {
   readonly prompt: string;
   readonly jynxRoutingLane: string;
   readonly compositeScaleScore: string;
-  readonly seasonLedger: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)";
+  readonly seasonLedger: string;
   readonly standingRosterRuling: {
     readonly genoSmith: "NYJ QB";
     readonly mikeEvans: "SF WR";
@@ -673,20 +674,20 @@ export function runJarvisJynxAutonomousBrain(req: {
   // Public social templates: market categories and matchup environment notes ONLY — zero leaked picks!
   const contentPack: JarvisJynxContentPack = {
     xPost:
-      `[GSE AUTONOMOUS DESK · ${modelUsed}] Verified Season Record: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u). ` +
+      `[GSE AUTONOMOUS DESK · ${modelUsed}] Verified Season Record: ${PUBLIC_RECORD_LINE}. ` +
       `Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & MNF (LAC @ BAL) 360-degree market categories live: ` +
       `Game Lines, 1Q/1H Scripts, Red-Zone Kicking FGM, Receiving Volume Props, Correlated SGPs & 14-Player DFS Core. ` +
       `Full locked card at galaxysportsedge.com/packages.`,
     igCarouselCaption:
       `Slide 1: Week 10 Autonomous Game-Day Briefing (${WEEK8_GAME_DAY_CATALOG_METADATA.slateWindowLabel}). ` +
-      `Slide 2: Verified Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · Composite ${dynamicComposite.formattedScore} across 7 suites. ` +
+      `Slide 2: Verified Ledger ${PUBLIC_RECORD_LINE} · Composite ${dynamicComposite.formattedScore} across 7 suites. ` +
       `Slide 3: DFS Optimal Cash Flagship (${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.salary} · ${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.projectedPts}). ` +
       `Slide 4: GSI Biomechanics & 4Q Trench Fatigue Overlay. Unlock the full card at galaxysportsedge.com/packages.`,
     chalkboardReelScript:
       `Hook (0-3s): Why the market misprices second-half blitz hot-reads and red-zone stall scripts in Week 10. ` +
       `Body (3-18s): Disguised pressure packages force faster time-to-throw and funnel targets into high-percentage intermediate route trees while elevating field-goal attempt floors inside the 25-yard line. ` +
       `Every active depth chart and injury redistribution is verified before a single play clears the gate. ` +
-      `CTA (18-25s): Tap the link in bio for our verified 36-13-1 (+20.14u) Week 10 card at galaxysportsedge.com/packages.`,
+      `CTA (18-25s): Tap the link in bio for our verified ${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS}) Week 10 card at galaxysportsedge.com/packages.`,
     socialArchiveStats: "132 IG + 100 X verified social assets indexed in corpus",
   };
 
@@ -703,7 +704,7 @@ export function runJarvisJynxAutonomousBrain(req: {
   };
 
   const betPredictionCard: JarvisJynxBetPredictionCard = {
-    seasonLedger: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+    seasonLedger: PUBLIC_RECORD_LINE,
     gatedGameCalls,
     topPlayerProps,
     correlatedSgps,
@@ -729,7 +730,7 @@ export function runJarvisJynxAutonomousBrain(req: {
 
   const modeSummaryMap: Record<JarvisJynxBrainMode, string> = {
     content_making:
-      `Jarvis x Jynx Content Engine (${modelUsed}) synthesized paywall-clean X copy, IG carousel slides, and a 25-second chalkboard reel script grounded in our 132 IG + 100 X social corpus and verified 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) season ledger.`,
+      `Jarvis x Jynx Content Engine (${modelUsed}) synthesized paywall-clean X copy, IG carousel slides, and a 25-second chalkboard reel script grounded in our 132 IG + 100 X social corpus and verified season ledger: ${PUBLIC_RECORD_LINE}.`,
     dfs_picking:
       `Jarvis x Jynx DFS Optimizer (${modelUsed}) generated our 14-player core pool and 2 optimal DraftKings/FanDuel lineups (${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.cashFlagship.projectedPts} Cash Flagship & ${STAGE0_VERIFIED_WEEK9_DFS_LINEUPS.gppTournament.projectedPts} GPP Stack) with Stage 0 roster hygiene and Nov 1 pull-list exclusions enforced.`,
     bet_predicting:
@@ -759,7 +760,7 @@ export function runJarvisJynxAutonomousBrain(req: {
     prompt: cleanPrompt,
     jynxRoutingLane: `stealth_skeleton_${modelUsed.replace("gse/", "").replace(/-/g, "_")}`,
     compositeScaleScore: dynamicComposite.formattedScore,
-    seasonLedger: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+    seasonLedger: PUBLIC_RECORD_LINE,
     standingRosterRuling: {
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",

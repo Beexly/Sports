@@ -7,6 +7,7 @@ import {
   type UniversalBotAdapterRequest,
 } from "@/lib/jarvis/autonomous-bot-sdk-adapter";
 import { OUR_STEALTH_SKELETON_MODELS } from "@/lib/jarvis/stealth-skeleton-brain";
+import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export async function GET(): Promise<NextResponse> {
       ok: true,
       adapterSuite: "GSE Universal Autonomous Bot SDK Adapter (Powered by OUR OWN LLM MODEL)",
       compositeScaleScore: "86.12/100",
-      seasonLedgerOfRecord: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+      seasonLedgerOfRecord: PUBLIC_RECORD_LINE,
       standingRosterRuling: {
         genoSmith: "NYJ QB",
         mikeEvans: "SF WR",

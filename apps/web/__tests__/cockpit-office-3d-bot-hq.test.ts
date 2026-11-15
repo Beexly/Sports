@@ -14,6 +14,7 @@ vi.mock("@/lib/auth", () => ({
 
 import { POST } from "@/app/api/cockpit/jarvis/jynx-brain/route";
 import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
+import { PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 // The settled win rate is the ONE permitted percent on a customer surface; the
 // catalog is its source. Confidence is XX/100, never a percentage.
@@ -79,7 +80,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
         agent: "360 Market & Optimal Lineup Agent",
         model: "gse/skeleton-forecast",
         status: "GRADING_BOARD",
-        task: "Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · 14-player DFS Core Pool locked",
+        task: "Season Ledger ${PUBLIC_RECORD_LINE} · 14-player DFS Core Pool locked",
       },
       {
         desk: "Creative Studio Desk",
@@ -121,9 +122,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.modelUsed).toBe("gse/skeleton-math-pro");
-    expect(body.seasonLedger).toBe(
-      "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)"
-    );
+    expect(body.seasonLedger).toBe(PUBLIC_RECORD_LINE);
   });
 
   it("visualizes the OmniRoute Universal API & MCP Plugin World mesh", () => {
@@ -177,9 +176,7 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
     const voidedBatch = ["62", "23", "1"].join("-");
     expect(componentSrc).not.toContain(voidedBatch);
     expect(botHqPageSrc).not.toContain(voidedBatch);
-    expect(componentSrc).toContain(
-      "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)"
-    );
+    expect(componentSrc).toContain("PUBLIC_RECORD_LINE");
     expect(componentSrc).toContain("Geno Smith = NYJ QB");
     expect(componentSrc).toContain("Mike Evans = SF WR");
   });

@@ -9,7 +9,10 @@ import {
   singleSlateCheckoutAvailability,
   membershipCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
-import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
+import { LIVE_PACKAGE_CATALOG, getActiveForSalePackages } from "@/lib/packages/catalog";
+import { scrubOfferingCopy } from "@/lib/packages/copy-fence";
+import { getRedactedTeasersForWindowSlot } from "@/lib/writeups/coach-writeup-engine";
+import { PaywallRevealCard } from "@/components/packages/paywall-reveal-card";
 import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
 import { SingleSlateCard, MembershipPlans } from "./_components/two-door-checkout";
 
@@ -180,6 +183,23 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                   One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.
                 </p>
               </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {getActiveForSalePackages().map((rawPkg, idx) => {
+                const cleanPkg = scrubOfferingCopy(rawPkg);
+                const teasers = getRedactedTeasersForWindowSlot(cleanPkg.windowSlot);
+                return (
+                  <div key={cleanPkg.slug} id={`checkout-${cleanPkg.slug}`}>
+                    <PaywallRevealCard
+                      pkg={cleanPkg}
+                      teasers={teasers}
+                      featured={idx === 0 || cleanPkg.slug === "week8-all-access"}
+                      ctaTone="solid"
+                    />
+                  </div>
+                );
+              })}
             </div>
 
             <div className="mt-8 grid gap-6 lg:grid-cols-2">

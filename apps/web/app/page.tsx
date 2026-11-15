@@ -38,7 +38,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   const doctrine = await loadDoctrineBoard();
   return (
     <>
-      <RedlineWorld packs={packs} writeups={writeups} />
+      <RedlineWorld packs={packs} writeups={writeups} initialStage={2} />
       <section
         id="doctrine-board"
         data-testid="homepage-doctrine-board"

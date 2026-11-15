@@ -7,6 +7,7 @@ import {
   runJarvisJynxAutonomousBrain,
   type JarvisJynxBrainMode,
 } from "@/lib/jarvis/stealth-skeleton-brain";
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 vi.mock("@/lib/auth", () => ({
   auth: vi.fn().mockResolvedValue({
@@ -43,7 +44,7 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     ]);
   });
 
-  it("synthesizes autonomous output with OUR MODEL default, dynamic composite score, official 47-19-1 ledger, standing roster ruling, and zero Nov 1 pulled plays or leaked picks", () => {
+  it("synthesizes autonomous output with OUR MODEL default, dynamic composite score, official verified ledger, standing roster ruling, and zero Nov 1 pulled plays or leaked picks", () => {
     const res = runJarvisJynxAutonomousBrain({
       prompt: "Run full autonomous GSE website synthesis",
     });
@@ -51,7 +52,7 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     expect(res.modelUsed).toBe("gse/skeleton-stealth");
     expect(res.jynxRoutingLane).toContain("stealth_skeleton");
     expect(res.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
-    expect(res.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
+    expect(res.seasonLedger).toBe(PUBLIC_RECORD_LINE);
     expect(res.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
@@ -75,7 +76,7 @@ describe("Jarvis x Jynx Autonomous Brain (stealth-skeleton-brain.ts)", () => {
     expect(serialized).not.toContain("Jets ($3,100)");
     expect(res.contentPack.xPost).not.toContain("Mark Andrews");
     expect(res.contentPack.chalkboardReelScript).not.toContain("Mark Andrews");
-    expect(serialized).toContain("47-19-1");
+    expect(serialized).toContain(PUBLIC_RECORD_COUNTS);
     expect(serialized).toContain("Geno Smith");
     expect(serialized).toContain("NYJ QB");
     expect(serialized).toContain("Mike Evans");
@@ -143,7 +144,7 @@ describe("/api/cockpit/jarvis/jynx-brain route", () => {
     expect(body.status).toBe("ONLINE");
     expect(body.defaultModel).toBe("gse/skeleton-stealth");
     expect(body.models).toEqual(OUR_STEALTH_SKELETON_MODELS);
-    expect(body.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
+    expect(body.seasonLedger).toBe(PUBLIC_RECORD_LINE);
     expect(body.standingRosterRuling).toMatchObject({
       genoSmith: "NYJ QB",
       mikeEvans: "SF WR",
@@ -169,7 +170,7 @@ describe("/api/cockpit/jarvis/jynx-brain route", () => {
     const body = await res.json();
     expect(body.modelUsed).toBe("gse/skeleton-council");
     expect(body.modeUsed).toBe("dfs_picking");
-    expect(body.seasonLedger).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
+    expect(body.seasonLedger).toBe(PUBLIC_RECORD_LINE);
     expect(body.dfsLineupCard.corePlays.length).toBeGreaterThan(0);
   });
 });
@@ -293,7 +294,7 @@ describe("Universal Autonomous Bot SDK Adapter (OpenMuse, OpenDots, CopilotKit, 
       expect(envelope.protocol).toBe(proto.protocol);
       expect(envelope.ourModelUsed).toBe("gse/skeleton-stealth");
       expect(envelope.compositeScaleScore).toMatch(/^\d+\.\d{2}\/100$/);
-      expect(envelope.seasonLedgerOfRecord).toBe("36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)");
+      expect(envelope.seasonLedgerOfRecord).toBe(PUBLIC_RECORD_LINE);
       expect(envelope.standingRosterRuling).toMatchObject({
         genoSmith: "NYJ QB",
         mikeEvans: "SF WR",

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_UNITS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 /**
  * Hermes 11-Plugin Universe Suite & NVIDIA 6-Skill Cockpit Integration.
@@ -83,13 +84,13 @@ export interface NvidiaSkillDescriptor {
 }
 
 export const OFFICIAL_SEASON_LEDGER = {
-  overallRecord: "36-13-1",
-  overallUnits: "+20.14u",
-  overallSummary: "36-13-1 (+20.14u)",
-  baseRecord: "38-13-1",
-  baseUnits: "+22.85u",
-  baseSummary: "Base 38-13-1 (+22.85u)",
-  fullBanner: "36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+  overallRecord: PUBLIC_RECORD_COUNTS,
+  overallUnits: PUBLIC_RECORD_UNITS,
+  overallSummary: `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS})`,
+  baseRecord: PUBLIC_RECORD_COUNTS,
+  baseUnits: PUBLIC_RECORD_UNITS,
+  baseSummary: `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS})`,
+  fullBanner: PUBLIC_RECORD_LINE,
   stealthSkeletonScore: "86.12/100",
 } as const;
 
@@ -165,8 +166,8 @@ export const BLINKENBAR_CHANNELS: readonly BlinkenbarChannel[] = [
     channel: 7,
     code: "BOARD-47-19-1",
     state: "GREEN",
-    metric: "+24.92u",
-    subsystem: "Official Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)",
+    metric: PUBLIC_RECORD_UNITS,
+    subsystem: `Official Season Ledger ${PUBLIC_RECORD_LINE}`,
     latencyMs: 1.5,
   },
   {
@@ -317,10 +318,10 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     wiringScore: "86.12/100",
     status: "ACTIVE",
     summary:
-      "Live NFL Week 9 360-degree betting board state matrix anchored on Official Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u), Geno Smith (NYJ QB), and Mike Evans (SF WR).",
+      `Live NFL Week 9 360-degree betting board state matrix anchored on Official Ledger ${PUBLIC_RECORD_LINE}, Geno Smith (NYJ QB), and Mike Evans (SF WR).`,
     keyMetrics: [
-      { label: "Official Ledger", value: "36-13-1 (+20.14u)" },
-      { label: "Base Ledger", value: "38-13-1 (+22.85u)" },
+      { label: "Official Ledger", value: `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS})` },
+      { label: "Base Ledger", value: `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS})` },
       { label: "360 Markets", value: "77+ DK Types" },
     ],
   },
@@ -417,7 +418,7 @@ export const HERMES_PLUGINS_CATALOG: readonly HermesPluginDescriptor[] = [
     keyMetrics: [
       { label: "Export Formats", value: "JSON + Markdown" },
       { label: "Redaction Gate", value: "Paywall Safe" },
-      { label: "Ledger Stamp", value: "36-13-1 (+20.14u)" },
+      { label: "Ledger Stamp", value: `${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS})` },
     ],
   },
 ] as const;
@@ -965,7 +966,7 @@ export function HermesPluginUniverseSuite() {
                 132 IG Posts & Reels Queue
               </p>
               <p className="mt-1 text-xs text-ion-2">
-                Visual matchup cards, Stealth-Skeleton biomechanical breakdowns, and Verified Ledger 36-13-1 (+20.14u) story tiles.
+                Visual matchup cards, Stealth-Skeleton biomechanical breakdowns, and Verified Ledger {PUBLIC_RECORD_COUNTS} ({PUBLIC_RECORD_UNITS}) story tiles.
               </p>
             </div>
             <div className="rounded-xl border border-titanium/40 bg-carbon/90 p-3.5">

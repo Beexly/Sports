@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "week": 10,
-  "generated_at_utc": "2026-11-15T13:22:41.798554+00:00",
+  "generated_at_utc": "2026-11-15T16:21:56.910455+00:00",
   "slate_source": "live Neon public.games (T-00 query shape)",
   "n_sims_per_game": 10000,
   "remaining_games_count": 13,
@@ -4332,7 +4332,7 @@
         "MIA": "Kyle McCord",
         "IND": "Daniel Jones"
       },
-      "verified_board_athletes_count": 33,
+      "verified_board_athletes_count": 31,
       "matchup_environment": {
         "window": "Sun, November 15th at 1:00 PM EST",
         "posted_home_spread": -4.5,
@@ -4401,8 +4401,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132111Z0000-75b69e1f",
-        "content_hash": "f59c570e5412006b9190496e7b6daa7eb5e638ea8b60e7f91c0cc07c5753a1f1",
+        "trace_id": "2026-11-15T161126Z0000-1b5a7e02",
+        "content_hash": "6d83a0c55a8a8f1a0ea2b9adf17045d9ffb86123303c447d63570f46414d5e25",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -4487,6 +4487,7 @@
             "Dante Trader Jr.": 6,
             "Greg Dulcich": 5,
             "Jacob Rodriguez": 6,
+            "Jaylen Wright": 5,
             "Jordan Phillips": 6,
             "Jordyn Brooks": 6,
             "Josh Uche": 6,
@@ -4496,10 +4497,7 @@
             "Michael Taaffe": 6,
             "Ollie Gordon II": 5,
             "Zane Gonzalez": 1,
-            "Chris Bell": 6,
-            "Mo Alie-Cox": 4,
-            "Will Kacmarek": 4,
-            "Will Mallory": 2
+            "Will Kacmarek": 4
           }
         },
         "pre_projection_universal_and_deep_priors": {
@@ -8428,75 +8426,75 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": -0.3395,
-          "whitened_z": -0.3058,
-          "epa_adj": -0.00765,
+          "whitened_z": -0.3076,
+          "epa_adj": -0.00769,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "MIA pass rush & blitz tendency vs IND OL & Daniel Jones pocket survival",
           "note": "MIA pass rush & blitz tendency vs IND OL & Daniel Jones pocket survival"
         },
         "weather": {
           "raw_z": 0.0,
-          "whitened_z": 0.0369,
-          "epa_adj": 0.00092,
+          "whitened_z": 0.0373,
+          "epa_adj": 0.00093,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Lucas Oil Stadium (turf, 70.0F, wind 0.0 mph): MIA @ IND Week 10 venue=Lucas Oil Stadium (indoor=True, wind=0 mph, temp=70F)",
           "note": "Lucas Oil Stadium (turf, 70.0F, wind 0.0 mph): MIA @ IND Week 10 venue=Lucas Oil Stadium (indoor=True, wind=0 mph, temp=70F)"
         },
         "restFatigue": {
           "raw_z": 0.0331,
-          "whitened_z": 0.0835,
-          "epa_adj": 0.00209,
+          "whitened_z": 0.0841,
+          "epa_adj": 0.0021,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for MIA @ IND",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for MIA @ IND"
         },
         "coveragePersonnel": {
           "raw_z": -0.4387,
-          "whitened_z": -0.3253,
-          "epa_adj": -0.00813,
+          "whitened_z": -0.3272,
+          "epa_adj": -0.00818,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "IND MOFO/MOFC coverage shell mix vs Kyle McCord & MIA 11/12 personnel",
           "note": "IND MOFO/MOFC coverage shell mix vs Kyle McCord & MIA 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 0.2043,
-          "whitened_z": 0.373,
-          "epa_adj": 0.00932,
+          "whitened_z": 0.3753,
+          "epa_adj": 0.00938,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Kyle McCord (MIA) vs Daniel Jones (IND) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Kyle McCord (MIA) vs Daniel Jones (IND) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.5292,
-          "whitened_z": -0.4811,
-          "epa_adj": -0.01203,
+          "whitened_z": -0.484,
+          "epa_adj": -0.0121,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor MIA +4.5 / IND -4.5 (total 37.5) FWL residualized",
           "note": "Layer-1 market anchor MIA +4.5 / IND -4.5 (total 37.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 15.48,
-        "away_score_p50": 15.37,
-        "home_score_mean": 20.61,
-        "home_score_p50": 20.63,
-        "total_points_mean": 36.09,
-        "total_points_p50": 36.76,
-        "away_win_prob": 0.3584,
-        "home_cover_prob": 0.5416,
+        "away_score_mean": 16.05,
+        "away_score_p50": 15.9,
+        "home_score_mean": 20.82,
+        "home_score_p50": 20.75,
+        "total_points_mean": 36.87,
+        "total_points_p50": 37.64,
+        "away_win_prob": 0.3662,
+        "home_cover_prob": 0.5179,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 58,
+        "total_props_on_board": 61,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 58,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 64,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 61,
+        "props_with_two_sided_prices": 42,
+        "approved_plays_count": 2,
+        "approved_prop_bets": 2,
+        "pass_decisions_count": 65,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "2 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -8504,9 +8502,9 @@
           "selection": "MIA +4.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.4584,
-          "wilson_lower_90": 0.4502,
-          "net_edge": -0.0416,
+          "post_sim_prob": 0.4821,
+          "wilson_lower_90": 0.4739,
+          "net_edge": -0.0179,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -8514,33 +8512,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: MIA +4.5 post-sim cover prob 45.84% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: MIA +4.5 post-sim cover prob 48.21% vs 50.00% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "IND -4.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.5416,
-          "wilson_lower_90": 0.5334,
-          "net_edge": 0.0416,
-          "confidence_score": "55/100",
+          "post_sim_prob": 0.5179,
+          "wilson_lower_90": 0.5097,
+          "net_edge": 0.0179,
+          "confidence_score": "52/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: IND -4.5 post-sim cover prob 54.16% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: IND -4.5 post-sim cover prob 51.79% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 37.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.4412,
-          "wilson_lower_90": 0.433,
-          "net_edge": -0.0588,
+          "post_sim_prob": 0.5121,
+          "wilson_lower_90": 0.5039,
+          "net_edge": 0.0121,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -8548,50 +8546,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 37.5 post-sim prob 44.12% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 37.5 post-sim prob 51.21% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 37.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.5588,
-          "wilson_lower_90": 0.5506,
-          "net_edge": 0.0588,
-          "confidence_score": "57/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 37.5 post-sim prob 55.88% vs 50.00% de-vigged market."
-        },
-        {
-          "market": "Moneyline",
-          "selection": "MIA ML",
-          "american_odds": 185,
-          "market_prob_devig": 0.3364,
-          "post_sim_prob": 0.3584,
-          "wilson_lower_90": 0.3506,
-          "net_edge": 0.022,
-          "confidence_score": "53/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: MIA ML (+185) post-sim win prob 35.84% vs 33.64% de-vigged market."
-        },
-        {
-          "market": "Moneyline",
-          "selection": "IND ML",
-          "american_odds": -225,
-          "market_prob_devig": 0.6636,
-          "post_sim_prob": 0.6416,
-          "wilson_lower_90": 0.6337,
-          "net_edge": -0.022,
+          "post_sim_prob": 0.4879,
+          "wilson_lower_90": 0.4797,
+          "net_edge": -0.0121,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -8599,18 +8563,52 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: IND ML (-225) post-sim win prob 64.16% vs 66.36% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 37.5 prob 48.79% < 50.00% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "MIA ML",
+          "american_odds": 185,
+          "market_prob_devig": 0.3364,
+          "post_sim_prob": 0.3662,
+          "wilson_lower_90": 0.3583,
+          "net_edge": 0.0298,
+          "confidence_score": "54/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: MIA ML (+185) post-sim win prob 36.62% vs 33.64% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "IND ML",
+          "american_odds": -225,
+          "market_prob_devig": 0.6636,
+          "post_sim_prob": 0.6338,
+          "wilson_lower_90": 0.6258,
+          "net_edge": -0.0298,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: IND ML (-225) post-sim win prob 63.38% vs 66.36% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "fc449af0e5d90b60ab385200d4db5e3e3c3849a672041dfea50b721f70a5e9a1",
-        "stage1a_receipt_sha256": "fd2738314013ad4455b370d3b25be00685403f6382b8f98be29f2c6f5159a33a",
-        "stage1b_receipt_sha256": "517fa3f90fc39bdb4b52c0cfa9e597eddf634851b0f2b623024aa0adcbc87d12",
-        "stage2_receipt_sha256": "61677dc3b448c4a2874d2627277231a73529e85753e38e791ccb5dd96a689a5a",
-        "stage3_4_receipt_sha256": "b7b1a0f2b340400306636d828a04bfed5b5df51da71971d59d7e7a6da426300b",
-        "stage5_receipt_sha256": "a69d7193dc3b73cadeeafaf6ad321994abb6233906ecc5c1933c3502a36c0efe"
+        "stage0_receipt_sha256": "99dcc55b16a52d84d7a2fde846602422acb19b5b429a9ce40637ff5f92df754c",
+        "stage1a_receipt_sha256": "cc0dd23e40a18d916f0ce88224551946741249d7d1949278b80d32c6a3b21eee",
+        "stage1b_receipt_sha256": "1a6ae96bb5c6ce1756720c1bdd3db96c7009b6d1bbcbd31b03a002f3c7709955",
+        "stage2_receipt_sha256": "a818ff86a4ba59729e971960571857373149a0c7c73944afef1df50ad44dd2ab",
+        "stage3_4_receipt_sha256": "840af1030dc4ea107fcd308883a538ce575667f6248068ab9b2c5b7ff8f79e7b",
+        "stage5_receipt_sha256": "dea4461fdb42708d1562a4dc4580dae932f90bc6f9983d55617442971179ed57"
       },
-      "master_bundle_sha256": "a438d2e0004a9f03e5caa973302304b25a9effd716a85a8c29e580f8772cf0e0"
+      "master_bundle_sha256": "cf0f17c942fc4552d72e2cef1297dd3527741d799b10061f99b437166fa4982b"
     },
     "HOU @ CLE": {
       "matchup": "HOU @ CLE",
@@ -8626,7 +8624,7 @@
         "HOU": "C.J. Stroud",
         "CLE": "Deshaun Watson"
       },
-      "verified_board_athletes_count": 33,
+      "verified_board_athletes_count": 32,
       "matchup_environment": {
         "window": "Sun, November 15th at 1:00 PM EST",
         "posted_home_spread": 4.5,
@@ -8698,8 +8696,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132119Z0000-26e5040c",
-        "content_hash": "a4bcf3a5c618b14677757a92758147c129ede32203a13c598d72ea1fa113670d",
+        "trace_id": "2026-11-15T161025Z0000-9303e5ed",
+        "content_hash": "d95bd8edfeb0a405465dfbff66660d60a68194bf3046dbde3250d96842c55c8a",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -8780,6 +8778,7 @@
             "C.J. Stroud": 7,
             "Calen Bullock": 5,
             "Dalton Schultz": 7,
+            "Emari Demercado": 1,
             "Foster Moreau": 6,
             "Henry To'oTo'o": 3,
             "Jalen Pitre": 5,
@@ -8791,11 +8790,9 @@
             "Woody Marks": 7,
             "Xavier Hutchinson": 7,
             "Deshaun Watson": 7,
-            "David Montgomery": 5,
             "Isaiah Bond": 3,
             "Jaleel McLaughlin": 4,
             "Jaylin Noel": 7,
-            "Marvin Harrison Jr.": 2,
             "Raheim Sanders": 5
           }
         },
@@ -12725,75 +12722,75 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.3991,
-          "whitened_z": 0.3343,
-          "epa_adj": 0.00836,
+          "whitened_z": 0.3424,
+          "epa_adj": 0.00856,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "HOU pass rush & blitz tendency vs CLE OL & Deshaun Watson pocket survival",
           "note": "HOU pass rush & blitz tendency vs CLE OL & Deshaun Watson pocket survival"
         },
         "weather": {
           "raw_z": -0.1728,
-          "whitened_z": -0.1861,
-          "epa_adj": -0.00465,
+          "whitened_z": -0.1906,
+          "epa_adj": -0.00477,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Huntington Bank Field (grass, 47.0F, wind 9.0 mph): Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, mostly cloudy, 8% precip) \u2014 NFLWeather.com forecast retrieved 2026-11-13 for Sun Nov 15 2026 1:00 PM ET kickoff",
           "note": "Huntington Bank Field (grass, 47.0F, wind 9.0 mph): Huntington Bank Field outdoor (9 mph wind, gusts 15 mph, 47F feels like 42F, mostly cloudy, 8% precip) \u2014 NFLWeather.com forecast retrieved 2026-11-13 for Sun Nov 15 2026 1:00 PM ET kickoff"
         },
         "restFatigue": {
           "raw_z": -0.0812,
-          "whitened_z": -0.1157,
-          "epa_adj": -0.00289,
+          "whitened_z": -0.1184,
+          "epa_adj": -0.00296,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for HOU @ CLE",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for HOU @ CLE"
         },
         "coveragePersonnel": {
           "raw_z": 0.3452,
-          "whitened_z": 0.2128,
-          "epa_adj": 0.00532,
+          "whitened_z": 0.218,
+          "epa_adj": 0.00545,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "CLE MOFO/MOFC coverage shell mix vs C.J. Stroud & HOU 11/12 personnel",
           "note": "CLE MOFO/MOFC coverage shell mix vs C.J. Stroud & HOU 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 1.4719,
-          "whitened_z": 1.2677,
-          "epa_adj": 0.03169,
+          "whitened_z": 1.2985,
+          "epa_adj": 0.03246,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: C.J. Stroud (HOU) vs Deshaun Watson (CLE) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: C.J. Stroud (HOU) vs Deshaun Watson (CLE) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.144,
-          "whitened_z": -0.3812,
-          "epa_adj": -0.00953,
+          "whitened_z": -0.3904,
+          "epa_adj": -0.00976,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor HOU -4.5 / CLE +4.5 (total 40.5) FWL residualized",
           "note": "Layer-1 market anchor HOU -4.5 / CLE +4.5 (total 40.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 24.82,
-        "away_score_p50": 24.83,
-        "home_score_mean": 15.63,
-        "home_score_p50": 14.62,
-        "total_points_mean": 40.45,
-        "total_points_p50": 41.06,
-        "away_win_prob": 0.7322,
-        "home_cover_prob": 0.3653,
+        "away_score_mean": 23.66,
+        "away_score_p50": 23.86,
+        "home_score_mean": 16.87,
+        "home_score_p50": 15.99,
+        "total_points_mean": 40.53,
+        "total_points_p50": 41.15,
+        "away_win_prob": 0.7032,
+        "home_cover_prob": 0.4222,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 56,
+        "total_props_on_board": 57,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 56,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 62,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 57,
+        "props_with_two_sided_prices": 41,
+        "approved_plays_count": 3,
+        "approved_prop_bets": 3,
+        "pass_decisions_count": 60,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "3 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -12801,26 +12798,26 @@
           "selection": "HOU -4.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.6347,
-          "wilson_lower_90": 0.6267,
-          "net_edge": 0.1304,
-          "confidence_score": "66/100",
+          "post_sim_prob": 0.5778,
+          "wilson_lower_90": 0.5697,
+          "net_edge": 0.0735,
+          "confidence_score": "59/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6347, market_prob=0.5043, edge=+0.1304)."
+          "gate_reason": "STAGE5_SPREAD_GATE: HOU -4.5 post-sim cover prob 57.78% vs 50.43% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "CLE +4.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.3653,
-          "wilson_lower_90": 0.3574,
-          "net_edge": -0.1304,
+          "post_sim_prob": 0.4222,
+          "wilson_lower_90": 0.4141,
+          "net_edge": -0.0735,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12828,16 +12825,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: CLE +4.5 post-sim cover prob 36.53% vs 49.57% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: CLE +4.5 post-sim cover prob 42.22% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 40.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.5154,
-          "wilson_lower_90": 0.5072,
-          "net_edge": 0.0111,
+          "post_sim_prob": 0.5152,
+          "wilson_lower_90": 0.507,
+          "net_edge": 0.0109,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12845,16 +12842,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 40.5 post-sim prob 51.54% vs 50.43% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 40.5 post-sim prob 51.52% vs 50.43% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 40.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.4846,
-          "wilson_lower_90": 0.4764,
-          "net_edge": -0.0111,
+          "post_sim_prob": 0.4848,
+          "wilson_lower_90": 0.4766,
+          "net_edge": -0.0109,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12862,33 +12859,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 40.5 prob 48.46% < 49.57% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 40.5 prob 48.48% < 49.57% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "HOU ML",
           "american_odds": -225,
           "market_prob_devig": 0.6636,
-          "post_sim_prob": 0.7322,
-          "wilson_lower_90": 0.7249,
-          "net_edge": 0.0686,
-          "confidence_score": "58/100",
+          "post_sim_prob": 0.7032,
+          "wilson_lower_90": 0.6956,
+          "net_edge": 0.0396,
+          "confidence_score": "55/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: HOU ML (-225) post-sim win prob 73.22% vs 66.36% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: HOU ML (-225) post-sim win prob 70.32% vs 66.36% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "CLE ML",
           "american_odds": 185,
           "market_prob_devig": 0.3364,
-          "post_sim_prob": 0.2678,
-          "wilson_lower_90": 0.2606,
-          "net_edge": -0.0686,
+          "post_sim_prob": 0.2968,
+          "wilson_lower_90": 0.2893,
+          "net_edge": -0.0396,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -12896,18 +12893,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: CLE ML (+185) post-sim win prob 26.78% vs 33.64% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: CLE ML (+185) post-sim win prob 29.68% vs 33.64% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "570c1cff34bf533e0a0bd21f7afafa40d7f339411d0461521dcda05e126e45b9",
-        "stage1a_receipt_sha256": "bc349840b628fb946a0ad4ee8a785f529f92dcb0a17e554ff0be2979c0c8edce",
-        "stage1b_receipt_sha256": "179aae30f5c388944ebb83e408c06d029a6be1ac7bb954cc2f2ebd170bba398f",
-        "stage2_receipt_sha256": "2cc8056da373b418bd3aa203a3ee7e0231ffcad90ff5a03ea2ca993b69b628ba",
-        "stage3_4_receipt_sha256": "557217852c20a87958c6d9d5d0e416c00f203398c0a6017bd35c9c6e163aaea2",
-        "stage5_receipt_sha256": "a41f8d9464d1d004097b36490c43a0473bbe38bcee9e8920181ed4328e0fa621"
+        "stage0_receipt_sha256": "06816b04130a54dc637375ea9710cdd494aa6bf1d61771f39bc0fbed54113155",
+        "stage1a_receipt_sha256": "ec7eeeafe540e3dbeae3f8c2498ef4aac107008f5798a832764c04d2d38f1815",
+        "stage1b_receipt_sha256": "6615c1e004a2f17eb9d719bf081af544b84fd6a0405489ab1e016f1e9f497785",
+        "stage2_receipt_sha256": "5c3a8d9071f2d3a86058da5293b910eca840242ee8b32eb988a1c8ddf7afe1d2",
+        "stage3_4_receipt_sha256": "c8b85c924a2228e556d0624c1e633a20307bf3ec272a30804cf9a972398d7f37",
+        "stage5_receipt_sha256": "b4e3a5913832cdbca7a0e427beffff08759f12f00f9791e2dad51684a4e27380"
       },
-      "master_bundle_sha256": "83cecb6ac998de37ef69df06e791abe170ee3892127ff402e9c78d8d7c7d3b51"
+      "master_bundle_sha256": "fdd9b58f4cba7f3d353a298cb05df7b6f486d025faacaaba35bbd24432a6c994"
     },
     "MIN @ GB": {
       "matchup": "MIN @ GB",
@@ -12992,8 +12989,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132126Z0000-af0953d6",
-        "content_hash": "3f3e7ec786cb79ea5e4d30f114df205e618523a245995243825a4bc45421f218",
+        "trace_id": "2026-11-15T162114Z0000-b4430096",
+        "content_hash": "49c58b950a6ea5230304835b7235269fd7cbf88f70b0f4cf94e93b799e742c35",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -13065,6 +13062,7 @@
             "Jordan Love": 8,
             "Kaleb Johnson": 5,
             "Keisean Nixon": 8,
+            "MarShawn Lloyd": 8,
             "Matthew Golden": 8,
             "Savion Williams": 3,
             "Trey Smack": 8,
@@ -13081,12 +13079,11 @@
             "Jordan Mason": 2,
             "Justin Jefferson": 5,
             "Kirk Cousins": 1,
+            "Myles Price": 3,
             "Will Reichard": 6,
             "Bo Melton": 7,
             "Jonnu Smith": 4,
-            "Myles Price": 3,
             "Pierre Strong": 3,
-            "T.J. Hockenson": 6,
             "Tai Felton": 4
           }
         },
@@ -17016,15 +17013,15 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.7553,
-          "whitened_z": 0.7328,
-          "epa_adj": 0.01832,
+          "whitened_z": 0.7321,
+          "epa_adj": 0.0183,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "MIN pass rush & blitz tendency vs GB OL & Jordan Love pocket survival",
           "note": "MIN pass rush & blitz tendency vs GB OL & Jordan Love pocket survival"
         },
         "weather": {
           "raw_z": -0.0756,
-          "whitened_z": -0.1625,
+          "whitened_z": -0.1624,
           "epa_adj": -0.00406,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Lambeau Field (grass, 54.0F, wind 6.0 mph): MIN @ GB Week 10 venue=Lambeau Field (indoor=False, wind=6 mph, temp=54F)",
@@ -17032,31 +17029,31 @@
         },
         "restFatigue": {
           "raw_z": -0.0248,
-          "whitened_z": -0.146,
-          "epa_adj": -0.00365,
+          "whitened_z": -0.1458,
+          "epa_adj": -0.00364,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for MIN @ GB",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for MIN @ GB"
         },
         "coveragePersonnel": {
           "raw_z": -0.2504,
-          "whitened_z": -0.4855,
-          "epa_adj": -0.01214,
+          "whitened_z": -0.4849,
+          "epa_adj": -0.01212,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "GB MOFO/MOFC coverage shell mix vs Kirk Cousins & MIN 11/12 personnel",
           "note": "GB MOFO/MOFC coverage shell mix vs Kirk Cousins & MIN 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": -1.62,
-          "whitened_z": -1.789,
-          "epa_adj": -0.04473,
+          "whitened_z": -1.7874,
+          "epa_adj": -0.04469,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Kirk Cousins (MIN) vs Jordan Love (GB) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Kirk Cousins (MIN) vs Jordan Love (GB) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.3312,
-          "whitened_z": -0.0585,
+          "whitened_z": -0.0583,
           "epa_adj": -0.00146,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor MIN +2.5 / GB -2.5 (total 42.5) FWL residualized",
@@ -17064,27 +17061,27 @@
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 22.78,
-        "away_score_p50": 22.44,
-        "home_score_mean": 23.53,
-        "home_score_p50": 22.81,
-        "total_points_mean": 46.31,
-        "total_points_p50": 46.69,
-        "away_win_prob": 0.4574,
-        "home_cover_prob": 0.4602,
+        "away_score_mean": 21.38,
+        "away_score_p50": 20.88,
+        "home_score_mean": 22.95,
+        "home_score_p50": 22.23,
+        "total_points_mean": 44.33,
+        "total_points_p50": 45.37,
+        "away_win_prob": 0.4562,
+        "home_cover_prob": 0.4517,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 53,
+        "total_props_on_board": 58,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 53,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 59,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 58,
+        "props_with_two_sided_prices": 43,
+        "approved_plays_count": 7,
+        "approved_prop_bets": 7,
+        "pass_decisions_count": 57,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "7 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -17092,26 +17089,26 @@
           "selection": "MIN +2.5",
           "american_odds": 100,
           "market_prob_devig": 0.4783,
-          "post_sim_prob": 0.5398,
-          "wilson_lower_90": 0.5316,
-          "net_edge": 0.0615,
-          "confidence_score": "57/100",
+          "post_sim_prob": 0.5483,
+          "wilson_lower_90": 0.5401,
+          "net_edge": 0.07,
+          "confidence_score": "58/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: MIN +2.5 post-sim cover prob 53.98% vs 47.83% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: MIN +2.5 post-sim cover prob 54.83% vs 47.83% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "GB -2.5",
           "american_odds": -120,
           "market_prob_devig": 0.5217,
-          "post_sim_prob": 0.4602,
-          "wilson_lower_90": 0.452,
-          "net_edge": -0.0615,
+          "post_sim_prob": 0.4517,
+          "wilson_lower_90": 0.4435,
+          "net_edge": -0.07,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -17119,33 +17116,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: GB -2.5 post-sim cover prob 46.02% vs 52.17% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: GB -2.5 post-sim cover prob 45.17% vs 52.17% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 42.5",
           "american_odds": -105,
           "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.6095,
-          "wilson_lower_90": 0.6014,
-          "net_edge": 0.1203,
-          "confidence_score": "64/100",
+          "post_sim_prob": 0.5175,
+          "wilson_lower_90": 0.5093,
+          "net_edge": 0.0283,
+          "confidence_score": "53/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 42.5 post-sim prob 60.95% vs 48.92% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 42.5 post-sim prob 51.75% vs 48.92% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 42.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.3905,
-          "wilson_lower_90": 0.3825,
-          "net_edge": -0.1203,
+          "post_sim_prob": 0.4825,
+          "wilson_lower_90": 0.4743,
+          "net_edge": -0.0283,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -17153,33 +17150,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 42.5 prob 39.05% < 51.08% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 42.5 prob 48.25% < 51.08% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "MIN ML",
           "american_odds": 124,
           "market_prob_devig": 0.4279,
-          "post_sim_prob": 0.4574,
-          "wilson_lower_90": 0.4492,
-          "net_edge": 0.0295,
-          "confidence_score": "54/100",
+          "post_sim_prob": 0.4562,
+          "wilson_lower_90": 0.448,
+          "net_edge": 0.0283,
+          "confidence_score": "53/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: MIN ML (+124) post-sim win prob 45.74% vs 42.79% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: MIN ML (+124) post-sim win prob 45.62% vs 42.79% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "GB ML",
           "american_odds": -148,
           "market_prob_devig": 0.5721,
-          "post_sim_prob": 0.5426,
-          "wilson_lower_90": 0.5344,
-          "net_edge": -0.0295,
+          "post_sim_prob": 0.5438,
+          "wilson_lower_90": 0.5356,
+          "net_edge": -0.0283,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -17187,18 +17184,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: GB ML (-148) post-sim win prob 54.26% vs 57.21% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: GB ML (-148) post-sim win prob 54.38% vs 57.21% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "8a7d23e41c0745364b05a08348ac8e7f91bbda224dfae8873eb74a68e94e6d87",
-        "stage1a_receipt_sha256": "776c5a48439c434fbae7bec93032409509f9610be24a6d8818f010a3bb75255e",
-        "stage1b_receipt_sha256": "c7fe2703b2c56a5500b559f1f4fea3f0d486e2c772f4f53361025b18e92d0562",
-        "stage2_receipt_sha256": "ae270a32a1e62053d02d2bcc228868ebcd664d6484bb2f973076da33ce14a377",
-        "stage3_4_receipt_sha256": "1605b1adf44599b3b0812974f9b7eec2c61c7b9d169572d7316382a493c07348",
-        "stage5_receipt_sha256": "7d3f9eb36f69b734283e9490af5c6f82b855904cbd351aee56c60aab6ccd8f24"
+        "stage0_receipt_sha256": "5f10a67a312264e25d31fa29c2ddb5909023e4313742b795256bcd12c669cb45",
+        "stage1a_receipt_sha256": "be498f0a38c2cf28c6021650ac13988ff7c5e72a36bb70cd4caabe8785501de7",
+        "stage1b_receipt_sha256": "3b24312b91da0f49408812eafd7f86d0c520999d6bbd64d0ee8d2db64a0f0edd",
+        "stage2_receipt_sha256": "65c2e51a344e84c9ddd95e671977c4f2ef4d50642c4bf60ede611e38de919fcf",
+        "stage3_4_receipt_sha256": "f9befdc4786d6afe0569c5d7bfe622bebb2a8d91eaca2e6d79c46a5169d44f78",
+        "stage5_receipt_sha256": "f9c5471eab694150f40463ccd36506e532d4900356eec86dadebe5583f028b20"
       },
-      "master_bundle_sha256": "7190e66a7b9364953fee0247107249b29fddc6e7d8902fd71b224125feeff5b1"
+      "master_bundle_sha256": "10ce60c74b465051bb016092e3deff27094b964fec46b924415a0fe18b8bf2e6"
     },
     "CAR @ NO": {
       "matchup": "CAR @ NO",
@@ -17214,7 +17211,7 @@
         "CAR": "Bryce Young",
         "NO": "Tyler Shough"
       },
-      "verified_board_athletes_count": 37,
+      "verified_board_athletes_count": 36,
       "matchup_environment": {
         "window": "Sun, November 15th at 1:00 PM EST",
         "posted_home_spread": -1.5,
@@ -17283,8 +17280,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132135Z0000-76820c80",
-        "content_hash": "e9fd61d98858901e442bfc6cc7b7a59109b9beb42fe082e4af09ef6f1039e5bd",
+        "trace_id": "2026-11-15T162058Z0000-ee0e7744",
+        "content_hash": "833d710bee39c11599889dd97a53e98725b8aa393852da0c7e6e6b959ec51988",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -17360,6 +17357,7 @@
             "Tetairoa McMillan": 7,
             "Tommy Tremble": 7,
             "Tre'von Moehrig": 7,
+            "Trevor Etienne": 3,
             "Tyrel Dodson": 4,
             "Xavier Legette": 2,
             "Alvin Kamara": 6,
@@ -17381,10 +17379,8 @@
             "AJ Dillon": 4,
             "Bryce Lance": 7,
             "Brycen Tremayne": 7,
-            "CJ Donaldson": 6,
             "Kendre Miller": 6,
             "Mitchell Evans": 7,
-            "Trevor Etienne": 3,
             "Daniel Carlson": 7
           }
         },
@@ -21314,15 +21310,15 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": -0.5116,
-          "whitened_z": -0.511,
-          "epa_adj": -0.01278,
+          "whitened_z": -0.5085,
+          "epa_adj": -0.01271,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "CAR pass rush & blitz tendency vs NO OL & Tyler Shough pocket survival",
           "note": "CAR pass rush & blitz tendency vs NO OL & Tyler Shough pocket survival"
         },
         "weather": {
           "raw_z": 0.0,
-          "whitened_z": 0.0617,
+          "whitened_z": 0.0616,
           "epa_adj": 0.00154,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Caesars Superdome (turf, 70.0F, wind 0.0 mph): CAR @ NO Week 10 venue=Caesars Superdome (indoor=True, wind=0 mph, temp=70F)",
@@ -21330,59 +21326,59 @@
         },
         "restFatigue": {
           "raw_z": -0.0531,
-          "whitened_z": 0.0347,
-          "epa_adj": 0.00087,
+          "whitened_z": 0.0346,
+          "epa_adj": 0.00086,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for CAR @ NO",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for CAR @ NO"
         },
         "coveragePersonnel": {
           "raw_z": -0.0072,
-          "whitened_z": 0.1598,
-          "epa_adj": 0.004,
+          "whitened_z": 0.1591,
+          "epa_adj": 0.00398,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "NO MOFO/MOFC coverage shell mix vs Bryce Young & CAR 11/12 personnel",
           "note": "NO MOFO/MOFC coverage shell mix vs Bryce Young & CAR 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 0.7574,
-          "whitened_z": 0.9407,
-          "epa_adj": 0.02352,
+          "whitened_z": 0.936,
+          "epa_adj": 0.0234,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Bryce Young (CAR) vs Tyler Shough (NO) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Bryce Young (CAR) vs Tyler Shough (NO) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": 0.0396,
-          "whitened_z": -0.0655,
-          "epa_adj": -0.00164,
+          "whitened_z": -0.0652,
+          "epa_adj": -0.00163,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor CAR +1.5 / NO -1.5 (total 48.5) FWL residualized",
           "note": "Layer-1 market anchor CAR +1.5 / NO -1.5 (total 48.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 21.68,
-        "away_score_p50": 20.82,
-        "home_score_mean": 21.33,
-        "home_score_p50": 20.37,
-        "total_points_mean": 43.0,
-        "total_points_p50": 43.24,
-        "away_win_prob": 0.4987,
-        "home_cover_prob": 0.4545,
+        "away_score_mean": 22.53,
+        "away_score_p50": 21.43,
+        "home_score_mean": 23.12,
+        "home_score_p50": 22.13,
+        "total_points_mean": 45.65,
+        "total_points_p50": 45.96,
+        "away_win_prob": 0.4916,
+        "home_cover_prob": 0.4554,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 65,
+        "total_props_on_board": 66,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 65,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 71,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 66,
+        "props_with_two_sided_prices": 52,
+        "approved_plays_count": 6,
+        "approved_prop_bets": 6,
+        "pass_decisions_count": 66,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "6 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -21390,9 +21386,9 @@
           "selection": "CAR +1.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.5455,
-          "wilson_lower_90": 0.5373,
-          "net_edge": 0.0347,
+          "post_sim_prob": 0.5446,
+          "wilson_lower_90": 0.5364,
+          "net_edge": 0.0338,
           "confidence_score": "54/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -21400,16 +21396,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: CAR +1.5 post-sim cover prob 54.55% vs 51.08% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: CAR +1.5 post-sim cover prob 54.46% vs 51.08% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "NO -1.5",
           "american_odds": -105,
           "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.4545,
-          "wilson_lower_90": 0.4463,
-          "net_edge": -0.0347,
+          "post_sim_prob": 0.4554,
+          "wilson_lower_90": 0.4472,
+          "net_edge": -0.0338,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -21417,16 +21413,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: NO -1.5 post-sim cover prob 45.45% vs 48.92% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: NO -1.5 post-sim cover prob 45.54% vs 48.92% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 48.5",
           "american_odds": -118,
           "market_prob_devig": 0.5174,
-          "post_sim_prob": 0.3623,
-          "wilson_lower_90": 0.3544,
-          "net_edge": -0.1551,
+          "post_sim_prob": 0.404,
+          "wilson_lower_90": 0.396,
+          "net_edge": -0.1134,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -21434,50 +21430,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 48.5 post-sim prob 36.23% vs 51.74% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 48.5 post-sim prob 40.40% vs 51.74% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 48.5",
           "american_odds": -102,
           "market_prob_devig": 0.4826,
-          "post_sim_prob": 0.6377,
-          "wilson_lower_90": 0.6298,
-          "net_edge": 0.1551,
-          "confidence_score": "69/100",
+          "post_sim_prob": 0.596,
+          "wilson_lower_90": 0.5879,
+          "net_edge": 0.1134,
+          "confidence_score": "64/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6377, market_prob=0.4826, edge=+0.1551)."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 48.5 post-sim prob 59.60% vs 48.26% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "CAR ML",
           "american_odds": -102,
           "market_prob_devig": 0.4826,
-          "post_sim_prob": 0.4987,
-          "wilson_lower_90": 0.4905,
-          "net_edge": 0.0161,
-          "confidence_score": "52/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: CAR ML (-102) post-sim win prob 49.87% vs 48.26% de-vigged market."
-        },
-        {
-          "market": "Moneyline",
-          "selection": "NO ML",
-          "american_odds": -118,
-          "market_prob_devig": 0.5174,
-          "post_sim_prob": 0.5013,
-          "wilson_lower_90": 0.4931,
-          "net_edge": -0.0161,
+          "post_sim_prob": 0.4916,
+          "wilson_lower_90": 0.4834,
+          "net_edge": 0.009,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -21485,18 +21464,35 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: NO ML (-118) post-sim win prob 50.13% vs 51.74% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: CAR ML (-102) post-sim win prob 49.16% vs 48.26% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NO ML",
+          "american_odds": -118,
+          "market_prob_devig": 0.5174,
+          "post_sim_prob": 0.5084,
+          "wilson_lower_90": 0.5002,
+          "net_edge": -0.009,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: NO ML (-118) post-sim win prob 50.84% vs 51.74% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "3ccc760f8fc4396b07851b43c5b92ec76c70dc72aedf99866a547edd061c6a65",
-        "stage1a_receipt_sha256": "d1268ee3e408c7b350eaadf5b154e51a71d20d397559856b30d15f2add1649ea",
-        "stage1b_receipt_sha256": "0df31ad087d9af8e1a5c58deff9b55aedb9fefb6deb42c275838398b1c224d70",
-        "stage2_receipt_sha256": "78b2587ae3ea2b16c46628b571e7bf8e663b4c8e9a667284d38f135f6640e326",
-        "stage3_4_receipt_sha256": "7d4ecd6f816190e36a36f82bb501c510c4a10fba1723ae84b7c7a55d1738b015",
-        "stage5_receipt_sha256": "b3f27e88ab794943f4bcceaaf903308a50d693da8361aba508835c1c7e0d4b7f"
+        "stage0_receipt_sha256": "96f23bd2d1c2297d23bf7caeb389460b1eaf05522ae31221a8e5be14bbaef440",
+        "stage1a_receipt_sha256": "cd4b643c52e4520a680498b94e6ad34dcbab551c906cf086b35088a991ef8595",
+        "stage1b_receipt_sha256": "8fe99f79a26159cb1b54d1d36e43ef08a142719a48db075145690d54ded42bee",
+        "stage2_receipt_sha256": "a17b5cdead06455c159e98201867677e149518aa3c85796c146fe2c7e61895bd",
+        "stage3_4_receipt_sha256": "d01bc85915dfba1ee3506a2a2d13610d3f2752e97a7d2c655ba7caadca57ca7b",
+        "stage5_receipt_sha256": "2ae26948113b132bafec76809143f8a0afccfe8a34975d1c40194df8dd24e82f"
       },
-      "master_bundle_sha256": "9e43c976b8fe26606b1dd910b499825d903043f0ea66da0209b78eed689edae6"
+      "master_bundle_sha256": "e14be0d99a938a7f9b44cfc55a235005857f00b9019603a522f3d573acbfde3e"
     },
     "JAX @ TEN": {
       "matchup": "JAX @ TEN",
@@ -21581,8 +21577,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132143Z0000-ed0743e0",
-        "content_hash": "bcbc347717f0b7efba598c780a17d0da3e73ada9c5977a54f356b264ff87235d",
+        "trace_id": "2026-11-15T161137Z0000-afc44e92",
+        "content_hash": "304f8d8917a0b17e0ba38206e6d4f46dd729eb7ef0d5bbe94449d7b81dd04072",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -25619,75 +25615,75 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.4815,
-          "whitened_z": 0.3667,
-          "epa_adj": 0.00917,
+          "whitened_z": 0.3686,
+          "epa_adj": 0.00922,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "JAX pass rush & blitz tendency vs TEN OL & Cam Ward pocket survival",
           "note": "JAX pass rush & blitz tendency vs TEN OL & Cam Ward pocket survival"
         },
         "weather": {
           "raw_z": -0.0756,
-          "whitened_z": -0.1022,
-          "epa_adj": -0.00256,
+          "whitened_z": -0.1028,
+          "epa_adj": -0.00257,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Nissan Stadium (grass, 54.0F, wind 6.0 mph): JAX @ TEN Week 10 venue=Nissan Stadium (indoor=False, wind=6 mph, temp=54F)",
           "note": "Nissan Stadium (grass, 54.0F, wind 6.0 mph): JAX @ TEN Week 10 venue=Nissan Stadium (indoor=False, wind=6 mph, temp=54F)"
         },
         "restFatigue": {
           "raw_z": -0.1298,
-          "whitened_z": -0.1598,
-          "epa_adj": -0.004,
+          "whitened_z": -0.1607,
+          "epa_adj": -0.00402,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for JAX @ TEN",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for JAX @ TEN"
         },
         "coveragePersonnel": {
           "raw_z": 0.4441,
-          "whitened_z": 0.2543,
-          "epa_adj": 0.00636,
+          "whitened_z": 0.2558,
+          "epa_adj": 0.00639,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "TEN MOFO/MOFC coverage shell mix vs Trevor Lawrence & JAX 11/12 personnel",
           "note": "TEN MOFO/MOFC coverage shell mix vs Trevor Lawrence & JAX 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 1.62,
-          "whitened_z": 1.2361,
-          "epa_adj": 0.0309,
+          "whitened_z": 1.2427,
+          "epa_adj": 0.03107,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Trevor Lawrence (JAX) vs Cam Ward (TEN) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Trevor Lawrence (JAX) vs Cam Ward (TEN) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.7668,
-          "whitened_z": -0.8779,
-          "epa_adj": -0.02195,
+          "whitened_z": -0.8827,
+          "epa_adj": -0.02207,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor JAX -10.5 / TEN +10.5 (total 46.5) FWL residualized",
           "note": "Layer-1 market anchor JAX -10.5 / TEN +10.5 (total 46.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 29.04,
-        "away_score_p50": 28.81,
-        "home_score_mean": 14.4,
-        "home_score_p50": 13.88,
-        "total_points_mean": 43.44,
-        "total_points_p50": 43.5,
-        "away_win_prob": 0.8408,
-        "home_cover_prob": 0.3391,
+        "away_score_mean": 28.8,
+        "away_score_p50": 28.8,
+        "home_score_mean": 16.28,
+        "home_score_p50": 15.95,
+        "total_points_mean": 45.08,
+        "total_points_p50": 45.41,
+        "away_win_prob": 0.8348,
+        "home_cover_prob": 0.4464,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 63,
+        "total_props_on_board": 68,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 63,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
+        "core_athlete_props_projected": 68,
+        "props_with_two_sided_prices": 52,
+        "approved_plays_count": 5,
+        "approved_prop_bets": 5,
         "pass_decisions_count": 69,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "5 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -25695,26 +25691,26 @@
           "selection": "JAX -10.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.6609,
-          "wilson_lower_90": 0.6531,
-          "net_edge": 0.1501,
-          "confidence_score": "68/100",
+          "post_sim_prob": 0.5536,
+          "wilson_lower_90": 0.5454,
+          "net_edge": 0.0428,
+          "confidence_score": "55/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6609, market_prob=0.5108, edge=+0.1501)."
+          "gate_reason": "STAGE5_SPREAD_GATE: JAX -10.5 post-sim cover prob 55.36% vs 51.08% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "TEN +10.5",
           "american_odds": -105,
           "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.3391,
-          "wilson_lower_90": 0.3314,
-          "net_edge": -0.1501,
+          "post_sim_prob": 0.4464,
+          "wilson_lower_90": 0.4382,
+          "net_edge": -0.0428,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -25722,16 +25718,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: TEN +10.5 post-sim cover prob 33.91% vs 48.92% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: TEN +10.5 post-sim cover prob 44.64% vs 48.92% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 46.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.4239,
-          "wilson_lower_90": 0.4158,
-          "net_edge": -0.0761,
+          "post_sim_prob": 0.4294,
+          "wilson_lower_90": 0.4213,
+          "net_edge": -0.0706,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -25739,33 +25735,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 46.5 post-sim prob 42.39% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 46.5 post-sim prob 42.94% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 46.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.5761,
-          "wilson_lower_90": 0.568,
-          "net_edge": 0.0761,
-          "confidence_score": "59/100",
+          "post_sim_prob": 0.5706,
+          "wilson_lower_90": 0.5624,
+          "net_edge": 0.0706,
+          "confidence_score": "58/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 46.5 post-sim prob 57.61% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 46.5 post-sim prob 57.06% vs 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "JAX ML",
           "american_odds": -750,
           "market_prob_devig": 0.8465,
-          "post_sim_prob": 0.8408,
-          "wilson_lower_90": 0.8347,
-          "net_edge": -0.0057,
+          "post_sim_prob": 0.8348,
+          "wilson_lower_90": 0.8286,
+          "net_edge": -0.0117,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -25773,16 +25769,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: JAX ML (-750) post-sim win prob 84.08% vs 84.65% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: JAX ML (-750) post-sim win prob 83.48% vs 84.65% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "TEN ML",
           "american_odds": 525,
           "market_prob_devig": 0.1535,
-          "post_sim_prob": 0.1592,
-          "wilson_lower_90": 0.1533,
-          "net_edge": 0.0057,
+          "post_sim_prob": 0.1652,
+          "wilson_lower_90": 0.1592,
+          "net_edge": 0.0117,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -25790,18 +25786,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: TEN ML (+525) post-sim win prob 15.92% vs 15.35% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: TEN ML (+525) post-sim win prob 16.52% vs 15.35% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "d31529ef2ec1aff793387425a632b561c6301af3dde36a1f2d6af8f64915dbf0",
-        "stage1a_receipt_sha256": "056fff4557d6a5795f25624fe400b0542dc018c7eedd140935b34a860feb591c",
-        "stage1b_receipt_sha256": "89ea5141271491ec9872de64460d9339448d2e176a6cdbb6bcc80bfb2dc2b1e8",
-        "stage2_receipt_sha256": "41b1f3f23d7cb0a7c22196b2f122904df5a9fe79dc2e3b4fac067f315590973f",
-        "stage3_4_receipt_sha256": "23fd5a376e917a37f1e3708c4595517c8fe5c7cc1efb1d7dfdfda6f2dd72d881",
-        "stage5_receipt_sha256": "f596c9aeac772c2bbbf9d16e599c48c2c12d92efb544d0f6c36ac80b796bc162"
+        "stage0_receipt_sha256": "91b8298a1c8c67469078fe2b741ec33b07f3ec1cd86834e24c268ab821e77f39",
+        "stage1a_receipt_sha256": "a4cb02cf89d754488d1dd5a0ecf9d2188ebae7a540178d6d7fa60de9e2bbcd0c",
+        "stage1b_receipt_sha256": "279cb5636e345c70034557b8fed793b4860a7b82233fbd42264761490dee8dfa",
+        "stage2_receipt_sha256": "d53b3248072e9fe537dcde3e8ef82cf897abb8a1fa95969a091c50167b706d2f",
+        "stage3_4_receipt_sha256": "b4aa60a2ac295e1be106bd9f951dd5a3606d99c010bcd100231866b4bf8487be",
+        "stage5_receipt_sha256": "e396442b49a6d08f0192bb3a5e4c06479e34af46a560b339c0a39385046127a2"
       },
-      "master_bundle_sha256": "c38f3386656674628726f41cc928359c2b9e1196c1ee0acd9824251dc96490d5"
+      "master_bundle_sha256": "1bf20ad1aaad0754e63f3d4e3c6c8b44b3d4a65766383c065a338d667457c404"
     },
     "KC @ ATL": {
       "matchup": "KC @ ATL",
@@ -25886,8 +25882,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132150Z0000-de4edda8",
-        "content_hash": "b98d32612dd5716c43aadab79ea578b765b41b3fa7678652999cd8d3710085cd",
+        "trace_id": "2026-11-15T161137Z0000-23e29d6f",
+        "content_hash": "ef7d86e0b45a475116335022770b69bd034f9010efebdfef71485886d23c3921",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -29909,62 +29905,62 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.5256,
-          "whitened_z": 0.445,
-          "epa_adj": 0.01112,
+          "whitened_z": 0.4748,
+          "epa_adj": 0.01187,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "KC pass rush & blitz tendency vs ATL OL & Michael Penix Jr. pocket survival",
           "note": "KC pass rush & blitz tendency vs ATL OL & Michael Penix Jr. pocket survival"
         },
         "weather": {
           "raw_z": 0.0,
-          "whitened_z": -0.0538,
-          "epa_adj": -0.00135,
+          "whitened_z": -0.0574,
+          "epa_adj": -0.00144,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Mercedes-Benz Stadium (turf, 70.0F, wind 0.0 mph): KC @ ATL Week 10 venue=Mercedes-Benz Stadium (indoor=True, wind=0 mph, temp=70F)",
           "note": "Mercedes-Benz Stadium (turf, 70.0F, wind 0.0 mph): KC @ ATL Week 10 venue=Mercedes-Benz Stadium (indoor=True, wind=0 mph, temp=70F)"
         },
         "restFatigue": {
           "raw_z": -0.0592,
-          "whitened_z": -0.1285,
-          "epa_adj": -0.00321,
+          "whitened_z": -0.1372,
+          "epa_adj": -0.00343,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for KC @ ATL",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for KC @ ATL"
         },
         "coveragePersonnel": {
           "raw_z": 0.2968,
-          "whitened_z": 0.1303,
-          "epa_adj": 0.00326,
+          "whitened_z": 0.1391,
+          "epa_adj": 0.00348,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "ATL MOFO/MOFC coverage shell mix vs Patrick Mahomes & KC 11/12 personnel",
           "note": "ATL MOFO/MOFC coverage shell mix vs Patrick Mahomes & KC 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 1.62,
-          "whitened_z": 1.386,
-          "epa_adj": 0.03465,
+          "whitened_z": 1.4791,
+          "epa_adj": 0.03698,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Patrick Mahomes (KC) vs Michael Penix Jr. (ATL) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Patrick Mahomes (KC) vs Michael Penix Jr. (ATL) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.0279,
-          "whitened_z": -0.3217,
-          "epa_adj": -0.00804,
+          "whitened_z": -0.3433,
+          "epa_adj": -0.00858,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor KC -3.0 / ATL +3.0 (total 47.5) FWL residualized",
           "note": "Layer-1 market anchor KC -3.0 / ATL +3.0 (total 47.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 27.64,
-        "away_score_p50": 28.25,
-        "home_score_mean": 20.34,
-        "home_score_p50": 19.74,
-        "total_points_mean": 47.98,
-        "total_points_p50": 47.75,
-        "away_win_prob": 0.719,
-        "home_cover_prob": 0.3566,
+        "away_score_mean": 26.44,
+        "away_score_p50": 27.31,
+        "home_score_mean": 21.32,
+        "home_score_p50": 20.54,
+        "total_points_mean": 47.75,
+        "total_points_p50": 47.33,
+        "away_win_prob": 0.6378,
+        "home_cover_prob": 0.4553,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -29972,12 +29968,12 @@
         "total_props_on_board": 59,
         "total_market_types_on_board": 77,
         "core_athlete_props_projected": 59,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 65,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "props_with_two_sided_prices": 43,
+        "approved_plays_count": 5,
+        "approved_prop_bets": 5,
+        "pass_decisions_count": 60,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "5 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -29985,43 +29981,9 @@
           "selection": "KC -3.0",
           "american_odds": -118,
           "market_prob_devig": 0.5174,
-          "post_sim_prob": 0.6434,
-          "wilson_lower_90": 0.6355,
-          "net_edge": 0.126,
-          "confidence_score": "65/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6434, market_prob=0.5174, edge=+0.1260)."
-        },
-        {
-          "market": "Spread",
-          "selection": "ATL +3.0",
-          "american_odds": -102,
-          "market_prob_devig": 0.4826,
-          "post_sim_prob": 0.3566,
-          "wilson_lower_90": 0.3488,
-          "net_edge": -0.126,
-          "confidence_score": "51/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: ATL +3.0 post-sim cover prob 35.66% vs 48.26% de-vigged market."
-        },
-        {
-          "market": "Total",
-          "selection": "Over 47.5",
-          "american_odds": -105,
-          "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.5104,
-          "wilson_lower_90": 0.5022,
-          "net_edge": 0.0212,
+          "post_sim_prob": 0.5447,
+          "wilson_lower_90": 0.5365,
+          "net_edge": 0.0273,
           "confidence_score": "53/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -30029,50 +29991,84 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 47.5 post-sim prob 51.04% vs 48.92% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: KC -3.0 post-sim cover prob 54.47% vs 51.74% de-vigged market."
+        },
+        {
+          "market": "Spread",
+          "selection": "ATL +3.0",
+          "american_odds": -102,
+          "market_prob_devig": 0.4826,
+          "post_sim_prob": 0.4553,
+          "wilson_lower_90": 0.4471,
+          "net_edge": -0.0273,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_SPREAD_GATE: ATL +3.0 post-sim cover prob 45.53% vs 48.26% de-vigged market."
+        },
+        {
+          "market": "Total",
+          "selection": "Over 47.5",
+          "american_odds": -105,
+          "market_prob_devig": 0.4892,
+          "post_sim_prob": 0.4764,
+          "wilson_lower_90": 0.4682,
+          "net_edge": -0.0128,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 47.5 post-sim prob 47.64% vs 48.92% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 47.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.4896,
-          "wilson_lower_90": 0.4814,
-          "net_edge": -0.0212,
-          "confidence_score": "51/100",
+          "post_sim_prob": 0.5236,
+          "wilson_lower_90": 0.5154,
+          "net_edge": 0.0128,
+          "confidence_score": "52/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 47.5 prob 48.96% < 51.08% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 47.5 post-sim prob 52.36% vs 51.08% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "KC ML",
           "american_odds": -180,
           "market_prob_devig": 0.6164,
-          "post_sim_prob": 0.719,
-          "wilson_lower_90": 0.7115,
-          "net_edge": 0.1026,
-          "confidence_score": "62/100",
+          "post_sim_prob": 0.6378,
+          "wilson_lower_90": 0.6299,
+          "net_edge": 0.0214,
+          "confidence_score": "53/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: KC ML (-180) post-sim win prob 71.90% vs 61.64% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: KC ML (-180) post-sim win prob 63.78% vs 61.64% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "ATL ML",
           "american_odds": 150,
           "market_prob_devig": 0.3836,
-          "post_sim_prob": 0.281,
-          "wilson_lower_90": 0.2737,
-          "net_edge": -0.1026,
+          "post_sim_prob": 0.3622,
+          "wilson_lower_90": 0.3543,
+          "net_edge": -0.0214,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -30080,18 +30076,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: ATL ML (+150) post-sim win prob 28.10% vs 38.36% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: ATL ML (+150) post-sim win prob 36.22% vs 38.36% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "1be69ff1f8abd8e92caaa06fed8f0e3876c51c8d7615ffd8d881cdea6ed00547",
-        "stage1a_receipt_sha256": "2f7ad3efe5590845f8a260298c4608f789cecfb3b9dbc40602777674cce3359b",
-        "stage1b_receipt_sha256": "5d110ccd49da2497af7ca731c2ed093e6d7aafabd423dc93dea973e398ae5b8c",
-        "stage2_receipt_sha256": "eb3440cd15b0963c1c01a7cfe8d08abba609e0c2099eaa0166a315acf729fbd6",
-        "stage3_4_receipt_sha256": "55fd9f74889864183bb71640f78bfbd64c4e644c9202e3e76947c2a7ac2a6fcf",
-        "stage5_receipt_sha256": "32b1fc8db31f30ed966a7f3ff23d522344b0a34ed00d9668e098ed1b27ccafff"
+        "stage0_receipt_sha256": "5feb57d8fef951d6c95c9a0554c1d3be73925981cfa70a3a95e3206bdbb2fb68",
+        "stage1a_receipt_sha256": "5c941758ee86f16029f7a30bb5aeda5c4c01df446acb3c7e8425f5b7653a3b89",
+        "stage1b_receipt_sha256": "49a5b1b34d06e0d9b637ca65575e87381864c800c2aea3a0c1e726513c0627b4",
+        "stage2_receipt_sha256": "f92ebdbe9bf1526eb2f26a1a41d37dfe80312e065ccd1944803912c82ce21f40",
+        "stage3_4_receipt_sha256": "cd1058d212b2ab2f726dd478a4cd01d6eb0f6e5eeee5fcd9b6c04b01ba2f943d",
+        "stage5_receipt_sha256": "794958e0409f0e842d2351114d30a259f3e45b622da4190db89b411d53a3a8a9"
       },
-      "master_bundle_sha256": "00f5e3b297dcb345a29b9b24249abfed67c793f01eb5500bf056fa7c71fcd01d"
+      "master_bundle_sha256": "0599555b3587c9539a20361b18475a84909ae7db765d51791df2fd039d1c5e01"
     },
     "BUF @ NYJ": {
       "matchup": "BUF @ NYJ",
@@ -30107,19 +30103,19 @@
         "BUF": "Josh Allen",
         "NYJ": "Geno Smith"
       },
-      "verified_board_athletes_count": 32,
+      "verified_board_athletes_count": 34,
       "matchup_environment": {
         "window": "Sun, November 15th at 1:00 PM EST",
         "posted_home_spread": 8.5,
         "posted_total": 50.5,
         "away_spread_label": "BUF -8.5",
         "home_spread_label": "NYJ +8.5",
-        "away_sp_odds": -105,
-        "home_sp_odds": -115,
+        "away_sp_odds": -102,
+        "home_sp_odds": -118,
         "over_tot_odds": -115,
         "under_tot_odds": -105,
-        "away_ml_odds": -470,
-        "home_ml_odds": 360,
+        "away_ml_odds": -455,
+        "home_ml_odds": 350,
         "open_home_spread": 7.0,
         "open_total": 46.5,
         "stadium": "MetLife Stadium",
@@ -30176,8 +30172,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132159Z0000-b114dfba",
-        "content_hash": "879b2acdc50585558bfeffabbac5b3b0183129f76615638946914d51915dde6e",
+        "trace_id": "2026-11-15T162126Z0000-4aaab465",
+        "content_hash": "0fffe5ebf1b9e50e862b491f5cbd197215192325c1fe2ac09585faaefedf18b0",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -30267,7 +30263,9 @@
             "Jamien Sherwood": 7,
             "Jason Sanders": 7,
             "Kenyon Sadiq": 7,
+            "Kingsley Enagbare": 6,
             "Mason Taylor": 4,
+            "Minkah Fitzpatrick": 4,
             "Omar Cooper Jr.": 3,
             "Isaiah Davis": 6,
             "Isaiah Williams": 6,
@@ -34202,102 +34200,102 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.4014,
-          "whitened_z": 0.3006,
-          "epa_adj": 0.00751,
+          "whitened_z": 0.3238,
+          "epa_adj": 0.0081,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "BUF pass rush & blitz tendency vs NYJ OL & Geno Smith pocket survival",
           "note": "BUF pass rush & blitz tendency vs NYJ OL & Geno Smith pocket survival"
         },
         "weather": {
           "raw_z": -0.0756,
-          "whitened_z": -0.0934,
-          "epa_adj": -0.00234,
+          "whitened_z": -0.1006,
+          "epa_adj": -0.00252,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "MetLife Stadium (grass, 54.0F, wind 6.0 mph): BUF @ NYJ Week 10 venue=MetLife Stadium (indoor=False, wind=6 mph, temp=54F)",
           "note": "MetLife Stadium (grass, 54.0F, wind 6.0 mph): BUF @ NYJ Week 10 venue=MetLife Stadium (indoor=False, wind=6 mph, temp=54F)"
         },
         "restFatigue": {
           "raw_z": -0.0968,
-          "whitened_z": -0.1217,
-          "epa_adj": -0.00304,
+          "whitened_z": -0.131,
+          "epa_adj": -0.00328,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for BUF @ NYJ",
           "note": "Week 10 Sun, November 15th at 1:00 PM EST rest/travel differential for BUF @ NYJ"
         },
         "coveragePersonnel": {
           "raw_z": 0.6359,
-          "whitened_z": 0.4194,
-          "epa_adj": 0.01049,
+          "whitened_z": 0.4518,
+          "epa_adj": 0.0113,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "NYJ MOFO/MOFC coverage shell mix vs Josh Allen & BUF 11/12 personnel",
           "note": "NYJ MOFO/MOFC coverage shell mix vs Josh Allen & BUF 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 1.62,
-          "whitened_z": 1.1795,
-          "epa_adj": 0.02949,
+          "whitened_z": 1.2704,
+          "epa_adj": 0.03176,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Josh Allen (BUF) vs Geno Smith (NYJ) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Josh Allen (BUF) vs Geno Smith (NYJ) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.2313,
-          "whitened_z": -0.4552,
-          "epa_adj": -0.01138,
+          "whitened_z": -0.4903,
+          "epa_adj": -0.01226,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor BUF -8.5 / NYJ +8.5 (total 50.5) FWL residualized",
           "note": "Layer-1 market anchor BUF -8.5 / NYJ +8.5 (total 50.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 33.08,
-        "away_score_p50": 33.35,
-        "home_score_mean": 18.94,
-        "home_score_p50": 18.46,
-        "total_points_mean": 52.02,
-        "total_points_p50": 51.81,
-        "away_win_prob": 0.8585,
-        "home_cover_prob": 0.3483,
+        "away_score_mean": 31.21,
+        "away_score_p50": 31.83,
+        "home_score_mean": 20.0,
+        "home_score_p50": 19.69,
+        "total_points_mean": 51.21,
+        "total_points_p50": 50.89,
+        "away_win_prob": 0.776,
+        "home_cover_prob": 0.3867,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 62,
+        "total_props_on_board": 65,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 62,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 68,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 65,
+        "props_with_two_sided_prices": 47,
+        "approved_plays_count": 4,
+        "approved_prop_bets": 3,
+        "pass_decisions_count": 67,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "4 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
           "market": "Spread",
           "selection": "BUF -8.5",
-          "american_odds": -105,
-          "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.6517,
-          "wilson_lower_90": 0.6438,
-          "net_edge": 0.1625,
-          "confidence_score": "70/100",
+          "american_odds": -102,
+          "market_prob_devig": 0.4826,
+          "post_sim_prob": 0.6133,
+          "wilson_lower_90": 0.6053,
+          "net_edge": 0.1307,
+          "confidence_score": "66/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6517, market_prob=0.4892, edge=+0.1625)."
+          "recommended_kelly_units": 0.2143,
+          "decision": "PLAY",
+          "publishAllowed": true,
+          "gate_reason": "CLEARED_STAGE5_CONJUNCTION_GATE"
         },
         {
           "market": "Spread",
           "selection": "NYJ +8.5",
-          "american_odds": -115,
-          "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.3483,
-          "wilson_lower_90": 0.3405,
-          "net_edge": -0.1625,
+          "american_odds": -118,
+          "market_prob_devig": 0.5174,
+          "post_sim_prob": 0.3867,
+          "wilson_lower_90": 0.3787,
+          "net_edge": -0.1307,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -34305,33 +34303,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: NYJ +8.5 post-sim cover prob 34.83% vs 51.08% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: NYJ +8.5 post-sim cover prob 38.67% vs 51.74% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 50.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.5594,
-          "wilson_lower_90": 0.5512,
-          "net_edge": 0.0486,
-          "confidence_score": "56/100",
+          "post_sim_prob": 0.5511,
+          "wilson_lower_90": 0.5429,
+          "net_edge": 0.0403,
+          "confidence_score": "55/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 50.5 post-sim prob 55.94% vs 51.08% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 50.5 post-sim prob 55.11% vs 51.08% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 50.5",
           "american_odds": -105,
           "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.4406,
-          "wilson_lower_90": 0.4325,
-          "net_edge": -0.0486,
+          "post_sim_prob": 0.4489,
+          "wilson_lower_90": 0.4407,
+          "net_edge": -0.0403,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -34339,33 +34337,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 50.5 prob 44.06% < 48.92% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 50.5 prob 44.89% < 48.92% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "BUF ML",
-          "american_odds": -470,
-          "market_prob_devig": 0.7914,
-          "post_sim_prob": 0.8585,
-          "wilson_lower_90": 0.8527,
-          "net_edge": 0.0671,
-          "confidence_score": "58/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: BUF ML (-470) post-sim win prob 85.85% vs 79.14% de-vigged market."
-        },
-        {
-          "market": "Moneyline",
-          "selection": "NYJ ML",
-          "american_odds": 360,
-          "market_prob_devig": 0.2086,
-          "post_sim_prob": 0.1415,
-          "wilson_lower_90": 0.1359,
-          "net_edge": -0.0671,
+          "american_odds": -455,
+          "market_prob_devig": 0.7867,
+          "post_sim_prob": 0.776,
+          "wilson_lower_90": 0.7691,
+          "net_edge": -0.0107,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -34373,18 +34354,35 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: NYJ ML (+360) post-sim win prob 14.15% vs 20.86% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: BUF ML (-455) post-sim win prob 77.60% vs 78.67% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "NYJ ML",
+          "american_odds": 350,
+          "market_prob_devig": 0.2133,
+          "post_sim_prob": 0.224,
+          "wilson_lower_90": 0.2172,
+          "net_edge": 0.0107,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: NYJ ML (+350) post-sim win prob 22.40% vs 21.33% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "f18e4d6a0d8261964c2ed4f7e7f21c5ef5a363807bf2656584c1f77f4225e494",
-        "stage1a_receipt_sha256": "f12ddf6cb925a0476940784ab37dfed23889bf306f4f244ec496b6e0f3ad704d",
-        "stage1b_receipt_sha256": "3be2d54a80b5dcf26ba5c7ea204f6bb1196b10e86c94135ca2d0a8b6273265fe",
-        "stage2_receipt_sha256": "17bac8b867d337ce267c881d60fabf7594514d2b4f447d85d5e5a4059ae31b00",
-        "stage3_4_receipt_sha256": "66ecdd21d4addb60e7f0d75cbc0db0c178b98a50a23eb0fd9248a1b6ac5aa404",
-        "stage5_receipt_sha256": "0125034d27472e5d37eb93ab658805b292c78f02a6e03b74ac0ee7ff62961d1b"
+        "stage0_receipt_sha256": "525e727e8f6886e1ee5b6f5e983ef0f82fa1c1bf1b8723c34110217b009b2bc4",
+        "stage1a_receipt_sha256": "29ecd8319d0c8ed10e478d02057d8aa26e800dabab63ad03d25bd67901d6728b",
+        "stage1b_receipt_sha256": "2e9b6be9c9124569a47f4d3182ca6b88da9df5ee57b1fdb16d26342caf5b6632",
+        "stage2_receipt_sha256": "2869e5fab69864909a280eab599fde6e8c8336bd189f998973ecc2e909a921e8",
+        "stage3_4_receipt_sha256": "aa7fcae9736b0b147e32d366ffb85595b9666f442879c85d4a63511355cf4eaa",
+        "stage5_receipt_sha256": "1eaef90c874116389fb2b28bfa63b59f396e80e9be2dd8d4406a6d662c9b5b16"
       },
-      "master_bundle_sha256": "b5a7b30ef6a23b361a5120e7571c5920e22952f13e68349b5633f77c32ce34ba"
+      "master_bundle_sha256": "742dd26857d738f6f755e7db9bd5805bfd980982b3b73e4defd6486d2093fd11"
     },
     "LAR @ ARI": {
       "matchup": "LAR @ ARI",
@@ -34469,8 +34467,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132206Z0000-89b77be7",
-        "content_hash": "dee2bce1cf4a0aa6ad80b30dde7e95bbf836d3c4b1e909fd24c9a2ad0c767f4c",
+        "trace_id": "2026-11-15T161146Z0000-14ad0f71",
+        "content_hash": "064ad78421cff43a1a29a6b7b3b16329516efd3a5288bb722cca98ed16928564",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -38507,7 +38505,7 @@
         },
         "restFatigue": {
           "raw_z": -0.0826,
-          "whitened_z": -0.0657,
+          "whitened_z": -0.0655,
           "epa_adj": -0.00164,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 4:05 PM EST rest/travel differential for LAR @ ARI",
@@ -38523,30 +38521,30 @@
         },
         "qbSkillScript": {
           "raw_z": 0.8937,
-          "whitened_z": 0.8316,
-          "epa_adj": 0.02079,
+          "whitened_z": 0.8296,
+          "epa_adj": 0.02074,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Matthew Stafford (LAR) vs Carson Beck (ARI) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Matthew Stafford (LAR) vs Carson Beck (ARI) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.5094,
-          "whitened_z": -0.5711,
-          "epa_adj": -0.01428,
+          "whitened_z": -0.5699,
+          "epa_adj": -0.01425,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor LAR -9.5 / ARI +9.5 (total 38.5) FWL residualized",
           "note": "Layer-1 market anchor LAR -9.5 / ARI +9.5 (total 38.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 25.04,
-        "away_score_p50": 25.42,
-        "home_score_mean": 14.99,
-        "home_score_p50": 14.08,
-        "total_points_mean": 40.03,
-        "total_points_p50": 38.98,
-        "away_win_prob": 0.7498,
-        "home_cover_prob": 0.4698,
+        "away_score_mean": 24.54,
+        "away_score_p50": 24.8,
+        "home_score_mean": 14.75,
+        "home_score_p50": 14.04,
+        "total_points_mean": 39.29,
+        "total_points_p50": 38.24,
+        "away_win_prob": 0.7526,
+        "home_cover_prob": 0.5107,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -38554,12 +38552,12 @@
         "total_props_on_board": 67,
         "total_market_types_on_board": 77,
         "core_athlete_props_projected": 67,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 73,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "props_with_two_sided_prices": 55,
+        "approved_plays_count": 5,
+        "approved_prop_bets": 5,
+        "pass_decisions_count": 68,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "5 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -38567,77 +38565,77 @@
           "selection": "LAR -9.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.5302,
-          "wilson_lower_90": 0.522,
-          "net_edge": 0.0259,
-          "confidence_score": "53/100",
+          "post_sim_prob": 0.4893,
+          "wilson_lower_90": 0.4811,
+          "net_edge": -0.015,
+          "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: LAR -9.5 post-sim cover prob 53.02% vs 50.43% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: LAR -9.5 post-sim cover prob 48.93% vs 50.43% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "ARI +9.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.4698,
-          "wilson_lower_90": 0.4616,
-          "net_edge": -0.0259,
-          "confidence_score": "51/100",
+          "post_sim_prob": 0.5107,
+          "wilson_lower_90": 0.5025,
+          "net_edge": 0.015,
+          "confidence_score": "52/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: ARI +9.5 post-sim cover prob 46.98% vs 49.57% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: ARI +9.5 post-sim cover prob 51.07% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 38.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.5294,
-          "wilson_lower_90": 0.5212,
-          "net_edge": 0.0337,
-          "confidence_score": "54/100",
+          "post_sim_prob": 0.4829,
+          "wilson_lower_90": 0.4747,
+          "net_edge": -0.0128,
+          "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 38.5 post-sim prob 52.94% vs 49.57% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 38.5 post-sim prob 48.29% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 38.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.4706,
-          "wilson_lower_90": 0.4624,
-          "net_edge": -0.0337,
-          "confidence_score": "51/100",
+          "post_sim_prob": 0.5171,
+          "wilson_lower_90": 0.5089,
+          "net_edge": 0.0128,
+          "confidence_score": "52/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 38.5 prob 47.06% < 50.43% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 38.5 post-sim prob 51.71% vs 50.43% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "LAR ML",
           "american_odds": -485,
           "market_prob_devig": 0.7958,
-          "post_sim_prob": 0.7498,
-          "wilson_lower_90": 0.7426,
-          "net_edge": -0.046,
+          "post_sim_prob": 0.7526,
+          "wilson_lower_90": 0.7454,
+          "net_edge": -0.0432,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -38645,35 +38643,35 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: LAR ML (-485) post-sim win prob 74.98% vs 79.58% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: LAR ML (-485) post-sim win prob 75.26% vs 79.58% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "ARI ML",
           "american_odds": 370,
           "market_prob_devig": 0.2042,
-          "post_sim_prob": 0.2502,
-          "wilson_lower_90": 0.2431,
-          "net_edge": 0.046,
-          "confidence_score": "56/100",
+          "post_sim_prob": 0.2474,
+          "wilson_lower_90": 0.2404,
+          "net_edge": 0.0432,
+          "confidence_score": "55/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: ARI ML (+370) post-sim win prob 25.02% vs 20.42% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: ARI ML (+370) post-sim win prob 24.74% vs 20.42% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "c1d9ddc9e5d684ea0111627ea9ea4a0af0a8b002f9c302f8b094bbbb9eb9d2bd",
-        "stage1a_receipt_sha256": "723888730b2fea1a071d9b0dba59e81d60abbe140386c4fcade6caae73ef89e2",
-        "stage1b_receipt_sha256": "1bed2bbbf1ae6137a749153a93c78ef9887497d43c4f3c5418985fd6cf14ec88",
-        "stage2_receipt_sha256": "0b22b7941dc636cdb544b23472fa82d66ea0864ebe9e7002dd38a981673d7484",
-        "stage3_4_receipt_sha256": "19e673291b7ca7ef40ef1cee180caf2ba7f3a4a82e6810b3fa9b27ea4d637419",
-        "stage5_receipt_sha256": "7e9d8a36ec29ffd2d9469e7ded029494dc348ffe00e8b7064360370449210146"
+        "stage0_receipt_sha256": "d18af5ad4a1b959941739289bed714f9257845d7f4141c47f83451eea45cc7bc",
+        "stage1a_receipt_sha256": "6e1965ebd19d9430d50dc5e26c919effc9095168fcecfd31c64e2858ea92eac7",
+        "stage1b_receipt_sha256": "8b6ba3ea1eba0734aed8735ae7463f8cf9fe083219a260a9d4fba3d669d90fc5",
+        "stage2_receipt_sha256": "c54d3c8a7b70de41adf522ff6921fd217643df2ea2322aba44b2fe8b80c90e22",
+        "stage3_4_receipt_sha256": "ffad30f44ff338cba6ae931d7b1926661c2e4a1d905ee457461be62f318e6d61",
+        "stage5_receipt_sha256": "436027ef270c49e11f956279c5192d7819d9e27ea9bc216c17471b7f42b11530"
       },
-      "master_bundle_sha256": "84778098c02a0c52dcb746bf71f40044fe9132b384207358c8b93c9cdc1dc51e"
+      "master_bundle_sha256": "7e90098b2bbe0018c45af1f22b39f935ed7debf8ef2790cd5c947045cbb5ad3f"
     },
     "SEA @ LV": {
       "matchup": "SEA @ LV",
@@ -38689,7 +38687,7 @@
         "SEA": "Drew Lock",
         "LV": "Fernando Mendoza"
       },
-      "verified_board_athletes_count": 28,
+      "verified_board_athletes_count": 29,
       "matchup_environment": {
         "window": "Sun, November 15th at 4:05 PM EST",
         "posted_home_spread": 6.5,
@@ -38758,8 +38756,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132214Z0000-4116a963",
-        "content_hash": "fa81807cb560608e2fc288a4b1a6b16d311d81e90cd904b09261a0b0c1ab2a98",
+        "trace_id": "2026-11-15T161025Z0000-eaeff3ec",
+        "content_hash": "02be211b45bca19b87cd0d092406c5ddc12c308874e078364021b5757e23ab44",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -38846,6 +38844,7 @@
             "Jason Myers": 7,
             "Jaxon Smith-Njigba": 7,
             "Nick Emmanwori": 6,
+            "Rashid Shaheed": 7,
             "Tory Horton": 4,
             "Zach Charbonnet": 1,
             "Cody White": 7,
@@ -42780,15 +42779,15 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": -0.8248,
-          "whitened_z": -0.7038,
-          "epa_adj": -0.0176,
+          "whitened_z": -0.7063,
+          "epa_adj": -0.01766,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "SEA pass rush & blitz tendency vs LV OL & Fernando Mendoza pocket survival",
           "note": "SEA pass rush & blitz tendency vs LV OL & Fernando Mendoza pocket survival"
         },
         "weather": {
           "raw_z": 0.0,
-          "whitened_z": 0.0851,
+          "whitened_z": 0.0853,
           "epa_adj": 0.00213,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Allegiant Stadium (turf, 70.0F, wind 0.0 mph): SEA @ LV Week 10 venue=Allegiant Stadium (indoor=True, wind=0 mph, temp=70F)",
@@ -42796,57 +42795,57 @@
         },
         "restFatigue": {
           "raw_z": -0.0774,
-          "whitened_z": 0.0549,
-          "epa_adj": 0.00137,
+          "whitened_z": 0.0553,
+          "epa_adj": 0.00138,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 4:05 PM EST rest/travel differential for SEA @ LV",
           "note": "Week 10 Sun, November 15th at 4:05 PM EST rest/travel differential for SEA @ LV"
         },
         "coveragePersonnel": {
           "raw_z": 0.0135,
-          "whitened_z": 0.2421,
-          "epa_adj": 0.00605,
+          "whitened_z": 0.243,
+          "epa_adj": 0.00607,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "LV MOFO/MOFC coverage shell mix vs Drew Lock & SEA 11/12 personnel",
           "note": "LV MOFO/MOFC coverage shell mix vs Drew Lock & SEA 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": -1.1916,
-          "whitened_z": -1.0102,
-          "epa_adj": -0.02525,
+          "whitened_z": -1.0139,
+          "epa_adj": -0.02535,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Drew Lock (SEA) vs Fernando Mendoza (LV) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Drew Lock (SEA) vs Fernando Mendoza (LV) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.3033,
-          "whitened_z": -0.0418,
-          "epa_adj": -0.00104,
+          "whitened_z": -0.0419,
+          "epa_adj": -0.00105,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor SEA -6.5 / LV +6.5 (total 40.5) FWL residualized",
           "note": "Layer-1 market anchor SEA -6.5 / LV +6.5 (total 40.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 22.86,
-        "away_score_p50": 22.43,
-        "home_score_mean": 16.4,
-        "home_score_p50": 15.47,
-        "total_points_mean": 39.26,
-        "total_points_p50": 39.16,
-        "away_win_prob": 0.7096,
-        "home_cover_prob": 0.48,
+        "away_score_mean": 23.21,
+        "away_score_p50": 22.84,
+        "home_score_mean": 16.75,
+        "home_score_p50": 16.04,
+        "total_points_mean": 39.96,
+        "total_points_p50": 39.78,
+        "away_win_prob": 0.705,
+        "home_cover_prob": 0.4821,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 59,
+        "total_props_on_board": 61,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 59,
+        "core_athlete_props_projected": 61,
         "props_with_two_sided_prices": 0,
         "approved_plays_count": 0,
         "approved_prop_bets": 0,
-        "pass_decisions_count": 65,
+        "pass_decisions_count": 67,
         "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
         "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
       },
@@ -42856,9 +42855,9 @@
           "selection": "SEA -6.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.52,
-          "wilson_lower_90": 0.5118,
-          "net_edge": 0.02,
+          "post_sim_prob": 0.5179,
+          "wilson_lower_90": 0.5097,
+          "net_edge": 0.0179,
           "confidence_score": "52/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -42866,16 +42865,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: SEA -6.5 post-sim cover prob 52.00% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: SEA -6.5 post-sim cover prob 51.79% vs 50.00% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "LV +6.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.48,
-          "wilson_lower_90": 0.4718,
-          "net_edge": -0.02,
+          "post_sim_prob": 0.4821,
+          "wilson_lower_90": 0.4739,
+          "net_edge": -0.0179,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -42883,16 +42882,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: LV +6.5 post-sim cover prob 48.00% vs 50.00% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: LV +6.5 post-sim cover prob 48.21% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 40.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.4186,
-          "wilson_lower_90": 0.4105,
-          "net_edge": -0.0771,
+          "post_sim_prob": 0.4872,
+          "wilson_lower_90": 0.479,
+          "net_edge": -0.0085,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -42900,33 +42899,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 40.5 post-sim prob 41.86% vs 49.57% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 40.5 post-sim prob 48.72% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 40.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.5814,
-          "wilson_lower_90": 0.5733,
-          "net_edge": 0.0771,
-          "confidence_score": "59/100",
+          "post_sim_prob": 0.5128,
+          "wilson_lower_90": 0.5046,
+          "net_edge": 0.0085,
+          "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 40.5 post-sim prob 58.14% vs 50.43% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 40.5 post-sim prob 51.28% vs 50.43% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "SEA ML",
           "american_odds": -290,
           "market_prob_devig": 0.7136,
-          "post_sim_prob": 0.7096,
-          "wilson_lower_90": 0.7021,
-          "net_edge": -0.004,
+          "post_sim_prob": 0.705,
+          "wilson_lower_90": 0.6974,
+          "net_edge": -0.0086,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -42934,16 +42933,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: SEA ML (-290) post-sim win prob 70.96% vs 71.36% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: SEA ML (-290) post-sim win prob 70.50% vs 71.36% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "LV ML",
           "american_odds": 235,
           "market_prob_devig": 0.2864,
-          "post_sim_prob": 0.2904,
-          "wilson_lower_90": 0.283,
-          "net_edge": 0.004,
+          "post_sim_prob": 0.295,
+          "wilson_lower_90": 0.2876,
+          "net_edge": 0.0086,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -42951,18 +42950,18 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: LV ML (+235) post-sim win prob 29.04% vs 28.64% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: LV ML (+235) post-sim win prob 29.50% vs 28.64% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "4db17fc563d9b563071a65c7d6099ab09595a4cea40c507e29ca35a2f08253b3",
-        "stage1a_receipt_sha256": "d15745455af240e4b3da8311fbe01c810c54e580db6168acdcfb48403fa81520",
-        "stage1b_receipt_sha256": "145216c37b7a091dcfb9ab9623d633f2b503673d6e4c4ede3ce54b317b0be546",
-        "stage2_receipt_sha256": "86e499f8e5a7e2559cb37a74d02bf0e049da6bb68dd4273777ae2759ff467978",
-        "stage3_4_receipt_sha256": "0e3a318b65fe3010d1197f09fe986f196793e897670649b9f036b5bb6d45d372",
-        "stage5_receipt_sha256": "a9264cacc47a8e01ac2a7bc9aab1fe3aeb0d2ca0fe6f1f8046f857bf7f5aef36"
+        "stage0_receipt_sha256": "4e2cf09a000eb574d95f848b750bd334f7b92c1a37a2a59450fc8d15f386c832",
+        "stage1a_receipt_sha256": "556db14ea52ca26ff02d759ae8da54badb50dcb2ece48a74d246ba6c9e3cd9ee",
+        "stage1b_receipt_sha256": "c861c66f9161f1478da3ed96eec813e32d4e532ac95957f6af7c649e153ff7b7",
+        "stage2_receipt_sha256": "5ba9236e1e763020bd8412b6e051b9aa99076ede982e886e6a5b5a824816c140",
+        "stage3_4_receipt_sha256": "af87bff488fd347aa780e81bf3dadc326d737dd3621d8dca7c19a93a19b3c871",
+        "stage5_receipt_sha256": "615a7d1f5e68114a20a2f961694b20444ae71bb51d468e7be9be104c01d09dbf"
       },
-      "master_bundle_sha256": "c42e9c4343709de1765f4f33eb449cc3fdbad92d329a6bea94abe0b57f66cf38"
+      "master_bundle_sha256": "48ca5375b208716e3854f9df78019395600089589108301b880295d600f74e29"
     },
     "SF @ DAL": {
       "matchup": "SF @ DAL",
@@ -42978,7 +42977,7 @@
         "SF": "Brock Purdy",
         "DAL": "Dak Prescott"
       },
-      "verified_board_athletes_count": 27,
+      "verified_board_athletes_count": 26,
       "matchup_environment": {
         "window": "Sun, November 15th at 4:25 PM EST",
         "posted_home_spread": 4.5,
@@ -43049,8 +43048,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132221Z0000-f5c97834",
-        "content_hash": "68359cd0e5d800b7c68c6549de8ae8d5b14f0970dffa26735da740a9b9379c5f",
+        "trace_id": "2026-11-15T162135Z0000-bfd32a51",
+        "content_hash": "c12d948af91d0a00e74eb05eebed3062dbd6adf3635385a2ab90c1cc4f7c595a",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -43140,7 +43139,6 @@
             "Kyle Juszczyk": 5,
             "Brandin Cooks": 4,
             "Jacob Cowing": 4,
-            "Jonathan Mingo": 4,
             "KaVontae Turpin": 4
           }
         },
@@ -47070,62 +47068,62 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": 0.3978,
-          "whitened_z": 0.3272,
-          "epa_adj": 0.00818,
+          "whitened_z": 0.3474,
+          "epa_adj": 0.00869,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "SF pass rush & blitz tendency vs DAL OL & Dak Prescott pocket survival",
           "note": "SF pass rush & blitz tendency vs DAL OL & Dak Prescott pocket survival"
         },
         "weather": {
           "raw_z": 0.0,
-          "whitened_z": -0.0396,
-          "epa_adj": -0.00099,
+          "whitened_z": -0.0419,
+          "epa_adj": -0.00105,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "AT&T Stadium (turf, 70.0F, wind 0.0 mph): AT&T Stadium roof CLOSED \u2014 indoor climate-controlled (~70F, 0 mph wind, 0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed at the same venue roof-closed, Soccer America 2026 World Cup)",
           "note": "AT&T Stadium (turf, 70.0F, wind 0.0 mph): AT&T Stadium roof CLOSED \u2014 indoor climate-controlled (~70F, 0 mph wind, 0% precip); outdoor 49F / 10 mph / 62% rain forecast does not reach the field (DK Network + FantasyInfoCentral 2026-11-13; ~70F indoor observed at the same venue roof-closed, Soccer America 2026 World Cup)"
         },
         "restFatigue": {
           "raw_z": -0.0225,
-          "whitened_z": -0.0758,
-          "epa_adj": -0.00189,
+          "whitened_z": -0.0805,
+          "epa_adj": -0.00201,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 4:25 PM EST rest/travel differential for SF @ DAL",
           "note": "Week 10 Sun, November 15th at 4:25 PM EST rest/travel differential for SF @ DAL"
         },
         "coveragePersonnel": {
           "raw_z": 0.1474,
-          "whitened_z": 0.0266,
-          "epa_adj": 0.00067,
+          "whitened_z": 0.0283,
+          "epa_adj": 0.00071,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "DAL MOFO/MOFC coverage shell mix vs Brock Purdy & SF 11/12 personnel",
           "note": "DAL MOFO/MOFC coverage shell mix vs Brock Purdy & SF 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": 0.2592,
-          "whitened_z": 0.1481,
-          "epa_adj": 0.0037,
+          "whitened_z": 0.1571,
+          "epa_adj": 0.00393,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Brock Purdy (SF) vs Dak Prescott (DAL) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Brock Purdy (SF) vs Dak Prescott (DAL) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.4896,
-          "whitened_z": -0.4887,
-          "epa_adj": -0.01222,
+          "whitened_z": -0.5186,
+          "epa_adj": -0.01296,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor SF -4.5 / DAL +4.5 (total 55.5) FWL residualized",
           "note": "Layer-1 market anchor SF -4.5 / DAL +4.5 (total 55.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 32.28,
-        "away_score_p50": 32.17,
-        "home_score_mean": 23.45,
-        "home_score_p50": 22.49,
-        "total_points_mean": 55.72,
-        "total_points_p50": 55.14,
-        "away_win_prob": 0.7531,
-        "home_cover_prob": 0.3959,
+        "away_score_mean": 31.14,
+        "away_score_p50": 31.0,
+        "home_score_mean": 24.48,
+        "home_score_p50": 23.69,
+        "total_points_mean": 55.62,
+        "total_points_p50": 54.95,
+        "away_win_prob": 0.6812,
+        "home_cover_prob": 0.4147,
         "over_prob": null
       },
       "stage5_board_summary": {
@@ -47133,12 +47131,12 @@
         "total_props_on_board": 60,
         "total_market_types_on_board": 77,
         "core_athlete_props_projected": 58,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 66,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "props_with_two_sided_prices": 44,
+        "approved_plays_count": 4,
+        "approved_prop_bets": 4,
+        "pass_decisions_count": 62,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "4 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -47146,77 +47144,9 @@
           "selection": "SF -4.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.6041,
-          "wilson_lower_90": 0.596,
-          "net_edge": 0.1084,
-          "confidence_score": "63/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: SF -4.5 post-sim cover prob 60.41% vs 49.57% de-vigged market."
-        },
-        {
-          "market": "Spread",
-          "selection": "DAL +4.5",
-          "american_odds": -112,
-          "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.3959,
-          "wilson_lower_90": 0.3879,
-          "net_edge": -0.1084,
-          "confidence_score": "51/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: DAL +4.5 post-sim cover prob 39.59% vs 50.43% de-vigged market."
-        },
-        {
-          "market": "Total",
-          "selection": "Over 55.5",
-          "american_odds": -118,
-          "market_prob_devig": 0.5174,
-          "post_sim_prob": 0.4757,
-          "wilson_lower_90": 0.4675,
-          "net_edge": -0.0417,
-          "confidence_score": "51/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 55.5 post-sim prob 47.57% vs 51.74% de-vigged market."
-        },
-        {
-          "market": "Total",
-          "selection": "Under 55.5",
-          "american_odds": -102,
-          "market_prob_devig": 0.4826,
-          "post_sim_prob": 0.5243,
-          "wilson_lower_90": 0.5161,
-          "net_edge": 0.0417,
-          "confidence_score": "55/100",
-          "student_t_copula_df_nu": 4.5,
-          "afml_meta_label_kelly_multiplier": 0.82,
-          "cqr_interval_width_mult": 1.08,
-          "recommended_kelly_units": 0.0,
-          "decision": "PASS",
-          "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 55.5 post-sim prob 52.43% vs 48.26% de-vigged market."
-        },
-        {
-          "market": "Moneyline",
-          "selection": "SF ML",
-          "american_odds": -218,
-          "market_prob_devig": 0.6575,
-          "post_sim_prob": 0.7531,
-          "wilson_lower_90": 0.7459,
-          "net_edge": 0.0956,
+          "post_sim_prob": 0.5853,
+          "wilson_lower_90": 0.5772,
+          "net_edge": 0.0896,
           "confidence_score": "61/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -47224,16 +47154,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: SF ML (-218) post-sim win prob 75.31% vs 65.75% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: SF -4.5 post-sim cover prob 58.53% vs 49.57% de-vigged market."
         },
         {
-          "market": "Moneyline",
-          "selection": "DAL ML",
-          "american_odds": 180,
-          "market_prob_devig": 0.3425,
-          "post_sim_prob": 0.2469,
-          "wilson_lower_90": 0.2399,
-          "net_edge": -0.0956,
+          "market": "Spread",
+          "selection": "DAL +4.5",
+          "american_odds": -112,
+          "market_prob_devig": 0.5043,
+          "post_sim_prob": 0.4147,
+          "wilson_lower_90": 0.4066,
+          "net_edge": -0.0896,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -47241,18 +47171,86 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: DAL ML (+180) post-sim win prob 24.69% vs 34.25% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: DAL +4.5 post-sim cover prob 41.47% vs 50.43% de-vigged market."
+        },
+        {
+          "market": "Total",
+          "selection": "Over 55.5",
+          "american_odds": -118,
+          "market_prob_devig": 0.5174,
+          "post_sim_prob": 0.4799,
+          "wilson_lower_90": 0.4717,
+          "net_edge": -0.0375,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 55.5 post-sim prob 47.99% vs 51.74% de-vigged market."
+        },
+        {
+          "market": "Total",
+          "selection": "Under 55.5",
+          "american_odds": -102,
+          "market_prob_devig": 0.4826,
+          "post_sim_prob": 0.5201,
+          "wilson_lower_90": 0.5119,
+          "net_edge": 0.0375,
+          "confidence_score": "54/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 55.5 post-sim prob 52.01% vs 48.26% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "SF ML",
+          "american_odds": -218,
+          "market_prob_devig": 0.6575,
+          "post_sim_prob": 0.6812,
+          "wilson_lower_90": 0.6735,
+          "net_edge": 0.0237,
+          "confidence_score": "53/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: SF ML (-218) post-sim win prob 68.12% vs 65.75% de-vigged market."
+        },
+        {
+          "market": "Moneyline",
+          "selection": "DAL ML",
+          "american_odds": 180,
+          "market_prob_devig": 0.3425,
+          "post_sim_prob": 0.3188,
+          "wilson_lower_90": 0.3112,
+          "net_edge": -0.0237,
+          "confidence_score": "51/100",
+          "student_t_copula_df_nu": 4.5,
+          "afml_meta_label_kelly_multiplier": 0.82,
+          "cqr_interval_width_mult": 1.08,
+          "recommended_kelly_units": 0.0,
+          "decision": "PASS",
+          "publishAllowed": false,
+          "gate_reason": "STAGE5_ML_GATE: DAL ML (+180) post-sim win prob 31.88% vs 34.25% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "9e4ae135d9698226fae950a226f75413e3d019611bfdff44074fab4b9efee3b9",
-        "stage1a_receipt_sha256": "5abaa0d6144ee00e784b9a31ca2553df7c2dd073e0d5efedd818abc45e5e51ed",
-        "stage1b_receipt_sha256": "26818b6dd0baab56676e29ac153279b9ec1d98b195441867cde06f96ffc31f87",
-        "stage2_receipt_sha256": "7c91417dfbcdd5c0792d5582d0a5137919a1a17d53822584d9f923724f45b8b4",
-        "stage3_4_receipt_sha256": "7ba7b91c097dc4ae32c97ee78153ea4e2ec23a27c18cca26b0f9ea630d755839",
-        "stage5_receipt_sha256": "49e3452d565aba329a05b0e083248a58ece2b3680dda529dab34a7f7300ea894"
+        "stage0_receipt_sha256": "3a96a3fbe768f9b97977ea1cadf90bf2bb6f02a7eb7b5fdb9527f4cf473cf673",
+        "stage1a_receipt_sha256": "5be7fb924392a096c7f9e10054932cc74b4322e6b39cb2db331e4e482afc4259",
+        "stage1b_receipt_sha256": "338ff5970e8d89bb8364afab086b8de829b6ade71298f827c419859d723f051d",
+        "stage2_receipt_sha256": "60a084c5d1104d17c7005bfe5445a7c17806e90590b4673cf8ee4eb5b85faeba",
+        "stage3_4_receipt_sha256": "e95fe1856133d9b35af6538314cae60d397d7e86263d9e6ea575b8cbc798a4d2",
+        "stage5_receipt_sha256": "dfd297e3236e219bcdb81671b2043b8b8853c9fd61b54c58d59d09227166386e"
       },
-      "master_bundle_sha256": "ed955577efcd395722bda3944c7313cfb9a59378a810144d3c353c3034e05554"
+      "master_bundle_sha256": "b5cd496aa2d4aa1ee245d5546dd934e45b713458b88d92a113b041f767fb4739"
     },
     "PIT @ CIN": {
       "matchup": "PIT @ CIN",
@@ -47337,8 +47335,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132229Z0000-b5d347e9",
-        "content_hash": "203ba261bba4f64f7bdf21c40fbb6b3685cfa23dc96d0ab4f7ee1f0f2f57af7f",
+        "trace_id": "2026-11-15T161136Z0000-c563f920",
+        "content_hash": "516c4e0fa5521285ab24830f86fdd980ad23e2edc4113647fa4159653abce602",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -51360,75 +51358,75 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": -0.2745,
-          "whitened_z": -0.2295,
-          "epa_adj": -0.00574,
+          "whitened_z": -0.2452,
+          "epa_adj": -0.00613,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "PIT pass rush & blitz tendency vs CIN OL & Joe Burrow pocket survival",
           "note": "PIT pass rush & blitz tendency vs CIN OL & Joe Burrow pocket survival"
         },
         "weather": {
           "raw_z": -0.0756,
-          "whitened_z": -0.036,
-          "epa_adj": -0.0009,
+          "whitened_z": -0.0383,
+          "epa_adj": -0.00096,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Paycor Stadium (grass, 54.0F, wind 6.0 mph): PIT @ CIN Week 10 venue=Paycor Stadium (indoor=False, wind=6 mph, temp=54F)",
           "note": "Paycor Stadium (grass, 54.0F, wind 6.0 mph): PIT @ CIN Week 10 venue=Paycor Stadium (indoor=False, wind=6 mph, temp=54F)"
         },
         "restFatigue": {
           "raw_z": -0.0605,
-          "whitened_z": -0.0065,
-          "epa_adj": -0.00016,
+          "whitened_z": -0.007,
+          "epa_adj": -0.00018,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Sun, November 15th at 8:20 PM EST rest/travel differential for PIT @ CIN",
           "note": "Week 10 Sun, November 15th at 8:20 PM EST rest/travel differential for PIT @ CIN"
         },
         "coveragePersonnel": {
           "raw_z": -0.3717,
-          "whitened_z": -0.2497,
-          "epa_adj": -0.00624,
+          "whitened_z": -0.2668,
+          "epa_adj": -0.00667,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "CIN MOFO/MOFC coverage shell mix vs Aaron Rodgers & PIT 11/12 personnel",
           "note": "CIN MOFO/MOFC coverage shell mix vs Aaron Rodgers & PIT 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": -1.62,
-          "whitened_z": -1.3604,
-          "epa_adj": -0.03401,
+          "whitened_z": -1.4539,
+          "epa_adj": -0.03635,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Aaron Rodgers (PIT) vs Joe Burrow (CIN) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Aaron Rodgers (PIT) vs Joe Burrow (CIN) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.0288,
-          "whitened_z": 0.2731,
-          "epa_adj": 0.00683,
+          "whitened_z": 0.2918,
+          "epa_adj": 0.00729,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor PIT +3.5 / CIN -3.5 (total 49.5) FWL residualized",
           "note": "Layer-1 market anchor PIT +3.5 / CIN -3.5 (total 49.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 21.33,
-        "away_score_p50": 20.68,
-        "home_score_mean": 29.34,
-        "home_score_p50": 29.0,
-        "total_points_mean": 50.66,
-        "total_points_p50": 49.39,
-        "away_win_prob": 0.2657,
-        "home_cover_prob": 0.6526,
+        "away_score_mean": 22.18,
+        "away_score_p50": 21.63,
+        "home_score_mean": 27.85,
+        "home_score_p50": 27.53,
+        "total_points_mean": 50.03,
+        "total_points_p50": 48.83,
+        "away_win_prob": 0.3476,
+        "home_cover_prob": 0.5571,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 65,
+        "total_props_on_board": 66,
         "total_market_types_on_board": 77,
-        "core_athlete_props_projected": 65,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 71,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "core_athlete_props_projected": 66,
+        "props_with_two_sided_prices": 50,
+        "approved_plays_count": 6,
+        "approved_prop_bets": 6,
+        "pass_decisions_count": 66,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "6 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -51436,9 +51434,9 @@
           "selection": "PIT +3.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.3474,
-          "wilson_lower_90": 0.3396,
-          "net_edge": -0.1569,
+          "post_sim_prob": 0.4429,
+          "wilson_lower_90": 0.4347,
+          "net_edge": -0.0614,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -51446,33 +51444,33 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: PIT +3.5 post-sim cover prob 34.74% vs 50.43% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: PIT +3.5 post-sim cover prob 44.29% vs 50.43% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "CIN -3.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.6526,
-          "wilson_lower_90": 0.6447,
-          "net_edge": 0.1569,
-          "confidence_score": "69/100",
+          "post_sim_prob": 0.5571,
+          "wilson_lower_90": 0.5489,
+          "net_edge": 0.0614,
+          "confidence_score": "57/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6526, market_prob=0.4957, edge=+0.1569)."
+          "gate_reason": "STAGE5_SPREAD_GATE: CIN -3.5 post-sim cover prob 55.71% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 49.5",
           "american_odds": -105,
           "market_prob_devig": 0.4892,
-          "post_sim_prob": 0.4848,
-          "wilson_lower_90": 0.4766,
-          "net_edge": -0.0044,
+          "post_sim_prob": 0.4847,
+          "wilson_lower_90": 0.4765,
+          "net_edge": -0.0045,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -51480,16 +51478,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Over 49.5 post-sim prob 48.48% vs 48.92% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 49.5 post-sim prob 48.47% vs 48.92% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 49.5",
           "american_odds": -115,
           "market_prob_devig": 0.5108,
-          "post_sim_prob": 0.5152,
-          "wilson_lower_90": 0.507,
-          "net_edge": 0.0044,
+          "post_sim_prob": 0.5153,
+          "wilson_lower_90": 0.5071,
+          "net_edge": 0.0045,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -51497,16 +51495,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_TOTAL_GATE: Under 49.5 post-sim prob 51.52% vs 51.08% de-vigged market."
+          "gate_reason": "STAGE5_TOTAL_GATE: Under 49.5 post-sim prob 51.53% vs 51.08% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "PIT ML",
           "american_odds": 154,
           "market_prob_devig": 0.3775,
-          "post_sim_prob": 0.2657,
-          "wilson_lower_90": 0.2585,
-          "net_edge": -0.1118,
+          "post_sim_prob": 0.3476,
+          "wilson_lower_90": 0.3398,
+          "net_edge": -0.0299,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -51514,35 +51512,35 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: PIT ML (+154) post-sim win prob 26.57% vs 37.75% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: PIT ML (+154) post-sim win prob 34.76% vs 37.75% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "CIN ML",
           "american_odds": -185,
           "market_prob_devig": 0.6225,
-          "post_sim_prob": 0.7343,
-          "wilson_lower_90": 0.727,
-          "net_edge": 0.1118,
-          "confidence_score": "63/100",
+          "post_sim_prob": 0.6524,
+          "wilson_lower_90": 0.6445,
+          "net_edge": 0.0299,
+          "confidence_score": "54/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: CIN ML (-185) post-sim win prob 73.43% vs 62.25% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: CIN ML (-185) post-sim win prob 65.24% vs 62.25% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "1936d92a6805e9783a9385b9a40080e831ac5c16d770e72f0cfcfddbee27cc98",
-        "stage1a_receipt_sha256": "d8f785743a05e0cf418875b474142931f4562ff4aa40455daab971115018f85d",
-        "stage1b_receipt_sha256": "41ec5db79bcbc183e879713dcac92b50d8a75717fc4a3ea06c76b9d32f018333",
-        "stage2_receipt_sha256": "de08116b8496f4965cd281da17c1300ea9d528ccd918aeae143bf49e13092417",
-        "stage3_4_receipt_sha256": "91dfa3ba77b88f773f2eb679fe95b50e38673b634a05f2e6fb87cfb60b66b9d8",
-        "stage5_receipt_sha256": "2fb63ab6f96e0417781cd5179f4172228a7e88e89cc568a9872255817a63d402"
+        "stage0_receipt_sha256": "8e83e5c549e1b5d37deea5b9a1d3fc2cfd606b2e98d72fa57c35031ff91799b6",
+        "stage1a_receipt_sha256": "79d1ea6ee427626d68e41cd1c45afee5bda63fc7e2cb373f21513c4ecc60c2ba",
+        "stage1b_receipt_sha256": "069c3ca98b8c63e875f9b9772fc4ac1a3e023f6024da991397446e9d0d4b3d21",
+        "stage2_receipt_sha256": "4721fde240cd5be9fa3927ae6166709f362fb7bc7d0ba5b3a2e44e4ea989ed19",
+        "stage3_4_receipt_sha256": "5542cd1dcd0829c292a5541794573466dd9d23057e45b8631103eb28a832cc16",
+        "stage5_receipt_sha256": "953403edbd5273c133216de6fdaadecaa1d9eb86d84d9ccf5a18599c989eb697"
       },
-      "master_bundle_sha256": "a29d651adb48c73b79c1955926effebb392808d5f10e85248f6541244d0836f3"
+      "master_bundle_sha256": "29a646a6aa3430af22bb11a3ba174079ebc44d9b7000476c58f916e5c4fd4934"
     },
     "LAC @ BAL": {
       "matchup": "LAC @ BAL",
@@ -51558,7 +51556,7 @@
         "LAC": "Justin Herbert",
         "BAL": "Jacoby Brissett"
       },
-      "verified_board_athletes_count": 27,
+      "verified_board_athletes_count": 31,
       "matchup_environment": {
         "window": "Mon, November 16th at 8:15 PM EST",
         "posted_home_spread": -4.5,
@@ -51627,8 +51625,8 @@
         }
       },
       "l1_to_l5_specialist_reasoning_trace": {
-        "trace_id": "2026-11-15T132237Z0000-ac447684",
-        "content_hash": "7cc6b748e87eb3c2e4789b1a0b097629771c39d1b930f2b3a7adb64d43c89efa",
+        "trace_id": "2026-11-15T161146Z0000-974f0d6c",
+        "content_hash": "89273876a60f716fd3d0311a181fd82a181b94bf8cd51ac7a7d2dcd38786f041",
         "depth_reached": "L5",
         "hierarchy_order": [
           "offensive_line",
@@ -51698,10 +51696,16 @@
             "Jacoby Brissett": 1,
             "Josh Cuevas": 4,
             "Justice Hill": 7,
+            "Kyle Hamilton": 7,
+            "Malaki Starks": 7,
             "Mark Andrews": 7,
+            "Marlon Humphrey": 7,
             "Matt Hibner": 3,
+            "Matthew Hibner": 3,
             "Rashod Bateman": 7,
             "Riley Patterson": 1,
+            "Roquan Smith": 7,
+            "Trenton Simpson": 7,
             "Zay Flowers": 6,
             "Cameron Dicker": 6,
             "Justin Herbert": 6,
@@ -51717,9 +51721,7 @@
             "Quentin Johnston": 5,
             "Tre Harris": 5,
             "Daiyan Henley": 6,
-            "Del'Shawn Phillips": 6,
-            "Roquan Smith": 7,
-            "Kyle Hamilton": 7
+            "Del'Shawn Phillips": 6
           }
         },
         "pre_projection_universal_and_deep_priors": {
@@ -55648,75 +55650,75 @@
       "situational_6family_cholesky_overlay": {
         "pressure": {
           "raw_z": -1.3135,
-          "whitened_z": -1.049,
-          "epa_adj": -0.02623,
+          "whitened_z": -1.1376,
+          "epa_adj": -0.02844,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "LAC pass rush & blitz tendency vs BAL OL & Jacoby Brissett pocket survival",
           "note": "LAC pass rush & blitz tendency vs BAL OL & Jacoby Brissett pocket survival"
         },
         "weather": {
           "raw_z": -0.0756,
-          "whitened_z": 0.0661,
-          "epa_adj": 0.00165,
+          "whitened_z": 0.0716,
+          "epa_adj": 0.00179,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "M&T Bank Stadium (grass, 54.0F, wind 6.0 mph): LAC @ BAL Week 10 venue=M&T Bank Stadium (indoor=False, wind=6 mph, temp=54F)",
           "note": "M&T Bank Stadium (grass, 54.0F, wind 6.0 mph): LAC @ BAL Week 10 venue=M&T Bank Stadium (indoor=False, wind=6 mph, temp=54F)"
         },
         "restFatigue": {
           "raw_z": -0.0439,
-          "whitened_z": 0.1516,
-          "epa_adj": 0.00379,
+          "whitened_z": 0.1643,
+          "epa_adj": 0.00411,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Week 10 Mon, November 16th at 8:15 PM EST rest/travel differential for LAC @ BAL",
           "note": "Week 10 Mon, November 16th at 8:15 PM EST rest/travel differential for LAC @ BAL"
         },
         "coveragePersonnel": {
           "raw_z": -0.6367,
-          "whitened_z": -0.2011,
-          "epa_adj": -0.00503,
+          "whitened_z": -0.218,
+          "epa_adj": -0.00545,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "BAL MOFO/MOFC coverage shell mix vs Justin Herbert & LAC 11/12 personnel",
           "note": "BAL MOFO/MOFC coverage shell mix vs Justin Herbert & LAC 11/12 personnel"
         },
         "qbSkillScript": {
           "raw_z": -1.62,
-          "whitened_z": -1.0964,
-          "epa_adj": -0.02741,
+          "whitened_z": -1.1889,
+          "epa_adj": -0.02972,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Verified QB1 matchup: Justin Herbert (LAC) vs Jacoby Brissett (BAL) with active Week 10 injury adjustments",
           "note": "Verified QB1 matchup: Justin Herbert (LAC) vs Jacoby Brissett (BAL) with active Week 10 injury adjustments"
         },
         "marketMicrostructure": {
           "raw_z": -0.2772,
-          "whitened_z": 0.1181,
-          "epa_adj": 0.00295,
+          "whitened_z": 0.1282,
+          "epa_adj": 0.0032,
           "source": "execute_master_6family_cholesky_aggregator",
           "detail": "Layer-1 market anchor LAC +4.5 / BAL -4.5 (total 38.5) FWL residualized",
           "note": "Layer-1 market anchor LAC +4.5 / BAL -4.5 (total 38.5) FWL residualized"
         }
       },
       "post_sim_team_scores": {
-        "away_score_mean": 16.87,
-        "away_score_p50": 15.93,
-        "home_score_mean": 27.17,
-        "home_score_p50": 28.3,
-        "total_points_mean": 44.04,
-        "total_points_p50": 43.59,
-        "away_win_prob": 0.2125,
-        "home_cover_prob": 0.6855,
+        "away_score_mean": 17.05,
+        "away_score_p50": 16.47,
+        "home_score_mean": 24.31,
+        "home_score_p50": 25.54,
+        "total_points_mean": 41.37,
+        "total_points_p50": 40.96,
+        "away_win_prob": 0.3088,
+        "home_cover_prob": 0.6031,
         "over_prob": null
       },
       "stage5_board_summary": {
         "total_game_lines_evaluated": 6,
-        "total_props_on_board": 55,
-        "total_market_types_on_board": 70,
-        "core_athlete_props_projected": 55,
-        "props_with_two_sided_prices": 0,
-        "approved_plays_count": 0,
-        "approved_prop_bets": 0,
-        "pass_decisions_count": 61,
-        "circuit_breaker_status": "STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES",
-        "final_board_verdict": "0 BETS / FULL-BOARD PASS (publishAllowed: false)"
+        "total_props_on_board": 63,
+        "total_market_types_on_board": 76,
+        "core_athlete_props_projected": 63,
+        "props_with_two_sided_prices": 44,
+        "approved_plays_count": 1,
+        "approved_prop_bets": 1,
+        "pass_decisions_count": 68,
+        "circuit_breaker_status": "STAGE_5_ACTIVE_TWO_SIDED_PRICES_VERIFIED",
+        "final_board_verdict": "1 APPROVED PLAYS (publishAllowed: true)"
       },
       "stage5_game_line_evaluations": [
         {
@@ -55724,9 +55726,9 @@
           "selection": "LAC +4.5",
           "american_odds": -112,
           "market_prob_devig": 0.5043,
-          "post_sim_prob": 0.3145,
-          "wilson_lower_90": 0.3069,
-          "net_edge": -0.1898,
+          "post_sim_prob": 0.3969,
+          "wilson_lower_90": 0.3889,
+          "net_edge": -0.1074,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -55734,50 +55736,50 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_SPREAD_GATE: LAC +4.5 post-sim cover prob 31.45% vs 50.43% de-vigged market."
+          "gate_reason": "STAGE5_SPREAD_GATE: LAC +4.5 post-sim cover prob 39.69% vs 50.43% de-vigged market."
         },
         {
           "market": "Spread",
           "selection": "BAL -4.5",
           "american_odds": -108,
           "market_prob_devig": 0.4957,
-          "post_sim_prob": 0.6855,
-          "wilson_lower_90": 0.6778,
-          "net_edge": 0.1898,
-          "confidence_score": "72/100",
+          "post_sim_prob": 0.6031,
+          "wilson_lower_90": 0.595,
+          "net_edge": 0.1074,
+          "confidence_score": "63/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6855, market_prob=0.4957, edge=+0.1898)."
+          "gate_reason": "STAGE5_SPREAD_GATE: BAL -4.5 post-sim cover prob 60.31% vs 49.57% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Over 38.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.6786,
-          "wilson_lower_90": 0.6709,
-          "net_edge": 0.1786,
-          "confidence_score": "71/100",
+          "post_sim_prob": 0.5861,
+          "wilson_lower_90": 0.578,
+          "net_edge": 0.0861,
+          "confidence_score": "60/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.6786, market_prob=0.5000, edge=+0.1786)."
+          "gate_reason": "STAGE5_TOTAL_GATE: Over 38.5 post-sim prob 58.61% vs 50.00% de-vigged market."
         },
         {
           "market": "Total",
           "selection": "Under 38.5",
           "american_odds": -110,
           "market_prob_devig": 0.5,
-          "post_sim_prob": 0.3214,
-          "wilson_lower_90": 0.3138,
-          "net_edge": -0.1786,
+          "post_sim_prob": 0.4139,
+          "wilson_lower_90": 0.4058,
+          "net_edge": -0.0861,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -55785,16 +55787,16 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "NEGATIVE_EV: Post-sim Under 38.5 prob 32.14% < 50.00% de-vigged market."
+          "gate_reason": "NEGATIVE_EV: Post-sim Under 38.5 prob 41.39% < 50.00% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "LAC ML",
           "american_odds": 185,
           "market_prob_devig": 0.3364,
-          "post_sim_prob": 0.2125,
-          "wilson_lower_90": 0.2058,
-          "net_edge": -0.1239,
+          "post_sim_prob": 0.3088,
+          "wilson_lower_90": 0.3013,
+          "net_edge": -0.0276,
           "confidence_score": "51/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
@@ -55802,35 +55804,35 @@
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "STAGE5_ML_GATE: LAC ML (+185) post-sim win prob 21.25% vs 33.64% de-vigged market."
+          "gate_reason": "STAGE5_ML_GATE: LAC ML (+185) post-sim win prob 30.88% vs 33.64% de-vigged market."
         },
         {
           "market": "Moneyline",
           "selection": "BAL ML",
           "american_odds": -225,
           "market_prob_devig": 0.6636,
-          "post_sim_prob": 0.7875,
-          "wilson_lower_90": 0.7807,
-          "net_edge": 0.1239,
-          "confidence_score": "65/100",
+          "post_sim_prob": 0.6912,
+          "wilson_lower_90": 0.6835,
+          "net_edge": 0.0276,
+          "confidence_score": "53/100",
           "student_t_copula_df_nu": 4.5,
           "afml_meta_label_kelly_multiplier": 0.82,
           "cqr_interval_width_mult": 1.08,
           "recommended_kelly_units": 0.0,
           "decision": "PASS",
           "publishAllowed": false,
-          "gate_reason": "WIRE_FIRST_CALIBRATION_HOLD: CALIBRATION_ADJUSTMENTS_ENABLED!=true blocks live publish (model_prob=0.7875, market_prob=0.6636, edge=+0.1239)."
+          "gate_reason": "STAGE5_ML_GATE: BAL ML (-225) post-sim win prob 69.12% vs 66.36% de-vigged market."
         }
       ],
       "cryptographic_receipt_chain": {
-        "stage0_receipt_sha256": "b88c36ca5d879e68606d8bcebdfa5576cc25d6b9c0df15ed74e80fa08c8cf969",
-        "stage1a_receipt_sha256": "8ab5e99e9898dff5460184aa19a73e619112612dee868fa4101ba99b9abb28f9",
-        "stage1b_receipt_sha256": "2bb533389b20ed2d6f902ed73be6888ba3392d5022c6eda3c3bf3dae9fb796e1",
-        "stage2_receipt_sha256": "04676991c1bcd4c74edd3128a062291d4740bb58478d69ada2c821eb71c3451a",
-        "stage3_4_receipt_sha256": "5b01f7b068172687b66c1c76cb7a40c7ba5786ab35b2a18796061fceec1b1583",
-        "stage5_receipt_sha256": "1e495c93ff121208f338792d2918ff8f0e14b1ea2f1308645bd3f6f0b794a474"
+        "stage0_receipt_sha256": "69305bf8ec7900bbcc57310b10e5f4553b92916e9c4d985f3fd3d5e47924c14d",
+        "stage1a_receipt_sha256": "268143e9384949ff0168d6e75f768af10a795ab3df4be80026ac67cf204667dd",
+        "stage1b_receipt_sha256": "b55081a0a4cf56893cb3c66c559f6cabc6d8d8f6f466fad6d1b388443424a553",
+        "stage2_receipt_sha256": "5e0bb42becc713b733544511398a568d96a84a8e4e7a4fb9106ad46959536339",
+        "stage3_4_receipt_sha256": "c6765c17ec3eb66e7fc20ed975eedac087f238f89613bde21a18a1254c04787d",
+        "stage5_receipt_sha256": "55f4de0b67619db360386e0c7742c3e29f01acb0c65b10261c1b5fe67e45a20a"
       },
-      "master_bundle_sha256": "5d7f0443129d591bf38f94487b124debbf73305018e3bbd5c0e72a10a6f75416"
+      "master_bundle_sha256": "fa97a40652c742e092b2de2d3a183693f29018405b2f7fe3841a1caf817a31ac"
     }
   },
   "stage0": {
@@ -55838,5 +55840,5 @@
     "excluded": 127,
     "qb1s": 32
   },
-  "slate_packet_sha256": "3f3c0b0eb4feff196730862b20a11565ac76f95f3ba90d31a4e40dfe484cf139"
+  "slate_packet_sha256": "7ec31d87c4907bba8598d966c2c6636e8b0d362bd111a454c544860148f62071"
 }

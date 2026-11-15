@@ -151,6 +151,7 @@ def main() -> int:
     ap.add_argument("--n-sims", type=int, default=10000, help="Monte Carlo worlds per game (default 10000)")
     ap.add_argument("--dry-run", action="store_true", help="Validate slate + Stage 0 config only; no sims, no JEV calls")
     ap.add_argument("--only", default="", help="Comma-separated AWAY@HOME filters (e.g. NE@DET,KC@ATL)")
+    ap.add_argument("--skip-aggregate-write", action="store_true", help="Write per-game dossiers only; skip overwriting 13-game slate aggregate files (for parallel sharding)")
     args = ap.parse_args()
 
     # Stage 0 hard gate first (week-aware config; fail-closed on stale rosters).
@@ -243,10 +244,11 @@ def main() -> int:
             for k, d in dossiers.items()
         },
     }
-    for path, obj in ((OUT_DOSSIERS, packet), (OUT_CALL_SHEET, call_sheet), (OUT_COVERAGE, coverage)):
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(obj, indent=2, default=str), encoding="utf-8")
-        print(f"[WP-8] wrote {path.relative_to(REPO_ROOT)}")
+    if not args.skip_aggregate_write:
+        for path, obj in ((OUT_DOSSIERS, packet), (OUT_CALL_SHEET, call_sheet), (OUT_COVERAGE, coverage)):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(obj, indent=2, default=str), encoding="utf-8")
+            print(f"[WP-8] wrote {path.relative_to(REPO_ROOT)}")
 
     print(f"[WP-8] COVERAGE {coverage['coverage']} | sha256={packet['slate_packet_sha256'][:16]}")
     if not coverage["all_green"]:

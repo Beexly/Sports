@@ -58,13 +58,21 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
     );
   }
 
-  // ── New two-door single-slate offers: Stage-5 gated, Whop checkout ──
+  // ── New two-door single-slate offers: Stage-5 gated, Whop checkout (with Stripe fallback) ──
   const singleSlateOffer = getSingleSlateOffer(rawPkg.slug);
   if (singleSlateOffer) {
     const gate = await getStage5GateStatus();
     const availability = singleSlateCheckoutAvailability().find(
       (a) => a.offerSlug === singleSlateOffer.slug,
     );
+    const hasWhopCheckout = Boolean(availability?.standardConfigured || availability?.creditBackConfigured);
+    const fallbackSlug =
+      singleSlateOffer.slug === "sunday-full-slate-pack"
+        ? "sunday-nfl-5pct-slate"
+        : "sgp-correlation-basket";
+    const fallbackRawPkg = !hasWhopCheckout ? getPackageBySlug(fallbackSlug) : undefined;
+    const fallbackCleanPkg = fallbackRawPkg ? scrubOfferingCopy(fallbackRawPkg) : undefined;
+    const fallbackTeasers = fallbackCleanPkg ? getRedactedTeasersForWindowSlot(fallbackCleanPkg.windowSlot) : [];
     return (
       <div className="min-h-screen bg-obsidian text-ion-white">
         <Nav />
@@ -82,7 +90,18 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
             </p>
           </header>
 
-          <div className="mt-8">
+          <div className="mt-8 space-y-6">
+            {fallbackCleanPkg && (
+              <div>
+                <p className={`${eyebrow} mb-3 text-plasma`}>Direct Stripe Checkout Active</p>
+                <PaywallRevealCard
+                  pkg={fallbackCleanPkg}
+                  teasers={fallbackTeasers}
+                  featured
+                  ctaTone="solid"
+                />
+              </div>
+            )}
             <SingleSlateCard
               offer={singleSlateOffer}
               gate={gate}

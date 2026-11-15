@@ -17,14 +17,28 @@ Usage: DATABASE_URL=... python scripts/ops/build_week10_stage0_config.py
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import subprocess
 import sys
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 import psycopg2
 import psycopg2.extras
+
+ESPN_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+ESPN_SUMMARY_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event={event_id}"
+ESPN_TEAM_NORM = {"LAR": "LA", "WSH": "WAS"}
+ESPN_BLOCKED_STATUS = {
+    "Out": "OUT",
+    "Doubtful": "DOUBTFUL",
+    "Injured Reserve": "IR",
+    "Suspended": "SUSP",
+    "Suspension": "SUSP",
+}
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "nflverse" / "week10_live_roster_transactions_and_starters_2026.json"
@@ -67,11 +81,77 @@ ESPN_EVIDENCE_OVERRIDES = {
 }
 
 
-def main() -> int:
+def _load_baseline_config() -> dict:
+    rel = "data/nflverse/week10_live_roster_transactions_and_starters_2026.json"
+    try:
+        raw = subprocess.check_output(["git", "show", f"HEAD:{rel}"], cwd=str(ROOT), text=True, stderr=subprocess.DEVNULL)
+        parsed = json.loads(raw)
+        if isinstance(parsed, dict) and parsed.get("confirmed_qb1"):
+            return parsed
+    except Exception:
+        pass
+    if OUT.is_file():
+        try:
+            parsed = json.loads(OUT.read_text(encoding="utf-8"))
+            if isinstance(parsed, dict):
+                return parsed
+        except Exception:
+            pass
+    return {}
+
+
+def _fetch_espn_live_inactives() -> list[dict]:
+    """Fetch official pregame Out/Doubtful/Coach's Decision inactives from ESPN unstarted events."""
+    rows: list[dict] = []
+    sb = json.loads(urllib.request.urlopen(ESPN_SCOREBOARD_URL, timeout=15).read().decode("utf-8"))
+    for ev in sb.get("events", []):
+        st_type = ((ev.get("status") or {}).get("type") or {})
+        state = str(st_type.get("state") or "").lower()
+        if state != "pre":
+            continue
+        ev_id = str(ev.get("id") or "").strip()
+        if not ev_id:
+            continue
+        sm = json.loads(urllib.request.urlopen(ESPN_SUMMARY_URL.format(event_id=ev_id), timeout=15).read().decode("utf-8"))
+        for team_blk in sm.get("injuries", []):
+            raw_abbr = str((team_blk.get("team") or {}).get("abbreviation") or "").upper()
+            team = ESPN_TEAM_NORM.get(raw_abbr, raw_abbr)
+            if not team:
+                continue
+            for item in team_blk.get("injuries") or []:
+                status_text = str(item.get("status") or "").strip()
+                mapped = ESPN_BLOCKED_STATUS.get(status_text)
+                if not mapped:
+                    continue
+                athlete = item.get("athlete") or {}
+                name = str(athlete.get("displayName") or athlete.get("fullName") or "").strip()
+                if not name:
+                    continue
+                pos = str(((athlete.get("position") or {}).get("abbreviation")) or "UNKNOWN")
+                detail = str(((item.get("details") or {}).get("type")) or item.get("longComment") or item.get("shortComment") or "ESPN gameday status")
+                dt = str(item.get("date") or "")
+                rows.append({
+                    "name": name,
+                    "team": team,
+                    "position": pos,
+                    "reason": f"{mapped} - {detail} (ESPN live pregame {dt or 'gameday'})",
+                })
+    return rows
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Build Week 10 Stage 0 preflight roster config.")
+    ap.add_argument("--include-espn-live-inactives", action="store_true", help="Overlay official pregame Out/Doubtful/Inactive entries from unstarted ESPN Week 10 events.")
+    args = ap.parse_args(argv)
+
     url = os.environ.get("DATABASE_URL", "").strip()
     if not url:
         print("DATABASE_URL required", file=sys.stderr)
         return 2
+    baseline = _load_baseline_config()
+    baseline_qb1: dict[str, str] = dict(baseline.get("confirmed_qb1") or {})
+    baseline_traded: list[dict] = list(baseline.get("traded_players") or [])
+
     conn = psycopg2.connect(url)
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -109,6 +189,33 @@ def main() -> int:
         else:
             excluded.append({"name": name, "team": team, "reason": ban_reason, "position": "UNKNOWN"})
             excluded_set.add((name.lower(), team))
+            excluded_names.add(name.lower())
+
+    espn_live_added = 0
+    if args.include_espn_live_inactives:
+        for er in _fetch_espn_live_inactives():
+            key = (er["name"].lower(), er["team"])
+            if key in excluded_set:
+                for p in excluded:
+                    if (p["name"].lower(), p["team"]) == key and er["reason"] not in p["reason"]:
+                        p["reason"] += " + " + er["reason"]
+                continue
+            excluded.append(er)
+            excluded_set.add(key)
+            excluded_names.add(er["name"].lower())
+            espn_live_added += 1
+
+    # Preserve verified season-long IR exclusions from baseline even if omitted in latest weekly ESPN report.
+    for bp in baseline.get("excluded_players") or []:
+        if not isinstance(bp, dict):
+            continue
+        reason = str(bp.get("reason") or "")
+        nm = str(bp.get("name") or "").strip()
+        tm = str(bp.get("team") or "").strip()
+        if nm and tm and reason.startswith("IR -") and (nm.lower(), tm) not in excluded_set:
+            excluded.append(dict(bp))
+            excluded_set.add((nm.lower(), tm))
+            excluded_names.add(nm.lower())
 
     # QB snap evidence: most recent week per team, then snaps desc.
     cur.execute(
@@ -125,25 +232,30 @@ def main() -> int:
     confirmed_qb1: dict[str, str] = {}
     flags: dict[str, dict] = {}
     omitted: list[str] = []
-    for team in sorted(by_team):
-        rows = by_team[team]
-        latest_week = rows[0]["week"]
-        starters = [r for r in rows if r["week"] == latest_week]
+    for team in sorted(set(by_team) | set(baseline_qb1)):
+        base_qb = baseline_qb1.get(team)
+        if base_qb and (base_qb.lower(), team) not in excluded_set:
+            confirmed_qb1[team] = base_qb
+            continue
+        rows = by_team.get(team, [])
         chosen = None
-        for r in starters:
-            if (r["playerName"].lower(), team) not in excluded_set:
-                chosen = r["playerName"]
-                break
-        if chosen is None:
-            # starter excluded — promote next non-excluded QB with snap evidence
-            for r in rows:
+        if rows:
+            latest_week = rows[0]["week"]
+            starters = [r for r in rows if r["week"] == latest_week]
+            for r in starters:
                 if (r["playerName"].lower(), team) not in excluded_set:
                     chosen = r["playerName"]
-                    flags[team] = {
-                        "qb1_change": True,
-                        "reason": f"wk{latest_week} snap leader excluded by wk10 injury report; promoted {chosen} from snap evidence",
-                    }
                     break
+            if chosen is None:
+                # starter excluded — promote next non-excluded QB with snap evidence
+                for r in rows:
+                    if (r["playerName"].lower(), team) not in excluded_set:
+                        chosen = r["playerName"]
+                        flags[team] = {
+                            "qb1_change": True,
+                            "reason": f"Baseline/wk{latest_week} starter {base_qb or 'leader'} excluded by wk10 injury/inactive report; promoted {chosen} from snap evidence",
+                        }
+                        break
         if chosen is None:
             ov = ESPN_EVIDENCE_OVERRIDES.get(team)
             if ov and (ov["qb1"].lower(), team) not in excluded_set:
@@ -154,6 +266,8 @@ def main() -> int:
                 flags[team] = {"qb1_change": False, "reason": "no non-excluded QB with snap evidence — fail-closed, props blocked"}
                 continue
         confirmed_qb1[team] = chosen
+        if base_qb and base_qb != chosen and team not in flags:
+            flags[team] = {"qb1_change": True, "reason": f"Baseline QB1 {base_qb} excluded; promoted {chosen}"}
 
     # Cross-check: every team in the Week 10 slate must have a QB1 or be flagged.
     cur.execute(
@@ -171,17 +285,17 @@ def main() -> int:
         "schema": "gse.preflight_roster_gate.v1",
         "week": WEEK,
         "as_of": latest.strftime("%Y-%m-%d"),
-        "verified_by": "hermes-wp6-stage0-from-neon (injuries wk10 + snap_counts wk7-9 QB leaders)",
+        "verified_by": baseline.get("verified_by") or "hermes-wp6-stage0-from-neon (injuries wk10 + snap_counts wk7-9 QB leaders)",
         "note": (
-            f"Generated {datetime.now(timezone.utc):%Y-%m-%dT%H:%M:%SZ} from live Neon: "
+            f"Generated {datetime.now(timezone.utc):%Y-%m-%dT%H:%M:%SZ} from live Neon + HEAD transactions baseline: "
             f"{len(injuries)} wk10 injury rows (latest fetch {latest:%Y-%m-%dT%H:%M:%SZ}), "
-            f"{len(excluded)} excluded, {len(confirmed_qb1)} QB1s confirmed from snap evidence. "
-            "traded_players empty: no live transactions feed in Neon — re-verify trades before DFS lock."
+            f"{len(excluded)} excluded ({espn_live_added} from ESPN live pregame inactives), "
+            f"{len(baseline_traded)} verified trades preserved, {len(confirmed_qb1)} QB1s confirmed."
         ),
         "max_age_days": 3,
         "blocked_statuses": BLOCKED,
         "excluded_players": sorted(excluded, key=lambda p: (p["team"], p["name"])),
-        "traded_players": [],
+        "traded_players": baseline_traded,
         "confirmed_qb1": confirmed_qb1,
         "qb1_fallback_rule": (
             "QB1 = most offenseSnaps in team's latest snap_counts week (>=7, 2026); "

@@ -20,6 +20,8 @@ import {
   getDfsAndPlaysCommercialPosture,
   getRevenueStreamAttributionMatrix,
 } from "@/lib/content-os/video-and-revenue-engine";
+import { PUBLIC_RECORD_COUNTS } from "@/lib/ledger/public-record";
+import { verifiedLedger } from "@/lib/ledger/verified-ledger-view";
 
 describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
   it("elevates Jarvis Capability Registry wiring score from 44/100 to 67/100 (Building) without claiming false autonomy", () => {
@@ -174,14 +176,14 @@ describe("Mega-Sweep 2026-11-06 & Live Surface Truth Wiring", () => {
     const dfsPosture = getDfsAndPlaysCommercialPosture();
     const streams = getRevenueStreamAttributionMatrix();
 
-    expect(summary.record).toBe("36-13-1");
-    expect(summary.winRateLabel).toBe("73.5%");
-    expect(summary.netUnits).toBe(20.14);
-    expect(summary.wins).toBe(36);
-    expect(summary.losses).toBe(13);
+    expect(summary.record).toBe(PUBLIC_RECORD_COUNTS);
+    expect(summary.winRateLabel).not.toContain("%");
+    expect(summary.netUnits).toBe(verifiedLedger.official.units.total);
+    expect(summary.wins).toBe(verifiedLedger.official.wlp.wins);
+    expect(summary.losses).toBe(verifiedLedger.official.wlp.losses);
     expect(scripts.length).toBe(5);
     expect(scripts.every((s) => s.paywallSafe === true)).toBe(true);
-    expect(dfsPosture.verifiedRecord.record).toBe("36-13-1");
+    expect(dfsPosture.verifiedRecord.record).toBe(PUBLIC_RECORD_COUNTS);
     expect(dfsPosture.dfsPlatformsSupported).toEqual(["DraftKings", "FanDuel"]);
     expect(dfsPosture.officialPicksAndLineupsGated).toBe(true);
     expect(streams.length).toBe(7);

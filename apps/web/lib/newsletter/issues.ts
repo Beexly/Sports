@@ -1,3 +1,5 @@
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
+
 export type NewsletterIssue = {
   slug: string;
   number: number;
@@ -85,14 +87,14 @@ export const ISSUES: readonly NewsletterIssue[] = [
   {
     slug: "004-week-8-sweep-and-week-9-stage-0-gate",
     number: 4,
-    title: "Board Meeting 004: Week 8 Settlement Review, Verified 36-13-1 Ledger & Week 10 Slate Preview",
+    title: `Board Meeting 004: Week 8 Settlement Review, Verified ${PUBLIC_RECORD_COUNTS} Ledger & Week 10 Slate Preview`,
     publishedAt: "2026-11-04T18:00:00.000Z",
     lede:
-      "How our verified ledger stands at 36-13-1 (73.5% · +20.14u), with the all-in secondary view at 47-19-1 (+24.92u), plus our roster and injury check for Thursday Night Football (WSH @ NYG) and the 11-game Sunday Main Slate.",
+      `How our verified ledger stands at ${PUBLIC_RECORD_LINE}, plus our roster and injury check for Thursday Night Football (WSH @ NYG) and the 11-game Sunday Main Slate.`,
     sections: [
       {
         heading: "Verified Week 8 Settled Review",
-        body: "Our official verified NFL ledger stands at 36-13-1 (73.5% · +20.14u, MAIN + DERIVATIVE + TNF SINGLE-STAKE; all-in secondary 47-19-1 · +24.92u). The TNF CAR@GB official card settled 14-6-1 (+7.19u) and Sunday Nov 1 settled 6-2-0 (+2.50u) on the main card. The NYJ ML leg was pulled Nov 1 for Oct 30 freeze identity contamination and is voided, not counted.",
+        body: `Our official verified NFL ledger stands at ${PUBLIC_RECORD_LINE}. The TNF CAR@GB official card settled 14-6-1 (+7.19u) and Sunday Nov 1 settled 6-2-0 (+2.50u) on the main card. The NYJ ML leg was pulled Nov 1 for Oct 30 freeze identity contamination and is voided, not counted.`,
       },
       {
         heading: "Week 10 Roster & Injury Verification",

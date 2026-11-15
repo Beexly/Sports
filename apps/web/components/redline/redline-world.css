@@ -622,9 +622,13 @@
   transform: none !important;
   background-position: center 58%;
 }
-.is-static .plate-b,
-.is-static .plate-c { display: none; }
-.is-static .plate-a { opacity: 1; }
+.is-static .plate[data-active="false"] {
+  display: none;
+}
+.is-static .plate[data-active="true"] {
+  display: flex;
+  opacity: 1;
+}
 
 /* ── Trench X-Ray, Inline Email Capture & Paywall Gate ────────── */
 .trench-xray-card {

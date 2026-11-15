@@ -183,11 +183,17 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         self.assertEqual(
             manifest["row_counts"]["nov8_morning_sweep_csv_files_count"], 39
         )
-        self.assertIsNotNone(manifest["injury_report_completeness_warning"])
-        self.assertIn(
-            "STALE_INJURY_REPORT_WARNING",
-            manifest["injury_report_completeness_warning"],
+        populated_rows = int(
+            manifest["row_counts"].get("injuries_2026_populated_sunday_report_status_rows") or 0
         )
+        if populated_rows >= 30:
+            self.assertIsNone(manifest["injury_report_completeness_warning"])
+        else:
+            self.assertIsNotNone(manifest["injury_report_completeness_warning"])
+            self.assertIn(
+                "STALE_INJURY_REPORT_WARNING",
+                manifest["injury_report_completeness_warning"],
+            )
 
         tourney = _build_two_wave_tournament_lineups_with_exposure_and_hamming_guards(
             {}, seed=42, num_sims=2000

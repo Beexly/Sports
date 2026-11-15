@@ -165,11 +165,14 @@ def _normalize_team(tm: Any) -> str:
 def sync_dk_draftables_to_csvs(
     scratch_dir: Path | None = None,
     dfs_dir: Path = DATA_DFS_DIR,
+    skip_slates: set[str] | None = None,
 ) -> dict[str, Path]:
     """Normalize cached DraftKings Draftables JSONs into canonical CSVs in `dfs_dir`."""
     dfs_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
     for slate_key, spec in SLATE_SPECS.items():
+        if skip_slates and slate_key in skip_slates:
+            continue
         csv_path = dfs_dir / spec["salary_csv"]
         json_path = _resolve_scratch_json_path(spec["scratch_json"], scratch_dir=scratch_dir)
         if not json_path.is_file():
@@ -896,9 +899,33 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
     if len(by_pos["QB"]) != 1 or len(by_pos["TE"]) != 1 or len(by_pos["DST"]) != 1:
         raise ValueError(f"Invalid Classic lineup positional counts: { {k: len(v) for k, v in by_pos.items()} }")
 
-    rb_primary = by_pos["RB"][:2]
-    wr_primary = by_pos["WR"][:3]
-    flex_candidates = [*by_pos["RB"][2:], *by_pos["WR"][3:]]
+    # Late-swap FLEX optimization: put latest-kickoff eligible RB/WR/TE in FLEX slot (zero projection loss).
+    def _window_rank(team_code: str) -> int:
+        t = str(team_code or "").upper()
+        if t in {"LAC", "BAL"}:
+            return 3
+        if t in {"PIT", "CIN"}:
+            return 2
+        if t in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
+            return 1
+        return 0
+
+    rbs = list(by_pos["RB"])
+    wrs = list(by_pos["WR"])
+    if len(rbs) == 3:
+        rbs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
+        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
+        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
+        flex_candidates = [rbs[2]]
+    elif len(wrs) == 4:
+        wrs.sort(key=lambda r: (_window_rank(str(r.get("team", ""))), -float(r["median_fpts"])))
+        rb_primary = sorted(rbs[:2], key=lambda r: -float(r["median_fpts"]))
+        wr_primary = sorted(wrs[:3], key=lambda r: -float(r["median_fpts"]))
+        flex_candidates = [wrs[3]]
+    else:
+        rb_primary = rbs[:2]
+        wr_primary = wrs[:3]
+        flex_candidates = [*rbs[2:], *wrs[3:]]
     if len(rb_primary) != 2 or len(wr_primary) != 3 or len(flex_candidates) != 1:
         raise ValueError(f"Could not assign Classic FLEX deterministically: { {k: len(v) for k, v in by_pos.items()} }")
 
@@ -1252,17 +1279,55 @@ def _render_week10_dfs_markdown(packets: Mapping[str, Mapping[str, Any]]) -> str
     return raw_md
 
 
+def _load_existing_packet(slate_key: str, output_dir: Path) -> dict[str, Any]:
+    pkt_path = output_dir / SLATE_SPECS[slate_key]["packet_json"]
+    if not pkt_path.is_file():
+        raise FileNotFoundError(f"Expected sealed packet {pkt_path} when skipping rebuild of {slate_key}")
+    return json.loads(pkt_path.read_text(encoding="utf-8"))
+
+
 def build_all_week10_slates(
     today: date | None = None,
     output_dir: Path = DATA_DFS_DIR,
     docs_md_path: Path | None = None,
+    skip_munich: bool = False,
+    slates: set[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
-    """Build all 5 Week 10 DraftKings DFS packets, upload CSVs, and research markdown packet."""
-    sync_dk_draftables_to_csvs(dfs_dir=output_dir)
-    munich = build_showdown_packet("munich_ne_det", write_outputs=True, today=today, output_dir=output_dir)
-    sun_main = build_classic_packet("sun_main_classic", include_14_core=False, write_outputs=True, today=today, output_dir=output_dir)
-    sun_mon = build_classic_packet("sun_mon_expanded", include_14_core=True, write_outputs=True, today=today, output_dir=output_dir)
-    primetime = build_primetime_showdowns(write_outputs=True, today=today, output_dir=output_dir)
+    """Build selected Week 10 DraftKings DFS packets, upload CSVs, and research markdown packet."""
+    active_slates = set(SLATE_SPECS.keys()) if not slates else set(slates)
+    if skip_munich:
+        active_slates.discard("munich_ne_det")
+    skip_set = set(SLATE_SPECS.keys()) - active_slates
+    sync_dk_draftables_to_csvs(dfs_dir=output_dir, skip_slates=skip_set)
+
+    munich = (
+        build_showdown_packet("munich_ne_det", write_outputs=True, today=today, output_dir=output_dir)
+        if "munich_ne_det" in active_slates
+        else _load_existing_packet("munich_ne_det", output_dir)
+    )
+    sun_main = (
+        build_classic_packet("sun_main_classic", include_14_core=False, write_outputs=True, today=today, output_dir=output_dir)
+        if "sun_main_classic" in active_slates
+        else _load_existing_packet("sun_main_classic", output_dir)
+    )
+    sun_mon = (
+        build_classic_packet("sun_mon_expanded", include_14_core=True, write_outputs=True, today=today, output_dir=output_dir)
+        if "sun_mon_expanded" in active_slates
+        else _load_existing_packet("sun_mon_expanded", output_dir)
+    )
+
+    if {"snf_pit_cin", "mnf_lac_bal"}.issubset(active_slates):
+        primetime = build_primetime_showdowns(write_outputs=True, today=today, output_dir=output_dir)
+    else:
+        primetime = {
+            sk: (
+                build_showdown_packet(sk, write_outputs=True, today=today, output_dir=output_dir)
+                if sk in active_slates
+                else _load_existing_packet(sk, output_dir)
+            )
+            for sk in ("snf_pit_cin", "mnf_lac_bal")
+        }
+
     packets: dict[str, dict[str, Any]] = {
         "munich_ne_det": munich,
         "sun_main_classic": sun_main,
@@ -1279,7 +1344,14 @@ def build_all_week10_slates(
 
 
 if __name__ == "__main__":
-    all_packets = build_all_week10_slates()
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Build Week 10 DraftKings DFS packets")
+    ap.add_argument("--skip-munich", action="store_true", help="Do not rebuild or overwrite sealed munich_ne_det artifacts")
+    ap.add_argument("--slates", default="", help="Comma-separated subset of slate keys to rebuild")
+    cli_args = ap.parse_args()
+    wanted_slates = {s.strip() for s in cli_args.slates.split(",") if s.strip()} or None
+    all_packets = build_all_week10_slates(skip_munich=cli_args.skip_munich, slates=wanted_slates)
     for skey, spkt in all_packets.items():
         print(
             f"[DFS] {skey}: Cash=${spkt['cash_lineup']['total_salary']} "

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_UNITS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 export type OfficeTabMode =
   | "office-3d"
@@ -222,12 +223,12 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
     agentName: "360 Market & Optimal Lineup Agent",
     model: "gse/skeleton-forecast",
     status: "GRADING_BOARD",
-    task: "Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · 14-player DFS Core Pool locked",
+    task: `Season Ledger ${PUBLIC_RECORD_LINE} · 14-player DFS Core Pool locked`,
     activeToolCall: "calibration.signCallSheetTickets(markets=77)",
     thoughtBubble:
       "Auditing 1Q-4Q, 1H/2H, Kicking, IDP & Props against Class B de-vig Conjunction Gate.",
     memoryState:
-      "Official Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) · 14-player DFS Core",
+      `Official Season Ledger ${PUBLIC_RECORD_LINE} · 14-player DFS Core`,
     gridPos: { col: 1, row: 1, x: 500, y: 300 },
     accentHex: "#22d3ee",
     accentClass: "border-mineral/60 bg-eclipse/30 text-ion-1",
@@ -248,7 +249,7 @@ export const WORKSTATION_PODS: readonly WorkstationPod[] = [
       },
     ],
     logs: [
-      "[TRD-01] Official Season Ledger of Record: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u).",
+      "[TRD-01] Official Season Ledger of Record: " + PUBLIC_RECORD_LINE + ".",
       "[TRD-02] Full 360-degree board scan active across 1Q-4Q, 1H/2H, Kicking, IDP, and TDs.",
       "[TRD-03] Sub-threshold edges marked PASS (publishAllowed: false) via no-bet-gate.",
     ],
@@ -540,7 +541,7 @@ const INITIAL_BUS_MESSAGES: readonly HermesBusMessage[] = [
     channel: "brain/agent-bus#ledger-truth",
     topic: "CONJUNCTION_GATE_RECEIPT",
     payload:
-      "Official Season Ledger 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u) synced. 14-player DFS Core Pool locked.",
+      `Official Season Ledger ${PUBLIC_RECORD_LINE} synced. 14-player DFS Core Pool locked.`,
     receiptHash: "0x5c19..f208",
   },
   {
@@ -585,7 +586,7 @@ export function CockpitOffice3dBotHq({
     timestamp: null,
   });
   const [broadcastInput, setBroadcastInput] = useState<string>(
-    "SYNC_ALL_DESKS: Verify Stage 2 situational priors + 36-13-1 (+20.14u) ledger pin"
+    `SYNC_ALL_DESKS: Verify Stage 2 situational priors + ${PUBLIC_RECORD_COUNTS} (${PUBLIC_RECORD_UNITS}) ledger pin`
   );
   const [busMessages, setBusMessages] =
     useState<readonly HermesBusMessage[]>(INITIAL_BUS_MESSAGES);
@@ -795,7 +796,7 @@ export function CockpitOffice3dBotHq({
             <p className="mt-0.5 font-mono text-[10px] text-ion-3">
               Season Ledger{" "}
               <span className="font-semibold text-verify">
-                36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
+                {PUBLIC_RECORD_LINE}
               </span>{" "}
               · Roster Ruling:{" "}
               <span className="text-ion-2">
@@ -1453,7 +1454,7 @@ export function CockpitOffice3dBotHq({
                 </p>
               </div>
               <span className="font-mono text-[10px] text-verify">
-                Ledger Pin: 36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)
+                Ledger Pin: {PUBLIC_RECORD_LINE}
               </span>
             </div>
 

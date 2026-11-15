@@ -94,7 +94,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
   it("renders unlocked PaywallRevealCard in-place with XX/100 confidence and honest BET THIS / PASS · NO BET badges", () => {
     const tnfPkg = getPackageBySlug("tnf-all-in-pack")!;
     const teasers = getRedactedTeasersForWindowSlot(tnfPkg.windowSlot);
-    const tnfWriteups = getWriteupsForWindowSlot(tnfPkg.windowSlot);
+    const tnfWriteups = LIVE_SLATE_COACH_WRITEUPS.filter((w) => w.windowSlot === tnfPkg.windowSlot);
 
     const { container } = render(
       <PaywallRevealCard
@@ -160,7 +160,7 @@ describe("Packages Storefront & Paywall Reveal Vault", () => {
     const mnfWriteups = LIVE_SLATE_COACH_WRITEUPS.filter((w) => w.windowSlot === "MNF");
     expect(mnfWriteups.length).toBe(1);
     const mnfWriteup = mnfWriteups[0]!;
-    expect(mnfWriteup.matchup).toBe("Buffalo Bills @ Minnesota Vikings");
+    expect(mnfWriteup.matchup).toBe("Los Angeles Chargers @ Baltimore Ravens");
     expect(["PLAY", "PASS"]).toContain(mnfWriteup.sideTotalCall.sideDecision);
     expect(["PLAY", "PASS"]).toContain(mnfWriteup.sideTotalCall.totalDecision);
     expect(mnfWriteup.topProps.length).toBeGreaterThan(0);
