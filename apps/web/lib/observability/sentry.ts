@@ -107,10 +107,11 @@ export function initObservability(): void {
   // unconditionally and read `globalThis._sentryVercelCronsConfig`, which the
   // build plugin would inject from vercel.json. We set that same global at
   // runtime instead — identical check-in behaviour, no webpack plugin.
-  // Server-only: the literal `typeof window` guard lets Next dead-code-
-  // eliminate this import (and its node:fs dep) from the client bundle,
-  // the same pattern instrumentation.ts uses for NEXT_RUNTIME.
-  if (typeof window === "undefined") {
+  // Server-only Node.js runtime: gating on BOTH `typeof window === "undefined"`
+  // and literal `process.env.NEXT_RUNTIME === "nodejs"` lets Next dead-code-
+  // eliminate this import (and its node:fs/node:path deps) from BOTH the
+  // client bundle and the Edge compilation.
+  if (typeof window === "undefined" && process.env.NEXT_RUNTIME === "nodejs") {
     void import("./vercel-crons")
       .then((mod) => mod.enableVercelCronsMonitoring())
       .catch(() => {

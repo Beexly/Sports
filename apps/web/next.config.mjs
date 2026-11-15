@@ -15,7 +15,12 @@ const nextConfig = {
   poweredByHeader: false,
   transpilePackages: [
     "@sports/ai-council",
+    "@sports/compliance",
     "@sports/db",
+    "@sports/feature-store",
+    "@sports/governed",
+    "@sports/stats-api",
+    "@sports/stealth-skeleton-provider",
     "@sports/types",
     "@sports/prediction-engine",
     "@sports/data-ingestion",
@@ -171,17 +176,17 @@ const nextConfig = {
       "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, nextRuntime }) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
       "@": path.resolve(process.cwd()),
     };
 
-    // Client components import @sports/prediction-engine's barrel, which
-    // re-exports corpus-evaluator (node:fs / node:path). Those builtins are
-    // server-only; shim the scheme on the client build so production compiles.
-    // The server build keeps the real modules.
-    if (!isServer) {
+    // Client and Edge builds cannot import node:* builtins (e.g. from
+    // @sports/prediction-engine barrels or shared server/edge helpers). Shim
+    // the node: scheme on Client and Edge builds; Node.js server builds keep
+    // the real builtins.
+    if (!isServer || nextRuntime === "edge") {
       const fsShim = path.resolve(here, "lib/shims/empty-fs.js");
       const pathShim = path.resolve(here, "lib/shims/empty-path.js");
       config.plugins.push({

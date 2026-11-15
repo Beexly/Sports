@@ -94,7 +94,7 @@ export async function GET(req: Request) {
     }
 
     return res;
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { unlocked: false, error: "Internal server error" },
       { status: 500 },

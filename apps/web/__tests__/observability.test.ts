@@ -154,6 +154,19 @@ describe("next.config.mjs — source pins", () => {
   it("does NOT contain withSentryConfig", () => {
     expect(src).not.toMatch(/withSentryConfig/);
   });
+
+  it("shims node:* builtins on Edge runtime builds in addition to Client builds", () => {
+    expect(src).toMatch(/nextRuntime\s*===\s*"edge"/);
+    expect(src).toMatch(/!isServer\s*\|\|\s*nextRuntime\s*===\s*"edge"/);
+  });
+});
+
+describe("sentry.ts - edge bundle guard", () => {
+  const sentrySrc = readSource("lib/observability/sentry.ts");
+
+  it("guards the dynamic vercel-crons import with literal NEXT_RUNTIME nodejs check", () => {
+    expect(sentrySrc).toMatch(/process\.env\.NEXT_RUNTIME\s*===\s*"nodejs"/);
+  });
 });
 
 describe("package.json — @sentry/nextjs present", () => {
