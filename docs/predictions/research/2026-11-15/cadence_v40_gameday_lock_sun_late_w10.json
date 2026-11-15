@@ -1,0 +1,431 @@
+{
+  "report_type": "CADENCE_V4_0_T90_GAMEDAY_LOCK_AND_CONFORMAL_DIAGNOSTIC",
+  "version": "v4.0",
+  "phase": "T90_GAMEDAY_LOCK_REFRESH",
+  "slot": "SUN_LATE",
+  "week": 10,
+  "season": 2026,
+  "cadence_window": {
+    "day": "Sun",
+    "ct_time": "13:35",
+    "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
+  },
+  "generated_at_utc": "2026-11-15T19:41:26.118695+00:00",
+  "inputs": {
+    "scoreboard_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261115",
+    "scoreboard_http_status": 200,
+    "scoreboard_events_total": 12,
+    "sun_late_games_derived": [
+      {
+        "matchup": "Los Angeles Rams at Arizona Cardinals",
+        "gameId": "401873061",
+        "kickoff": "2026-11-15T21:05Z",
+        "venue": "State Farm Stadium",
+        "indoor": true,
+        "status": "Scheduled"
+      },
+      {
+        "matchup": "Seattle Seahawks at Las Vegas Raiders",
+        "gameId": "401873062",
+        "kickoff": "2026-11-15T21:05Z",
+        "venue": "Allegiant Stadium",
+        "indoor": true,
+        "status": "Scheduled"
+      },
+      {
+        "matchup": "San Francisco 49ers at Dallas Cowboys",
+        "gameId": "401873063",
+        "kickoff": "2026-11-15T21:25Z",
+        "venue": "AT&T Stadium",
+        "indoor": true,
+        "status": "Scheduled"
+      }
+    ],
+    "sealed_build_probe": {
+      "sealed_build_found": false,
+      "checked": [
+        {
+          "path": "data/engine/week10_full_slate_connected_dossiers_2026_11_13.json",
+          "exists": false
+        },
+        {
+          "path": "data/engine/week10_full_slate_connected_dossiers_2026_11_12.json",
+          "exists": false
+        },
+        {
+          "path": "data/engine/nfl_2026_w10_five_stage_engine_verdicts.json",
+          "exists": false
+        },
+        {
+          "path": "data/engine/week10_tuesday_0400ct_sealed_baseline_2026.json",
+          "exists": false
+        },
+        {
+          "path": "data/packages/live-slate-writeups.json",
+          "exists": true,
+          "sha256": "9223b484666a14ea08a0e7e4d6b8ba70590aef1aa3882c1c1fadc29cd696e3d8",
+          "declared_week": 8,
+          "declared_season": 2026,
+          "generated_at": "2026-10-29T23:30:08Z",
+          "week10_usable": false
+        }
+      ],
+      "reason": "no Week-10 sealed call build on disk: candidate paths either do not exist or declare a different week (Week-8 writeup package is the newest build, and its gameIds cover zero Week-10 games). The active seal center is the 2026-W44 seal (sealed 2026-10-25). Cadence v3.0 Friday overlay recorded the same gap as BLOCKED_NO_SEALED_BUILD on 2026-11-13."
+    },
+    "stored_snapshot": {
+      "source_csv": "data/nflverse/injuries_2026.csv",
+      "csv_sha256": "40d98f1fa0a07159c9271ecb167611876e234f643e33ff55358d3d81adb34edb",
+      "week10_rows": 300,
+      "week10_designations_all_count": 18,
+      "week10_designations_slot_teams": [],
+      "counts": {
+        "ruled_out": 8,
+        "questionable": 10,
+        "doubtful": 0,
+        "slot_ruled_out": 0,
+        "slot_questionable": 0,
+        "slot_doubtful": 0
+      },
+      "caveat": "nflverse report_status is blank for Sunday games at this hour (Week-10 rows exist, but zero carry a designating status for SUN_LATE teams). The live ESPN pull is the authoritative availability check; this CSV is a parity/diff baseline only."
+    }
+  },
+  "seal": {
+    "sealed_center_path": "candidates/sealed-center.json",
+    "sealed_center_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "authoritative_merkle": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "sealed_at": "2026-10-25T04:00:00-05:00",
+    "tau": 0.42,
+    "candidate_parent_seal_hash": "23245bcbba04f1470c5b0f60b83358c6af44c2b20c70e244d8b7a1a0eb686e8b",
+    "coach_mind_canonical_digest": "354b4c132e200657fa2bfb9f3235680a249d8a7d28cf3fb64cdd65c165022599",
+    "epa_dropoff_table_sha256": "9b8c701c162efa8513b2c900474c0a4351b34be6f024ef7fc424677466f00938",
+    "checks": {
+      "sealed_center_merkle_matches_recorded": true,
+      "candidate_parent_seal_hash_matches_center": true,
+      "candidate_tau_rating_recorded": true,
+      "coach_mind_tau_is_0_42": true,
+      "epa_dropoff_table_unmodified": true,
+      "qb_questionable_ev_dropoff_is_0_0947": true
+    },
+    "unchanged": true,
+    "provenance_caveat": "candidates/ is quarantined per artifacts/CANONICAL-ENVIRONMENT-2026-10-27.md D1: the parent seal hash is documented as sequential hex. 'unchanged' asserts byte-identity with the active seal center, not that the seal is independently reproducible."
+  },
+  "no_mutation": {
+    "sealed_state_written": false,
+    "candidate_written": false,
+    "seal_function_called": false,
+    "note": "This run wrote exactly one file: this report. candidates/, dossiers, parquet, and every sealed artifact were opened read-only; tau, costMatrixC, teamRatings and epaDropoffTable were read, never re-estimated."
+  },
+  "availability_refresh": {
+    "slot": "SUN_LATE",
+    "stored_snapshot": {
+      "source": "data/nflverse/injuries_2026.csv",
+      "week10_rows": 300,
+      "week10_designations_all_count": 18,
+      "week10_designations_slot_teams": [],
+      "counts": {
+        "ruled_out": 8,
+        "questionable": 10,
+        "doubtful": 0,
+        "slot_ruled_out": 0,
+        "slot_questionable": 0,
+        "slot_doubtful": 0
+      },
+      "caveat": "nflverse report_status is blank for Sunday games at this hour (Week-10 rows exist, but zero carry a designating status for SUN_LATE teams). The live ESPN pull is the authoritative availability check; this CSV is a parity/diff baseline only."
+    },
+    "fetched_at_utc": "2026-11-15T19:41:25.647877+00:00",
+    "games": [
+      {
+        "game": "Los Angeles Rams at Arizona Cardinals",
+        "gameId": "401873061",
+        "kickoff": "2026-11-15T21:05Z",
+        "venue": "State Farm Stadium",
+        "indoor": true,
+        "status_at_poll": "Scheduled",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "ARI",
+            "player": "Hunter Long",
+            "position": "TE",
+            "status": "Questionable"
+          },
+          {
+            "team": "ARI",
+            "player": "Jayden Williams",
+            "position": "OT",
+            "status": "Questionable"
+          },
+          {
+            "team": "ARI",
+            "player": "Jon Gaines II",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "LAR",
+            "player": "Steve Avila",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "LAR",
+            "player": "Trent McDuffie",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "LAR",
+            "player": "Kam Curl",
+            "position": "S",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "ARI",
+            "player": "Gardner Minshew II",
+            "position": "QB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "ARI",
+            "player": "Zachary Carter",
+            "position": "DT",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LAR",
+            "player": "Davante Adams",
+            "position": "WR",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LAR",
+            "player": "Puka Nacua",
+            "position": "WR",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "Seattle Seahawks at Las Vegas Raiders",
+        "gameId": "401873062",
+        "kickoff": "2026-11-15T21:05Z",
+        "venue": "Allegiant Stadium",
+        "indoor": true,
+        "status_at_poll": "Scheduled",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "LV",
+            "player": "Thomas Booker IV",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "LV",
+            "player": "Dont'e Thornton Jr.",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "SEA",
+            "player": "Quenton Nelson",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Charles Cross",
+            "position": "OT",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Leonard Williams",
+            "position": "DT",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
+            "player": "Sam Darnold",
+            "position": "QB",
+            "status": "Out"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "LV",
+            "player": "Patrick Johnson",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LV",
+            "player": "Keyron Crawford",
+            "position": "DE",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "LV",
+            "player": "Chigozie Anusiem",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SEA",
+            "player": "Elijah Arroyo",
+            "position": "TE",
+            "status": "Injured Reserve"
+          }
+        ]
+      },
+      {
+        "game": "San Francisco 49ers at Dallas Cowboys",
+        "gameId": "401873063",
+        "kickoff": "2026-11-15T21:25Z",
+        "venue": "AT&T Stadium",
+        "indoor": true,
+        "status_at_poll": "Scheduled",
+        "http_status": 200,
+        "team_blocks": 2,
+        "designations_applied": [
+          {
+            "team": "DAL",
+            "player": "Joey Porter Jr.",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "DAL",
+            "player": "DaRon Bland",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "DAL",
+            "player": "Jonathan Bullard",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "DAL",
+            "player": "Donovan Ezeiruaku",
+            "position": "LB",
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Mike Evans",
+            "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Trent Williams",
+            "position": "OT",
+            "status": "Questionable"
+          }
+        ],
+        "roster_statuses_not_applied": [
+          {
+            "team": "DAL",
+            "player": "Tyler Goodson",
+            "position": "RB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SF",
+            "player": "C.J. West",
+            "position": "DT",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SF",
+            "player": "Nate Hobbs",
+            "position": "CB",
+            "status": "Injured Reserve"
+          },
+          {
+            "team": "SF",
+            "player": "Gracen Halton",
+            "position": "DT",
+            "status": "Injured Reserve"
+          }
+        ]
+      }
+    ],
+    "offline": false,
+    "summary": {
+      "games_polled": 3,
+      "games_with_error": 0,
+      "designations_applied": 18,
+      "out_count": 8,
+      "doubtful_count": 0,
+      "questionable_count": 10,
+      "statuses_not_applied": 12,
+      "qb_designations": [
+        {
+          "team": "SEA",
+          "player": "Sam Darnold",
+          "position": "QB",
+          "status": "Out"
+        }
+      ],
+      "stored_curated_subset_size": 0,
+      "newly_listed_not_in_stored_subset": [
+        "Charles Cross",
+        "DaRon Bland",
+        "Donovan Ezeiruaku",
+        "Dont'e Thornton Jr.",
+        "Hunter Long",
+        "Jayden Williams",
+        "Joey Porter Jr.",
+        "Jon Gaines II",
+        "Jonathan Bullard",
+        "Kam Curl",
+        "Leonard Williams",
+        "Mike Evans",
+        "Quenton Nelson",
+        "Sam Darnold",
+        "Steve Avila",
+        "Thomas Booker IV",
+        "Trent McDuffie",
+        "Trent Williams"
+      ],
+      "stored_names_absent_from_refresh": [],
+      "downstream_effect": "FLAG ONLY. No Week-10 sealed call rows exist, so no designation lands on a sealed ticket and nothing is re-priced. A QB listed Out (SEA: Sam Darnold) is reported for the owner; whether it voids any prior lean is a downstream decision, not this run's.",
+      "diff_caveat": "The stored snapshot is the injuries_2026.csv Week-10 designation set for the SUN_LATE teams; it is empty (all Sunday rows carry a blank report_status at this hour), so every live designation is net-new relative to the stored baseline rather than a scope difference."
+    }
+  },
+  "conformal": {
+    "sigma_total": 12.798,
+    "sigma_total_calibration": {
+      "source": "artifacts/slate/2026-10-25-week7-master-slate.json",
+      "n": 13,
+      "sd": 0.134,
+      "relation": "finalProjectedTotal = totalLine + sigma * Phi^-1(modelOverProb)"
+    },
+    "alpha": 0.1,
+    "path": "none available for Week 10: no sealed call build, hence no (model total, market total) pairs",
+    "no_observations": true,
+    "observations": [],
+    "band": {
+      "lower": -0.0,
+      "upper": 0.0
+    },
+    "residuals": [],
+    "flagged": [],
+    "n": 0,
+    "coverage": 0.0,
+    "qLevel": 0.0,
+    "degenerate": false,
+    "degeneracy_note": "n = 0: there are no residuals to estimate a band from, so the band is undefined rather than non-degenerate. qLevel = 0.0 and band = 0.0 are carry-through values from the estimator on an empty sample, not evidence about calibration."
+  },
+  "publication": {
+    "published": false,
+    "reason": "Flag-only diagnostic. Nothing here is a publication."
+  }
+}
