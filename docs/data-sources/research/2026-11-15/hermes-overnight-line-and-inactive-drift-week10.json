@@ -1,0 +1,3489 @@
+{
+ "schema": "gse.data_sources.line_inactive_drift.v1",
+ "generated_utc": "2026-11-15T15:05:14.244452+00:00",
+ "author": "hermes overnight watch (Wave 3 poller archive)",
+ "coordination_ref": "antigravity/20261115T042800000Z-ethos01 lane 1",
+ "window_utc": {
+  "start": "20261115T072525Z",
+  "end": "20261115T135909Z"
+ },
+ "sources": {
+  "lines": "SportsbookReview public pages (spread, totals/full-game, money-line/full-game), 8 books, 15-min poll cycles",
+  "status_inactives": "ESPN site.api summary event 401873053 (Munich) + scoreboard; official inactives captured 13:05Z and 13:19Z with fresh fetch",
+  "draftkings_prop_api": "BLOCKED 403 IP reputation from this host; recorded, not retried; no paid quota used"
+ },
+ "caveats": [
+  "first_observed is the poller's first sighting (~02:10-07:25 UTC window), NOT the true book opener",
+  "poller cutoff 14:05 UTC (08:05 CST); in-game movement after cutoff is not covered",
+  "moneyline field values are American odds; spread fields are half-point lines; total fields are points"
+ ],
+ "summary": {
+  "total_moves": 246,
+  "distinct_series": 150,
+  "moves_by_game": {
+   "LAR @ ARI": 41,
+   "BUF @ NYJ": 38,
+   "NE @ DET": 29,
+   "CAR @ NO": 29,
+   "SF @ DAL": 28,
+   "JAX @ TEN": 19,
+   "SEA @ LV": 17,
+   "KC @ ATL": 12,
+   "MIA @ IND": 11,
+   "HOU @ CLE": 8,
+   "MIN @ GB": 7,
+   "PIT @ CIN": 7
+  },
+  "moves_by_market": {
+   "spread": 70,
+   "total": 65,
+   "moneyline": 111
+  }
+ },
+ "drift_series": [
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -440,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -460,
+   "net_delta": -20,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -440,
+     "to": -450
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -450,
+     "to": -460
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 340,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": 350,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 340,
+     "to": 350
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 340,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": 350,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 340,
+     "to": 350
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "caesars",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -441,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -461,
+   "net_delta": -20,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -441,
+     "to": -461
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "caesars",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": 340,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": 350,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": 340,
+     "to": 350
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -380,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -455,
+   "net_delta": -75,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -380,
+     "to": -455
+    },
+    {
+     "ts": "20261115T121353Z",
+     "from": -455,
+     "to": -485
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -485,
+     "to": -470
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": -470,
+     "to": -455
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 300,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": 350,
+   "net_delta": 50,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 300,
+     "to": 350
+    },
+    {
+     "ts": "20261115T121353Z",
+     "from": 350,
+     "to": 370
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": 370,
+     "to": 360
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": 360,
+     "to": 350
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": -450,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -450,
+   "net_delta": 0,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": -450,
+     "to": -425
+    },
+    {
+     "ts": "20261115T094334Z",
+     "from": -425,
+     "to": -450
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -450,
+     "to": -475
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": -475,
+     "to": -450
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": 340,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": 340,
+   "net_delta": 0,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": 340,
+     "to": 325
+    },
+    {
+     "ts": "20261115T094334Z",
+     "from": 325,
+     "to": 340
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": 340,
+     "to": 360
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": 360,
+     "to": 340
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": -500,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -500,
+   "net_delta": 0,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": -500,
+     "to": -400
+    },
+    {
+     "ts": "20261115T085829Z",
+     "from": -400,
+     "to": -475
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": -475,
+     "to": -500
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": 375,
+   "last_observed_utc": "20261115T101338Z",
+   "last_value": 350,
+   "net_delta": -25,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": 375,
+     "to": 300
+    },
+    {
+     "ts": "20261115T085829Z",
+     "from": 300,
+     "to": 375
+    },
+    {
+     "ts": "20261115T101338Z",
+     "from": 375,
+     "to": 350
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T092833Z",
+   "first_value": -529,
+   "last_observed_utc": "20261115T092833Z",
+   "last_value": -110,
+   "net_delta": 419,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T092833Z",
+     "from": -529,
+     "to": -110
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T092833Z",
+   "first_value": 335,
+   "last_observed_utc": "20261115T092833Z",
+   "last_value": -110,
+   "net_delta": -445,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T092833Z",
+     "from": 335,
+     "to": -110
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T092833Z",
+   "first_value": 0,
+   "last_observed_utc": "20261115T092833Z",
+   "last_value": 7.5,
+   "net_delta": 7.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T092833Z",
+     "from": 0,
+     "to": 7.5
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "spread",
+   "book": "draftkings",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T092833Z",
+   "first_value": 7.5,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": 9.5,
+   "net_delta": 2.0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T092833Z",
+     "from": 7.5,
+     "to": 8.5
+    },
+    {
+     "ts": "20261115T125901Z",
+     "from": 8.5,
+     "to": 9.5
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "total",
+   "book": "bet_rivers_co",
+   "field": "total",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 50.5,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": 51,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 50.5,
+     "to": 51
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "total",
+   "book": "caesars",
+   "field": "total",
+   "first_observed_utc": "20261115T131403Z",
+   "first_value": 51,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": 50.5,
+   "net_delta": -0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T131403Z",
+     "from": 51,
+     "to": 50.5
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "total",
+   "book": "draftkings",
+   "field": "overOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": -106,
+   "last_observed_utc": "20261115T085829Z",
+   "last_value": -125,
+   "net_delta": -19,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": -106,
+     "to": -125
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "total",
+   "book": "draftkings",
+   "field": "total",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": 51.5,
+   "last_observed_utc": "20261115T085829Z",
+   "last_value": 50.5,
+   "net_delta": -1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": 51.5,
+     "to": 50.5
+    }
+   ]
+  },
+  {
+   "matchup": "BUF @ NYJ",
+   "market": "total",
+   "book": "draftkings",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": -125,
+   "last_observed_utc": "20261115T085829Z",
+   "last_value": -106,
+   "net_delta": 19,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": -125,
+     "to": -106
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": 109,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -101,
+   "net_delta": -210,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": 109,
+     "to": -101
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -129,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -119,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -129,
+     "to": -119
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": 108,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -105,
+   "net_delta": -213,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": 108,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": -132,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -118,
+   "net_delta": 14,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": -132,
+     "to": -118
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": 110,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -105,
+   "net_delta": -215,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": 110,
+     "to": -102
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": -102,
+     "to": 100
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 100,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -130,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -118,
+   "net_delta": 12,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -130,
+     "to": -118
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "caesars",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -137,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -125,
+   "net_delta": 12,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -137,
+     "to": -125
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": 110,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -102,
+   "net_delta": -212,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": 110,
+     "to": 100
+    },
+    {
+     "ts": "20261115T125901Z",
+     "from": 100,
+     "to": -102
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -130,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -120,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -130,
+     "to": -120
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T135909Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -105,
+   "net_delta": -205,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T135909Z",
+     "from": 100,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "fanduel",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": 114,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -108,
+   "net_delta": -222,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": 114,
+     "to": -108
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "fanduel",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -134,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -108,
+   "net_delta": 26,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -134,
+     "to": -108
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": 115,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -105,
+   "net_delta": -220,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": 115,
+     "to": 105
+    },
+    {
+     "ts": "20261115T124358Z",
+     "from": 105,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": -135,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -115,
+   "net_delta": 20,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": -135,
+     "to": -125
+    },
+    {
+     "ts": "20261115T124358Z",
+     "from": -125,
+     "to": -115
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "bet365",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -2.5,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -1.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -2.5,
+     "to": -1.5
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": -106,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -117,
+   "net_delta": -11,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": -106,
+     "to": -117
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": -117,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -106,
+   "net_delta": 11,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": -117,
+     "to": -106
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -120,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -110,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -120,
+     "to": -110
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "caesars",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -120,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -104,
+   "net_delta": 16,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -120,
+     "to": -104
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "caesars",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -2.5,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -1.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -2.5,
+     "to": -1.5
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -111,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": 100,
+   "net_delta": 211,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -111,
+     "to": 100
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -2.5,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -1.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -2.5,
+     "to": -1.5
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "total",
+   "book": "draftkings",
+   "field": "total",
+   "first_observed_utc": "20261115T131403Z",
+   "first_value": 48.5,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": 49.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T131403Z",
+     "from": 48.5,
+     "to": 49.5
+    }
+   ]
+  },
+  {
+   "matchup": "CAR @ NO",
+   "market": "total",
+   "book": "draftkings",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T131403Z",
+   "first_value": -105,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": -123,
+   "net_delta": -18,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T131403Z",
+     "from": -105,
+     "to": -123
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "moneyline",
+   "book": "fanduel",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -220,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -230,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -220,
+     "to": -230
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": 195,
+   "last_observed_utc": "20261115T085829Z",
+   "last_value": 185,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": 195,
+     "to": 185
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T082236Z",
+   "first_value": 170,
+   "last_observed_utc": "20261115T082236Z",
+   "last_value": -109,
+   "net_delta": -279,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T082236Z",
+     "from": 170,
+     "to": -109
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T082236Z",
+   "first_value": 0,
+   "last_observed_utc": "20261115T082236Z",
+   "last_value": 4.5,
+   "net_delta": 4.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T082236Z",
+     "from": 0,
+     "to": 4.5
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "total",
+   "book": "betmgm",
+   "field": "total",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": 40.5,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": 41,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": 40.5,
+     "to": 41
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": 40.5,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": 41,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": 40.5,
+     "to": 41
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "total",
+   "book": "fanduel",
+   "field": "overOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -105,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -122,
+   "net_delta": -17,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -105,
+     "to": -122
+    }
+   ]
+  },
+  {
+   "matchup": "HOU @ CLE",
+   "market": "total",
+   "book": "fanduel",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T124358Z",
+   "first_value": -115,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -104,
+   "net_delta": 11,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T124358Z",
+     "from": -115,
+     "to": -104
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -600,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -650,
+   "net_delta": -50,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -600,
+     "to": -650
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": 450,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": 475,
+   "net_delta": 25,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": 450,
+     "to": 475
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -625,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -625,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -625,
+     "to": -714
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -714,
+     "to": -625
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": 425,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 420,
+   "net_delta": -5,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": 425,
+     "to": 475
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 475,
+     "to": 420
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "caesars",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -592,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -625,
+   "net_delta": -33,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -592,
+     "to": -625
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -700,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -700,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -700,
+     "to": -750
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -750,
+     "to": -700
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": 500,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 500,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": 500,
+     "to": 525
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 525,
+     "to": 500
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T134407Z",
+   "first_value": 10.5,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": 10.5,
+   "net_delta": 0.0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T134407Z",
+     "from": 10.5,
+     "to": 11.5
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": 11.5,
+     "to": 10.5
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T135909Z",
+   "first_value": -120,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -110,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T135909Z",
+     "from": -120,
+     "to": -110
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T135909Z",
+   "first_value": -110,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -120,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T135909Z",
+     "from": -110,
+     "to": -120
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T135909Z",
+   "first_value": 10.5,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": 11.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T135909Z",
+     "from": 10.5,
+     "to": 11.5
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "spread",
+   "book": "hardrock",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T082236Z",
+   "first_value": 11.5,
+   "last_observed_utc": "20261115T082236Z",
+   "last_value": 10.5,
+   "net_delta": -1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T082236Z",
+     "from": 11.5,
+     "to": 10.5
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T101338Z",
+   "first_value": 46.5,
+   "last_observed_utc": "20261115T101338Z",
+   "last_value": 46,
+   "net_delta": -0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T101338Z",
+     "from": 46.5,
+     "to": 46
+    }
+   ]
+  },
+  {
+   "matchup": "JAX @ TEN",
+   "market": "total",
+   "book": "hardrock",
+   "field": "total",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": 46,
+   "last_observed_utc": "20261115T085829Z",
+   "last_value": 46.5,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": 46,
+     "to": 46.5
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": -175,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -185,
+   "net_delta": -10,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": -175,
+     "to": -185
+    },
+    {
+     "ts": "20261115T114350Z",
+     "from": -185,
+     "to": -175
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": -175,
+     "to": -185
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -180,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -180,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -180,
+     "to": -190
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": -190,
+     "to": -180
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": -107,
+   "last_observed_utc": "20261115T112848Z",
+   "last_value": 100,
+   "net_delta": 207,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": -107,
+     "to": 100
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T112848Z",
+   "last_value": -102,
+   "net_delta": -202,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 100,
+     "to": -102
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "spread",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -101,
+   "net_delta": -201,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 100,
+     "to": -101
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "spread",
+   "book": "hardrock",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T083738Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -105,
+   "net_delta": -205,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T083738Z",
+     "from": 100,
+     "to": -105
+    },
+    {
+     "ts": "20261115T084327Z",
+     "from": -105,
+     "to": 100
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": 100,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "KC @ ATL",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 47,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 47.5,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 47,
+     "to": 47.5
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -525,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -525,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -525,
+     "to": -500
+    },
+    {
+     "ts": "20261115T125901Z",
+     "from": -500,
+     "to": -525
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 390,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": 390,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 390,
+     "to": 375
+    },
+    {
+     "ts": "20261115T125901Z",
+     "from": 375,
+     "to": 390
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -529,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -529,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -529,
+     "to": -592
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -592,
+     "to": -529
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": 360,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 360,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": 360,
+     "to": 400
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 400,
+     "to": 360
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T102840Z",
+   "first_value": -500,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -500,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T102840Z",
+     "from": -500,
+     "to": -474
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -474,
+     "to": -500
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T135909Z",
+   "first_value": 380,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": 400,
+   "net_delta": 20,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T135909Z",
+     "from": 380,
+     "to": 400
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "caesars",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": 360,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": 370,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": 360,
+     "to": 370
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -575,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -485,
+   "net_delta": 90,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -575,
+     "to": -520
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": -520,
+     "to": -485
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 425,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 370,
+   "net_delta": -55,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 425,
+     "to": 390
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": 390,
+     "to": 370
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": -525,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": -525,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": -525,
+     "to": -475
+    },
+    {
+     "ts": "20261115T094334Z",
+     "from": -475,
+     "to": -525
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "betmgm",
+   "field": "total",
+   "first_observed_utc": "20261115T075233Z",
+   "first_value": 38.5,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": 38,
+   "net_delta": -0.5,
+   "move_count": 8,
+   "timeline": [
+    {
+     "ts": "20261115T075233Z",
+     "from": 38.5,
+     "to": 39
+    },
+    {
+     "ts": "20261115T075529Z",
+     "from": 39,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T080735Z",
+     "from": 38.5,
+     "to": 39
+    },
+    {
+     "ts": "20261115T101338Z",
+     "from": 39,
+     "to": 38
+    },
+    {
+     "ts": "20261115T102840Z",
+     "from": 38,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T121353Z",
+     "from": 38.5,
+     "to": 38
+    },
+    {
+     "ts": "20261115T131403Z",
+     "from": 38,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": 38.5,
+     "to": 38
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "caesars",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T131403Z",
+   "first_value": -105,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": -118,
+   "net_delta": -13,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T131403Z",
+     "from": -105,
+     "to": -118
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "draftkings",
+   "field": "overOdds",
+   "first_observed_utc": "20261115T075233Z",
+   "first_value": -108,
+   "last_observed_utc": "20261115T080735Z",
+   "last_value": -118,
+   "net_delta": -10,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T075233Z",
+     "from": -108,
+     "to": -118
+    },
+    {
+     "ts": "20261115T075529Z",
+     "from": -118,
+     "to": -108
+    },
+    {
+     "ts": "20261115T080735Z",
+     "from": -108,
+     "to": -118
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "draftkings",
+   "field": "total",
+   "first_observed_utc": "20261115T075233Z",
+   "first_value": 39.5,
+   "last_observed_utc": "20261115T080735Z",
+   "last_value": 38.5,
+   "net_delta": -1.0,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T075233Z",
+     "from": 39.5,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T075529Z",
+     "from": 38.5,
+     "to": 39.5
+    },
+    {
+     "ts": "20261115T080735Z",
+     "from": 39.5,
+     "to": 38.5
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "draftkings",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T075233Z",
+   "first_value": -123,
+   "last_observed_utc": "20261115T080735Z",
+   "last_value": -102,
+   "net_delta": 21,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T075233Z",
+     "from": -123,
+     "to": -102
+    },
+    {
+     "ts": "20261115T075529Z",
+     "from": -102,
+     "to": -123
+    },
+    {
+     "ts": "20261115T080735Z",
+     "from": -123,
+     "to": -102
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T101338Z",
+   "first_value": 39,
+   "last_observed_utc": "20261115T121353Z",
+   "last_value": 38,
+   "net_delta": -1,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T101338Z",
+     "from": 39,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T102840Z",
+     "from": 38.5,
+     "to": 38
+    },
+    {
+     "ts": "20261115T114350Z",
+     "from": 38,
+     "to": 38.5
+    },
+    {
+     "ts": "20261115T121353Z",
+     "from": 38.5,
+     "to": 38
+    }
+   ]
+  },
+  {
+   "matchup": "LAR @ ARI",
+   "market": "total",
+   "book": "hardrock",
+   "field": "total",
+   "first_observed_utc": "20261115T101338Z",
+   "first_value": 39,
+   "last_observed_utc": "20261115T101338Z",
+   "last_value": 38.5,
+   "net_delta": -0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T101338Z",
+     "from": 39,
+     "to": 38.5
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T134407Z",
+   "first_value": 175,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 160,
+   "net_delta": -15,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T134407Z",
+     "from": 175,
+     "to": 160
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T134407Z",
+   "first_value": -220,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -200,
+   "net_delta": 20,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T134407Z",
+     "from": -220,
+     "to": -200
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": -210,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -220,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": -210,
+     "to": -220
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -4.5,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -3.5,
+   "net_delta": 1.0,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -4.5,
+     "to": -3.5
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -3.5,
+     "to": -4.5
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": -4.5,
+     "to": -3.5
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": -120,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": -110,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": -120,
+     "to": -110
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -105,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -115,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -105,
+     "to": -115
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -115,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -105,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -115,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -3.5,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": -4.5,
+   "net_delta": -1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -3.5,
+     "to": -4.5
+    }
+   ]
+  },
+  {
+   "matchup": "MIA @ IND",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T082236Z",
+   "first_value": 37,
+   "last_observed_utc": "20261115T082236Z",
+   "last_value": 37.5,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T082236Z",
+     "from": 37,
+     "to": 37.5
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T083738Z",
+   "first_value": -127,
+   "last_observed_utc": "20261115T083738Z",
+   "last_value": -103,
+   "net_delta": 24,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T083738Z",
+     "from": -127,
+     "to": -103
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T083738Z",
+   "first_value": 104,
+   "last_observed_utc": "20261115T083738Z",
+   "last_value": -121,
+   "net_delta": -225,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T083738Z",
+     "from": 104,
+     "to": -121
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T083738Z",
+   "first_value": -3.5,
+   "last_observed_utc": "20261115T083738Z",
+   "last_value": -2.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T083738Z",
+     "from": -3.5,
+     "to": -2.5
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -130,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": -118,
+   "net_delta": 12,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -130,
+     "to": -118
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T121353Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": 100,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T121353Z",
+     "from": 100,
+     "to": -105
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": -105,
+     "to": 100
+    }
+   ]
+  },
+  {
+   "matchup": "MIN @ GB",
+   "market": "spread",
+   "book": "hardrock",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T082236Z",
+   "first_value": 105,
+   "last_observed_utc": "20261115T082236Z",
+   "last_value": -105,
+   "net_delta": -210,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T082236Z",
+     "from": 105,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T114350Z",
+   "first_value": 124,
+   "last_observed_utc": "20261115T114350Z",
+   "last_value": 114,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T114350Z",
+     "from": 124,
+     "to": 114
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T114350Z",
+   "first_value": -148,
+   "last_observed_utc": "20261115T114350Z",
+   "last_value": -135,
+   "net_delta": 13,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T114350Z",
+     "from": -148,
+     "to": -135
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "spread",
+   "book": "caesars",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T073731Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T075233Z",
+   "last_value": -104,
+   "net_delta": -204,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T073731Z",
+     "from": 100,
+     "to": -104
+    },
+    {
+     "ts": "20261115T074027Z",
+     "from": -104,
+     "to": 100
+    },
+    {
+     "ts": "20261115T075233Z",
+     "from": 100,
+     "to": -104
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "spread",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T125901Z",
+   "first_value": -102,
+   "last_observed_utc": "20261115T125901Z",
+   "last_value": 100,
+   "net_delta": 202,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T125901Z",
+     "from": -102,
+     "to": 100
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "spread",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T075529Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T075529Z",
+   "last_value": -105,
+   "net_delta": -205,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T075529Z",
+     "from": 100,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "spread",
+   "book": "fanduel",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T073731Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T075233Z",
+   "last_value": -105,
+   "net_delta": -205,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T073731Z",
+     "from": 100,
+     "to": -105
+    },
+    {
+     "ts": "20261115T074027Z",
+     "from": -105,
+     "to": 100
+    },
+    {
+     "ts": "20261115T075233Z",
+     "from": 100,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "bet365",
+   "field": "total",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 50.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 49.5,
+     "to": 50.5
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "bet_rivers_co",
+   "field": "total",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T112848Z",
+   "last_value": 50.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 49.5,
+     "to": 50.5
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "betmgm",
+   "field": "total",
+   "first_observed_utc": "20261115T084327Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": 51,
+   "net_delta": 1.5,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T084327Z",
+     "from": 49.5,
+     "to": 50
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": 50,
+     "to": 50.5
+    },
+    {
+     "ts": "20261115T132905Z",
+     "from": 50.5,
+     "to": 51
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "caesars",
+   "field": "total",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 51,
+   "net_delta": 1.5,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 49.5,
+     "to": 50.5
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 50.5,
+     "to": 51
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "draftkings",
+   "field": "total",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T112848Z",
+   "last_value": 50.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 49.5,
+     "to": 50.5
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 51,
+   "net_delta": 1.5,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 49.5,
+     "to": 50.5
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 50.5,
+     "to": 51
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "fanduel",
+   "field": "overOdds",
+   "first_observed_utc": "20261115T131403Z",
+   "first_value": -115,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": -104,
+   "net_delta": 11,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T131403Z",
+     "from": -115,
+     "to": -104
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "fanduel",
+   "field": "total",
+   "first_observed_utc": "20261115T073731Z",
+   "first_value": 50.5,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": 51.5,
+   "net_delta": 1.0,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T073731Z",
+     "from": 50.5,
+     "to": 49.5
+    },
+    {
+     "ts": "20261115T125901Z",
+     "from": 49.5,
+     "to": 50.5
+    },
+    {
+     "ts": "20261115T131403Z",
+     "from": 50.5,
+     "to": 51.5
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "fanduel",
+   "field": "underOdds",
+   "first_observed_utc": "20261115T073731Z",
+   "first_value": -118,
+   "last_observed_utc": "20261115T131403Z",
+   "last_value": -122,
+   "net_delta": -4,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T073731Z",
+     "from": -118,
+     "to": -105
+    },
+    {
+     "ts": "20261115T131403Z",
+     "from": -105,
+     "to": -122
+    }
+   ]
+  },
+  {
+   "matchup": "NE @ DET",
+   "market": "total",
+   "book": "hardrock",
+   "field": "total",
+   "first_observed_utc": "20261115T112848Z",
+   "first_value": 49.5,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": 51,
+   "net_delta": 1.5,
+   "move_count": 3,
+   "timeline": [
+    {
+     "ts": "20261115T112848Z",
+     "from": 49.5,
+     "to": 50
+    },
+    {
+     "ts": "20261115T131403Z",
+     "from": 50,
+     "to": 50.5
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": 50.5,
+     "to": 51
+    }
+   ]
+  },
+  {
+   "matchup": "PIT @ CIN",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T105844Z",
+   "first_value": -108,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -108,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T105844Z",
+     "from": -108,
+     "to": 155
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": 155,
+     "to": -108
+    }
+   ]
+  },
+  {
+   "matchup": "PIT @ CIN",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T105844Z",
+   "first_value": -113,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -113,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T105844Z",
+     "from": -113,
+     "to": -205
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": -205,
+     "to": -113
+    }
+   ]
+  },
+  {
+   "matchup": "PIT @ CIN",
+   "market": "spread",
+   "book": "bet_rivers_co",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T105844Z",
+   "first_value": -3.5,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -3.5,
+   "net_delta": 0.0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T105844Z",
+     "from": -3.5,
+     "to": 0
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": 0,
+     "to": -3.5
+    }
+   ]
+  },
+  {
+   "matchup": "PIT @ CIN",
+   "market": "total",
+   "book": "betmgm",
+   "field": "total",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": 49,
+   "last_observed_utc": "20261115T132905Z",
+   "last_value": 49.5,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": 49,
+     "to": 49.5
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T095836Z",
+   "first_value": -300,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -300,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T095836Z",
+     "from": -300,
+     "to": -310
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": -310,
+     "to": -300
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "bet365",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T095836Z",
+   "first_value": 240,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 240,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T095836Z",
+     "from": 240,
+     "to": 250
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": 250,
+     "to": 240
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T104342Z",
+   "first_value": -286,
+   "last_observed_utc": "20261115T104342Z",
+   "last_value": -315,
+   "net_delta": -29,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T104342Z",
+     "from": -286,
+     "to": -315
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "bet_rivers_co",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T104342Z",
+   "first_value": 225,
+   "last_observed_utc": "20261115T104342Z",
+   "last_value": 240,
+   "net_delta": 15,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T104342Z",
+     "from": 225,
+     "to": 240
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": -295,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": -295,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": -295,
+     "to": -285
+    },
+    {
+     "ts": "20261115T124358Z",
+     "from": -285,
+     "to": -295
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 240,
+   "last_observed_utc": "20261115T124358Z",
+   "last_value": 240,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 240,
+     "to": 230
+    },
+    {
+     "ts": "20261115T124358Z",
+     "from": 230,
+     "to": 240
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": -310,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -285,
+   "net_delta": 25,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": -310,
+     "to": -285
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 250,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 230,
+   "net_delta": -20,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 250,
+     "to": 230
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": -300,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": -285,
+   "net_delta": 15,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": -300,
+     "to": -285
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 240,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 230,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 240,
+     "to": 230
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "fanduel",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -300,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -310,
+   "net_delta": -10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -300,
+     "to": -310
+    }
+   ]
+  },
+  {
+   "matchup": "SEA @ LV",
+   "market": "moneyline",
+   "book": "hardrock",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T085829Z",
+   "first_value": 240,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 240,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T085829Z",
+     "from": 240,
+     "to": 250
+    },
+    {
+     "ts": "20261115T115851Z",
+     "from": 250,
+     "to": 240
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "moneyline",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -220,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -220,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -220,
+     "to": -210
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -210,
+     "to": -220
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": -205,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": -218,
+   "net_delta": -13,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": -205,
+     "to": -218
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "moneyline",
+   "book": "draftkings",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 170,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": 180,
+   "net_delta": 10,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 170,
+     "to": 180
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "moneyline",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T122855Z",
+   "first_value": -215,
+   "last_observed_utc": "20261115T134407Z",
+   "last_value": -215,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T122855Z",
+     "from": -215,
+     "to": -205
+    },
+    {
+     "ts": "20261115T134407Z",
+     "from": -205,
+     "to": -215
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -108,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -108,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -108,
+     "to": -125
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": -125,
+     "to": -108
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": -125,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": -125,
+   "net_delta": 0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": -125,
+     "to": -108
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": -108,
+     "to": -125
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "betmgm",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T132905Z",
+   "first_value": 4.5,
+   "last_observed_utc": "20261115T135909Z",
+   "last_value": 4.5,
+   "net_delta": 0.0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T132905Z",
+     "from": 4.5,
+     "to": 3.5
+    },
+    {
+     "ts": "20261115T135909Z",
+     "from": 3.5,
+     "to": 4.5
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "draftkings",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T094334Z",
+   "first_value": 3.5,
+   "last_observed_utc": "20261115T094334Z",
+   "last_value": 4.5,
+   "net_delta": 1.0,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T094334Z",
+     "from": 3.5,
+     "to": 4.5
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "fanatics",
+   "field": "awayOdds",
+   "first_observed_utc": "20261115T101338Z",
+   "first_value": -120,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -115,
+   "net_delta": 5,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T101338Z",
+     "from": -120,
+     "to": -105
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -105,
+     "to": -115
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "fanatics",
+   "field": "homeOdds",
+   "first_observed_utc": "20261115T072525Z",
+   "first_value": 100,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": -105,
+   "net_delta": -205,
+   "move_count": 4,
+   "timeline": [
+    {
+     "ts": "20261115T072525Z",
+     "from": 100,
+     "to": -105
+    },
+    {
+     "ts": "20261115T073731Z",
+     "from": -105,
+     "to": 100
+    },
+    {
+     "ts": "20261115T101338Z",
+     "from": 100,
+     "to": -115
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": -115,
+     "to": -105
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "spread",
+   "book": "fanatics",
+   "field": "homeSpread",
+   "first_observed_utc": "20261115T101338Z",
+   "first_value": 3.5,
+   "last_observed_utc": "20261115T122855Z",
+   "last_value": 3.5,
+   "net_delta": 0.0,
+   "move_count": 2,
+   "timeline": [
+    {
+     "ts": "20261115T101338Z",
+     "from": 3.5,
+     "to": 4.5
+    },
+    {
+     "ts": "20261115T122855Z",
+     "from": 4.5,
+     "to": 3.5
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "total",
+   "book": "caesars",
+   "field": "total",
+   "first_observed_utc": "20261115T115851Z",
+   "first_value": 55.5,
+   "last_observed_utc": "20261115T115851Z",
+   "last_value": 56,
+   "net_delta": 0.5,
+   "move_count": 1,
+   "timeline": [
+    {
+     "ts": "20261115T115851Z",
+     "from": 55.5,
+     "to": 56
+    }
+   ]
+  },
+  {
+   "matchup": "SF @ DAL",
+   "market": "total",
+   "book": "fanatics",
+   "field": "total",
+   "first_observed_utc": "20261115T075233Z",
+   "first_value": 55.5,
+   "last_observed_utc": "20261115T114350Z",
+   "last_value": 55.5,
+   "net_delta": 0.0,
+   "move_count": 6,
+   "timeline": [
+    {
+     "ts": "20261115T075233Z",
+     "from": 55.5,
+     "to": 56
+    },
+    {
+     "ts": "20261115T075529Z",
+     "from": 56,
+     "to": 55.5
+    },
+    {
+     "ts": "20261115T080735Z",
+     "from": 55.5,
+     "to": 56
+    },
+    {
+     "ts": "20261115T095836Z",
+     "from": 56,
+     "to": 55.5
+    },
+    {
+     "ts": "20261115T112848Z",
+     "from": 55.5,
+     "to": 56
+    },
+    {
+     "ts": "20261115T114350Z",
+     "from": 56,
+     "to": 55.5
+    }
+   ]
+  }
+ ],
+ "final_snapshot_utc": "20261115T135909Z",
+ "munich_official_inactives": {
+  "captured": true,
+  "note": "ESPN summary injuries block captured; official inactives are the team-issued list 90 min pre-kick.",
+  "players": {
+   "Mekhi Wingo": {
+    "team": "DET",
+    "status": "Out"
+   },
+   "Amen Ogbongbemiga": {
+    "team": "DET",
+    "status": "Out"
+   },
+   "D.J. Reed": {
+    "team": "DET",
+    "status": "Out"
+   },
+   "Ahmed Hassanein": {
+    "team": "DET",
+    "status": "Out"
+   },
+   "Cade Mays": {
+    "team": "DET",
+    "status": "Out"
+   },
+   "Walter Rouse": {
+    "team": "NE",
+    "status": "Out"
+   },
+   "Brenden Schooler": {
+    "team": "NE",
+    "status": "Out"
+   },
+   "Behren Morton": {
+    "team": "NE",
+    "status": "Out"
+   },
+   "Ben Brown": {
+    "team": "NE",
+    "status": "Out"
+   },
+   "Dametrious Crownover": {
+    "team": "NE",
+    "status": "Out"
+   },
+   "Eli Raridon": {
+    "team": "NE",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Mack Hollins": {
+    "team": "NE",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Amon-Ra St. Brown": {
+    "team": "DET",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Jahmyr Gibbs": {
+    "team": "DET",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Sam LaPorta": {
+    "team": "DET",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Drake Maye": {
+    "team": "NE",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   },
+   "Jared Goff": {
+    "team": "DET",
+    "status": "NOT_LISTED (no injury designation in ESPN block)"
+   }
+  }
+ },
+ "munich_final_gate_lines": [
+  {
+   "selection": "NE +2.5",
+   "live_line": 2.5,
+   "live_odds": 100,
+   "decision": "PASS"
+  },
+  {
+   "selection": "DET -2.5",
+   "live_line": -2.5,
+   "live_odds": -120,
+   "decision": "PASS"
+  },
+  {
+   "selection": "Over 44.5",
+   "live_line": 50.5,
+   "live_odds": -115,
+   "decision": "PASS"
+  },
+  {
+   "selection": "Under 44.5",
+   "live_line": 50.5,
+   "live_odds": -105,
+   "decision": "PASS"
+  },
+  {
+   "selection": "NE ML",
+   "live_line": null,
+   "live_odds": 120,
+   "decision": "PASS"
+  },
+  {
+   "selection": "DET ML",
+   "live_line": null,
+   "live_odds": -142,
+   "decision": "PASS"
+  }
+ ],
+ "board_outcome": "FULL_BOARD_PASS: 18/18 overnight template-approved plays invalidated on live prices, 0 live clears, publishAllowed FALSE"
+}
