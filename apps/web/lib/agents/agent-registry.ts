@@ -1,5 +1,6 @@
 import { FORBIDDEN_EXTERNAL_ACTIONS, type AgentAction } from "./agent-capabilities";
 import type { AgentOSDefinition } from "./agent-os";
+export type { AgentOSDefinition };
 
 const draftActions = ["OBSERVE", "ANALYZE", "DRAFT", "ROUTE", "ESCALATE", "SUMMARIZE", "QUEUE", "REPORT"] as const satisfies readonly AgentAction[];
 const manualActions = ["OBSERVE", "ANALYZE", "VALIDATE", "REVIEW", "MEASURE", "REPORT"] as const satisfies readonly AgentAction[];
