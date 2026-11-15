@@ -1,15 +1,33 @@
 import { readFileSync, existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { ENGINE_FAMILIES } from "./engine-weights.js";
 import { LAC_BUF_EDGE, LAC_BUF_PARTS, LIVE_EDGE_PARTS } from "./live-edge-registry.js";
 
+/**
+ * Walk up from this module to the workspace root instead of naming a developer
+ * machine. A hardcoded developer-home path is the difference between a test
+ * that runs on CI and one that only runs on the machine it was written on
+ * (reconciliation GAP-07 re-derives this by grepping the reasoning tree).
+ */
+function workspaceRoot(): string {
+  let dir = dirname(fileURLToPath(import.meta.url));
+  for (let hop = 0; hop < 8; hop += 1) {
+    if (existsSync(resolve(dir, "apps", "web")) && existsSync(resolve(dir, "package.json"))) {
+      return dir;
+    }
+    dir = resolve(dir, "..");
+  }
+  return process.cwd();
+}
+
 function resolveDataFile(rel: string): string {
+  const root = workspaceRoot();
   const candidates = [
+    resolve(root, rel),
     resolve(process.cwd(), rel),
     resolve(process.cwd(), "../../", rel),
-    resolve("C:/c/wt-week8-forensic", rel),
-    resolve("C:/Users/Garrett/Sports", rel),
   ];
   return candidates.find((p) => existsSync(p)) ?? candidates[0]!;
 }

@@ -61,11 +61,11 @@
       "detail": "a TS call site exists and no Python duplicate remains",
       "probe": "the TypeScript Sovereign Signal Plane has zero call sites",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({\r",
-        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {\r",
+        "packages/prediction-engine/src/game-context.ts:1139:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
+        "packages/prediction-engine/src/game-context.ts:1215:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
         "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
-        "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
-        "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
+        "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
+        "packages/prediction-engine/src/scoring.ts:111:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,"
       ],
       "blocks_current_business_model": true
     },
@@ -77,8 +77,8 @@
       "detail": "all 3 NGS keys are included in SOVEREIGN_SIGNAL_KEYS and read by live code (3 keys in sync_week6_db.py)",
       "probe": "the 3 highest-weighted NGS keys are activated in the DB but excluded from the board",
       "evidence": [
-        "apps/web/app/api/cron/signal-ledger-write/route.ts:174:      db.nextGenStat.findMany({ orderBy: { fetchedAt: \"desc\" } }),",
-        "apps/web/app/api/cron/signal-ledger-write/route.ts:198:      nextGenStats: ngs.map((r) => ({",
+        "apps/web/app/api/cron/signal-ledger-write/route.ts:177:      db.nextGenStat.findMany({ orderBy: { fetchedAt: \"desc\" } }),",
+        "apps/web/app/api/cron/signal-ledger-write/route.ts:201:      nextGenStats: ngs.map((r) => ({",
         "apps/web/app/api/ops/id-crosswalk/route.ts:76:      db.nextGenStat.findMany({",
         "apps/web/lib/ingestion/next-gen-stats.ts:167:    db.nextGenStat.deleteMany({ where: { season, statType } }),",
         "apps/web/lib/ingestion/next-gen-stats.ts:168:    ...chunks.map((c) => db.nextGenStat.createMany({ data: c })),",
@@ -110,14 +110,16 @@
       "probe": "the Reasoning Engine output is computed, stored, displayed -- and never used",
       "evidence": [
         "packages/prediction-engine/src/index.ts:4614:  evaluateMindReasoning,",
+        "packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline.ts:19:import { evaluateMindReasoning } from \"../reasoning/mind-reasoning.js\";",
+        "packages/prediction-engine/src/pipeline/unified-autonomous-mind-pipeline.ts:97:  const mind = evaluateMindReasoning(ctx);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:4:  evaluateMindReasoning,",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:60:    const res = evaluateMindReasoning(seaAtDenCtx);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:146:    const resultFull = evaluateMindReasoning(seaAtDenCtx, fullCorpus);",
         "packages/prediction-engine/src/reasoning/__tests__/mind-reasoning.test.ts:166:    const resultMutated = evaluateMindReasoning(seaAtDenCtx, mutatedCorpus);",
-        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:1194:export function evaluateMindReasoning(",
+        "packages/prediction-engine/src/reasoning/mind-reasoning.ts:1246:export function evaluateMindReasoning(",
         "packages/prediction-engine/src/reasoning/situational-engine.ts:21:  evaluateMindReasoning,",
-        "packages/prediction-engine/src/reasoning/situational-engine.ts:160:  const mindEvaluation = evaluateMindReasoning(context);",
-        "packages/ingestion-pipeline/src/process-sport.ts:1391:              corpusWeight: 1.0,"
+        "packages/prediction-engine/src/reasoning/situational-engine.ts:164:  const mindEvaluation = evaluateMindReasoning(context);",
+        "packages/ingestion-pipeline/src/process-sport.ts:1398:              corpusWeight: 1.0,"
       ],
       "blocks_current_business_model": true
     },
@@ -139,10 +141,10 @@
       "detail": "continual learning and recalibration loop actively executes in the settlement cycle (4 live loop call sites)",
       "probe": "no self-improvement loop exists; continual-learning and recalibration are absent",
       "evidence": [
-        "apps/web/app/api/cron/settle-picks/route.ts:40:  runSettlementLearningLoop,",
-        "apps/web/app/api/cron/settle-picks/route.ts:261:      continualLearning = await runSettlementLearningLoop(",
-        "packages/ingestion-pipeline/src/settle-sport.ts:83:  runSettlementLearningLoop,",
-        "packages/ingestion-pipeline/src/settle-sport.ts:980:        learningReport = await runSettlementLearningLoop(settledPicksForLearning);"
+        "apps/web/app/api/cron/settle-picks/route.ts:53:  runSettlementLearningLoop,",
+        "apps/web/app/api/cron/settle-picks/route.ts:311:      continualLearning = await runSettlementLearningLoop(observations);",
+        "packages/ingestion-pipeline/src/settle-sport.ts:88:  runSettlementLearningLoop,",
+        "packages/ingestion-pipeline/src/settle-sport.ts:1012:        learningReport = await runSettlementLearningLoop(settledPicksForLearning);"
       ],
       "blocks_current_business_model": true
     },
@@ -164,11 +166,11 @@
       "detail": "the duplication is resolved; canonical weights reside in TypeScript constant",
       "probe": "Sovereign Signal Plane weights are duplicated across a TS constant and a DB config",
       "evidence": [
-        "packages/prediction-engine/src/game-context.ts:1126:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({\r",
-        "packages/prediction-engine/src/game-context.ts:1202:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {\r",
+        "packages/prediction-engine/src/game-context.ts:1139:export const SOVEREIGN_SIGNAL_PLANE_WEIGHTS: Readonly<Record<string, number>> = Object.freeze({",
+        "packages/prediction-engine/src/game-context.ts:1215:  for (const [key, defaultWeight] of Object.entries(SOVEREIGN_SIGNAL_PLANE_WEIGHTS)) {",
         "packages/prediction-engine/src/index.ts:35:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
-        "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r",
-        "packages/prediction-engine/src/scoring.ts:38:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,\r"
+        "packages/prediction-engine/src/scoring.ts:27:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,",
+        "packages/prediction-engine/src/scoring.ts:111:  SOVEREIGN_SIGNAL_PLANE_WEIGHTS,"
       ],
       "blocks_current_business_model": false
     },
@@ -193,13 +195,14 @@
       "detail": "probabilityCalibrator is wired into both scoring.ts and process-sport.ts behind calibrationAdjustmentsEnabled",
       "probe": "the only calibration effect in production is a withhold; no calibration is applied",
       "evidence": [
-        "packages/ingestion-pipeline/src/process-sport.ts:1400:        ...(gates.calibrationAdjustmentsEnabled",
+        "packages/prediction-engine/src/model-prob-bridge.ts:48: * gated MODEL_VERSION step (see platform-config.calibrationAdjustmentsEnabled and",
+        "packages/prediction-engine/src/model-prob-bridge.ts:114: * platform-config.calibrationAdjustmentsEnabled). It defaults to CLOSED so adding",
         "packages/prediction-engine/src/platform-config.ts:130:  calibrationAdjustmentsEnabled: boolean;",
         "packages/prediction-engine/src/platform-config.ts:174:    calibrationAdjustmentsEnabled:    parseBool(process.env[\"CALIBRATION_ADJUSTMENTS_ENABLED\"],    false),",
         "packages/prediction-engine/src/readiness.ts:142:    canApplyCalibrationAdjustments:  config.calibrationAdjustmentsEnabled,",
-        "packages/ingestion-pipeline/src/process-sport.ts:1402:              probabilityCalibrator: {",
-        "packages/prediction-engine/src/scoring.ts:832:    input.context?.probabilityCalibrator,\r",
-        "packages/prediction-engine/src/scoring.ts:1511:    input.context?.probabilityCalibrator,\r"
+        "packages/ingestion-pipeline/src/process-sport.ts:1409:              probabilityCalibrator: {",
+        "packages/prediction-engine/src/scoring.ts:980:    input.context?.probabilityCalibrator,",
+        "packages/prediction-engine/src/scoring.ts:1785:    input.context?.probabilityCalibrator,"
       ],
       "blocks_current_business_model": false
     },
@@ -222,7 +225,7 @@
       "probe": "corpus-evaluator coverage is asserted in a docstring but not enforced",
       "evidence": [
         "reconciliation/_check_class_a_coverage.mjs",
-        ".github/workflows/ci.yml:389:        run: node reconciliation/_check_class_a_coverage.mjs"
+        ".github/workflows/ci.yml:452:        run: node reconciliation/_check_class_a_coverage.mjs"
       ],
       "blocks_current_business_model": false
     },
@@ -270,12 +273,12 @@
       "detail": "the premise registry is wired and actively invoked in live production reasoning (6 live method call sites)",
       "probe": "the corpus evaluator's premise registry modules are tested but never consulted",
       "evidence": [
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:109:    readonly voronoiPocket: ReturnType<typeof premiseRegistry.extractVoronoiPocketControl>;",
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:110:    readonly kellyResult: ReturnType<typeof premiseRegistry.evaluateKellyUncertainty>;",
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:111:    readonly consensusResult: ReturnType<typeof premiseRegistry.aggregateMultiBookConsensus>;",
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:966:  const voronoiPocket = premiseRegistry.extractVoronoiPocketControl(qbCoord, olCoords, dlCoords);",
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:970:  const kellyResult = premiseRegistry.evaluateKellyUncertainty({",
-        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:977:  const consensusResult = premiseRegistry.aggregateMultiBookConsensus(["
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:112:    readonly voronoiPocket: ReturnType<typeof premiseRegistry.extractVoronoiPocketControl>;",
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:113:    readonly kellyResult: ReturnType<typeof premiseRegistry.evaluateKellyUncertainty>;",
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:114:    readonly consensusResult: ReturnType<typeof premiseRegistry.aggregateMultiBookConsensus>;",
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:970:  const voronoiPocket = premiseRegistry.extractVoronoiPocketControl(qbCoord, olCoords, dlCoords);",
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:974:  const kellyResult = premiseRegistry.evaluateKellyUncertainty({",
+        "packages/prediction-engine/src/reasoning/corpus-evaluator.ts:981:  const consensusResult = premiseRegistry.aggregateMultiBookConsensus(["
       ],
       "blocks_current_business_model": true
     },
@@ -297,7 +300,7 @@
       "severity": "MEDIUM",
       "title": "Whole module families are exported, tested, and never invoked",
       "status": "partial",
-      "detail": "reachability census active in CI (2174 zero-importer files cataloged; 498 live modules monitored via census-engine-reachability.mjs)",
+      "detail": "reachability census active in CI (2841 zero-importer files cataloged; 498 live modules monitored via census-engine-reachability.mjs)",
       "probe": "whole module families are exported, tested, and never invoked",
       "evidence": [
         "scripts/ops/census-engine-reachability.mjs",
@@ -313,7 +316,8 @@
       "detail": "the mint path consults the gate",
       "probe": "the public-picks gate is never consulted at mint time; isPublished defaults true",
       "evidence": [
-        "packages/ingestion-pipeline/src/process-sport.ts:1539:      const isPublic = gates.canExposePublicPicks;"
+        "packages/ingestion-pipeline/src/process-sport.ts:1546:      const isPublic = gates.canExposePublicPicks;",
+        "packages/ingestion-pipeline/src/process-sport.ts:1578:        // only an explicit veto (`canExposePublicPicks === false`) sets it. The"
       ],
       "blocks_current_business_model": true
     },
@@ -325,13 +329,13 @@
       "detail": "the three surfaces (picks, signals, blog_posts) and copula SGP posture are explicitly documented on public-surface-truth",
       "probe": "props and copula SGPs are not on the board at all",
       "evidence": [
-        "apps/web/app/api/ops/public-surface-truth/route.ts:951:      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:954:          route: \"/api/ops/props-slate\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:958:          operatorHint: \"props-slate writes player prop model_p_over to the signals table, not the picks table.\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:960:        copulaSgp: {",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:961:          surface: \"sgp-copula\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:963:          distribution: \"bivariate-copula\",",
-        "apps/web/app/api/ops/public-surface-truth/route.ts:966:          operatorHint: \"copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.\","
+        "apps/web/app/api/ops/public-surface-truth/route.ts:954:      /** GAP-22: Explicit posture for props-slate and copula SGPs across disparate storage layers. */",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:957:          route: \"/api/ops/props-slate\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:961:          operatorHint: \"props-slate writes player prop model_p_over to the signals table, not the picks table.\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:963:        copulaSgp: {",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:964:          surface: \"sgp-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:966:          distribution: \"bivariate-copula\",",
+        "apps/web/app/api/ops/public-surface-truth/route.ts:969:          operatorHint: \"copula SGPs are priced via APMM / Frank copula; published via content engine or static projections.\","
       ],
       "blocks_current_business_model": false
     },
@@ -371,10 +375,11 @@
       "detail": "some mechanisms are gone",
       "probe": "the no-publish doctrine is enforced by four separate mechanisms",
       "evidence": [
-        ".github/workflows/ci.yml:181:              - scripts/guardrails/draft-only.test.mjs",
-        ".github/workflows/ci.yml:329:  draft-only:",
-        ".github/workflows/ci.yml:343:      - name: Run draft-only guardrail",
-        ".github/workflows/ci.yml:344:        run: node scripts/guardrails/draft-only.mjs"
+        ".github/workflows/ci.yml:197:  # exited 0; `draft-only.test.mjs` exited 1 because `scripts/post_week6_x_thread.js`",
+        ".github/workflows/ci.yml:217:          - scripts/guardrails/draft-only.test.mjs",
+        ".github/workflows/ci.yml:392:  draft-only:",
+        ".github/workflows/ci.yml:406:      - name: Run draft-only guardrail",
+        ".github/workflows/ci.yml:407:        run: node scripts/guardrails/draft-only.mjs"
       ],
       "blocks_current_business_model": true
     },
