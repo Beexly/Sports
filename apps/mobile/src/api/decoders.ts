@@ -143,7 +143,7 @@ function decodePick(raw: unknown, label: string): PublicPick {
     },
     pickType: (r.pickType as PublicPick["pickType"]) ?? "SPREAD",
     selection: str(r.selection ?? "", `${label}.selection`),
-    line: numOr(r.line, 0),
+    line: optNum(r.line),
     lineMovement: isRecord(r.lineMovement)
       ? { opening: numOr(r.lineMovement.opening, 0), current: numOr(r.lineMovement.current, 0) }
       : null,

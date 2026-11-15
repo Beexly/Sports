@@ -118,10 +118,14 @@ export function PickCard({
           <Eyebrow tone="muted">Model signal only</Eyebrow>
         </Row>
       ) : (
-        <Row gap="s2" align="center">
-          <Eyebrow tone="meta">Line</Eyebrow>
-          <Numeral size="numMd">{pick.line > 0 ? `+${pick.line}` : `${pick.line}`}</Numeral>
-        </Row>
+        /* WP-22: the API withholds the unpriced `line: 0` sentinel as null —
+           render no numeral rather than a fabricated zero. */
+        pick.line !== null && (
+          <Row gap="s2" align="center">
+            <Eyebrow tone="meta">Line</Eyebrow>
+            <Numeral size="numMd">{pick.line > 0 ? `+${pick.line}` : `${pick.line}`}</Numeral>
+          </Row>
+        )
       )}
 
       <Spacer size="s4" />

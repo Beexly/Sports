@@ -95,6 +95,8 @@ export async function GET(req: Request) {
 
     return res;
   } catch {
+    // The declaration was unused (eslint no-unused-vars) and the message was
+    // deliberately generic: a public unlock endpoint does not echo internals.
     return NextResponse.json(
       { unlocked: false, error: "Internal server error" },
       { status: 500 },

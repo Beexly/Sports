@@ -635,7 +635,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
         pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
         selection: displaySelection(pick.selection),
-        line: pick.line,
+        // WP-22: an unpriced row stores its line as the non-null DB sentinel 0.
+        // Shipping that beside hasBookPrice:false told consumers a book had
+        // quoted a zero line. Null is the absence of a quote; 0 survives only
+        // when a book really priced the row (a pick'em spread).
+        line: pick.line === 0 && !(bookmakerCount > 0) ? null : pick.line,
         hasBookPrice: bookmakerCount > 0,
         ...(marketImplied ? { marketImplied } : {}),
         ...(winProbability ? { winProbability } : {}),
