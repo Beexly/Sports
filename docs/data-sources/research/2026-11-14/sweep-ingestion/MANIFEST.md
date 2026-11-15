@@ -180,3 +180,29 @@ the run's own audit: 68 feed rows were inventoried without status IDs in the
 run itself (59 of them are slug-keyed here); chart-locked values stay
 UNVERIFIED as printed. Poster numbers in the delta are claims as printed,
 not verified facts.
+
+## 2026-11-15 AM deltas (three lanes)
+
+IG For You AM delta: `ig-for-you-feed-2026-11-15-am-delta.jsonl`, 44 records
+(20 dossier, 24 inventoried) from ~/workspace/ig-for-you-sweep/reports/
+2026-11-15-AM.md; 0 duplicates skipped at conversion.
+
+X For You AM delta: `x-for-you-feed-2026-11-15-am-delta.jsonl`, 122 records
+(45 dossier, 77 inventoried) from ~/workspace/x-for-you-sweep/reports/
+2026-11-15-AM.md; 1 duplicate and 3 NO-ID rows skipped at conversion. Gap
+carried from the run's own audit: 72 organic feed rows were inventoried
+without status IDs (the feed route's known capture loss); the slug-keyed
+records here carry their payloads as printed.
+
+X analytics AM delta: `x-analytics-feed-2026-11-15-am-delta.jsonl`, 63
+records converted from x-intel-2026-11-15-09.md plus the staged section-15
+inventory; 0 duplicates skipped. Note: the sweep's own push of the Nov 15
+AGENTS.md section and its 44 CSVs to Beexly/Sports main was stopped by a
+GitHub API rate limit (HTTP 403) on the worker's attempt; the staged files
+remain in the sweep goal's hidden_files staging directory and the next run
+is instructed to land them first. This delta was converted from the local
+staged copies, so the engine feed does not wait on that push.
+
+Running feed total: 10,553 records (10,324 through 2026-11-14 PM + 44 IG AM
++ 122 X For You AM + 63 X analytics AM). Poster numbers in the deltas are
+claims as printed, not verified facts.
