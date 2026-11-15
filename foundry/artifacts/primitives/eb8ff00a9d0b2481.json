@@ -1,0 +1,761 @@
+{
+ "book_id": "eb8ff00a9d0b2481",
+ "source_status": "COMPLETE",
+ "source_note": "Fernando Zanela da Silva Areas, Guilherme Peixoto Tinoco Areas, Chad Swank and Carolina Anhoque (eds.), Neurorehabilitative and regenerative methods involved in treating traumatic brain and spinal cord injuries, volume II, Frontiers Media SA, Lausanne, July 2026, ISBN 978-2-8325-8430-9, DOI 10.3389/978-2-8325-8430-9. The catalog title in the task differs slightly from the printed title; the printed title governs. The local file is the complete Frontiers ebook compiling 13 contributions plus editorial, 20,959,383 bytes, full sha256 eb8ff00a9d0b24815cc15995bfed2fbb7ed8c95e000a8c99677e6b7371f6c562. Extracted text is layout text with two columns interleaved by line; every verbatim quote was therefore taken from a single column segment inside one line and one page and verified as a contiguous substring of the extracted text file. Text quality is good for prose; mathematical content is minimal in this clinical volume and no equations were invented. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "central_injury_burden",
+   "name": "Traumatic brain and spinal cord injuries are among the most devastating conditions, producing long term disability and loss of independence",
+   "verbatim_quote": "Traumatic injuries to the brain and spinal cord remain among the most devastating",
+   "page": "Editorial, ebook p.5, text line 286",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injury severity and chronic disability dominate the rehabilitation problem, so recovery interventions are the load bearing target"
+   ],
+   "breakdown_regime": [
+    "Editorial framing only; it quantifies no effect and cannot rank interventions"
+   ],
+   "domain": "neurotrauma burden",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine habit of weighting problems by downstream disability burden rather than by acute event salience, so chronic state variables stay in the state representation",
+    "source_operator": "central_injury_burden",
+    "telemetry": "Injury incidence, disability duration, independence and quality of life measures"
+   }
+  },
+  {
+   "primitive_id": "repair_plus_behavior_integration",
+   "name": "Successful recovery requires biological repair combined with targeted behavioral intervention that harnesses nervous system reorganization",
+   "verbatim_quote": "recovery relies not only on biological repair but also on targeted",
+   "page": "Editorial, ebook p.6, text line 335",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Biological repair alone is insufficient; activity dependent reorganization must be driven by structured behavior"
+   ],
+   "breakdown_regime": [
+    "Fails when either arm is absent: repair without training, or training on a substrate that cannot reorganize"
+   ],
+   "domain": "rehabilitation paradigm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a two factor recovery model in the reasoning engine: substrate repair capacity multiplied by targeted practice exposure, neither factor credited alone",
+    "source_operator": "repair_plus_behavior_integration",
+    "telemetry": "Repair markers, therapy dose and type, functional reorganization measures"
+   }
+  },
+  {
+   "primitive_id": "gcs_severity_scale",
+   "name": "Glasgow Coma Scale bands classify TBI severity: 13 to 15 mild and 9 to 12 moderate, with 8 or less severe",
+   "verbatim_quote": "system. A score of 13 to 15 indicates mild TBI; 9 to 12 moderate TBI",
+   "page": "tDCS case series, ebook p.9, text line 612",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GCS is quick and reproducible at initial examination and orders severity monotonically"
+   ],
+   "breakdown_regime": [
+    "Coarse ordinal scale; it is confounded by sedation, intoxication and intubation and does not localize injury"
+   ],
+   "domain": "clinical severity scale",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to ordinal severity bucketing in the engine: a fast reproducible score that stratifies cases before finer features are considered",
+    "source_operator": "gcs_severity_scale",
+    "telemetry": "Admission GCS, severity band, downstream outcome by band"
+   }
+  },
+  {
+   "primitive_id": "tdcs_membrane_principle",
+   "name": "tDCS applies a low intensity electrical current flowing from anode to cathode to modify the resting membrane potential of neurons",
+   "verbatim_quote": "the application of a low intensity electrical current that flows from the",
+   "page": "tDCS case series, ebook p.10, text line 620",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subthreshold current shifts resting potential and excitability without directly firing neurons; effects depend on polarity and montage"
+   ],
+   "breakdown_regime": [
+    "Polarity effects reverse or vanish with different orientation, intensity or baseline state; mechanism is modulatory, not deterministic"
+   ],
+   "domain": "neuromodulation mechanism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a small continuous nudge operator in the engine: a weak field that biases excitability of a target population rather than switching it on or off",
+    "source_operator": "tdcs_membrane_principle",
+    "telemetry": "Current intensity, electrode montage, excitability and plasticity markers"
+   }
+  },
+  {
+   "primitive_id": "tdcs_dlpfc_anode_protocol",
+   "name": "The tDCS protocol placed the active anode over the left dorsolateral prefrontal cortex at F3 with the cathode over the contralateral supraorbital area",
+   "verbatim_quote": "applied to the region of the left dorsolateral prefrontal cortex (LPFC - F3) and the",
+   "page": "tDCS case series, abstract, ebook p.9, text line 558",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Left DLPFC is the intended cognitive and affective target; five consecutive daily sessions in the subacute phase, 2 mA through 35 cm2 sponge electrodes per the methods text"
+   ],
+   "breakdown_regime": [
+    "Single group case series of five men; no sham control, so placebo, spontaneous recovery and practice effects are unseparated"
+   ],
+   "domain": "neuromodulation protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a targeted intervention record in the engine: site, polarity, dose and phase are all explicit fields, and an uncontrolled pre post change is stored as a weak signal, never as proof",
+    "source_operator": "tdcs_dlpfc_anode_protocol",
+    "telemetry": "Montage, intensity, session count, phase after injury, pre and post scores"
+   }
+  },
+  {
+   "primitive_id": "tdcs_fim_gain",
+   "name": "After tDCS the Functional Independence Measure score improved notably, pointing to increased functional independence",
+   "verbatim_quote": "The notable improvement in the FIM score points to an increase",
+   "page": "tDCS case series, ebook p.12, text line 705",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "FIM change over five days reflects intervention effect in the authors interpretation"
+   ],
+   "breakdown_regime": [
+    "Five patients, no control arm, subacute spontaneous recovery is a competing explanation the design cannot exclude"
+   ],
+   "domain": "functional outcome",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to outcome delta tracking in the engine: a validated functional scale delta is recorded with its design strength attached, so small uncontrolled deltas are down weighted",
+    "source_operator": "tdcs_fim_gain",
+    "telemetry": "FIM, MMSE, HADS-A, VAS, RLAS and GOS-E scores before and after intervention"
+   }
+  },
+  {
+   "primitive_id": "laminar_fracture_risk_factors",
+   "name": "Laminar fractures, motor vehicle accidents and falls are independent risk factors for neurological deficit after thoracolumbar burst fracture",
+   "verbatim_quote": "Conclusion: Laminar fractures, car accidents, and falls were identified as",
+   "page": "Risk factors study, abstract, ebook p.14, text line 875",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Multivariate analysis separates independent association from univariate correlation in the 322 patient cohort"
+   ],
+   "breakdown_regime": [
+    "Retrospective single region cohort; association is not causation and transport to other populations is unproven"
+   ],
+   "domain": "prognostic risk factors",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a prognostic feature set in the engine: a small set of independently associated features carries the risk estimate, with mechanism of injury and fracture morphology as first class inputs",
+    "source_operator": "laminar_fracture_risk_factors",
+    "telemetry": "Fracture morphology, injury mechanism, ASIA grade, imaging features"
+   }
+  },
+  {
+   "primitive_id": "thoracolumbar_cohort_design",
+   "name": "The risk factor analysis included 322 patients with thoracolumbar burst fracture, classified by ASIA grade and compared by laminar fracture status",
+   "verbatim_quote": "Methods: This study included 322 patients with TBF, comprising 115 patients",
+   "page": "Risk factors study, abstract, ebook p.14, text line 853",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ASIA classification and Denis classification define deficit and fracture type consistently across the cohort"
+   ],
+   "breakdown_regime": [
+    "Retrospective design; treatment decisions and imaging availability can bias who is classified and followed"
+   ],
+   "domain": "cohort methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to cohort construction discipline in the engine: explicit denominators, a named classification system and a predeclared comparison define every prognostic claim",
+    "source_operator": "thoracolumbar_cohort_design",
+    "telemetry": "Cohort size, group counts, ASIA distribution, classification system used"
+   }
+  },
+  {
+   "primitive_id": "kyphotic_angle_threshold",
+   "name": "A kyphotic angle exceeding 20 degrees is treated as a threshold for instability and neurological risk after burst fracture",
+   "verbatim_quote": "Particularly, a KA exceeding 20° is often considered a threshold",
+   "page": "Risk factors study, discussion, ebook p.19, text line 1170",
+   "latex": "KA > 20^\\circ",
+   "symbol_and_unit_ledger": {
+    "KA": "kyphotic angle, degrees of sagittal deformity at the fractured level"
+   },
+   "assumptions": [
+    "Kyphotic angle summarizes sagittal deformity and load transfer onto the cord"
+   ],
+   "breakdown_regime": [
+    "A single angle threshold ignores canal compromise, fragment position and patient specific anatomy; the text notes cases where ASIA classification was not performed"
+   ],
+   "domain": "biomechanical threshold",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a threshold feature in the engine: a continuous measurement converted to a risk flag at a stated cut point, with the cut point stored so it can be retested",
+    "source_operator": "kyphotic_angle_threshold",
+    "telemetry": "Kyphotic angle in degrees, canal compromise, neurological status"
+   }
+  },
+  {
+   "primitive_id": "aomi_cognition_depression_burden",
+   "name": "Cognitive impairment and depression frequently occur after spinal cord injury and adversely affect functional independence and quality of life",
+   "verbatim_quote": "Background: Cognitive impairment and depression frequently occur after spinal",
+   "page": "AOMI protocol, abstract, ebook p.21, text line 1365",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cognitive and mood outcomes are rehabilitation targets in their own right, not side effects of physical recovery"
+   ],
+   "breakdown_regime": [
+    "Protocol stage evidence; burden is asserted from prior literature, not measured in this study"
+   ],
+   "domain": "SCI comorbidity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to multi outcome modeling in the engine: cognition and mood are tracked as primary state variables alongside motor function, not as afterthoughts",
+    "source_operator": "aomi_cognition_depression_burden",
+    "telemetry": "Cognitive scores, depression scores, independence and quality of life measures"
+   }
+  },
+  {
+   "primitive_id": "aomi_pilot_rct_design",
+   "name": "The AOMI study is an assessor blinded two arm pilot randomized controlled trial with pre, post and one month follow up measures, 46 participants planned",
+   "verbatim_quote": "Methods: This is an assessor-blinded, two-arm pilot randomized controlled trial",
+   "page": "AOMI protocol, abstract, ebook p.21, text line 1379",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pilot trials estimate feasibility, acceptability and preliminary effect, not definitive efficacy; assessor blinding limits detection bias"
+   ],
+   "breakdown_regime": [
+    "Blinding of participants is impossible for this intervention; 46 participants cannot power definitive cognitive or mood effects"
+   ],
+   "domain": "trial design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to evidence grading in the engine: pilot randomized designs generate feasibility and variance estimates that size later trials, and are labeled as such",
+    "source_operator": "aomi_pilot_rct_design",
+    "telemetry": "Recruitment, dropout and retention rates, adherence, adverse events, outcome variance"
+   }
+  },
+  {
+   "primitive_id": "aomi_dose_schedule",
+   "name": "The AOMI intervention dosage is set at three sessions per week for a total of eight weeks, combined with basic wheelchair exercises",
+   "verbatim_quote": "intervention dosages are set as 3 sessions a week for a total of 8 weeks",
+   "page": "AOMI protocol, methods, ebook p.24, text line 1570",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Home based delivery with observation and imagery suits adults who cannot perform conventional physical training; adherence of at least 60 percent of sessions defines exposure in the analysis plan"
+   ],
+   "breakdown_regime": [
+    "Dose is a protocol choice, not an optimized value; optimal dosage is explicitly not yet established in the source literature"
+   ],
+   "domain": "intervention dose",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to dose specification in the engine: frequency, duration and adherence threshold are stored as the intervention definition, so dose response can be examined later",
+    "source_operator": "aomi_dose_schedule",
+    "telemetry": "Sessions per week, weeks, adherence percentage, home delivery completion"
+   }
+  },
+  {
+   "primitive_id": "rtms_motor_signal",
+   "name": "Across fourteen studies, repetitive transcranial magnetic stimulation was associated with reductions in spasticity and improvements in voluntary motor function of both upper and lower limbs after SCI",
+   "verbatim_quote": "and improvements in voluntary motor function of both upper and lower limbs.",
+   "page": "rTMS narrative review, abstract, ebook p.31, text line 2083",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "rTMS after SCI can modulate corticospinal excitability in a therapeutically useful direction"
+   ],
+   "breakdown_regime": [
+    "Narrative review of small heterogeneous studies; no pooled effect size and no standard protocol"
+   ],
+   "domain": "neuromodulation evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a directional signal with wide uncertainty in the engine: repeated small studies pointing the same way raise a hypothesis priority without fixing an effect size",
+    "source_operator": "rtms_motor_signal",
+    "telemetry": "Motor scores, spasticity scales, motor evoked potentials, protocol parameters"
+   }
+  },
+  {
+   "primitive_id": "rtms_evidence_limits",
+   "name": "Many rTMS findings after SCI derive from small sample sizes, varied protocols and methodological heterogeneity, limiting definitive conclusions",
+   "verbatim_quote": "many of these findings are derived from small sample sizes, varied protocols, and",
+   "page": "rTMS narrative review, abstract, ebook p.31, text line 2089",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Heterogeneity in frequency, site, intensity and session count prevents treating the literature as one intervention"
+   ],
+   "breakdown_regime": [
+    "The limit is about the evidence base, not proof that rTMS is ineffective; larger controlled trials could resolve it"
+   ],
+   "domain": "evidence limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a heterogeneity penalty in the engine: when protocols vary as much as outcomes, the pooled claim is discounted and protocol identity is preserved",
+    "source_operator": "rtms_evidence_limits",
+    "telemetry": "Sample sizes, protocol variants, outcome heterogeneity across studies"
+   }
+  },
+  {
+   "primitive_id": "tbs_burst_protocol",
+   "name": "Theta burst stimulation delivers pulse bursts of three stimuli at 50 Hz, a compressed protocol distinct from conventional repetitive TMS trains",
+   "verbatim_quote": "protocols. TBS includes pulse bursts of three stimuli at 50 Hz (i.e.,",
+   "page": "rTMS narrative review, ebook p.33, text line 2175",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Burst pattern, not only total pulses, determines the plasticity direction and magnitude of the after effect"
+   ],
+   "breakdown_regime": [
+    "After effects are short lived and state dependent; seizure risk and individual anatomy bound safe intensity"
+   ],
+   "domain": "stimulation protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to pattern encoding in the engine: the temporal pattern of an intervention is a distinct variable from its total amount",
+    "source_operator": "tbs_burst_protocol",
+    "telemetry": "Burst frequency, pulses per burst, total pulses, session duration, after effect duration"
+   }
+  },
+  {
+   "primitive_id": "hbot_cohort_dose",
+   "name": "In the HBOT cohort, 26 adults with post concussion symptoms after childhood TBI received at least 40 hyperbaric oxygen sessions",
+   "verbatim_quote": "brain injury. In total, 26 adults received at least 40 HBOT",
+   "page": "Editorial summary of HBOT study, ebook p.6, text line 374",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A high cumulative dose, at least 40 sessions, is the exposure definition for the reported cognitive gains"
+   ],
+   "breakdown_regime": [
+    "Retrospective cohort with no control group; self selection and expectancy are plausible alternative explanations"
+   ],
+   "domain": "hyperbaric therapy cohort",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to cumulative exposure modeling in the engine: total sessions form the dose variable and retrospective gains are stored with a no control flag",
+    "source_operator": "hbot_cohort_dose",
+    "telemetry": "Session count, years since injury, injury severity, cognitive domain scores"
+   }
+  },
+  {
+   "primitive_id": "hbot_session_protocol",
+   "name": "Each HBOT session consisted of 90 minutes of 100 percent oxygen exposure under pressure",
+   "verbatim_quote": "sessions, each consisting of 90 min of 100% oxygen exposure.",
+   "page": "Editorial summary of HBOT study, ebook p.6, text line 375",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Raised inspired oxygen under pressure increases tissue oxygen delivery, the proposed driver of angiogenesis and repair"
+   ],
+   "breakdown_regime": [
+    "Protocol parameters vary across HBOT literature, so this dose does not define the class effect"
+   ],
+   "domain": "hyperbaric protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a fully specified dose record in the engine: duration, gas fraction and session count are separate fields rather than a therapy label",
+    "source_operator": "hbot_session_protocol",
+    "telemetry": "Session minutes, oxygen fraction, pressure, total sessions"
+   }
+  },
+  {
+   "primitive_id": "hbot_cognitive_effect",
+   "name": "HBOT produced statistically significant improvements in all measured cognitive domains except motor skills, by Wilcoxon signed rank testing",
+   "verbatim_quote": "Statistically significant improvements were observed in all domains except for Motor Skills (adjusted p < 0.05, Wilcoxon signed-rank test, with p-values",
+   "page": "HBOT study, results, ebook p.45, text line 2986",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Paired pre post testing suits the retrospective within subject design; gains were independent of injury severity and of time since injury, which averaged 23.6 years"
+   ],
+   "breakdown_regime": [
+    "No control arm and multiple domains tested; motor skills null result shows the effect is domain specific, not global"
+   ],
+   "domain": "cognitive outcome",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to domain specific effect vectors in the engine: an intervention can move cognition while leaving motor output unchanged, so effects are never smeared across domains",
+    "source_operator": "hbot_cognitive_effect",
+    "telemetry": "Global cognition, memory, executive function, attention, processing speed and motor scores"
+   }
+  },
+  {
+   "primitive_id": "early_rehab_trial_design",
+   "name": "The extended early rehabilitation trial randomly divided 124 patients with moderate and severe TBI into two groups of 62",
+   "verbatim_quote": "Results: 124 patients were randomly divided into two groups of 62 patients",
+   "page": "Extended early rehabilitation study, abstract, ebook p.49, text line 3261",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Random division into equal groups supports a fair comparison of intensified kinesitherapy against standard rehabilitation"
+   ],
+   "breakdown_regime": [
+    "Single center trial; mortality was similar between groups, so the benefit claim rests on complications and function, not survival"
+   ],
+   "domain": "rehabilitation trial",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a balanced comparison template in the engine: equal allocation and a named standard care comparator define what an intensity claim is relative to",
+    "source_operator": "early_rehab_trial_design",
+    "telemetry": "Group sizes, complication counts, device use at discharge, mortality, functional outcome"
+   }
+  },
+  {
+   "primitive_id": "early_rehab_complication_reduction",
+   "name": "Extended early rehabilitation reduced clinical complications at discharge, including the need for nasogastric tubes, tracheostomies and pressure ulcer care",
+   "verbatim_quote": "clinical complications, including the need for nasogastric tubes,",
+   "page": "Editorial summary of early rehabilitation study, ebook p.6, text line 332",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Earlier and longer mobilization and kinesitherapy reduce secondary complications of immobility and critical illness"
+   ],
+   "breakdown_regime": [
+    "Benefit is in complications and function; it does not extend to mortality in this trial"
+   ],
+   "domain": "clinical complications",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to secondary outcome value in the engine: an intervention can be worth adopting for complication reduction even when the primary survival outcome is neutral",
+    "source_operator": "early_rehab_complication_reduction",
+    "telemetry": "Nasogastric tube use, tracheostomy, pressure ulcers, supportive devices at discharge"
+   }
+  },
+  {
+   "primitive_id": "tscs_exo_feasibility",
+   "name": "The combined use of transcutaneous spinal cord stimulation and exoskeleton gait training appears technically feasible and safe in incomplete SCI",
+   "verbatim_quote": "Discussion: The combined use of tSCS and EGT appears technically feasible and",
+   "page": "tSCS and exoskeleton study, discussion, ebook p.65, text line 4275",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Feasibility and safety are the correct first claims for a three participant case series testing a combined device protocol"
+   ],
+   "breakdown_regime": [
+    "Responses varied substantially: one participant worsened on some measures and another showed reduced activation, so feasibility does not imply benefit"
+   ],
+   "domain": "hybrid rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to staged adoption in the engine: a combined intervention first earns a feasibility and safety record, and only responder analysis can promote it further",
+    "source_operator": "tscs_exo_feasibility",
+    "telemetry": "Adverse events, session completion, participant level response direction"
+   }
+  },
+  {
+   "primitive_id": "tscs_emg_metrics",
+   "name": "Muscle activation during gait is quantified by root mean square and integrated EMG, with functional outcomes measured alongside",
+   "verbatim_quote": "root mean square (RMS) and integrated EMG (iEMG). Functional outcomes were",
+   "page": "tSCS and exoskeleton study, abstract, ebook p.61, text line 4247",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "RMS and integrated EMG summarize activation amplitude and total activation over the gait task"
+   ],
+   "breakdown_regime": [
+    "EMG amplitude is a surrogate: in this study increased activation did not always coincide with better Timed Up and Go performance"
+   ],
+   "domain": "electromyography metrics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to surrogate endpoint discipline in the engine: a physiological signal and a functional outcome are stored as separate channels and discordance between them is itself recorded",
+    "source_operator": "tscs_emg_metrics",
+    "telemetry": "RMS and integrated EMG by muscle, Timed Up and Go, walking distance, fatigue and discomfort scales"
+   }
+  },
+  {
+   "primitive_id": "ea_meta_population",
+   "name": "The electroacupuncture meta analysis included 15 studies comprising 1,394 patients with urinary incontinence after spinal cord injury",
+   "verbatim_quote": "Results: A total of 15 studies were included, comprising 1,394 patients with UI after",
+   "page": "Electroacupuncture meta analysis, abstract, ebook p.75, text line 5340",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pooling randomized trials of electroacupuncture against conventional rehabilitation estimates a class level effect on bladder outcomes"
+   ],
+   "breakdown_regime": [
+    "Included trials are mostly small and regionally concentrated, so publication and quality bias bound the pooled estimate"
+   ],
+   "domain": "meta analysis population",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to pooled evidence weighting in the engine: a meta analytic population size and study count set the ceiling on confidence for the pooled claim",
+    "source_operator": "ea_meta_population",
+    "telemetry": "Study count, total patients, outcome definitions, risk of bias ratings"
+   }
+  },
+  {
+   "primitive_id": "ea_incontinence_effect",
+   "name": "Electroacupuncture significantly improved 24 hour incontinence frequency versus conventional rehabilitation, with a mean difference of minus 1.42",
+   "verbatim_quote": "showed a significant improvement in 24 h incontinence frequency (MD = −1.42,",
+   "page": "Electroacupuncture meta analysis, abstract, ebook p.75, text line 5342",
+   "latex": "MD = -1.42",
+   "symbol_and_unit_ledger": {
+    "MD": "mean difference in 24 hour incontinence frequency, electroacupuncture versus conventional rehabilitation, episodes per 24 hours"
+   },
+   "assumptions": [
+    "Mean difference on the original scale is interpretable as episodes per 24 hours; trial sequential analysis in the same paper supports that the evidence is not a random high"
+   ],
+   "breakdown_regime": [
+    "Effect is for incontinence frequency; other bladder outcomes have their own estimates and uncertainty"
+   ],
+   "domain": "pooled effect size",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to effect size storage in the engine: the estimate is kept on its natural scale with its outcome identity, never converted to a generic positive or negative label",
+    "source_operator": "ea_incontinence_effect",
+    "telemetry": "Mean difference, confidence interval, incontinence episodes per 24 hours, residual urine volume, bladder capacity"
+   }
+  },
+  {
+   "primitive_id": "ea_trial_sequential_analysis",
+   "name": "Trial sequential analysis was applied to the electroacupuncture outcomes to test whether the cumulative evidence crosses monitoring boundaries for a firm conclusion",
+   "verbatim_quote": "(37). The TSA plots for EA (alone or with CR) versus CR showed that",
+   "page": "Electroacupuncture meta analysis, results, ebook p.82, text line 5639",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cumulative meta analysis can produce false positives; trial sequential analysis adjusts for repeated updating and required information size"
+   ],
+   "breakdown_regime": [
+    "Boundaries depend on assumed effect and variance; crossing a boundary supports but does not prove the clinical claim"
+   ],
+   "domain": "sequential evidence method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to sequential updating discipline in the engine: as new studies arrive, the evidence total is checked against a required information size before a claim is promoted",
+    "source_operator": "ea_trial_sequential_analysis",
+    "telemetry": "Cumulative Z curve, monitoring boundaries, required information size, GRADE ratings"
+   }
+  },
+  {
+   "primitive_id": "robot_ue_effect",
+   "name": "Robot assisted upper extremity therapy improved upper limb function compared with traditional therapies after stroke, significant at p less than 0.01 in the pooled analysis of 42 trials and 1,678 patients summarized in this volume",
+   "verbatim_quote": "in upper limb function compared to traditional therapies (p < 0.01),",
+   "page": "Robotic upper extremity meta analysis, discussion, ebook p.105, text line 7287",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Benefits were greatest in the subacute phase and in severe impairment, per the editorial summary of the same meta analysis"
+   ],
+   "breakdown_regime": [
+    "Grip strength and social participation gains were statistically significant but of uncertain clinical importance; phase and severity moderate the effect"
+   ],
+   "domain": "robotic therapy evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to moderator aware pooling in the engine: a pooled benefit is stored together with the phase and severity subgroups where it is largest",
+    "source_operator": "robot_ue_effect",
+    "telemetry": "Upper limb function, grip strength, activities of daily living, social participation, recovery phase, impairment severity"
+   }
+  },
+  {
+   "primitive_id": "intensity_over_duration",
+   "name": "High intensity rehabilitation performed for four to six hours daily over three to four weeks produced gains comparable or superior to conventional programs lasting twelve to sixteen weeks",
+   "verbatim_quote": "studies, high-intensity rehabilitation performed for 4-6 h daily",
+   "page": "Intensity perspective, as summarized in the Editorial, ebook p.7, text line 402",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Neural and muscular adaptation respond to concentrated stimulation density more than to elapsed program duration"
+   ],
+   "breakdown_regime": [
+    "Evidence is synthesized in a perspective article across stroke trials, high repetition training and intensive models; it is not one randomized trial"
+   ],
+   "domain": "rehabilitation intensity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a density variable in the engine: therapeutic value is modeled as intensity per day interacting with total days, not as program length alone",
+    "source_operator": "intensity_over_duration",
+    "telemetry": "Hours per day, weeks, repetitions, functional gain per week"
+   }
+  },
+  {
+   "primitive_id": "duration_without_intensity_null",
+   "name": "Increasing rehabilitation duration without intensity yields minimal gains, as seen in trials of increased duration without raised intensity",
+   "verbatim_quote": "yields minimal gains, as seen in trials of increased duration without",
+   "page": "Intensity perspective, ebook p.118, text line 8240",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Time in therapy is not the active ingredient; engagement and effort density are"
+   ],
+   "breakdown_regime": [
+    "Null duration results come from specific trial contexts and do not license unlimited intensity, which is bounded by fatigue and safety"
+   ],
+   "domain": "rehabilitation intensity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a null control lesson in the engine: adding more of a low density input is recorded as a near zero effect, preventing duration from masquerading as dose",
+    "source_operator": "duration_without_intensity_null",
+    "telemetry": "Therapy hours added, intensity level, gain relative to control"
+   }
+  },
+  {
+   "primitive_id": "ghost_polytrauma_monitoring",
+   "name": "Multimodal monitoring in severe TBI polytrauma tracks brain tissue oxygenation and intracranial pressure in real time to guide management",
+   "verbatim_quote": "brain tissue oxygenation, and ICP in real time, thereby guiding and",
+   "page": "GHOST-CAP case report, ebook p.130, text line 8980",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The GHOST-CAP strategy is an eight dimensional goal directed framework combined with cerebral blood flow, EEG, cerebral oxygenation and ICP related assessment, per the editorial summary"
+   ],
+   "breakdown_regime": [
+    "Single case of a 39 year old man with Glasgow Coma Scale 4 after a fall; improvement in one case cannot attribute effect to the strategy"
+   ],
+   "domain": "multimodal monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to multi channel state estimation in the engine: several imperfect physiological channels are fused into one management picture, and no single channel is treated as the state",
+    "source_operator": "ghost_polytrauma_monitoring",
+    "telemetry": "Brain tissue oxygenation, intracranial pressure, EEG, cerebral blood flow, optic nerve sheath diameter"
+   }
+  },
+  {
+   "primitive_id": "ghost_onsd_threshold",
+   "name": "Optic nerve sheath diameter is monitored against a reference threshold of less than 5 mm as a noninvasive intracranial pressure signal",
+   "verbatim_quote": "(ONSD), with a reference threshold of <5 mm. The initial ONSD",
+   "page": "GHOST-CAP case report, ebook p.131, text line 9010",
+   "latex": "ONSD < 5\\,\\mathrm{mm}",
+   "symbol_and_unit_ledger": {
+    "ONSD": "optic nerve sheath diameter, millimeters; threshold is the reference upper limit used in the case"
+   },
+   "assumptions": [
+    "ONSD enlarges as intracranial pressure rises, giving a bedside proxy when invasive monitoring is limited"
+   ],
+   "breakdown_regime": [
+    "Proxy thresholds vary by population and technique; a value near the threshold is weak evidence either way"
+   ],
+   "domain": "monitoring threshold",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to proxy measurement handling in the engine: an indirect signal is used with its reference threshold and its proxy status explicit",
+    "source_operator": "ghost_onsd_threshold",
+    "telemetry": "Optic nerve sheath diameter in millimeters, intracranial pressure, imaging findings"
+   }
+  },
+  {
+   "primitive_id": "exo_l2_case_profile",
+   "name": "The exoskeleton case is an 18 year old male with traumatic incomplete L2 paraplegia, AIS C, trained over 20 sessions across six months with conventional physiotherapy",
+   "verbatim_quote": "Case presentation: An 18-year-old male with traumatic L2 AIS C paraplegia",
+   "page": "Robotic exoskeleton case report, abstract, ebook p.135, text line 9514",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Incomplete injury leaves residual pathways that device assisted gait training can engage"
+   ],
+   "breakdown_regime": [
+    "One patient; every outcome in the case is hypothesis generating only"
+   ],
+   "domain": "case profile",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to case level longitudinal records in the engine: a single subject trajectory is kept intact with its injury level and completeness, never averaged away",
+    "source_operator": "exo_l2_case_profile",
+    "telemetry": "AIS grade, injury level, session count, training duration"
+   }
+  },
+  {
+   "primitive_id": "exo_gait_recovery",
+   "name": "Exoskeleton training in the L2 case produced gait capacity recovery to 300 meters with crutches, with hip extensor strength up 21.7 percent and improved bone mineral density",
+   "verbatim_quote": "improving from 78 to 84) and gait capacity recovery (300 m with crutches).",
+   "page": "Robotic exoskeleton case report, abstract, ebook p.135, text line 9531",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Functional gains were associated with muscle strength recovery in the case interpretation"
+   ],
+   "breakdown_regime": [
+    "The same case showed persistent neuromuscular asymmetry and a substantial increase in visceral fat, so gains came with a metabolic cost the intervention did not address"
+   ],
+   "domain": "functional recovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to tradeoff accounting in the engine: a functional gain and a metabolic deterioration from the same intervention are both booked, so net value is judged on the full outcome vector",
+    "source_operator": "exo_gait_recovery",
+    "telemetry": "Walking distance, hip extensor strength, bone mineral density, visceral fat, limb symmetry"
+   }
+  },
+  {
+   "primitive_id": "exo_adherence",
+   "name": "Adherence to the exoskeleton rehabilitation protocol was high, with 92 plus or minus 3 percent of sessions completed",
+   "verbatim_quote": "protocol was high (92 ± 3% of sessions completed), as recorded",
+   "page": "Robotic exoskeleton case report, results, ebook p.140, text line 9796",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "High completion shows the device protocol is tolerable and schedulable for this patient profile"
+   ],
+   "breakdown_regime": [
+    "Adherence in a supervised single case overstates what unsupervised or larger cohorts will achieve"
+   ],
+   "domain": "adherence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to feasibility telemetry in the engine: completion percentage is a deliverability signal separate from efficacy",
+    "source_operator": "exo_adherence",
+    "telemetry": "Sessions completed percentage, session structure, dropout and tolerance notes"
+   }
+  },
+  {
+   "primitive_id": "aging_screening_yield",
+   "name": "The aging systematic review screened 3,118 unique records and included nine studies of locomotor recovery after traumatic SCI in animal models",
+   "verbatim_quote": "Results: Of 3,118 unique records screened, nine studies met inclusion criteria.",
+   "page": "Aging systematic review, abstract, ebook p.144, text line 10211",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A very low inclusion yield signals a sparse and fragmented preclinical evidence base for the aging question"
+   ],
+   "breakdown_regime": [
+    "Nine small animal studies cannot support precise effect sizes; risk of bias was often unclear in the review"
+   ],
+   "domain": "systematic review yield",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to evidence density accounting in the engine: screened to included ratio is stored as a sparsity measure for the question",
+    "source_operator": "aging_screening_yield",
+    "telemetry": "Records screened, studies included, animals per study, locomotor outcome used"
+   }
+  },
+  {
+   "primitive_id": "aging_poorer_recovery",
+   "name": "Aged and geriatric animals showed poorer and delayed locomotor recovery after SCI compared with young animals, consistently across the included studies",
+   "verbatim_quote": "They found that aged and geriatric rats had poorer and delayed",
+   "page": "Aging systematic review, results, ebook p.150, text line 10466",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Age is a biological effect modifier: older animals recovered less on the Basso Beattie Bresnahan scale in all seven studies using that outcome, per the review abstract"
+   ],
+   "breakdown_regime": [
+    "Preclinical models only; contusion, hemisection and clip compression models and mixed species limit direct human translation"
+   ],
+   "domain": "age effect modification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to effect modification in the engine: age enters as an interaction term that scales expected recovery, not as a background demographic",
+    "source_operator": "aging_poorer_recovery",
+    "telemetry": "BBB and Basso Mouse Scale scores, CatWalk measures, age group, injury model, exercise intervention"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "eb8ff00a9d0b2481-t1",
+   "think": "This volume is an edited Frontiers Research Topic, not a single experiment, and its value to a reasoning engine is the way it organizes a whole intervention space around one problem: after traumatic injury to the brain or spinal cord, what actually moves recovery, for whom, at what dose, and with what evidence strength. Thirteen contributions span an editorial, four original research articles, three case reports, three systematic reviews, one narrative review and one study protocol, and the first discipline the volume teaches is that these are not interchangeable currencies. A five patient tDCS case series, a three participant stimulation and exoskeleton feasibility study and a single GHOST-CAP critical care case can establish that something can be delivered safely and can generate a responder hypothesis, while the two meta analyses, covering 1,394 patients for electroacupuncture after spinal cord injury and 1,678 stroke patients across 42 trials for robot assisted upper limb therapy, are the only places where pooled effect language is earned, and even there the volume is careful to attach moderators and uncertainty. The second organizing idea is mechanism paired with dose. Neuromodulation appears in three distinct forms: tDCS shifting resting membrane potential with a low intensity current at the left dorsolateral prefrontal cortex, repetitive TMS and theta burst patterns driving corticospinal excitability, and transcutaneous spinal stimulation raising muscle activation during exoskeleton gait. In each case the primitive that matters is not the device name but the parameter set: polarity and montage, burst pattern and frequency, stimulation timing relative to training. The same is true on the rehabilitation side, where the intensity perspective argues that density of stimulation, hours per day and repetitions, explains gains that raw program duration does not, a claim the extended early rehabilitation trial supports from the other direction by showing complication reduction from an intensified early protocol in 124 randomized patients. Third, the volume separates outcome channels that weaker reasoning habitually merges. Hyperbaric oxygen improved cognition across domains while motor skills stayed flat. Transcutaneous stimulation raised EMG amplitude in some muscles while Timed Up and Go performance moved independently, improving in one participant, unchanged or worse in others. The exoskeleton case gained 300 meters of walking and hip extensor strength while visceral fat rose substantially. An engine that collapses these into one recovery score would learn the wrong lesson from every one of these studies; the correct representation is an outcome vector with per channel deltas and explicit discordance. Fourth, prognosis and stratification run underneath the interventions. Laminar fracture morphology, mechanism of injury and a kyphotic angle threshold stratify neurological risk after burst fracture before any therapy is chosen. Age stratifies recovery in the preclinical spinal cord literature so consistently that it behaves as an effect modifier rather than a covariate. Recovery phase moderates robot therapy benefit, with the subacute phase and severe impairment showing the largest gains. The engine lesson is that intervention effects in this domain are conditional statements, and the conditions, phase, severity, age, morphology, are part of the primitive, not metadata. Fifth, the volume models honest evidence handling. Trial sequential analysis is used to ask whether a meta analysis has accumulated enough information to stop updating casually. The AOMI protocol prespecifies feasibility endpoints, adherence thresholds and multimodal MRI mechanism measures before any efficacy claim exists. The rTMS review states plainly that small samples and varied protocols block definitive conclusions. These are reasoning procedures an engine can copy directly: prespecify, grade, and refuse to promote a signal past the design that produced it. Where the volume breaks is equally instructive. Most primary studies are small, several lack control arms, spontaneous recovery in subacute windows competes with every pre post gain, and the HBOT result rests on a retrospective cohort treated on average more than two decades after injury. Heterogeneity is the norm: stimulation protocols, injury models and outcome scales differ across nearly every comparison. The transferable core is therefore not a list of winning therapies. It is a grammar: specify the substrate, the intervention parameters, the dose, the phase, the stratifying variables, the outcome vector and the evidence grade, and let each claim live at exactly the strength its design supports. Sixth, measurement is treated as an intervention in its own right. The GHOST-CAP case fuses cerebral blood flow, electroencephalography, cerebral oxygenation, intracranial pressure related assessment and optic nerve sheath diameter against a reference threshold into one goal directed picture, because in ultra severe injury no single channel is trustworthy alone. The tDCS series stacks seven instruments, MMSE, HADS-A, VAS, FIM, RLAS and GOS-E, because cognition, mood, pain, independence and global outcome can move in different directions. The spinal stimulation study pairs EMG metrics with timed functional tests for the same reason. The pattern to copy is channel fusion with explicit thresholds and per channel reporting, where disagreement between channels triggers scrutiny rather than being averaged into silence. Seventh, secondary systems decide long term value. Bladder dysfunction after spinal cord injury is common and corrosive enough to justify its own meta analysis. Bone mineral density, muscle asymmetry and visceral fat in the exoskeleton case show that a gait intervention is also a metabolic and skeletal intervention, for better and worse. Depression and cognitive impairment after spinal cord injury are framed as primary targets of the home based AOMI protocol, with wheelchair exercise as the physical base and imagery as the cognitive lever. A reasoning engine that only tracks the headline motor outcome will systematically misprice interventions whose real value, or real cost, sits in these secondary systems. Finally, the volume repeatedly returns to responder identification as the open problem. Feasibility studies close by asking which patients benefit most, the robot therapy analysis finds its effect concentrated in a phase and severity subgroup, and the HBOT cohort reports gains independent of severity and of decades old injury timing, which is itself a stratification surprise worth testing prospectively. The mature posture the volume teaches is to treat every average effect as a provisional summary over hidden subgroups, and to design the next measurement to split the average, not to celebrate it.",
+   "retrocausal_genealogy": "The lineage runs from nineteenth and twentieth century electrotherapy and cortical stimulation, through the plasticity literature that reframed rehabilitation as activity dependent reorganization, to modern noninvasive neuromodulation. The Glasgow Coma Scale and ASIA classification supplied the shared severity language that makes cohorts comparable. Meta analysis and trial sequential analysis arrived from clinical epidemiology as the field accumulated small trials. Robotics and powered exoskeletons entered from engineering, hyperbaric oxygen from diving and wound medicine, and electroacupuncture from traditional practice retested under randomized designs. The volume is a snapshot of these streams converging on neurotrauma.",
+   "theory_of_mind": "The editors and authors model the injured nervous system as plastic but constrained: capable of reorganization when given the right input at the right time, and limited by lesion anatomy, age and secondary complications. They model the reader as a clinician researcher who needs parameters, not slogans, so papers report montages, doses, session counts and scales. They also assume recovery is multidimensional, which is why cognition, mood, bladder function, bone health and metabolism all appear as legitimate endpoints beside walking and hand function.",
+   "cross_layer_veto": "Several findings veto naive cross layer transfer. The motor skills null result under hyperbaric oxygen vetoes any claim that a cognitive gain implies global recovery. The participant level discordance between EMG activation and gait performance vetoes surrogate only promotion of spinal stimulation. Similar mortality under extended early rehabilitation vetoes survival framing of its complication benefit. The aging review vetoes unadjusted translation of young animal recovery curves to older patients. Each veto is a constraint that other signals in an engine must respect before they are combined."
+  }
+ ],
+ "universal_lens": "The volume is a template for any recovery problem in a damaged adaptive system: grade the evidence before using it, specify interventions by parameters and dose rather than by name, stratify by the variables that modify response, track an outcome vector instead of a single score, and let negative and discordant channels constrain the positive ones. Applied outside medicine, the same grammar disciplines rehabilitation of models, organizations and ecosystems after a shock: repair the substrate, drive targeted practice, measure per channel, and never let a feasibility result pose as an efficacy result.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the volume methods core: severity classification before comparison, dose defined as intensity and adherence rather than duration, prespecified feasibility endpoints for pilot work, trial sequential thinking for accumulating evidence, and effect modification by age and phase. Its study designs gain the habit of storing protocol parameters, stratifiers and outcome vectors as first class fields, and of recording discordant outcomes, such as a functional gain beside a metabolic cost, instead of averaging them away.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes conditional claim structure from this volume: every intervention or signal claim carries its population, phase, severity band, dose parameters, outcome channel and evidence grade, and promotion requires the design to support the strength claimed. Surrogate channels are kept separate from functional outcomes, pooled claims inherit their heterogeneity penalty, and null results on one channel veto global recovery language on others. No betting or sportsbook content is involved; the value is prediction and reasoning discipline for health and performance states."
+}
