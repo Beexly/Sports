@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
-  TWO_DOOR_PACK_OFFERS,
+  TWO_DOOR_PACK_OFFERS, FOUNDING_SEAT_COPY,
   membershipCheckoutAvailability, singleSlateCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
 import { LIVE_PACKAGE_CATALOG, getActiveForSalePackages } from "@/lib/packages/catalog";
@@ -86,7 +86,7 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                 Choose Your Football Pack
               </h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
-                One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card.
+                One-time purchase. Your official picks, player props, and parlays unlock immediately right inside the card below.
               </p>
             </div>
           </div>
@@ -229,7 +229,8 @@ export default async function PackagesPage(): Promise<JSX.Element> {
             <section id="season-membership" aria-labelledby="door-1-heading">
               <h2 id="door-1-heading" className="font-display text-2xl text-ion-white sm:text-3xl">
                 Season Membership
-              </h2>
+              </h2
+              ><p className="mt-2 text-xs text-ion-2">{FOUNDING_SEAT_COPY} - we do not publish a live seat counter.</p>
               <div className="mt-4 border border-mineral bg-obsidian p-6">
                 <MembershipPlans gate={gate} availability={membershipAvailability} />
               </div>
