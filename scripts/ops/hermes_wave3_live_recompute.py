@@ -166,6 +166,21 @@ for m in ORDER:
                     "evaluations": evals, "open_to_current": moves})
 
 # ---- inactives ----
+# Fresh fetch at/after 13:00 UTC (07:00 CST official inactives release): the poller
+# snapshot may predate the release, so never trust a stale summary for the gate.
+import urllib.request
+_now = datetime.datetime.now(datetime.timezone.utc)
+if _now >= datetime.datetime(2026, 11, 15, 13, 0, tzinfo=datetime.timezone.utc):
+    try:
+        _req = urllib.request.Request(
+            "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873053",
+            headers={"User-Agent": "Mozilla/5.0"})
+        _d = json.loads(urllib.request.urlopen(_req, timeout=30).read().decode("utf-8"))
+        snap["munich_summary"] = {"header": _d.get("header", {}).get("competitions", [{}])[0].get("status"),
+                                  "injuries": _d.get("injuries"), "gameInfo": _d.get("gameInfo"),
+                                  "fresh_fetch_utc": _now.isoformat()}
+    except Exception as _ex:
+        snap.setdefault("errors", []).append(f"fresh munich summary: {_ex}")
 inact = {"captured": False, "note": "Munich summary not yet captured (inactives window opens ~07:00 CST / 13:00 UTC).", "players": {}}
 ms = snap.get("munich_summary")
 if ms:
