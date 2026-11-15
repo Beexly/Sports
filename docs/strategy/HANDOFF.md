@@ -3,6 +3,28 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-15 (04:31 CST takeover cycle) — public record manifests stop advertising the superseded all-in snapshot (`AUTON-MANIFEST-TRUTH-23`)
+
+- **What changed**:
+  - New single source `apps/web/lib/ledger/public-record.ts`, derived from `verified-ledger.json` (the artifact `/record` and `/picks` already render): `PUBLIC_RECORD_LINE` (`79-46-0 +81.47u verified · win rate locked until 200 CLV-backed settled plays (53/200) · as of 2026-11-13`), `PUBLIC_RECORD_POLICY`, and a labelled `SUPERSEDED_RECORD_NOTE`.
+  - `/llms.txt`, `/llms-full.txt` and `/.well-known/ai-plugin.json` (the three manifests an LLM crawler reads first) now interpolate that line instead of printing `Verified Official NFL Record: 47-19-1 (71.2% win rate ...)` — a superseded 2026-11-02 snapshot published as the official record, with a win-rate percentage the calibration law forbids while the 200-bet gate is locked.
+  - `/props` (metadata description + header eyebrow) and `/research` (process metrics) render the same derived line. `/research` also drops two retired numbers: the `TNF CAR@GB Wedge 14-6-1 / +7.19u` card (the Week 10 TNF window was WSH@NYG, already FINAL) and `Graded Plays 50 / 36 wins · 13 losses · 1 push` (the pipeline carries 4,078 settled plays). Their slots now show the settled pipeline count and the calibration gate.
+  - `scripts/guardrails/no-unsupported-performance-claims.mjs`: the blanket exemption for `47-19-1` / `38-13-1` is gone. Those numbers are now exempt only on a line that labels them (all-in / superseded / historical / anchor / audited / snapshot / prior / legacy / retired / demoted / secondary). Verified by probe: the two old manifest strings now FLAG, the derived line passes.
+  - `apps/web/__tests__/public-record-manifests.test.ts` pins the derivations, forbids a percentage while the gate is locked, forbids the superseded literal on all five surfaces, and forbids a hand-typed W-L record inside the record module itself.
+- **What was proven**:
+  - `node ../../node_modules/vitest/vitest.mjs run __tests__/public-record-manifests.test.ts` → `9/9 passed`.
+  - Adjacent regression batch (`mega-sweep-and-surface-truth`, `marketing-science-conversion-engine`, `packages-storefront`, `public-copy-plain-language`, `machine-proof`, `docs-pricing-figures`) → `88 passed`, 0 failed.
+  - `scripts/guardrails/no-unsupported-performance-claims.mjs` → `OK - scanned 503 file(s)`; `commercial-copy-scan.mjs` → `OK - scanned 500 file(s)`.
+  - Live production defect confirmed before the fix: `curl https://www.galaxysportsedge.com/llms.txt` returned `- **Verified Official NFL Record:** 47-19-1 (71.2% win rate ...)`.
+- **What was not proven**:
+  - Local `tsc --noEmit -p apps/web/tsconfig.json` is not trustworthy in a sparse worktree with a junctioned `node_modules`: it reports 1,377 errors rooted in a stale `next` package (`Cannot find module 'next/link'`) and Prisma types, none of them in the changed files. Type-safety is deferred to CI.
+  - `__tests__/content-os-and-resources-revenue.test.tsx` cannot collect in the junction farm (`Missing "./link" specifier in "next" package`) — same stale-`next` cause, not a code defect. CI covers it.
+  - The host disk was at 100% (`C:` 472G/476G used, 4.0G free) during this cycle; a full `git worktree add` failed with `No space left on device` and the cycle ran on a sparse checkout instead.
+- **What the next role must do**:
+  - 20 files still print `36-13-1 (73.5%) · +20.14u Verified | All-in 47-19-1 (+24.92u)` (cockpit 3D HQ, plugin suite, ask-jarvis panel, two `/api/cockpit/jarvis/*` routes, `lib/jarvis/stealth-skeleton-brain.ts`, `lib/content-os/video-and-revenue-engine.ts`, `lib/newsletter/issues.ts`, `lib/seo/...`, plus the tests that pin those literals). 36-13-1 is no longer the record of record — it is the pre-Nov-13 snapshot — and 73.5% is a banned percentage. Repoint them at `@/lib/ledger/public-record` and re-enable the `record-with-percent` numeric pattern (`\b\d{1,3}[-–]\d{1,3}[-–]\d{1,3}\b\s*[(\[]?\s*\d{1,3}(?:\.\d+)?\s*%`) in the guard, which is what surfaced them.
+  - `workers/immortal-orchestrator/src/index.ts:371` returns `official_record: "47-19-1 (+24.92u) | Base 38-13-1 (+22.85u)"` to paying syndicate seats on `POST /syndicate/feed`.
+  - Reclaim disk: `C:` is effectively full, and the primary checkout `C:/Users/Garrett/Sports` is missing 36,337 tracked files under `data/` (reported as deletions in `git status`).
+
 ## 2026-11-15 (UTC Night Wave 22) - WP5 + Wave 21 Live origin/main Merge, Full Vitest & Two-Axis Review Closure (`AUTON-MAIN-LIVE-22`)
 
 - **What changed**:

@@ -6,6 +6,7 @@ import { SealedTable } from "@/components/week8/sealed-table";
 import { CardStaleNotice } from "@/components/week8/card-stale-notice";
 import { cardFreshness } from "@/lib/week8/card-freshness";
 import type { SealedBoard } from "@/lib/week8/types";
+import { PUBLIC_RECORD_COUNTS, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 
 const card = board as unknown as SealedBoard;
 
@@ -13,7 +14,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: { absolute: "NFL Player Props | Galaxy Sports Edge" },
-  description: "Official verified record 47-19-1 (71.2% · +24.92u (with gated props)). Locked player props and the 360-degree watchlist from the sealed card.",
+  description: `Official settled record ${PUBLIC_RECORD_COUNTS}, recomputed from the settlement database. Locked player props and the 360-degree watchlist from the sealed card.`,
 };
 
 export default function PropsPage(): JSX.Element {
@@ -41,7 +42,7 @@ export default function PropsPage(): JSX.Element {
     <div className="min-h-screen bg-[#08090C] text-[#EDE8E0]">
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">47-19-1 (71.2% · +24.92u (with gated props))</p>
+        <p className="text-xs uppercase tracking-[0.16em] text-[#FF4D2E]">{PUBLIC_RECORD_LINE}</p>
         <h1 className="mt-3 font-display text-5xl uppercase sm:text-7xl">Locked props</h1>
         <div className="mt-10">
           <SealedTable rows={props} freeLimit={2} />
