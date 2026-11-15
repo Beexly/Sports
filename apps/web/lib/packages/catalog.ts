@@ -87,7 +87,7 @@ export const WEEK8_GAME_DAY_CATALOG_METADATA = {
     withGatedPropsUnits: "+24.92u",
     supersededPriorSnapshotNote:
       "47-19-1 (+24.92u) is the audited snapshot published 2026-11-02, superseded by the recomputed ledger at /record after the Nov 13 settlement drain. Historical anchor only.",
-    voidedBatchNote: "Nov 5 historical Week 8 batch voided after Nov 5 engine failure — never a standing record",
+    voidedBatchNote: "Nov 5 historical Week 8 batch voided after Nov 5 engine failure - never a standing record",
   },
   standingRosterRuling: {
     genoSmithTeam: "NYJ",
@@ -123,9 +123,9 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     id: "tnf-all-in-pack",
     slug: "tnf-all-in-pack",
     title: "Week 10 Standalone Primetime Game Pack (Closed Window)",
-    subtitle: "Window Closed — Pivot to Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL)",
+    subtitle: "Window Closed - Pivot to Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL)",
     description:
-      "This standalone primetime window (Jacksonville @ Baltimore) is closed and archived. Explore our active Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) packages below. The verified record is recomputed from the settlement database and lives at /record.",
+      "This standalone primetime window (Washington @ NY Giants) is closed and archived. Explore our active Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & Monday Night Football (LAC @ BAL) packages below. The verified record is recomputed from the settlement database and lives at /record.",
     windowSlot: "TNF",
     standardPriceCents: 1900,
     creditBackPriceCents: null,
@@ -134,7 +134,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
     stripeLookupKey: "gse-pack-tnf-all-in",
     gamesCount: 1,
     highlights: [
-      "Standalone Primetime Window Closed — See Active Week 10 Sunday Main Slate & MNF Packs Below",
+      "Standalone Primetime Window Closed - See Active Week 10 Sunday Main Slate & MNF Packs Below",
     ],
     badge: "CLOSED WINDOW · ARCHIVED",
     includesProps: true,
@@ -161,7 +161,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "1Q / 1H / 2Q Opening Script Derivatives + Team Total Over/Under Calls",
       "Kicking & Special Teams Suite: Red-Zone Stall Field Goals Made Over 1.5 Reads",
     ],
-    badge: "WEEK 10 SUN–MON · BEST BETS, 1Q/1H & KICKING",
+    badge: "WEEK 10 SUN-MON · BEST BETS, 1Q/1H & KICKING",
     includesProps: true,
     includesSgp: false,
     includesDfs: false,
@@ -237,7 +237,7 @@ export const LIVE_PACKAGE_CATALOG: readonly PickPackageOffering[] = [
       "Every Pack Included: Main Lines, Skill/QB Props, Defense/IDP, Anytime TD, SGPs & Kicking/1Q/1H Derivatives",
       "Full RedZone DFS Included: 2 Sunday Optimal Lineups + 14-Player Core + SNF/MNF Primetime Builds",
     ],
-    badge: "WEEK 10 ALL-ACCESS VIP · SUN–MON + DFS",
+    badge: "WEEK 10 ALL-ACCESS VIP · SUN-MON + DFS",
     includesProps: true,
     includesSgp: true,
     includesDfs: true,
@@ -324,7 +324,7 @@ export const WEEK8_SPECIALTY_PACK_TIERS: readonly SpecialtyPackTier[] = [
     highlights: [
       "Includes Full Week 10 Sunday Main Slate (NE @ DET, KC @ ATL, HOU @ CLE) & MNF (LAC @ BAL) Correlated SGP Card",
       "Cross-Game High-Conviction Anchor Parlay Baskets (Pairing 86/100 & 85/100 Reads)",
-      "Zero Conflicting Legs — Every Ticket Built Around Matching Offensive & Defensive Game Scripts",
+      "Zero Conflicting Legs - Every Ticket Built Around Matching Offensive & Defensive Game Scripts",
     ],
     badge: "PARLAY & SGP PACK · $29",
     includesProps: true,

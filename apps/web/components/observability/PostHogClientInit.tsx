@@ -58,8 +58,6 @@ export function PostHogClientInit(): null {
         }
 
         identifyPostHogUser(user.id, {
-          email: user.email ?? undefined,
-          name: user.name ?? undefined,
           role: user.role ?? undefined,
         });
         sessionStorage.setItem(identityStorageKey, user.id);

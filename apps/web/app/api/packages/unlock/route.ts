@@ -76,12 +76,17 @@ export async function GET(req: Request) {
     });
 
     if (effectiveSessionId) {
+      const isProd = process.env.NODE_ENV === "production";
       res.cookies.set(`gse_unlock_${pkg.slug}`, effectiveSessionId, {
+        httpOnly: true,
+        secure: isProd,
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",
       });
       res.cookies.set("gse_unlock_global", effectiveSessionId, {
+        httpOnly: true,
+        secure: isProd,
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",
@@ -91,7 +96,7 @@ export async function GET(req: Request) {
     return res;
   } catch (error) {
     return NextResponse.json(
-      { unlocked: false, error: error instanceof Error ? error.message : "Internal server error" },
+      { unlocked: false, error: "Internal server error" },
       { status: 500 },
     );
   }

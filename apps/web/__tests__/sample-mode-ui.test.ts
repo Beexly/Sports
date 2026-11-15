@@ -66,20 +66,13 @@ describe("Sample-mode UI contracts", () => {
     expect(passes).toMatch(/passes: \[\]/);
   });
 
-  it("/picks is a static sealed card with no demo banner - the seal digest is its provenance", () => {
+  it("/picks renders DoctrineBoardView + verifiedLedger with no demo/sample banner", () => {
     const src = read("app/picks/page.tsx");
-    // REPOINT (2026-11-04): /picks is the static sealed Week 8 locked
-    // board. It has no demo mode and renders no sample data, so a
-    // sample-data banner would be a lie about what the surface is. The
-    // honesty invariant that banner used to carry (sample data must never
-    // be mistaken for live data) is preserved structurally: the page
-    // reads ONLY the sealed card and renders the seal digest as its
-    // provenance. The dashboard banner test below still covers the one
-    // surface that does render sample data.
     expect(src).not.toMatch(/sample-data-banner-picks/);
     expect(src).not.toMatch(/isDemoPicksEnabled/);
-    expect(src).toContain("sealed-board.json");
-    expect(src).toMatch(/Publish-allowed sealed card|seal/);
+    expect(src).toContain("loadDoctrineBoard");
+    expect(src).toContain("DoctrineBoardView");
+    expect(src).toContain('data-testid="verified-record-strip"');
   });
 
   it("/cockpit shows a today's-picks pill that flags sample mode", () => {

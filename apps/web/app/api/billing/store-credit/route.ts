@@ -15,6 +15,7 @@
  * Nothing is ever faked: no mint is reported unless it is persisted.
  */
 
+import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { settlePack } from "@/lib/billing/store-credit-ledger";
@@ -44,7 +45,10 @@ function authorized(req: Request): boolean {
   const secret = process.env["CRON_SECRET"]?.trim() ?? "";
   if (!secret) return false;
   const header = req.headers.get("authorization") ?? "";
-  return header === `Bearer ${secret}`;
+  const expected = `Bearer ${secret}`;
+  const a = Buffer.from(header, "utf8");
+  const b = Buffer.from(expected, "utf8");
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 
 function unconfigured(): NextResponse {
@@ -90,8 +94,9 @@ export async function POST(req: Request): Promise<NextResponse> {
     const result = await settlePack(parsed.data, new PrismaStoreCreditStore());
     return NextResponse.json({ ok: true, ...result });
   } catch (error) {
+    console.error("[store-credit] POST settlement failed:", error);
     return NextResponse.json(
-      { ok: false, reason: "settlement_failed", detail: String(error) },
+      { ok: false, reason: "settlement_failed" },
       { status: 500 },
     );
   }
@@ -117,6 +122,14 @@ export async function GET(req: Request): Promise<NextResponse> {
       { status: 503 },
     );
   }
-  const record = await new PrismaStoreCreditStore().getMint(purchaseId, slateKey);
-  return NextResponse.json({ ok: true, record });
+  try {
+    const record = await new PrismaStoreCreditStore().getMint(purchaseId, slateKey);
+    return NextResponse.json({ ok: true, record });
+  } catch (error) {
+    console.error("[store-credit] GET lookup failed:", error);
+    return NextResponse.json(
+      { ok: false, reason: "store_credit_lookup_failed" },
+      { status: 500 },
+    );
+  }
 }

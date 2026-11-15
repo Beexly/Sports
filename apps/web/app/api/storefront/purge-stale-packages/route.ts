@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { authorizeOperator } from "@/lib/storefront/operator-auth";
+import { activeSlateWeek, priorWeekMatchers, slateWeekToken } from "@/lib/storefront/slate-week";
 
 export const dynamic = "force-dynamic";
 
@@ -32,35 +33,35 @@ export async function POST(request?: Request) {
   }
 
   try {
-    // 1. Archive stale prior-week promotions/packages (Week 8 and Week 9) so the
-    // active storefront table carries only the current slate.
+    // The active week comes from the catalogue, not from this file. Prior
+    // weeks (the two behind it) are what the storefront can leave behind.
+    const activeWeek = activeSlateWeek();
+    const priorWeeks = [activeWeek - 2, activeWeek - 1];
+    const priorMatchers = priorWeeks.map(priorWeekMatchers);
+    const promotionFilters = priorMatchers.flatMap((m) => [
+      ...m.slugs.map((slug) => ({ slug: { contains: slug } })),
+      ...m.headlines.map((headline) => ({ headline: { contains: headline } })),
+    ]);
+    const taskFilters = priorMatchers.flatMap((m) =>
+      m.headlines.map((title) => ({ title: { contains: title } }))
+    );
+
+    // 1. Archive stale prior-week promotions/packages so the active storefront
+    // table carries only the current slate.
     const promotionPurgeResult = await db.promotion.updateMany({
-      where: {
-        OR: [
-          { slug: { contains: "week-8" } },
-          { slug: { contains: "week-9" } },
-          { slug: { contains: "WEEK_08" } },
-          { slug: { contains: "WEEK_09" } },
-          { headline: { contains: "Week 8" } },
-          { headline: { contains: "Week 9" } },
-        ],
-      },
+      where: { OR: promotionFilters },
       data: {
         status: "ARCHIVED",
-        offerSummary:
-          "Archived historical prior-week package — shifted cleanly to the upcoming active Week 10 slate.",
+        offerSummary: `Archived historical prior-week package - shifted cleanly to the upcoming active Week ${activeWeek} slate.`,
       },
     });
 
-    // 2. Archive hardcoded stale prior-week tasks across operator cockpit tables
+    // 2. Archive stale prior-week tasks across operator cockpit tables
     const dashboardFixResult = await db.cockpitTask.updateMany({
-      where: {
-        OR: [{ title: { contains: "Week 8" } }, { title: { contains: "Week 9" } }],
-      },
+      where: { OR: taskFilters },
       data: {
         status: "ARCHIVED",
-        decisionNotes:
-          "Purged automatically via storefront recovery layer execution script (WEEK_10_LIVE).",
+        decisionNotes: `Purged automatically via storefront recovery layer execution script (${slateWeekToken(activeWeek)}).`,
       },
     });
 
@@ -71,7 +72,7 @@ export async function POST(request?: Request) {
         remediations: {
           stale_packages_deactivated: promotionPurgeResult.count,
           cockpit_records_archived: dashboardFixResult.count,
-          active_slate_target: "WEEK_10_LIVE",
+          active_slate_target: slateWeekToken(activeWeek),
         },
       },
       { status: 200 }

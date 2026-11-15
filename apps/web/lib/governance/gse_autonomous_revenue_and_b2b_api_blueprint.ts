@@ -1,6 +1,6 @@
 /**
- * Galaxy Sports Edge (`galaxysportsedge.com` — Galaxy Sports Network LLC)
- * & Galaxy Science Institute (TX SOS #15043440630001 501(c)(3) Revision Track)
+ * Galaxy Sports Edge (`galaxysportsedge.com` - Galaxy Sports Network LLC)
+ * B2B Analytics & Commercial API Blueprint
  * ============================================================================
  * File: gse_autonomous_revenue_and_b2b_api_blueprint.ts
  * Date: 2026-11-13
@@ -25,9 +25,8 @@
  *               (`gse-dfs-pool-preview` feature flag live at 100% in PostHog `516325`)
  *   - Stream 4: OpenRouter `Stealth-Skeleton` B2B Quantitative Reasoning API + x402 USDC / Stripe Metered
  *               Developer API (`packages/stats-api` & `packages/mcp-equations-server`)
- *   - Stream 5: Dual-Use Commercial SBIR/STTR & Defense Telemetry Licensing (`NSF SBIR Phase I $305k`,
- *               `DoD MTEC 26-04` commercial performer track, `NFL Big Data Bowl $100k`) under
- *               `Galaxy Sports Network LLC` while GSI clears its TX SOS `#15043440630001` 501(c)(3) revision.
+ *   - Stream 5: Commercial Analytics API & Telemetry Licensing (`NSF SBIR Phase I $305k`,
+ *               `NFL Big Data Bowl $100k`) under `Galaxy Sports Network LLC`.
  */
 
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
@@ -45,8 +44,7 @@ export const PUBLIC_LEDGER_LINE =
 export const POSTHOG_PROJECT_ID = 516325 as const;
 export const POSTHOG_DFS_PREVIEW_FLAG = "gse-dfs-pool-preview" as const;
 export const BASE_MAINNET_EAS_CONTRACT = "0x4200000000000000000000000000000000000021" as const;
-export const GSI_TX_SOS_FILING_NUMBER = "15043440630001" as const;
-export const HCB_FISCAL_SPONSOR_EIN = "81-2908499" as const;
+export const COMMERCIAL_ENTITY_FILING_SCOPE = "COMMERCIAL_SBC_PRIME" as const;
 
 export function atOrThrow<T>(items: readonly T[], index: number, context: string): T {
   const item = items[index];
@@ -837,93 +835,47 @@ export class B2BMeteredApiAndOpenRouterGateway {
 }
 
 // ============================================================================
-// STREAM 5: DUAL-USE COMMERCIAL SBIR/STTR, DEFENSE TELEMETRY & PRIZE ROUTER
-//           WHILE GSI CLEARS TX SOS `#15043440630001` 501(c)(3) REVISION
+// STREAM 5: COMMERCIAL ANALYTICS & OPEN RESEARCH PRIZE ROUTER (GSN LLC PRIME)
 // ============================================================================
 
 export type NonDilutiveTrackId =
   | "nsf_sbir_phase1_305k"
-  | "dod_mtec_26_04_ota_7m"
-  | "nfl_big_data_bowl_100k"
-  | "arpa_h_precise_paradigm_9_3m"
-  | "gsi_nonprofit_restricted_filings_hold";
+  | "nfl_big_data_bowl_100k";
 
 export interface DualUseTrackPackage {
   readonly trackId: NonDilutiveTrackId;
   readonly title: string;
-  readonly primeApplicantEntity: typeof COMMERCIAL_LEGAL_ENTITY | "Galaxy Science Institute";
+  readonly primeApplicantEntity: typeof COMMERCIAL_LEGAL_ENTITY;
   readonly targetAwardUsd: number;
   readonly statutoryOrContestAuthority: string;
-  readonly gsiTxSosDependencyStatus:
-    | "UNBLOCKED_COMMERCIAL_SBC_PRIME"
-    | "HELD_UNTIL_TX_SOS_15043440630001_501C3_CLEARED_OR_HCB_81_2908499_SPONSORED";
+  readonly commercialEligibilityStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME";
   readonly dataRightsRetention:
-    | "SBIR_DATA_RIGHTS_20YR_100PCT_GSE_GSI"
-    | "OPEN_COMPETITION_REPRODUCIBLE_CODE"
-    | "501C3_PUBLIC_CHARITY_GRANT";
+    | "SBIR_DATA_RIGHTS_20YR_100PCT_GSE"
+    | "OPEN_COMPETITION_REPRODUCIBLE_CODE";
   readonly submissionGate: ActionGovernanceGateResult;
 }
 
-export function buildStream5DualUseCapitalPackages(
-  gsiTxSosRevisionCleared: boolean = false,
-): readonly DualUseTrackPackage[] {
+export function buildStream5DualUseCapitalPackages(): readonly DualUseTrackPackage[] {
   return [
     {
       trackId: "nsf_sbir_phase1_305k",
-      title: "NSF SBIR Phase I ($305k) — Bitemporal Viscoelastic & Rough-Path Telemetry Kernel",
+      title: "NSF SBIR Phase I ($305k) - Bitemporal Viscoelastic & Rough-Path Telemetry Kernel",
       primeApplicantEntity: COMMERCIAL_LEGAL_ENTITY,
       targetAwardUsd: 305_000,
       statutoryOrContestAuthority: "15 U.S.C. § 638 (For-Profit SBC Prime: Galaxy Sports Network LLC)",
-      gsiTxSosDependencyStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
-      dataRightsRetention: "SBIR_DATA_RIGHTS_20YR_100PCT_GSE_GSI",
+      commercialEligibilityStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
+      dataRightsRetention: "SBIR_DATA_RIGHTS_20YR_100PCT_GSE",
       submissionGate: enforceAutonomousBoundary("submit", "nsf-sbir-phase1-305k-gsn-llc"),
     },
     {
-      trackId: "dod_mtec_26_04_ota_7m",
-      title: "DoD / DHA MTEC-26-04 Commercial Performer Track — WHIM/Prony Blast & Blunt TBI Telemetry",
-      primeApplicantEntity: COMMERCIAL_LEGAL_ENTITY,
-      targetAwardUsd: 7_000_000,
-      statutoryOrContestAuthority: "10 U.S.C. § 4022 Prototype OTA (W81XWH-15-9-0001; Commercial NTDC Prime + <=30% TRC4 Sub)",
-      gsiTxSosDependencyStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
-      dataRightsRetention: "SBIR_DATA_RIGHTS_20YR_100PCT_GSE_GSI",
-      submissionGate: enforceAutonomousBoundary("submit", "dod-mtec-26-04-gsn-llc"),
-    },
-    {
       trackId: "nfl_big_data_bowl_100k",
-      title: "NFL Big Data Bowl ($100k Kaggle Track) — Bitemporal SkeleTrack v2 & Coverage Separation",
+      title: "NFL Big Data Bowl ($100k Kaggle Track) - Bitemporal SkeleTrack v2 & Coverage Separation",
       primeApplicantEntity: COMMERCIAL_LEGAL_ENTITY,
       targetAwardUsd: 100_000,
       statutoryOrContestAuthority: "NFL Football Operations / Kaggle Competition (mu=close CRPS <= 7.099 & Zero Lookahead)",
-      gsiTxSosDependencyStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
+      commercialEligibilityStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
       dataRightsRetention: "OPEN_COMPETITION_REPRODUCIBLE_CODE",
       submissionGate: enforceAutonomousBoundary("submit", "nfl-bdb-100k-kaggle"),
-    },
-    {
-      trackId: "arpa_h_precise_paradigm_9_3m",
-      title: "ARPA-H Open BAA / PRECISE-AI & PARADIGM ($125k Day-15 Payable Milestone 1A)",
-      primeApplicantEntity: COMMERCIAL_LEGAL_ENTITY,
-      targetAwardUsd: 9_300_000,
-      statutoryOrContestAuthority: "42 U.S.C. § 290c Other Transaction Authority (ARPA-H-SOL-24-104 / 25-113)",
-      gsiTxSosDependencyStatus: "UNBLOCKED_COMMERCIAL_SBC_PRIME",
-      dataRightsRetention: "SBIR_DATA_RIGHTS_20YR_100PCT_GSE_GSI",
-      submissionGate: enforceAutonomousBoundary("submit", "arpa-h-9-3m-gsn-llc"),
-    },
-    {
-      trackId: "gsi_nonprofit_restricted_filings_hold",
-      title: `Galaxy Science Institute Direct 501(c)(3) Research Grants (TX SOS #${GSI_TX_SOS_FILING_NUMBER})`,
-      primeApplicantEntity: "Galaxy Science Institute",
-      targetAwardUsd: 250_000,
-      statutoryOrContestAuthority: gsiTxSosRevisionCleared
-        ? `Direct 501(c)(3) Public Charity (TX SOS #${GSI_TX_SOS_FILING_NUMBER} Cleared)`
-        : `Held pending TX SOS #${GSI_TX_SOS_FILING_NUMBER} 501(c)(3) revision (or routed via HCB EIN ${HCB_FISCAL_SPONSOR_EIN})`,
-      gsiTxSosDependencyStatus: gsiTxSosRevisionCleared
-        ? "UNBLOCKED_COMMERCIAL_SBC_PRIME"
-        : "HELD_UNTIL_TX_SOS_15043440630001_501C3_CLEARED_OR_HCB_81_2908499_SPONSORED",
-      dataRightsRetention: "501C3_PUBLIC_CHARITY_GRANT",
-      submissionGate: enforceAutonomousBoundary(
-        gsiTxSosRevisionCleared ? "submit" : "draft",
-        `gsi-tx-sos-${GSI_TX_SOS_FILING_NUMBER}`,
-      ),
     },
   ];
 }

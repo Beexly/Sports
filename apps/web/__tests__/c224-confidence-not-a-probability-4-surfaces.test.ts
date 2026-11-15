@@ -66,9 +66,9 @@ describe("C-224: app/board/page.tsx", () => {
     expect(src).not.toMatch(/decidedWinRateLabel/);
     expect(src).not.toMatch(/headlineClopperPearsonLow/);
     expect(src).not.toMatch(/calibration\.population/);
-    expect(src).toContain('data-testid="under-construction-notice"');
+    expect(src).toContain("loadDoctrineBoard");
     expect(src).toContain('href="/packages"');
-    expect(src).toContain('href="/fantasy/dfs"');
+    expect(src).toContain('href="/record"');
   });
 });
 
@@ -98,23 +98,12 @@ describe("C-224: app/fable/proof-dashboard.tsx", () => {
 describe("C-224: app/glass-ledger/page.tsx", () => {
   const src = read("app/glass-ledger/page.tsx");
 
-  it("no longer renders a Brier score tile or 'predicted vs settled' framing", () => {
+  it("retires /glass-ledger cleanly to /picks so no second Brier/confidence surface drifts", () => {
+    expect(src).toMatch(/redirect\(["']\/picks["']\)/);
     expect(src).not.toMatch(/Brier score/);
     expect(src).not.toMatch(/calibration\?\.brierScore/);
-  });
-
-  it("the bucket table's predicted-vs-observed column is removed, not relabelled (Devin finding, PR #737)", () => {
-    // A first pass relabelled the "Predicted" column "Edge level" — Devin
-    // Review correctly flagged that a side-by-side column next to Observed
-    // still reads as a predicted-vs-actual table structurally, whatever the
-    // header says. Dropped instead of relabelled.
     expect(src).not.toMatch(/>\s*Predicted\s*</);
     expect(src).not.toMatch(/Edge level/);
     expect(src).not.toMatch(/bucket\.predicted/);
-  });
-
-  it("intro copy reads as a separation claim, not a calibration/probability claim", () => {
-    expect(src).toMatch(/leads with separation/);
-    expect(src).not.toMatch(/how well confidence numbers\s*\n?\s*matched reality/);
   });
 });

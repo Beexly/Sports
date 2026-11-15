@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: { absolute: "NFL Picks | Galaxy Sports Edge" },
   description:
-    "Official plays with confidence out of 100, transparent passes with reasons, and a verified record recomputed from the settlement database. No hardcoded win rates.",
+    "Official plays with confidence out of 100, transparent passes with reasons, and a verified record recomputed from the settlement database. No hardcoded win-rate claims.",
   alternates: { canonical: "/picks" },
 };
 
@@ -52,7 +52,7 @@ export default async function PicksPage(): Promise<JSX.Element> {
               <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
                 Official settled record · recomputed from the database
               </div>
-              <div className="mt-1 font-display text-3xl text-emerald-300">
+              <div className="mt-1 font-display text-3xl text-verify">
                 {formatWlp(ledger.official.wlp)}{" "}
                 <span className="text-xl text-ion-1">{formatUnits(ledger.official.units.total)}</span>
               </div>

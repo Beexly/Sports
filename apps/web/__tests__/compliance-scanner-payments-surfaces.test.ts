@@ -22,6 +22,7 @@ const webRoot = resolve(__dirname, "..");
 
 const PAYMENTS_PAGES = [
   "app/pricing/page.tsx",
+  "app/packages/page.tsx",
   "app/clv/page.tsx",
   "app/methodology/page.tsx",
   "app/dashboard/page.tsx",
@@ -145,17 +146,17 @@ describe("payments surfaces — live page source", () => {
     });
   }
 
-  it("pricing copy still contains underwriting tokens the layer is meant to see", () => {
-    const source = readPage("app/pricing/page.tsx");
-    const flags = scanPaymentsSurfaceCopy(extractDetectableCopy(source));
-    const ids = flags.map((flag) => flag.id);
-    // L4-WAGERING was originally asserted here too, but the pricing page has
-    // never carried the word "wager" in any commit (git -S confirms) - its
-    // detectable copy avoids processor-coded gambling language on purpose,
-    // which is what the L4 layer recommends. The wagering canary therefore
-    // lives on the legal pages below, where that vocabulary genuinely appears.
-    expect(ids).toContain("L4-BETTING-AS-PRODUCT");
-    expect(ids).toContain("L4-PARLAY");
+  it("the paid storefront still carries the underwriting tokens the layer is meant to see", () => {
+    // The one-time storefront moved to /packages; /pricing is a catalog
+    // mirror. WP5 /packages deliberately avoids "betting" while still carrying
+    // product-level "parlays", and /pricing still carries "bets" vocabulary.
+    const packagesSource = readPage("app/packages/page.tsx");
+    const packagesFlags = scanPaymentsSurfaceCopy(extractDetectableCopy(packagesSource));
+    expect(packagesFlags.map((flag) => flag.id)).toContain("L4-PARLAY");
+
+    const pricingSource = readPage("app/pricing/page.tsx");
+    const pricingFlags = scanPaymentsSurfaceCopy(extractDetectableCopy(pricingSource));
+    expect(pricingFlags.map((flag) => flag.id)).toContain("L4-BET-VOCAB");
   });
 
   it("terms copy still contains wager vocabulary the layer is meant to see", () => {

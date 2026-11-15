@@ -201,16 +201,16 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header & Title Section (title <= 60 chars) */}
-        <div className="rounded-2xl border-2 border-slate-800 bg-slate-900/90 p-6 sm:p-10 shadow-2xl">
+        <div className="rounded-2xl border-2 border-mineral bg-obsidian/90 p-6 sm:p-10 shadow-2xl">
           <div className="flex flex-col gap-4">
-            <span className="inline-block w-fit rounded-md bg-amber-500/20 border border-amber-400/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-300">
+            <span className="inline-block w-fit rounded-md bg-caution/20 border border-caution/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-caution">
               OPERATOR RESOURCES &amp; DESK STACK
             </span>
             <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
               Pro Card Supplies &amp; Operator Resources
             </h1>
             {/* One-sentence answer paragraph at top per §1E / W-72 */}
-            <p className="text-base sm:text-lg leading-relaxed text-slate-200">
+            <p className="text-base sm:text-lg leading-relaxed text-ion">
               A curated reference guide of tournament-grade grading supplies, vault cases, live breaking studio gear, and quantitative study tools used by Galaxy Sports Edge operators.
             </p>
           </div>
@@ -218,7 +218,7 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
           {/* Prominent Affiliate Disclosure Banner per Rule R4 / §4.3 */}
           <div
             id="affiliate-disclosure"
-            className="mt-6 rounded-xl border border-amber-500/30 bg-amber-950/40 p-4 text-xs sm:text-sm text-amber-200/90"
+            className="mt-6 rounded-xl border border-caution/30 bg-caution/40 p-4 text-xs sm:text-sm text-caution/90"
           >
             <p className="font-medium">
               Disclosure (#affiliate): As an Amazon Associate (tag: galaxysportse-20), Galaxy Sports Edge earns from qualifying purchases at no additional cost to you.
@@ -232,14 +232,14 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
             const items = CARD_SUPPLY_ITEMS.filter((item) => item.category === category);
             return (
               <section key={category} className="space-y-6" aria-labelledby={`cat-${category.replace(/\s+/g, "-")}`}>
-                <div className="border-b border-slate-800 pb-3">
+                <div className="border-b border-mineral pb-3">
                   <h2
                     id={`cat-${category.replace(/\s+/g, "-")}`}
                     className="text-2xl font-bold tracking-tight text-white"
                   >
                     {category}
                   </h2>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <p className="mt-1 text-sm text-ion-1">
                     Field-tested gear and verified specs for professional collectors and operators.
                   </p>
                 </div>
@@ -250,28 +250,28 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
                     return (
                       <div
                         key={item.name}
-                        className="flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900/60 p-5 hover:border-slate-700 transition-colors"
+                        className="flex flex-col justify-between rounded-xl border border-mineral bg-obsidian/60 p-5 hover:border-ion-2 transition-colors"
                       >
                         <div>
                           <div className="flex items-center justify-between gap-2">
-                            <span className="rounded bg-slate-800 px-2 py-0.5 text-[11px] font-semibold text-slate-300">
+                            <span className="rounded bg-titanium px-2 py-0.5 text-[11px] font-semibold text-ion-2">
                               {item.recommendedUse}
                             </span>
                           </div>
                           <h3 className="mt-3 text-lg font-semibold text-white">
                             {item.name}
                           </h3>
-                          <p className="mt-2 text-sm text-slate-300 leading-relaxed">
+                          <p className="mt-2 text-sm text-ion-2 leading-relaxed">
                             {item.description}
                           </p>
                         </div>
 
-                        <div className="mt-6 pt-4 border-t border-slate-800/80">
+                        <div className="mt-6 pt-4 border-t border-mineral/80">
                           <a
                             href={amazonUrl}
                             target="_blank"
                             rel="noopener noreferrer sponsored"
-                            className="inline-flex w-full items-center justify-center rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 text-sm font-semibold text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 transition-colors"
+                            className="inline-flex w-full items-center justify-center rounded-lg border border-caution/40 bg-caution/10 px-4 py-2.5 text-sm font-semibold text-caution hover:bg-caution/20 hover:border-caution transition-colors"
                           >
                             Check Price on Amazon &rarr;
                           </a>
@@ -286,23 +286,23 @@ export default function ResourcesCardSuppliesPage(): JSX.Element {
         </div>
 
         {/* CTA section with >= 2 internal links to /packages and /fantasy/dfs */}
-        <div className="mt-16 rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 to-slate-950 p-8 text-center sm:p-12 shadow-xl">
+        <div className="mt-16 rounded-2xl border border-mineral bg-gradient-to-r from-eclipse to-obsidian p-8 text-center sm:p-12 shadow-xl">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
             Power Your Game Day Preparation
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-300">
+          <p className="mx-auto mt-3 max-w-2xl text-base text-ion-2">
             Combine verified operator hardware with institutional-grade football intelligence and mathematical simulation engines.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/packages"
-              className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-6 py-3 text-sm font-bold text-slate-950 hover:bg-amber-400 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg bg-caution px-6 py-3 text-sm font-bold text-obsidian hover:bg-caution transition-colors"
             >
               Galaxy Picks Storefront &rarr;
             </Link>
             <Link
               href="/fantasy/dfs"
-              className="inline-flex items-center justify-center rounded-lg border-2 border-slate-700 bg-slate-800 px-6 py-3 text-sm font-bold text-white hover:border-amber-400 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border-2 border-mineral-hi bg-titanium px-6 py-3 text-sm font-bold text-white hover:border-caution transition-colors"
             >
               DFS Lineup Builder &rarr;
             </Link>

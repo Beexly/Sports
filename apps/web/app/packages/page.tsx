@@ -9,6 +9,7 @@ import {
   singleSlateCheckoutAvailability,
   membershipCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 import { getStage5GateStatus } from "@/lib/packages/stage5-gate";
 import { SingleSlateCard, MembershipPlans } from "./_components/two-door-checkout";
 
@@ -194,6 +195,48 @@ export default async function PackagesPage(): Promise<JSX.Element> {
                   />
                 );
               })}
+            </div>
+
+            <div className="mt-10 border-t border-mineral pt-8">
+              <p className={`${eyebrow} text-ion-2`}>Slate Package Directory</p>
+              <h3 className="mt-2 font-display text-2xl text-ion-white">
+                All Active Single-Slate &amp; Derivative Packages
+              </h3>
+              <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {LIVE_PACKAGE_CATALOG.map((pkg) => {
+                  const formattedPrice = `$${(pkg.standardPriceCents / 100).toFixed(2).replace(/\.00$/, "")}`;
+                  return (
+                    <article
+                      key={pkg.slug}
+                      id={pkg.slug}
+                      className="flex flex-col justify-between border border-mineral bg-eclipse p-5"
+                    >
+                      <div>
+                        <p className="font-numerals text-[10px] uppercase tracking-[0.18em] text-plasma">
+                          {pkg.badge}
+                        </p>
+                        <h4 className="mt-2 font-display text-lg text-ion-white">
+                          {pkg.title}
+                        </h4>
+                        <p className="mt-2 text-xs leading-5 text-ion-2">
+                          {pkg.subtitle}
+                        </p>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between border-t border-mineral pt-4">
+                        <span className="font-numerals text-lg font-semibold tabular-nums text-ion-white">
+                          {formattedPrice}
+                        </span>
+                        <Link
+                          href={`/packages/${pkg.slug}`}
+                          className="border border-plasma px-3 py-1.5 font-numerals text-xs uppercase tracking-[0.14em] text-plasma transition-colors hover:bg-plasma hover:text-plasma-ink"
+                        >
+                          View Pack
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </section>
 

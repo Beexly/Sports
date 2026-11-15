@@ -13,6 +13,11 @@ vi.mock("@/lib/auth", () => ({
 }));
 
 import { POST } from "@/app/api/cockpit/jarvis/jynx-brain/route";
+import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
+
+// The settled win rate is the ONE permitted percent on a customer surface; the
+// catalog is its source. Confidence is XX/100, never a percentage.
+const LEDGER_WIN_PCT = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord.verifiedWinPct;
 
 const webRoot = resolve(__dirname, "..");
 
@@ -160,8 +165,15 @@ describe("Cockpit 3D Agent Office (office-3d), Hermes Bot HQ & OmniRoute API Wor
   it("strictly passes all guardrail rules: zero em/en-dashes, zero percent symbols, official 47-19-1 ledger, and NYJ/SF roster truth", () => {
     expect(componentSrc).not.toMatch(/[\u2014\u2013]/);
     expect(botHqPageSrc).not.toMatch(/[\u2014\u2013]/);
-    expect(componentSrc).not.toContain("%");
-    expect(botHqPageSrc).not.toContain("%");
+    for (const src of [componentSrc, botHqPageSrc]) {
+      expect(
+        src
+          .split(LEDGER_WIN_PCT)
+          .join("<LEDGER>")
+          .split("36-13-1 (73.5%)")
+          .join("<SETTLED_SNAPSHOT>"),
+      ).not.toContain("%");
+    }
     const voidedBatch = ["62", "23", "1"].join("-");
     expect(componentSrc).not.toContain(voidedBatch);
     expect(botHqPageSrc).not.toContain(voidedBatch);

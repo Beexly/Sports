@@ -1,5 +1,5 @@
 /**
- * Galaxy Sports Edge (Galaxy Sports Network LLC) — Next.js App Router SEO/JSON-LD,
+ * Galaxy Sports Edge (Galaxy Sports Network LLC) - Next.js App Router SEO/JSON-LD,
  * WCAG 2.2 Level AA/AAA Design Tokens & Accessibility Audit Helpers, and
  * PostHog US Cloud Project 516325 Executive HogQL Analytics Pack.
  *
@@ -205,7 +205,7 @@ export const PACKAGES_FAQ_ITEMS: readonly FaqQuestionAnswer[] = [
 ] as const;
 
 export const parlayMriMetadata: NextRouteMetadataShape = {
-  title: "Parlay MRI — Multi-Leg Correlation & Pricing Diagnostics | Galaxy Sports Edge",
+  title: "Parlay MRI - Multi-Leg Correlation & Pricing Diagnostics | Galaxy Sports Edge",
   description:
     "Inspect NFL multi-leg parlay correlation, shared game-environment exposure, and sample-size (n) dispersion on Galaxy Sports Edge. Every pick is on the public ledger, wins and losses.",
   alternates: {
@@ -216,7 +216,7 @@ export const parlayMriMetadata: NextRouteMetadataShape = {
     follow: true,
   },
   openGraph: {
-    title: "Parlay MRI — Multi-Leg Correlation Diagnostics | Galaxy Sports Edge",
+    title: "Parlay MRI - Multi-Leg Correlation Diagnostics | Galaxy Sports Edge",
     description:
       "Decompose NFL same-game and cross-game parlay correlation with explicit sample-size (n) parity and zero sportsbook affiliate links.",
     url: GSE_LEGAL_ENTITY.parlayMriUrl,
@@ -234,7 +234,7 @@ export const parlayMriMetadata: NextRouteMetadataShape = {
 };
 
 export const packagesMetadata: NextRouteMetadataShape = {
-  title: "NFL Access Packages & Sunday Pass — 100% Store-Credit Alignment | Galaxy Sports Edge",
+  title: "NFL Access Packages & Sunday Pass - 100% Store-Credit Alignment | Galaxy Sports Edge",
   description:
     "Compare Galaxy Sports Edge NFL Sunday Pass and seasonal analytics packages backed by contractual 100% Store-Credit Alignment. Every pick is on the public ledger, wins and losses.",
   alternates: {
@@ -245,7 +245,7 @@ export const packagesMetadata: NextRouteMetadataShape = {
     follow: true,
   },
   openGraph: {
-    title: "Galaxy Sports Edge Packages — Contractual 100% Store-Credit Alignment",
+    title: "Galaxy Sports Edge Packages - Contractual 100% Store-Credit Alignment",
     description:
       "Access Parlay MRI, NFL slate diagnostics, and DraftKings MILP pool previews from Galaxy Sports Network LLC. Losses shown as readily as wins.",
     url: GSE_LEGAL_ENTITY.packagesUrl,
@@ -314,8 +314,8 @@ export function buildSoftwareApplicationJsonLdNode(
     "@type": "SoftwareApplication",
     "@id": `${canonicalUrl}#application`,
     name: isParlayMri
-      ? "Galaxy Sports Edge — Parlay MRI"
-      : "Galaxy Sports Edge — NFL Analytics & DFS Platform",
+      ? "Galaxy Sports Edge - Parlay MRI"
+      : "Galaxy Sports Edge - NFL Analytics & DFS Platform",
     applicationCategory: "SportsApplication",
     operatingSystem: "Web",
     url: canonicalUrl,

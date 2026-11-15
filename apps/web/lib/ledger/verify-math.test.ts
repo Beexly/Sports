@@ -228,7 +228,7 @@ describe("the 200-bet calibration gate", () => {
     expect(gate.target).toBe(200);
   });
 
-  it("unlocks at exactly 200 and computes wins/(wins+losses), pushes excluded", () => {
+  it("unlocks at exactly 200 and computes won over decided, pushes excluded", () => {
     const rows = [
       ...Array.from({ length: 120 }, () => row()),
       ...Array.from({ length: 70 }, () => row({ result: "LOSS" })),

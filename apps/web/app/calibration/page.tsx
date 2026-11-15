@@ -29,7 +29,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
       <Nav />
       <main id="main-content" className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         {/* Header */}
-        <p className="eyebrow">Public settlement ledger · honest grading</p>
+        <p className="eyebrow uppercase tracking-[0.22em]">Public settlement ledger · honest grading</p>
         <h1 className="mt-4 font-display text-5xl uppercase tracking-tight sm:text-6xl">
           Calibration Proof Room
         </h1>
@@ -61,11 +61,11 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             aria-valuemax={gate.target}
             aria-label="Calibration progress"
           >
-            <div className="h-full bg-emerald-400" style={{ width: `${progressPct}%` }} />
+            <div className="h-full bg-verify" style={{ width: `${progressPct}%` }} />
           </div>
           <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ion-2">{ledger.scope.calibrationLaw}</p>
           {gate.unlocked && gate.winRate !== null ? (
-            <p className="mt-3 font-mono text-sm text-emerald-300">
+            <p className="mt-3 font-mono text-sm text-verify">
               Threshold met. Observed win rate (wins / decided): {(gate.winRate * 100).toFixed(1)}%
             </p>
           ) : (
@@ -81,7 +81,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
             <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
               Official settled sample
             </div>
-            <div className="mt-2 font-display text-4xl text-emerald-300">
+            <div className="mt-2 font-display text-4xl text-verify">
               {formatWlp(ledger.official.wlp)}
             </div>
             <div className="mt-2 text-xs text-ion-2">
@@ -125,7 +125,7 @@ export default function CalibrationProofRoomPage(): JSX.Element {
                 <div className="w-24 shrink-0 font-mono text-xs text-ion-1">{b.label} / 100</div>
                 <div className="h-5 flex-1 overflow-hidden rounded border border-mineral bg-eclipse">
                   <div
-                    className="h-full bg-emerald-400/70"
+                    className="h-full bg-verify/70"
                     style={{ width: `${Math.round((b.count / maxCount) * 100)}%` }}
                   />
                 </div>

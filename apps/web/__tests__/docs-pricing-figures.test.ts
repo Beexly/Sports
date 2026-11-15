@@ -112,6 +112,7 @@ const EXEMPT_TREES: ReadonlyArray<readonly [string, string]> = [
   // never GSE tier pricing. Rewriting them would be falsifying the record.
   ["data/snapshots/", "frozen snapshot archive  -  third-party prices captured on their date, preserved as-shipped"],
   ["data/corpus/", "dated third-party corpus captures (Instagram/X reports); dollar figures are other people's captions or vendor prices, never GSE tier pricing"],
+  ["docs/ops/antigravity-review-2026-11-13/", "dated 2026-11-13 audit review records capturing historical findings as observed then, not live pricing guidance"],
 ];
 
 /**

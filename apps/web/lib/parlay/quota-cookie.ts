@@ -23,11 +23,17 @@ export const XRAY_QUOTA_COOKIE = "pmri_xray_quota";
 export const XRAY_QUOTA_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 function cookieSecret(): string {
-  return (
-    process.env.PARLAY_MRI_COOKIE_SECRET ??
-    process.env.NEXTAUTH_SECRET ??
-    "parlay-mri-local-dev-secret"
-  );
+  const configured =
+    process.env.PARLAY_MRI_COOKIE_SECRET ?? process.env.NEXTAUTH_SECRET;
+  if (configured) {
+    return configured;
+  }
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "PARLAY_MRI_COOKIE_SECRET or NEXTAUTH_SECRET must be set in production.",
+    );
+  }
+  return "parlay-mri-local-dev-secret";
 }
 
 function hmacPayload(payload: string): string {

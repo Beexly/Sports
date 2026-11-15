@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
+import { WEEK8_GAME_DAY_CATALOG_METADATA } from "@/lib/packages/catalog";
 
 /**
  * FE-10 / FE-15 / C-107 copy contracts (plan LAUNCH_FINISH_LINE_2026-09-05
@@ -32,30 +33,34 @@ const calibration = read("app/calibration/page.tsx");
 
 const JARGON = /LIVE_BOARD|Just now|refuse-default|gate held by law|founder enable/;
 
-describe("FE-10: /board and /picks speak plainly (sealed-era design)", () => {
-  // Shipped design (founder doctrine 2026-10-29): the public web UI serves
-  // ONLY GALAXY PICKS (PAID) (/packages) and DFS (/fantasy/dfs). /board is
-  // an under-construction stub that redirects there; /picks renders the
-  // Week 8 sealed card only. Neither renders a live board, a timestamp, or
-  // ranking internals, so the pre-sealed "board is closed" copy and the
-  // timeLabel helper are gone by design — these pins assert the shipped
-  // plain-language redirect instead.
+describe("FE-10: /board and /picks speak plainly (WP5 two-doctrines design)", () => {
   it("carries none of the internal gate jargon", () => {
     expect(board).not.toMatch(JARGON);
     expect(picks).not.toMatch(JARGON);
   });
 
-  it("/board says it is under construction and points at Galaxy Picks and DFS", () => {
-    expect(board).toContain("under construction");
+  it("/board renders the two-doctrines board via loadDoctrineBoard and links /packages, /record, and /board/gate", () => {
+    expect(board).toContain("loadDoctrineBoard");
+    expect(board).toContain("DoctrineBoardView");
     expect(board).toContain('href="/packages"');
-    expect(board).toContain('href="/fantasy/dfs"');
-    expect(board).toContain('data-testid="under-construction-notice"');
+    expect(board).toContain('href="/record"');
+    expect(board).toContain('href="/board/gate"');
+    expect(board).not.toContain('data-testid="under-construction-notice"');
   });
 
-  it("/picks renders the sealed card only, in plain language", () => {
-    expect(picks).toContain("16-5");
+  it("/picks renders DoctrineBoardView + verifiedLedger in plain language with no hardcoded win rate", () => {
+    const ledger = WEEK8_GAME_DAY_CATALOG_METADATA.seasonLedgerOfRecord;
+    const ledgerSrc = read("lib/engine/engine-live-bridge.ts");
+    expect(picks).toContain("loadDoctrineBoard");
+    expect(picks).toContain("DoctrineBoardView");
+    expect(picks).toContain("verifiedLedger");
+    expect(picks).toContain('data-testid="verified-record-strip"');
     expect(picks).toContain('href="/packages"');
-    expect(picks).toMatch(/publishAllowed/);
+    expect(picks).toContain('href="/record"');
+    expect(ledgerSrc).toContain("OFFICIAL_VERIFIED_LEDGER_2026");
+    expect(ledgerSrc).toContain("verifiedLedger");
+    expect(ledgerSrc).toContain(ledger.withGatedPropsRecord);
+    expect(ledgerSrc).toContain(ledger.withGatedPropsUnits);
   });
 
   it("/board renders no timestamp and never invents 'Just now'", () => {
@@ -99,23 +104,30 @@ describe("C-107: the public calibration claim is MONEYLINE-scoped", () => {
     expect(MARKET_IMPLIED_CALIBRATION_CLAIM).toContain("Confidence is a ranking score");
   });
 
-  it("is rendered on /about from the single constant (/calibration is a stub)", () => {
+  it("is rendered on /about from the single constant; /calibration is live but keeps the claim off its page", () => {
     expect(about).toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
-    // /calibration shipped as an under-construction stub redirecting to
-    // Galaxy Picks and DFS, so it renders no calibration claim at all.
+    // /calibration shipped as an under-construction stub once, then went live
+    // as the Calibration Proof Room. The pin that matters is not the stub — it
+    // is that the MONEYLINE-scoped market-implied claim lives in exactly one
+    // place (/about, sourced from MARKET_IMPLIED_CALIBRATION_CLAIM) and the
+    // proof room never restates it in its own words.
+    expect(calibration).toContain("Calibration Proof Room");
     expect(calibration).not.toContain("MARKET_IMPLIED_CALIBRATION_CLAIM");
     expect(calibration).not.toContain('data-testid="calibration-claim-scope"');
-    expect(calibration).toContain('data-testid="under-construction-notice"');
+    expect(calibration).not.toMatch(/market-implied/i);
   });
 
-  it("/calibration renders no interactive chart and no chart-basis claim", () => {
-    // The stub renders no ProofExplorer and no confidence-bucketed chart, so
-    // there is no chart to misread as the market-implied measurement.
+  it("/calibration derives counts from verifiedLedger, links /record and /board, and renders no chart-basis claim", () => {
+    expect(calibration).toContain("verifiedLedger");
+    expect(calibration).toContain('href="/record"');
+    expect(calibration).toContain('href="/board"');
+
+    // No confidence-bucketed chart dressed up as the market-implied
+    // measurement. (The conviction-band ladder is a separate, labelled
+    // signal-path table and is allowed; a chart-basis claim is not.)
     expect(calibration).not.toContain('data-testid="calibration-chart-basis"');
     expect(calibration).not.toContain("groups settled picks by confidence score");
     expect(calibration).not.toContain("not the market-implied measurement");
-    expect(calibration).toContain('href="/packages"');
-    expect(calibration).toContain('href="/fantasy/dfs"');
   });
 
   it("no public copy still calls confidence a calibrated number", () => {

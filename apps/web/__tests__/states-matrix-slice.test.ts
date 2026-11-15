@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { LIVE_PACKAGE_CATALOG } from "@/lib/packages/catalog";
 
 /**
  * States-matrix pins (task: grandpa-simple states pass). Doctrine under test:
@@ -107,10 +108,22 @@ describe("states matrix — loading skeletons on data-heavy routes", () => {
   );
 });
 
-describe("states matrix — pricing explainer cards never render headed-but-empty", () => {
-  it("both explainer paragraphs carry static fallbacks", () => {
+describe("states matrix — pricing cards never render headed-but-empty", () => {
+  it("every storefront pack card carries a real description and highlight list", () => {
+    // The plan-explainer cards (getFeature(...).customerExplanation) retired
+    // with the monthly matrix. The remaining headed-but-empty risk on the
+    // one-time storefront is a card rendering a badge and title over an empty
+    // body, so the data the card prints must be non-empty for every pack.
     const pricing = read("app/pricing/page.tsx");
-    expect(pricing).toMatch(/getFeature\("confidence"\)\?\.customerExplanation \?\?/);
-    expect(pricing).toMatch(/getFeature\("no-bet-reasoning"\)\?\.customerExplanation \?\?/);
+    expect(pricing).toMatch(/sanitizePlainFootballText\(pkg\.description\)/);
+    expect(pricing).toMatch(/pkg\.highlights\.map/);
+    for (const pkg of LIVE_PACKAGE_CATALOG) {
+      expect(pkg.description.trim().length, `${pkg.slug} description`).toBeGreaterThan(40);
+      expect(pkg.highlights.length, `${pkg.slug} highlights`).toBeGreaterThan(0);
+      expect(
+        pkg.highlights.every((h) => h.trim().length > 0),
+        `${pkg.slug} empty highlight`,
+      ).toBe(true);
+    }
   });
 });

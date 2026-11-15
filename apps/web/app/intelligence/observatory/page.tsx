@@ -158,51 +158,51 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
     <main id="main-content" className="min-h-screen bg-black text-white px-4 py-8 md:px-12 lg:px-20 font-sans">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Header */}
-        <header className="border-b border-gray-800 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <header className="border-b border-mineral pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-mono text-xs uppercase tracking-widest text-emerald-400">
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-verify animate-pulse" />
+              <span className="font-mono text-xs uppercase tracking-widest text-verify">
                 Live Intelligence Growth Observatory
               </span>
             </div>
             <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white">
               Quad-Engine Corpus & Reasoning Velocity
             </h1>
-            <p className="mt-2 text-sm md:text-base text-gray-400 max-w-3xl">
+            <p className="mt-2 text-sm md:text-base text-ion-1 max-w-3xl">
               Continuous monitoring of knowledge ingestion across Kaggle, arXiv, OpenAlex, Hugging Face,
               and Word OMML. Tracks 4-stage router pruning and Sunday 4:00 PM CT film autopsy calibration.
             </p>
           </div>
-          <div className="text-right font-mono text-xs text-gray-500 shrink-0">
+          <div className="text-right font-mono text-xs text-ion-2 shrink-0">
             <div>Snapshot: {timestampIso.slice(0, 19).replace("T", " ")} UTC</div>
-            <div className="text-emerald-400 font-semibold mt-1">Autonomous Mode: ACTIVE</div>
+            <div className="text-verify font-semibold mt-1">Autonomous Mode: ACTIVE</div>
           </div>
         </header>
 
         {/* Autonomous Pipeline Cadence Status Banner */}
-        <section className="bg-gray-950 border border-gray-800 rounded-lg p-5 flex flex-wrap items-center justify-between gap-6">
+        <section className="bg-obsidian border border-mineral rounded-lg p-5 flex flex-wrap items-center justify-between gap-6">
           <div className="space-y-1">
-            <span className="font-mono text-xs text-gray-400 uppercase">Last Cadence Window</span>
+            <span className="font-mono text-xs text-ion-1 uppercase">Last Cadence Window</span>
             <div className="text-sm font-semibold text-white">
               {autonomousPipelineStatus.lastCadenceWindow}
             </div>
           </div>
           <div className="space-y-1">
-            <span className="font-mono text-xs text-gray-400 uppercase">Next T-48h Simulation Window</span>
-            <div className="text-sm font-semibold text-emerald-300">
+            <span className="font-mono text-xs text-ion-1 uppercase">Next T-48h Simulation Window</span>
+            <div className="text-sm font-semibold text-verify">
               {autonomousPipelineStatus.nextTMinus48hSimWindow}
             </div>
           </div>
           <div className="space-y-1">
-            <span className="font-mono text-xs text-gray-400 uppercase">Active Packages Published</span>
+            <span className="font-mono text-xs text-ion-1 uppercase">Active Packages Published</span>
             <div className="text-sm font-semibold text-white">
               {autonomousPipelineStatus.activePackagesPublished} packages
             </div>
           </div>
           <div className="space-y-1">
-            <span className="font-mono text-xs text-gray-400 uppercase">Autonomous Agent Fleet</span>
-            <div className="text-sm font-semibold text-indigo-300">
+            <span className="font-mono text-xs text-ion-1 uppercase">Autonomous Agent Fleet</span>
+            <div className="text-sm font-semibold text-ion-1">
               {autonomousPipelineStatus.activeAgentsOnline} Online (AVA, BOBBY, JARVIS, SARAH, SCOUT, TAL)
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
               1. Quad-Engine Corpus Velocity
             </h2>
-            <span className="text-xs font-mono text-gray-400 uppercase">
+            <span className="text-xs font-mono text-ion-1 uppercase">
               Ingest & Learn Standing Doctrine
             </span>
           </div>
@@ -223,20 +223,20 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
             {corpusCards.map((card, idx) => (
               <div
                 key={idx}
-                className="bg-gray-950 border border-gray-800 rounded-lg p-5 flex flex-col justify-between hover:border-gray-700 transition"
+                className="bg-obsidian border border-mineral rounded-lg p-5 flex flex-col justify-between hover:border-ion-2 transition"
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-gray-400 px-2 py-0.5 rounded bg-gray-900 border border-gray-800">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-ion-1 px-2 py-0.5 rounded bg-obsidian border border-mineral">
                       {card.tag}
                     </span>
                   </div>
                   <div className="mt-4 text-3xl font-black font-mono text-white">
                     {card.value}
                   </div>
-                  <div className="text-sm font-medium text-gray-300 mt-1">{card.title}</div>
+                  <div className="text-sm font-medium text-ion-2 mt-1">{card.title}</div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-gray-900 text-xs text-gray-500">
+                <div className="mt-4 pt-3 border-t border-mineral text-xs text-ion-2">
                   {card.subtext}
                 </div>
               </div>
@@ -251,33 +251,33 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
               <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
                 2. Four-Stage Router Funnel
               </h2>
-              <p className="text-xs md:text-sm text-gray-400 mt-1">
+              <p className="text-xs md:text-sm text-ion-1 mt-1">
                 From full theoretical corpus to millisecond-grade execution: 3,646 &rarr; 2,000 &rarr; 250 &rarr; 25
               </p>
             </div>
-            <span className="font-mono text-xs text-emerald-400">Lat &lt; 14ms</span>
+            <span className="font-mono text-xs text-verify">Lat &lt; 14ms</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {funnelSteps.map((step, idx) => (
               <div
                 key={idx}
-                className="bg-gray-950 border border-gray-800 rounded-lg p-5 relative overflow-hidden"
+                className="bg-obsidian border border-mineral rounded-lg p-5 relative overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-emerald-400">
+                  <span className="font-mono text-xs font-bold text-verify">
                     {step.stage}
                   </span>
-                  <span className="font-mono text-xs text-gray-400">{step.pct}</span>
+                  <span className="font-mono text-xs text-ion-1">{step.pct}</span>
                 </div>
                 <div className="text-2xl font-black font-mono text-white">
                   {step.count.toLocaleString()}
                 </div>
-                <div className="text-sm font-semibold text-gray-200 mt-1">{step.label}</div>
-                <p className="text-xs text-gray-500 mt-2 leading-relaxed">{step.detail}</p>
-                <div className="mt-4 w-full bg-gray-900 h-1.5 rounded-full overflow-hidden">
+                <div className="text-sm font-semibold text-ion mt-1">{step.label}</div>
+                <p className="text-xs text-ion-2 mt-2 leading-relaxed">{step.detail}</p>
+                <div className="mt-4 w-full bg-obsidian h-1.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-emerald-400 h-full rounded-full"
+                    className="bg-verify h-full rounded-full"
                     style={{
                       width: `${(step.count / routerFunnel.stageA) * 100}%`,
                     }}
@@ -295,94 +295,94 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
               <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
                 3. Sunday 4:00 PM CT Post-Game Film Autopsy
               </h2>
-              <p className="text-xs md:text-sm text-gray-400 mt-1">
+              <p className="text-xs md:text-sm text-ion-1 mt-1">
                 Decomposition of graded outcomes: our_defect vs shared_blind vs we_saw
               </p>
             </div>
-            <span className="font-mono text-xs text-gray-400">
+            <span className="font-mono text-xs text-ion-1">
               Total Graded: {postGameAutopsyStats.gamesGraded} games
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gray-950 border border-red-950/60 rounded-lg p-5">
+            <div className="bg-obsidian border border-alert/60 rounded-lg p-5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs uppercase tracking-wider text-red-400">
+                <span className="font-mono text-xs uppercase tracking-wider text-alert">
                   our_defect
                 </span>
-                <span className="font-mono text-xs text-red-300">
+                <span className="font-mono text-xs text-alert">
                   {((postGameAutopsyStats.ourDefectCount / (totalAutopsy || 1)) * 100).toFixed(1)}%
                 </span>
               </div>
-              <div className="text-3xl font-black font-mono text-red-400 mt-3">
+              <div className="text-3xl font-black font-mono text-alert mt-3">
                 {postGameAutopsyStats.ourDefectCount}
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-ion-1 mt-2">
                 Missed edge or mis-calibrated model factor. Triggers immediate auto-retrain of factor weights.
               </p>
             </div>
 
-            <div className="bg-gray-950 border border-yellow-950/60 rounded-lg p-5">
+            <div className="bg-obsidian border border-caution/60 rounded-lg p-5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs uppercase tracking-wider text-yellow-400">
+                <span className="font-mono text-xs uppercase tracking-wider text-caution">
                   shared_blind
                 </span>
-                <span className="font-mono text-xs text-yellow-300">
+                <span className="font-mono text-xs text-caution">
                   {((postGameAutopsyStats.sharedBlindCount / (totalAutopsy || 1)) * 100).toFixed(1)}%
                 </span>
               </div>
-              <div className="text-3xl font-black font-mono text-yellow-400 mt-3">
+              <div className="text-3xl font-black font-mono text-caution mt-3">
                 {postGameAutopsyStats.sharedBlindCount}
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-ion-1 mt-2">
                 Unforeseeable black-swan event (freak injury, weather disruption) where both model and Vegas closing line were blind.
               </p>
             </div>
 
-            <div className="bg-gray-950 border border-emerald-950/60 rounded-lg p-5">
+            <div className="bg-obsidian border border-verify/60 rounded-lg p-5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs uppercase tracking-wider text-emerald-400">
+                <span className="font-mono text-xs uppercase tracking-wider text-verify">
                   we_saw
                 </span>
-                <span className="font-mono text-xs text-emerald-300">
+                <span className="font-mono text-xs text-verify">
                   {((postGameAutopsyStats.weSawCount / (totalAutopsy || 1)) * 100).toFixed(1)}%
                 </span>
               </div>
-              <div className="text-3xl font-black font-mono text-emerald-400 mt-3">
+              <div className="text-3xl font-black font-mono text-verify mt-3">
                 {postGameAutopsyStats.weSawCount}
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-ion-1 mt-2">
                 Correctly exploited edge where market was inefficient or slow to adjust to news/schematics.
               </p>
             </div>
           </div>
 
           {/* Brier Score & CLV Weekly Trajectory */}
-          <div className="bg-gray-950 border border-gray-800 rounded-lg p-5 space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300 font-mono">
+          <div className="bg-obsidian border border-mineral rounded-lg p-5 space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-ion-2 font-mono">
               Calibration & CLV Trajectory Across Ingestion Weeks
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-left font-mono text-xs">
                 <thead>
-                  <tr className="border-b border-gray-800 text-gray-400">
+                  <tr className="border-b border-mineral text-ion-1">
                     <th className="py-2 px-3">Week</th>
                     <th className="py-2 px-3">Brier Score (&darr; lower is sharper)</th>
                     <th className="py-2 px-3">Mean CLV (&uarr; higher is sharper)</th>
                     <th className="py-2 px-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-900">
+                <tbody className="divide-y divide-mineral">
                   {postGameAutopsyStats.brierTrajectory.map((pt, i) => (
-                    <tr key={i} className="hover:bg-gray-900/40">
+                    <tr key={i} className="hover:bg-obsidian/40">
                       <td className="py-2.5 px-3 font-bold text-white">{pt.week}</td>
-                      <td className="py-2.5 px-3 text-emerald-300">{pt.brier.toFixed(4)}</td>
-                      <td className="py-2.5 px-3 text-indigo-300">
+                      <td className="py-2.5 px-3 text-verify">{pt.brier.toFixed(4)}</td>
+                      <td className="py-2.5 px-3 text-ion-1">
                         {pt.clvMean >= 0 ? `+${(pt.clvMean * 100).toFixed(2)}%` : `${(pt.clvMean * 100).toFixed(2)}%`}
                       </td>
-                      <td className="py-2.5 px-3 text-gray-400">
+                      <td className="py-2.5 px-3 text-ion-1">
                         {i === postGameAutopsyStats.brierTrajectory.length - 1 ? (
-                          <span className="text-emerald-400 font-bold">CURRENT PEAK</span>
+                          <span className="text-verify font-bold">CURRENT PEAK</span>
                         ) : (
                           "CALIBRATED"
                         )}
@@ -396,24 +396,24 @@ export default function IntelligenceObservatoryPage(): JSX.Element {
         </section>
 
         {/* Section 4: Live Equation Traces & Cockpit Navigation */}
-        <section className="bg-gray-950 border border-gray-800 rounded-lg p-6 space-y-4">
+        <section className="bg-obsidian border border-mineral rounded-lg p-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h3 className="text-lg font-bold text-white">Observatory & Operator Navigation</h3>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-ion-1 mt-1">
                 Access Cockpit autonomous controls, Hermes mind dashboard, or research ledgers.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/cockpit"
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-black font-semibold text-xs rounded transition"
+                className="px-4 py-2 bg-verify hover:bg-verify text-black font-semibold text-xs rounded transition"
               >
                 Launch Cockpit Console
               </Link>
               <Link
                 href="/intelligence/metrics"
-                className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-gray-300 border border-gray-700 font-semibold text-xs rounded transition"
+                className="px-4 py-2 bg-obsidian hover:bg-titanium text-ion-2 border border-mineral-hi font-semibold text-xs rounded transition"
               >
                 Metric Methodology
               </Link>

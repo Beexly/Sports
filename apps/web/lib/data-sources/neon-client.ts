@@ -17,7 +17,7 @@
  * No error message, log line, or returned object produced here may contain the
  * connection string.
  */
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import pg from "pg";
 
 /** Default Neon project (GSE main branch). Override with NEON_PROJECT_ID. */
@@ -48,11 +48,21 @@ export function resolveDatabaseUrl(): string {
   const projectId = (process.env["NEON_PROJECT_ID"] ?? DEFAULT_NEON_PROJECT_ID).trim();
   const branch = (process.env["NEON_BRANCH"] ?? DEFAULT_NEON_BRANCH).trim();
   const role = (process.env["NEON_ROLE"] ?? DEFAULT_NEON_ROLE).trim();
+  const SAFE_NEON_ARG = /^[a-zA-Z0-9_-]{1,64}$/;
+  if (!SAFE_NEON_ARG.test(branch) || !SAFE_NEON_ARG.test(projectId) || !SAFE_NEON_ARG.test(role)) {
+    throw new Error("Invalid Neon CLI identifier format.");
+  }
   try {
-    // execSync (shell) so the neonctl .cmd shim resolves on Windows.
-    const captured = execSync(
-      `neonctl connection-string ${branch} --project-id ${projectId} --role-name ${role}`,
-      { encoding: "utf8", timeout: 60_000, stdio: ["ignore", "pipe", "pipe"] },
+    // Use execFileSync with argv array and validated identifiers (Win32 uses shell for .cmd shim).
+    const captured = execFileSync(
+      "neonctl",
+      ["connection-string", branch, "--project-id", projectId, "--role-name", role],
+      {
+        encoding: "utf8",
+        timeout: 60_000,
+        stdio: ["ignore", "pipe", "pipe"],
+        shell: process.platform === "win32",
+      },
     ).trim();
     if (!isStubDatabaseUrl(captured)) return captured;
   } catch {

@@ -357,7 +357,7 @@ export function computeXrayResult(
     modelJointProb,
     modelChanceDisplay: chanceDisplay(modelJointProb),
     fairAmericanOdds,
-    fairPriceDisplay: fairAmericanOdds === null ? "—" : americanDisplay(fairAmericanOdds),
+    fairPriceDisplay: fairAmericanOdds === null ? "N/A" : americanDisplay(fairAmericanOdds),
     bookAmericanOdds: bookQuote,
     bookPriceDisplay: americanDisplay(bookQuote),
     bookImpliedProb,

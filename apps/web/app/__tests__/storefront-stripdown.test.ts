@@ -117,8 +117,8 @@ describe("storefront stripdown: copy stays clean", () => {
 });
 
 describe("storefront stripdown: surfaces render", () => {
-  it("renders HomePage with the field and the responsible close", () => {
-    const { container } = render(React.createElement(HomePage));
+  it("renders HomePage with the field and the responsible close", async () => {
+    const { container } = render(await HomePage());
 
     expect(container.querySelector('[data-testid="redline-world"]')).not.toBeNull();
     expect(
@@ -132,12 +132,13 @@ describe("storefront stripdown: surfaces render", () => {
     expect(container.querySelector('[data-testid="mock-footer"]')).not.toBeNull();
   });
 
-  it("renders PackagesPage with the Week 8 sealed board hero", () => {
-    const { container } = render(React.createElement(PackagesPage));
+  it("renders PackagesPage with the two-door storefront hero and Stage-5 gate band", async () => {
+    const { container } = render(await PackagesPage());
 
-    expect(container.textContent).toContain("GALAXY PICKS");
+    expect(container.textContent).toContain("Two doors. One standard.");
     expect(container.textContent).toContain("Choose Your Football Pack");
-    expect(container.querySelector("#slate-dossiers")).not.toBeNull();
+    expect(container.querySelector('[data-testid="stage5-gate-band"]')).not.toBeNull();
+    expect(container.querySelector("#pack-cards")).not.toBeNull();
     expect(container.querySelector('[data-testid="mock-footer"]')).not.toBeNull();
   });
 

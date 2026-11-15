@@ -18,23 +18,21 @@ import { join } from "node:path";
  */
 
 describe("board class UI honesty", () => {
-  it("parked /board page renders no board-class banner (no live board to classify)", () => {
+  it("two-doctrine /board page renders no legacy board-class banner", () => {
     const src = readFileSync(
       join(process.cwd(), "app/board/page.tsx"),
       "utf8",
     );
-    // The honesty surface of the stub is the under-construction notice.
-    expect(src).toContain('data-testid="under-construction-notice"');
-    // No live-board state may be rendered or gated on this page.
+    expect(src).toContain("loadDoctrineBoard");
+    expect(src).toContain("DoctrineBoardView");
+    // No legacy boardClass banner state may be rendered on this page.
     expect(src).not.toContain('data-testid="board-class-banner"');
     expect(src).not.toContain("boardClass.publicMessage");
     expect(src).not.toContain("refusePublicFire");
     expect(src).not.toContain("loadBoardState");
-    // The stub can never read as a live board: it names the construction
-    // state and routes to the two live surfaces.
-    expect(src).toMatch(/under construction/i);
     expect(src).toContain('href="/packages"');
-    expect(src).toContain('href="/fantasy/dfs"');
+    expect(src).toContain('href="/record"');
+    expect(src).toContain('href="/picks"');
   });
 
   it("badge surfaces boardClass state", () => {

@@ -99,9 +99,9 @@ describe("site-wide-workflow-fabric", () => {
     expect(summary.workflowReceipts.every((w) => w.contractRuling.decision === "ALLOW")).toBe(true);
   });
 
-  it("loads Wave 15 snapshot metadata cleanly via default checkCorpusCompletionBeforeSlatePrep while keeping public board fail-closed", () => {
+  it("loads Wave 21 snapshot metadata cleanly via default checkCorpusCompletionBeforeSlatePrep while keeping public board fail-closed", () => {
     const diskGate = checkCorpusCompletionBeforeSlatePrep();
-    expect(diskGate.slatePrepAllowed).toBe(false);
+    expect(diskGate.slatePrepAllowed).toBe(true);
     expect(diskGate.publicBoardPublishAllowed).toBe(false);
     expect(diskGate.internalWorkflowCorpusReady).toBe(true);
     expect(diskGate.activeCorpusSnapshot.wiredBooks).toBeGreaterThanOrEqual(1064);

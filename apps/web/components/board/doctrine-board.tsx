@@ -25,7 +25,7 @@ export function DoctrineBoardView({
           <span
             className={`inline-flex rounded-md border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${
               board.posture === "PLAYS"
-                ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
+                ? "border-verify/40 bg-verify/10 text-verify"
                 : "border-mineral bg-eclipse text-ion-1"
             }`}
             data-testid="doctrine-posture"
@@ -45,7 +45,7 @@ export function DoctrineBoardView({
       {/* Zone 1 - plays */}
       {board.zone1.length > 0 ? (
         <section className="mt-6" data-testid="zone-1-plays">
-          <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-verify">
             Zone 1 · Official plays
           </h3>
           <div className="mt-3 grid gap-3">
@@ -65,7 +65,7 @@ export function DoctrineBoardView({
                   <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
                     Confidence
                   </div>
-                  <div className="font-display text-2xl text-emerald-300" data-testid="play-confidence">
+                  <div className="font-display text-2xl text-verify" data-testid="play-confidence">
                     {row.confidenceLabel}
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export function DoctrineBoardView({
             ))}
           </div>
           {compact && board.zone2.length > 6 ? (
-            <Link href="/board" className="mt-3 inline-block font-mono text-xs text-emerald-300">
+            <Link href="/board" className="mt-3 inline-block font-mono text-xs text-verify">
               See all {board.zone2.length} passes on the board
             </Link>
           ) : null}

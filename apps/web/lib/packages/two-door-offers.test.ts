@@ -198,7 +198,7 @@ describe("catalog backward compatibility (homepage + legacy consumers)", () => {
     expect(payload.mode).toBe("payment");
     expect(payload.line_items[0].price_data.unit_amount).toBe(1900);
     const description = payload.line_items[0].price_data.product_data.description;
-    expect(description).toContain("Jacksonville");
+    expect(description).toContain("Washington");
     expect(containsBannedRecordCopy(description)).toBe(false);
   });
 });

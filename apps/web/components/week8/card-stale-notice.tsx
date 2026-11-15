@@ -26,19 +26,19 @@ export function CardStaleNotice({ ageDays, generatedAt }: { ageDays: number; gen
       <div className="mt-6 flex flex-wrap gap-4">
         <Link
           href="/slate/nfl"
-          className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-black transition-colors hover:bg-emerald-400"
+          className="rounded-xl bg-verify px-6 py-3 text-sm font-extrabold text-black transition-colors hover:bg-verify"
         >
           Live NFL slate →
         </Link>
         <Link
           href="/packages"
-          className="rounded-xl border border-white/15 px-6 py-3 text-sm font-bold text-[#EDE8E0] transition-colors hover:border-emerald-400"
+          className="rounded-xl border border-white/15 px-6 py-3 text-sm font-bold text-[#EDE8E0] transition-colors hover:border-verify"
         >
           Galaxy Picks packs →
         </Link>
         <Link
           href="/fantasy/dfs"
-          className="rounded-xl border border-white/15 px-6 py-3 text-sm font-bold text-[#EDE8E0] transition-colors hover:border-emerald-400"
+          className="rounded-xl border border-white/15 px-6 py-3 text-sm font-bold text-[#EDE8E0] transition-colors hover:border-verify"
         >
           DFS optimizer →
         </Link>

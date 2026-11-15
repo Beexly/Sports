@@ -12,7 +12,7 @@ import { sanitizePlainFootballText } from "@/lib/writeups/coach-writeup-engine";
 export const metadata: Metadata = {
   title: { absolute: "Pricing & Plans | Galaxy Sports Edge" },
   description:
-    "No monthly subscription needed right now. One-time Week 9 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
+    "No monthly subscription needed right now. One-time Week 10 NFL packs: Player Props & SGPs ($29), Sunday & MNF Best Bets ($39), RedZone Standalone DFS ($39.99), and All-Access Bundle ($49). Every settled result is recomputed from the database and published at /record.",
   alternates: { canonical: "/pricing" },
 };
 

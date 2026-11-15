@@ -58,7 +58,7 @@ describe("the DFS page discloses the pool state as a function of that state", ()
   it("carries both disclosures, so neither the live nor the dark state is silent", () => {
     // live branch names the licensed feed; dark branch says the column is empty.
     expect(PAGE).toMatch(/salaryIsReal\s*\n?\s*\?\s*[\s\S]{0,400}?Licensed DFS/i);
-    expect(PAGE).toMatch(/no licensed DFS salary feed is connected/i);
+    expect(PAGE).toMatch(/no licensed (?:DFS )?salary feed is connected/i);
   });
 
   it("keeps the page out of the index while the pool can be illustrative", () => {

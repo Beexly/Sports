@@ -28,7 +28,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const rawPkg = getPackageBySlug(params.slug);
   if (!rawPkg) {
-    return { title: "Package Not Found | Galaxy Sports Edge" };
+    return { title: { absolute: "Package Not Found | Galaxy Sports Edge" } };
   }
   const pkg = scrubOfferingCopy(rawPkg);
   return {
@@ -46,7 +46,7 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
     return (
       <div className="min-h-screen bg-obsidian text-ion-white">
         <Nav />
-        <main className="mx-auto max-w-3xl px-4 py-20 text-center">
+        <main id="main-content" className="mx-auto max-w-3xl px-4 py-20 text-center">
           <h1 className="font-display text-3xl">Package Not Found</h1>
           <p className="mt-4 text-ion-1">The package slug &quot;{params.slug}&quot; does not exist in our catalog.</p>
           <Link href="/packages" className="mt-6 inline-block text-plasma transition-colors hover:text-plasma-glow">
@@ -68,7 +68,7 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
     return (
       <div className="min-h-screen bg-obsidian text-ion-white">
         <Nav />
-        <main className="mx-auto w-full max-w-3xl px-4 pb-20 pt-12 sm:px-6">
+        <main id="main-content" className="mx-auto w-full max-w-3xl px-4 pb-20 pt-12 sm:px-6">
           <Link href="/packages" className={`${eyebrow} text-plasma transition-colors hover:text-plasma-glow`}>
             ← All packs &amp; membership
           </Link>
@@ -147,7 +147,7 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
   return (
     <div className="min-h-screen bg-obsidian text-ion-white">
       <Nav />
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         {cardIsStale ? (
           <div
             data-testid="packages-card-pending-notice"

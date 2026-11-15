@@ -10,7 +10,7 @@ import {
 } from "@/lib/ledger/verified-ledger-view";
 
 export const metadata: Metadata = {
-  title: "The Sealed Record | Galaxy Sports Edge",
+  title: { absolute: "The Sealed Record | Galaxy Sports Edge" },
   description:
     "Every settled play, recomputed straight from the settlement database. Wins, losses, pushes, units, closing-line value and pre-kickoff commitment hashes. No hardcoded numbers.",
   alternates: { canonical: "/record" },
@@ -19,10 +19,10 @@ export const metadata: Metadata = {
 function ResultBadge({ result }: { result: string }): JSX.Element {
   const tone =
     result === "WIN"
-      ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
+      ? "border-verify/40 bg-verify/10 text-verify"
       : result === "LOSS"
-        ? "border-rose-400/40 bg-rose-500/10 text-rose-300"
-        : "border-slate-500/40 bg-slate-500/10 text-slate-300";
+        ? "border-alert/40 bg-alert/10 text-alert"
+        : "border-mineral-hi bg-titanium/40 text-ion-1";
   return (
     <span className={`inline-flex rounded-md border px-2 py-0.5 font-mono text-[11px] font-bold ${tone}`}>
       {result}
@@ -82,7 +82,7 @@ export default function RecordPage(): JSX.Element {
             <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-2">
               Official record · published premium plays
             </div>
-            <div className="mt-3 font-display text-5xl tracking-tight text-emerald-300">
+            <div className="mt-3 font-display text-5xl tracking-tight text-verify">
               {formatWlp(ledger.official.wlp)}
             </div>
             <div className="mt-2 text-sm font-semibold text-ion-1">
@@ -108,7 +108,7 @@ export default function RecordPage(): JSX.Element {
               aria-valuemax={gate.target}
               aria-label="CLV-backed settled official plays toward the calibration threshold"
             >
-              <div className="h-full bg-emerald-400" style={{ width: `${progressPct}%` }} />
+              <div className="h-full bg-verify" style={{ width: `${progressPct}%` }} />
             </div>
             <p className="mt-3 text-xs leading-relaxed text-ion-2">
               {gate.unlocked
@@ -118,7 +118,7 @@ export default function RecordPage(): JSX.Element {
                   "Until then you get counts, units and this progress bar. That is the whole law."}
             </p>
             {gate.unlocked && gate.winRate !== null ? (
-              <p className="mt-2 font-mono text-sm text-emerald-300">
+              <p className="mt-2 font-mono text-sm text-verify">
                 Observed win rate (wins / decided): {(gate.winRate * 100).toFixed(1)}%
               </p>
             ) : null}
@@ -141,7 +141,7 @@ export default function RecordPage(): JSX.Element {
               label="Net units (flat 1u)"
               value={formatUnits(ledger.pipeline.units.total)}
               sub={`${ledger.pipeline.units.coveredPicks} plays with a recorded entry price. ${ledger.pipeline.units.missingPricePicks} unpriced plays are counted but excluded from units, never guessed.`}
-              tone={ledger.pipeline.units.total >= 0 ? "text-emerald-300" : "text-rose-300"}
+              tone={ledger.pipeline.units.total >= 0 ? "text-verify" : "text-alert"}
             />
             <StatCard
               label="CLV graded"
@@ -170,7 +170,7 @@ export default function RecordPage(): JSX.Element {
               label="Fully verified"
               value={String(ledger.commitments.fullyVerified)}
               sub="Hash matches AND the freeze timestamp precedes kickoff."
-              tone="text-emerald-300"
+              tone="text-verify"
             />
           </div>
           {ledger.commitments.samples.length > 0 ? (
@@ -188,7 +188,7 @@ export default function RecordPage(): JSX.Element {
                   {ledger.commitments.samples.map((s) => (
                     <tr key={s.pickId}>
                       <td className="px-3 py-2">{s.pickId.slice(0, 12)}…</td>
-                      <td className="px-3 py-2 text-emerald-300/90">{s.contentHash.slice(0, 24)}…</td>
+                      <td className="px-3 py-2 text-verify/90">{s.contentHash.slice(0, 24)}…</td>
                       <td className="px-3 py-2">{s.frozenAt ?? "n/a"}</td>
                       <td className="px-3 py-2">{s.kickoff ?? "n/a"}</td>
                     </tr>
@@ -206,7 +206,7 @@ export default function RecordPage(): JSX.Element {
                 {ledger.commitments.slateCommitments.map((s) => (
                   <li key={`${s.slateKey}-${s.committedAt}`}>
                     <span className="text-ion-white">{s.slateKey ?? "slate"}</span> · {s.count ?? 0} picks ·
-                    root <span className="text-emerald-300/90">{(s.root ?? "").slice(0, 20)}…</span> ·{" "}
+                    root <span className="text-verify/90">{(s.root ?? "").slice(0, 20)}…</span> ·{" "}
                     {s.committedAt ?? ""}
                   </li>
                 ))}
@@ -278,7 +278,7 @@ export default function RecordPage(): JSX.Element {
           <h2 className="font-display text-2xl uppercase tracking-tight">Recompute it yourself</h2>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-ion-1">
             This page renders the output of one script:{" "}
-            <code className="rounded bg-eclipse px-1.5 py-0.5 font-mono text-xs text-emerald-300">
+            <code className="rounded bg-eclipse px-1.5 py-0.5 font-mono text-xs text-verify">
               npm run verify:ledger
             </code>
             . It reads the ledger tables read-only, recomputes every aggregate, re-derives every

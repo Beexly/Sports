@@ -22,6 +22,43 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+const CANONICAL_ORIGIN = "https://www.galaxysportsedge.com";
+const ALLOWED_ORIGINS = new Set([
+  "https://www.galaxysportsedge.com",
+  "https://galaxysportsedge.com",
+]);
+
+function resolveSafeOrigin(req: Request): string {
+  const candidates = [
+    req.headers.get("origin"),
+    (() => {
+      const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+      if (!host) return null;
+      const proto =
+        req.headers.get("x-forwarded-proto") ||
+        (host.startsWith("localhost") ? "http" : "https");
+      return `${proto}://${host}`;
+    })(),
+  ];
+  for (const raw of candidates) {
+    if (!raw) continue;
+    try {
+      const parsed = new URL(raw);
+      if (ALLOWED_ORIGINS.has(parsed.origin)) return parsed.origin;
+      if (
+        process.env.NODE_ENV !== "production" &&
+        (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") &&
+        (parsed.protocol === "http:" || parsed.protocol === "https:")
+      ) {
+        return parsed.origin;
+      }
+    } catch {
+      // Ignore malformed origin or host headers
+    }
+  }
+  return CANONICAL_ORIGIN;
+}
+
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
@@ -57,13 +94,12 @@ export async function GET(req: Request) {
   form.set("returnToStorefront", String(returnToStorefront));
   if (email) form.set("email", email);
 
+  const safeOrigin = resolveSafeOrigin(req);
   const postReq = new Request(req.url, {
     method: "POST",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      host: req.headers.get("host") || "www.galaxysportsedge.com",
-      "x-forwarded-host": req.headers.get("x-forwarded-host") || "www.galaxysportsedge.com",
-      "x-forwarded-proto": req.headers.get("x-forwarded-proto") || "https",
+      origin: safeOrigin,
     },
     body: form.toString(),
   });
@@ -112,9 +148,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "www.galaxysportsedge.com";
-    const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const origin = req.headers.get("origin") || `${proto}://${host}`;
+    const origin = resolveSafeOrigin(req);
 
     // ── New two-door offers: Stage-5 gate + Whop only. Never Stripe, never a
     //    mock success. Legacy slugs below keep the existing Stripe path. ──

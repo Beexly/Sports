@@ -43,44 +43,35 @@ describe("Board vs Picks differentiation", () => {
   });
 
   it("each page keeps its own job and data source", () => {
-    // BOARD (this era): the under-construction stub. Its job is to say the
-    // live board is parked and route to the two live surfaces. It must not
-    // fetch or render any board rows.
-    expect(board).toMatch(/under-construction-notice/);
+    expect(board).toContain("loadDoctrineBoard");
+    expect(board).toContain("DoctrineBoardView");
+    expect(board).toContain("The Board");
     expect(board).toContain('href="/packages"');
-    expect(board).toContain('href="/fantasy/dfs"');
-    expect(board).not.toContain("loadBoardState");
+    expect(board).toContain('href="/record"');
+    expect(board).toContain('href="/board/gate"');
+    expect(board).not.toContain('data-testid="verified-record-strip"');
     expect(board).not.toContain("sealed-board.json");
 
-    // PICKS (this era): the sealed Week 8 locked board, read from the
-    // static sealed card. Its job is to show ONLY publish-allowed rows and
-    // name the seal as provenance.
-    expect(picks).toContain("sealed-board.json");
-    expect(picks).toMatch(/SealedTable/);
-    expect(picks).toContain("publishAllowed && row.decision === \"PUBLISH\"");
-    expect(picks).toContain("card.seal_digest");
+    expect(picks).toContain("loadDoctrineBoard");
+    expect(picks).toContain("DoctrineBoardView");
+    expect(picks).toContain("verifiedLedger");
+    expect(picks).toContain('data-testid="verified-record-strip"');
     expect(picks).toContain('href="/packages"');
     expect(picks).toContain('href="/props"');
+    expect(picks).toContain('href="/record"');
+    expect(picks).not.toContain("sealed-board.json");
   });
 
-  it("the nav names the picks job; the parked board is deliberately not a front door", () => {
-    // /picks is one of the four revenue pillars, named with its job.
+  it("the nav names the picks job; the board stays accessible via its dedicated route", () => {
     expect(nav).toContain('label: "Picks", href: "/picks"');
     expect(nav).toContain("Locked Week 10 board");
-    // /board is under construction: it is deliberately ABSENT from the nav
-    // so it can never be mistaken for a live front door. The picks pillar
-    // must not be the board (distinct jobs, distinct doors).
     expect(nav).not.toContain('href: "/board"');
   });
 
-  it("each page routes onward with its job named; neither links the other", () => {
-    // The visitor's route between the two jobs is the shared /packages
-    // funnel, not a direct link between two surfaces that do different
-    // things. A direct board<->picks link would imply they are the same
-    // job; the prohibition is that they never present as interchangeable.
+  it("each page routes through /packages while cross-linking intentionally", () => {
     expect(board).toContain('href="/packages"');
     expect(picks).toContain('href="/packages"');
-    expect(board).not.toMatch(/href="\/picks"/);
-    expect(picks).not.toMatch(/href="\/board"/);
+    expect(board).toContain('href="/picks"');
+    expect(picks).toContain('href="/board"');
   });
 });

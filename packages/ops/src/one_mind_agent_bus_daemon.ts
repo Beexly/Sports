@@ -1,5 +1,5 @@
 /**
- * one_mind_agent_bus_daemon.ts — Unified Two-Way Agent-Bus & `mind_guardian` Daemon
+ * one_mind_agent_bus_daemon.ts - Unified Two-Way Agent-Bus & `mind_guardian` Daemon
  * Commercial Entity: Galaxy Sports Network LLC, DBA Galaxy Sports Edge (https://www.galaxysportsedge.com)
  * Repositories: Beexly/agent-bus <-> Beexly/Sports (`brain/mind.jsonl`)
  *
@@ -33,8 +33,8 @@ export const CANONICAL_SEALED_HASH_FIXTURE =
 export const SEALED_TAU = 0.42;
 export const QB_QUESTIONABLE_EV_WEIGHTED_EPA_DROPOFF = 0.0947;
 export const PROB_PER_POINT = 0.033;
-export const CANONICAL_RECORD = "62-23-1";
-export const CANONICAL_NET_UNITS = 26.5;
+export const CANONICAL_RECORD = "79-46-0";
+export const CANONICAL_NET_UNITS = 81.47;
 export const NUM_MCP_DOMAINS = 31;
 export const WIDE_EVENT_SCHEMA_CODE = "516325";
 export const WIDE_EVENT_SCHEMA_ID = "gse.wide_event.516325";

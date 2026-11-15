@@ -77,14 +77,17 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
   {
     route: "/pricing",
     file: "apps/web/app/pricing/page.tsx",
+    // /pricing is now the one-time storefront (the monthly plan matrix and its
+    // calibration-status copy retired with it; the withhold-until-honest
+    // promise lives on /faq and is pinned there). What must remain visible is
+    // the grading discipline and the pack terms.
     requiredCopy: [
-      "public record as settled history accumulates",
-      "Public record & calibration status",
-      "line-value tracker",
-      // The pinned PROMISE is the withhold-until-honest commitment; the
-      // phrasing was de-jargoned ("canonical" dropped) in the wording sweep.
-      "holds back a public win-rate until enough settled history exists",
-      "The Calibration Report stays gated",
+      "No Monthly Subscription Needed Right Now",
+      "One-Time Packs",
+      "Honest Football Grading",
+      "We never force action.",
+      "Timestamped Pre-Kickoff Ledger",
+      "One-time checkout, zero recurring billing.",
     ],
   },
 ] as const;
