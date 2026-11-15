@@ -1,7 +1,7 @@
 import csv
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Set
+from typing import Any, Dict, Iterable, List, Set
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -224,7 +224,7 @@ def test_week10_dk_upload_csv_artifact() -> None:
         pytest.skip(f"{path} not emitted yet")
     with path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.reader(f)
-        header = next(reader, None)
+       next(reader, None)
         rows = list(reader)
     for row in rows:
         for val in row:
