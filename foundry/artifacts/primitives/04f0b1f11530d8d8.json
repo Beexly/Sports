@@ -1,0 +1,767 @@
+{
+  "book_id": "04f0b1f11530d8d8",
+  "source_status": "COMPLETE",
+  "source_note": "Edited volume: Renato Anghinah, Wellingson Silva Paiva, Tiago Henrique Falk and Felipe Fregni (eds.), Neurotrauma: From Emergency Room to Back to Day-by-Day Life, Frontiers in Neurology Research Topic e-book, Frontiers Media SA, January 2019 (component articles published 2016-2018), e-book DOI 10.3389/978-2-88945-724-3. Local file is the publisher's complete e-book PDF, 4,817,920 bytes, sha256 over (str(size) + file bytes) = 04f0b1f11530d8d85fb47b7509b5079b4f4eb8fe9b3066b4aaad6b1812da43af. Text quality: the library's shipped extraction was made with pdftotext -layout and interleaves the journal's two columns on shared lines, so verbatim quotes were proven as contiguous strings against a column-sequential reading-order extraction of the same PDF (pdftotext default mode) stored at ~/workspace/motif-foundry/work/fregni-neurotrauma/fregni-plain.txt, following the fleet precedent for column-interleaved texts. Catalog correction: the assignment named the title 'From the Emergency Room to Day by Day Life'; the printed title reads 'From Emergency Room to Back to Day-by-Day Life', and Felipe Fregni is the fourth of four editors, not the sole editor. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "tbi_definition_silent_epidemic",
+      "name": "TBI defined as a nondegenerative, non-congenital mechanical insult with possible permanent or temporary cognitive, physical, and psychosocial impairment; framed as a silent epidemic striking young productive people",
+      "verbatim_quote": "Traumatic brain injury (TBI) is a nondegenerative and non-congenital insult to the brain from an external mechanical force that can lead to permanent or temporary impairment of cognitive, physical, and psychosocial functions",
+      "page": "Editorial (Anghinah et al.), book p. 5; fregni-plain.txt line 258",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Severity and outcome vary by mechanism, lesion type, and secondary insults, so the definition is a class boundary, not a prognosis",
+        "Impairment can be temporary or permanent, so any state model needs a recovery dimension"
+      ],
+      "breakdown_regime": "The definition does not stratify severity; it breaks down as a decision rule unless paired with grading scales such as GCS and the Gennarelli DAI classes elsewhere in this volume",
+      "domain": "clinical neurology / framing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Sets the top-level event class for the engine's health layer: an externally caused, non-progressive insult whose state evolves over time, distinct from degenerative decline curves. Every downstream availability and recovery feature hangs off this class boundary.",
+        "source_operator": "tbi_definition_silent_epidemic",
+        "telemetry": "Injury event records with mechanism, timestamp, and initial severity grade"
+      }
+    },
+    {
+      "primitive_id": "dai_clinical_picture",
+      "name": "Diffuse axonal injury is the predominant finding in roughly half of TBI patients, occurs at all severity levels, and presents with prolonged unconsciousness of 6 hours or more without mass lesions or ischemic damage",
+      "verbatim_quote": "Diffuse axonal injury is clinically defined by coma lasting 6 h or more after traumatic brain",
+      "page": "Hayashi et al., Introduction, book p. 7; fregni-plain.txt line 482",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "DAI is a diffuse process, so focal-lesion logic does not apply",
+        "The clinical picture is defined by coma duration plus absence of explanatory mass lesions"
+      ],
+      "breakdown_regime": "Breaks down for mild injuries without prolonged unconsciousness, where axonal injury can still exist but the clinical definition no longer detects it",
+      "domain": "neuropathology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Gives the engine a diffuse-damage state variable that is decoupled from visible lesion load: a player can carry major functional damage with a near-normal scan, so imaging-negative status must never be read as damage-negative.",
+        "source_operator": "dai_clinical_picture",
+        "telemetry": "Coma duration, CT/MRI lesion inventory, and injury mechanism energy"
+      }
+    },
+    {
+      "primitive_id": "dai_confirmed_only_postmortem",
+      "name": "Definitive DAI diagnosis requires postmortem histopathology, so all in-vivo DAI labels are probabilistic inferences from clinical signs and indirect imaging",
+      "verbatim_quote": "The diagnosis of DAI can only be confirmed by postmortem",
+      "page": "Hayashi et al., Introduction, book p. 7; fregni-plain.txt line 489",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In-vivo criteria (coma duration, gray-white junction and corpus callosum lesions on CT/MRI) are surrogates for the histological ground truth",
+        "Surrogate sensitivity is limited, especially for non-hemorrhagic lesions"
+      ],
+      "breakdown_regime": "The surrogate chain breaks when lesions are entirely non-hemorrhagic and below MRI resolution, producing false reassurance",
+      "domain": "diagnostics / measurement limits",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A standing measurement-limit primitive: any engine feature derived from a DAI label inherits label noise, and confidence in the label must be modeled explicitly rather than treated as ground truth.",
+        "source_operator": "dai_confirmed_only_postmortem",
+        "telemetry": "Which diagnostic modality produced the label, and its known sensitivity class"
+      }
+    },
+    {
+      "primitive_id": "paired_pulse_tms_inhibition_probe",
+      "name": "Paired-pulse TMS at short interstimulus intervals (2 and 4 ms) indirectly measures GABAergic intracortical inhibition, while longer intervals (10 and 15 ms) probe glutamatergic facilitation",
+      "verbatim_quote": "ICI 2 ms, Motor-evoked potential amplitude ratio for 2 ms ISI and 120% of RMT; ICI 4 ms, Motor-evoked potential amplitude ratio for 4 ms ISI and 120% of RMT; ICF 10 ms, Motor-evoked potential amplitude ratio for 10 ms ISI and 120% of RMT; ICF 15 ms, Motor-evoked potential ratio for 15 ms ISI and 120% of RMT; SIICI, Short-interval intracortical inhibition; ICF, intracortical facilitation",
+      "page": "Hayashi et al., Discussion, book p. 11; fregni-plain.txt line 1095",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Conditioning pulse at 80% of resting motor threshold and test pulse at 120% in the study protocol",
+        "The probe reads motor cortex only, so it samples one node of a distributed system"
+      ],
+      "breakdown_regime": "Breaks down when peripheral injury, medication, sleep loss, or caffeine shifts excitability independently of the injury of interest",
+      "domain": "neurophysiology / measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Demonstrates the probe pattern the engine should reuse: an indirect, ratio-based measurement of a hidden circuit state, valid only under a stated protocol. The same pattern governs any proxy metric used for player neurological state.",
+        "source_operator": "paired_pulse_tms_inhibition_probe",
+        "telemetry": "Paired-pulse protocol parameters and the conditioned-to-test response ratio"
+      }
+    },
+    {
+      "primitive_id": "chronic_dai_disinhibition_siici",
+      "name": "In chronic moderate-to-severe DAI, short-interval intracortical inhibition is lost: median SIICI 1.28 (95% CI 1.01 to 1.87) versus 0.56 (0.33 to 0.69) in healthy controls, p < 0.001, while RMT, MEP amplitude, and ICF stay within normal limits",
+      "verbatim_quote": "higher in the DAI group—DAI SIICI = 1.28 (1.01; 1.87) versus the control value = 0.56",
+      "page": "Hayashi et al., Results, book pp. 9-10; fregni-plain.txt line 819",
+      "latex": "\\mathrm{SIICI} = \\frac{\\mathrm{MEP}_{\\mathrm{conditioned}}}{\\mathrm{MEP}_{\\mathrm{test}}}",
+      "symbol_and_unit_ledger": {
+        "MEP_conditioned": "mean peak-to-peak motor-evoked potential amplitude (microvolts) after a subthreshold conditioning pulse at 2 and 4 ms interstimulus intervals",
+        "MEP_test": "mean peak-to-peak motor-evoked potential amplitude (microvolts) after the test pulse alone at 120% of resting motor threshold",
+        "SIICI": "dimensionless ratio; healthy range 0.0 to 1.0, values above 1.0 indicate lost inhibition"
+      },
+      "assumptions": [
+        "SIICI is the ratio of the conditioned MEP amplitude to the test MEP amplitude, averaged over the 2 ms and 4 ms intervals",
+        "Values above 1.0 mean the conditioning pulse failed to suppress the test response, i.e. inhibition is absent or reversed",
+        "Sample was 22 DAI patients (42 hemispheres) at least 1 year post injury versus 22 matched controls"
+      ],
+      "breakdown_regime": "Small single-center sample; neuropsychological correlation was weak, so SIICI does not by itself predict cognitive scores. Medication history and hemisphere pooling are confounds",
+      "domain": "neurophysiology / empirical finding",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A concrete hidden-state biomarker with an explicit normal band (0.0 to 1.0) and a measured pathological shift. For the engine it is the template for turning a continuous physiological ratio into a state flag with a defensible threshold.",
+        "source_operator": "chronic_dai_disinhibition_siici",
+        "telemetry": "SIICI ratio from paired-pulse TMS; normative band 0.0 to 1.0"
+      }
+    },
+    {
+      "primitive_id": "axonal_disruption_gaba_depletion",
+      "name": "Mechanism proposed for chronic disinhibition: axonal disruption itself depletes GABA, so the inhibitory circuitry fails structurally rather than only functionally",
+      "verbatim_quote": "DAI pathophysiology itself (disruption of axons) may deplete GABA and contribute to",
+      "page": "Hayashi et al., Discussion, book pp. 11-12; fregni-plain.txt line 1105",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Inhibition is GABA-mediated, so losing axons and interneurons degrades inhibition",
+        "The authors flag this as an inference and recommend MR spectroscopy measurement of GABA for direct evidence"
+      ],
+      "breakdown_regime": "It is a hypothesis, not a measurement: GABA was not assayed in this study, and vascular injury or blood-brain barrier disruption could produce the same SIICI shift",
+      "domain": "neuropathology / mechanism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Supplies a causal chain the reasoning layer can test elsewhere: structural disconnection first, transmitter depletion second, circuit-level disinhibition third. Chains of this shape let the engine propagate one measured lesion into several predicted functional deficits.",
+        "source_operator": "axonal_disruption_gaba_depletion",
+        "telemetry": "Axonal injury load, SIICI ratio, and (where available) spectroscopic GABA concentration"
+      }
+    },
+    {
+      "primitive_id": "mtbi_clinical_criteria",
+      "name": "Mild TBI is identified clinically by GCS 13-15, confusion or disorientation, loss of consciousness of 30 minutes or less, posttraumatic amnesia under 24 hours, and/or other transient neurological abnormalities",
+      "verbatim_quote": "13–15, confusion and disorientation, loss of consciousness for",
+      "page": "Amorim et al., Introduction, book p. 15; fregni-plain.txt line 1481",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Any one criterion suffices; the criteria are observable at presentation",
+        "GCS is measured after stabilization, so timing of the score matters"
+      ],
+      "breakdown_regime": "Breaks down for injuries with delayed presentation or no witnessed event, and it cannot detect microstructural damage, which is the entire problem the rest of the volume addresses",
+      "domain": "clinical classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's entry gate for the mild-injury class: a cheap, fast, deliberately insensitive screen. Everything downstream (imaging, biomarkers, symptom tracking) exists because this gate under-detects.",
+        "source_operator": "mtbi_clinical_criteria",
+        "telemetry": "GCS at presentation, witnessed loss of consciousness duration, amnesia duration"
+      }
+    },
+    {
+      "primitive_id": "mtbi_share_of_all_tbi",
+      "name": "About 90% of the more than two million annual traumatic brain injuries in the United States are mild, so the mild class dominates the population base rate",
+      "verbatim_quote": "of more than two million annual traumatic brain injuries in the",
+      "page": "Amorim et al., Introduction, book p. 15; fregni-plain.txt line 1479",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "United States figures from the cited CDC-era literature",
+        "Hospital-presenting cases; unreported mild injuries push the true share higher"
+      ],
+      "breakdown_regime": "Base rate shifts by setting (military blast exposure, contact sport cohorts) and by reporting culture, so the 90% figure is a prior, not a constant",
+      "domain": "epidemiology / base rates",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Anchors the prior distribution over injury severity in any population the engine reasons about: absent other evidence, a head injury is mild, and the analytical problem is finding the minority whose mild label hides persistent damage.",
+        "source_operator": "mtbi_share_of_all_tbi",
+        "telemetry": "Population injury counts by severity class and care setting"
+      }
+    },
+    {
+      "primitive_id": "ppcs_shearing_microstructure_hypothesis",
+      "name": "Persistent post-concussion syndrome is hypothesized to arise from shearing microstructural damage invisible to conventional imaging, preferentially affecting mesial and deep structures including hippocampus and corpus callosum plus prefrontal cortex",
+      "verbatim_quote": "It has been hypothesized that PPCS is caused by microstruc tural damage to the brain due to shearing injury, which is not",
+      "page": "Amorim et al., Introduction, book p. 15; fregni-plain.txt line 1453",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The regional preference is offered as the explanation for the observed memory and executive deficits",
+        "Stated as a hypothesis in a trial protocol paper, not as a demonstrated result"
+      ],
+      "breakdown_regime": "Fails as a complete account where symptoms are driven by vestibular, cervical, or mood mechanisms rather than axonal shearing",
+      "domain": "neuropathology / hypothesis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tells the reasoning layer where to look when the standard scan is clean: deep midline structures and prefrontal systems, with memory and executive function as the expected deficit signature. It converts a negative image into a directed search instead of a stop.",
+        "source_operator": "ppcs_shearing_microstructure_hypothesis",
+        "telemetry": "Symptom profile by domain (memory, executive, vestibular, mood) and advanced imaging where available"
+      }
+    },
+    {
+      "primitive_id": "tdcs_excitability_mechanism",
+      "name": "Transcranial direct current stimulation delivers weak polarizing current through two scalp electrodes to modify cerebral excitability; anodal stimulation over dorsolateral prefrontal or temporal cortex is the configuration reported to enhance cognition",
+      "verbatim_quote": "technique delivers weak polarizing direct current to the cortex via",
+      "page": "Amorim et al., Introduction, book p. 16; fregni-plain.txt line 1560",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "One active electrode over the target region and a reference over the contralateral supraorbital area or a non-cephalic site",
+        "Effects are modulatory, not lesion-like: excitability shifts rather than tissue change"
+      ],
+      "breakdown_regime": "Single-session effects are short-lived and task-specific; the volume reports facilitation in Alzheimer and stroke cohorts, not yet demonstrated efficacy in TBI",
+      "domain": "neuromodulation / intervention",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An intervention primitive with polarity, target, and dose as its parameters. For the engine it models any exogenous input that shifts a system's excitability rather than its structure, with effects that decay.",
+        "source_operator": "tdcs_excitability_mechanism",
+        "telemetry": "Electrode montage, polarity, current intensity, session duration"
+      }
+    },
+    {
+      "primitive_id": "crossover_sham_controlled_design",
+      "name": "The tDCS trial design: randomized, sham-controlled crossover in 30 patients, every subject receiving left DLPFC, left temporal, and sham stimulation one week apart, with neuropsychological testing before and immediately after each session",
+      "verbatim_quote": "This is a randomized, sham-controlled, crossover trial. All",
+      "page": "Amorim et al., Methods and Analysis, book p. 17; fregni-plain.txt line 1638",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Seven-day washout is assumed sufficient to avoid carry-over effects",
+        "Sham is 30 seconds of current then automatic shutoff, preserving blinding",
+        "Stimulation dose in the protocol is 1.5 mA for 20 minutes"
+      ],
+      "breakdown_regime": "Crossover validity collapses if the intervention has durable effects beyond the washout, and a protocol paper carries no outcome evidence by itself",
+      "domain": "study design / evidence grading",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A design template for grading intervention evidence inside the engine: within-subject control, sham blinding, and washout discipline. Claims sourced from weaker designs get discounted by exactly the elements this design includes.",
+        "source_operator": "crossover_sham_controlled_design",
+        "telemetry": "Design type, washout interval, blinding method, and per-arm sample size for each evidence item"
+      }
+    },
+    {
+      "primitive_id": "dti_diffusion_microstructure_principle",
+      "name": "Diffusion tensor imaging uses the diffusion of water molecules to assess microstructure in pathological and normal brain tissue, making otherwise invisible axonal injury measurable",
+      "verbatim_quote": "(DTI) (3), which uses the diffusion of water molecules to assess",
+      "page": "Hashim et al., Introduction, book p. 23; fregni-plain.txt line 2312",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Water diffusion is directionally constrained by intact axonal membranes and myelin, so disruption changes the measured signal",
+        "The method is indirect: it infers microstructure from a physical proxy"
+      ],
+      "breakdown_regime": "The proxy is not specific: edema, inflammation, and crossing fibers also change diffusion, so a DTI abnormality is not uniquely axonal injury",
+      "domain": "neuroimaging / measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The core sensing primitive for the whole volume: infer hidden structure from a directional physical proxy. The engine uses the same move whenever it reads an unobservable state (neurological integrity, fatigue, readiness) off an observable signal.",
+        "source_operator": "dti_diffusion_microstructure_principle",
+        "telemetry": "Diffusion-weighted MRI acquisition parameters and derived scalar maps"
+      }
+    },
+    {
+      "primitive_id": "tbss_skeleton_fa_threshold",
+      "name": "Tract-Based Spatial Statistics projects each subject's diffusion data onto a mean white matter skeleton built with an FA threshold above 0.2, restricting voxel-wise comparison to tract centers common to the whole group",
+      "verbatim_quote": "threshold of FA > 0.2 to include only the centers of white matter",
+      "page": "Hashim et al., Materials and Methods, book p. 25; fregni-plain.txt line 2465",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "FA above 0.2 is taken to mark tract centers and exclude gray matter and cerebrospinal fluid",
+        "Non-linear registration to MNI152 standard space precedes skeleton projection"
+      ],
+      "breakdown_regime": "Threshold choice trades sensitivity for specificity: peripheral tract voxels are discarded, and registration smoothing can mask small focal differences, a limitation the Khong review in this same volume also raises",
+      "domain": "neuroimaging / method",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A data-reduction primitive: threshold a continuous field, keep the common skeleton, compare there. The engine applies the same discipline when it restricts a noisy per-player signal to the region where cross-subject comparison is meaningful.",
+        "source_operator": "tbss_skeleton_fa_threshold",
+        "telemetry": "FA map, skeleton threshold value, registration target space"
+      }
+    },
+    {
+      "primitive_id": "md_ad_elevation_in_nawm",
+      "name": "In sub-acute and chronic TBI with normal-appearing white matter, mean diffusivity and axial diffusivity are significantly elevated across widespread tracts (corpus callosum, internal and external capsule, corona radiata, cingulum) versus healthy controls, indicating persistent diffuse axonal injury despite normal routine MRI",
+      "verbatim_quote": "Our finding of widespread increase in the overall diffusivity",
+      "page": "Hashim et al., Discussion, book p. 28; fregni-plain.txt line 3011",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Group comparison controlled for age, sex, and time since injury, with family-wise error correction at p at or below 0.05",
+        "Only 19 of 40 screened TBI patients had truly normal-appearing white matter; 15 of the 19 were mild TBI"
+      ],
+      "breakdown_regime": "Cross-sectional design cannot separate injury effect from pre-injury differences, and AD elevation is less specific to axons than the classic FA story suggests",
+      "domain": "neuroimaging / empirical finding",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The volume's strongest positive imaging result: a distributed, whole-network elevation rather than a focal lesion. It teaches the engine to expect diffuse state changes after head injury and to distrust any single-region readout as the whole story.",
+        "source_operator": "md_ad_elevation_in_nawm",
+        "telemetry": "Voxel-wise MD and AD maps with covariate-adjusted group contrasts"
+      }
+    },
+    {
+      "primitive_id": "fa_null_result_in_nawm",
+      "name": "No significant fractional anisotropy difference was found between TBI patients with normal-appearing white matter and healthy controls in the same whole-brain voxel-wise analysis that detected MD and AD differences",
+      "verbatim_quote": "increase in AD and MD and no difference in FA in our study,",
+      "page": "Hashim et al., Discussion, book p. 28; fregni-plain.txt line 3024",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Same subjects, same pipeline, same correction as the positive MD and AD findings, so the null is informative rather than a power artifact alone",
+        "Prior studies reporting FA decreases often included patients with gross abnormalities or more acute scans"
+      ],
+      "breakdown_regime": "A null in one cohort does not erase positive FA findings elsewhere; timing since injury and cohort composition move the result",
+      "domain": "neuroimaging / negative result",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A published honest negative that disciplines metric selection: the most popular parameter (FA) was the one that failed here. The engine should weight metrics by demonstrated discrimination in the target population, not by popularity in the literature.",
+        "source_operator": "fa_null_result_in_nawm",
+        "telemetry": "Per-metric group effect sizes and significance under identical pipelines"
+      }
+    },
+    {
+      "primitive_id": "tccs_ct_measurement_agreement",
+      "name": "Transcranial color-coded sonography agrees excellently with CT for midline shift (slope 0.978, intraclass correlation 0.93) and third ventricle width (slope 0.85, ICC 0.88) in severe TBI patients with intact skulls",
+      "verbatim_quote": "and TCCS concerning midline structural shifts (b: 0.978,",
+      "page": "Oliveira et al., Results, book p. 37; fregni-plain.txt line 3948",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fifteen consecutive severe TBI patients; measurements paired against CT",
+        "Bland-Altman analysis showed no systematic bias for either measure"
+      ],
+      "breakdown_regime": "Small single-center sample; agreement on two linear distances does not validate sonography for the full CT feature set",
+      "domain": "neurocritical care / measurement validation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A surrogate-validation primitive: a cheap bedside sensor earns trust by quantified agreement (ICC, bias limits) against the reference instrument on the exact quantities it claims to measure. That is the standard any proxy feed must meet before the engine leans on it.",
+        "source_operator": "tccs_ct_measurement_agreement",
+        "telemetry": "Paired surrogate and reference measurements with ICC and Bland-Altman limits"
+      }
+    },
+    {
+      "primitive_id": "tccs_cistern_sylvian_prediction",
+      "name": "TCCS predicts non-compressed peri-mesencephalic cisterns with AUC 0.83 at 100% sensitivity and 50% specificity, and Sylvian fissure presence with AUC 0.91 at 83% sensitivity and 100% specificity, giving bedside evidence about intracranial pressure status",
+      "verbatim_quote": "presence of the Sylvian fissure (AUC: 0.91, 95% CI 0.73–1.0), with",
+      "page": "Oliveira et al., Results, book pp. 37-38; fregni-plain.txt line 3962",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cistern obliteration on CT is treated as a strong predictor of intracranial hypertension, so predicting its absence is the clinically useful direction",
+        "Confidence intervals are wide (cistern AUC 95% CI 0.46 to 1.0) because n = 15"
+      ],
+      "breakdown_regime": "With 50% specificity for cisterns, half of compressed cases would be missed if the test were used alone; it is an adjunct, not a replacement for CT",
+      "domain": "neurocritical care / classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shows the operating-point asymmetry the engine must respect in clearance-type decisions: a high-sensitivity rule-out signal and a high-specificity rule-in signal are different tools, and quoting one accuracy number for both is an error.",
+        "source_operator": "tccs_cistern_sylvian_prediction",
+        "telemetry": "ROC area, sensitivity, and specificity at the chosen operating point for each predicted feature"
+      }
+    },
+    {
+      "primitive_id": "acoustic_window_failure_rate",
+      "name": "Transcranial sonography depends on an adequate acoustic window, reported inadequate in 5 to 18% of patients, which caps the method's coverage no matter how accurate it is when the window exists",
+      "verbatim_quote": "windows in our sample, it has been reported in 5–18% of patients",
+      "page": "Oliveira et al., Discussion (limitations), book p. 38; fregni-plain.txt line 4033",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Window adequacy depends on skull thickness and bone density",
+        "The study sample happened to contain no inadequate windows, so its accuracy figures are conditional on a usable window"
+      ],
+      "breakdown_regime": "Coverage failure is a property of the patient, not the operator, so it cannot be trained away; reported accuracy from window-selected samples overstates field performance",
+      "domain": "measurement / failure modes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A coverage primitive: every sensing channel has a subpopulation it simply cannot read, and headline accuracy must be discounted by that blind fraction before the engine trusts the channel for a specific individual.",
+        "source_operator": "acoustic_window_failure_rate",
+        "telemetry": "Channel success rate per subject, with failure attributed to subject properties"
+      }
+    },
+    {
+      "primitive_id": "gennarelli_dai_severity_grading",
+      "name": "Gennarelli clinical grading of DAI: mild is coma of 6 to 24 hours; moderate is coma over 24 hours without abnormal posturing; severe is coma over 24 hours with brainstem impairment signs",
+      "verbatim_quote": "In mild DAI, coma lasts 6–24 h. In moderate DAI, coma lasts",
+      "page": "Vieira et al., Materials and Methods, book p. 41; fregni-plain.txt line 4330",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Coma duration is the primary axis, with posturing and brainstem signs as the severe-class modifiers",
+        "Awakening is operationalized as a GCS best motor response score of 6"
+      ],
+      "breakdown_regime": "Coma duration is confounded by sedation practice and by associated injuries, so the grade partly measures the care environment",
+      "domain": "clinical classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A compact ordinal severity scale built from one duration variable plus two sign modifiers. It is the pattern for turning messy clinical courses into the ordered states a reasoning engine can actually condition on.",
+        "source_operator": "gennarelli_dai_severity_grading",
+        "telemetry": "Coma duration in hours, posturing presence, brainstem sign presence"
+      }
+    },
+    {
+      "primitive_id": "dai_six_month_outcome_rates",
+      "name": "In a prospective cohort of 78 DAI patients admitted with GCS at or below 8, 30.8% had died and 45.1% had reached full recovery on the Extended Glasgow Outcome Scale at 6 months",
+      "verbatim_quote": "DAI in 35.9%. Six months after trauma, 30.8% of the patients had died, and 45.1%",
+      "page": "Vieira et al., Abstract, book p. 40; fregni-plain.txt line 4176",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cohort mean Injury Severity Score 35.0 and mean New Injury Severity Score 46.2, so this is a severely injured population",
+        "Mild DAI was 44.9% of the cohort and severe DAI 35.9% by Gennarelli grade"
+      ],
+      "breakdown_regime": "Single tertiary center in Sao Paulo with traffic accidents dominant; rates do not transfer to sports concussion populations, where the severity mix is entirely different",
+      "domain": "epidemiology / outcomes",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Supplies the outcome base rates for the severe end of the DAI spectrum: even in a GCS-at-or-below-8 cohort, full recovery is the single largest outcome at 6 months. Base rates like this keep the engine from treating a severe label as a deterministic verdict.",
+        "source_operator": "dai_six_month_outcome_rates",
+        "telemetry": "Cohort severity mix and GOS-E distribution at a fixed follow-up horizon"
+      }
+    },
+    {
+      "primitive_id": "dai_mortality_dependence_predictors",
+      "name": "In the same cohort's logistic models, mortality was significantly associated with DAI combined with hypoxia (peripheral oxygen saturation), hypotension, and NISS value, while dependence was predicted by DAI severity grade and length of hospital stay; DAI severity was a risk factor for both outcomes",
+      "verbatim_quote": "and hypotension with NISS value – had a statistically significant association with patient",
+      "page": "Vieira et al., Abstract, book p. 40; fregni-plain.txt line 4170",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Secondary systemic insults were defined by fixed thresholds in the protocol: systolic blood pressure under 90 mmHg for hypotension and SpO2 under 90% for hypoxia",
+        "Separate models were built with ISS and NISS to avoid multicollinearity between the two severity scores"
+      ],
+      "breakdown_regime": "Stepwise selection on 78 patients risks overfitting; hospital stay length is partly a consequence, not only a cause, of dependence",
+      "domain": "prognosis / risk factors",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The transferable structure: secondary insults (oxygen, pressure) multiply a primary injury's lethality, while the primary grade drives long-term dependence. The engine should model post-event secondary stressors as outcome modifiers, not as noise.",
+        "source_operator": "dai_mortality_dependence_predictors",
+        "telemetry": "Secondary insult flags with thresholds, anatomical severity scores, and length-of-stay"
+      }
+    },
+    {
+      "primitive_id": "concussion_biomechanical_definition",
+      "name": "Concussion is a complex pathophysiological process affecting the brain, induced by biomechanical forces, with traumatically induced alteration in mental status with or without loss of consciousness (consensus definition)",
+      "verbatim_quote": "Concussion is defined as a “complex pathophysiological process",
+      "page": "Dambinova et al., Clinical Definitions, book p. 52; fregni-plain.txt line 6220",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Loss of consciousness is not required, so absence of LOC cannot exclude the diagnosis",
+        "The terms concussion and mild TBI are used interchangeably in the review because symptomology overlaps and about 80% of concussions are diagnosed as mTBI"
+      ],
+      "breakdown_regime": "A process definition gives no measurement threshold; two clinicians can apply it differently to the same event, which is why the volume keeps reaching for biomarkers",
+      "domain": "clinical definition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Defines the event class at the mild end with the same discipline as the TBI definition at the top: mechanism first, observable alteration second, no single necessary sign. The engine's event detector must be built the same way.",
+        "source_operator": "concussion_biomechanical_definition",
+        "telemetry": "Biomechanical exposure record plus any documented mental status alteration"
+      }
+    },
+    {
+      "primitive_id": "rotational_acceleration_injury_threshold",
+      "name": "Rotational acceleration above 5,000 rad/s2 from head impact produces the greatest stress and strain in frontotemporal regions, limbic connections, corpus callosum, and corticospinal tract; the review's severity table scales linear and rotational acceleration bands from mild (about 30-65 g, 4,000-5,000 rad/s2) to severe (over 100 g, 7,000-13,000 rad/s2)",
+      "verbatim_quote": "a solid surface (rotational acceleration >5,000 rad/s2) leads to",
+      "page": "Dambinova et al., Biomechanics of Injury, book p. 53; fregni-plain.txt line 6203",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Rotational, not purely linear, acceleration is the injurious component because it shears tissue",
+        "The same review cautions that no impact threshold reliably diagnoses concussion in an individual, so these bands are population-level mechanics, not per-event verdicts"
+      ],
+      "breakdown_regime": "Breaks down at the individual level: identical measured impacts produce different outcomes across people, and instrumented-headgear metrics have not validated as diagnostic thresholds",
+      "domain": "biomechanics / dose",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A dose primitive with an explicit caveat attached: exposure magnitude orders risk across a population but must not be inverted into an individual diagnosis. The engine needs both halves of that statement wherever it consumes impact telemetry.",
+        "source_operator": "rotational_acceleration_injury_threshold",
+        "telemetry": "Peak linear acceleration (g), peak rotational acceleration (rad/s2), impact location and direction"
+      }
+    },
+    {
+      "primitive_id": "postconcussion_symptom_resolution_base_rate",
+      "name": "About 80% of post-concussive symptoms resolve spontaneously within 7 to 10 days of the acute phase, so persistence beyond that window is the informative deviation",
+      "verbatim_quote": "8). Typically, about 80% of post-concussive symptoms resolve",
+      "page": "Dambinova et al., Clinical Definitions, book p. 52; fregni-plain.txt line 6260",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Resolution refers to symptom course after concussion in the general clinical population",
+        "The remaining minority with persistent symptoms is the population the rest of the volume studies"
+      ],
+      "breakdown_regime": "The base rate varies with age, prior concussions, and comorbidity; applying the 7 to 10 day expectation to a multiply-concussed athlete understates persistence risk",
+      "domain": "natural history / base rates",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The recovery-clock prior for the engine's health layer: expected resolution inside roughly ten days, with each additional symptomatic day carrying increasing evidence of a persistent-process state rather than normal recovery.",
+        "source_operator": "postconcussion_symptom_resolution_base_rate",
+        "telemetry": "Symptom presence by day since injury, prior concussion count, age"
+      }
+    },
+    {
+      "primitive_id": "ampar_peptide_release_pathway",
+      "name": "After concussion, massive glutamate release upregulates excitotoxic AMPA receptors; the GluR1 N-terminal fragment is cleaved by extracellular proteases and crosses the compromised blood-brain barrier into blood, where the 5-7 kD peptide can be assayed within hours to days",
+      "verbatim_quote": "are rapidly cleaved by extracellular proteases and released into",
+      "page": "Dambinova et al., Neurotoxicity Biomarkers, book p. 56; fregni-plain.txt line 6896",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Blood-brain barrier compromise is required for the brain-derived peptide to reach peripheral blood",
+        "AMPA receptors concentrate in forebrain and subcortical pathways including hippocampus, amygdala, thalamus, hypothalamus, and brain stem"
+      ],
+      "breakdown_regime": "The pathway is one of several injury cascades; peptide levels also rise in other neurological conditions, so the marker is not concussion-specific in isolation",
+      "domain": "biomarkers / mechanism",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A complete source-to-signal chain: cellular event, proteolytic fragment, barrier crossing, blood assay. The engine should demand this chain, link by link, before treating any blood number as a readout of brain state.",
+        "source_operator": "ampar_peptide_release_pathway",
+        "telemetry": "Assay target fragment, sampling time since injury, barrier-status context"
+      }
+    },
+    {
+      "primitive_id": "ampar_peptide_assay_accuracy",
+      "name": "The AMPAR peptide assay at a preliminary cut-off of 0.4 ng/mL assessed acute and semi-acute concussion in college athletes with 91% sensitivity and 92% specificity against ImPACT testing and neuroimaging",
+      "verbatim_quote": "of the biomarker (86). The sensitivity (91%) and specificity (92%)",
+      "page": "Dambinova et al., Neurotoxicity Biomarkers, book p. 56; fregni-plain.txt line 6908",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cohort: concussed athletes 1-2 weeks post injury with GCS 14-15 versus matched healthy controls",
+        "In multiply-concussed athletes, worse ImPACT processing speed, reaction time, and cognitive efficiency tracked abnormal AMPAR peptide levels of 2.0-12.0 ng/mL with DAI changes on MRI"
+      ],
+      "breakdown_regime": "Cut-off is labeled preliminary by the authors and derives substantially from one research group's cohorts; independent replication is the open gap, and a semi-acute (89% sensitivity, 91% specificity) estimate in the same review is unpublished data",
+      "domain": "biomarkers / test accuracy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A thresholded biomarker with stated operating characteristics, the exact object the engine's evidence layer wants: cut-off, sensitivity, specificity, population, and time window, all explicit and all falsifiable.",
+        "source_operator": "ampar_peptide_assay_accuracy",
+        "telemetry": "Peptide concentration in ng/mL, days since injury, comparison standard used"
+      }
+    },
+    {
+      "primitive_id": "kar_peptide_venous_cutoff",
+      "name": "Kainate receptor peptide detection in blast-injured military personnel with impaired venous circulation yielded an optimal cut-off of 1.0 ng/mL with 90% sensitivity, 83% specificity, and 93% positive predictive value; a civilian mTBI cohort gave an optimal cut-off of 0.5 ng/mL (83% sensitivity, 92% specificity, positive likelihood ratio 10.5)",
+      "verbatim_quote": "1.0 ng/mL (90% sensitivity, 83% specificity), at which a positive",
+      "page": "Dambinova et al., Neurotoxicity Biomarkers, book p. 56; fregni-plain.txt line 6924",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Kainate receptors concentrate in hippocampus, subcortical areas, spinal cord tract, and brainstem and are tied to medullary regulation of breathing, heart rate, and consciousness",
+        "The military cohort was screened for venous circulation impairment by dopplerography, so the cut-off is conditional on that phenotype"
+      ],
+      "breakdown_regime": "Two cohorts give two different optimal cut-offs, so the threshold is population-conditional; the civilian result is reported as unpublished data in the review",
+      "domain": "biomarkers / test accuracy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Demonstrates that a biomarker cut-off is a function of the population and the phenotype screened for, not a universal constant. The engine must store thresholds with their cohort conditions attached or it will misapply them.",
+        "source_operator": "kar_peptide_venous_cutoff",
+        "telemetry": "Peptide concentration, cohort type, and the phenotypic screen that conditioned the cut-off"
+      }
+    },
+    {
+      "primitive_id": "nr2_antibody_chronic_persistence",
+      "name": "NR2 antibodies, a marker linked to delayed cerebral ischemia, remained above the 2.0 ng/mL cut-off for the full 1.5-year follow-up in three previously concussed subjects, and falling NR2 peptide and antibody levels corresponded with improving ImPACT scores and symptom reduction",
+      "verbatim_quote": "cut-off (2.0 ng/mL) throughout the 1.5-year study duration (2).",
+      "page": "Dambinova et al., Prognostic/Monitoring Approaches, book p. 57; fregni-plain.txt line 6973",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Antibodies in serum index the immune response to injury and so track chronic or advanced damage, whereas plasma antigens track acute injury",
+        "The persistence observation rests on three subjects, so it is a signal, not an estimate"
+      ],
+      "breakdown_regime": "Three cases cannot support a prognostic rule; antibody elevation also occurs across chronic neurological pathologies (the review cites diagnostic sensitivity 86-88% and specificity 83-97% for seizure assessment in a separate large series)",
+      "domain": "biomarkers / prognosis",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Introduces the slow variable: an immune marker that stays abnormal for over a year after the event, separating acute state from chronic burden. Recovery models in the engine need both a fast and a slow component, and this is the slow one.",
+        "source_operator": "nr2_antibody_chronic_persistence",
+        "telemetry": "Serial antibody concentration against the 2.0 ng/mL cut-off over months of follow-up"
+      }
+    },
+    {
+      "primitive_id": "ampar_return_to_play_gate",
+      "name": "Used as a clearance gate, preseason AMPAR peptide levels within 0.1-1.0 ng/mL cleared 40 of 43 professional football players (93%) with no reported prior-season concussion, while the 3 players above the range (1.2-2.3 ng/mL) were advised to postpone return, two of whom reported a concussion a week before the blood draw",
+      "verbatim_quote": "0.1–1.0 ng/mL) cleared 40 players (93%) to play. The remaining",
+      "page": "Dambinova et al., Prognostic/Monitoring Approaches, book p. 57; fregni-plain.txt line 7005",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The gate is one input to a medical decision, applied alongside symptom and cognitive assessment in the studies described",
+        "Elevated values in supposedly uninjured players suggest cumulative or unreported exposure, which is precisely what a gate is meant to catch"
+      ],
+      "breakdown_regime": "A single-team, single-assay result from the biomarker's own research group; no independent validation, and the review presents the semi-acute performance figures as unpublished",
+      "domain": "biomarkers / decision gate",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The decision pattern itself is the primitive: a measured internal-state value, a pre-set normal band, and a hold recommendation when the value sits outside it, including for athletes who report nothing wrong. That is the shape of every availability gate the engine will ever build.",
+        "source_operator": "ampar_return_to_play_gate",
+        "telemetry": "Assay value versus the pre-registered normal band at the time of the clearance decision"
+      }
+    },
+    {
+      "primitive_id": "fes_controlled_movement_principle",
+      "name": "Functional electrical stimulation delivers low-energy electrical pulses to nerves innervating targeted muscles to induce controlled, synergistic movements such as reaching, grasping, and walking in limbs paralyzed after central nervous system injury",
+      "verbatim_quote": "Functional electrical stimulation (FES) is a method that is able",
+      "page": "Popovic et al., Background, book pp. 64-65; fregni-plain.txt line 7950",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The peripheral nerve and muscle must remain excitable; FES bypasses the damaged central command, not the final common pathway",
+        "Stimulation sequences must be carefully controlled to produce functional rather than chaotic contraction"
+      ],
+      "breakdown_regime": "Fails where lower motor neurons or muscles are themselves damaged, and a movement produced by stimulation is not yet voluntary function, which is why the therapy variant exists",
+      "domain": "rehabilitation / intervention",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An actuation primitive: substitute an external, precisely timed drive for a lost internal command. In engine terms it is the model for any compensatory input that restores output while the underlying controller is repaired or retrained.",
+        "source_operator": "fes_controlled_movement_principle",
+        "telemetry": "Stimulation channels, target muscles, pulse parameters, produced movement quality"
+      }
+    },
+    {
+      "primitive_id": "fest_retraining_protocol",
+      "name": "Functional electrical stimulation therapy uses FES as a finite retraining program rather than a permanent prosthesis: the patient first attempts each task unassisted, stimulation then assists only the components the patient cannot perform, assistance is faded as performance improves, and after 40-60 one-hour sessions the patient typically performs unassisted",
+      "verbatim_quote": "extremity (20–30). The FEST program is designed to “retrain” the",
+      "page": "Popovic et al., Functional Electrical Stimulation Therapy, book p. 65; fregni-plain.txt line 7990",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Active patient attempt before assistance is a required ingredient, along with movement fidelity and repetition",
+        "Proposed mechanisms include muscle strengthening, reduced spasticity, cortical reorganization, and Hebbian strengthening of synaptic connections",
+        "The case in this article is a single 61-year-old man, 22 months after C3-C7 laminectomy for cervical spondylotic myelopathy, whose post-surgical recovery had plateaued at 6 months"
+      ],
+      "breakdown_regime": "Evidence here is a single case study extrapolated from stroke and spinal cord injury cohorts; the mechanism list is explicitly stated as not yet established",
+      "domain": "rehabilitation / protocol",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The assistance-fading schedule is the transferable design: support proportional to current deficit, withdrawn as capability returns, with unassisted performance as the exit test. Any rehabilitation or return-to-activity progression the engine models should have this shape rather than a fixed calendar.",
+        "source_operator": "fest_retraining_protocol",
+        "telemetry": "Assistance level per task over sessions, unassisted task success rate, session count"
+      }
+    },
+    {
+      "primitive_id": "dti_parameter_definitions",
+      "name": "The four classic DTI parameters: fractional anisotropy measures directionality of diffusion; mean diffusivity is total diffusion within a voxel; radial diffusivity is diffusion perpendicular to the axon; axial diffusivity is diffusion along the axon",
+      "verbatim_quote": "(FA) (28), a measure of the directionality of diffusion (25). Other",
+      "page": "Khong et al., Introduction, book p. 71; fregni-plain.txt line 8610",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All four derive from the same fitted diffusion tensor per voxel, so they are correlated readouts, not independent measurements",
+        "The review notes studies rarely quantify absolute change because no established healthy reference values exist"
+      ],
+      "breakdown_regime": "Without normative reference values, only within-study group contrasts are interpretable; cross-study numeric comparison breaks down",
+      "domain": "neuroimaging / definitions",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The vocabulary layer for every imaging claim in the volume: four named scalars with distinct geometric meanings. The engine's feature dictionary needs the same discipline, one name per quantity, with the generating process stated.",
+        "source_operator": "dti_parameter_definitions",
+        "telemetry": "FA, MD, RD, AD maps from a fitted tensor model, with acquisition b-value and direction count"
+      }
+    },
+    {
+      "primitive_id": "pcs_dti_biomarker_not_validated",
+      "name": "Systematic review verdict (10 studies, 235 PCS patients, from 205 screened): DTI trends run toward decreased FA and increased MD and RD, but no DTI parameter in any specific brain region is validated as a diagnostic or predictive biomarker for post-concussion syndrome",
+      "verbatim_quote": "PCS onset or be used to diagnose PCS, there is insufficient",
+      "page": "Khong et al., Discussion, book p. 76; fregni-plain.txt line 9203",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PCS was defined as symptoms persisting 3 months or longer; 13 otherwise eligible studies were excluded for assessing symptoms earlier",
+        "All included studies were cross-sectional, and brain regions investigated were not uniform across studies"
+      ],
+      "breakdown_regime": "The verdict is bounded by a small, heterogeneous literature through May 2016; it refutes validated status, not the existence of an effect",
+      "domain": "evidence synthesis / negative result",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A meta-level primitive about evidence maturity: a consistent directional trend across studies is not a validated instrument. The engine should carry exactly this status field for its own candidate signals, trend-positive but not validated, with the blocking gaps named.",
+        "source_operator": "pcs_dti_biomarker_not_validated",
+        "telemetry": "Study count, pooled sample, direction consistency, and the named gaps (normative values, longitudinal design, standard assessment)"
+      }
+    },
+    {
+      "primitive_id": "posttraumatic_seizure_early_late_split",
+      "name": "Posttraumatic seizures split at 7 days: early seizures occur within the first 7 days after brain injury and late seizures after 7 days, and the split governs management and prognosis",
+      "verbatim_quote": "early and late PTS. Early seizures occur within the first 7 days after",
+      "page": "Kirmani et al., Role of Anticonvulsants, book p. 80; fregni-plain.txt line 9651",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 7-day boundary is a convention with management consequences, not a biological discontinuity",
+        "Posttraumatic epilepsy proper means a recurrent seizure disorder, distinct from isolated posttraumatic seizures"
+      ],
+      "breakdown_regime": "Boundary cases near day 7 are classified by convention; the underlying epileptogenic process does not switch at the boundary",
+      "domain": "epilepsy / classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A time-window classification primitive: the same event type means different things inside and outside a fixed post-event window, and the correct response differs by window. The engine's event taxonomy needs windowed classes of this kind throughout.",
+        "source_operator": "posttraumatic_seizure_early_late_split",
+        "telemetry": "Days since injury at seizure onset, recurrence, injury severity"
+      }
+    },
+    {
+      "primitive_id": "anticonvulsant_prophylaxis_asymmetry",
+      "name": "Anticonvulsant prophylaxis reduces early posttraumatic seizures but shows little to no benefit for late seizures or for preventing epileptogenesis itself; phenytoin remains the agent of choice and levetiracetam a viable alternative, so prophylaxis beyond the first week is not supported",
+      "verbatim_quote": "Based on current studies, however, anticonvulsants have been shown to reduce early PTS occurring within the first 7 days, but little to no benefits have been shown in late PTS occurring after 7 days.",
+      "page": "Kirmani et al., Abstract and Conclusion, book pp. 79 and 83; fregni-plain.txt line 9580",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The verdict rests on randomized trials summarized in the review (including Temkin et al., phenytoin started within 24 hours) showing early-seizure reduction without late-seizure difference",
+        "Penetrating injury carries far higher epilepsy risk (45-53% prevalence in the Vietnam Head Injury Study cohort) than closed injury, so prophylaxis value is injury-type conditional"
+      ],
+      "breakdown_regime": "Suppressing early seizures is not preventing epilepsy: the asymmetry is the finding. Extrapolating the early benefit past 7 days is the specific error the trials refute",
+      "domain": "pharmacology / evidence verdict",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "An intervention-asymmetry primitive: an input can be genuinely effective in the acute window and genuinely useless as long-run prevention. The engine must not let a verified short-window effect license an open-ended intervention assumption.",
+        "source_operator": "anticonvulsant_prophylaxis_asymmetry",
+        "telemetry": "Agent, start time relative to injury, early versus late seizure incidence by arm"
+      }
+    },
+    {
+      "primitive_id": "subconcussive_impact_definition",
+      "name": "A subconcussive impact is a head impact that may cause neuronal dysfunction in the absence of concussive symptoms, making cumulative exposure a candidate injury mechanism independent of diagnosed concussions",
+      "verbatim_quote": "impact to the head that may cause neuronal dysfunction in the",
+      "page": "Rodrigues et al., Introduction, book p. 84; fregni-plain.txt line 10384",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The definition is functional (possible neuronal dysfunction) rather than threshold-based, so exposure counting depends on the activity, here soccer heading at an average of 6-12 headers per competitive game",
+        "Effects may depend on exposure rate, spacing between exposures, and individual vulnerability"
+      ],
+      "breakdown_regime": "Without a measurable per-impact threshold, subconcussive dose is an exposure count, not a dose in the pharmacological sense; the construct risks absorbing unrelated variance",
+      "domain": "exposure science / definition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Names the silent-accumulation channel: damage-relevant exposure that produces no event in the record. Any engine that only counts diagnosed events will systematically understate cumulative load, in sport and everywhere else.",
+        "source_operator": "subconcussive_impact_definition",
+        "telemetry": "Counted sub-threshold exposures per session and per season, with spacing"
+      }
+    },
+    {
+      "primitive_id": "heading_exposure_thresholds",
+      "name": "In amateur soccer players (about 432 headings in the prior year on average), higher heading frequency was associated with lower fractional anisotropy in temporo-occipital white matter and poorer memory, with threshold (nonlinear) exposure levels: FA reduction appeared between 885 and 1550 headings per year depending on region, and cognitive impairment at 1800 headings per year",
+      "verbatim_quote": "885 and 1550 headings per year, depending on the brain region)",
+      "page": "Rodrigues et al., Effects on Brain Structure, book p. 85; fregni-plain.txt line 10457",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Exposure was self-reported by questionnaire for the prior 12 months, so counts carry recall error",
+        "Cross-sectional association in one cohort (Lipton et al. 2013) as summarized by the review; the review itself calls the structural evidence preliminary"
+      ],
+      "breakdown_regime": "Thresholds from a single study with self-reported exposure should not be read as safe limits below the threshold; other studies in the same review found no structural differences, and serum marker results conflict across studies",
+      "domain": "exposure science / dose response",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A nonlinear dose-response with region-specific thresholds is the exact shape the engine should expect from cumulative exposure: flat, then a knee, then measurable harm. It also warns that the knee location is an estimate from one cohort, not a safety boundary.",
+        "source_operator": "heading_exposure_thresholds",
+        "telemetry": "Annual exposure count, regional FA, memory test performance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "04f0b1f11530d8d8-t1",
+      "think": "This volume is an edited Frontiers in Neurology research topic, ten papers plus an editorial, organized as a single clinical arc: a brain injury happens, it is assessed in the emergency phase, its hidden microstructure is interrogated, its course is predicted, and the patient is carried back toward day-to-day life. Reading it as one work rather than eleven fragments, the load-bearing structure is a chain of measurement problems, each paper attacking the gap left by the previous instrument. The editorial defines traumatic brain injury and concedes the central embarrassment immediately: most patients go home, and the deficits that persist, cognition, mood, work capacity, are exactly the ones the acute instruments were not built to see. Hayashi and colleagues show the physiological version of that gap. In chronic diffuse axonal injury, the standard excitability measures, resting motor threshold, motor-evoked potentials, intracortical facilitation, are normal, and only the inhibition ratio betrays the damage, because the lesion is in the wiring and the transmitter economy, not in the output stage. Amorim and colleagues then try to intervene on the mild end of the same spectrum, persistent post-concussion syndrome, with a rigorously designed crossover tDCS protocol whose very existence is an admission that the field has hypotheses and designs but not yet results. Hashim and colleagues supply the imaging counterpart: in patients whose routine MRI is normal, mean and axial diffusivity are broadly elevated while fractional anisotropy, the field's favorite number, shows nothing, a result that should discipline anyone's confidence in single-metric readouts. Oliveira and colleagues validate a bedside surrogate, transcranial sonography, against CT with proper agreement statistics, and are candid that the surrogate simply cannot see through 5 to 18 percent of skulls. Vieira and colleagues ground the severe end with cohort arithmetic: 78 DAI patients, 30.8 percent dead and 45.1 percent fully recovered at six months, with secondary insults, hypoxia and hypotension layered on the primary injury, driving mortality. Dambinova and colleagues push the measurement frontier into blood, glutamate receptor fragments with explicit cut-offs and operating characteristics, including a return-to-play gate that held three asymptomatic professional players out. Popovic and colleagues close the arc with rehabilitation as engineering: stimulation assistance faded over 40 to 60 sessions until voluntary function stands alone. Khong and colleagues, reviewing the DTI literature for post-concussion syndrome, deliver the volume's conscience: trends are not biomarkers, and nothing here is validated yet. Kirmani and colleagues add the pharmacological version of the same lesson, a drug class that works in the first seven days and not after. Rodrigues and colleagues end on exposure, where the dose is counted in hundreds of soccer headings per year and the harm function has a knee, not a slope. For a reasoning engine, the transferable machinery is the pattern discipline: define the event class cleanly, state what each instrument can and cannot see, attach operating characteristics and failure fractions to every proxy, keep base rates and recovery clocks explicit, separate acute state from chronic burden, and mark every candidate signal with its validation status. The volume's weakness is equally instructive: much of the biomarker evidence comes from single groups, small samples, and in places unpublished data, so its numbers are priors to be tested, not constants to be trusted. A second structural feature deserves emphasis: the papers constrain each other. Khong's systematic review reaches back and disciplines Hashim's primary study, because the review shows that the direction of DTI trends is consistent while their anatomical localization is chaotic, which means a single study's tract list should be read as sampling variation around a diffuse effect rather than as a map. Dambinova's biomarker chapters are disciplined from within by their own numbers: the kainate peptide has one optimal cut-off in a military blast cohort and a different one in civilians, which is the authors demonstrating, perhaps without intending to, that thresholds are population-conditional objects. Oliveira's sonography work is disciplined by its limitations paragraph, which converts an accuracy claim into a coverage claim. Even the trial protocol contributes a constraint of a different kind: Amorim's crossover design, with its seven-day washout and thirty-second sham, specifies exactly what evidence would look like if tDCS worked in persistent post-concussion syndrome, and by specifying it, exposes that the field does not yet have it. Vieira's cohort adds the temporal dimension the others lack, because it follows the same patients to a fixed six-month horizon and reports the full outcome distribution instead of a mean, letting a reader see that death and full recovery are both common and that the middle is comparatively thin. The rehabilitation case contributes the opposite temporal lesson: recovery after cervical myelopathy surgery plateaus at six months, yet a structured retraining program started at twenty-two months still moved function, so a plateau under one regime is not a plateau under all regimes. Where the volume genuinely breaks is replication and scale. Fifteen patients in the sonography study, twenty-two in the TMS study, three subjects behind the chronic NR2 antibody claim, one patient in the rehabilitation case, and a biomarker program whose key performance figures trace to a single research group, sometimes explicitly as unpublished data. None of this makes the work useless; it makes it correctly classified as hypothesis-grade and pilot-grade evidence whose quantitative details should enter any downstream system tagged with their provenance and sample sizes. An engine that ingests the 0.4 ng/mL cut-off without ingesting the words preliminary and single-group alongside it has not extracted this book's knowledge, it has extracted its numbers and discarded its judgment, which is the one failure this entire fleet process exists to prevent.",
+      "retrocausal_genealogy": "The lineage runs from nineteenth and twentieth century clinical neurology into modern measurement science. Gennarelli's coma-duration grading of diffuse axonal injury and the Glasgow scales gave the field its first ordinal language for severity. The Annegers population studies and the Vietnam Head Injury Study established the long tail of posttraumatic epilepsy risk that Kirmani and colleagues still cite. Transcranial magnetic stimulation, from Barker's first motor cortex experiments through the paired-pulse protocols of the 1990s, turned cortical inhibition into a measurable quantity, which Hayashi and colleagues then aimed at chronic axonal injury. Diffusion tensor imaging arrived from Basser's tensor formalism and the FMRIB software ecosystem, and Dambinova's glutamate receptor fragment assays grew out of decades of excitotoxicity research. Each paper in the volume is a downstream application of one of those instrument lineages.",
+      "theory_of_mind": "The editors and authors write as clinician-scientists addressing other clinicians, and their shared model of the reader is someone who must make decisions under measurement scarcity. They assume the reader already believes that a normal scan does not mean a normal brain, and they argue about which additional instrument deserves trust next. The problem, as they frame it, is never a lack of pathophysiological theory; it is that every available readout is partial, conditional, or unvalidated, and the patient still has to be cleared, treated, or held out today. Their rhetoric follows from that stance: heavy emphasis on sensitivity, specificity, agreement coefficients, and explicit limitations sections, because the audience's real question is always how much weight a number can bear.",
+      "cross_layer_veto": "The volume vetoes several tempting simplifications in any layered reasoning system. A clean conventional image cannot veto a damage hypothesis, because Hashim's diffusivity findings and the PPCS shearing hypothesis both live below that resolution. A popular metric cannot veto its rivals, because fractional anisotropy failed in the very analysis where mean and axial diffusivity succeeded. An acute-window treatment effect cannot be promoted into long-term prevention, per the anticonvulsant trials. An exposure magnitude cannot be inverted into an individual diagnosis, per the biomechanics review's own caution. And a directional trend across studies cannot be promoted to a validated biomarker, per the Khong review. Any layer of an engine that tries one of these moves should be stopped by this volume."
+    }
+  ],
+  "universal_lens": "Read as a general template, this volume is about reasoning over a damaged system whose true state is only partially observable. Its method repeats at every scale: define the event, inventory what each sensor actually measures, quantify agreement and blind spots, separate the fast state from the slow burden, and never let a convenient proxy silently become the thing itself. That discipline transfers intact to any domain where decisions must be made from indirect signals, from infrastructure monitoring to organizational health, because the failure modes it catalogs, surrogate overreach, threshold worship, acute effects mistaken for cures, are properties of measurement, not of brains.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the volume is a curriculum in athlete brain health that is honest about uncertainty. It supplies the classification language for injury severity, the recovery-clock base rate of roughly 80 percent symptom resolution inside ten days, the subconcussive exposure concept with counted heading doses and nonlinear thresholds, and a worked example of a biomarker-informed clearance gate. Just as valuable is what it refuses to certify: no imaging parameter and no blood assay in these pages is a validated standalone diagnostic, and teaching that boundary is itself protective for athletes, families, and practitioners.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the volume contributes health-layer machinery rather than any direct performance signal: severity classes with explicit criteria, a diffuse-damage state that decouples injury from visible lesions, recovery priors and outcome base rates for injured-player availability reasoning, secondary-insult modifiers that multiply primary-injury risk, and a validation-status discipline for candidate signals. Its biomarker chapters model how any future player-state feed should be ingested, with cut-off, sensitivity, specificity, population, and time window attached, and its negative results mark which popular metrics to down-weight. Nothing in the volume supports treating an unvalidated proxy as a settled input."
+}
