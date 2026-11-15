@@ -270,6 +270,17 @@ else:
     md.append("No watch-list starter flagged OUT/DOUBTFUL in the captured block (or block not yet captured).")
 md.append(f"Munich DFS upload file (data/dfs/week10_munich_ne_det_dk_upload.csv): {'PRESENT' if dfs_exists else 'NOT YET LANDED (Antigravity push pending)'}.")
 md.append("")
+if inact["captured"] and inact["players"]:
+    md.append("Full ESPN injuries block at gate time (official game-day inactives are the team-issued Out list):")
+    md.append("")
+    md.append("| Player | Team | Status |")
+    md.append("|---|---|---|")
+    for p, v in sorted(inact["players"].items(), key=lambda kv: (kv[1].get("team",""), kv[0])):
+        if str(v.get("status","")).startswith("NOT_LISTED"): continue
+        md.append(f"| {p} | {v.get('team','n/a')} | {v.get('status','n/a')} |")
+    md.append("")
+    md.append("Watch-list starters (Raridon, Hollins, St. Brown, Gibbs, LaPorta, Maye, Goff): none ruled OUT at gate time; the paid-path trigger (official inactives invalidating a Munich QB1/WR1/RB1 starter) did NOT fire. Model spend stays 0.00 USD.")
+md.append("")
 md.append("## Full 13-game live delta")
 md.append("")
 for g in results:

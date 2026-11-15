@@ -1,6 +1,6 @@
 # Sunday Pre-Munich Live Inactives and Prop Delta (2026-11-15)
 
-Generated: 2026-11-15T08:21:30.592318+00:00 | Market snapshot: 20261115T081031Z
+Generated: 2026-11-15T13:20:32.365542+00:00 | Market snapshot: 20261115T131403Z
 Author: Hermes overnight watch, Wave 3. Worktree branch feat/hermes-overnight-mind-and-munich-watch-2026-11-15.
 
 ## Method and discipline
@@ -28,54 +28,71 @@ Books seen: spread 8, total 8, ML 8.
 
 | Ticket | Template line/odds | Live line/odds | Sim prob | Live devig | Edge | Wilson LB | Conf | Decision |
 |---|---|---|---|---|---|---|---|---|
-| NE +2.5 | 2.5 / -110 | 2.5 / -102 | 0.4742 | 0.4826 | -0.0084 | 0.4660 | 51/100 | PASS |
-| DET -2.5 | -2.5 / -110 | -2.5 / -118 | 0.5258 | 0.5174 | 0.0084 | 0.5176 | 51/100 | PASS |
-| Over 44.5 | 44.5 / -110 | 49.5 / -112 | 0.5730 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 44.5 / -110 | 49.5 / -108 | 0.4270 | n/a | n/a | n/a | n/a | PASS |
-| NE ML | ML / 120 | ML / 124 | 0.3808 | 0.4279 | -0.0471 | 0.3728 | 51/100 | PASS |
-| DET ML | ML / -142 | ML / -148 | 0.6192 | 0.5721 | 0.0471 | 0.6112 | 56/100 | PASS |
+| NE +2.5 | 2.5 / -110 | 2.5 / 100 | 0.4742 | 0.4783 | -0.0041 | 0.4660 | 51/100 | PASS |
+| DET -2.5 | -2.5 / -110 | -2.5 / -120 | 0.5258 | 0.5217 | 0.0041 | 0.5176 | 51/100 | PASS |
+| Over 44.5 | 44.5 / -110 | 50.5 / -115 | 0.5730 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 44.5 / -110 | 50.5 / -105 | 0.4270 | n/a | n/a | n/a | n/a | PASS |
+| NE ML | ML / 120 | ML / 120 | 0.3808 | 0.4365 | -0.0557 | 0.3728 | 51/100 | PASS |
+| DET ML | ML / -142 | ML / -142 | 0.6192 | 0.5635 | 0.0557 | 0.6112 | 57/100 | PASS |
 
-- NE +2.5: LIVE_GATE: edge -0.0084 vs 0.035, wilson 0.4660 vs devig 0.4826, conf 51/100 vs 65/100
-- DET -2.5: LIVE_GATE: edge 0.0084 vs 0.035, wilson 0.5176 vs devig 0.5174, conf 51/100 vs 65/100
-- Over 44.5: LINE_MOVED_RESIM_REQUIRED: template 44.5 live 49.5; Nov-13 sim prob is line-specific
-- Under 44.5: LINE_MOVED_RESIM_REQUIRED: template 44.5 live 49.5; Nov-13 sim prob is line-specific
-- NE ML: LIVE_GATE: edge -0.0471 vs 0.035, wilson 0.3728 vs devig 0.4279, conf 51/100 vs 65/100
-- DET ML: LIVE_GATE: edge 0.0471 vs 0.035, wilson 0.6112 vs devig 0.5721, conf 56/100 vs 65/100
+- NE +2.5: LIVE_GATE: edge -0.0041 vs 0.035, wilson 0.4660 vs devig 0.4783, conf 51/100 vs 65/100
+- DET -2.5: LIVE_GATE: edge 0.0041 vs 0.035, wilson 0.5176 vs devig 0.5217, conf 51/100 vs 65/100
+- Over 44.5: LINE_MOVED_RESIM_REQUIRED: template 44.5 live 50.5; Nov-13 sim prob is line-specific
+- Under 44.5: LINE_MOVED_RESIM_REQUIRED: template 44.5 live 50.5; Nov-13 sim prob is line-specific
+- NE ML: LIVE_GATE: edge -0.0557 vs 0.035, wilson 0.3728 vs devig 0.4365, conf 51/100 vs 65/100
+- DET ML: LIVE_GATE: edge 0.0557 vs 0.035, wilson 0.6112 vs devig 0.5635, conf 57/100 vs 65/100
 
-Open -> current (book used): {"spread_home": {"open": 1.5, "current": -2.5, "delta": -4.0}, "total": {"open": 49.5, "current": 49.5, "delta": 0.0}, "ml_home": {"open": 110, "current": -148, "delta": -258}}
+Open -> current (book used): {"spread_home": {"open": 1.5, "current": -2.5, "delta": -4.0}, "total": {"open": 49.5, "current": 50.5, "delta": 1.0}, "ml_home": {"open": 110, "current": -142, "delta": -252}}
 
 ### Inactives watch (07:00 CST gate)
 
-Munich summary not yet captured (inactives window opens ~07:00 CST / 13:00 UTC).
+ESPN summary injuries block captured; official inactives are the team-issued list 90 min pre-kick.
 
 | Player | Team | Status |
 |---|---|---|
-| Eli Raridon | n/a | NOT_CAPTURED |
-| Mack Hollins | n/a | NOT_CAPTURED |
-| Amon-Ra St. Brown | n/a | NOT_CAPTURED |
-| Jahmyr Gibbs | n/a | NOT_CAPTURED |
-| Sam LaPorta | n/a | NOT_CAPTURED |
-| Drake Maye | n/a | NOT_CAPTURED |
-| Jared Goff | n/a | NOT_CAPTURED |
+| Eli Raridon | NE | NOT_LISTED (no injury designation in ESPN block) |
+| Mack Hollins | NE | NOT_LISTED (no injury designation in ESPN block) |
+| Amon-Ra St. Brown | DET | NOT_LISTED (no injury designation in ESPN block) |
+| Jahmyr Gibbs | DET | NOT_LISTED (no injury designation in ESPN block) |
+| Sam LaPorta | DET | NOT_LISTED (no injury designation in ESPN block) |
+| Drake Maye | NE | NOT_LISTED (no injury designation in ESPN block) |
+| Jared Goff | DET | NOT_LISTED (no injury designation in ESPN block) |
 
 No watch-list starter flagged OUT/DOUBTFUL in the captured block (or block not yet captured).
 Munich DFS upload file (data/dfs/week10_munich_ne_det_dk_upload.csv): NOT YET LANDED (Antigravity push pending).
+
+Full ESPN injuries block at gate time (official game-day inactives are the team-issued Out list):
+
+| Player | Team | Status |
+|---|---|---|
+| Ahmed Hassanein | DET | Out |
+| Amen Ogbongbemiga | DET | Out |
+| Cade Mays | DET | Out |
+| D.J. Reed | DET | Out |
+| Mekhi Wingo | DET | Out |
+| Behren Morton | NE | Out |
+| Ben Brown | NE | Out |
+| Brenden Schooler | NE | Out |
+| Dametrious Crownover | NE | Out |
+| Walter Rouse | NE | Out |
+
+Watch-list starters (Raridon, Hollins, St. Brown, Gibbs, LaPorta, Maye, Goff): none ruled OUT at gate time; the paid-path trigger (official inactives invalidating a Munich QB1/WR1/RB1 starter) did NOT fire. Model spend stays 0.00 USD.
 
 ## Full 13-game live delta
 
 ### NE @ DET
 
 Template circuit breaker: STAGE_5_CIRCUIT_BREAKER_HALT_0_TWO_SIDED_PRICES | template publishAllowed: False | props two-sided: 0 | books sp/tot/ml: 8/8/8
-Open -> current: {"spread_home": {"open": 1.5, "current": -2.5, "delta": -4.0}, "total": {"open": 49.5, "current": 49.5, "delta": 0.0}, "ml_home": {"open": 110, "current": -148, "delta": -258}}
+Open -> current: {"spread_home": {"open": 1.5, "current": -2.5, "delta": -4.0}, "total": {"open": 49.5, "current": 50.5, "delta": 1.0}, "ml_home": {"open": 110, "current": -142, "delta": -252}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| NE +2.5 | 2.5 / -102 | 0.4742 | 0.4826 | -0.0084 | 0.4660 | 51/100 | PASS |
-| DET -2.5 | -2.5 / -118 | 0.5258 | 0.5174 | 0.0084 | 0.5176 | 51/100 | PASS |
-| Over 44.5 | 49.5 / -112 | 0.5730 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 49.5 / -108 | 0.4270 | n/a | n/a | n/a | n/a | PASS |
-| NE ML | ML / 124 | 0.3808 | 0.4279 | -0.0471 | 0.3728 | 51/100 | PASS |
-| DET ML | ML / -148 | 0.6192 | 0.5721 | 0.0471 | 0.6112 | 56/100 | PASS |
+| NE +2.5 | 2.5 / 100 | 0.4742 | 0.4783 | -0.0041 | 0.4660 | 51/100 | PASS |
+| DET -2.5 | -2.5 / -120 | 0.5258 | 0.5217 | 0.0041 | 0.5176 | 51/100 | PASS |
+| Over 44.5 | 50.5 / -115 | 0.5730 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 50.5 / -105 | 0.4270 | n/a | n/a | n/a | n/a | PASS |
+| NE ML | ML / 120 | 0.3808 | 0.4365 | -0.0557 | 0.3728 | 51/100 | PASS |
+| DET ML | ML / -142 | 0.6192 | 0.5635 | 0.0557 | 0.6112 | 57/100 | PASS |
 
 Line moved vs template (resim required): Over 44.5, Under 44.5.
 
@@ -89,16 +106,16 @@ Overnight template-approved plays and their live-market fate:
 |---|---|---|---|---|
 | BUF +2.5 | -110 | 0.1498 | 68/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 | BUF ML | 120 | 0.1957 | 72/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
-Open -> current: {"spread_home": {"open": 7.5, "current": 7.5, "delta": 0.0}, "total": {"open": 50.5, "current": 51.5, "delta": 1.0}, "ml_home": {"open": 320, "current": 300, "delta": -20}}
+Open -> current: {"spread_home": {"open": 7.5, "current": 9.5, "delta": 2.0}, "total": {"open": 50.5, "current": 50.5, "delta": 0.0}, "ml_home": {"open": 320, "current": 360, "delta": 40}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| BUF +2.5 | -7.5 / -112 | 0.6498 | n/a | n/a | n/a | n/a | PASS |
-| NYJ -2.5 | 7.5 / -108 | 0.3502 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 51.5 / -106 | 0.5526 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 51.5 / -125 | 0.4474 | n/a | n/a | n/a | n/a | PASS |
-| BUF ML | ML / -380 | 0.6322 | 0.7600 | -0.1278 | 0.6242 | 51/100 | PASS |
-| NYJ ML | ML / 300 | 0.3678 | 0.2400 | 0.1278 | 0.3599 | 65/100 | PASS |
+| BUF +2.5 | -9.5 / -108 | 0.6498 | n/a | n/a | n/a | n/a | PASS |
+| NYJ -2.5 | 9.5 / -123 | 0.3502 | n/a | n/a | n/a | n/a | PASS |
+| Over 44.5 | 50.5 / -115 | 0.5526 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 50.5 / -105 | 0.4474 | n/a | n/a | n/a | n/a | PASS |
+| BUF ML | ML / -470 | 0.6322 | 0.7914 | -0.1592 | 0.6242 | 51/100 | PASS |
+| NYJ ML | ML / 360 | 0.3678 | 0.2086 | 0.1592 | 0.3599 | 69/100 | PASS |
 
 Line moved vs template (resim required): BUF +2.5, NYJ -2.5, Over 44.5, Under 44.5, NYJ ML.
 
@@ -111,16 +128,16 @@ Overnight template-approved plays and their live-market fate:
 | selection | template odds | template edge | template conf | live fate |
 |---|---|---|---|---|
 | Under 44.5 | -110 | 0.1818 | 72/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
-Open -> current: {"spread_home": {"open": 1.5, "current": -1.5, "delta": -3.0}, "total": {"open": 47.5, "current": 48.5, "delta": 1.0}, "ml_home": {"open": 105, "current": -130, "delta": -235}}
+Open -> current: {"spread_home": {"open": 1.5, "current": -1.5, "delta": -3.0}, "total": {"open": 47.5, "current": 49.5, "delta": 2.0}, "ml_home": {"open": 105, "current": -118, "delta": -223}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| CAR +2.5 | 1.5 / -105 | 0.6005 | n/a | n/a | n/a | n/a | PASS |
-| NO -2.5 | -1.5 / -115 | 0.3995 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 48.5 / -115 | 0.3182 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 48.5 / -105 | 0.6818 | n/a | n/a | n/a | n/a | PASS |
-| CAR ML | ML / 110 | 0.4962 | 0.4573 | 0.0389 | 0.4880 | 55/100 | PASS |
-| NO ML | ML / -130 | 0.5038 | 0.5427 | -0.0389 | 0.4956 | 51/100 | PASS |
+| CAR +2.5 | 1.5 / -115 | 0.6005 | n/a | n/a | n/a | n/a | PASS |
+| NO -2.5 | -1.5 / -105 | 0.3995 | n/a | n/a | n/a | n/a | PASS |
+| Over 44.5 | 49.5 / -108 | 0.3182 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 49.5 / -123 | 0.6818 | n/a | n/a | n/a | n/a | PASS |
+| CAR ML | ML / -102 | 0.4962 | 0.4826 | 0.0136 | 0.4880 | 52/100 | PASS |
+| NO ML | ML / -118 | 0.5038 | 0.5174 | -0.0136 | 0.4956 | 51/100 | PASS |
 
 Line moved vs template (resim required): CAR +2.5, NO -2.5, Over 44.5, Under 44.5.
 
@@ -138,10 +155,10 @@ Open -> current: {"spread_home": {"open": 4.5, "current": 4.5, "delta": 0.0}, "t
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| HOU +2.5 | -4.5 / -108 | 0.6467 | n/a | n/a | n/a | n/a | PASS |
-| CLE -2.5 | 4.5 / -112 | 0.3533 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 40.5 / -108 | 0.4477 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 40.5 / -112 | 0.5523 | n/a | n/a | n/a | n/a | PASS |
+| HOU +2.5 | -4.5 / -112 | 0.6467 | n/a | n/a | n/a | n/a | PASS |
+| CLE -2.5 | 4.5 / -108 | 0.3533 | n/a | n/a | n/a | n/a | PASS |
+| Over 44.5 | 40.5 / -112 | 0.4477 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 40.5 / -108 | 0.5523 | n/a | n/a | n/a | n/a | PASS |
 | HOU ML | ML / -225 | 0.6261 | 0.6636 | -0.0375 | 0.6181 | 51/100 | PASS |
 | CLE ML | ML / 185 | 0.3739 | 0.3364 | 0.0375 | 0.3660 | 55/100 | PASS |
 
@@ -157,7 +174,7 @@ Overnight template-approved plays and their live-market fate:
 |---|---|---|---|---|
 | JAX +2.5 | -110 | 0.1782 | 71/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 | JAX ML | 120 | 0.1502 | 68/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
-Open -> current: {"spread_home": {"open": 8.5, "current": 10.5, "delta": 2.0}, "total": {"open": 44.5, "current": 46.5, "delta": 2.0}, "ml_home": {"open": 340, "current": 500, "delta": 160}}
+Open -> current: {"spread_home": {"open": 8.5, "current": 10.5, "delta": 2.0}, "total": {"open": 44.5, "current": 46.5, "delta": 2.0}, "ml_home": {"open": 340, "current": 525, "delta": 185}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
@@ -165,8 +182,8 @@ Open -> current: {"spread_home": {"open": 8.5, "current": 10.5, "delta": 2.0}, "
 | TEN -2.5 | 10.5 / -105 | 0.3218 | n/a | n/a | n/a | n/a | PASS |
 | Over 44.5 | 46.5 / -110 | 0.4363 | n/a | n/a | n/a | n/a | PASS |
 | Under 44.5 | 46.5 / -110 | 0.5637 | n/a | n/a | n/a | n/a | PASS |
-| JAX ML | ML / -700 | 0.5867 | 0.8400 | -0.2533 | 0.5786 | 51/100 | PASS |
-| TEN ML | ML / 500 | 0.4133 | 0.1600 | 0.2533 | 0.4052 | 72/100 | PASS |
+| JAX ML | ML / -750 | 0.5867 | 0.8465 | -0.2598 | 0.5786 | 51/100 | PASS |
+| TEN ML | ML / 525 | 0.4133 | 0.1535 | 0.2598 | 0.4052 | 72/100 | PASS |
 
 Line moved vs template (resim required): JAX +2.5, TEN -2.5, Over 44.5, Under 44.5, TEN ML.
 
@@ -180,16 +197,16 @@ Overnight template-approved plays and their live-market fate:
 |---|---|---|---|---|
 | KC +2.5 | -110 | 0.1563 | 69/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 | KC ML | 120 | 0.2043 | 72/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
-Open -> current: {"spread_home": {"open": 3, "current": 3.5, "delta": 0.5}, "total": {"open": 46.5, "current": 47.5, "delta": 1.0}, "ml_home": {"open": 145, "current": 140, "delta": -5}}
+Open -> current: {"spread_home": {"open": 3, "current": 3.5, "delta": 0.5}, "total": {"open": 46.5, "current": 47.5, "delta": 1.0}, "ml_home": {"open": 145, "current": 150, "delta": 5}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| KC +2.5 | -3.5 / 101 | 0.6563 | n/a | n/a | n/a | n/a | PASS |
-| ATL -2.5 | 3.5 / -134 | 0.3437 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 47.5 / -102 | 0.5445 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 47.5 / -118 | 0.4555 | n/a | n/a | n/a | n/a | PASS |
-| KC ML | ML / -166 | 0.6408 | 0.5996 | 0.0412 | 0.6329 | 55/100 | PASS |
-| ATL ML | ML / 140 | 0.3592 | 0.4004 | -0.0412 | 0.3513 | 51/100 | PASS |
+| KC +2.5 | -3.5 / -101 | 0.6563 | n/a | n/a | n/a | n/a | PASS |
+| ATL -2.5 | 3.5 / -131 | 0.3437 | n/a | n/a | n/a | n/a | PASS |
+| Over 44.5 | 47.5 / -105 | 0.5445 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 47.5 / -115 | 0.4555 | n/a | n/a | n/a | n/a | PASS |
+| KC ML | ML / -180 | 0.6408 | 0.6164 | 0.0244 | 0.6329 | 53/100 | PASS |
+| ATL ML | ML / 150 | 0.3592 | 0.3836 | -0.0244 | 0.3513 | 51/100 | PASS |
 
 Line moved vs template (resim required): KC +2.5, ATL -2.5, Over 44.5, Under 44.5.
 
@@ -202,16 +219,16 @@ Overnight template-approved plays and their live-market fate:
 | selection | template odds | template edge | template conf | live fate |
 |---|---|---|---|---|
 | LAR ML | 120 | 0.1431 | 67/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
-Open -> current: {"spread_home": {"open": 8.5, "current": 9.5, "delta": 1.0}, "total": {"open": 47.5, "current": 38.5, "delta": -9.0}, "ml_home": {"open": 295, "current": 425, "delta": 130}}
+Open -> current: {"spread_home": {"open": 8.5, "current": 9.5, "delta": 1.0}, "total": {"open": 47.5, "current": 38.5, "delta": -9.0}, "ml_home": {"open": 295, "current": 370, "delta": 75}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
 | LAR +2.5 | -9.5 / -112 | 0.5959 | n/a | n/a | n/a | n/a | PASS |
 | ARI -2.5 | 9.5 / -108 | 0.4041 | n/a | n/a | n/a | n/a | PASS |
-| Over 44.5 | 38.5 / -118 | 0.4427 | n/a | n/a | n/a | n/a | PASS |
-| Under 44.5 | 38.5 / -102 | 0.5573 | n/a | n/a | n/a | n/a | PASS |
-| LAR ML | ML / -575 | 0.5796 | 0.8173 | -0.2377 | 0.5715 | 51/100 | PASS |
-| ARI ML | ML / 425 | 0.4204 | 0.1827 | 0.2377 | 0.4123 | 72/100 | PASS |
+| Over 44.5 | 38.5 / -108 | 0.4427 | n/a | n/a | n/a | n/a | PASS |
+| Under 44.5 | 38.5 / -112 | 0.5573 | n/a | n/a | n/a | n/a | PASS |
+| LAR ML | ML / -485 | 0.5796 | 0.7958 | -0.2162 | 0.5715 | 51/100 | PASS |
+| ARI ML | ML / 370 | 0.4204 | 0.2042 | 0.2162 | 0.4123 | 72/100 | PASS |
 
 Line moved vs template (resim required): LAR +2.5, ARI -2.5, Over 44.5, Under 44.5, ARI ML.
 
@@ -228,8 +245,8 @@ Open -> current: {"spread_home": {"open": -2.5, "current": -4.5, "delta": -2.0},
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| MIA +2.5 | 4.5 / -112 | 0.4625 | n/a | n/a | n/a | n/a | PASS |
-| IND -2.5 | -4.5 / -108 | 0.5375 | n/a | n/a | n/a | n/a | PASS |
+| MIA +2.5 | 4.5 / -110 | 0.4625 | n/a | n/a | n/a | n/a | PASS |
+| IND -2.5 | -4.5 / -110 | 0.5375 | n/a | n/a | n/a | n/a | PASS |
 | Over 44.5 | 37.5 / -110 | 0.3602 | n/a | n/a | n/a | n/a | PASS |
 | Under 44.5 | 37.5 / -110 | 0.6398 | n/a | n/a | n/a | n/a | PASS |
 | MIA ML | ML / 185 | 0.3652 | 0.3364 | 0.0288 | 0.3573 | 53/100 | PASS |
@@ -285,16 +302,16 @@ Overnight template-approved plays and their live-market fate:
 | selection | template odds | template edge | template conf | live fate |
 |---|---|---|---|---|
 | Under 44.5 | -110 | 0.1434 | 67/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
-Open -> current: {"spread_home": {"open": 6, "current": 6.5, "delta": 0.5}, "total": {"open": 44.5, "current": 40.5, "delta": -4.0}, "ml_home": {"open": 215, "current": 245, "delta": 30}}
+Open -> current: {"spread_home": {"open": 6, "current": 6.5, "delta": 0.5}, "total": {"open": 44.5, "current": 40.5, "delta": -4.0}, "ml_home": {"open": 215, "current": 235, "delta": 20}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| SEA +2.5 | -6.5 / -112 | 0.5898 | n/a | n/a | n/a | n/a | PASS |
-| LV -2.5 | 6.5 / -108 | 0.4102 | n/a | n/a | n/a | n/a | PASS |
+| SEA +2.5 | -6.5 / -110 | 0.5898 | n/a | n/a | n/a | n/a | PASS |
+| LV -2.5 | 6.5 / -110 | 0.4102 | n/a | n/a | n/a | n/a | PASS |
 | Over 44.5 | 40.5 / -108 | 0.3566 | n/a | n/a | n/a | n/a | PASS |
 | Under 44.5 | 40.5 / -112 | 0.6434 | n/a | n/a | n/a | n/a | PASS |
-| SEA ML | ML / -305 | 0.5167 | 0.7221 | -0.2054 | 0.5085 | 51/100 | PASS |
-| LV ML | ML / 245 | 0.4833 | 0.2779 | 0.2054 | 0.4751 | 72/100 | PASS |
+| SEA ML | ML / -290 | 0.5167 | 0.7136 | -0.1969 | 0.5085 | 51/100 | PASS |
+| LV ML | ML / 235 | 0.4833 | 0.2864 | 0.1969 | 0.4751 | 72/100 | PASS |
 
 Line moved vs template (resim required): SEA +2.5, LV -2.5, Over 44.5, Under 44.5, LV ML.
 
@@ -308,16 +325,16 @@ Overnight template-approved plays and their live-market fate:
 |---|---|---|---|---|
 | SF +2.5 | -110 | 0.1831 | 72/100 | INVALIDATED_LINE_MOVED (template benchmark, not a live quote) |
 | SF ML | 120 | 0.1529 | 68/100 | INVALIDATED_LIVE_GATE (edge/wilson/conf fails on live price) |
-Open -> current: {"spread_home": {"open": 3.5, "current": 3.5, "delta": 0.0}, "total": {"open": 53.5, "current": 56.5, "delta": 3.0}, "ml_home": {"open": 170, "current": 170, "delta": 0}}
+Open -> current: {"spread_home": {"open": 3.5, "current": 4.5, "delta": 1.0}, "total": {"open": 53.5, "current": 56.5, "delta": 3.0}, "ml_home": {"open": 170, "current": 180, "delta": 10}}
 
 | Ticket | Live line/odds | Sim | Devig | Edge | Wilson | Conf | Decision |
 |---|---|---|---|---|---|---|---|
-| SF +2.5 | -3.5 / -115 | 0.6831 | n/a | n/a | n/a | n/a | PASS |
-| DAL -2.5 | 3.5 / -105 | 0.3169 | n/a | n/a | n/a | n/a | PASS |
+| SF +2.5 | -4.5 / -108 | 0.6831 | n/a | n/a | n/a | n/a | PASS |
+| DAL -2.5 | 4.5 / -112 | 0.3169 | n/a | n/a | n/a | n/a | PASS |
 | Over 44.5 | 56.5 / -108 | 0.6018 | n/a | n/a | n/a | n/a | PASS |
 | Under 44.5 | 56.5 / -123 | 0.3982 | n/a | n/a | n/a | n/a | PASS |
-| SF ML | ML / -205 | 0.5894 | 0.6447 | -0.0553 | 0.5813 | 51/100 | PASS |
-| DAL ML | ML / 170 | 0.4106 | 0.3553 | 0.0553 | 0.4025 | 57/100 | PASS |
+| SF ML | ML / -218 | 0.5894 | 0.6575 | -0.0681 | 0.5813 | 51/100 | PASS |
+| DAL ML | ML / 180 | 0.4106 | 0.3425 | 0.0681 | 0.4025 | 58/100 | PASS |
 
 Line moved vs template (resim required): SF +2.5, DAL -2.5, Over 44.5, Under 44.5.
 
