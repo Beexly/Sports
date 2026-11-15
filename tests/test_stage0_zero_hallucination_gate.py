@@ -185,4 +185,5 @@ def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     assert "Mike Evans" in excluded_names
     assert "Travis Etienne Jr." not in excluded_names
     assert "Xavier Legette" not in excluded_names
-
+    assert cfg["confirmed_qb1"]["CLE"] == "Deshaun Watson"
+assert "Deshaun Watson" not in excluded_names
