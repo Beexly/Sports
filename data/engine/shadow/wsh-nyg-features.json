@@ -1,0 +1,54 @@
+{
+  "codeVersion": "v5.3.1+evidence-spine.1",
+  "devigCrossCheck": {
+    "agreement": true,
+    "holdPct": 4.0664,
+    "homeProbMax": 0.549587,
+    "homeProbMin": 0.546733,
+    "methods": {
+      "Additive": [
+        0.548634,
+        0.451366
+      ],
+      "Cheung_Odds_Ratio": [
+        0.548715,
+        0.451285
+      ],
+      "Multiplicative": [
+        0.546733,
+        0.453267
+      ],
+      "Power": [
+        0.549587,
+        0.450413
+      ],
+      "Probit": [
+        0.548698,
+        0.451302
+      ],
+      "Shin": [
+        0.548634,
+        0.451366
+      ]
+    },
+    "rawImpliedAway": 0.471698,
+    "rawImpliedHome": 0.568966,
+    "spread": 0.002854,
+    "status": "REAL",
+    "threshold": 0.02
+  },
+  "emissionWeight": 0,
+  "gameId": "cmt4fewrc00jbeat5nq9eauqo",
+  "note": "Features only. No probability is produced here. The de-vig cross-check is a gate input; the ballistics are a diagnostic with weight zero.",
+  "schema": "gse.pregame.python-features.v1",
+  "weatherBallistics": {
+    "airDensityKgM3": 1.2311,
+    "emissionWeight": 0,
+    "fgRangeDeltaYards": -4.55,
+    "note": "air density at standard sea-level pressure; venue elevation is not in the bundle. Wind is scalar because the NWS reading carries no direction.",
+    "status": "REAL",
+    "temperatureC": 12.778,
+    "windDirectionDeg": null,
+    "windMph": 13
+  }
+}

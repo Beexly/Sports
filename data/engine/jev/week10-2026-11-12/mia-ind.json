@@ -1,0 +1,947 @@
+{
+  "awayTeam": "MIA",
+  "buckets": [
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.42,
+          "probabilities": {
+            "cover_zero_pressure": 0.02,
+            "goal_line": 0.01,
+            "prevent": 0.0,
+            "single_high": 0.29,
+            "two_high_quarters": 0.52,
+            "two_high_split": 0.16
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "inside_zone_run",
+          "confidence": 0.18,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.28,
+            "inside_zone_run": 0.28,
+            "outside_zone_run": 0.16,
+            "play_action_pass": 0.12,
+            "quick_game_pass": 0.11,
+            "rpo": 0.03,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "low",
+          "confidence": 0.19,
+          "probabilities": {
+            "high": 0.07,
+            "immediate": 0.02,
+            "low": 0.35,
+            "moderate": 0.27,
+            "none": 0.29
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.32,
+          "probabilities": {
+            "explosive_gain": 0.03,
+            "incomplete": 0.12,
+            "moderate_gain": 0.42,
+            "no_gain_or_loss": 0.05,
+            "sack": 0.01,
+            "short_gain": 0.36,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.53,
+          "probabilities": {
+            "qb_scramble": 0.03,
+            "rb1": 0.61,
+            "rb2": 0.02,
+            "te1": 0.03,
+            "wr1": 0.28,
+            "wr2": 0.03
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q1_1st_10_own25_tied",
+      "scoreMarginHome": 0,
+      "secondsRemaining": 3600,
+      "yardlineOwn": 25
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.4,
+          "probabilities": {
+            "cover_zero_pressure": 0.07,
+            "goal_line": 0.01,
+            "prevent": 0.0,
+            "single_high": 0.26,
+            "two_high_quarters": 0.5,
+            "two_high_split": 0.16
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "dropback_pass",
+          "confidence": 0.31,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.4,
+            "inside_zone_run": 0.13,
+            "outside_zone_run": 0.05,
+            "play_action_pass": 0.18,
+            "quick_game_pass": 0.18,
+            "rpo": 0.03,
+            "screen": 0.03
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.41,
+          "probabilities": {
+            "high": 0.22,
+            "immediate": 0.02,
+            "low": 0.14,
+            "moderate": 0.53,
+            "none": 0.09
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.26,
+          "probabilities": {
+            "explosive_gain": 0.02,
+            "incomplete": 0.29,
+            "moderate_gain": 0.37,
+            "no_gain_or_loss": 0.09,
+            "sack": 0.02,
+            "short_gain": 0.2,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "wr1",
+          "confidence": 0.22,
+          "probabilities": {
+            "qb_scramble": 0.04,
+            "rb1": 0.34,
+            "rb2": 0.04,
+            "te1": 0.15,
+            "wr1": 0.35,
+            "wr2": 0.08
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 7,
+      "down": 3,
+      "id": "Q1_3rd_7_own40_tied",
+      "scoreMarginHome": 0,
+      "secondsRemaining": 3000,
+      "yardlineOwn": 40
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "single_high",
+          "confidence": 0.28,
+          "probabilities": {
+            "cover_zero_pressure": 0.03,
+            "goal_line": 0.02,
+            "prevent": 0.01,
+            "single_high": 0.4,
+            "two_high_quarters": 0.39,
+            "two_high_split": 0.15
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "dropback_pass",
+          "confidence": 0.23,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.33,
+            "inside_zone_run": 0.25,
+            "outside_zone_run": 0.15,
+            "play_action_pass": 0.18,
+            "quick_game_pass": 0.05,
+            "rpo": 0.03,
+            "screen": 0.01
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.19,
+          "probabilities": {
+            "high": 0.09,
+            "immediate": 0.02,
+            "low": 0.34,
+            "moderate": 0.35,
+            "none": 0.2
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.35,
+          "probabilities": {
+            "explosive_gain": 0.06,
+            "incomplete": 0.15,
+            "moderate_gain": 0.44,
+            "no_gain_or_loss": 0.04,
+            "sack": 0.01,
+            "short_gain": 0.29,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.4,
+          "probabilities": {
+            "qb_scramble": 0.02,
+            "rb1": 0.5,
+            "rb2": 0.02,
+            "te1": 0.03,
+            "wr1": 0.39,
+            "wr2": 0.04
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q2_1st_10_opp35_lead3",
+      "scoreMarginHome": 3,
+      "secondsRemaining": 1800,
+      "yardlineOwn": 65
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "goal_line",
+          "confidence": 0.16,
+          "probabilities": {
+            "cover_zero_pressure": 0.23,
+            "goal_line": 0.3,
+            "prevent": 0.02,
+            "single_high": 0.16,
+            "two_high_quarters": 0.21,
+            "two_high_split": 0.08
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "inside_zone_run",
+          "confidence": 0.44,
+          "probabilities": {
+            "desperation_pass": 0.01,
+            "dropback_pass": 0.07,
+            "inside_zone_run": 0.51,
+            "outside_zone_run": 0.08,
+            "play_action_pass": 0.09,
+            "quick_game_pass": 0.21,
+            "rpo": 0.02,
+            "screen": 0.01
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "low",
+          "confidence": 0.09,
+          "probabilities": {
+            "high": 0.13,
+            "immediate": 0.11,
+            "low": 0.27,
+            "moderate": 0.23,
+            "none": 0.26
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "short_gain",
+          "confidence": 0.66,
+          "probabilities": {
+            "explosive_gain": 0.03,
+            "incomplete": 0.06,
+            "moderate_gain": 0.12,
+            "no_gain_or_loss": 0.06,
+            "sack": 0.01,
+            "short_gain": 0.71,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.71,
+          "probabilities": {
+            "qb_scramble": 0.07,
+            "rb1": 0.76,
+            "rb2": 0.03,
+            "te1": 0.08,
+            "wr1": 0.05,
+            "wr2": 0.01
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 2,
+      "down": 3,
+      "id": "Q2_3rd_2_opp12_lead3",
+      "scoreMarginHome": 3,
+      "secondsRemaining": 900,
+      "yardlineOwn": 88
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.24,
+          "probabilities": {
+            "cover_zero_pressure": 0.1,
+            "goal_line": 0.02,
+            "prevent": 0.04,
+            "single_high": 0.35,
+            "two_high_quarters": 0.37,
+            "two_high_split": 0.12
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "quick_game_pass",
+          "confidence": 0.2,
+          "probabilities": {
+            "desperation_pass": 0.01,
+            "dropback_pass": 0.28,
+            "inside_zone_run": 0.12,
+            "outside_zone_run": 0.06,
+            "play_action_pass": 0.18,
+            "quick_game_pass": 0.3,
+            "rpo": 0.02,
+            "screen": 0.03
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.24,
+          "probabilities": {
+            "high": 0.18,
+            "immediate": 0.02,
+            "low": 0.26,
+            "moderate": 0.39,
+            "none": 0.15
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.38,
+          "probabilities": {
+            "explosive_gain": 0.06,
+            "incomplete": 0.18,
+            "moderate_gain": 0.47,
+            "no_gain_or_loss": 0.04,
+            "sack": 0.01,
+            "short_gain": 0.23,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.34,
+          "probabilities": {
+            "qb_scramble": 0.04,
+            "rb1": 0.45,
+            "rb2": 0.02,
+            "te1": 0.06,
+            "wr1": 0.38,
+            "wr2": 0.05
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q2_2min_own20_trail3",
+      "scoreMarginHome": -3,
+      "secondsRemaining": 120,
+      "yardlineOwn": 20
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "single_high",
+          "confidence": 0.28,
+          "probabilities": {
+            "cover_zero_pressure": 0.04,
+            "goal_line": 0.01,
+            "prevent": 0.01,
+            "single_high": 0.4,
+            "two_high_quarters": 0.4,
+            "two_high_split": 0.14
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "dropback_pass",
+          "confidence": 0.27,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.36,
+            "inside_zone_run": 0.17,
+            "outside_zone_run": 0.08,
+            "play_action_pass": 0.24,
+            "quick_game_pass": 0.1,
+            "rpo": 0.03,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.2,
+          "probabilities": {
+            "high": 0.11,
+            "immediate": 0.02,
+            "low": 0.3,
+            "moderate": 0.36,
+            "none": 0.21
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.43,
+          "probabilities": {
+            "explosive_gain": 0.06,
+            "incomplete": 0.15,
+            "moderate_gain": 0.51,
+            "no_gain_or_loss": 0.05,
+            "sack": 0.01,
+            "short_gain": 0.21,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.44,
+          "probabilities": {
+            "qb_scramble": 0.03,
+            "rb1": 0.53,
+            "rb2": 0.03,
+            "te1": 0.06,
+            "wr1": 0.32,
+            "wr2": 0.03
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q3_1st_10_own25_trail3",
+      "scoreMarginHome": -3,
+      "secondsRemaining": 3600,
+      "yardlineOwn": 25
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.27,
+          "probabilities": {
+            "cover_zero_pressure": 0.13,
+            "goal_line": 0.01,
+            "prevent": 0.01,
+            "single_high": 0.34,
+            "two_high_quarters": 0.39,
+            "two_high_split": 0.12
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "dropback_pass",
+          "confidence": 0.42,
+          "probabilities": {
+            "desperation_pass": 0.02,
+            "dropback_pass": 0.49,
+            "inside_zone_run": 0.05,
+            "outside_zone_run": 0.02,
+            "play_action_pass": 0.23,
+            "quick_game_pass": 0.14,
+            "rpo": 0.02,
+            "screen": 0.03
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.35,
+          "probabilities": {
+            "high": 0.31,
+            "immediate": 0.03,
+            "low": 0.12,
+            "moderate": 0.48,
+            "none": 0.06
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.36,
+          "probabilities": {
+            "explosive_gain": 0.05,
+            "incomplete": 0.3,
+            "moderate_gain": 0.45,
+            "no_gain_or_loss": 0.05,
+            "sack": 0.03,
+            "short_gain": 0.1,
+            "turnover": 0.02
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "wr1",
+          "confidence": 0.4,
+          "probabilities": {
+            "qb_scramble": 0.05,
+            "rb1": 0.2,
+            "rb2": 0.04,
+            "te1": 0.14,
+            "wr1": 0.5,
+            "wr2": 0.07
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 12,
+      "down": 3,
+      "id": "Q3_3rd_12_own18_trail10",
+      "scoreMarginHome": -10,
+      "secondsRemaining": 2400,
+      "yardlineOwn": 18
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.32,
+          "probabilities": {
+            "cover_zero_pressure": 0.05,
+            "goal_line": 0.01,
+            "prevent": 0.01,
+            "single_high": 0.37,
+            "two_high_quarters": 0.43,
+            "two_high_split": 0.13
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "dropback_pass",
+          "confidence": 0.28,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.37,
+            "inside_zone_run": 0.21,
+            "outside_zone_run": 0.08,
+            "play_action_pass": 0.2,
+            "quick_game_pass": 0.1,
+            "rpo": 0.02,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.22,
+          "probabilities": {
+            "high": 0.1,
+            "immediate": 0.01,
+            "low": 0.33,
+            "moderate": 0.38,
+            "none": 0.18
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.42,
+          "probabilities": {
+            "explosive_gain": 0.04,
+            "incomplete": 0.13,
+            "moderate_gain": 0.5,
+            "no_gain_or_loss": 0.03,
+            "sack": 0.01,
+            "short_gain": 0.28,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.46,
+          "probabilities": {
+            "qb_scramble": 0.02,
+            "rb1": 0.55,
+            "rb2": 0.02,
+            "te1": 0.03,
+            "wr1": 0.35,
+            "wr2": 0.03
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q4_1st_10_own35_trail10",
+      "scoreMarginHome": -10,
+      "secondsRemaining": 1200,
+      "yardlineOwn": 35
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.28,
+          "probabilities": {
+            "cover_zero_pressure": 0.12,
+            "goal_line": 0.01,
+            "prevent": 0.02,
+            "single_high": 0.33,
+            "two_high_quarters": 0.4,
+            "two_high_split": 0.12
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "quick_game_pass",
+          "confidence": 0.35,
+          "probabilities": {
+            "desperation_pass": 0.0,
+            "dropback_pass": 0.25,
+            "inside_zone_run": 0.08,
+            "outside_zone_run": 0.03,
+            "play_action_pass": 0.17,
+            "quick_game_pass": 0.43,
+            "rpo": 0.02,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.37,
+          "probabilities": {
+            "high": 0.2,
+            "immediate": 0.02,
+            "low": 0.19,
+            "moderate": 0.5,
+            "none": 0.09
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "short_gain",
+          "confidence": 0.36,
+          "probabilities": {
+            "explosive_gain": 0.03,
+            "incomplete": 0.16,
+            "moderate_gain": 0.32,
+            "no_gain_or_loss": 0.02,
+            "sack": 0.01,
+            "short_gain": 0.45,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "wr1",
+          "confidence": 0.32,
+          "probabilities": {
+            "qb_scramble": 0.04,
+            "rb1": 0.22,
+            "rb2": 0.04,
+            "te1": 0.18,
+            "wr1": 0.43,
+            "wr2": 0.09
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 4,
+      "down": 3,
+      "id": "Q4_3rd_4_opp45_trail3",
+      "scoreMarginHome": -3,
+      "secondsRemaining": 600,
+      "yardlineOwn": 55
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "cover_zero_pressure",
+          "confidence": 0.22,
+          "probabilities": {
+            "cover_zero_pressure": 0.35,
+            "goal_line": 0.28,
+            "prevent": 0.05,
+            "single_high": 0.09,
+            "two_high_quarters": 0.16,
+            "two_high_split": 0.07
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "inside_zone_run",
+          "confidence": 0.5,
+          "probabilities": {
+            "desperation_pass": 0.04,
+            "dropback_pass": 0.07,
+            "inside_zone_run": 0.56,
+            "outside_zone_run": 0.04,
+            "play_action_pass": 0.07,
+            "quick_game_pass": 0.19,
+            "rpo": 0.01,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "none",
+          "confidence": 0.16,
+          "probabilities": {
+            "high": 0.12,
+            "immediate": 0.14,
+            "low": 0.27,
+            "moderate": 0.14,
+            "none": 0.33
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "short_gain",
+          "confidence": 0.64,
+          "probabilities": {
+            "explosive_gain": 0.02,
+            "incomplete": 0.1,
+            "moderate_gain": 0.05,
+            "no_gain_or_loss": 0.1,
+            "sack": 0.01,
+            "short_gain": 0.69,
+            "turnover": 0.03
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.51,
+          "probabilities": {
+            "qb_scramble": 0.16,
+            "rb1": 0.59,
+            "rb2": 0.04,
+            "te1": 0.15,
+            "wr1": 0.04,
+            "wr2": 0.02
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 1,
+      "down": 4,
+      "id": "Q4_4th_1_opp38_trail3",
+      "scoreMarginHome": -3,
+      "secondsRemaining": 420,
+      "yardlineOwn": 62
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "single_high",
+          "confidence": 0.24,
+          "probabilities": {
+            "cover_zero_pressure": 0.15,
+            "goal_line": 0.01,
+            "prevent": 0.07,
+            "single_high": 0.37,
+            "two_high_quarters": 0.3,
+            "two_high_split": 0.1
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "quick_game_pass",
+          "confidence": 0.21,
+          "probabilities": {
+            "desperation_pass": 0.02,
+            "dropback_pass": 0.27,
+            "inside_zone_run": 0.08,
+            "outside_zone_run": 0.04,
+            "play_action_pass": 0.23,
+            "quick_game_pass": 0.31,
+            "rpo": 0.02,
+            "screen": 0.03
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.27,
+          "probabilities": {
+            "high": 0.17,
+            "immediate": 0.02,
+            "low": 0.26,
+            "moderate": 0.42,
+            "none": 0.13
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.4,
+          "probabilities": {
+            "explosive_gain": 0.09,
+            "incomplete": 0.2,
+            "moderate_gain": 0.49,
+            "no_gain_or_loss": 0.03,
+            "sack": 0.01,
+            "short_gain": 0.17,
+            "turnover": 0.01
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "wr1",
+          "confidence": 0.35,
+          "probabilities": {
+            "qb_scramble": 0.06,
+            "rb1": 0.35,
+            "rb2": 0.02,
+            "te1": 0.06,
+            "wr1": 0.46,
+            "wr2": 0.05
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q4_2min_own25_trail3",
+      "scoreMarginHome": -3,
+      "secondsRemaining": 120,
+      "yardlineOwn": 25
+    },
+    {
+      "answers": {
+        "def_shell_call": {
+          "choice": "two_high_quarters",
+          "confidence": 0.24,
+          "probabilities": {
+            "cover_zero_pressure": 0.12,
+            "goal_line": 0.06,
+            "prevent": 0.04,
+            "single_high": 0.28,
+            "two_high_quarters": 0.37,
+            "two_high_split": 0.13
+          },
+          "type": "choice"
+        },
+        "off_play_call": {
+          "choice": "play_action_pass",
+          "confidence": 0.12,
+          "probabilities": {
+            "desperation_pass": 0.02,
+            "dropback_pass": 0.22,
+            "inside_zone_run": 0.19,
+            "outside_zone_run": 0.11,
+            "play_action_pass": 0.23,
+            "quick_game_pass": 0.19,
+            "rpo": 0.02,
+            "screen": 0.02
+          },
+          "type": "choice"
+        },
+        "pressure_disruption": {
+          "choice": "moderate",
+          "confidence": 0.18,
+          "probabilities": {
+            "high": 0.15,
+            "immediate": 0.03,
+            "low": 0.29,
+            "moderate": 0.34,
+            "none": 0.19
+          },
+          "type": "choice"
+        },
+        "snap_outcome": {
+          "choice": "moderate_gain",
+          "confidence": 0.36,
+          "probabilities": {
+            "explosive_gain": 0.12,
+            "incomplete": 0.16,
+            "moderate_gain": 0.45,
+            "no_gain_or_loss": 0.04,
+            "sack": 0.02,
+            "short_gain": 0.19,
+            "turnover": 0.02
+          },
+          "type": "choice"
+        },
+        "target_carrier": {
+          "choice": "rb1",
+          "confidence": 0.32,
+          "probabilities": {
+            "qb_scramble": 0.06,
+            "rb1": 0.43,
+            "rb2": 0.02,
+            "te1": 0.04,
+            "wr1": 0.41,
+            "wr2": 0.04
+          },
+          "type": "choice"
+        }
+      },
+      "distance": 10,
+      "down": 1,
+      "id": "Q4_1st_10_opp20_tied",
+      "scoreMarginHome": 0,
+      "secondsRemaining": 60,
+      "yardlineOwn": 80
+    }
+  ],
+  "contentHash": "dea05511a79bf1cd6fd691cf8facb4837d9667c0cecc54b94c7472defb4f3ccb",
+  "diagnosticDelta": 0,
+  "emissionWeight": 0,
+  "gameId": "cmt4fews800jpeat5w2m7q0pb",
+  "generatedAt": "2026-11-12T23:20:24.458407Z",
+  "homeTeam": "IND",
+  "label": "UNVALIDATED_CLASSIFIER_SHADOW",
+  "latencyMs": 2588,
+  "note": "JEV classification of situational buckets for a game that has not been played. Not measured data. Emission weight is zero by construction; this file may inform the reasoning trace and nothing else.",
+  "questions": [
+    "off_play_call",
+    "def_shell_call",
+    "target_carrier",
+    "snap_outcome",
+    "pressure_disruption"
+  ],
+  "schema": "gse.jev.spine.v1",
+  "snapCount": 12
+}

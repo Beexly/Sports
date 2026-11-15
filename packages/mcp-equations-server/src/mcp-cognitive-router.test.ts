@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildContextMask,
   buildUniversalAndSecondOrderCognitiveSignals,
+  describeMissingRouterInputs,
   maskToArray,
   MASK_WORDS,
   MAX_ABS_DELTA_LOG_ODDS,
@@ -108,12 +109,24 @@ describe("Stage C spectral orthogonalization & Stage D James-Stein Jacobian coup
   });
 
   it("wires Universal 360 + 2nd/3rd-Order Non-Stationary + 8-Step 5-API Cascade priors into Stage 2 Pre-Projection routing", () => {
+    // Only the families whose inputs are supplied are emitted. The previous
+    // version substituted hand-set defaults (0.58, -0.26, 0.14, -0.35, 0.12,
+    // 0.11, 0.18, 0.15, 0.72) and emitted all seven regardless, so an
+    // unmeasured family moved the router exactly as if it had been measured.
     const signals = buildUniversalAndSecondOrderCognitiveSignals({
       trenchWeakLinkCollapseProb: 0.64,
       qbTraumaCompressionSec: -0.32,
       gsiBiomechanicalEfficiencyLossPct: 0.14,
     });
-    expect(signals.length).toBe(7);
+    expect(signals.length).toBe(3);
+    expect(signals.map((s) => s.family).sort((a, b) => a - b)).toEqual([12, 48, 176]);
+
+    // With no inputs at all, nothing is emitted and every family is reported.
+    expect(buildUniversalAndSecondOrderCognitiveSignals({})).toEqual([]);
+    const missing = describeMissingRouterInputs({});
+    expect(missing.length).toBe(9);
+    expect(missing.map((m) => m.field)).toContain("trenchWeakLinkCollapseProb");
+
     const out = routePreProjectionWithUniversalAndOmnisciencePriors([], {
       trenchWeakLinkCollapseProb: 0.64,
       qbTraumaCompressionSec: -0.32,
@@ -121,12 +134,16 @@ describe("Stage C spectral orthogonalization & Stage D James-Stein Jacobian coup
       openAlexOrthopedicSnapCap: 0.72,
     });
     expect(out.reverse8Step5ApiCascadeActive).toBe(true);
-    expect(out.injectedSignalsCount).toBe(7);
+    expect(out.injectedSignalsCount).toBe(3);
     expect(Math.abs(out.routerResult.clampedTotalLogOddsDelta)).toBeLessThanOrEqual(
       MAX_ABS_DELTA_LOG_ODDS,
     );
     expect(out.pressureDisruptionHazardDelta).toBeGreaterThan(0);
     expect(out.secondHalfTutFatigueDecayRate).toBeGreaterThan(0.05);
     expect(out.gsiSnapShareCap).toBeCloseTo(0.72, 5);
+    // causalUnschemedEpaDelta was not supplied, so this delta is null, not a
+    // number computed from a substituted 0.14.
+    expect(out.passEfficiencyPriorDelta).toBeNull();
+    expect(out.missingInputs.map((m) => m.field)).toContain("causalUnschemedEpaDelta");
   });
 });

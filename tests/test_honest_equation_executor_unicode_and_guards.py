@@ -62,3 +62,13 @@ def test_set_relations_are_still_rejected() -> None:
     # smuggled through the comparison path.
     result = parse_and_execute_honestly("x \u2208 S")
     assert "relational_or_set_statement" in (result.reason or "")
+
+
+def test_wrapper_macros_flatten_and_punctuation_only_wrapper_adds_no_symbol():
+    """\\mbox{ ,} must not invent a phantom symbol; \\bm/\\textbf/\\mathfrak flatten."""
+    from intelligence.equations import honest_equation_executor as h
+    r = h.parse_and_execute_honestly(r"\mbox{ ,} x = \bm{y}+2")
+    assert r.status == "PARSED_SYMBOLIC_ONLY"
+    assert r.normalized_expr == "x = y+2"
+    r2 = h.parse_and_execute_honestly(r"\frac{\Delta\tau_{\text{Out}}}{2} \leq 3.5")
+    assert r2.status != "UNPARSEABLE"
