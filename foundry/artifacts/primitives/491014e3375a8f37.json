@@ -1,0 +1,684 @@
+{
+ "book_id": "491014e3375a8f37",
+ "source_status": "COMPLETE",
+ "source_note": "Edited by Amit Agrawal. Brain Injury: Pathogenesis, Monitoring, Recovery and Management. InTech, Rijeka, first published 2012. ISBN 978-953-51-0265-6, eBook ISBN 978-953-51-5259-0, DOI 10.5772/1074. Individual chapters distributed under Creative Commons Attribution 3.0. Local file is the complete publisher PDF of the edited volume, 539 PDF pages by form feed count, 22987 extracted text lines. File size 24189780 bytes. Full sha256 scan digest 491014e3375a8f371712ef96dc543d638a2accb8e4e060f98d1da167803d0d01, book_id is its first 16 hex characters. Catalog note: the contents list Chapters 1 to 25 in five parts while the preface text says 26 chapters; the contents list governs. Chapter 7 GCS bands are recorded exactly as printed and differ from other common conventions. Text quality: clean born digital extraction for prose; Greek letters and some equation glyphs are corrupted in places, so all quoted passages were chosen from clean prose and verified as contiguous substrings inside single PDF pages of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "primary_secondary_two_phase_division",
+   "name": "Closed brain injury divides into two phases, primary injury at impact and secondary injury after it",
+   "verbatim_quote": "Closed brain injury processes can be divided into two phases, primary and secondary brain injury.",
+   "page": "Chapter 11, sec. 2 (Idris et al.); PDF chunk 226 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The initial mechanical insult is complete before care begins",
+    "A later phase exists in which further damage accrues and can in principle be interrupted"
+   ],
+   "breakdown_regime": "The clean two phase split blurs when primary lesions keep evolving, for example expanding hematomas, and when secondary processes begin within seconds of impact",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a two stage state model in the reasoning engine: a fixed initial condition set at the event, then a dynamic deterioration layer whose variables keep moving and can still change the outcome after the event itself is over",
+    "source_operator": "primary_secondary_two_phase_division",
+    "telemetry": "Event severity descriptors at first observation, then time stamped physiological observations after the event"
+   }
+  },
+  {
+   "primitive_id": "primary_injury_at_impact",
+   "name": "Primary brain injury occurs at the time of impact with an instantaneous clinical effect",
+   "verbatim_quote": "Primary brain injury occurs at the time of impact with an instantaneous clinical effect.",
+   "page": "Chapter 11, sec. 2.1 (Idris et al.); PDF chunk 228 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Impact mechanics determine the primary lesion pattern",
+    "Primary lesions are largely evident clinically or on imaging as macroscopic events"
+   ],
+   "breakdown_regime": "Focal and diffuse primary lesions overlap in most real injuries, and imaging in the first hours understates diffuse axonal injury, so the primary label can hide later declared damage",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine treatment of opening conditions: facts fixed by the event itself are inputs, not predictions, and any later change must be explained by the secondary layer rather than by rewriting the initial state",
+    "source_operator": "primary_injury_at_impact",
+    "telemetry": "Impact mechanism reports, first imaging, first neurological examination"
+   }
+  },
+  {
+   "primitive_id": "secondary_insults_end_stage_events",
+   "name": "Secondary insults progress to cerebral infarct, cerebral or brain swelling, and herniation syndromes",
+   "verbatim_quote": "These secondary insults can progress to three major forms of end-stage events: 1) cerebral infarct; 2) cerebral or brain swelling and 3) herniation syndromes, all of which impose a negative impact on outcome.",
+   "page": "Chapter 11, sec. 2 (Idris et al.); PDF chunk 227 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intracranial hypertension, cerebral hypoxia and hypoperfusion, and electrographic seizures are the common secondary insult forms named in the chapter",
+    "End stage events impose a negative impact on outcome"
+   ],
+   "breakdown_regime": "Not every secondary insult progresses; progression depends on duration, depth, and treatment response, and herniation can also follow a primary mass lesion without a long secondary phase",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to terminal state detection in the engine: a small set of absorbing bad end states that any worsening trajectory must be checked against, with distance to those states tracked explicitly",
+    "source_operator": "secondary_insults_end_stage_events",
+    "telemetry": "Pressure trends, oxygenation trends, seizure monitoring, serial imaging for swelling and shift"
+   }
+  },
+  {
+   "primitive_id": "secondary_damage_mediator_set",
+   "name": "Secondary neuronal damage is mediated by raised intracranial pressure, blood brain barrier disruption, brain edema, decreased cerebral blood flow, altered perfusion, hypoxia, ischemia and reperfusion injury",
+   "verbatim_quote": "Secondary neuronal damage is induced immediately after primary injury and is mediated through several pathophysiologic mechanisms including raised intracranial pressure, disruption of blood brain barrier, brain edema, decreased cerebral blood flow, altered tissue perfusion, cerebral hypoxia, ischemia and reperfusion injury (Graham et al., 2000).",
+   "page": "Chapter 2 (Dardiotis et al.); PDF chunk 36 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Secondary damage begins immediately after primary injury, not after a safe interval",
+    "The listed mediators act together rather than as isolated single causes"
+   ],
+   "breakdown_regime": "The mediator list is a review level summary; individual patients differ in which mediator dominates, and reperfusion can be protective or harmful depending on timing and tissue state",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a mediator checklist in the reasoning layer: after any major insult the engine enumerates the standard secondary channels and requires evidence about each one instead of reasoning from the headline injury alone",
+    "source_operator": "secondary_damage_mediator_set",
+    "telemetry": "Pressure, flow, oxygenation, edema on imaging, barrier disruption markers"
+   }
+  },
+  {
+   "primitive_id": "delayed_secondary_event_cascade",
+   "name": "Beyond local neuronal loss, TBI induces delayed secondary events: ischemia, Wallerian degeneration after diffuse axonal injury, excitotoxicity, calcium dysregulation, mitochondrial dysfunction and free radical damage",
+   "verbatim_quote": "In addition to local neuronal loss resulting from the mechanical primary insult, TBI also induces a cascade of delayed secondary events that contribute to neuronal death, including ischemia, Wallerian degeneration secondary to diffuse axonal injury, excitotoxicity, dysregulation of calcium homeostasis, mitochondrial dysfunction and free radical-mediated damage.",
+   "page": "Chapter 4 (Connor); PDF chunk 79 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Delayed events contribute to neuronal death after the mechanical insult",
+    "The hippocampus is identified in the chapter as especially vulnerable to this delayed degeneration"
+   ],
+   "breakdown_regime": "Most cascade evidence comes from controlled cortical impact and lateral fluid percussion animal models; human timing and magnitude differ and single pathway blockade has repeatedly failed to translate",
+   "domain": "neurotrauma pathophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to delayed effect kernels in the engine: consequences that arrive on a lag after the triggering event, so a quiet early window is not evidence that the process has finished",
+    "source_operator": "delayed_secondary_event_cascade",
+    "telemetry": "Delayed imaging change, late functional decline, metabolic markers over days to weeks"
+   }
+  },
+  {
+   "primitive_id": "neuroinflammation_bbb_opening",
+   "name": "Ischemic brain injury engages neuroinflammatory reactions with movement and deposition of leukocytes, macrophages, monocytes and serum proteins through an opened blood brain barrier",
+   "verbatim_quote": "Additionally, ischemic brain injury not only causes tissue cell injury, but also engages neuroinflammatory reactions that include the movement and depositions of leukocytes, macrophages, monocytes and different serum proteins due to open of the blood brain barrier (Danton, Dietrich 2003).",
+   "page": "Chapter 6 (Pluta and Jablonski); PDF chunk 119 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Barrier opening permits peripheral cells and serum proteins into brain tissue",
+    "Inflammation is part of the injury process, not only a response after injury ends"
+   ],
+   "breakdown_regime": "Inflammation also carries repair functions, and the same cell types appear in protective and harmful roles at different times, so a single inflammation level cannot be read as purely bad",
+   "domain": "neuroinflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to barrier state reasoning: when a protective boundary fails, outside agents enter the system and the internal state can no longer be modeled as closed, which changes which signals are even possible",
+    "source_operator": "neuroinflammation_bbb_opening",
+    "telemetry": "Barrier imaging, peripheral cell counts, inflammatory mediator levels"
+   }
+  },
+  {
+   "primitive_id": "microglia_innate_immune_core",
+   "name": "Microglia, the resident macrophages of the brain, are the main cell type of its innate immune system",
+   "verbatim_quote": "Microglia, the brain's resident macrophages, are the main cell type of the innate immune system of the brain.",
+   "page": "Chapter 2 (Dardiotis et al.); PDF chunk 41 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The brain has a resident immune compartment distinct from circulating immune cells",
+    "Innate responses activate before adaptive responses in the injured brain"
+   ],
+   "breakdown_regime": "Resident and infiltrating macrophage populations are hard to separate in human samples, and microglial activation states are a spectrum rather than an on or off switch",
+   "domain": "neuroinflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the distinction between internal state and external input in the engine: a resident response generated inside the system follows different timing and control than a response imported from outside it",
+    "source_operator": "microglia_innate_immune_core",
+    "telemetry": "Cell markers distinguishing resident from infiltrating populations, activation state markers"
+   }
+  },
+  {
+   "primitive_id": "monro_kellie_volume_constraint",
+   "name": "Monro-Kellie doctrine: intracranial volumes of blood, brain and CSF sum to a constant, so a rise in one component must be offset by a fall in another or intracranial pressure rises",
+   "verbatim_quote": "According to Monro-Kellie doctrine, the sum of the intracranial volumes of blood, brain and CSF is constant and that an increase in any one component must be offset by an equal decrease in another or else ICP rises.",
+   "page": "Chapter 11, sec. 5.1 (Idris et al.); PDF chunk 235 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The adult cranial vault is effectively rigid with very little compliance",
+    "Compensation works by displacing CSF and venous blood first"
+   ],
+   "breakdown_regime": "The doctrine fails once compensatory displacement is exhausted, where the pressure volume curve turns steep; it also weakens in children with open sutures and after decompressive surgery removes the rigid boundary",
+   "domain": "neurocritical care physiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to hard capacity constraint reasoning: inside a fixed volume, every gain somewhere is a loss somewhere else, and the system stays quiet until compensation is exhausted and then changes state abruptly",
+    "source_operator": "monro_kellie_volume_constraint",
+    "telemetry": "Intracranial pressure, CSF drainage volume, imaging signs of shift and cistern effacement"
+   }
+  },
+  {
+   "primitive_id": "cerebral_perfusion_pressure_equation",
+   "name": "Cerebral perfusion pressure equals mean arterial pressure minus intracranial pressure",
+   "verbatim_quote": "Therefore, CPP in equation form can be stated as CPP = MAP - ICP.",
+   "page": "Chapter 11 (Idris et al.); PDF chunk 234 in extracted text",
+   "latex": "CPP = MAP - ICP",
+   "symbol_and_unit_ledger": {
+    "CPP": "cerebral perfusion pressure, mmHg",
+    "MAP": "mean arterial pressure, mmHg",
+    "ICP": "intracranial pressure, mmHg"
+   },
+   "assumptions": [
+    "Elevated ICP is the opposing force to incoming mean systemic arterial pressure",
+    "Pressures are compared at the same reference level and in the same units"
+   ],
+   "breakdown_regime": "The equation is a pressure difference, not a flow guarantee: autoregulation failure, venous outflow obstruction, and local vascular injury can leave tissue ischemic at an acceptable computed CPP",
+   "domain": "neurocritical care physiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to opposed force accounting in the engine: an effective driving signal computed as a resource term minus a resistance term, where raising either side changes the result and the cheaper side to move depends on the case",
+    "source_operator": "cerebral_perfusion_pressure_equation",
+    "telemetry": "Continuous arterial pressure and intracranial pressure monitoring, computed CPP trend"
+   }
+  },
+  {
+   "primitive_id": "icp_targeted_vs_cpp_targeted_therapy",
+   "name": "Reduced CPP can be corrected by reducing ICP (ICP targeted therapy) or by raising MAP (CPP targeted therapy)",
+   "verbatim_quote": "Reduced CPP can be corrected by raising the MAP or by reducing the ICP. Reduction in ICP is normally called ICP targeted therapy, whilst CPP targeted therapy corrects the reduced CPP by raising the MAP.",
+   "page": "Chapter 11 (Idris et al.); PDF chunk 239 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "MAP is kept in view when attributing a CPP fall to raised ICP",
+    "Both levers act on the same computed perfusion pressure"
+   ],
+   "breakdown_regime": "Raising MAP pharmacologically carries systemic costs and can worsen edema in tissue with a broken barrier; lowering ICP has its own ceiling once volume compensation is exhausted",
+   "domain": "neurocritical care management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to dual lever correction in the engine: when a derived quantity is off target, enumerate both the numerator lever and the denominator lever, price each one, and record which lever was chosen and why",
+    "source_operator": "icp_targeted_vs_cpp_targeted_therapy",
+    "telemetry": "Vasopressor dose, ICP directed interventions, CPP response after each intervention"
+   }
+  },
+  {
+   "primitive_id": "cerebral_autoregulation_definition",
+   "name": "Cerebral autoregulation holds CBF stable across a wide CPP range by dilating resistance vessels when CPP falls and constricting them when CPP rises",
+   "verbatim_quote": "In normal condition the cerebral circulation has the ability to maintain a stable CBF over a wide range of cerebral perfusion pressures (CPP); this phenomenon is designated as cerebral autoregulation and mainly represents the capacity of the brain's resistance vessels to dilate in response to a decrease in CPP or to constrict in response to an increase in CPP.",
+   "page": "Chapter 9 (Manvelyan); PDF chunk 196 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Resistance vessel caliber changes are mediated by myogenic, metabolic, or neurogenic mechanisms",
+    "The stable range has limits at both ends"
+   ],
+   "breakdown_regime": "Autoregulation is impaired or abolished after TBI in many patients, is age dependent, and can be regionally heterogeneous, so a normal systemic pressure does not prove a protected brain region",
+   "domain": "cerebral blood flow",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to feedback buffer reasoning: a healthy subsystem absorbs input swings inside a working range and fails silently outside it, so the engine must estimate whether the buffer is intact before trusting that inputs and outputs will stay proportional",
+    "source_operator": "cerebral_autoregulation_definition",
+    "telemetry": "Pressure reactivity indices, flow velocity response to pressure change, carbon dioxide reactivity"
+   }
+  },
+  {
+   "primitive_id": "early_cbf_fall_fluid_percussion",
+   "name": "Moderate fluid percussion injury caused up to 50 percent reduction in CBF within 15 to 30 minutes after injury",
+   "verbatim_quote": "Moderate fluid percussion injury caused up to 50% reduction in CBF within 15-30 min after injury (Yamakami & McIntosh, 1989).",
+   "page": "Chapter 9 (Manvelyan); PDF chunk 194 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fluid percussion is a valid experimental model of TBI for flow measurement",
+    "The early post injury window is when the flow fall is largest in this model"
+   ],
+   "breakdown_regime": "The figure is from animal experiments cited by the chapter; human post traumatic flow patterns vary between hypoperfusion, hyperemia, and vasospasm across patients and days",
+   "domain": "cerebral blood flow",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to immediate post event measurement discipline: the largest deviation can occur inside the first measurement interval, so baselines taken later systematically understate the initial shock",
+    "source_operator": "early_cbf_fall_fluid_percussion",
+    "telemetry": "Early flow measurement by transcranial Doppler, xenon methods, or perfusion imaging with time stamps"
+   }
+  },
+  {
+   "primitive_id": "dai_microbleeds_demyelination",
+   "name": "White matter microbleeds are an early indicator of diffuse axonal injury, which involves progressive demyelination and axonal damage throughout the brain",
+   "verbatim_quote": "These microbleeds are one early indicator of diffuse axonal injury (DAI), which involves progressive demyelination and axonal damage throughout the brain.",
+   "page": "Chapter 10 (Immonen and Hayward); PDF chunk 204 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Impact forces stretch the white matter tract network and adjacent vasculature",
+    "DAI is a key factor in progressive cognitive impairment after TBI"
+   ],
+   "breakdown_regime": "Microbleeds are an indirect indicator; axonal injury also occurs without visible bleeds, and conventional imaging misses much of the diffuse burden that susceptibility and diffusion methods detect",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to distributed network damage reasoning: injury spread across connections rather than concentrated in one node degrades global function progressively, and a visible marker can index a much larger invisible burden",
+    "source_operator": "dai_microbleeds_demyelination",
+    "telemetry": "Susceptibility weighted imaging, diffusion imaging, cognitive testing over follow up"
+   }
+  },
+  {
+   "primitive_id": "dti_axonal_damage_detection",
+   "name": "Diffusion tensor imaging detects axonal damage after TBI through changes in diffusion anisotropy, in both acute and chronic patients",
+   "verbatim_quote": "Axonal damage following TBI has been frequently detected using diffusion tensor imaging (DTI) and the changes in diffusion anisotropy have been reported in both acute and chronic TBI patients (Sidaros et al., 2008).",
+   "page": "Chapter 10 (Immonen and Hayward); PDF chunk 207 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Diffusion anisotropy reflects white matter microstructural integrity",
+    "Changes persist from the acute into the chronic phase"
+   ],
+   "breakdown_regime": "Anisotropy changes are not specific to axonal injury alone; edema, crossing fibers, and myelin change also move the metric, so DTI supports rather than proves an axonal diagnosis",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to structure sensitive measurement in the engine: when the quantity of interest cannot be observed directly, use a physical proxy whose direction of change is understood, and record the proxy limits beside the reading",
+    "source_operator": "dti_axonal_damage_detection",
+    "telemetry": "Fractional anisotropy and diffusivity maps by tract, magnetization transfer ratio"
+   }
+  },
+  {
+   "primitive_id": "progressive_atrophy_after_tbi",
+   "name": "Atrophy volume keeps increasing for up to 6 months after experimental TBI on repeated MRI, a span corresponding to decades in human relative age",
+   "verbatim_quote": "In long follow-up studies of rats, repeated MRI scans have shown that the atrophy volume continues to increase up to 6 months post injury, which correspond to decades in humans (when comparing the relative age).",
+   "page": "Chapter 10 (Immonen and Hayward); PDF chunk 206 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The lateral fluid percussion rat model tracks the human pattern closely enough for time course inference",
+    "A plateau state is reached around 6 months in the rat follow up"
+   ],
+   "breakdown_regime": "Rodent to human time scaling by relative age is approximate, and human atrophy rates vary with lesion type, age, and comorbidity, so the calendar cannot be transferred directly",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to slow variable tracking: some outcome relevant quantities keep moving for months after the event that caused them, so an engine that closes a case at discharge will misread the final state",
+    "source_operator": "progressive_atrophy_after_tbi",
+    "telemetry": "Serial volumetric MRI, long interval follow up imaging"
+   }
+  },
+  {
+   "primitive_id": "multimodality_monitoring_need",
+   "name": "Standard ICP and CPP monitoring alone is insufficient to detect subtle manifestations of brain injury, so multimodality monitoring of more brain parameters is required",
+   "verbatim_quote": "The development of new neuromonitoring techniques has been particularly important because typically standard cranial monitoring techniques such as ICP and CPP measurements seem insufficient in detecting subtle manifestations of brain injury or poor surrogates for physiologic parameters of interest.",
+   "page": "Chapter 11 (Idris et al.); PDF chunk 232 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Extra parameters include cerebral blood flow, oxygenation, metabolites, brain temperature and perfusion",
+    "No single monitored variable is a complete surrogate for the injured brain state"
+   ],
+   "breakdown_regime": "More channels bring more artifacts, calibration drift, and conflicting signals; multimodality monitoring helps only when discordance itself is interpreted rather than averaged away",
+   "domain": "neurocritical care monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to multi channel state estimation in the engine: a complex hidden state is estimated from several imperfect channels at once, and disagreement between channels is itself information about which layer is failing",
+    "source_operator": "multimodality_monitoring_need",
+    "telemetry": "ICP, CPP, brain tissue oxygen, microdialysis metabolites, temperature, EEG"
+   }
+  },
+  {
+   "primitive_id": "icp_treatment_threshold",
+   "name": "Quoted ICP limits are 15, 20 and 25, and most centers use ICP above 20 to 25 mmHg as the upper treatment limit",
+   "verbatim_quote": "Levels of 15, 20 and 25 are quoted but most centers use ICP > 20-25mmHg as the upper limit (Bullock 1995).",
+   "page": "Chapter 23 (Adewumi and Colohan); PDF chunk 489 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Thresholds are treatment triggers, not biological constants",
+    "Center practice converges on the 20 to 25 mmHg band in the cited source"
+   ],
+   "breakdown_regime": "The threshold is contested in the literature the book reviews; outcome also depends on pressure duration and dose, and good outcomes occur above the line while poor outcomes occur below it",
+   "domain": "neurocritical care management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to threshold provenance discipline: every numeric trigger in the engine carries its source, its spread across sources, and its known exceptions, so a threshold is used as a decision rule and never quoted as a law of nature",
+    "source_operator": "icp_treatment_threshold",
+    "telemetry": "ICP level and duration above threshold, treatment response, outcome by pressure dose"
+   }
+  },
+  {
+   "primitive_id": "nirs_noninvasive_principle",
+   "name": "Near infrared light interrogates the brain non invasively through the scalp because biological tissue is relatively transparent to it",
+   "verbatim_quote": "Due to the relative transparency of biological tissue to near-infrared (NIR) light, the brain can be interrogated non-invasively by probes placed on the scalp (Jobsis, 1977).",
+   "page": "Chapter 14 (Diop et al.); PDF chunk 293 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tissue chromophores including oxy and deoxy hemoglobin have distinct absorption in the near infrared range",
+    "Scattering dominates over absorption and must be modeled to quantify concentrations"
+   ],
+   "breakdown_regime": "Extracerebral tissue contaminates the signal, especially in adults; absolute quantification needs scattering correction and validation against reference methods, as the chapter shows against CT perfusion",
+   "domain": "neurocritical care monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to non invasive proxy sensing in the engine: a quantity that cannot be sampled directly is inferred from a transmitted signal, with the transfer medium modeled explicitly and the estimate validated against a direct method",
+    "source_operator": "nirs_noninvasive_principle",
+    "telemetry": "Tissue oxygenation index, hemoglobin concentration changes, NIRS derived CBF and CMRO2"
+   }
+  },
+  {
+   "primitive_id": "gcs_severity_bands_ch7",
+   "name": "Head injury severity graded by GCS in this study: mild 14 to 15, moderate 8 to 13, severe 3 to 7",
+   "verbatim_quote": "The severity of head injury was graded according to the GCS as mild (GCS 14-15), moderate (GCS 8-13) and severe (GCS 3-7).",
+   "page": "Chapter 7 (Subramanian et al.); PDF chunk 157 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GCS on admission is the grading instrument for the cohort",
+    "Band boundaries are the study convention and are recorded here exactly as printed"
+   ],
+   "breakdown_regime": "These bands differ from other conventions in common use, and GCS is confounded by sedation, intubation, alcohol, and eye or verbal component limits, so cross study comparison needs the convention stated",
+   "domain": "clinical assessment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to scale convention discipline in the engine: a score is meaningless without the banding convention that produced its label, and labels from different conventions must never be merged as if they were one scale",
+    "source_operator": "gcs_severity_bands_ch7",
+    "telemetry": "Admission GCS with component scores, banding convention identifier, sedation and intubation status"
+   }
+  },
+  {
+   "primitive_id": "leukocyte_count_outcome_signal",
+   "name": "Non survivors had higher WBC counts above 12,096 cells per cumm, more severe head injury, and more abnormal pupillary reactions than survivors",
+   "verbatim_quote": "The non survivors had high WBC counts (>12,096 cells/cumm, p<0.0001), severe head injury (GCS 3-7, p<0.001) and higher abnormal pupillary reaction (unilaterally present and bilaterally absent pupillary reaction, p<0.01) compared to the survivors.",
+   "page": "Chapter 7 (Subramanian et al.); PDF chunk 158 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cohort is 80 head injury patients in the study as reported in the chapter",
+    "WBC count was also an independent predictor of outcome on multivariate analysis in the cited prior work"
+   ],
+   "breakdown_regime": "Leukocytosis is nonspecific and rises with infection, steroids, and systemic injury; a single admission count is a prognostic association, not a mechanism, and cut points are cohort fitted",
+   "domain": "prognostic markers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to cheap early signal use in the engine: a routine low cost measurement taken at intake can carry real prognostic weight, provided it is treated as a noisy correlate with a stated cohort and never upgraded into a cause",
+    "source_operator": "leukocyte_count_outcome_signal",
+    "telemetry": "Admission total and differential WBC, immature granulocyte count, pupillary reaction, GCS"
+   }
+  },
+  {
+   "primitive_id": "intubation_gcs_threshold",
+   "name": "Intubation is indicated to secure the airway when GCS is less than 9, when the patient is hypoxic despite supplemental oxygen, or when the patient cannot maintain a patent airway",
+   "verbatim_quote": "Intubation is indicated to secure the airway if the Glasgow Coma Scale (GCS) is less than 9, if the patient is hypoxic (SpO2 < 90%) despite supplemental oxygen, or if the patient is unable to maintain a patent airway (Gabriel et al. 2002).",
+   "page": "Chapter 18 (Hays and Varma); PDF chunk 370 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Airway, breathing and circulation resuscitation comes first in acute care",
+    "Cervical spine immobilization is maintained during resuscitation in the protocol described"
+   ],
+   "breakdown_regime": "The threshold is a safety rule, not a physiological cliff; some patients below it protect their airway and some above it do not, and intubation itself carries risks that the rule prices in only roughly",
+   "domain": "acute care management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to preemptive action thresholds in the engine: when a protective function may fail, act on a conservative trigger before failure is proven, because the cost of late action is asymmetric",
+    "source_operator": "intubation_gcs_threshold",
+    "telemetry": "GCS trend, oxygen saturation, airway patency assessment, end tidal carbon dioxide"
+   }
+  },
+  {
+   "primitive_id": "hypotension_secondary_injury_rule",
+   "name": "Systolic blood pressure below 90 mm Hg has been shown to increase mortality two fold in TBI",
+   "verbatim_quote": "Systolic blood pressure below 90 mm Hg has been shown to increase mortality by two fold in TBI (Chesnut et al. 1993).",
+   "page": "Chapter 18 (Hays and Varma); PDF chunk 370 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hypotension accelerates secondary injury and must be promptly recognized and treated",
+    "The cited figure is from the Chesnut 1993 work referenced in the chapter"
+   ],
+   "breakdown_regime": "The doubling is an observational association from the cited era of care; single readings, age, and associated injuries modify the risk, and later targets are often set higher for severe TBI",
+   "domain": "acute care management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to veto variables in the engine: a small set of systemic variables can dominate outcome regardless of how good the primary assessment looks, so they are checked first and can override every other signal",
+    "source_operator": "hypotension_secondary_injury_rule",
+    "telemetry": "Systolic and mean arterial pressure trend, fluid and vasopressor response, associated hemorrhage"
+   }
+  },
+  {
+   "primitive_id": "surgical_evacuation_thresholds",
+   "name": "Lesions with midline shift of 5 mm or more with basal cistern effacement, and posterior fossa lesions distorting the fourth ventricle, should be evacuated in patients with GCS of 8 or less",
+   "verbatim_quote": "A supratentorial lesion with a midline shift of 5 mm or more and effacement of the basal cisterns, and a posterior fossa lesion with compression or distortion of fourth ventricle or effacement of basal cisterns or obstructive hydrocephalus in patients with GCS of 8 or less should be evacuated.",
+   "page": "Chapter 18 (Hays and Varma); PDF chunk 378 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CT findings and clinical grade are combined, not used separately",
+    "The rule addresses supratentorial and posterior fossa lesions with mass effect"
+   ],
+   "breakdown_regime": "Thresholds guide rather than replace surgical judgment; lesion type, patient trajectory, and operability modify the decision, and some lesions above the line are observed while some below it are removed",
+   "domain": "neurosurgical management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to combined trigger rules in the engine: action fires on a conjunction of a structural measure and a state grade, not on either alone, which keeps single metric spikes from forcing irreversible steps",
+    "source_operator": "surgical_evacuation_thresholds",
+    "telemetry": "CT shift and cistern status, GCS, lesion type and volume, clinical trajectory"
+   }
+  },
+  {
+   "primitive_id": "neurogenesis_four_phases",
+   "name": "Adult neurogenesis proceeds in four phases: progenitor proliferation, migration toward a target area, terminal differentiation, and integration into established networks",
+   "verbatim_quote": "Neurogenesis in the adult brain can be divided into four phases: (a) progenitor cell proliferation; (b) migration of progenitor cells towards a target area; (c) terminal differentiation into a specific phenotype, and; (d) integration into established networks.",
+   "page": "Chapter 4 (Connor); PDF chunk 76 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each phase can succeed or fail independently",
+    "New neurons must integrate to contribute function, not merely be produced"
+   ],
+   "breakdown_regime": "Injury driven neurogenesis can miswire: seizure induced dentate neurogenesis promotes aberrant circuitry in the epilepsy work the chapter reviews, so more new neurons is not automatically better",
+   "domain": "recovery and plasticity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to staged pipeline reasoning in the engine: a regenerative process is a chain of gates, total yield is the product of stage yields, and boosting an early stage while a later stage fails produces inventory, not recovery",
+    "source_operator": "neurogenesis_four_phases",
+    "telemetry": "Proliferation markers, migration and differentiation markers, network integration evidence"
+   }
+  },
+  {
+   "primitive_id": "svz_dentate_progenitor_niches",
+   "name": "Neural stem and progenitor cells generate neurons throughout life in the subventricular zone olfactory bulb pathway and the hippocampal dentate gyrus",
+   "verbatim_quote": "Neural stem/progenitor cells generate neurons throughout life in the mammalian forebrain subventricular zone (SVZ)-olfactory bulb (OB) pathway and the hippocampal dentate gyrus [for review see (Whitman, et al., 2009)].",
+   "page": "Chapter 4 (Connor); PDF chunk 76 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "These two niches are the established sites of adult forebrain neurogenesis in the review",
+    "Progenitors from these regions can be cultured as self renewable neurospheres with EGF and FGF2"
+   ],
+   "breakdown_regime": "Human adult neurogenesis magnitude, especially outside these niches, remains debated, and injury can recruit progenitors to sites where integration is poor or harmful",
+   "domain": "recovery and plasticity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to reserve capacity location in the engine: repair resources are not uniformly distributed; they sit in specific reservoirs, and any recovery plan must route from where the reserve actually is",
+    "source_operator": "svz_dentate_progenitor_niches",
+    "telemetry": "Niche specific progenitor markers, injury distance from niche, newborn neuron counts by region"
+   }
+  },
+  {
+   "primitive_id": "leukoaraiosis_heritability",
+   "name": "Heritability estimates for leukoaraiosis range from 0.45 to 0.71, so genetic factors account for a large share of inter individual variation",
+   "verbatim_quote": "Estimates of heritability for leukoaraiosis range from 0.45-0.71, indicating that genetic factors account for a large proportion of the inter-individual variation in this trait (Atwood et al., 2004; Carmelli et al., 1998; Turner et al., 2004).",
+   "page": "Chapter 3 (Smith et al.); PDF chunk 55 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Estimates come from the family and population studies cited in the chapter",
+    "Leukoaraiosis is measured as white matter hyperintensity burden on MRI"
+   ],
+   "breakdown_regime": "Heritability is population and environment specific; a high estimate does not identify the genes, and shared family environment can inflate family based estimates",
+   "domain": "genetics of brain injury risk",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to variance accounting in the engine: before crediting a modifiable factor, estimate how much of the variation is already spoken for by background endowment, so effort is aimed at the variance that can actually move",
+    "source_operator": "leukoaraiosis_heritability",
+    "telemetry": "Family structure, genotype data, quantitative white matter lesion burden, cognitive scores"
+   }
+  },
+  {
+   "primitive_id": "melatonin_antioxidant_defense",
+   "name": "Melatonin decreases oxidative stress by increasing production of antioxidant enzymes including superoxide dismutase and glutathione peroxidase",
+   "verbatim_quote": "Melatonin decreases oxidative stress by increasing the production of antioxidant enzymes like melatonin superoxide dismutase (SOD) and glutathione peroxidase (GSH-Px), the most important protective substance in the brain (Hsu et al, 2002).",
+   "page": "Chapter 5 (Bayir); PDF chunk 100 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The context is acute organophosphate toxicity, where oxidant and antioxidant balance is upset",
+    "Enzyme induction is the stated protective route in the cited work"
+   ],
+   "breakdown_regime": "Evidence is largely preclinical and dose and timing dependent; antioxidant strategies that work in rodent poisoning models have a weak record of direct human translation",
+   "domain": "neuroprotection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to defense upregulation in the engine: instead of supplying the protective quantity directly, raise the system production rate of its own defense, which changes the steady state rather than adding a one time dose",
+    "source_operator": "melatonin_antioxidant_defense",
+    "telemetry": "Antioxidant enzyme levels, lipid peroxidation markers such as MDA, oxidative stress panels"
+   }
+  },
+  {
+   "primitive_id": "exercise_neurotrophin_neuroprotection",
+   "name": "Exercise neuroprotection in ischemia reperfusion injury is conveyed in part through upregulation of neurotrophins including BDNF and nerve growth factor",
+   "verbatim_quote": "This neuroprotection is, in part, conveyed through the upregulation of neurotrophin expression, including brain derived neurotrophic factor (BDNF) and nerve growth factor (NGF).",
+   "page": "Chapter 15 (Dornbos and Ding); PDF chunk 314 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Weeks of continuous exercise raise BDNF and NGF messenger RNA in astrocytes and neuronal cells in the cited work",
+    "Preconditioning before the insult is the protective design in most cited studies"
+   ],
+   "breakdown_regime": "Protection is partial and protocol dependent; exercise after injury follows different rules than preconditioning, and intensity that helps a healthy brain can harm a metabolically vulnerable one",
+   "domain": "neuroprotection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to preconditioning in the engine: a system exposed to graded load before a shock carries higher protective reserves into the shock, so history of load is a state variable, not background trivia",
+    "source_operator": "exercise_neurotrophin_neuroprotection",
+    "telemetry": "Exercise history and dose, neurotrophin levels, infarct and functional outcome after ischemia"
+   }
+  },
+  {
+   "primitive_id": "growth_hormone_recovery_role",
+   "name": "Growth hormone administration likely plays a key role in recovering from brain injury, whether or not a growth hormone deficiency exists",
+   "verbatim_quote": "According to these results it is likely that GH administration plays a key role in recovering from a brain injury, independently or not that a GH deficiency exists.",
+   "page": "Chapter 21 (Devesa et al.); PDF chunk 452 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter pairs GH with kinesiotherapy in its recovery program",
+    "Cognitive dysfunction is linked in the chapter discussion to GH deficiency and serum IGF-I correlation with IQ"
+   ],
+   "breakdown_regime": "The claim rests substantially on the authors own program and observational series; controlled trial support is thin, and GH treatment carries metabolic risks that a recovery claim must be weighed against",
+   "domain": "recovery and rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to growth signal reasoning in the engine: a systemic anabolic signal can support repair across tissues at once, but a program level claim from its own proponents is graded as lower evidence than the same claim from independent trials",
+    "source_operator": "growth_hormone_recovery_role",
+    "telemetry": "GH and IGF-I levels, rehabilitation dose, cognitive and motor recovery scores"
+   }
+  },
+  {
+   "primitive_id": "no_fda_approved_biomarkers",
+   "name": "There are currently no biomarkers of brain injury approved by the Food and Drug Administration",
+   "verbatim_quote": "Importantly, there are currently no biomarkers of brain injury approved by Food and Drug Administration (FDA).",
+   "page": "Chapter 22 (Mondello et al.); PDF chunk 468 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The statement is the chapter baseline at its 2012 writing",
+    "The chapter reviews discovery, validation, and approval strategy for acute and chronic brain injury biomarkers"
+   ],
+   "breakdown_regime": "The statement is time stamped by the book; approval status changes after publication, so the fact must be rechecked before any current use and never quoted as a present day claim without a fresh source",
+   "domain": "biomarkers and validation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to honest negative registration in the engine: the absence of a validated shortcut is itself a stored fact that blocks a whole class of shortcuts, and it carries a date so it can be retired when the field moves",
+    "source_operator": "no_fda_approved_biomarkers",
+    "telemetry": "Regulatory approval registries, biomarker validation study status, assay performance data"
+   }
+  },
+  {
+   "primitive_id": "second_impact_syndrome",
+   "name": "During the transient period of altered brain metabolism after concussion, a second concussive episode of even modest size may cause dramatic brain damage, the basis of second impact syndrome",
+   "verbatim_quote": "During this transient period of altered brain metabolism and function, a second concussive episode of even modest entity may cause significantly addition and/or dramatic brain damage (Longhi et al., 2005), thereby underlying the so called second impact syndrome (SIS), encountered occasionally in sports medicine (Saunders & Harbaugh, 1984).",
+   "page": "Chapter 25 (Lazzarino et al.); PDF chunk 516 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The first concussion leaves a transient period of altered metabolism and function",
+    "The second impact need not be large to cause disproportionate damage in this account"
+   ],
+   "breakdown_regime": "Second impact syndrome is described as encountered occasionally and its catastrophic form is rare and debated; the metabolic vulnerability underneath it is the better supported and more general claim",
+   "domain": "concussion and metabolic recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to state dependent impact scaling in the engine: the damage from an input is a function of current system state, so the same input is scored differently inside and outside a vulnerability window",
+    "source_operator": "second_impact_syndrome",
+    "telemetry": "Time since concussion, metabolic markers, symptom status, repeat exposure record"
+   }
+  },
+  {
+   "primitive_id": "metabolic_vulnerability_window",
+   "name": "A window of metabolic brain vulnerability exists during which neurons receiving a second insult of even very modest size can suffer dramatic impairment of cell functions",
+   "verbatim_quote": "This strongly indicates the existence of a window of metabolic brain vulnerability during which neurons, when receiving a second insult of even very modest entity, can suffer from dramatic impairment of cell functions.",
+   "page": "Chapter 25 (Lazzarino et al.); PDF chunk 525 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Severity and recovery track the extent of ATP and NAA decrease and recovery in the cited experimental work",
+    "NAA can be followed non invasively in vivo by proton magnetic resonance spectroscopy"
+   ],
+   "breakdown_regime": "Window length varies between individuals and cannot be read from symptoms alone; the chapter reports cases where symptoms resolved before metabolic recovery completed, which is exactly the dangerous gap",
+   "domain": "concussion and metabolic recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to recovery gating in the engine: return to full exposure is gated on the slow metabolic variable returning to baseline, not on the fast symptom variable, and the gate stays closed while the two disagree",
+    "source_operator": "metabolic_vulnerability_window",
+    "telemetry": "Serial NAA by spectroscopy, ATP related measures, symptom scores, days since injury"
+   }
+  },
+  {
+   "primitive_id": "decompressive_craniectomy_refractory_ih",
+   "name": "Decompressive craniectomy is a valid, widely performed treatment option for medically refractory intracranial hypertension",
+   "verbatim_quote": "Decompressive craniectomy has recently become a valid, widely-performed treatment option for managing patients with medically refractory intracranial hypertension.",
+   "page": "Chapter 24 (Gatos et al.); PDF chunk 505 in extracted text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Medical management has failed or is expected to fail in the refractory cases addressed",
+    "Removing the rigid skull boundary changes the volume constraint described by the Monro-Kellie doctrine"
+   ],
+   "breakdown_regime": "Benefit is contested in the sources the book reviews: a 2007 Cochrane analysis found no evidence to support routine secondary decompression for unfavorable outcome reduction, and the RESCUEicp trial was still ongoing at writing",
+   "domain": "neurosurgical management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to constraint removal as a last lever in the engine: when a hard boundary itself causes the failure, the remaining move is to change the boundary, priced as irreversible and evidence contested rather than as a routine escalation",
+    "source_operator": "decompressive_craniectomy_refractory_ih",
+    "telemetry": "Refractory ICP course, medical therapy exhaustion, imaging, trial and outcome data"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "491014e3375a8f37-t1",
+   "think": "This book is an edited clinical and experimental volume, not a single author monograph, and that shape decides how it must be read. Amit Agrawal edited it for InTech in 2012, and its chapters move in five parts from pathogenesis through cerebral blood flow and metabolism, investigative approaches and monitoring, protective mechanisms and recovery, and finally management approaches. Twenty five chapters are listed in the contents while the preface speaks of twenty six, a small discrepancy that is worth recording because it is typical of the whole object: the knowledge is real and deep, but it arrives as many expert voices with different conventions, different evidence bases, and different dates, and any system that ingests it has to keep the provenance of each claim attached to the claim itself. The load bearing architecture is the division of brain injury into a primary phase and a secondary phase. The primary injury happens at the moment of impact and is, by the time any clinician or any model sees the patient, already fixed. Everything that can still be changed lives in the secondary phase, where raised intracranial pressure, barrier failure, edema, falling blood flow, hypoxia, ischemia, excitotoxic chemistry, calcium dysregulation, mitochondrial failure, free radical damage, and inflammation keep injuring tissue that survived the impact. The book returns to this split in chapter after chapter because it is the reason monitoring exists at all: you monitor a patient, or a system, in order to catch the secondary insults while they are still reversible, and the end stage events the monitoring chapters name, infarct, swelling, and herniation, are the absorbing states that the whole apparatus is built to keep the patient away from. Under that architecture sits a small quantitative spine. The Monro-Kellie doctrine states the rigid box constraint: blood, brain, and cerebrospinal fluid volumes sum to a constant inside the skull, so growth in one compartment must be paid for by shrinkage in another until compensation runs out and pressure climbs steeply. The cerebral perfusion pressure equation, CPP equals MAP minus ICP, then prices the consequence, because the same pressure that signals a full box also subtracts directly from the pressure driving blood through the brain. Cerebral autoregulation is the feedback loop that normally hides this arithmetic by widening and narrowing resistance vessels to hold flow steady, and the cerebral blood flow chapter shows why the loop cannot be assumed after injury: moderate fluid percussion injury cut cortical flow by up to half within fifteen to thirty minutes in the animal work, and human patterns afterward vary between low flow, hyperemia, and vasospasm. A reasoning engine should take from this a general template: identify the fixed capacity, write the opposed force equation, check whether the compensating feedback is intact, and never trust the headline input number until those three things are known. The measurement stack is layered to match the mechanism stack, and the book is unusually honest about the limits of each layer. The Glasgow Coma Scale grades state quickly but its banding conventions differ between chapters of this very book, which is a standing warning that a label is meaningless without its convention. A routine white blood cell count, checked in the leukocyte chapter against outcome in eighty patients, carries independent prognostic weight while remaining a nonspecific correlate. Imaging sees structure at increasing depth: computed tomography for surgical lesions and shift, susceptibility methods for the microbleeds that index diffuse axonal injury, diffusion tensor imaging for axonal damage through anisotropy change, and serial magnetic resonance imaging for atrophy that keeps growing for six months in the animal follow up. Monitoring sees physiology: pressure and perfusion pressure as the standard pair, then the multimodality argument that the standard pair is an insufficient surrogate and that flow, oxygenation, metabolites, and temperature must be added, and finally near infrared spectroscopy as the non invasive route that infers flow and oxygen metabolism from light, validated against computed tomography perfusion in the piglet work. At the top of the stack the biomarker chapter records the honest negative that organizes all the others: at the time of writing there was no biomarker of brain injury approved by the Food and Drug Administration, so no blood test shortcut existed and the layered stack could not be collapsed. Time is the second organizing variable, and the concussion chapter states its sharpest form. After a concussive episode the brain enters a window of metabolic vulnerability in which ATP and the neuronal marker NAA fall and recover on their own slow schedule, symptoms can clear before metabolism does, and a second insult of even modest size inside the window can cause damage out of all proportion to its size, up to the catastrophic pattern called second impact syndrome. The prescribed response is restriction from physical activity until metabolic normalization, verified by spectroscopy rather than by how the athlete feels. The same timing logic runs through the rest of the book at other scales: flow falls in minutes, pressure crises build over hours, atrophy progresses over months, progenitor cells proliferate, migrate, differentiate, and integrate in sequence during recovery, and exercise or growth hormone based programs act on the slow end of the scale. Any engine that reasons about injured systems needs windows as first class state: the same input has different consequences depending on which window the system is currently inside, and recovery is complete only when the slowest relevant variable has returned, not when the fastest one has. The management chapters convert the physiology into decision rules, and their form is as instructive as their content. Airway rules fire early and conservatively, with intubation indicated below a Glasgow Coma Scale of nine. Systemic vetoes are priced explicitly, with systolic pressure below ninety millimeters of mercury associated with doubled mortality in the cited work. Surgical evacuation fires on a conjunction, a structural threshold on imaging together with a clinical grade, rather than on either signal alone. Perfusion pressure can be defended from either side of its equation, by lowering intracranial pressure or by raising arterial pressure, and the chapters name the two strategies separately because the right lever depends on the case. Decompressive craniectomy is the limiting case: when the rigid boundary itself is the problem and medical management is refractory, the boundary is removed, and the book faithfully records that the outcome evidence for doing so was contested and under trial at the time. For a reasoning engine the lesson is that thresholds in this book are decision rules with provenance, spread, and exceptions, and the correct internal representation keeps all three attached to the number. What the volume cannot do must be stated as plainly as what it can. Its evidence is a 2012 snapshot: trials described as ongoing have since reported, biomarker status has to be rechecked before any present day use, and several therapeutic claims, most visibly in the growth hormone chapter, rest heavily on the proponents own program rather than on independent controlled trials. Animal models do heavy lifting throughout, controlled cortical impact and fluid percussion in rodents, piglets for optical monitoring, and the translation discounts are real even where the chapters are careful. Conventions drift between chapters, thresholds are quoted at fifteen, twenty, and twenty five millimeters of mercury in different places, and the quantitative content is thin compared with the clinical content: one governing equation, a handful of measured effect sizes, and many qualitative mechanisms. Read whole, though, the book is a unusually complete worked example of how to reason about a damaged, monitored, slowly recovering system, and that is the level at which it transfers.",
+   "retrocausal_genealogy": "The lineage inside the book runs from the Monro-Kellie volume doctrine, the old anatomical insight that the skull is a fixed box, through the Kocher statement quoted at the head of the craniectomy chapter in 1901 that pressure relief requires opening the skull, to the twentieth century monitoring era built on intracranial pressure measurement and the Teasdale and Jennett style coma grading that the chapters use as their common language. The flow work descends from xenon and Doppler measurement traditions and the Yamakami and McIntosh fluid percussion experiments of 1989, the hypotension warning descends from the Chesnut analyses of the early 1990s, the optical monitoring descends from the 1977 Jobsis demonstration that near infrared light crosses tissue, and the concussion metabolism work descends from the Hovda laboratory concept of post concussive metabolic vulnerability that the final chapter extends with spectroscopy.",
+   "theory_of_mind": "The editors and chapter authors write for a clinician who is standing in front of a deteriorating patient and needs defensible actions, not for a reader collecting facts. Their shared model of the domain is that the first injury is fate and the second injury is failure: damage after impact is treated as partly preventable, which is why so much of the book is monitoring, thresholds, and escalation rules. They trust layered measurement more than any single number, they expect the reader to combine imaging, examination, and physiology before acting, and they are comfortable publishing contested evidence side by side, as the craniectomy chapters do, because the reader is assumed to be a professional who must decide before the evidence is complete.",
+   "cross_layer_veto": "Several findings in this book veto conclusions that other layers invite. A reassuring examination is vetoed by a systolic pressure under ninety, which the acute care chapter prices at doubled mortality regardless of how the primary injury looked. A normal pressure reading is vetoed by the multimodality argument that pressure and perfusion pressure together still miss subtle injury, so single channel calm cannot close a case. Symptom recovery after concussion is vetoed by the metabolic window: while NAA and ATP remain depressed, return to play is barred even for an athlete who feels well. And every proposed blood biomarker shortcut is vetoed by the validation chapter baseline that no approved biomarker existed, so inference must stay with the slower layered stack until that fact is retired by new evidence."
+  }
+ ],
+ "universal_lens": "The general template is two phase damage inside a rigid constraint. An initial insult fixes a starting state, then a secondary cascade, driven by pressure, flow failure, barrier breakdown, and inflammation, decides how much worse things get, and the cascade is the only part still open to intervention. Around the template sit three reusable tools: an opposed force equation that prices the constraint, a feedback loop whose integrity must be checked before inputs are trusted, and a vulnerability window in which identical inputs do outsized damage. Any system with a capacity limit, a compensating buffer, and a slow recovery variable can be reasoned about in exactly this shape.",
+ "gsi_mapping": "The Institute takes the measurement and validation discipline. Severity labels are stored with the banding convention that produced them, thresholds are stored with source, spread, and exceptions, and no marker graduates to decision use without a validation path of the kind the biomarker chapter lays out for regulatory approval. The concussion work contributes a concrete research program: recovery after head impact is tracked on the slow metabolic variable with serial spectroscopy, return to activity is gated on that variable rather than on symptoms, and repeat exposure inside the window is treated as a distinct and dangerous condition. The monitoring chapters contribute the rule that one channel is never treated as a complete state estimate.",
+ "gse_mapping": "The Edge engine takes the reasoning structure. Cases are represented in two layers, a fixed event layer and a moving secondary layer, so later information updates the trajectory instead of rewriting the event. Systemic veto variables are checked before any finer analysis, because the book shows single variables such as arterial pressure dominating outcome on their own. Every numeric trigger carries provenance and known exceptions, combined triggers require conjunctions of structure and state, and recovery or readiness judgments are gated on the slowest relevant variable with an explicit vulnerability window. Where the book records an honest negative, such as the missing approved biomarker, the engine stores the negative as a dated fact that blocks shortcuts."
+}

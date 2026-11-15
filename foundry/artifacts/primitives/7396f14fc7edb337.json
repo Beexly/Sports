@@ -1,0 +1,680 @@
+{
+ "book_id": "7396f14fc7edb337",
+ "source_status": "COMPLETE",
+ "source_note": "Claude Bernard, An Introduction to the Study of Experimental Medicine, first published in French in 1865; the local file is the English translation by Henry Copley Greene with an introduction by Lawrence J. Henderson, The Macmillan Company, New York, 1927. Local PDF size 16657234 bytes, full sha256 7396f14fc7edb33719d70291b796f490bdbe00f45a0f177d49f76de165de5392, book_id is the first 16 hex chars of the scan digest over str(size) plus the full PDF bytes. Extracted text is OCR of a scanned printed book, about 97,900 words, generally clean in the body with OCR garbling in front matter, contents, and some running heads; all quoted passages were chosen from clean body pages and verified as contiguous substrings of the extracted text file. The work contains no equations; latex is empty throughout and the domain is qualitative experimental method. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "observation_shows_experiment_teaches",
+   "name": "Observation shows and experiment teaches: control by reasoning and facts is experiment properly speaking",
+   "verbatim_quote": "This sort of control, by means of reasoning and facts, is what constitutes experiment, properly speaking; and it is the only process that we have for teaching ourselves about the nature of things outside us.",
+   "page": "extracted text page block 32 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phenomena can be revealed by observation before they are explained",
+    "Reasoning can test facts against one another"
+   ],
+   "breakdown_regime": "Fails when observation is too narrow or instruments cannot reach hidden parts; mere seeing without control teaches nothing",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "observation_shows_experiment_teaches",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "observer_listens_experimenter_questions",
+   "name": "The observer listens to nature while the experimenter questions her and forces her to unveil herself",
+   "verbatim_quote": "The observer listens to nature; the experimenter questions and forces her to unveil herself.",
+   "page": "extracted text page block 33 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nature answers only when actively questioned",
+    "Passivity and activity are roles in investigation, not fixed kinds of people"
+   ],
+   "breakdown_regime": "The passive active contrast breaks down in practice where observation itself requires instruments and intervention",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "observer_listens_experimenter_questions",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "experimenter_head_and_hand",
+   "name": "An experimenter must be at once theorist and practitioner, head and hand together",
+   "verbatim_quote": "To be worthy of the name, an experimenter must be at once theorist and practitioner. While he must completely master the art of establishing experimental facts, which are the materials of science, he must also clearly understand the scientific principles which guide his reasoning through the varied experimental study of natural phenomena.",
+   "page": "extracted text page block 30 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Experimental facts are the materials of science",
+    "Theory without operative skill is blind and skill without theory is powerless"
+   ],
+   "breakdown_regime": "Fails when theory and practice are separated into different people or stages with no feedback",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "experimenter_head_and_hand",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "comparable_facts_need_standard",
+   "name": "Complex sciences need a good experimental standard to secure comparable facts free from sources of error",
+   "verbatim_quote": "The more complex the science, the more essential is it, in fact, to establish a good experimental standard, so as to secure comparable facts, free from sources of error.",
+   "page": "extracted text page block 30 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Complexity multiplies sources of error",
+    "Comparability must be designed, not assumed"
+   ],
+   "breakdown_regime": "A standard built on poorly observed facts locks in error; standards must themselves be revised as facts improve",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "comparable_facts_need_standard",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "experiment_is_induced_observation_for_control",
+   "name": "An experiment is an observation produced or induced for the purpose of control",
+   "verbatim_quote": "the experiment is just an observation produced for the purpose of control.",
+   "page": "extracted text page block 47 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A ready made observation can serve if it controls the idea",
+    "Intervention is needed only when nature has not already prepared the observation"
+   ],
+   "breakdown_regime": "Fails when the induced observation does not actually discriminate between the idea and its rivals",
+   "domain": "experimental method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "experiment_is_induced_observation_for_control",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "preconceived_idea_first_flight",
+   "name": "A preconceived idea is always the first flight of an investigating mind",
+   "verbatim_quote": "a preconceived idea always has been and always will be the first flight of an investigating mind.",
+   "page": "extracted text page block 54 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Anticipation before experience is spontaneous and unavoidable",
+    "The idea is a starting point, not a conclusion"
+   ],
+   "breakdown_regime": "Becomes scholasticism when the idea is imposed as absolute truth instead of being submitted to experiment",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "preconceived_idea_first_flight",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "a_priori_transformed_to_a_posteriori",
+   "name": "The experimental method transforms an a priori conception into an a posteriori interpretation founded on experimental study",
+   "verbatim_quote": "the object of the experimental method is to transform this a priori conception, based on an intuition or a vague feeling about the nature of things, into an a posteriori interpretation founded on the experimental study of phenomena.",
+   "page": "extracted text page block 54 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intuition and vague feeling can supply the initial conception",
+    "Experimental study can replace feeling with founded interpretation"
+   ],
+   "breakdown_regime": "Fails when the a priori conception is never confronted with phenomena and remains metaphysical",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "a_priori_transformed_to_a_posteriori",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "hypothesis_based_on_prior_observation",
+   "name": "The experimental hypothesis must always be based on prior observation",
+   "verbatim_quote": "The experimental hypothesis, in short, must always be based on prior observation.",
+   "page": "extracted text page block 60 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An effect awakens an idea of causation only after observation",
+    "Ideas need a support in observed reality"
+   ],
+   "breakdown_regime": "Chance or accidental observations can start a line, but an idea with no observational support leaves the method",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "hypothesis_based_on_prior_observation",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "hypothesis_must_be_verifiable",
+   "name": "An hypothesis that experiment cannot verify leaves the experimental method for scholastic error",
+   "verbatim_quote": "if we made an hypothesis which experiment could not verify, in that very act we should leave the experimental method to fall into the errors of the scholastics and makers of systems.",
+   "page": "extracted text page block 60 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Verifiability is a condition on admissible hypotheses",
+    "Probability alone does not make an hypothesis experimental"
+   ],
+   "breakdown_regime": "Some fertile ideas begin vague in a young science; they must still be pushed toward a verifiable form",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "hypothesis_must_be_verifiable",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "observer_passive_photographer",
+   "name": "In noting phenomena the observer must be passive, observing without preconceived idea and writing at nature dictation",
+   "verbatim_quote": "We must observe without any preconceived idea; the observer's mind must. be passive, that is, must hold its peace; it listens to nature and writes at nature's dictation.",
+   "page": "extracted text page block 49 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observation must accurately represent nature",
+    "Preconceived ideas bias what is noted if they govern the noting stage"
+   ],
+   "breakdown_regime": "Pure passivity is an ideal; instrument choice and attention already shape what can be observed",
+   "domain": "observation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "observer_passive_photographer",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "experimenter_mind_active",
+   "name": "The experimenter mind must be active, questioning nature according to the hypotheses that suggest themselves",
+   "verbatim_quote": "An experimenter's mind must be active, i.e., must question nature, and put all manner of queries to it according to the various hypotheses which suggest themselves.",
+   "page": "extracted text page block 49 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Questioning is guided by hypotheses",
+    "Activity belongs to the design stage, passivity to the noting stage"
+   ],
+   "breakdown_regime": "Activity becomes error when the experimenter notes only results that confirm the hypothesis",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "experimenter_mind_active",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "necessity_of_preconceived_idea",
+   "name": "We experiment of necessity with a preconceived idea that serves as control for the results",
+   "verbatim_quote": "Of necessity we experiment with a preconceived idea.",
+   "page": "extracted text page block 49 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No experiment is designed without anticipation",
+    "The idea orders the search for experimental conditions"
+   ],
+   "breakdown_regime": "The sentence alone is the source statement; it fails as a rule if the idea is treated as immune to the result",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "necessity_of_preconceived_idea",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "true_science_teaches_doubt",
+   "name": "True science teaches us to doubt and, in ignorance, to refrain",
+   "verbatim_quote": "True science teaches us to doubt and, in ignorance, to refrain.",
+   "page": "extracted text page block 82 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Doubt is a discipline, not scepticism that believes nothing",
+    "Refraining is required when facts are indefinite"
+   ],
+   "breakdown_regime": "Doubt carried to scepticism destroys the criterion itself and makes science impossible",
+   "domain": "experimental reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "true_science_teaches_doubt",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "absolute_determinism_in_all_sciences",
+   "name": "There is absolute determinism in all sciences because every phenomenon is necessarily linked with physico-chemical conditions that can be altered to master it",
+   "verbatim_quote": "Yet there is absolute determinism in all the sciences, because every phenomenon being necessarily linked with physico-chemical conditions, men of science can alter them to master the phenomenon, Le., to prevent or to promote its appearing.",
+   "page": "extracted text page block 87 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every phenomenon is linked with necessary conditions",
+    "Altering conditions is how mastery is exercised"
+   ],
+   "breakdown_regime": "If determinism were impossible in life, biological science would be denied; the claim is a working postulate tested by success in altering conditions",
+   "domain": "determinism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "absolute_determinism_in_all_sciences",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "science_rejects_the_indeterminate",
+   "name": "Rational science rejects the indeterminate and must not repudiate an accurate and well observed fact",
+   "verbatim_quote": "Rational science based, as we have said, on a necessary determinism, must never repudiate an accurate and well-observed fact;",
+   "page": "extracted text page block 82 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Poorly observed indefinite facts are obstacles, not data",
+    "Accurate facts and vague impressions have different standing"
+   ],
+   "breakdown_regime": "Indefinite facts must be re observed with precision rather than debated; basing opinions on tact or inspiration places medicine outside science",
+   "domain": "determinism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "science_rejects_the_indeterminate",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "counterproof_necessary",
+   "name": "Counterproof is a necessary and essential characteristic of the conclusion of experimental reasoning",
+   "verbatim_quote": "Counterproof, then, is a necessary and essential characteristic of the conclusion of experimental reasoning.",
+   "page": "extracted text page block 82 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Presence of a condition before a phenomenon does not prove causation",
+    "Coincidence is a standing danger in complex sciences"
+   ],
+   "breakdown_regime": "Without removal of the condition, post hoc reasoning remains open and conclusions stay provisional",
+   "domain": "experimental criterion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "counterproof_necessary",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "sublata_causa_removal_test",
+   "name": "The only proof that one phenomenon is cause of another is removing the first to stop the second",
+   "verbatim_quote": "Now the only proof that one phenomenon plays the part of cause in relation to another is by removing the first, to stop the second.",
+   "page": "extracted text page block 83 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Causation is tested by suppression, the sublata causa principle",
+    "The effect must disappear when the accepted cause is removed"
+   ],
+   "breakdown_regime": "In entangled living systems removal may disturb many conditions at once, so comparative experiment must accompany counterproof",
+   "domain": "experimental criterion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "sublata_causa_removal_test",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "counterproof_distinct_from_comparative",
+   "name": "Counterproof must not be confused with comparative experiment; counterproof is a counterjudgment on the conclusion",
+   "verbatim_quote": "counterproof, on the contrary, is a counterjudgment dealing directly with the experimental conclusion and forming one of its necessary terms.",
+   "page": "extracted text page block 83 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparative experiment simplifies phenomena and forearms against unforeseen error",
+    "Counterproof deals directly with the causal conclusion"
+   ],
+   "breakdown_regime": "Confusing the two leaves a comparison standing in place of a causal test",
+   "domain": "experimental criterion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "counterproof_distinct_from_comparative",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "proof_needs_synthesis_counterproof",
+   "name": "Analysis is proved only when the synthesis that demonstrates it provides the counterproof",
+   "verbatim_quote": "Analysis can be absolutely proved only when the synthesis, which demonstrates it, provides the counterproof or counterexperiment.",
+   "page": "extracted text page block 83 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Analysis and synthesis control each other",
+    "Proof in science never establishes certainty without counterproof"
+   ],
+   "breakdown_regime": "In very complex phenomena full synthesis may be unattainable, and proof then remains partial",
+   "domain": "experimental criterion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "proof_needs_synthesis_counterproof",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "destroy_own_conclusions",
+   "name": "Ideas are solidly settled only by trying to destroy our own conclusions by counterexperiments",
+   "verbatim_quote": "if we mean to find truth, we can solidly settle our ideas only by trying to destroy our own conclusions by counterexperiments.",
+   "page": "extracted text page block 83 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Contradictory facts must be actively sought, not avoided",
+    "Fear of losing an hypothesis is a poor scientific spirit"
+   ],
+   "breakdown_regime": "Self destruction of conclusions requires conditions clean enough that a negative result is informative",
+   "domain": "experimental criticism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "destroy_own_conclusions",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "statistics_presence_absence_not_proof",
+   "name": "Statistical tables of presence or absence never establish experimental demonstrations",
+   "verbatim_quote": "statistical tables of presence or of absence never establish experimental demonstrations.",
+   "page": "extracted text page block 83 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Constant conjunction is not causation",
+    "Counting cases does not replace removing the cause"
+   ],
+   "breakdown_regime": "Statistics can guide and corroborate, but alone they do not perform the counterproof",
+   "domain": "experimental criticism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "statistics_presence_absence_not_proof",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "averages_are_not_reality",
+   "name": "Averages of organic fluids are combinations with no scientific reality unless precise conditions of the inner environment are found",
+   "verbatim_quote": "instead of tabulating the variations in phenomena and taking averages as expressions of reality; we should thus reach conclusions based on correct statistics, but with no more scientific reality than if they were wholly arbitrary.",
+   "page": "extracted text page block 143 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Variation signals unfound conditions, not noise to be averaged away",
+    "Determinism requires the precise conditions behind each case"
+   ],
+   "breakdown_regime": "Averaging is useful only after the conditions that produce variation are known and held comparable",
+   "domain": "statistics and determinism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "averages_are_not_reality",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "same_foundations_life_and_inorganic",
+   "name": "The science of vital phenomena must have the same foundations as the science of inorganic bodies",
+   "verbatim_quote": "the science of vital phenomena must have the same foundations as the science of the phenomena of inorganic bodies,",
+   "page": "extracted text page block 87 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The goal everywhere is connecting phenomena with their necessary conditions or immediate causes",
+    "Vital force does not exempt life from physico-chemical conditions"
+   ],
+   "breakdown_regime": "Complexity and spontaneity make application harder, not different in principle",
+   "domain": "determinism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "same_foundations_life_and_inorganic",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "parallelism_vital_physicochemical",
+   "name": "Between vital and physico-chemical manifestations there is complete parallelism and a direct and necessary relation",
+   "verbatim_quote": "we must note, on the contrary, in these two orders of phenomena a complete parallelism and a direct and necessary relation.",
+   "page": "extracted text page block 89 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Influences producing or retarding vital manifestations are the same kind as those acting on inorganic bodies",
+    "Warmth, moisture and light link life to its environment"
+   ],
+   "breakdown_regime": "In warm blooded animals the parallelism is hidden by protective mechanisms regulating the internal environment",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "parallelism_vital_physicochemical",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "two_environments",
+   "name": "In higher animals two environments must be considered, the external cosmic environment and the internal intraorganic environment",
+   "verbatim_quote": "in the higher living animals, at least two environments must be considered, the external or extra-organic environment and the internal or intraorganic environment.",
+   "page": "extracted text page block 90 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Inorganic experimentation needs only the external environment",
+    "Vital phenomena are immersed in an internal environment that mediates outer influences"
+   ],
+   "breakdown_regime": "In simple organisms the internal environment is barely distinct from the external, so the distinction weakens",
+   "domain": "internal environment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "two_environments",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "internal_environment_constancy",
+   "name": "In warm blooded animals the blood serum maintains an almost fixed and constant temperature and composition",
+   "verbatim_quote": "in the latter the blood serum maintains an almost fixed and constant temperature and composition.",
+   "page": "extracted text page block 91 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The internal environment is a true product of the organism",
+    "Isolation from the surrounding environment increases with perfection of the organism"
+   ],
+   "breakdown_regime": "Constancy fails when the protective system becomes insufficient in given conditions, and functions then vary with the outside",
+   "domain": "internal environment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "internal_environment_constancy",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "vital_variation_from_internal_conditions",
+   "name": "Vital manifestations vary only because the physico-chemical conditions of their internal environments vary",
+   "verbatim_quote": "Vital manifestations in animals vary only because the physico-chemical conditions of their internal environments vary",
+   "page": "extracted text page block 91 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Apparent independence from the cosmic environment is an appearance produced by regulation",
+    "A chilled mammal resembles a cold blooded animal in tissue properties"
+   ],
+   "breakdown_regime": "The claim requires measuring the internal conditions; without that measurement it cannot be applied to a given case",
+   "domain": "internal environment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "vital_variation_from_internal_conditions",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "no_opposing_forces_in_nature",
+   "name": "There are no forces opposed and struggling in nature, only order and disorder, harmony or discord",
+   "verbatim_quote": "There are no forces opposed and struggling one with another; in nature there can be only order and disorder, harmony or discord.",
+   "page": "extracted text page block 90 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A living organism is a machine set going by complex and delicate mechanism",
+    "Apparent vital forces arise from ignoring the internal environment"
+   ],
+   "breakdown_regime": "The machine picture does not by itself supply the conditions of any particular phenomenon",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "no_opposing_forces_in_nature",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "living_units_inert_without_stimulus",
+   "name": "Anatomical units are inert in themselves and enter activity only through a stimulus from blood, nerve or environment",
+   "verbatim_quote": "this living fibre is inert in the sense that if nothing changes in its environmental or its inner conditions, it cannot bring its functions into play, and it will not contract.",
+   "page": "extracted text page block 105 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every phenomenon results from a physico-chemical stimulant outside the reacting body",
+    "Units stimulate one another in reciprocal relations"
+   ],
+   "breakdown_regime": "Units are autonomous in properties but not self starting; isolating a unit from its conditions destroys the activity studied",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "living_units_inert_without_stimulus",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "study_of_life_two_knowledges",
+   "name": "The study of life is study of the properties of organized units and study of the organic environment that permits their activity",
+   "verbatim_quote": "the study of life includes two things: (1) Study of the properties of organized units; (2) study of the organic environment, i.e., study of the conditions which this environment must fulfill to permit the appearance of vital activities.",
+   "page": "extracted text page block 104 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physiology, pathology and therapeutics rest on this double knowledge",
+    "Only a small set of chemical elements compose even the human organism"
+   ],
+   "breakdown_regime": "Either half alone is insufficient; properties without environment or environment without units explain nothing",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "study_of_life_two_knowledges",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "medicine_begins_in_hospital_ends_in_laboratory",
+   "name": "Medicine merely begins in hospitals; the physician must go to the laboratory to account for what was observed in patients",
+   "verbatim_quote": "medicine does not end in hospitals, as is often believed, but merely begins there.",
+   "page": "extracted text page block 174 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hospital observation supplies the phenomena to be explained",
+    "Experiments on animals seek the origin of lesions and the action of drugs"
+   ],
+   "breakdown_regime": "Laboratory results must return to the patient and be controlled there; the laboratory alone is not medicine",
+   "domain": "experimental medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "medicine_begins_in_hospital_ends_in_laboratory",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "theory_system_doctrine",
+   "name": "An hypothesis submitted to the experimental method becomes a theory, submitted to logic alone it becomes a system, and a theory held immutable becomes a doctrine",
+   "verbatim_quote": "When an hypothesis is submitted to the experimental method, it becomes a theory, while if it is submitted to logic alone, it becomes a system.",
+   "page": "extracted text page block 247 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A theory is a verified hypothesis under continuing criticism",
+    "A system connects facts by reason without experimental critical verification"
+   ],
+   "breakdown_regime": "A theory that stops being resubmitted to verification as new facts appear degenerates into doctrine",
+   "domain": "theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "theory_system_doctrine",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  },
+  {
+   "primitive_id": "glycogenesis_animal_sugar_production",
+   "name": "Animals as well as vegetables possess the power of producing sugar, an acquired fact even without a plausible theory of the phenomenon",
+   "verbatim_quote": "the power of producing sugar, possessed by animals as well as vegetables, is now an acquired fact for science;",
+   "page": "extracted text page block 191 (form feed delimited), Part/Chapter as in the 1927 Macmillan translation text",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Facts can be acquired before their theory is plausible",
+    "Risky ideas should be expressed to stimulate research in all directions"
+   ],
+   "breakdown_regime": "The fact stands on experiment; competing theories of the mechanism remain open and must be settled by further experiment",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This Bernard rule maps onto the reasoning engine as a control on how claims are formed and tested: a signal or pattern is treated as an induced observation for control, held under doubt, and promoted only after a removal or counter test and after the conditions that produce it are named, which is the same discipline Bernard requires for a causal conclusion in physiology.",
+    "source_operator": "glycogenesis_animal_sugar_production",
+    "telemetry": "Logged observations with their conditions, the hypothesis stated before the test, the counter test result, and the internal state variables recorded at the time of each observation."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "7396f14fc7edb337-t1",
+   "think": "Claude Bernard wrote this work in 1865 to carry a method that already worked in physics and chemistry into medicine, and the whole book is best read as one machine with interlocking parts rather than as a collection of maxims. The first part builds the reasoning cycle. Observation reveals phenomena, but observation by itself teaches nothing until reasoning puts facts in control of one another. An experiment, in his precise sense, is an observation induced or produced for the purpose of control. That definition quietly removes the usual contrast between a passive observer and an active experimenter and replaces it with stages inside one investigator. When noting, the mind must be passive, a photographer of phenomena, writing at the dictation of nature and refusing to let a preconceived idea select what gets recorded. When designing, the same mind must be maximally active, questioning nature, contriving conditions, and forcing hidden parts into view with instruments and operations. Confusing those two stages is, for Bernard, a primary source of error, because a hypothesis that is legitimate and necessary as a guide to design becomes a contaminant when it governs the act of noting. The second part of the cycle is the life of the idea itself. Every investigator begins with a preconceived idea, an a priori anticipation that is the first flight of the mind, and Bernard refuses both to ban it and to trust it. The experimental method is defined by what happens next: the a priori conception, based on intuition or vague feeling, is transformed into an a posteriori interpretation founded on experimental study. For that transformation to be possible the hypothesis must satisfy two conditions that still read as modern research discipline. It must be based on prior observation, so that it has a support in nature rather than in pure imagination, and it must be experimentally verifiable, because an hypothesis that no experiment could test has already left the method and entered scholasticism. Doubt is the governor on the whole cycle. It is not scepticism, which believes nothing and therefore has no criterion left, but a serene, continuing refusal to treat a confirmed idea as settled. True science teaches us to doubt and, in ignorance, to refrain, and that refrain is a practical rule with clinical weight, since acting on indefinite facts surrenders patients to inspired ignorance. The criterion that closes the cycle is counterproof, and Bernard is unusually exact about it. Proof that a condition always precedes or accompanies a phenomenon does not establish that the condition is its immediate cause, because coincidence is one of the most dangerous stumbling blocks in complex sciences and because the post hoc fallacy is most seductive exactly when a result flatters a preconceived idea. The only proof that one phenomenon plays the part of cause in relation to another is removing the first and stopping the second, the old sublata causa, tollitur effectus, which he calls the experimentum crucis. He is careful to separate this counterjudgment from comparative experiment, which is a device for simplifying phenomena and forearming against unforeseen sources of error, and from statistical tables of presence or absence, which never establish an experimental demonstration. Analysis is proved only when synthesis provides the counterproof, and the experimenter settles an idea solidly only by trying to destroy his own conclusions by counterexperiments. Read as engine design, this is a complete promotion rule: correlation, co-occurrence counts, and a single confirming run are explicitly insufficient, and a claim earns causal standing only through a suppression test performed under named conditions. Underneath the reasoning cycle sits the postulate that makes it worth running on living beings at all, namely absolute determinism. Bernard argues that the science of vital phenomena must have the same foundations as the science of inorganic bodies, that between the two orders of manifestation there is complete parallelism and a direct and necessary relation, and that apparent spontaneity or a vital force at war with physico-chemical forces is an appearance produced by ignorance of conditions. Every phenomenon is necessarily linked with physico-chemical conditions, and because those conditions can be altered, the phenomenon can be mastered, prevented, or promoted. This is why he rejects the indeterminate so sharply and why he attacks averages with such force. If variation in urine or blood analyses is averaged away, the result is a combination that corresponds to nothing real, because the variation is precisely the trace of unfound conditions in the internal environment. Determinism therefore does not license confidence in aggregate regularities; it demands the opposite, a search for the precise and definite conditions of each case, with variation treated as information about missing conditions rather than as noise. The internal environment is the book's great constructive idea and the place where determinism becomes workable in a complex organism. In experimentation on inorganic bodies only one environment needs to be considered, the external cosmic environment, but in higher animals there are two, the external or extra-organic environment and the internal or intraorganic environment in which the organic units are immersed. The circulating liquids, the blood serum and the intra-organic fluids constitute that internal environment, and in warm blooded animals it maintains an almost fixed and constant temperature and composition, which is why such animals look independent of cosmic variation while in fact their vital manifestations vary only as the physico-chemical conditions of their internal environments vary. The study of life therefore splits into two knowledges that must be held together: the properties of organized units, and the conditions the organic environment must fulfill to permit vital activity. The units themselves are autonomous in their properties yet inert, entering activity only through a stimulus from blood, nerve, or surroundings, so function is always a relation between a unit and its immediate conditions. For a reasoning engine this is the deepest transfer in the book: never model a unit, a player, a tissue, or a signal in its outer circumstances alone; model the regulated internal state that mediates those circumstances, expect apparent independence to be regulation rather than exemption from law, and treat loss of regulation as the regime in which outside influences suddenly appear to act directly. The third part applies the method and shows its institutional and critical consequences. Medicine merely begins in hospitals and must continue in the laboratory, where what was observed in patients is accounted for by experiment; facts such as the power of producing sugar possessed by animals as well as vegetables can be acquired for science before any plausible theory explains them, and risky ideas are worth expressing to stimulate research in all directions. His taxonomy of theory, system, and doctrine supplies the final guardrail: an hypothesis submitted to the experimental method becomes a theory, submitted to logic alone it becomes a system, and a theory regarded as immutable and no longer resubmitted to verification becomes a doctrine. The engine lesson is that every stored conclusion needs a status that can decay, a record of the counter tests it survived, and a standing obligation to be resubmitted when new facts appear, because the moment verification stops, a working theory has quietly changed kind.",
+   "retrocausal_genealogy": "Bernard's genealogy runs through the physico-chemical sciences, where the experimental method had already produced brilliance, back through Bacon on observation and experiment as tools for gathering material, Cuvier on the observer who listens and the experimenter who questions, Zimmermann on experience in medicine, Goethe on experience disciplining man, and Chevreul in his own century on the philosophy of experimental science. His immediate formation was in the laboratory of Magendie at the College de France, whose daring experimentation and pitiless criticism he systematized. His own discoveries, including animal glycogenesis and the vasomotor nerves, supplied the worked examples. Lawrence Henderson's introduction to the 1927 translation then carried the internal environment forward toward the later language of homeostasis, so the lineage runs from early modern method talk through Paris physiology into twentieth century regulatory physiology.",
+   "theory_of_mind": "Bernard models the reader as a practitioner who is naturally metaphysical and proud, inclined to impose ideas on nature, to love systems because they flatter the mind with a science regulated by logic, and to stop verifying once a result agrees with him. He assumes the domain is not lawless but hidden: life looks spontaneous and independent only because its immediate conditions are internal, delicate, and unmeasured. His model of the investigator is therefore divided against itself on purpose, passive in noting and active in questioning, full of ideas yet ready to abandon them, and he writes as a teacher of a craft whose minutiae of method matter more than general exhortations to be scientific. He expects resistance from vitalists, system makers, and clinicians who fear counterproof, and he answers them by redefining rigor rather than by asking for faith.",
+   "cross_layer_veto": "Several vetoes in this work constrain any other layer that would reason over complex phenomena. Determinism vetoes explanations that appeal to spontaneity, vital force, tact, or inspiration, and it vetoes aggregate averages presented as reality when the producing conditions are unknown. The counterproof rule vetoes causal claims built on co-occurrence, presence and absence tables, or a single confirming experiment, no matter how consistent they look. The two environments doctrine vetoes any inference that reads an organism's outer circumstances directly off its behavior without passing through its regulated internal state. The theory and doctrine distinction vetoes frozen conclusions: a claim that is no longer being resubmitted to verification has changed status and must be demoted. Together these vetoes block promotion, not inquiry, which matches Bernard's own separation between free hypothesis formation and strict experimental control."
+  }
+ ],
+ "universal_lens": "As a general template, Bernard's method separates the generation of ideas from their control: anticipate freely, note passively, test by removal, and explain a complex system through the regulated internal state that mediates its surroundings. Any field studying entangled phenomena can adopt the same cycle, treating variation as evidence of unfound conditions, averages with suspicion, and every accepted conclusion as a theory that must keep being resubmitted to counter tests or decay into doctrine.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from Bernard a research discipline for studying athletes and teams as regulated systems: record the internal state variables that mediate performance, state hypotheses before tests, require suppression or counter tests before calling a factor causal, and refuse to publish averages as explanations when the conditions producing variation have not been found. His hospital to laboratory loop also models the institute's movement between field observation and controlled study, with each side controlling the other.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes Bernard's promotion rule and his internal environment model. A pattern found in data is an induced observation for control, not a conclusion; it earns causal weight only after a counter test in which the factor is removed or suppressed under named conditions, and co-occurrence counts alone never promote it. Matchup and performance reasoning should pass through the regulated internal state of the units involved, such as health, workload, and role conditions, rather than reading outer circumstances directly, and stored conclusions keep a verification status that decays when they stop being retested."
+}

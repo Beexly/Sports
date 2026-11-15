@@ -1,0 +1,731 @@
+{
+ "book_id": "f5542f472df6f80b",
+ "source_status": "COMPLETE",
+ "source_note": "Peter David Bailis, Coordination Avoidance in Distributed Databases, PhD dissertation, University of California, Berkeley, Fall 2015, revision of November 2, 2015. Committee co-chairs Joseph M. Hellerstein and Ion Stoica. The local file is the complete dissertation PDF (2177081 bytes, full sha256 f5542f472df6f80b345ba0ac9ee0ac0743013df9fe7b69d44d6106a96375370e) with clean born digital text extraction (9160 lines, 588208 characters) including abstract, eight chapters, and bibliography; page anchors cite the printed dissertation pagination as it appears in the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "coordination_avoidance",
+   "name": "Coordination avoidance: use as little coordination as possible while ensuring application integrity",
+   "verbatim_quote": "as little coordination as possible while ensuring application integrity",
+   "page": "Abstract, p.1",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Application integrity is specified by invariants the system must preserve.",
+    "Coordination is a cost to be minimized, not a default."
+   ],
+   "breakdown_regime": "Fails when the required invariant is not invariant confluent; then some coordination is strictly necessary.",
+   "domain": "distributed databases",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the reasoning engine, treat cross signal agreement checks as coordination: run them only when the combined conclusion would otherwise violate a stated integrity rule, and let independent signals progress locally otherwise.",
+    "source_operator": "coordination_avoidance",
+    "telemetry": "Per signal family coordination events, latency added by agreement checks, and invariant violations avoided."
+   }
+  },
+  {
+   "primitive_id": "invariant_confluence_definition",
+   "name": "Invariant confluence: merges of reachable valid states from a common ancestor stay valid",
+   "verbatim_quote": "A set of transactions T is invariant confluent with respect to invariant I if, for all I-T -reachable states Di , Dj with a common ancestor state,",
+   "page": "Chapter 3, Section 3.1, Definition 6, p.28",
+   "latex": "I(D_i \\sqcup D_j) = \\mathrm{true}",
+   "symbol_and_unit_ledger": {
+    "I": "invariant predicate over database states, dimensionless truth value",
+    "D_i, D_j": "reachable database states",
+    "\\sqcup": "merge operator over states, written t in the thesis text"
+   },
+   "assumptions": [
+    "Merge is defined for the states under consideration.",
+    "Both states are reachable by valid transaction and merge steps from a common ancestor.",
+    "The initial state is valid."
+   ],
+   "breakdown_regime": "Fails if two locally valid divergent states merge into an invalid state; a single pair counterexample is enough to refute it.",
+   "domain": "correctness theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine test for safe parallel work: two analysts or submodels may update shared state independently only if every pair of locally valid updates merges to a state that still satisfies the engine invariants.",
+    "source_operator": "invariant_confluence_definition",
+    "telemetry": "Pairs of divergent updates, merge outcomes, and invariant pass or fail on merged state."
+   }
+  },
+  {
+   "primitive_id": "invariant_confluence_theorem",
+   "name": "Theorem 1: invariant confluence is necessary and sufficient for coordination free, available, convergent, globally valid execution",
+   "verbatim_quote": "Theorem 1 establishes invariant confluence as a necessary and sufficient condition for invariant-preserving, coordination-free execution.",
+   "page": "Chapter 3, Section 3.2, p.29",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system model of Chapter 2 holds: transactional availability, convergence, and global validity are all required together.",
+    "Transactions and invariants are fixed for the analysis."
+   ],
+   "breakdown_regime": "If any one of availability, convergence, or global validity is dropped, the equivalence no longer applies as stated.",
+   "domain": "correctness theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use the theorem as a gate in engine design reviews: a proposed parallel pipeline must either pass the confluence test for its invariants or explicitly name which guarantee it gives up.",
+    "source_operator": "invariant_confluence_theorem",
+    "telemetry": "Design review records linking each parallel pipeline to its invariants and its confluence verdict."
+   }
+  },
+  {
+   "primitive_id": "local_commit_composability_rule",
+   "name": "Informal rule: coordination can only be avoided if all local commit decisions are globally valid",
+   "verbatim_quote": "Invariant Confluence captures a simple, informal rule: coordination can only be avoided if all local commit decisions are globally valid.",
+   "page": "Chapter 3, Section 3.3, p.33",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Commit decisions are made on local replica state.",
+    "Global validity is judged after merge."
+   ],
+   "breakdown_regime": "Breaks when invariants are incorrectly or incompletely specified; the analysis then guards only the stated invariants.",
+   "domain": "correctness theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine components that commit intermediate conclusions locally must be checked for composability: local acceptance is not enough unless merged conclusions remain valid.",
+    "source_operator": "local_commit_composability_rule",
+    "telemetry": "Local commit decisions, merged conclusion validity, and cases where local acceptance had to be revoked."
+   }
+  },
+  {
+   "primitive_id": "coordination_free_execution_definition",
+   "name": "Coordination free execution: progress of each transaction depends only on its own replica state",
+   "verbatim_quote": "A system provides coordination-free execution for a set of transactions T iff",
+   "page": "Chapter 2, Section 2.3, Definition 5, p.24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Replica state means the versions of the items the transaction reads.",
+    "Progress means movement toward commit or abort."
+   ],
+   "breakdown_regime": "Any blocking synchronization or communication with concurrent transactions violates the definition.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Define engine worker independence the same way: a worker is coordination free only if its progress depends solely on its assigned inputs, never on another worker finishing first.",
+    "source_operator": "coordination_free_execution_definition",
+    "telemetry": "Worker wait graphs, blocking edges between concurrent tasks, and progress during peer outages."
+   }
+  },
+  {
+   "primitive_id": "transactional_availability_definition",
+   "name": "Transactional availability: a transaction that can access its items eventually commits unless it aborts itself or would violate an invariant",
+   "verbatim_quote": "A system provides transactionally available execution iff, whenever a client",
+   "page": "Chapter 2, Section 2.3, Definition 2, p.23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The client can access servers holding versions of each item in the transaction.",
+    "Explicit abort inside the transaction is allowed."
+   ],
+   "breakdown_regime": "Durability beyond a single server failure needs the relaxed form requiring access to F plus 1 servers per item.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Apply the same availability contract to engine jobs: a job with all its inputs reachable must finish with a result or an explicit self abort, never hang waiting for an unrelated job.",
+    "source_operator": "transactional_availability_definition",
+    "telemetry": "Job completion, explicit aborts, invariant aborts, and hangs with inputs reachable."
+   }
+  },
+  {
+   "primitive_id": "convergence_definition",
+   "name": "Convergence: paired servers eventually hold the same versions for shared items when writes stop and delays are finite",
+   "verbatim_quote": "A system is convergent iff, for each pair of servers, in the absence of new",
+   "page": "Chapter 2, Section 2.3, Definition 3, p.24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No new writes arrive during the convergence window.",
+    "Communication delays are not indefinite."
+   ],
+   "breakdown_regime": "Pairwise convergence is stronger than system wide convergence and rules out background consensus that can stall under partitions.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine replicas and caches must satisfy the paired version of this test: any two stores holding the same signal must agree once updates stop propagating.",
+    "source_operator": "convergence_definition",
+    "telemetry": "Version vectors per store, divergence duration after last write, and pairwise agreement checks."
+   }
+  },
+  {
+   "primitive_id": "global_validity_definition",
+   "name": "Global validity: all replicas always contain invariant valid state",
+   "verbatim_quote": "A system is globally I-valid iff all replicas always contain I-valid state.",
+   "page": "Chapter 2, Section 2.3, Definition 4, p.24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Invariants are predicates over database states.",
+    "The initial state satisfies the invariants."
+   ],
+   "breakdown_regime": "Transient invalid states are not permitted under this definition, even if later repaired.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hold engine stores to the always valid form for published state: intermediate invalid states belong in private scratch state, never in the shared store other components read.",
+    "source_operator": "global_validity_definition",
+    "telemetry": "Invariant checks on every shared store snapshot, including intermediate snapshots during merges."
+   }
+  },
+  {
+   "primitive_id": "merge_operator",
+   "name": "Merge operator: commutative, associative, idempotent combination of divergent states, set union in the base model",
+   "verbatim_quote": "we assume the merge operator is commutative, associative, and idempotent",
+   "page": "Chapter 2, Section 2.3, p.22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Merge effects are atomically visible.",
+    "The initial state merged with any state returns that state."
+   ],
+   "breakdown_regime": "Arbitrary merge functions such as Bayou style user written merges need a background total order to converge and fall outside the base focus.",
+   "domain": "system model",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine state merges should be built from commutative, associative, idempotent operators by default, so merge order and duplicate delivery cannot change the result.",
+    "source_operator": "merge_operator",
+    "telemetry": "Merge operator property tests: commutativity, associativity, idempotence over sampled state pairs."
+   }
+  },
+  {
+   "primitive_id": "serializability_requires_coordination",
+   "name": "Serializability provably requires coordination, so it negates coordination free execution",
+   "verbatim_quote": "However, serializability is inconvenient for databases: serializability (provably) requires coordination",
+   "page": "Chapter 1, p.2",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transactions are arbitrary user operation groups.",
+    "The serial order must hold across transactions."
+   ],
+   "breakdown_regime": "Weaker non serializable semantics can still be coordination free; the result is specific to serializable semantics.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Do not demand a single global serial order over all engine reasoning steps; reserve total ordering for the few invariants that truly need it and pay the coordination cost only there.",
+    "source_operator": "serializability_requires_coordination",
+    "telemetry": "Ordering requirements per engine stage and the latency cost of stages that enforce total order."
+   }
+  },
+  {
+   "primitive_id": "implementation_vs_semantics_necessity",
+   "name": "An implementation using coordination does not prove the semantics require coordination",
+   "verbatim_quote": "just because a given implementation of a guarantee uses coordination does not mean that the guarantee necessarily requires coordination for enforcement.",
+   "page": "Chapter 2, Section 2.1, p.12",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Guarantees are analyzed as semantics, independent of one implementation.",
+    "A coordination free implementation may exist even when legacy ones coordinate."
+   ],
+   "breakdown_regime": "The converse direction needs a proof over all implementations, as with serializability, not a single example.",
+   "domain": "methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When an engine component is slow because it synchronizes, ask whether the synchronization is in the requirement or only in the current implementation before accepting the cost.",
+    "source_operator": "implementation_vs_semantics_necessity",
+    "telemetry": "Per component notes separating semantic requirements from implementation synchronization points."
+   }
+  },
+  {
+   "primitive_id": "coordination_latency_cost",
+   "name": "Coordination latency is bounded below by message exchange time, with a speed of light floor across the Earth",
+   "verbatim_quote": "the latency experienced by the operations will be bounded from below by the amount of time required to exchange information between the sites.",
+   "page": "Chapter 2, Section 2.2.1, p.12",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Networks are fault free for this latency bound.",
+    "Physical distance and routing add delay above the physical floor."
+   ],
+   "breakdown_regime": "Intra datacenter links are far faster, so the bound bites hardest for geo replicated and wide area coordination.",
+   "domain": "performance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every cross region or cross agent agreement step in the engine carries a hard latency floor; batch or remove such steps on the critical path of time sensitive projections.",
+    "source_operator": "coordination_latency_cost",
+    "telemetry": "Round trip times per coordination step, critical path length in round trips, and end to end projection latency."
+   }
+  },
+  {
+   "primitive_id": "coordination_throughput_bound",
+   "name": "Coordinating transactions on the same items are throughput limited by the inverse of their delay",
+   "verbatim_quote": "maximum throughput of coordinating transactions operating on the same items under a general-purpose (i.e., interactive, non-batched) transaction model is limited by",
+   "page": "Chapter 2, Section 2.2.2, p.14",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transactions are interactive and non batched.",
+    "Conflicting transactions target the same items."
+   ],
+   "breakdown_regime": "Batching, partitioning items across servers, and coordination free execution each escape this specific bound in different ways.",
+   "domain": "performance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Hot shared state is the engine throughput bottleneck: if many workers must coordinate on one record, throughput collapses to one over the coordination delay, so hot records need partitioning or confluent updates.",
+    "source_operator": "coordination_throughput_bound",
+    "telemetry": "Contention per shared record, coordination delay, and achieved throughput versus the inverse delay bound."
+   }
+  },
+  {
+   "primitive_id": "eventual_consistency_liveness_only",
+   "name": "Eventual consistency is purely a liveness property and makes no safety guarantees",
+   "verbatim_quote": "eventual consistency is purely a liveness property. Something good eventually happens",
+   "page": "Chapter 2, Section 2.2.5, p.20",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eventual consistency only promises reads agree if updates stop.",
+    "No constraint is placed on which value is converged to."
+   ],
+   "breakdown_regime": "Real systems often behave strongly in practice, but the guarantee itself permits arbitrary converged values such as a value never written.",
+   "domain": "consistency models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Treat eventual agreement between engine stores as liveness only: it never substitutes for a safety check that the agreed value was actually produced by a valid computation.",
+    "source_operator": "eventual_consistency_liveness_only",
+    "telemetry": "Converged values traced back to originating writes, and agreement checks paired with provenance checks."
+   }
+  },
+  {
+   "primitive_id": "read_committed_confluent",
+   "name": "Read Committed is invariant confluent and implementable coordination free with multiversion final write marking",
+   "verbatim_quote": "If the database only shows users records that have been marked as final writes upon transaction commit, users will never observe non-final writes.",
+   "page": "Chapter 1, Section 1.1, p.5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each version is marked final or non final.",
+    "Readers only see versions marked final at commit.",
+    "Each individual history respects Read Committed."
+   ],
+   "breakdown_regime": "The classic lock based implementation coordinates heavily in distributed settings even though the semantics do not require it.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Publish engine outputs the same way: keep draft versions invisible and flip a final marker at commit, so consumers never read half updated projections.",
+    "source_operator": "read_committed_confluent",
+    "telemetry": "Version visibility flags, reads of non final versions (target zero), and commit marker propagation."
+   }
+  },
+  {
+   "primitive_id": "sticky_availability",
+   "name": "Sticky availability: session guarantees such as read your writes, PRAM, and causal consistency become available when clients keep affinity to one logical copy",
+   "verbatim_quote": "With sticky availability, a system can achieve read your writes guarantees, PRAM, and causal consistency.",
+   "page": "Chapter 4, Section 4.2.4, p.48",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The client copy reflects all of the client prior operations.",
+    "Affinity is maintained for the session."
+   ],
+   "breakdown_regime": "Without stickiness, read your writes is unachievable coordination free: a client moving to a partitioned replica must stall or lose the guarantee.",
+   "domain": "session guarantees",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine sessions that need read your writes behavior should pin to one logical state copy; do not promise session continuity to clients that roam across unsynchronized copies.",
+    "source_operator": "sticky_availability",
+    "telemetry": "Session affinity records, read your writes violations by roaming versus pinned sessions."
+   }
+  },
+  {
+   "primitive_id": "lost_update_write_skew_impossibility",
+   "name": "Preventing Lost Update and Write Skew is impossible in a highly available coordination free system, blocking Snapshot Isolation and Repeatable Read",
+   "verbatim_quote": "It is impossible to prevent Lost Update in a highly available environment.",
+   "page": "Chapter 4, Section 4.2.3, p.46",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Register semantics: writes are accepted as written.",
+    "Both conflicting transactions must be allowed to commit for availability."
+   ],
+   "breakdown_regime": "Richer operations such as increment can avoid specific lost update cases, but the general register case persists.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Flag engine invariants whose enforcement needs lost update or write skew prevention: those are the ones that must pay for coordination or accept weaker guarantees, with the choice made explicitly.",
+    "source_operator": "lost_update_write_skew_impossibility",
+    "telemetry": "Invariant registry annotated with lost update and write skew prevention needs and the coordination mechanism chosen."
+   }
+  },
+  {
+   "primitive_id": "recency_impossibility",
+   "name": "Recency guarantees including linearizability are not invariant confluent and cannot be enforced coordination free",
+   "verbatim_quote": "an indefinitely long partition can force an available system to violate any recency bound, so recency bounds are not enforceable by coordination-free systems",
+   "page": "Chapter 4, Section 4.2.3, p.47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Partitions can last indefinitely.",
+    "Availability must be preserved during the partition."
+   ],
+   "breakdown_regime": "Bounded staleness promises fail the same way whenever the bound can be exceeded by a partition.",
+   "domain": "consistency models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Never promise fresh reads from coordination free engine paths: label data with its as of time and route true recency requirements to coordinated paths.",
+    "source_operator": "recency_impossibility",
+    "telemetry": "Read freshness distributions, partition events, and recency promise violations."
+   }
+  },
+  {
+   "primitive_id": "read_atomic_isolation",
+   "name": "Read Atomic isolation: no fractured reads and no reads of uncommitted, aborted, or intermediate versions",
+   "verbatim_quote": "A system provides Read Atomic isolation (RA) if it prevents fractured reads phenomena and also prevents transactions from reading uncommitted,",
+   "page": "Chapter 5, Section 5.3.1, Definition 48, p.72",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Versions are identified by timestamps unique across versions of each item.",
+    "All transactions commit unless otherwise noted in examples."
+   ],
+   "breakdown_regime": "Read Atomic is weaker than Snapshot Isolation and serializability and incomparable to Cursor Stability; it does not prevent all non serializable outcomes.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Adopt atomic visibility as the engine default for multi part updates: indexes, views, and base records derived from one update must appear together or not at all.",
+    "source_operator": "read_atomic_isolation",
+    "telemetry": "Multi part update visibility audits checking for partially visible update sets."
+   }
+  },
+  {
+   "primitive_id": "fractured_reads",
+   "name": "Fractured reads: a reader sees one item from a newer transaction version and another item from an older version of the same transaction",
+   "verbatim_quote": "A transaction Tj exhibits the fractured reads phenomenon",
+   "page": "Chapter 5, Section 5.3.1, Definition 47, p.71",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The writer wrote versions of two items in one transaction.",
+    "The reader mixes versions across the transaction boundary."
+   ],
+   "breakdown_regime": "Atomic snapshots aligned on transaction boundaries exclude this phenomenon by definition.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Define the engine analogue precisely: a consumer reading a projection and its supporting factors from different update generations is a fractured read and counts as a defect.",
+    "source_operator": "fractured_reads",
+    "telemetry": "Reads spanning update generations, detected by generation stamps on projections and factors."
+   }
+  },
+  {
+   "primitive_id": "ramp_scalability_criteria",
+   "name": "RAMP transactions guarantee coordination free execution and partition independence together",
+   "verbatim_quote": "RAMP transactions guarantee coordination-free execution: per Chapter 2, one client's transactions cannot cause another client's transactions to stall",
+   "page": "Chapter 5, p.66",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Clients contact only partitions their transactions directly reference.",
+    "There is no central master, coordinator, or scheduler."
+   ],
+   "breakdown_regime": "Either property alone is insufficient: a system can be coordination free yet still depend on unrelated partitions, or partition independent yet blocking.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Require both criteria for engine scaling claims: workers must not block each other and must not touch state outside their assignment, or the scalability claim does not hold.",
+    "source_operator": "ramp_scalability_criteria",
+    "telemetry": "Worker contact sets versus assigned sets, and cross worker blocking incidents."
+   }
+  },
+  {
+   "primitive_id": "ramp_detect_and_repair",
+   "name": "RAMP readers race writers, detect non atomic reads from metadata, and repair them with a second round instead of stalling",
+   "verbatim_quote": "RAMP readers autonomously detect the race (using metadata attached to each data item) and fetch any missing, in-flight writes from their respective partitions.",
+   "page": "Chapter 5, Section 5.4, p.81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Writers attach metadata to each write.",
+    "A two phase write protocol ensures a visible write implies its sibling writes are present and readable on their partitions."
+   ],
+   "breakdown_regime": "Repair costs an extra round trip when concurrent writes are detected; contention raises the second round rate.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Prefer detect and repair over prevention in engine read paths: let reads proceed, stamp them with generation metadata, and re fetch only the pieces proven stale or partial.",
+    "source_operator": "ramp_detect_and_repair",
+    "telemetry": "Second round repair rate, partial read detections, and read latency with and without repair."
+   }
+  },
+  {
+   "primitive_id": "ramp_fast",
+   "name": "RAMP Fast: write set metadata linear in transaction size buys one round trip reads in the common case",
+   "verbatim_quote": "RAMP-Fast transactions require metadata size that is linear in the number of writes in the transaction but only require one RTT for reads",
+   "page": "Chapter 5, p.66",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each write carries its transaction write set as metadata.",
+    "Writes take two round trips: prepare then commit."
+   ],
+   "breakdown_regime": "Metadata grows with transaction size, so very large transactions pay proportional storage per version.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For engine updates with small write sets, ship the full sibling list with each piece so readers can verify completeness in one pass.",
+    "source_operator": "ramp_fast",
+    "telemetry": "Write set sizes, metadata bytes per version, and one round versus two round read shares."
+   }
+  },
+  {
+   "primitive_id": "ramp_small",
+   "name": "RAMP Small: constant metadata of one timestamp per write, at the cost of always two round trip reads",
+   "verbatim_quote": "While RAMP-F requires metadata size linear in write set size but provides best-case one RTT for reads, RAMP-Small (RAMP-S) uses constant metadata but always requires two RTT",
+   "page": "Chapter 5, Section 5.4.2, p.85",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Writers store only the transaction timestamp per write.",
+    "First round reads fetch highest committed timestamps, second round fetches chosen versions."
+   ],
+   "breakdown_regime": "Read latency is always two round trips, which dominates when round trips are expensive.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For large engine update sets, switch to timestamp only metadata and accept the extra fetch round, bounding metadata growth when sibling lists would explode.",
+    "source_operator": "ramp_small",
+    "telemetry": "Metadata bytes per version by mode and read round trip counts by mode."
+   }
+  },
+  {
+   "primitive_id": "ramp_hybrid",
+   "name": "RAMP Hybrid: Bloom filter write set summaries trade metadata size against false positive driven extra reads",
+   "verbatim_quote": "RAMP-Hybrid (RAMP-H; Algorithm 3) strikes a compromise between RAMP-F and RAMP-S.",
+   "page": "Chapter 5, Section 5.4.3, p.87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Bloom filter represents the transaction write set.",
+    "False positives cause unnecessary second round reads but never incorrect results."
+   ],
+   "breakdown_regime": "As filters saturate on large transactions, behavior degrades toward RAMP Small performance.",
+   "domain": "algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use compact probabilistic summaries to declare update completeness in the engine when exact sibling lists are too large, sizing the summary by the tolerated wasted recheck rate.",
+    "source_operator": "ramp_hybrid",
+    "telemetry": "Summary size, false positive rate, and wasted recheck counts."
+   }
+  },
+  {
+   "primitive_id": "foreign_key_insert_confluent",
+   "name": "Foreign key insertions are invariant confluent because set union merge never removes the referenced record",
+   "verbatim_quote": "Insertions under foreign key constraints are invariant confluent (Claim 6).",
+   "page": "Chapter 6, Section 6.1.1, p.119",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Merge is non destructive set union.",
+    "Each inserting state individually maintains referential integrity."
+   ],
+   "breakdown_regime": "Deletions break the argument: the referenced record can disappear, which is why arbitrary deletion is not confluent.",
+   "domain": "constraints",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Referential links in engine data can be added in parallel safely when merges never delete: insertion order across workers cannot create a dangling reference.",
+    "source_operator": "foreign_key_insert_confluent",
+    "telemetry": "Dangling reference counts after parallel insertion merges."
+   }
+  },
+  {
+   "primitive_id": "uniqueness_split",
+   "name": "Uniqueness: choosing a specific value is not invariant confluent, but assigning some unique value from partitioned namespaces is",
+   "verbatim_quote": "uniqueness is not invariant confluent for inserts of unique values (Claim",
+   "page": "Chapter 6, Section 6.1.1, p.119",
+   "latex": "I(D) = \\forall c \\in \\mathrm{dom}(D),\\ |\\{x \\in D \\mid x = c\\}| \\le 1",
+   "symbol_and_unit_ledger": {
+    "I": "uniqueness invariant over a database state",
+    "D": "database state, a set of versions",
+    "c": "a value in the domain of D",
+    "x": "a version in D"
+   },
+   "assumptions": [
+    "Replicas can generate identifiers from disjoint namespace portions, for example replica id plus local sequence number.",
+    "Reads and deletions never introduce duplicates."
+   ],
+   "breakdown_regime": "Two replicas choosing the same specific value concurrently merge into a duplicate, the canonical counterexample.",
+   "domain": "constraints",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine identifier assignment must use partitioned namespaces: any worker may mint an identifier, but no two workers may mint from the same space, or parallel creation will collide on merge.",
+    "source_operator": "uniqueness_split",
+    "telemetry": "Identifier collision counts and namespace partition assignments per worker."
+   }
+  },
+  {
+   "primitive_id": "foreign_key_delete_cascade",
+   "name": "Arbitrary foreign key deletion is not confluent, but cascading deletion is invariant confluent",
+   "verbatim_quote": "Arbitrary deletion of records is unsafe: a user might be added to a department that was concurrently deleted (Claim 7).",
+   "page": "Chapter 6, Section 6.1.1, p.120",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cascading deletion removes all matching records on the opposite end of the association.",
+    "Tombstones can defer physical removal until writes quiesce."
+   ],
+   "breakdown_regime": "Plain deletion concurrent with insertion into the deleted target produces a dangling reference after merge.",
+   "domain": "constraints",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine deletions that other records reference must cascade or tombstone: a bare delete racing a parallel insert is a known invalid merge, not bad luck.",
+    "source_operator": "foreign_key_delete_cascade",
+    "telemetry": "Delete operations by type and dangling references traced to delete insert races."
+   }
+  },
+  {
+   "primitive_id": "threshold_counter_asymmetry",
+   "name": "Threshold invariants on counters are direction dependent: greater than survives increments, less than survives decrements",
+   "verbatim_quote": "we can provide coordination-free support for concurrent salary increments but not concurrent salary decrements.",
+   "page": "Chapter 6, Section 6.1.2, p.121",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Counters are abstract data types recording per transaction increments so no update is lost.",
+    "Assign operations behave like the monotone direction they set."
+   ],
+   "breakdown_regime": "The opposite direction in each case can cross the threshold only after merge, which is exactly the non confluent case.",
+   "domain": "constraints",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Classify engine accumulator rules by direction: monotone accumulations that move away from a bound are parallel safe, while moves toward a bound need coordination near the bound.",
+    "source_operator": "threshold_counter_asymmetry",
+    "telemetry": "Accumulator direction, distance to bound, and post merge bound violations."
+   }
+  },
+  {
+   "primitive_id": "materialized_view_confluent",
+   "name": "Materialized view maintenance updates are invariant confluent because views only reflect primary data and create no conflicts",
+   "verbatim_quote": "materialized view maintenance updates are invariant confluent (Claim 10).",
+   "page": "Chapter 6, Section 6.1.1, p.120",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "View updates are installed with the primary data changes they reflect.",
+    "The view is a function of primary data only."
+   ],
+   "breakdown_regime": "Views that incorporate external or non deterministic inputs fall outside this argument.",
+   "domain": "constraints",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Derived engine views and aggregates can be maintained in parallel with base updates, provided each derived value is a pure function of base data and ships with its source update.",
+    "source_operator": "materialized_view_confluent",
+    "telemetry": "Derived view lag, view versus base recomputation mismatches, and update pairing completeness."
+   }
+  },
+  {
+   "primitive_id": "separate_progress_visibility",
+   "name": "Design pattern: separate progress from visibility; coordination free systems arbitrate when effects become visible, not whether operations proceed",
+   "verbatim_quote": "system guarantees progress of operations without guaranteeing visibility of their side effects.",
+   "page": "Chapter 8, Section 8.1, p.184",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Independent operations must be able to proceed independently.",
+    "Applications cannot depend on observing concurrent side effects immediately."
+   ],
+   "breakdown_regime": "Consumers that secretly depend on immediate visibility break under this pattern and need explicit visibility waits.",
+   "domain": "design patterns",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Split engine pipelines into a progress layer that always advances and a visibility layer that decides when results become shared, so slow consumers never block producers.",
+    "source_operator": "separate_progress_visibility",
+    "telemetry": "Producer completion rates independent of consumer lag, and visibility delay distributions."
+   }
+  },
+  {
+   "primitive_id": "composability_question",
+   "name": "Design pattern: ensure composability; if transactions produce multiple effects independently, do the effects make sense when combined",
+   "verbatim_quote": "if transactions produce multiple effects independently, do the effects",
+   "page": "Chapter 8, Section 8.1, p.185",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A merge operator is specified explicitly.",
+    "Merge is typically set union or a natural abstract data type extension."
+   ],
+   "breakdown_regime": "Complicated merges such as compensating actions are possible but must be designed, not assumed.",
+   "domain": "design patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Make every engine contributor answer the composability question for its outputs before parallelizing: combined effects must be meaningful, or the work stays serialized.",
+    "source_operator": "composability_question",
+    "telemetry": "Composability reviews per contributor and merge incidents where combined outputs were meaningless."
+   }
+  },
+  {
+   "primitive_id": "multiversion_visibility_control",
+   "name": "Design pattern: control visibility via multiversioning; multiple versions are required to hide intermediate data while updating",
+   "verbatim_quote": "to avoid revealing intermediate data while allowing updates to existing data, multiple versions are required (e.g., as in RAMP).",
+   "page": "Chapter 8, Section 8.1, p.185",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each implementation decides when new writes are revealed.",
+    "Dependency information is encoded in stored metadata."
+   ],
+   "breakdown_regime": "Single version stores cannot both update in place and hide intermediate states, so they must block readers or expose partial updates.",
+   "domain": "design patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Keep multiple versions of engine projections during updates: readers pin a complete version while writers build the next one, instead of mutating the version readers are using.",
+    "source_operator": "multiversion_visibility_control",
+    "telemetry": "Version counts per projection, reader version pins, and partial update exposures (target zero)."
+   }
+  },
+  {
+   "primitive_id": "limit_coordination_scope",
+   "name": "Design pattern: when coordination is unavoidable, limit its scope in time and space and prefer single node coordination",
+   "verbatim_quote": "when coordination is unavoidable, it is desirable to limit its scope,",
+   "page": "Chapter 8, Section 8.1, p.185",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only the operations that require coordination should coordinate.",
+    "Coordination within one node is much cheaper than across nodes."
+   ],
+   "breakdown_regime": "Coordinating everything by default wastes the gains available from the confluent majority of operations.",
+   "domain": "design patterns",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the engine, coordinate per rule rather than per run: the few non confluent checks synchronize, everything else flows, and synchronization stays on one node whenever possible.",
+    "source_operator": "limit_coordination_scope",
+    "telemetry": "Coordination events scoped per rule, cross node share of coordination, and latency saved versus global coordination."
+   }
+  },
+  {
+   "primitive_id": "rsiw_serializable_under_ra",
+   "name": "Read Subset Items Written: when read only transactions only read items written by one write only transaction, Read Atomic outcomes are one copy serializable",
+   "verbatim_quote": "Theorem 2. If a history H containing read-only and write-only transactions has RSIW and",
+   "page": "Chapter 5, Section 5.3.4, Theorem 2, p.77",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "History contains read only and write only transactions.",
+    "Every read only transaction reads only items written by the single write transaction it reads from."
+   ],
+   "breakdown_regime": "Multi tuple reads across separate index updates can violate the property and surface non serializable states, though reads still see index consistent snapshots.",
+   "domain": "isolation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine read patterns that follow one update unit at a time can claim serializable quality under cheap atomic visibility; reads spanning many update units cannot make that claim automatically.",
+    "source_operator": "rsiw_serializable_under_ra",
+    "telemetry": "Read set versus write set containment checks per query pattern."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f5542f472df6f80b-t1",
+   "think": "This thesis asks a single question in many forms: when is coordination actually required to keep data correct, and when is it merely inherited habit from single node designs. Peter Bailis answers it by shifting the unit of analysis from implementations to semantics. Instead of asking whether a particular locking protocol or commit protocol coordinates, he asks whether the invariant an application actually cares about can survive independent execution and later merge. That shift is the whole book in one move, and it is why the work matters far beyond databases. Any system that runs work in parallel on copies of shared state, then reconciles, faces the identical question, whether the workers are database replicas, human analysts, or models in a reasoning engine. The machinery starts in Chapter 2 with a deliberately spare system model. Transactions transform replicas. Committed effects merge into other replicas through a merge operator that is commutative, associative, and idempotent, with set union as the base case. Four properties define success: global validity, meaning every replica always satisfies the invariants; transactional availability, meaning a transaction that can reach its items finishes unless it aborts itself or would break an invariant on its own replica; convergence, meaning replicas that stop receiving writes eventually agree pairwise; and coordination freedom, meaning each transaction progresses using only its own replica state. These definitions are chosen so that availability is not a vague promise but a progress guarantee under indefinite network delay, which is what connects the model to the classical partitioning arguments of distributed computing. Chapter 3 then states the central result. A set of transactions is invariant confluent with respect to an invariant when every pair of valid reachable states sharing a common ancestor merges into a valid state. Theorem 1 proves this condition is both necessary and sufficient for a globally valid, transactionally available, convergent, coordination free execution. The necessity direction replays histories under crafted partitions to force any such system into producing the divergent states, so if their merge were invalid the system would have to sacrifice one of its guarantees. The sufficiency direction is constructive: check each transaction locally, commit only valid results, and merge freely. The informal corollary is the sentence practitioners can carry: coordination can only be avoided if all local commit decisions are globally valid, which is a composability requirement on decisions, not a property of any single decision. The cost chapters ground the theory in measurement. Coordination latency is bounded below by message exchange time and ultimately by the speed of light, with cross region round trips on cloud networks measured at tens to hundreds of milliseconds against sub millisecond local links. Throughput of conflicting coordinating transactions is bounded by one over their delay, which collapses to roughly a dozen operations per second at wide area delays. Availability fails outright under partitions when progress requires communication. Against those costs, the popular alternative of eventual consistency is shown to be only a liveness property: it promises agreement someday but places no safety constraint on the value agreed, not even that the value was ever written. Safety and liveness must be specified together or the specification admits trivial and useless implementations. Chapters 4 and 6 apply the test at two levels of abstraction. At the isolation level, Read Uncommitted, Read Committed, Monotonic Atomic View, and the cut isolation family pass, while anything requiring prevention of lost update or write skew, including Snapshot Isolation, Repeatable Read, and one copy serializability, fails, as do all recency guarantees including linearizability. A middle class becomes available with sticky availability, where a client keeps affinity to one logical copy and thereby gains read your writes, PRAM, and causal consistency. At the constraint level the answers become operation specific: foreign key insertion passes and arbitrary deletion fails while cascading deletion passes; uniqueness fails for choosing a specific value but passes for assigning some value out of partitioned namespaces; materialized view maintenance passes; counter thresholds pass only in the direction that moves away from the bound. The lesson is that confluence is a property of an invariant paired with an operation set, never of either alone, and small changes in operation semantics, such as increment instead of blind write, or cascade instead of plain delete, flip the verdict. Chapter 5 turns from classification to construction with Read Atomic isolation and the RAMP algorithms. Read Atomic forbids fractured reads and forbids reading uncommitted, aborted, or intermediate versions, which is exactly the atomic visibility needed for foreign key maintenance, secondary indexing, and materialized view maintenance, the three use cases production systems were failing at the time. RAMP achieves it without mutual exclusion by separating visibility from progress: writers prepare all writes so that any visible write implies its siblings are present, attach metadata recording intent, and readers race writers, detect partial reads from that metadata, and repair them with a second round only when needed. The three variants price the same idea three ways: RAMP Fast stores the whole write set and usually reads in one round trip, RAMP Small stores one timestamp and always reads in two, and RAMP Hybrid stores a Bloom filter of the write set and pays extra reads only on false positives. The reported implementation scales linearly past seven million operations per second on one hundred servers for a read heavy workload, which is the empirical warrant that detect and repair beats prevent and stall at scale. The Read Subset Items Written result further shows that restricted read patterns recover one copy serializable outcomes under this weaker isolation, so strength can be bought by shaping access patterns instead of by coordinating. For a reasoning engine, the transfer is direct. Invariant confluence becomes the admission test for parallelizing any stage: enumerate the invariants the stage must preserve, enumerate its operations, and check whether locally valid outputs merge into valid outputs, with a concrete counterexample pair as the failure exhibit. Stages that pass run without synchronization, publish through final write marking so consumers never see intermediate state, and maintain indexes and derived views inside the same atomic unit as their base data. Stages that fail are not abandoned; they are scoped, following the closing design patterns: separate progress from visibility, ensure composability of operations, control visibility through multiversioning, and when coordination is unavoidable limit its scope in time, in space, and in the number of operations forced to participate. Identifier minting, accumulator bounds, and reference deletion each inherit their database verdicts almost verbatim. The work also disciplines claims. A component is not scalable because it avoids locks in its description; it is scalable when it satisfies coordination freedom and partition independence and the measurement curve bends the right way. A guarantee is not strong because it usually behaves; it is strong when its safety half is stated and proved alongside its liveness half. And an impossibility result is valuable rather than negative, because it stops the search for an implementation that cannot exist and redirects effort toward weakening the semantics, restricting the operations, adding stickiness, or paying for coordination in the smallest possible scope. That is the durable contribution: a decision procedure, a set of priced constructions, and a short list of patterns for everything the procedure rejects.",
+   "retrocausal_genealogy": "Bailis builds directly on the partitioning arguments of distributed computing, in the line running from the CAP theorem work of Gilbert and Lynch through the highly available transaction analyses he cites throughout, and lifts them from event traces to arbitrary application invariants. The invariant confluence idea itself is adapted from the constraint programming literature, where confluence asks whether local constraint propagation orders can diverge without changing the outcome, a cousin of Church Rosser confluence and of Newman lemma reasoning about terminating rewriting systems. On the database side the genealogy runs through Gray locking and the ANSI isolation critique by Berenson and coauthors, Adya formal theory of weak isolation, and the multiversion serializability tradition, each of which supplied the phenomena, such as dirty writes, lost update, and write skew, that the thesis reclassifies by coordination cost. The merge operator treatment descends from anti entropy and Bayou style reconciliation, and the abstract data type analysis connects to convergent replicated data types. RAMP in turn synthesizes atomic commitment, multiversioning, and metadata driven repair from these ancestors into a new point in the design space.",
+   "theory_of_mind": "The author models the reader as a systems builder who has been forced to choose between correctness and scale and suspects the choice is partly artificial. He assumes the reader knows classical transaction processing, distrusts marketing labels such as ACID and NoSQL, and will accept formalism only when it pays for itself in design decisions. His model of the domain is that correctness is whatever the application invariants say it is, no more and no less, and that most real invariants are weaker and more structured than serializability. He also believes practitioners under specify invariants because databases historically asked them to, and that production systems from large web companies are legitimate evidence about which semantics matter, equal in standing to benchmark workloads. Throughout, the stance is constructive: an impossibility result is only interesting paired with the nearest achievable semantics, and a possibility result is only interesting paired with an algorithm and a measurement.",
+   "cross_layer_veto": "Several results in this thesis veto common moves in other layers of a system. The lost update and write skew impossibility vetoes any design that promises highly available prevention of concurrent update anomalies, regardless of implementation cleverness. The recency results veto freshness promises on coordination free paths, so any layer consuming such data must carry as of timestamps and cannot silently upgrade stale reads into current facts. The uniqueness analysis vetoes global sequential identifier schemes in parallel writers and forces partitioned namespaces. The safety and liveness analysis vetoes evaluating a component on convergence or availability alone. Finally, the invariant specification warning vetoes blind trust in a confluence pass: if an invariant was never written down, the analysis says nothing about it, so layers above must treat unlisted properties as unguaranteed rather than as preserved by default."
+  }
+ ],
+ "universal_lens": "Read generally, this thesis is a method for pricing synchronization in any system of parallel workers over shared state: state the invariant, state the operations, test whether locally valid results always merge into valid results, and let that single test decide where synchronization is bought. The same pattern recurs in collaborative editing, distributed machine learning, multi agent reasoning, and organizational decision making, wherever independent local progress must later compose into one coherent state without a central arbiter on every step.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the method itself: invariant confluence as a teachable decision procedure for distributed correctness, the priced taxonomy of isolation and constraint guarantees, and the RAMP detect and repair construction as a canonical case study in trading metadata against round trips. It also takes the empirical discipline of the work, pairing every possibility claim with an algorithm and every algorithm with a measured cost curve, and the caution that unspecified invariants are unguaranteed invariants.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes an admission test for parallel stages, final write marking so consumers never read intermediate projections, atomic maintenance of indexes and derived views with their base data, partitioned identifier namespaces, direction aware accumulator rules, and detect and repair read paths with generation metadata. It also takes the scoping rule for its few genuinely coordinating checks: coordinate per rule, on one node where possible, and never let those checks block the confluent majority of the pipeline."
+}

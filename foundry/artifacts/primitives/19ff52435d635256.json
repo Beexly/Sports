@@ -1,0 +1,720 @@
+{
+ "book_id": "19ff52435d635256",
+ "source_status": "COMPLETE",
+ "source_note": "Andelic, Roe, Helseth, Howe, Forslund and Hellstrom (eds.), New Perspectives in Rehabilitation after Traumatic Brain Injury, MDPI, 2022, printed edition of the Journal of Clinical Medicine special issue, ISBN 978-3-0365-5622-2 (PDF). Local file is the complete edited volume of 13 papers. PDF size 7083110 bytes, full sha256 19ff52435d635256eb951a8c2e700205d28afc3d04e20126ca5bf25054d893d4, book_id is the first 16 hex chars of the scan digest over str(size) plus the full PDF bytes. Extracted text quality is good for body pages; abstract pages interleave two columns and some words split at line breaks, so all quotes were taken from clean body passages inside one page and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tbi_rehabilitation_phase_continuum",
+   "name": "TBI rehabilitation runs as a phase continuum from acute care to chronic community care",
+   "verbatim_quote": "TBI rehabilitation comprises several phases, from acute medical care to post-acute care in rehabilitation facilities and chronic care in the community.",
+   "page": "Preface, p. ix, text lines 234-235",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Care actually moves through identifiable phases",
+    "Phase at observation is recorded accurately"
+   ],
+   "breakdown_regime": "Breaks when phases blur, when community care is unrecorded, or when a case is observed in only one phase.",
+   "domain": "rehabilitation systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A trajectory is staged, not a single event. The engine should model state transitions across phases, with different signals and different failure modes at each stage, rather than scoring one snapshot.",
+    "source_operator": "tbi_rehabilitation_phase_continuum",
+    "telemetry": "Phase timestamps, discharge destinations, service contacts and time since injury for each case."
+   }
+  },
+  {
+   "primitive_id": "multidisciplinary_rehabilitation_scope",
+   "name": "Rehabilitation is multidisciplinary and spans neuroscience, imaging, pharmacology and assistive technology",
+   "verbatim_quote": "Rehabilitation is a multidisciplinary effort that covers the full spectrum of medical neuroscience, cognitive neuroscience, pharmacology, brain imaging, and assistive and smart technology.",
+   "page": "Preface, p. ix, text lines 236-237",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each discipline contributes non redundant information",
+    "Signals can be aligned to the same person and time window"
+   ],
+   "breakdown_regime": "Breaks when one discipline is missing and its absence is treated as a negative finding rather than as missing data.",
+   "domain": "rehabilitation systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "No single signal family owns the outcome. The engine should fuse clinical, cognitive, imaging and technology signals with explicit provenance instead of letting one family dominate by default.",
+    "source_operator": "multidisciplinary_rehabilitation_scope",
+    "telemetry": "Discipline tagged assessments, imaging findings, medication records and assistive technology use."
+   }
+  },
+  {
+   "primitive_id": "evidence_mapping_synthesis",
+   "name": "Evidence mapping synthesizes and visualizes characteristics and evidence from systematic reviews",
+   "verbatim_quote": "We used evidence mapping to synthesize and visualize study characteristics and evidence from CSRs on TBI.",
+   "page": "Young et al., Section 2, text lines 361-362",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The review set is complete for the stated window",
+    "Mapping categories are applied consistently"
+   ],
+   "breakdown_regime": "Breaks when the underlying reviews are outdated or when mapping categories hide disagreement inside a single cell.",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A map of what evidence exists, at what quality, is itself an input. The engine should carry an evidence coverage map so that thin areas lower confidence instead of being silently filled by analogy.",
+    "source_operator": "evidence_mapping_synthesis",
+    "telemetry": "Review counts, comparison counts, outcome domains and evidence quality grades per question."
+   }
+  },
+  {
+   "primitive_id": "rehabilitation_evidence_uncertainty",
+   "name": "Efficacy and safety of TBI rehabilitation interventions remain uncertain in the Cochrane evidence base",
+   "verbatim_quote": "Currently, the efficacy and safety of non-pharmacological and pharmacological interventions that are able to meet the needs of individuals with TBI remain uncertain",
+   "page": "Young et al., Section 5 Conclusions, text lines 1112-1115",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Published reviews reflect the trials that exist",
+    "Uncertainty in the source is not an artifact of search limits"
+   ],
+   "breakdown_regime": "Breaks when absence of evidence is read as evidence of no effect, or when a single small trial is treated as settling the question.",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Uncertainty must be a first class output. Where the evidence base rates an intervention uncertain, the engine should widen its interval and label the basis as weak rather than emitting a point claim.",
+    "source_operator": "rehabilitation_evidence_uncertainty",
+    "telemetry": "GRADE style quality ratings, number of trials and participants behind each intervention claim."
+   }
+  },
+  {
+   "primitive_id": "expand_sound_trial_research",
+   "name": "Clinical applicability requires more trials that reflect sound methodology",
+   "verbatim_quote": "To address the challenges experienced in clinical rehabilitation research, increasing the number of clinical and non-clinical trials performed that reflect sound methodology remains a priority.",
+   "page": "Young et al., Section 5 Conclusions, text lines 1115-1117",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sound methodology can be judged from reporting",
+    "More trials would cover the same questions rather than new ones only"
+   ],
+   "breakdown_regime": "Breaks when trial quantity rises without quality, or when reporting is too poor to judge method at all.",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Method quality is a weight, not a footnote. The engine should down weight findings from weak designs and record which conclusions would change if only sound trials were kept.",
+    "source_operator": "expand_sound_trial_research",
+    "telemetry": "Design type, risk of bias assessments and sample sizes for each contributing study."
+   }
+  },
+  {
+   "primitive_id": "direct_pathway_binary_endpoint",
+   "name": "The direct pathway outcome is defined as a binary direct transfer to specialized rehabilitation",
+   "verbatim_quote": "The endpoint variable was binary: direct transfer to rehabilitation or not.",
+   "page": "Tverdal et al., Section 2.2 Endpoint, text lines 1409-1410",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Discharge destination is recorded completely",
+    "Only specialized inpatient rehabilitation counts as the positive class"
+   ],
+   "breakdown_regime": "Breaks when later rehabilitation entry matters, since this endpoint captures only the direct transfer and not delayed entry.",
+   "domain": "care pathways",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A pathway question should be framed as an explicit binary state with a strict definition of the positive class. The engine should define its target event this sharply before fitting anything to it.",
+    "source_operator": "direct_pathway_binary_endpoint",
+    "telemetry": "Discharge destination codes with specialized rehabilitation separated from general rehabilitation and local hospital transfers."
+   }
+  },
+  {
+   "primitive_id": "direct_pathway_predictors",
+   "name": "Direct pathway probability rises with severity, younger age and lower functional level at discharge",
+   "verbatim_quote": "The probability of following the direct pathway increased for patients with more severe TBI, younger age, and decreased functional level at discharge as measured by the GOS.",
+   "page": "Tverdal et al., Section 4.3, text lines 1909-1911",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Associations in this registry generalize to similar trauma systems",
+    "GOS at discharge is measured before the routing decision it predicts"
+   ],
+   "breakdown_regime": "Breaks when bed supply, geography or policy, rather than clinical need, drives routing in a different system.",
+   "domain": "care pathways",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Access to a service is itself predictable from case mix. The engine should model who gets routed where as a separate layer, because routing shapes every downstream outcome comparison.",
+    "source_operator": "direct_pathway_predictors",
+    "telemetry": "Age, injury severity classification, Glasgow Outcome Scale at discharge and discharge destination."
+   }
+  },
+  {
+   "primitive_id": "gos_strongest_direct_predictor",
+   "name": "Severe disability on the GOS was the strongest clinical predictor of the direct pathway",
+   "verbatim_quote": "Severe disability (GOS) was the strongest clinical positive predictor in both models, suggesting that patients are clinically assessed and prioritized for the direct pathway.",
+   "page": "Tverdal et al., Section 4.3, text lines 1916-1917",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GOS scoring is consistent across assessors",
+    "The multivariate model includes the main confounders"
+   ],
+   "breakdown_regime": "Breaks when GOS is recorded after the routing decision, which would reverse the apparent direction of prediction.",
+   "domain": "care pathways",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One dominant driver should be named as such. The engine should report the strongest single predictor separately from the full model so users can see what is actually doing the routing work.",
+    "source_operator": "gos_strongest_direct_predictor",
+    "telemetry": "GOS category at discharge, model coefficients from univariate and multivariate fits."
+   }
+  },
+  {
+   "primitive_id": "long_term_wellbeing_adaptation",
+   "name": "Years after severe TBI, well being rests on acceptance of a recovered or changed life situation",
+   "verbatim_quote": "The life of a person who has suffered STBI is still affected to a lesser or greater degree several years after injury due to acceptance of a recovered or changed life situation.",
+   "page": "Stenberg et al., Section 5 Conclusions, text lines 3020-3022",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Self report reflects lived experience rather than only current mood",
+    "Follow up survivors represent the original cohort"
+   ],
+   "breakdown_regime": "Breaks in the acute phase, where adaptation has not yet occurred, and when loss to follow up removes the most affected persons.",
+   "domain": "long term outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long run outcomes are partly adaptation, not only impairment level. The engine should separate measured function from lived well being, because the two diverge systematically over long horizons.",
+    "source_operator": "long_term_wellbeing_adaptation",
+    "telemetry": "Functional outcome scores, self rated health, anxiety and depression scales and interview based adaptation themes at multiple follow ups."
+   }
+  },
+  {
+   "primitive_id": "fatigue_multifactorial_mechanisms",
+   "name": "Fatigue after TBI has many candidate mechanisms across precipitation, initiation and maintenance",
+   "verbatim_quote": "fatigue following TBI has a demonstrable impact on quality of life and functional recovery, and an abundance of mechanisms could potentially be implicated in the precipitation, initiation and maintenance of fatigue following TBI.",
+   "page": "Loke et al., Section 1.2, text lines 3403-3405",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Candidate mechanisms are at least partly separable",
+    "Fatigue measures capture the same construct across patients"
+   ],
+   "breakdown_regime": "Breaks when fatigue is treated as a single score with a single driver, which hides stage specific effects.",
+   "domain": "fatigue",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A symptom with many candidate mechanisms cannot be modeled with one cause. The engine should keep precipitation, initiation and maintenance as separate slots, since a factor can act at one stage and not the others.",
+    "source_operator": "fatigue_multifactorial_mechanisms",
+    "telemetry": "Fatigue scales, pain and sleep measures, mood scores and injury variables recorded longitudinally."
+   }
+  },
+  {
+   "primitive_id": "fatigue_factor_interaction",
+   "name": "Fatigue factors may act alone, sum, or interact in dynamic ways",
+   "verbatim_quote": "The factors involved may act in isolation, their effects may be summed, and they may interact with each other in dynamic ways.",
+   "page": "Loke et al., Section 1.2, text lines 3405-3407",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Measured factors include the interacting ones",
+    "Sample size supports interaction estimation"
+   ],
+   "breakdown_regime": "Breaks when interactions are real but the sample is too small to estimate them, producing false confidence in the additive fit.",
+   "domain": "fatigue",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Additive models are a special case, not the default truth. The engine should test interaction structure explicitly and report when a summed model is only an approximation.",
+    "source_operator": "fatigue_factor_interaction",
+    "telemetry": "Joint distributions of somatic, psychosocial and injury factors with repeated fatigue measurements."
+   }
+  },
+  {
+   "primitive_id": "fatigue_biopsychosocial_dimensions",
+   "name": "Fatigue relevance spans somatic symptom burden, mood, sleep, prospects and anatomical severity",
+   "verbatim_quote": "These factors, while having varying importance, illustrate the breadth of biopsychosocial underpinnings for fatigue following TBI.",
+   "page": "Loke et al., Section 5 Conclusions, text lines 4131-4134",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Patient reported measures are valid in this population",
+    "Six month timing is comparable across patients"
+   ],
+   "breakdown_regime": "Breaks when one domain, usually sleep or pain, is unmeasured and its effect is absorbed by correlated mood variables.",
+   "domain": "fatigue",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A usable factor set crosses body, mood, sleep and outlook domains at once. The engine should require coverage across domains before calling a fatigue explanation complete.",
+    "source_operator": "fatigue_biopsychosocial_dimensions",
+    "telemetry": "Pain burden, depression and anxiety scores, sleepiness and insomnia reports, loneliness, future prospects and anatomical severity grading."
+   }
+  },
+  {
+   "primitive_id": "bnis_tmt_long_term_screening",
+   "name": "BNIS and TMT at three months help estimate long term outcome after severe TBI",
+   "verbatim_quote": "These findings indicate that for patients able to complete screening with BNIS as well as TMT 3 months after sTBI, these screening instruments are valuable tools that help estimate patients' long-term outcome after sTBI.",
+   "page": "Ekdahl et al., Section 5 Conclusions, text lines 4901-4903",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Patients able to complete screening are the population the claim covers",
+    "Long term outcome is measured independently of the screen"
+   ],
+   "breakdown_regime": "Breaks for patients too impaired to complete screening, exactly the group where a different instrument is needed.",
+   "domain": "cognitive screening",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An early, cheap screen that predicts a distant outcome is high value signal. The engine should prize early measurements with proven long horizon linkage and record the eligibility condition, here the ability to complete the test.",
+    "source_operator": "bnis_tmt_long_term_screening",
+    "telemetry": "BNIS total score, Trail Making Test performance at three months and long term adaptability index scores years later."
+   }
+  },
+  {
+   "primitive_id": "cognitive_reserve_education_proxy",
+   "name": "Cognitive reserve, proxied by education, influences both test scores and outcome after severe TBI",
+   "verbatim_quote": "Additionally, cognitive reserve, usually approximated by educational level, has been found to influence both the score on neuropsychological tests, including BNIS, and the outcome after sTBI",
+   "page": "Ekdahl et al., text lines 4480-4482",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Education is an acceptable proxy for reserve in this cohort",
+    "Reserve acts similarly across the score range"
+   ],
+   "breakdown_regime": "Breaks when education quality or language background varies enough that years of schooling stop tracking reserve.",
+   "domain": "cognitive screening",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A baseline capacity proxy shifts both the measurement and the outcome. The engine should carry reserve as a confounder whenever test scores are compared across people with different educational histories.",
+    "source_operator": "cognitive_reserve_education_proxy",
+    "telemetry": "Years of education or highest qualification, premorbid estimates where available, alongside raw test scores."
+   }
+  },
+  {
+   "primitive_id": "bnis_tmt_complementarity",
+   "name": "BNIS and TMT measure different aspects of cognition and complement each other",
+   "verbatim_quote": "The instruments measure different aspects of cognition and seem to relate to different aspects of outcome, thereby complementing each other well.",
+   "page": "Ekdahl et al., Section 5 Conclusions, text lines 4904-4906",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both tests were administered under comparable conditions",
+    "Outcome subscales are distinct enough to show differential relations"
+   ],
+   "breakdown_regime": "Breaks when one test is missing for the most impaired patients, making the complementarity estimate apply only to completers.",
+   "domain": "cognitive screening",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two correlated looking tests can still carry non overlapping signal. The engine should check complementarity, what each instrument adds over the other, instead of dropping one as redundant.",
+    "source_operator": "bnis_tmt_complementarity",
+    "telemetry": "Paired BNIS and TMT scores with outcome subscales, so incremental value per instrument can be estimated."
+   }
+  },
+  {
+   "primitive_id": "functional_trajectories_over_snapshots",
+   "name": "Recovery should be studied as trajectories of functioning, not single time point outcomes",
+   "verbatim_quote": "The focus on trajectories of functioning rather than outcomes at single points in time further distinguishes the present study from previous research.",
+   "page": "Winter et al., text lines 5151-5152",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Repeated measurement uses a comparable scale over time",
+    "Attrition does not distort the estimated trajectory"
+   ],
+   "breakdown_regime": "Breaks when follow up is sparse or when the scale ceilings out, flattening trajectories that are still changing.",
+   "domain": "long term outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Slope and curvature carry information a snapshot cannot. The engine should model the arc of recovery over years and treat a single follow up score as a censored view of that arc.",
+    "source_operator": "functional_trajectories_over_snapshots",
+    "telemetry": "Repeated functional scale measurements over up to fifteen years, with age and severity at injury."
+   }
+  },
+  {
+   "primitive_id": "age_curvature_of_recovery",
+   "name": "The curvature of the functioning trajectory differs by age at injury in all severity groups",
+   "verbatim_quote": "The quadratic slope also differed by age of injury in all severity groups, meaning that the curvature of the trajectory of functioning differed by age.",
+   "page": "Winter et al., text lines 5297-5298",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quadratic form approximates the true trajectory shape",
+    "Confounder adjustment covers the main age related differences"
+   ],
+   "breakdown_regime": "Breaks when trajectories are non smooth, for example after a second injury or a major life event, which a polynomial arc cannot represent.",
+   "domain": "long term outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Age changes the shape of recovery, not only its level. The engine should let age interact with time curvature, since older cases decline on a different arc even within the same severity band.",
+    "source_operator": "age_curvature_of_recovery",
+    "telemetry": "Age at injury, severity band, and repeated functioning scores fitted with linear and quadratic time terms."
+   }
+  },
+  {
+   "primitive_id": "age_steeper_decline",
+   "name": "Older age led to a steeper decline in functioning in all severity groups",
+   "verbatim_quote": "As an inspection of Figure 1 indicates, older age led to a steeper decline in all severity groups.",
+   "page": "Winter et al., text lines 5298-5299",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Figure based inspection matches the fitted model estimates",
+    "Severity grouping is consistent across age strata"
+   ],
+   "breakdown_regime": "Breaks at the oldest ages where survivor selection is strongest, so the observed decline may understate the true decline.",
+   "domain": "long term outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A moderator that steepens decline across every severity band is a global constraint. The engine should apply age as a trajectory level modifier before fine grained factors are considered.",
+    "source_operator": "age_steeper_decline",
+    "telemetry": "Age stratified trajectory plots and slope estimates by severity group."
+   }
+  },
+  {
+   "primitive_id": "gas_goal_distribution",
+   "name": "In chronic phase goal work, most goals scored at or above the expected level at the final session",
+   "verbatim_quote": "At session 8, 41 (27%) goals were scored at expected levels of goal attainment (score 0), 55 (36%) goals were scored a little better than expected (score +1) and 42 (28%) goals were scored much better than expected (+2).",
+   "page": "Borgen et al., Section 3.2.1, text lines 6113-6115",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Expected levels were set before outcomes were known",
+    "Raters applied the scale consistently across domains"
+   ],
+   "breakdown_regime": "Breaks when goals are set too easy, inflating attainment, or when raters know the intervention status and score generously.",
+   "domain": "goal oriented rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Goal attainment needs a pre set expected level to mean anything. The engine should store the expected level at goal setting time, so later scoring measures performance against a prior commitment rather than a revised story.",
+    "source_operator": "gas_goal_distribution",
+    "telemetry": "Goal level scores from minus two to plus two, set at baseline and rated at the final session, per goal and per participant."
+   }
+  },
+  {
+   "primitive_id": "gas_high_attainment_chronic",
+   "name": "Goal attainment was high and spanned the problem areas typical of the chronic phase",
+   "verbatim_quote": "This study provides a transparent look at a goal-oriented approach in delivering rehabilitation interventions in the chronic phase of brain injury. Goal attainment was high, and goals were related to a broad range of problem areas typically identified in the chronic phase of TBI.",
+   "page": "Borgen et al., Section 5 Conclusions, text lines 6415-6418",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Domains are coded consistently across participants",
+    "High attainment is not an artifact of goal selection alone"
+   ],
+   "breakdown_regime": "Breaks when goal difficulty differs systematically by domain, making cross domain attainment comparisons misleading.",
+   "domain": "goal oriented rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Individualized goals can still aggregate. The engine should keep per person goals in their own terms while rolling attainment up by domain, so personalization does not destroy comparability.",
+    "source_operator": "gas_high_attainment_chronic",
+    "telemetry": "Goal domain labels, attainment change scores and participant level improvement summaries."
+   }
+  },
+  {
+   "primitive_id": "cici_telerehabilitation_adaptation",
+   "name": "The Child in Context intervention was adapted to telerehabilitation to widen access for families and schools",
+   "verbatim_quote": "The intervention has largely been adapted to a telerehabilitation format to facilitate access to rehabilitation services, and to ease participation for families and schools.",
+   "page": "Holthe et al., text lines 6829-6830",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Families have the connectivity and devices the format requires",
+    "Remote sessions preserve the active ingredients of the intervention"
+   ],
+   "breakdown_regime": "Breaks for children whose engagement drops on video, a concern the study itself flags for monitoring.",
+   "domain": "pediatric rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Delivery format is a design variable with access effects. The engine should treat remote delivery as changing who can participate and what alliance is possible, not as a neutral channel swap.",
+    "source_operator": "cici_telerehabilitation_adaptation",
+    "telemetry": "Session delivery mode, attendance by family and school participants, and completion rates."
+   }
+  },
+  {
+   "primitive_id": "cici_feasibility_acceptability",
+   "name": "The CICI feasibility study found high intervention feasibility and acceptability, particularly for parents",
+   "verbatim_quote": "The findings from the CICI feasibility study indicate high intervention feasibility and acceptability, particularly for the parents.",
+   "page": "Holthe et al., Section 5 Conclusions, text lines 7938-7939",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A priori feasibility criteria were set before the study ran",
+    "Respondents represent families who stayed in the study"
+   ],
+   "breakdown_regime": "Breaks when feasibility in a small volunteer sample is read as feasibility at population scale.",
+   "domain": "pediatric rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feasibility is a gate with its own evidence. The engine should require a feasibility pass, recruitment, retention, alliance and burden, before treating an efficacy design as ready to run.",
+    "source_operator": "cici_feasibility_acceptability",
+    "telemetry": "Recruitment and retention counts, parent and therapist acceptability ratings, assessment burden and protocol adjustments made."
+   }
+  },
+  {
+   "primitive_id": "cici_smart_goals_schools",
+   "name": "SMART goals were perceived as useful by all participants and including schools proved beneficial",
+   "verbatim_quote": "The focus on SMART-goals was perceived as useful by all participants, and including schools in the intervention proved beneficial.",
+   "page": "Holthe et al., Section 5 Conclusions, text lines 7942-7943",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Schools could act on the goals they helped set",
+    "Perceived usefulness tracks actual benefit at least partly"
+   ],
+   "breakdown_regime": "Breaks when school capacity or cooperation is absent, removing a component the benefit may depend on.",
+   "domain": "pediatric rehabilitation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Context holders change outcomes. Including the school, the setting where demands actually occur, improved a home based intervention, so the engine should include setting stakeholders as actors, not background.",
+    "source_operator": "cici_smart_goals_schools",
+    "telemetry": "School participation records, goal lists shared with schools, and participant usefulness ratings."
+   }
+  },
+  {
+   "primitive_id": "cbt_sexuality_aims",
+   "name": "CBT for sexuality after TBI aims at control, satisfaction and acceptance of change",
+   "verbatim_quote": "The overarching aims of CBT were to (1) foster shifts in cognition and/or behaviour that allow individuals/couples to feel more in control of their sexuality, (2) improve satisfaction with sexuality in the individual with TBI, and (3) help individuals with TBI accept and manage changes in sexuality.",
+   "page": "Fraser et al., text lines 8406-8409",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Participants can engage with cognitive and behavioural techniques",
+    "Organic and psychogenic contributors were reviewed in the medical review step"
+   ],
+   "breakdown_regime": "Breaks when the main driver is purely organic, where a cognition focused frame addresses only part of the problem.",
+   "domain": "psychological intervention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An intervention should state its mechanism level aims before its outcomes. The engine should store aims as cognition and behaviour shifts, so outcome measures can be checked against the stated mechanism rather than any convenient endpoint.",
+    "source_operator": "cbt_sexuality_aims",
+    "telemetry": "Treatment guide module list, session records and sexuality satisfaction and control measures before and after treatment."
+   }
+  },
+  {
+   "primitive_id": "cbt_sexuality_promising_avenue",
+   "name": "A CBT framework for TBI related sexuality difficulties is a promising therapeutic avenue",
+   "verbatim_quote": "and confirm that using a CBT framework to treat TBI-related sexuality difficulties may represent a promising therapeutic avenue.",
+   "page": "Fraser et al., Section 5 Conclusions, text lines 9047-9048",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Baseline lengths were randomized as designed",
+    "Outcome measures were sensitive to change over the treatment window"
+   ],
+   "breakdown_regime": "Breaks when preliminary efficacy language is upgraded downstream into a settled recommendation.",
+   "domain": "psychological intervention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Small rigorous designs can justify a larger trial without justifying a strong claim. The engine should grade single case evidence as promise, a reason to test further, not as established efficacy.",
+    "source_operator": "cbt_sexuality_promising_avenue",
+    "telemetry": "Single case multiple baseline results across nine participants with follow up at eight weeks."
+   }
+  },
+  {
+   "primitive_id": "nmt_dose_protocol",
+   "name": "Neurological music therapy was delivered as twenty individual sessions, twice weekly, sixty minutes each",
+   "verbatim_quote": "it consisted of 20 individual therapy sessions (2 times/week, 60 min/session) held by a trained music therapist at Validia Rehabilitation Helsinki.",
+   "page": "Sihvonen et al., Section 2.2, text lines 9510-9511",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Delivered dose matched the planned dose",
+    "No previous musical experience was required, so entry skill is not a hidden moderator"
+   ],
+   "breakdown_regime": "Breaks when attendance is partial, because the connectome analysis assumes the stated exposure.",
+   "domain": "music therapy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dose is part of the intervention identity. The engine should record session count, frequency and session length as parameters of any therapy claim, since the same label at a different dose is a different intervention.",
+    "source_operator": "nmt_dose_protocol",
+    "telemetry": "Session attendance logs, therapist identity and crossover timing in the randomized design."
+   }
+  },
+  {
+   "primitive_id": "nmt_connectome_underpinning",
+   "name": "Music therapy gains in executive function are underpinned by structural white matter reorganization",
+   "verbatim_quote": "In conclusion, the present results suggest that the positive effects of neurological music therapy on executive function recovery in TBI are underpinned by structural white matter reorganization within the structural executive function network.",
+   "page": "Sihvonen et al., Section 5 Conclusions, text lines 9778-9780",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Connectome change is not explained by scanner or time effects alone",
+    "Executive tests reflect the network the imaging targets"
+   ],
+   "breakdown_regime": "Breaks when structural change and behavioural change move together only by coincidence of recovery timing.",
+   "domain": "music therapy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A behavioural gain with a measured structural correlate is stronger than either alone. The engine should link functional improvement claims to a substrate measurement when one exists, and mark claims that lack one.",
+    "source_operator": "nmt_connectome_underpinning",
+    "telemetry": "Diffusion MRI connectometry measures, executive function test scores and their longitudinal correlation by group."
+   }
+  },
+  {
+   "primitive_id": "qa_tractography_specificity",
+   "name": "Quantitative anisotropy tractography is more specific to individual connectivity than fractional anisotropy methods",
+   "verbatim_quote": "QA-based tractography has been shown to outperform traditional fractional anisotropy-based methods by being more specific to individual's connectivity patterns",
+   "page": "Sihvonen et al., Section 2.4, text lines 9560-9562",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cited comparison studies apply to this acquisition setup",
+    "Individual connectivity patterns are stable enough to be a fingerprint"
+   ],
+   "breakdown_regime": "Breaks in low quality scans where neither metric recovers the underlying tracts reliably.",
+   "domain": "neuroimaging methods",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Measurement choice changes the answer. The engine should record which diffusion metric produced a connectivity claim, because fractional anisotropy and quantitative anisotropy disagree exactly where fibres cross.",
+    "source_operator": "qa_tractography_specificity",
+    "telemetry": "Quantitative anisotropy values, tractography outputs and crossing fibre region annotations."
+   }
+  },
+  {
+   "primitive_id": "dti_global_underestimates_focal",
+   "name": "Whole pathway DTI analysis underestimates focal or incomplete white matter abnormalities",
+   "verbatim_quote": "DTI analysis detected white matter pathway changes especially in TBI patients but underestimated focal or incomplete abnormalities when the white matter pathway was considered as one entity.",
+   "page": "Latini et al., Section 5 Conclusions, text lines 10618-10620",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Segment alignment across subjects is accurate",
+    "Regional differences are not driven by a few outliers in small samples"
+   ],
+   "breakdown_regime": "Breaks when samples are very small, as here with six TBI patients, so regional findings are exploratory rather than settled.",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Averaging over a whole structure hides local damage. The engine should prefer along tract, segment level analysis over whole structure means whenever focal injury is plausible.",
+    "source_operator": "dti_global_underestimates_focal",
+    "telemetry": "Along tract diffusion profiles per pathway segment, with false discovery rate controlled regional comparisons."
+   }
+  },
+  {
+   "primitive_id": "shared_focal_regions_tbi_rsrc",
+   "name": "Left frontal aslant tract, genu of the corpus callosum and right anterior thalamic radiation show focal changes in both TBI and repeated concussion",
+   "verbatim_quote": "At the regional analysis, similar regions of the left FAT, the genu of the CC, and the right ATR displayed different focal changes in both rSRC and TBI patients, reflecting possible differences in trauma and recovery mechanisms.",
+   "page": "Latini et al., Section 5 Conclusions, text lines 10621-10623",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Athlete and patient groups are comparable on age and imaging protocol",
+    "Focal changes are not an artifact of the reconstruction method"
+   ],
+   "breakdown_regime": "Breaks when injury mechanisms differ enough that shared regions reflect the method rather than the biology.",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shared focal sites across two injury populations point to common vulnerable anatomy. The engine should carry a vulnerability map of tracts that recur across cohorts instead of treating each study map as independent.",
+    "source_operator": "shared_focal_regions_tbi_rsrc",
+    "telemetry": "Regional diffusion indices for frontal aslant tract, corpus callosum genu and anterior thalamic radiation in patients, athletes and controls."
+   }
+  },
+  {
+   "primitive_id": "dorsal_caudate_mediation",
+   "name": "Impaired cognitive flexibility in mild TBI is mediated by abnormal dorsal caudate activation",
+   "verbatim_quote": "Further mediation analysis revealed that impaired cognitive flexibility was mediated by abnormal dorsal caudate activation in mTBI.",
+   "page": "Xu et al., Section 5 Conclusions, text lines 11465-11466",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The mediation ordering, injury to activation to behaviour, is the true causal order",
+    "No unmeasured confounder drives both activation and flexibility"
+   ],
+   "breakdown_regime": "Breaks when mediation is fitted on cross sectional data, where the ordering is assumed rather than observed.",
+   "domain": "cognitive neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mediation separates a correlate from a pathway. The engine should store mediated paths explicitly, exposure to mediator to outcome, because a mediator is an intervention target while a mere correlate is not.",
+    "source_operator": "dorsal_caudate_mediation",
+    "telemetry": "Task switching reaction times, dorsal caudate activation from functional MRI and processing speed measures for the mediation model."
+   }
+  },
+  {
+   "primitive_id": "caudate_reduced_activation_task_switching",
+   "name": "Mild TBI patients showed reduced activation in dorsal caudate, anterior cingulate and frontal regions during task switching",
+   "verbatim_quote": "In summary, we performed a rule-based task-switching paradigm to investigate the neural mechanism of impaired cognitive flexibility in mTBI. The mTBI patients showed reduced activation in the dorsal caudate, anterior cingulate cortex, and other frontal regions during the TS condition.",
+   "page": "Xu et al., Section 5 Conclusions, text lines 11462-11465",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Groups were matched and performed the task to the accuracy criterion",
+    "Activation differences are not explained by performance differences alone"
+   ],
+   "breakdown_regime": "Breaks when patients use a different strategy that changes activation without changing the underlying capacity.",
+   "domain": "cognitive neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A defined task paradigm makes a brain claim testable. The engine should tie activation claims to the exact task condition that produced them, since the same regions behave differently under other demands.",
+    "source_operator": "caudate_reduced_activation_task_switching",
+    "telemetry": "Blood oxygen level dependent activation maps for task switching versus control conditions, with reaction time by condition."
+   }
+  },
+  {
+   "primitive_id": "gm_volume_widespread_decrease",
+   "name": "TBI patients showed widespread decreased gray matter volume in cortical and subcortical regions",
+   "verbatim_quote": "We first demonstrated TBI patients underwent widespread decrease of GM volume in both cortical regions and subcortical regions.",
+   "page": "Xue et al., Section 4 Discussion, text lines 12111-12112",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Segmentation is accurate in injured brains with lesions",
+    "Control group matches patients on age and sex"
+   ],
+   "breakdown_regime": "Breaks when lesion driven segmentation errors inflate apparent volume loss near contusions.",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Damage is widespread but only a subset drives symptoms. The engine should separate the full damage map from the symptom linked subset, and not let the size of the map substitute for clinical relevance.",
+    "source_operator": "gm_volume_widespread_decrease",
+    "telemetry": "Voxel based gray matter volumes per region for patients and healthy controls, with clinical scale scores."
+   }
+  },
+  {
+   "primitive_id": "wm_microstructure_disruption_tracts",
+   "name": "White matter microstructure was disrupted with decreased fractional anisotropy across specific named tracts",
+   "verbatim_quote": "We then found WM microstructure was disrupted in TBI patients, involving a decreased FA value in widespread WM tracts including the left IFOF, left SLF, bilateral UF, forceps major, and forceps minor, with an increased MD value in the forceps minor.",
+   "page": "Xue et al., Section 4 Discussion, text lines 12115-12118",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tract labeling follows a standard atlas",
+    "Group differences survive the stated statistical thresholds"
+   ],
+   "breakdown_regime": "Breaks when tract averages combine damaged and spared segments, diluting the effect the list claims.",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A named tract list is a falsifiable claim. The engine should store tract level findings by name and direction of change, so later studies can confirm or contradict tract by tract.",
+    "source_operator": "wm_microstructure_disruption_tracts",
+    "telemetry": "Fractional anisotropy and mean diffusivity per tract from tract based spatial statistics, patients versus controls."
+   }
+  },
+  {
+   "primitive_id": "gm_fa_consistency_temporal",
+   "name": "Gray matter volumes relate to fractional anisotropy of left uncinate and inferior fronto occipital fasciculi in temporal regions",
+   "verbatim_quote": "Finally, we explored the consistency of structural damage in gray and WM, showing GM volumes were significantly related to the FA of left UF and left IFOF in multiple regions of left temporal gyrus and left hippocampus.",
+   "page": "Xue et al., Section 4 Discussion, text lines 12118-12120",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The paired regions are anatomically connected by the named tracts",
+    "Correlations are not driven by overall brain size differences"
+   ],
+   "breakdown_regime": "Breaks when a common cause, such as age, drives both measures and creates agreement without a direct link.",
+   "domain": "neuroimaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cross modal consistency is a coherence check. When gray matter loss and white matter disruption in connected tracts agree, the engine should raise confidence in both, and flag cases where they disagree for review.",
+    "source_operator": "gm_fa_consistency_temporal",
+    "telemetry": "Regional gray matter volumes paired with fractional anisotropy of the uncinate fasciculus and inferior fronto occipital fasciculus."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "19ff52435d635256-t1",
+   "think": "This edited volume is a reprint of a Journal of Clinical Medicine special issue, and its unity is clinical rather than mathematical. Thirteen papers cover the full arc of traumatic brain injury rehabilitation, and reading them together shows a field that is strong on careful cohort description and weak on settled intervention evidence. The opening overview of Cochrane systematic reviews sets the tone honestly. Only six Cochrane reviews, covering forty two studies and just under four thousand participants, address rehabilitation interventions after traumatic brain injury, and most comparisons rest on low or very low quality evidence. That single fact disciplines everything that follows. Each later paper is a contribution to a thin evidence base, not a confirmation of a mature one, and the volume is best read as a map of where knowledge is firm, where it is suggestive, and where it is missing. The care pathway paper from the Oslo registry gives the volume its systems anchor. Of more than seventeen hundred adults with intracranial injuries, only a minority reached specialized rehabilitation directly from acute care, and the route was predictable. Younger age, low preinjury comorbidity, greater injury severity and worse functional status at discharge raised the probability of the direct pathway, with severe disability on the Glasgow Outcome Scale as the strongest clinical predictor and a model discrimination that was good but not decisive. The lesson is that access is allocated, visibly and measurably, and any outcome comparison that ignores routing confuses the effect of treatment with the effect of selection. The long term Swedish follow up then shows what the routed and unrouted lives look like seven years on. Function was broadly stable between one and seven years, and well being turned on adaptation to a recovered or changed life rather than on recovery alone, with adaptation still unfinished for those with severe disability. The middle papers work at the level of mechanisms and measurement. The fatigue study refuses a single cause account and shows, through factor analysis in ninety six patients, that fatigue six months after injury loads on somatic vulnerability, psychosocial robustness and injury related factors at once, with pain, depression, anxiety, sleep disturbance, loneliness and perceived future prospects all carrying relevance. The cognitive screening study shows that two brief instruments at three months, the Barrow Neurological Institute Screen and the Trail Making Test, each predict long term adaptability years later, that they measure different things and complement each other, and that cognitive reserve proxied by education shifts both the scores and the outcomes, which is a standing warning against comparing raw test scores across unlike people. The American trajectory study, with more than eleven thousand participants followed for up to fifteen years, reframes outcome as an arc. Age at injury moderates the effect of severity on that arc, the curvature itself differs by age, and older patients decline more steeply in every severity band, with the trajectory already sloping downward by age fifty. A single outcome score at a single year would miss the finding entirely. The intervention papers are deliberately modest in design, and that modesty is informative. The chronic phase goal study reports one hundred and fifty one individualized SMART goals in fifty nine participants, with attainment high and spread across cognitive, physical and social domains, and it is transparent that goal difficulty and rater knowledge limit what high attainment proves. The pediatric Child in Context feasibility study tests whether a goal oriented, home based, largely telerehabilitation intervention can even be run with families and schools before a definitive trial, and finds feasibility and acceptability high for parents, SMART goals useful to all parties, and child engagement on video a point to watch. The sexuality study uses a nonconcurrent multiple baseline single case design in nine participants to test a cognitive behaviour therapy frame for a problem the literature has largely ignored, and claims promise, not proof. The music therapy paper is the volume at its most mechanistic, linking improved executive function after twenty sessions of neurological music therapy to structural white matter reorganization in the executive network, measured with diffusion connectometry that is more specific than fractional anisotropy averages. The imaging papers close the volume by showing how measurement granularity changes conclusions. The white matter study of traumatic brain injury and repeated sports concussion finds that whole pathway diffusion analysis detects change but underestimates focal damage, and that the same focal regions, left frontal aslant tract, genu of the corpus callosum and right anterior thalamic radiation, are implicated in both populations despite different injury mechanisms. The mild injury task switching study uses a rule based paradigm and mediation analysis to place the dorsal caudate on the pathway between injury and impaired cognitive flexibility, with reduced activation also in anterior cingulate and frontal regions. The final structural study finds widespread gray matter volume loss and tract specific white matter disruption, and then shows the two agree where anatomy says they should, in temporal gray matter and the uncinate and inferior fronto occipital fasciculi that serve it. For a reasoning engine, the transferable machinery is not any single result. It is the discipline the volume models. Define the target event sharply, as the binary direct pathway endpoint does. Model routing and selection before modelling treatment. Treat outcome as a trajectory with shape, not a point. Carry reserve and other baseline capacity proxies as confounders whenever people are compared. Require factor coverage across body, mood, sleep and outlook before accepting a symptom explanation. Distinguish a mediator, which is a target, from a correlate, which is not. Prefer segment level measurement over whole structure averages when injury is focal. Grade every claim by the design that produced it, so a feasibility study, a single case series, a registry model and a randomized trial enter with different weights. And keep the Cochrane verdict in view at all times, because a system that knows the evidence is thin will widen its intervals and say so, while a system that hides that fact will manufacture confidence the literature does not support. The volume breaks where its own samples break. Several studies are small, some are single centre, completers differ from non completers, and cross sectional mediation assumes an ordering it cannot observe. Those limits are stated in the papers themselves, and an extraction that dropped them would misrepresent the work.",
+   "retrocausal_genealogy": "The volume descends from several distinct lineages that converge in modern rehabilitation science. The Cochrane overview descends from evidence based medicine and the systematic review movement, applied here through the World Health Organization Rehabilitation 2030 programme and its Package of Interventions for Rehabilitation. The registry pathway work descends from Scandinavian health registry research and from earlier European studies of care pathways after severe injury, including the CENTER-TBI programme it compares itself against. The outcome instruments carry their own histories, the Glasgow Outcome Scale and its extended version from nineteen seventies neurosurgery, goal attainment scaling from nineteen sixties community mental health evaluation, and SMART goal framing from management practice absorbed into rehabilitation. The imaging papers descend from diffusion tensor imaging and its successors in quantitative anisotropy and connectometry, while the music therapy and cognitive behaviour therapy papers descend from neurorehabilitation traditions that treat structured activity and cognition as routes to brain plasticity.",
+   "theory_of_mind": "The editors and authors write for clinicians and researchers who already accept that traumatic brain injury is heterogeneous and that rehabilitation is long, multidisciplinary and under evidenced. Their model of the reader is a practitioner who needs to know what is known, what is merely promising and what is unknown, in that order. They assume the reader distrusts single cause stories, so fatigue is modelled as biopsychosocial, outcome as a trajectory, and sexuality and pediatric family context are treated as legitimate rehabilitation territory rather than extras. They also assume the reader will act on pathway findings, so access and routing are reported with the same care as treatment effects. The recurring rhetorical move is calibration, each paper states its design limits in its own conclusions, which tells the reader the authors expect to be believed only to the extent their designs allow.",
+   "cross_layer_veto": "Several findings in this volume veto moves that other layers of a reasoning system might otherwise make. The Cochrane overview vetoes any confident ranking of rehabilitation interventions, because most comparisons rest on low or very low quality evidence. The pathway study vetoes naive outcome comparisons between rehabilitation and non rehabilitation groups, because routing is strongly predicted by age, comorbidity, severity and disability, so selection is built into the groups. The cognitive reserve finding vetoes raw test score comparisons across patients with different educational histories. The trajectory study vetoes single time point outcome claims for older patients, whose arcs differ in shape. The imaging papers veto whole structure average claims where focal damage is the question, and the mediation paper, being cross sectional in its imaging, vetoes treating its pathway as proven causation rather than as a stated and testable ordering."
+  }
+ ],
+ "universal_lens": "Read generally, this volume is a template for reasoning about any long, heterogeneous recovery process. Define the transition events sharply, model who gets routed where before modelling what routing does, follow trajectories with shape rather than snapshots, carry baseline capacity as a confounder in every comparison, demand factor coverage across physical, psychological, sleep and social domains before accepting an explanation of a symptom, separate mediators from correlates, measure at the granularity where the damage actually lives, and grade every claim by the strength of the design behind it, widening uncertainty where the evidence base is thin.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume supplies a rehabilitation science foundation for concussion and brain injury work. It contributes the phase continuum of care, the direct pathway routing model with its named predictors, long term adaptation as an outcome distinct from function, a biopsychosocial factor structure for post injury fatigue, early cognitive screening with reserve adjustment, age moderated recovery trajectories over fifteen years, and tract level imaging findings that include repeated sports related concussion, all graded by evidence quality so teaching and protocol design can separate settled knowledge from promising leads.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the value is methodological and it transfers to any longitudinal prediction problem involving people. Sharp binary endpoint definitions, explicit routing and selection layers, trajectory models with age by severity interaction and curvature terms, reserve as a standing confounder, multi domain factor coverage checks, mediation versus correlation labelling, segment level rather than whole structure measurement, and design based confidence grading with honestly widened intervals where the underlying evidence is rated low or very low."
+}
