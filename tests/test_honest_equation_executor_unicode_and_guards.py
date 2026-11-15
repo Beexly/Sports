@@ -22,9 +22,13 @@ def test_subscripted_macro_no_longer_trips_on_the_residual_underscore() -> None:
     result = parse_and_execute_honestly(r"\Delta\tau_{\text{Out}} = 3.5")
     assert result.status != "UNPARSEABLE"
     assert "unexpected_character" not in (result.reason or "")
-    # `\Delta\tau_{\text{Out}}` is a product of Δ and τ_Out, so macro expansion
-    # keeps the two symbols space-separated; only the subscript residue is glued.
-    assert "Delta tau_Out" in result.normalized_expr
+    # `\Delta\tau_{\text{Out}}` is the single quantity Delta_tau_Out — the change
+    # in tau_Out — so with no whitespace between the macros the engine glues the
+    # prefix and keeps the subscript attached (see
+    # intelligence/equations/test_honest_equation_executor.py, which asserts the
+    # free symbol is exactly "Delta_tau_Out"). A space between \Delta and \tau is
+    # what asks for the product reading.
+    assert "Delta_tau_Out" in result.normalized_expr
 
 
 @pytest.mark.parametrize(

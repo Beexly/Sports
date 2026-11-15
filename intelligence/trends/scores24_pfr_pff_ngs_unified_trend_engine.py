@@ -1619,9 +1619,11 @@ class UnifiedScores24PfrPffNgsTrendEngine:
 
     def __init__(self, log_odds_cap: float = 0.35) -> None:
         self.log_odds_cap = max(0.05, min(0.35, float(log_odds_cap)))
-        self.multi_horizon_engine = NFLMultiHorizonTrendsAndPreGameVisionEngine(
-            log_odds_cap=self.log_odds_cap
-        )
+        # The vision engine is stateless: it emits bounded deltas (shootout boost
+        # clamped to [-0.04, 0.06]) rather than probabilities, so it takes no
+        # log-odds cap. Capping stays here, on the producer that owns the
+        # conversion.
+        self.multi_horizon_engine = NFLMultiHorizonTrendsAndPreGameVisionEngine()
 
     @classmethod
     def clear_shared_cache(cls) -> int:
