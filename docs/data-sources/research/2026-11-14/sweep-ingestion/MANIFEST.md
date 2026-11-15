@@ -164,3 +164,19 @@ detail for its repos because the run's GitHub API check did not return
 before filing; the fallback recorded in the report is a direct LICENSE read
 per repo before any Remotion test. Poster numbers in the delta are claims
 as printed, not verified facts.
+
+## 2026-11-14 PM X delta
+
+Delta feed: `x-for-you-feed-2026-11-14-pm-delta.jsonl`, 113 records converted
+from the X For You PM run of 2026-11-14 (source report:
+~/workspace/x-for-you-sweep/reports/2026-11-14-PM.md). 22 dossier records and
+91 inventoried-only records (27 with verified status IDs, 59 NO-ID rows
+slug-keyed, 5 TRADING-SKIP rows kept per the AM pattern). 5 duplicates
+against the base feed and the AM delta were skipped at conversion, and 5
+NO-ID rows were skipped because their generic keys already exist in the AM
+delta. Running feed total: 10,324 records (9,944 base + 43 IG AM + 116 X For
+You AM + 66 X analytics AM + 42 IG PM + 113 X For You PM). Gaps carried from
+the run's own audit: 68 feed rows were inventoried without status IDs in the
+run itself (59 of them are slug-keyed here); chart-locked values stay
+UNVERIFIED as printed. Poster numbers in the delta are claims as printed,
+not verified facts.
