@@ -1,0 +1,152 @@
+{
+ "schema_version": "2.0",
+ "book_id": "2c267b4bd1b1d675",
+ "title": "Hints and Principles for Computer System Design",
+ "author": "Butler Lampson",
+ "year": 2021,
+ "file_path": "G:/My Drive/GSE-GSI-Mega-Sweep-2026-11-06/books-c-systems/Lampson-2021-HintsAndPrinciplesForComputerSystemDesign.pdf",
+ "pages_total": 107,
+ "pages_read": 107,
+ "source_status": "COMPLETE",
+ "worker_id": "hermes-inline",
+ "primitives": [
+  {
+   "primitive_id": "p1",
+   "name": "Safety/liveness partition of a visible-behavior spec",
+   "domain": "cs",
+   "timescales": [
+    "tau_2",
+    "tau_3"
+   ],
+   "layer1_sovereign": "Any spec over visible behaviors is the conjunction of a safety part (nothing bad ever happens; a violation occurs in a finite number of steps; code that does nothing satisfies every safety spec) and a liveness part (something good eventually happens, usually fairness: every action allowed by safety eventually happens; no finite behavior can violate liveness).",
+   "verbatim_quote": "A safety spec, which says what the code may do, or equivalently, that nothing bad ever happens. If the code violates a safety spec the bad thing happens in a finite number of steps. Code that does nothing satisfies every safety spec. − A liveness spec, which says what the code must do, or equivalently, that something good eventually happens, usually that it's fair: every action allowed by safety eventually happens.",
+   "page": 8,
+   "section": "2.1.1 Safety and liveness",
+   "latex": null,
+   "assumptions": "The partition applies to specs that 'just say what visible behaviors are okay' (the source's scope); internal state is invisible and excluded; the source's finite-violation characterization of safety and no-finite-violation characterization of liveness are the printed definitions, not the topological prefix-closed/dense formulation (which is a standard equivalent, not printed here).",
+   "breakdown_regime": "Hyperproperties that constrain sets of behaviors (the source's example: non-interference) are explicitly beyond this partition's scope; timing specs blur the line (the source notes a two-second result bound is safety because it is violated after two seconds, while liveness proofs often contain time bounds).",
+   "falsification_test": "Take a candidate spec and exhibit a finite violating trace for its safety half and show no finite trace violates its liveness half; a spec whose 'liveness' half is violated by a finite trace is misclassified, falsifying the partition as applied.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine guardrail taxonomy: safety guards are the never-violate gates (no banned player published, no fabricated quote, no fake CLV floor) whose breach is detectable in finite steps; liveness is the eventual-settlement requirement (every published pick eventually graded). The two demand different monitors: finite-trace checks for safety, progress/completeness audits for liveness.",
+    "source_operator": "p1",
+    "telemetry": "observed: guardrail suite exit codes (finite safety checks) and ledger settlement completeness (liveness progress), both already logged per shift."
+   }
+  },
+  {
+   "primitive_id": "p2",
+   "name": "Independent-retry error squaring for approximate computation",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_2"
+   ],
+   "layer1_sovereign": "When an approximate answer's error is a truly random chance p of a wrong answer and repeated runs are independent, running twice squares the error: the source's printed instance is 1% becoming .01%. The invariant is the independence condition, not the numerical example.",
+   "verbatim_quote": "Very often you don't need an exact answer; a good enough approximation is fine. This might be \"within 5% of the true answer\" or \"the chance of a wrong answer is less than 1%.\" If the \"chance\" in the latter is truly random and the runs are independent, doing it twice makes it .01%.",
+   "page": 37,
+   "section": "3.4.3 Approximate - Flaky, springy parts",
+   "latex": "P(\\text{both runs wrong}) = p^{2} \\quad \\text{under independent runs}",
+   "symbol_and_unit_ledger": {
+    "p": "probability a single run gives a wrong answer [probability, 0..1]",
+    "p^2": "probability both independent runs are wrong [probability]",
+    "note": "Formalization of the printed prose rule; the source prints the numeric instance 1% -> .01% and the explicit conditions 'truly random' and 'runs are independent'."
+   },
+   "assumptions": "The squaring holds only when the chance is truly random and the runs are independent (both conditions printed); a systematic bias or correlated runs invalidates it; the source also allows approximation of the analysis rather than the solution (back-of-the-envelope), which is a different technique not covered by this rule.",
+   "breakdown_regime": "Correlated failures (shared seed, shared data defect, shared model bias) break independence and the error does not square; a biased estimator's error does not shrink at all under repetition. This is the singularity regime for any ensemble that assumes independent worlds.",
+   "falsification_test": "Run an approximate estimator twice on the same input with shared versus independent seeds and measure the joint wrong-answer rate against p^2; a joint rate near p (not p^2) under shared seeds confirms the independence boundary.",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine simulation ensemble: the 10,000-world PBP ensemble only earns error reduction to the extent worlds are independent; correlated world construction (shared injury draw, shared script) makes the effective sample smaller than the nominal count. The kernel derived is an independence audit on world vectors before any confidence claim scales with world count.",
+    "source_operator": "p2",
+    "telemetry": "observed: simulation world vectors and seed lineage from the 10,000-world runs (return_vectors output), auditable for shared draws."
+   }
+  },
+  {
+   "primitive_id": "p3",
+   "name": "Technical hint: cheap-check bypass with a working backup path",
+   "domain": "cs",
+   "timescales": [
+    "tau_0",
+    "tau_1"
+   ],
+   "layer1_sovereign": "A hint in the technical sense is information that bypasses an expensive computation if correct, is cheap to check for correctness, and has a (perhaps more expensive) backup path that works if it is wrong. Soft state is the more general variant where acting on a wrong value is acceptable (if inefficient) so no check is needed.",
+   "verbatim_quote": "A hint (in the technical sense) is information that bypasses an expensive computation if it's correct; it's cheap to check that it's correct, and there's a (perhaps more expensive) backup path that will work if it's wrong.",
+   "page": 40,
+   "section": "3.4.3 Approximate, Hints subsection",
+   "latex": null,
+   "assumptions": "All three clauses are required for a hint (bypass-if-correct, cheap check, working backup); the source distinguishes soft state as the check-free generalization acceptable in network routing where end-to-end fault tolerance and timeouts absorb wrong values; a cached value treated as a hint must be checked (the source's version-number example, p43).",
+   "breakdown_regime": "The pattern fails when the check is not actually cheap, when the backup path does not work, or when multiple matching items exist and the check only validates one (the source's approximate-index caveat: the check doesn't work if there might be more than one item and you want all).",
+   "falsification_test": "For a candidate hint, measure check cost versus full-computation cost and exercise the backup path with a deliberately wrong hint; if the backup fails or the check costs as much as the computation, the value is not a hint in the technical sense.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine cached-tendency hints: precomputed coaching tendencies and charting mirrors act as hints that bypass full re-aggregation; the cheap check is the window/provenance stamp (weeks covered, build date), and the backup path is the full PBP/FTN re-aggregation. A stale or out-of-window mirror must fall back, never be trusted silently.",
+    "source_operator": "p3",
+    "telemetry": "observed: coaching CSV mirror build stamps and parquet window pins (parquet-pins.json), plus the re-aggregation scripts as the backup path."
+   }
+  },
+  {
+   "primitive_id": "p4",
+   "name": "Idempotence: retry yields the same final state absent non-commuting concurrency",
+   "domain": "cs",
+   "timescales": [
+    "tau_1",
+    "tau_2"
+   ],
+   "layer1_sovereign": "A retry that succeeds is supposed to yield the same final state as a single try, provided there are no concurrent actions that do not commute with it; this is idempotence. Blind writes of a constant are intrinsically idempotent; an arbitrary action is made idempotent by making it testable with a unique ID whose completion is remembered.",
+   "verbatim_quote": "A retry that succeeds is supposed to yield the same final state as a single try (as long as there are no concurrent actions that don't commute with this one); this is idempotence.",
+   "page": 56,
+   "section": "3.6.2 Retry - Do it again",
+   "latex": null,
+   "assumptions": "The commutation condition is printed as a parenthetical and is load-bearing: idempotence of the retry is guaranteed only relative to actions that commute with it; the unique-ID recipe (give the action a unique ID, remember completed IDs) is the source's stated construction for non-intrinsic cases; the source also warns that too many retries overload the system and prescribes exponential backoff.",
+   "breakdown_regime": "Non-commuting concurrent actions break the same-final-state guarantee (a read-modify-write interleaved with another writer); a retry storm without backoff overloads the system; if completion cannot be tested (no unique ID, no observable effect), the action cannot be made idempotent by this recipe.",
+   "falsification_test": "Execute an action twice with the same unique ID and compare final state against a single execution; a state difference falsifies the claimed idempotence, and an interleaved non-commuting action should reproduce the breakdown regime.",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine settlement and receipt writes: ledger settlements and agent-bus receipts must be retry-safe via unique IDs (the same pattern as the durable CheckoutAttempt with a Stripe Idempotency-Key); a re-run settlement with the same pick ID must not double-count units, and the commutation condition maps to the single-writer rule on shared state.",
+    "source_operator": "p4",
+    "telemetry": "observed: receipt IDs and dedup logs in agent-bus outbox, settlement idempotency keys in the checkout path, single-writer discipline on brain/mind.jsonl."
+   }
+  },
+  {
+   "primitive_id": "p5",
+   "name": "Availability approximation: MTTR/MTTF with failover-as-repair",
+   "domain": "cs",
+   "timescales": [
+    "tau_2",
+    "tau_3"
+   ],
+   "layer1_sovereign": "Availability is described by nines (5 nines = 99.999% = about five minutes of downtime per year); a good approximation to the downtime fraction is MTTR/MTTF, mean time to repair over mean time to failure. In a fault-tolerant system MTTR is the failover time to a redundant component, not the time to fix the failing part; if failover is faster than the specified response time, the system does not fail at all.",
+   "verbatim_quote": "A good approximation is MTTR/MTTF, mean time to repair over mean time to failure (how long the system runs before it fails to serve its clients promptly enough).",
+   "page": 60,
+   "section": "3.6.5 Recovery and repair",
+   "latex": "U \\approx \\frac{MTTR}{MTTF}",
+   "symbol_and_unit_ledger": {
+    "MTTR": "mean time to repair (failover time in a fault-tolerant system) [time]",
+    "MTTF": "mean time to failure (time running before failing to serve clients promptly enough) [time]",
+    "U": "unavailability (downtime fraction) [dimensionless]",
+    "note": "Formalization of the printed prose 'A good approximation is MTTR/MTTF' in the nines/downtime context; the source prints the ratio, not the symbol U. Availability is 1 - U."
+   },
+   "assumptions": "The source's MTTF definition is service-level ('fails to serve its clients promptly enough'), not component death; MTTR is failover time when redundancy exists; the five-minutes-per-year figure uses the source's approximation of about pi x 10^7 seconds per year; the ratio is an approximation, exact only in the limiting renewal sense.",
+   "breakdown_regime": "Without a redundant component, MTTR is the full repair time and the approximation understates downtime; when failover exceeds the response-time budget the system fails even though a component survived; correlated failures that take out the redundant path invalidate the MTTF estimate.",
+   "falsification_test": "Measure observed downtime fraction over a long window and compare to MTTR/MTTF computed from incident logs; a systematic gap falsifies the approximation's applicability (usually because MTTR was measured as repair rather than failover).",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine live-pipeline availability: the poller/gate-runner's service-level MTTF is the time before it fails to deliver a fresh line/inactive snapshot within the cycle budget, and MTTR is the failover time to a restarted poller; the design rule derived is that restart must be faster than the 15-minute cycle budget or the watch silently fails.",
+    "source_operator": "p5",
+    "telemetry": "observed: poller cycle timestamps and gaps in scratch/wave3/poller.log, restart timestamps from process supervision."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "t0",
+   "think": "The source is Butler Lampson's Hints and Principles for Computer System Design, the long 2021 version of his 1983 paper (107 PDF pages, dated May 14, 2021 on the title page). It is a primary monograph by the author, not a derivative summary: the abstract states the STEADY goals (Simple, Timely, Efficient, Adaptable, Dependable, Yummy) and the AID techniques (Approximate, Incremental, Divide and Conquer), and the body develops them with numbered sections, quoted epigraphs, and a reference list. I extracted the full text of every page with pymupdf, applied NFKC normalization to fold the mathematical-italic Unicode the PDF uses for variables, normalized ligatures, curly quotes and cross-line hyphenation, scanned the entire core for definitional passages, and close-read sections 2.1.1, 3.4.3, 3.6.2 and 3.6.5. No retraction marker appears. The five primitives are the source's own definitional invariants: the safety/liveness partition, independent-retry error squaring, the technical definition of a hint, idempotence with its commutation condition, and the MTTR/MTTF availability approximation.\n\nThe dimensional and logical analysis separates printed invariants from formalizations. The safety/liveness partition is a logical characterization, not an equation: safety violations are finite-trace events, liveness violations are not, and code that does nothing satisfies every safety spec - that last clause is the source's own litmus test and the cleanest way to classify a guardrail. The error-squaring rule is printed as a numeric instance (1% becomes .01%) with two explicit conditions, truly random chance and independent runs; I formalized it as p-squared with a symbol-and-unit ledger and labeled it a formalization, because the general symbolic form is not printed. The hint definition is a three-clause prose contract (bypass if correct, cheap check, working backup) with no equation, so its latex is null. Idempotence is a state-equivalence claim with a printed commutation proviso; the unique-ID recipe is the source's construction, not my invention. The availability ratio MTTR/MTTF is printed as prose in the nines/downtime context; I formalized it as unavailability U with a ledger noting both operands are times and the ratio dimensionless, and recorded that the source's MTTR means failover time when redundancy exists.\n\nThe engine mappings are isomorphisms except for the ensemble kernel, which is derived. Safety/liveness maps directly onto the guardrail taxonomy: the never-violate publication gates are safety properties checkable on finite traces, while eventual settlement of every published pick is a liveness property that needs a progress audit rather than a finite check. The hint definition maps onto cached coaching tendencies and charting mirrors: they bypass expensive re-aggregation, their window and provenance stamps are the cheap check, and the full PBP/FTN re-aggregation is the backup path; a stale mirror must fall back rather than be trusted. Idempotence maps onto settlement and receipt writes with unique IDs, the same discipline as the durable checkout attempt with an idempotency key, and its commutation proviso maps onto the single-writer rule. The availability ratio maps onto the live poller: service-level failure is missing the cycle budget, and restart must be faster than the budget or the watch silently fails. The error-squaring rule yields a derived kernel rather than an isomorphism: the 10,000-world ensemble only earns its nominal confidence to the extent worlds are independent, so an independence audit on world vectors must precede any confidence claim that scales with world count.\n\nThe falsification program is operational. For safety/liveness, exhibit a finite violating trace for the safety half and verify no finite trace violates the liveness half; a finite violation of a claimed liveness property falsifies the classification. For error squaring, run the estimator with shared versus independent seeds and compare the joint wrong-answer rate to p-squared; a rate near p under shared seeds confirms the independence boundary. For hints, deliberately inject a wrong hint and exercise the backup path while measuring check cost against full computation. For idempotence, execute twice with the same unique ID and diff final state, then interleave a non-commuting action to reproduce the breakdown. For availability, compare observed downtime fraction to MTTR/MTTF from incident logs, checking that MTTR was measured as failover rather than repair. Every test uses observable system traces, so the program runs at zero model cost.\n\nThe sovereign boundaries are the conditions the source prints and that downstream compilers must carry as gates. Error squaring is void under correlated runs - the single most dangerous failure mode for a simulation ensemble that shares injury draws or scripts across worlds. Idempotence is void under non-commuting concurrency - the reason the single-writer rule exists. The hint pattern is void when the check is not cheap or the backup does not work - the reason a stale mirror must trigger re-aggregation. The availability approximation is void when MTTR is measured as repair instead of failover - the reason a restart must beat the cycle budget. And the safety/liveness partition does not cover hyperproperties such as non-interference, which the source explicitly excludes. A compiler that drops any of these conditions converts a sovereign invariant into a plausible-sounding heuristic, which is exactly the failure the foundry's gatekeeper exists to prevent. The monograph's own title makes the point: a hint without its check is just a guess, and a principle without its boundary is just a slogan.",
+   "retrocausal_genealogy": "This monograph is the 2021 long version of Lampson's 1983 paper, and the preface frames it as such; the safety/liveness partition descends from the formal specification tradition (Lamport and the concurrency verification community) that Lampson credits throughout, and the epigraphs quote Dijkstra, McGraw and Lamport on specification discipline. The hint/soft-state idea descends from network routing practice and the end-to-end principle, which the source explicitly names as the basis of retry. The MTTR/MTTF approximation descends from reliability engineering's renewal-theory availability models, reduced to a back-of-the-envelope ratio. The idempotence-with-unique-ID recipe descends from distributed transaction practice (the source's replicated-state-machine and log-idempotence discussion), and the error-squaring rule is the elementary probability of independent events applied to approximate computation.",
+   "theory_of_mind": "Lampson writes for practicing system designers who have seen failures, not for students meeting the ideas for the first time; the hints-and-principles framing is deliberate - he distinguishes hints (heuristics that may fail) from principles (claims he believes are more than hints), and the technical-hint definition is itself a move to make the paper's own title precise. The repeated failure stories (Maxc parity errors, the IronFleet build-script bug, DEC CI, Pentium Pro) are teaching devices meant to inoculate the reader against trusting any single layer, including the toolchain. The compiler should read the conditions printed alongside each rule (independence, commutation, cheap check, failover-as-repair) as the author's intended scope, not optional footnotes, because the whole paper is organized around knowing when a technique stops working.",
+   "cross_layer_veto": "Layer 3 must not promote the error-squaring rule to a confidence claim about the simulation ensemble without an independence audit on the world vectors; correlated worlds make the nominal 10,000-world count misleading and any confidence scaled by it is rejected. Idempotence must not be claimed for settlement writes without the unique-ID construction and the single-writer (commutation) discipline; a retry-safe claim without both is rejected. Cached tendencies must not be consumed as authoritative without the window/provenance check and a working re-aggregation backup; a stale-mirror trust path is rejected. Availability claims must measure MTTR as failover, not repair, or they are rejected. These vetoes are the source's own printed conditions enforced at the compilation gate."
+  }
+ ],
+ "universal_lens": "Conditions-as-sovereign-content: every technique in this monograph ships with the precise condition under which it stops working (independence, commutation, cheap check, failover-as-repair, finite-violation), and the invariant worth compiling is the technique together with its boundary, never the technique alone.",
+ "gsi_mapping": "The GSI institute reads the safety/liveness partition and the hint contract as measurement-system design rules: a biomechanics pipeline's never-violate calibration gates are safety properties, eventual re-calibration is liveness, and cached athlete models are hints that require a cheap validity check and a working full-recompute backup before any movement claim is issued.",
+ "gse_mapping": "The GSE engine consumes these as operational kernels: guardrail taxonomy split into finite-trace safety gates and settlement-progress liveness audits, an independence audit on 10,000-world vectors before confidence scales, cached-tendency hints with window checks and re-aggregation backup, idempotent settlement/receipt writes under the single-writer rule, and poller failover faster than the cycle budget."
+}
