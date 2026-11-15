@@ -605,27 +605,27 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
   {
     "id": "writeup-sun_early-401873039",
     "gameId": "401873039",
-    "matchup": "Detroit Lions @ Miami Dolphins",
-    "awayTeam": "Detroit Lions",
-    "homeTeam": "Miami Dolphins",
-    "kickoff": "2026-11-08T18:00Z",
+    "matchup": "Houston Texans @ Cleveland Browns",
+    "awayTeam": "Houston Texans",
+    "homeTeam": "Cleveland Browns",
+    "kickoff": "2026-11-15T18:00:00Z",
     "windowSlot": "SUN_EARLY",
     "paceOfPlay": {
       "neutralSecPerSnap": 26.4,
       "passEpaPlay": 0.118,
       "rushEpaPlay": 0.042,
       "noHuddleRate": 0.095,
-      "notes": "Detroit Lions and Miami Dolphins bring contrasting early-down tempo and trench protection fronts into Week 10."
+      "notes": "Houston Texans and Cleveland Browns bring contrasting early-down tempo and trench protection fronts into Week 10."
     },
     "schemeMatchup": {
       "coverageShell": "Jared Goff and Malik Willis headline this Week 10 matchup with Amon-Ra St. Brown, Jahmyr Gibbs, Jaylen Waddle, and Ollie Gordon II featured in early-down scripts.",
-      "blitzRateVsPressureToSack": "Detroit Lions and Miami Dolphins deploy disguised third-down pressure packages to test pocket protection.",
+      "blitzRateVsPressureToSack": "Houston Texans and Cleveland Browns deploy disguised third-down pressure packages to test pocket protection.",
       "personnelTendencies": "Detroit Lions leans on Jahmyr Gibbs, Amon-Ra St. Brown, and Sam LaPorta, while Miami Dolphins features Ollie Gordon II, Jaylen Waddle, and Greg Dulcich.",
-      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Detroit Lions and Miami Dolphins headline the film study.",
-      "notes": "Week 10 Matchup \u2014 Official spread call, total call, and player prop picks are locked inside the pack."
+      "coachingEdge": "Red-zone play-calling and third-down conversion rhythm between Houston Texans and Cleveland Browns headline the film study.",
+      "notes": "Week 10 Matchup - Official spread call, total call, and player prop picks are locked inside the pack."
     },
     "sideTotalCall": {
-      "sideSelection": "Miami Dolphins +6.5",
+      "sideSelection": "Cleveland Browns +6.5",
       "sideConfidence": "79/100",
       "sideExpectedClv": 0.052,
       "sideDecision": "PLAY",
@@ -652,7 +652,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       }
     ],
     "correlatedSgpTicket": {
-      "title": "Detroit Lions @ Miami Dolphins Same-Game Parlay",
+      "title": "Houston Texans @ Cleveland Browns Same-Game Parlay",
       "legs": [
         {
           "description": "Ollie Gordon II Rushing Yards",
