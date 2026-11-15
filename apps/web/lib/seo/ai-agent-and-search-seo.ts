@@ -11,6 +11,7 @@
  */
 
 import { PUBLIC_RECORD_AS_OF, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
+import { SOCIAL } from "@/lib/brand";
 
 export const HIGH_INTENT_SEARCH_KEYWORDS: string[] = [
   "NFL picks",
@@ -63,14 +64,15 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["Organization", "SportsOrganization"],
+        "@type": ["Organization", "OnlineBusiness", "SportsOrganization"],
         "@id": `${siteUrl}/#organization`,
         name: "Galaxy Sports Edge",
+        legalName: "Galaxy Sports Network LLC",
         alternateName: ["GSE", "Galaxy Sports Edge Football Desk"],
         url: siteUrl,
         description:
           "NFL and multi-sport football analysis platform built on film tendencies, offensive and defensive line trench matchups, blitz and coverage shells, verified 32-team injury reports, de-vigged line comparisons, Same-Game Parlays, and DraftKings & FanDuel DFS lineups.",
-        sameAs: ["https://x.com/GalaxySportsAI"],
+        sameAs: [SOCIAL.x, SOCIAL.instagram],
         knowsAbout: [
           "NFL Picks Against the Spread",
           "NFL Over/Under Totals",
