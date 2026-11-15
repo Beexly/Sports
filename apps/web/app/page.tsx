@@ -52,15 +52,15 @@ export default async function HomePage(): Promise<JSX.Element> {
 <div key={pkg.slug} className="flex flex-col justify-between border border-mineral bg-carbon p-4">
 <div>
 <div className="flex items-baseline justify-between gap-2">
-<h2 className="font-display text-base uppercase tracking-tight text-ion-white">{pkg.name}</h2>
-<span className="font-mono text-sm font-semibold text-plasma">${pkg.priceDollars}</span>
+<h2 className="font-display text-base uppercase tracking-tight text-ion-white">{pkg.title}</h2>
+<span className="font-mono text-sm font-semibold text-plasma">${Math.round(pkg.standardPriceCents / 100)}</span>
 </div>
-<p className="mt-1 text-xs text-ion-2">{pkg.tagline}</p>
+<p className="mt-1 text-xs text-ion-2">{pkg.subtitle}</p>
 </div>
 <form method="POST" action="/api/packages/checkout" className="mt-3">
 <input type="hidden" name="packageSlug" value={pkg.slug} />
 <button type="submit" className="inline-flex min-h-[48px] w-full items-center justify-center bg-plasma px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-void hover:bg-ion-white">
-{`Buy Pack - $${pkg.priceDollars} ->`}
+{`Buy Pack - $${Math.round(pkg.standardPriceCents / 100)} ->`}
 </button>
 </form>
 </div>
