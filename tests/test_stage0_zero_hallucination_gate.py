@@ -186,3 +186,36 @@ def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     assert "Travis Etienne Jr." not in excluded_names
     assert "Xavier Legette" not in excluded_names
 
+
+def test_week10_stage0_etienne_on_no_and_traded_excluded_metadata() -> None:
+    al_car_no = load_stage0_game_roster_allowlist("CAR", "NO", 10, today=date(2026, 11, 14))
+    assert_zero_roster_contamination(al_car_no, al_car_no, "self_check_car_no")
+    athletes_lower = {k.lower() for k in al_car_no["verified_board_athletes"]}
+    assert "travis etienne jr." in athletes_lower or "travis etienne" in athletes_lower
+
+    al_min_gb = load_stage0_game_roster_allowlist("MIN", "GB", 10, today=date(2026, 11, 14))
+    assert_zero_roster_contamination(al_min_gb, al_min_gb, "self_check_min_gb")
+    with pytest.raises(Stage0RosterContaminationError):
+        assert_zero_roster_contamination(
+            {"athlete": "Kyler Murray", "pass_yds_mean": 215.0},
+            al_min_gb,
+            "kyler_positive_proj",
+        )
+
+    al_kc_atl = load_stage0_game_roster_allowlist("KC", "ATL", 10, today=date(2026, 11, 14))
+    assert_zero_roster_contamination(al_kc_atl, al_kc_atl, "self_check_kc_atl")
+    with pytest.raises(Stage0RosterContaminationError):
+        assert_zero_roster_contamination(
+            {"athlete": "Kenneth Walker III", "rush_yds_mean": 68.0},
+            al_kc_atl,
+            "walker_positive_proj",
+        )
+
+    al_wk9 = load_stage0_game_roster_allowlist("JAX", "BAL", 9, today=date(2026, 11, 7))
+    with pytest.raises(Stage0RosterContaminationError):
+        assert_zero_roster_contamination(
+            {"athlete": "Travis Etienne Jr.", "rush_yds_mean": 55.0},
+            al_wk9,
+            "wk9_etienne_still_blocked",
+        )
+

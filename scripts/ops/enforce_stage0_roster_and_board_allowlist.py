@@ -186,6 +186,35 @@ OFF_ROSTER_HALLUCINATION_DENYLIST: dict[str, str] = {
     "jalen mcmillan": "WEEK8_INACTIVE_NAMES hard-blocked.",
 }
 
+_ACTIVE_2026_TEAM_EXEMPTIONS: dict[str, str] = {
+    "tank bigsby": "PHI",
+    "isaiah likely": "NYG",
+    "travis etienne": "NO",
+    "travis etienne jr.": "NO",
+    "richie james": "KC",
+    "trey benson": "ARI",
+}
+
+
+def _strip_name_suffix(name_low: str) -> str:
+    """Strip common generational suffixes when matching duplicate roster rows."""
+    for suffix in (" jr.", " sr.", " iii", " ii", " iv"):
+        if name_low.endswith(suffix):
+            return name_low[: -len(suffix)].strip()
+    return name_low
+
+
+def _effective_hallucination_denylist(away: str, home: str, week: int = 9) -> dict[str, str]:
+    """Return matchup-scoped static denylist entries, exempting active 2026 teams outside Week 9 JAX@BAL."""
+    pair = {str(away or "").strip().upper(), str(home or "").strip().upper()}
+    if int(week) == 9 and pair == {"JAX", "BAL"}:
+        return dict(OFF_ROSTER_HALLUCINATION_DENYLIST)
+    return {
+        k: v
+        for k, v in OFF_ROSTER_HALLUCINATION_DENYLIST.items()
+        if _ACTIVE_2026_TEAM_EXEMPTIONS.get(k) not in pair
+    }
+
 _DYNAMIC_DENYLIST_CACHE: dict[tuple[str, str, int], dict[str, str]] = {}
 
 
@@ -298,7 +327,7 @@ def build_dynamic_league_wide_denylist_for_matchup(
     if cache_key in _DYNAMIC_DENYLIST_CACHE:
         return _DYNAMIC_DENYLIST_CACHE[cache_key]
 
-    denylist: dict[str, str] = dict(OFF_ROSTER_HALLUCINATION_DENYLIST)
+    denylist: dict[str, str] = _effective_hallucination_denylist(away, home, week)
     try:
         stage0_cfg = require_week(week)
     except Exception:
@@ -318,19 +347,30 @@ def build_dynamic_league_wide_denylist_for_matchup(
     inactive_statuses = {"CUT", "TRD", "RES", "INA", "RET", "DEV"}
     if rosters_path.is_file():
         with rosters_path.open("r", encoding="utf-8") as fh:
-            for r in csv.DictReader(fh):
-                fn = str(r.get("full_name") or r.get("player_name") or "").strip()
-                tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
-                st = str(r.get("status") or "ACT").strip().upper()
-                if not fn:
-                    continue
-                fn_low = fn.lower()
-                if fn_low in traded_to_matchup:
-                    continue
-                if tm not in (away.upper(), home.upper()):
-                    denylist[fn_low] = f"Wrong NFL team for {away}@{home}: 2026 roster team is {tm}"
-                elif st in inactive_statuses:
-                    denylist[fn_low] = f"Inactive 2026 roster status on {tm}: status={st}"
+            roster_rows = list(csv.DictReader(fh))
+        active_matchup_base_names = {
+            _strip_name_suffix(str(r.get("full_name") or r.get("player_name") or "").strip().lower())
+            for r in roster_rows
+            if _normalize_team_abbr(str(r.get("team") or ""), away, home) in (away.upper(), home.upper())
+            and str(r.get("status") or "ACT").strip().upper() not in inactive_statuses
+        }
+        for r in roster_rows:
+            fn = str(r.get("full_name") or r.get("player_name") or "").strip()
+            tm = _normalize_team_abbr(str(r.get("team") or ""), away, home)
+            st = str(r.get("status") or "ACT").strip().upper()
+            if not fn:
+                continue
+            fn_low = fn.lower()
+            if fn_low in traded_to_matchup:
+                continue
+            if _strip_name_suffix(fn_low) in active_matchup_base_names and (
+                tm not in (away.upper(), home.upper()) or st in inactive_statuses
+            ):
+                continue
+            if tm not in (away.upper(), home.upper()):
+                denylist[fn_low] = f"Wrong NFL team for {away}@{home}: 2026 roster team is {tm}"
+            elif st in inactive_statuses:
+                denylist[fn_low] = f"Inactive 2026 roster status on {tm}: status={st}"
 
     inj_path = REPO_ROOT / "data" / "nflverse" / "injuries_2026.csv"
     if inj_path.is_file():
@@ -409,7 +449,7 @@ def resolve_or_generate_matchup_board(
     excluded_lower = {
         str(ep.get("name") or "").strip().lower()
         for ep in stage0_cfg.get("excluded_players", [])
-    } | set(OFF_ROSTER_HALLUCINATION_DENYLIST.keys())
+    } | set(_effective_hallucination_denylist(away, home, week).keys())
 
     rosters_path = REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv"
     roster_rows: list[dict[str, str]] = []
@@ -737,6 +777,8 @@ def load_stage0_game_roster_allowlist(
 
     situational_mults = (stage0_cfg.get("situational_multipliers_unfitted") or {}).get(matchup_key, {})
 
+    matchup_denylist = _effective_hallucination_denylist(away, home, week)
+
     # Extract all verified named athletes and their core lines from the live board
     athletes: dict[str, dict[str, Any]] = {}
     for p in board.get("props", []):
@@ -747,7 +789,7 @@ def load_stage0_game_roster_allowlist(
             raise Stage0RosterContaminationError(
                 f"STAGE0_FAIL: Excluded player {name} appeared on live board allowlist!"
             )
-        if name.lower() in OFF_ROSTER_HALLUCINATION_DENYLIST:
+        if name.lower() in matchup_denylist:
             raise Stage0RosterContaminationError(
                 f"STAGE0_FAIL: Off-roster player {name} appeared on live board allowlist!"
             )
@@ -891,7 +933,7 @@ def load_stage0_game_roster_allowlist(
     # Ensure no verified active board athlete on away/home is falsely flagged by historical depth-chart team
     for v_name in athletes:
         v_low = v_name.lower()
-        if v_low not in excluded_names_lower and v_low not in OFF_ROSTER_HALLUCINATION_DENYLIST:
+        if v_low not in excluded_names_lower and v_low not in matchup_denylist:
             dynamic_denylist.pop(v_low, None)
 
     allowlist_payload = {
@@ -904,7 +946,7 @@ def load_stage0_game_roster_allowlist(
         "qb1_ban_conflict_resolutions": stage0_cfg.get("qb1_ban_conflict_resolutions", []),
         "traded_players": traded_players,
         "excluded_players": excluded_players,
-        "off_roster_hallucination_denylist": OFF_ROSTER_HALLUCINATION_DENYLIST,
+        "off_roster_hallucination_denylist": matchup_denylist,
         "dynamic_league_wide_denylist_count": len(dynamic_denylist),
         "situational_multipliers_unfitted": situational_mults,
         "team_totals_2026_pbp": team_totals,
@@ -931,11 +973,17 @@ def assert_zero_roster_contamination(
       2. Excluded/IR players (Lamar Jackson, Tyler Huntley, Skylar Thompson) being assigned positive
          active projections or marked as active starters.
     """
+    matchup_denylist = (
+        dict(allowlist.get("off_roster_hallucination_denylist") or {})
+        if isinstance(allowlist, Mapping) and "off_roster_hallucination_denylist" in allowlist
+        else dict(OFF_ROSTER_HALLUCINATION_DENYLIST)
+    )
     if isinstance(payload_or_text, str):
         text_lower = payload_or_text.lower()
-        combined_denylist = dict(OFF_ROSTER_HALLUCINATION_DENYLIST)
-        for default_excl in ("lamar jackson", "tyler huntley", "skylar thompson"):
-            combined_denylist.setdefault(default_excl, "Excluded Week 9 inactive/IR player")
+        combined_denylist = dict(matchup_denylist)
+        if not isinstance(allowlist, Mapping) or int(allowlist.get("week") or 9) == 9:
+            for default_excl in ("lamar jackson", "tyler huntley", "skylar thompson"):
+                combined_denylist.setdefault(default_excl, "Excluded Week 9 inactive/IR player")
         if isinstance(allowlist, Mapping):
             for ep in allowlist.get("excluded_players", []):
                 ep_name = str(ep.get("name") or "").strip().lower()
@@ -985,7 +1033,7 @@ def assert_zero_roster_contamination(
         ).strip()
         if p_name:
             p_low = p_name.lower()
-            if p_low in OFF_ROSTER_HALLUCINATION_DENYLIST:
+            if p_low in matchup_denylist:
                 raise Stage0RosterContaminationError(
                     f"STAGE0_CONTAMINATION in {context_label}: Off-roster player '{p_name}' present in player record!"
                 )
@@ -1016,7 +1064,7 @@ def assert_zero_roster_contamination(
                 )
 
         for k, v in payload_or_text.items():
-            if k in ("off_roster_hallucination_denylist", "excluded_players"):
+            if k in ("off_roster_hallucination_denylist", "excluded_players", "traded_players"):
                 continue
             assert_zero_roster_contamination(v, allowlist, f"{context_label}.{k}")
     elif isinstance(payload_or_text, (list, tuple)):
