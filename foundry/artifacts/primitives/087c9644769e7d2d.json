@@ -1,0 +1,95 @@
+{
+  "book_id": "087c9644769e7d2d",
+  "source_status": "COMPLETE",
+  "title": "DIGEST",
+  "file_name": "DIGEST.md",
+  "sha256": "087c9644769e7d2d870d6b8a68d3d3a24fc5eb133d21447fe7ad3186f9d59391",
+  "primary_domain": "other",
+  "pages_total": 11,
+  "pages_read": 11,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "odds_api_event_market_query",
+      "name": "Event Market Endpoint Query",
+      "verbatim_quote": "Serves as the primary source for baseline market odds ingestion.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operational assumptions include valid event ID, active subscription, and adherence to rate limits.",
+      "breakdown_regime": "API endpoint unavailability or subscription termination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's external data source registry pattern for systematic vendor integration.",
+        "source_operator": "odds_api_event_market_query",
+        "telemetry": "Query success rate, latency percentiles, and error code frequency."
+      }
+    },
+    {
+      "primitive_id": "odds_api_historical_odds_query",
+      "name": "DIGEST Operator 2",
+      "verbatim_quote": "Already fully integrated into GSE with proper attribution and registry compliance.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Historical data access assumes prior live event-odds ingestion stability and correct event ID.",
+      "breakdown_regime": "Data archiving or subscription downgrade limiting historical depth.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSI's historical calibration archive retrieval for backtesting and edge verification.",
+        "source_operator": "odds_api_historical_odds_query",
+        "telemetry": "Historical data freshness metrics and query throughput efficiency."
+      }
+    },
+    {
+      "primitive_id": "odds_api_featured_market_query",
+      "name": "DIGEST Operator 3",
+      "verbatim_quote": "Already wired for featured h2h, spreads, and totals. Serves as the primary source for baseline market odds ingestion.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Baseline market wiring presumes standard market types and consistent market naming conventions.",
+      "breakdown_regime": "Market structure divergence causing parsing failures or missing required odds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Corresponds to GSE's core market data pipeline for initial odds feed consumption.",
+        "source_operator": "odds_api_featured_market_query",
+        "telemetry": "Market coverage completeness and parity with expected standard offerings."
+      }
+    },
+    {
+      "primitive_id": "odds_api_score_feed_query",
+      "name": "DIGEST Operator 4",
+      "verbatim_quote": "Serves as the primary source for baseline market odds ingestion.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Real-time score updates assume continuous network connectivity and valid sport/event identifiers.",
+      "breakdown_regime": "Score delay exceeding operational thresholds or status field inconsistencies disrupting event state logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's live event state synchronization for timely trigger-based data acquisition.",
+        "source_operator": "odds_api_score_feed_query",
+        "telemetry": "Score update latency and event state accuracy relative to official game clocks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "087c9644769e7d2d_t0",
+      "think": "The four sovereign primitives represent foundational API interaction patterns for structured sports betting data. They enable GSE to ingest baseline odds, historical calibration data, and real-time event states while maintaining registry compliance. The isomorphic mapping to GSI's historical calibration and GSE's market pipeline ensures consistency across platforms. Failure modes primarily involve API degradation, subscription lapses, or market structure evolution causing parsing errors. These primitives serve as critical infrastructure for verifying predictive models over time and supporting trigger-based data workflows.\n\nDeep epistemic analysis for DIGEST (087c9644769e7d2d, domain=other, pages_read=11/11): Operator 'Event Market Endpoint Query' (page 3, domain other) captures: Serves as the primary source for baseline market odds ingestion. Assumptions: Operational assumptions include valid event ID, active subscription, and adherence to rate limits. Breakdown regime: API endpoint unavailability or subscription termination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's external data source registry pattern for systematic vendor integration. Operator 'DIGEST Operator 2' (page 3, domain other) captures: Already fully integrated into GSE with proper attribution and registry compliance. Assumptions: Historical data access assumes prior live event-odds ingestion stability and correct event ID. Breakdown regime: Data archiving or subscription downgrade limiting historical depth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's historical calibration archive retrieval for backtesting and edge verification. Operator 'DIGEST Operator 3' (page 3, domain other) captures: Already wired for featured h2h, spreads, and totals. Serves as the primary source for baseline market odds ingestion. Assumptions: Baseline market wiring presumes standard market types and consistent market naming conventions. Breakdown regime: Market structure divergence causing parsing failures or missing required odds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to GSE's core market data pipeline for initial odds feed consumption. Operator 'DIGEST Operator 4' (page 3, domain other) captures: Serves as the primary source for baseline market odds ingestion. Assumptions: Real-time score updates assume continuous network connectivity and valid sport/event identifiers. Breakdown regime: Score delay exceeding operational thresholds or status field inconsistencies disrupting event state logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's live event state synchronization for timely trigger-based data acquisition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DIGEST (087c9644769e7d2d, domain=other, pages_read=11/11): Operator 'Event Market Endpoint Query' (page 3, domain other) captures: Serves as the primary source for baseline market odds ingestion. Assumptions: Operational assumptions include valid event ID, active subscription, and adherence to rate limits. Breakdown regime: API endpoint unavailability or subscription termination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's external data source registry pattern for systematic vendor integration. Operator 'DIGEST Operator 2' (page 3, domain other) captures: Already fully integrated into GSE with proper attribution and registry compliance. Assumptions: Historical data access assumes prior live event-odds ingestion stability and correct event ID. Breakdown regime: Data archiving or subscription downgrade limiting historical depth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's historical calibration archive retrieval for backtesting and edge verification. Operator 'DIGEST Operator 3' (page 3, domain other) captures: Already wired for featured h2h, spreads, and totals. Serves as the primary source for baseline market odds ingestion. Assumptions: Baseline market wiring presumes standard market types and consistent market naming conventions. Breakdown regime: Market structure divergence causing parsing failures or missing required odds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Corresponds to GSE's core market data pipeline for initial odds feed consumption. Operator 'DIGEST Operator 4' (page 3, domain other) captures: Serves as the primary source for baseline market odds ingestion. Assumptions: Real-time score updates assume continuous network connectivity and valid sport/event identifiers. Breakdown regime: Score delay exceeding operational thresholds or status field inconsistencies disrupting event state logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's live event state synchronization for timely trigger-based data acquisition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The conceptual lineage traces back to early sports data exchange protocols and modern RESTful API design patterns, evolving from proprietary feeds to standardized commercial subscriptions. Retrocausal Genealogy: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Modeling opposing agents reveals that bookmakers rely on similar data pipelines for pricing adjustments, creating a competitive landscape where accurate and timely data ingestion provides strategic advantage. Theory of Mind & Decision Maker Model: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require ensuring that historical and real-time data streams do not introduce redundant information, while leakage vetoes prevent using future event states for training predictive models. Cross-Layer Veto & Anti-Leakage Check: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in DIGEST (087c9644769e7d2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

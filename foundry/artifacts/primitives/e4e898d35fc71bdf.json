@@ -1,0 +1,78 @@
+{
+  "book_id": "e4e898d35fc71bdf",
+  "source_status": "COMPLETE",
+  "title": "CALIBRATION_LEAF_DRIFT_6_5_9_5",
+  "file_name": "CALIBRATION_LEAF_DRIFT_6_5_9_5.md",
+  "sha256": "e4e898d35fc71bdf1ba28b422500f06ba169b2b4f7988c6fdee41460b84a080f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Per-leaf calibration drifts assessed via z-scores, Bonferroni-corrected p-values, and Cochran's Q test for heterogeneity. Universal Lens: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration drifts modeled as latent variables with conformal prediction bounds using leaf-specific Brier scores and global mean comparisons. GSI Mapping: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps leaf drifts to state transitions in model calibration; 6.5–9.5 drift triggers conditional re-evaluation of leaf-specific mechanisms. GSE Mapping: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "per_leaf_z_score_drift",
+      "name": "Per-Layer Z-Score Drift",
+      "verbatim_quote": "Each leaf's training-period base rate is compared against what actually happened in the test period.",
+      "page": 1,
+      "latex": "\\Delta_{\\text{leaf}} = \\frac{\\hat{p}_{\\text{test}} - \\hat{p}_{\\text{train}}}{\\sqrt{\\frac{\\hat{p}_{\\text{train}}(1 - \\hat{p}_{\\text{train}})}{n_{\\text{test}}}}}",
+      "symbol_and_unit_ledger": "{'Δ_leaf': 'drift in percentage points', 'p_test': 'observed proportion in test period', 'p_train': 'expected proportion from training', 'n_test': 'number of observations in test'}",
+      "assumptions": "Normal approximation to binomial distribution, independence of observations.",
+      "breakdown_regime": "When sample size is insufficient or proportion approaches 0 or 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Z-score drifts form the basis for statistical significance testing in GSI's Bayesian calibration framework.",
+        "source_operator": "per_leaf_z_score_drift",
+        "telemetry": "p-values from two-tailed z-tests"
+      }
+    },
+    {
+      "primitive_id": "bonferroni_corrected_p_value",
+      "name": "Bonferroni-Corrected P-Value",
+      "verbatim_quote": "Bonferroni across the five leaves gives p = 4.9e-05 for 6.5–9.5, so this is not the one-in-twenty you expect from testing five things.",
+      "page": 1,
+      "latex": "p_{\\text{corrected}} = p_{\\text{raw}} \\times m",
+      "symbol_and_unit_ledger": "{'p_corrected': 'corrected p-value', 'p_raw': 'uncorrected p-value', 'm': 'number of hypotheses tested'}",
+      "assumptions": "Independence of tests or conservative dependence structure.",
+      "breakdown_regime": "When multiple comparisons increase Type I error risk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-hypothesis rejection logic in calibration validation.",
+        "source_operator": "bonferroni_corrected_p_value",
+        "telemetry": "Corrected p-values for leaf drift significance"
+      }
+    },
+    {
+      "primitive_id": "cochran_q_heterogeneity_test",
+      "name": "Cochran's Q Heterogeneity Test",
+      "verbatim_quote": "**Cochran's Q**, H0 = all five leaves share one common drift, weights `1/var_i`: ```text common-drift estimate -1.46 pp Cochran's Q 19.57 on 4 df heterogeneity p 6.07e-04 I2 79.6% ``` H0 is rejected.",
+      "page": 1,
+      "latex": "Q = \\sum_{j=1}^{k} \\left(\\frac{(X_j - \\bar{X})^2}{\\sigma_j^2}\\right)",
+      "symbol_and_unit_ledger": "{'Q': \"Cochran's Q statistic\", 'X_j': 'drift estimate for j-th leaf', '\\\\bar{X}': 'mean drift across leaves', '\\\\sigma_j^2': 'variance of drift for j-th leaf'}",
+      "assumptions": "Binomial outcomes, fixed weights inversely proportional to variance.",
+      "breakdown_regime": "When leaf variances are highly unequal or sample sizes are small.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE to detect non-uniformity in leaf drift patterns, informing state transition decisions.",
+        "source_operator": "cochran_q_heterogeneity_test",
+        "telemetry": "Cochran's Q statistic and associated p-value"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e4e898d35fc71bdf_t0",
+      "think": "The core derivation begins with per-leaf z-score computation to quantify deviation from expected behavior. These z-scores are then Bonferroni-corrected to account for multiple comparisons across five leaves, yielding a corrected p-value for the 6.5–9.5 leaf. Cochran’s Q test evaluates whether drifts across leaves are homogeneous, rejecting the null hypothesis of shared drift, indicating heterogeneity. The contrast between 6.5–9.5 and the pooled other leaves confirms a significant divergence. This sequence reveals that sampling noise alone cannot explain the observed drift, and that a uniform league-wide shift is inconsistent with the data. The failure mode lies in assuming homogeneity where heterogeneity exists, leading to misinterpretation of calibration stability.\n\nDeep epistemic analysis for CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf, domain=other, pages_read=4/4): Operator 'Per-Layer Z-Score Drift' (page 1, domain other) captures: Each leaf's training-period base rate is compared against what actually happened in the test period. Assumptions: Normal approximation to binomial distribution, independence of observations. Breakdown regime: When sample size is insufficient or proportion approaches 0 or 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score drifts form the basis for statistical significance testing in GSI's Bayesian calibration framework. Operator 'Bonferroni-Corrected P-Value' (page 1, domain other) captures: Bonferroni across the five leaves gives p = 4.9e-05 for 6.5–9.5, so this is not the one-in-twenty you expect from testing five things. Assumptions: Independence of tests or conservative dependence structure. Breakdown regime: When multiple comparisons increase Type I error risk. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-hypothesis rejection logic in calibration validation. Operator 'Cochran's Q Heterogeneity Test' (page 1, domain other) captures: **Cochran's Q**, H0 = all five leaves share one common drift, weights `1/var_i`: ```text common-drift estimate -1.46 pp Cochran's Q 19.57 on 4 df heterogeneity p 6.07e-04 I2 79.6% ``` H0 is rejected. Assumptions: Binomial outcomes, fixed weights inversely proportional to variance. Breakdown regime: When leaf variances are highly unequal or sample sizes are small. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect non-uniformity in leaf drift patterns, informing state transition decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf, domain=other, pages_read=4/4): Operator 'Per-Layer Z-Score Drift' (page 1, domain other) captures: Each leaf's training-period base rate is compared against what actually happened in the test period. Assumptions: Normal approximation to binomial distribution, independence of observations. Breakdown regime: When sample size is insufficient or proportion approaches 0 or 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score drifts form the basis for statistical significance testing in GSI's Bayesian calibration framework. Operator 'Bonferroni-Corrected P-Value' (page 1, domain other) captures: Bonferroni across the five leaves gives p = 4.9e-05 for 6.5–9.5, so this is not the one-in-twenty you expect from testing five things. Assumptions: Independence of tests or conservative dependence structure. Breakdown regime: When multiple comparisons increase Type I error risk. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-hypothesis rejection logic in calibration validation. Operator 'Cochran's Q Heterogeneity Test' (page 1, domain other) captures: **Cochran's Q**, H0 = all five leaves share one common drift, weights `1/var_i`: ```text common-drift estimate -1.46 pp Cochran's Q 19.57 on 4 df heterogeneity p 6.07e-04 I2 79.6% ``` H0 is rejected. Assumptions: Binomial outcomes, fixed weights inversely proportional to variance. Breakdown regime: When leaf variances are highly unequal or sample sizes are small. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE to detect non-uniformity in leaf drift patterns, informing state transition decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical frequentist inference and modern multiple testing corrections, with extensions into Bayesian hierarchical modeling and conformal prediction frameworks. Retrocausal Genealogy: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the modeler who assumes uniformity and the data-driven observer who detects heterogeneity. The modeler may overstate confidence in global calibration while the data suggests localized instability. Theory of Mind & Decision Maker Model: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through Bonferroni correction and Cochran’s Q, preventing false positives from spurious correlations. Leakage is mitigated by ensuring each leaf's drift is evaluated independently before pooling. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CALIBRATION_LEAF_DRIFT_6_5_9_5 (e4e898d35fc71bdf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

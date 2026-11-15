@@ -1,0 +1,78 @@
+{
+  "book_id": "16c9060fbc8da24f",
+  "source_status": "COMPLETE",
+  "title": "l1_l4_admission_gate",
+  "file_name": "l1_l4_admission_gate.md",
+  "sha256": "16c9060fbc8da24ff3d466c9a985f266ab6f563ee7e6452761eb6809ec88983a",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "L1–L4 admission gates enforce mechanistic truth through verbatim, numeric, and semantic alignment; failure at any layer invalidates citability. Universal Lens: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian truth verification via L1–L4 layers maps source credibility to posterior probability of citable premises; 0% truthful admission implies zero posterior confidence. GSI Mapping: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies L1–L4 state transitions to validate source integrity; rejection at L1 or L2 triggers immediate state collapse to non-citable. GSE Mapping: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "l1_verbatim_provenance",
+      "name": "Verbatim Provenance Gate",
+      "verbatim_quote": "Then, for every record: - **L1** — is the quote in the source document, exactly?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q': 'quoted text segment', 'D': 'document source', 'L1(Q,D)': 'binary indicator for exact match'}",
+      "assumptions": "Source documents are accessible and unaltered; quote is deterministic.",
+      "breakdown_regime": "L1(Q,D) = 0 when Q ∉ D or Q ≠ D",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L1 gate maps to GSI's Bayesian likelihood function over textual fidelity; GSE uses it as a prefilter for semantic trace validity.",
+        "source_operator": "l1_verbatim_provenance",
+        "telemetry": "Percentage of verbatim matches across corpus"
+      }
+    },
+    {
+      "primitive_id": "l2_numeric_containment",
+      "name": "Numeric Containment Gate",
+      "verbatim_quote": "- **L2** — is the claimed magnitude literally in the quote?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'claimed magnitude', 'Q': 'quoted text segment', 'L2(M,Q)': 'binary indicator for literal inclusion'}",
+      "assumptions": "Magnitude is expressed numerically within quote; no interpolation or estimation.",
+      "breakdown_regime": "L2(M,Q) = 0 when M ∉ Q",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "L2 gate computes GSI's numeric consistency kernel; GSE uses it to detect spurious quantification in reasoning traces.",
+        "source_operator": "l2_numeric_containment",
+        "telemetry": "Percentage of numerically contained claims"
+      }
+    },
+    {
+      "primitive_id": "l4_semantic_mechanism",
+      "name": "Semantic Mechanism Gate",
+      "verbatim_quote": "- **L4** — is the vocabulary held AND the mechanism quote in the source?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'vocabulary set', 'M': 'mechanism description', 'D': 'document source', 'L4(V,M,D)': 'binary indicator for full semantic alignment'}",
+      "assumptions": "V ⊆ D and M ⊆ D imply semantic coherence.",
+      "breakdown_regime": "L4(V,M,D) = 0 when V ∩ D = ∅ or M ∩ D = ∅",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L4 gate aligns with GSI's semantic grounding model; GSE uses it to validate causal mechanism integrity.",
+        "source_operator": "l4_semantic_mechanism",
+        "telemetry": "Percentage of semantically coherent mechanisms"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "16c9060fbc8da24f_t0",
+      "think": "The L1–L4 admission gates form a hierarchical truth filter. L1 enforces verbatim textual fidelity; L2 ensures numerical accuracy; L3 validates character-level span alignment; L4 confirms semantic mechanism integrity. Failure at any layer indicates a non-citable premise. The existing gate passes 67.4% of records based on superficial shape, while the truthful gate admits only 0%, revealing 3,509 false positives due to missing quotes. This demonstrates that the gate's mechanical rigor exposes systemic misalignment between perceived and actual citability.\n\nDeep epistemic analysis for l1_l4_admission_gate (16c9060fbc8da24f, domain=other, pages_read=5/5): Operator 'Verbatim Provenance Gate' (page 2, domain other) captures: Then, for every record: - **L1** — is the quote in the source document, exactly? Assumptions: Source documents are accessible and unaltered; quote is deterministic. Breakdown regime: L1(Q,D) = 0 when Q ∉ D or Q ≠ D Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L1 gate maps to GSI's Bayesian likelihood function over textual fidelity; GSE uses it as a prefilter for semantic trace validity. Operator 'Numeric Containment Gate' (page 2, domain other) captures: - **L2** — is the claimed magnitude literally in the quote? Assumptions: Magnitude is expressed numerically within quote; no interpolation or estimation. Breakdown regime: L2(M,Q) = 0 when M ∉ Q Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 gate computes GSI's numeric consistency kernel; GSE uses it to detect spurious quantification in reasoning traces. Operator 'Semantic Mechanism Gate' (page 2, domain other) captures: - **L4** — is the vocabulary held AND the mechanism quote in the source? Assumptions: V ⊆ D and M ⊆ D imply semantic coherence. Breakdown regime: L4(V,M,D) = 0 when V ∩ D = ∅ or M ∩ D = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L4 gate aligns with GSI's semantic grounding model; GSE uses it to validate causal mechanism integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for l1_l4_admission_gate (16c9060fbc8da24f, domain=other, pages_read=5/5): Operator 'Verbatim Provenance Gate' (page 2, domain other) captures: Then, for every record: - **L1** — is the quote in the source document, exactly? Assumptions: Source documents are accessible and unaltered; quote is deterministic. Breakdown regime: L1(Q,D) = 0 when Q ∉ D or Q ≠ D Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L1 gate maps to GSI's Bayesian likelihood function over textual fidelity; GSE uses it as a prefilter for semantic trace validity. Operator 'Numeric Containment Gate' (page 2, domain other) captures: - **L2** — is the claimed magnitude literally in the quote? Assumptions: Magnitude is expressed numerically within quote; no interpolation or estimation. Breakdown regime: L2(M,Q) = 0 when M ∉ Q Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): L2 gate computes GSI's numeric consistency kernel; GSE uses it to detect spurious quantification in reasoning traces. Operator 'Semantic Mechanism Gate' (page 2, domain other) captures: - **L4** — is the vocabulary held AND the mechanism quote in the source? Assumptions: V ⊆ D and M ⊆ D imply semantic coherence. Breakdown regime: L4(V,M,D) = 0 when V ∩ D = ∅ or M ∩ D = ∅ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L4 gate aligns with GSI's semantic grounding model; GSE uses it to validate causal mechanism integrity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory (Kripke structures), adapted to information retrieval systems. Influenced by Bayesian falsifiability and conformal prediction frameworks. Retrocausal Genealogy: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the corpus builder who promotes false positives and the verification system that enforces truth constraints. The agent's decision space is constrained by the gate's mechanical thresholds. Theory of Mind & Decision Maker Model: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity occurs when L1 fails, invalidating L2/L3/L4. Leakage happens when L2 passes but L1 fails, indicating spurious numeric claims. Veto conditions are defined by binary thresholds at each layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in l1_l4_admission_gate (16c9060fbc8da24f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

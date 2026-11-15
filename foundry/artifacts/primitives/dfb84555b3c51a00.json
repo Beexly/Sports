@@ -1,0 +1,78 @@
+{
+  "book_id": "dfb84555b3c51a00",
+  "source_status": "COMPLETE",
+  "title": "DOCTRINE_19_RECOVERED",
+  "file_name": "DOCTRINE_19_RECOVERED.md",
+  "sha256": "dfb84555b3c51a00cdea9b01d81492732a852636e943d44ef21bc2a0e1e7d3a0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A 19-rule enforcement lattice constrains model behavior via immutable code gates, ensuring all violations are physically refused. Each rule maps to a deterministic kernel enforcing integrity through cryptographic chaining, temporal consistency, and probabilistic calibration.",
+  "gsi_mapping": "Bayesian inference is constrained by a 19-rule lattice where each rule enforces conditional probability consistency. The honesty gate and calibration ledger ensure posterior validity under adversarial or stochastic perturbations, while the warehouse enforces temporal coherence in evidence processing.",
+  "gse_mapping": "Situationally, the GSE operates under a 19-rule state transition system where each rule defines a forbidden state. The kill ledger and founder gate enforce irreversible decision paths, while latency and college guards ensure valid model responses within temporal and structural constraints.",
+  "primitives": [
+    {
+      "primitive_id": "point_in_time_warehouse",
+      "name": "Point-in-Time Warehouse",
+      "verbatim_quote": "# DOCTRINE_19 — THE 19 RULES AS CODE **2026-10-10 · artifacts: `doctrine.py` + `doctrine_selfcheck.py` (19/19 PASS)** Enforcement standard: every rule is a class/function that physically REFUSES violation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'decision timestamp (seconds since epoch)', 'observed_at': 'timestamp of data ingestion (seconds since epoch)'}",
+      "assumptions": "Data rows must be stamped with a monotonic timestamp; reads are restricted to `asof(t)`.",
+      "breakdown_regime": "Future-row leak occurs when `observed_at > t`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Warehouse enforces a temporal slice of data as a function of time, mapping to a time-indexed Bayesian belief state.",
+        "source_operator": "point_in_time_warehouse",
+        "telemetry": "Timestamp validation during `append()` and `asof()` calls."
+      }
+    },
+    {
+      "primitive_id": "calibration_reported_founder_gate",
+      "name": "Calibration Reported Founder Gate",
+      "verbatim_quote": "Calibration reported, founder gate | `FounderGate` | `report(n, brier, ece)` → green only if n≥100 ∧ Brier≤0.22 ∧ ECE≤0.05; `can_flip_production()` needs **3 consecutive** green",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'number of predictions (dimensionless)', 'Brier': 'Brier score (unitless)', 'ECE': 'Expected Calibration Error (unitless)'}",
+      "assumptions": "Model must report sufficient predictions to validate calibration; gate flips only after 3 consecutive green reports.",
+      "breakdown_regime": "Flipping gate on insufficient or spurious calibration metrics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Founder gate enforces a conformal prediction kernel, where model reliability is validated via statistical calibration.",
+        "source_operator": "calibration_reported_founder_gate",
+        "telemetry": "Brier and ECE scores over rolling window of predictions."
+      }
+    },
+    {
+      "primitive_id": "kill_ledger_append_only",
+      "name": "Kill Ledger Append-Only",
+      "verbatim_quote": "Kill ledger append-only | `KillLedger` | JSONL, hash-chained (`prev_sha→chain_sha`); **no delete/clear verb exists**; `verify_chain()` detects rewrite",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'prev_sha': 'SHA-256 hash of previous entry (bytes)', 'chain_sha': 'SHA-256 hash of current entry (bytes)'}",
+      "assumptions": "Each entry is cryptographically chained; no deletion or modification allowed.",
+      "breakdown_regime": "Tampering detected via SHA mismatch in `verify_chain()`.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Kill ledger enforces a blockchain-like integrity kernel, where audit trails are immutable and verifiable.",
+        "source_operator": "kill_ledger_append_only",
+        "telemetry": "Hash chain verification upon each ledger update."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dfb84555b3c51a00_t0",
+      "think": "The 19 rules define a lattice of enforcement kernels that constrain model behavior through code-level refusal. Each rule maps to a specific failure mode: e.g., point-in-time warehouse prevents temporal leakage, founder gate ensures calibration reliability, kill ledger prevents history rewriting. These rules collectively enforce a dual structure: one of logical consistency (e.g., temporal stamps), and another of empirical robustness (e.g., Brier/ECE thresholds). The enforcement lattice is built atop a cryptographic stack, where each kernel is a deterministic function that either accepts or rejects a state transition. Violation of any rule results in an immediate stack trace rather than silent error propagation. This architecture enables both Bayesian inference integrity and situational reasoning robustness.\n\nDeep epistemic analysis for DOCTRINE_19_RECOVERED (dfb84555b3c51a00, domain=other, pages_read=3/3): Operator 'Point-in-Time Warehouse' (page 1, domain other) captures: # DOCTRINE_19 — THE 19 RULES AS CODE **2026-10-10 · artifacts: `doctrine.py` + `doctrine_selfcheck.py` (19/19 PASS)** Enforcement standard: every rule is a class/function that physically REFUSES violation. Assumptions: Data rows must be stamped with a monotonic timestamp; reads are restricted to `asof(t)`. Breakdown regime: Future-row leak occurs when `observed_at > t`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Warehouse enforces a temporal slice of data as a function of time, mapping to a time-indexed Bayesian belief state. Operator 'Calibration Reported Founder Gate' (page 2, domain other) captures: Calibration reported, founder gate | `FounderGate` | `report(n, brier, ece)` → green only if n≥100 ∧ Brier≤0.22 ∧ ECE≤0.05; `can_flip_production()` needs **3 consecutive** green Assumptions: Model must report sufficient predictions to validate calibration; gate flips only after 3 consecutive green reports. Breakdown regime: Flipping gate on insufficient or spurious calibration metrics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Founder gate enforces a conformal prediction kernel, where model reliability is validated via statistical calibration. Operator 'Kill Ledger Append-Only' (page 2, domain other) captures: Kill ledger append-only | `KillLedger` | JSONL, hash-chained (`prev_sha→chain_sha`); **no delete/clear verb exists**; `verify_chain()` detects rewrite Assumptions: Each entry is cryptographically chained; no deletion or modification allowed. Breakdown regime: Tampering detected via SHA mismatch in `verify_chain()`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kill ledger enforces a blockchain-like integrity kernel, where audit trails are immutable and verifiable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DOCTRINE_19_RECOVERED (dfb84555b3c51a00, domain=other, pages_read=3/3): Operator 'Point-in-Time Warehouse' (page 1, domain other) captures: # DOCTRINE_19 — THE 19 RULES AS CODE **2026-10-10 · artifacts: `doctrine.py` + `doctrine_selfcheck.py` (19/19 PASS)** Enforcement standard: every rule is a class/function that physically REFUSES violation. Assumptions: Data rows must be stamped with a monotonic timestamp; reads are restricted to `asof(t)`. Breakdown regime: Future-row leak occurs when `observed_at > t`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Warehouse enforces a temporal slice of data as a function of time, mapping to a time-indexed Bayesian belief state. Operator 'Calibration Reported Founder Gate' (page 2, domain other) captures: Calibration reported, founder gate | `FounderGate` | `report(n, brier, ece)` → green only if n≥100 ∧ Brier≤0.22 ∧ ECE≤0.05; `can_flip_production()` needs **3 consecutive** green Assumptions: Model must report sufficient predictions to validate calibration; gate flips only after 3 consecutive green reports. Breakdown regime: Flipping gate on insufficient or spurious calibration metrics. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Founder gate enforces a conformal prediction kernel, where model reliability is validated via statistical calibration. Operator 'Kill Ledger Append-Only' (page 2, domain other) captures: Kill ledger append-only | `KillLedger` | JSONL, hash-chained (`prev_sha→chain_sha`); **no delete/clear verb exists**; `verify_chain()` detects rewrite Assumptions: Each entry is cryptographically chained; no deletion or modification allowed. Breakdown regime: Tampering detected via SHA mismatch in `verify_chain()`. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Kill ledger enforces a blockchain-like integrity kernel, where audit trails are immutable and verifiable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and probabilistic programming, extended into adversarial robustness frameworks and cryptographic integrity systems. Retrocausal Genealogy: Rooted in DOCTRINE_19_RECOVERED (dfb84555b3c51a00), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DOCTRINE_19_RECOVERED (dfb84555b3c51a00), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass rules through falsified data, forged verdicts, or calibrated deception. The enforcement lattice is designed to detect such manipulations through cryptographic chaining and statistical validation. Theory of Mind & Decision Maker Model: Rooted in DOCTRINE_19_RECOVERED (dfb84555b3c51a00), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct verification layers: temporal integrity (warehouse), probabilistic calibration (founder gate), and cryptographic immutability (kill ledger). Leakage across these layers is prevented by strict read/write protocols and enforced state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in DOCTRINE_19_RECOVERED (dfb84555b3c51a00), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "f113cbf02cd1d1b4",
+  "source_status": "COMPLETE",
+  "title": "COMMUNITY_MODERATION_POLICY",
+  "file_name": "COMMUNITY_MODERATION_POLICY.md",
+  "sha256": "f113cbf02cd1d1b416bdc10b652cea0f2d40543775c9c17ad064136b10f0ad33",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The moderation policy formalizes a constrained dynamical system where user interactions are bounded by an invariant subspace of 'decision quality'. The action ladder acts as a discrete gradient descent on community toxicity, projecting high-entropy behavioral states back into the protected manifold via deterministic penalty operators.",
+  "gsi_mapping": "In GSI, the 'Nudge' and 'Ban' mechanisms map to conformal prediction filters. User-generated signals (parlay analysis) are treated as data points; if their toxicity residuals exceed the calibrated confidence interval, they are rejected from the training set, preserving the epistemic integrity of the collective intelligence model.",
+  "gse_mapping": "For GSE, the policy dictates state transitions in the situational reasoning engine. A user's 'sitting out' is modeled as a valid null-action in the decision tree. The platform enforces boundary conditions that prevent FOMO-induced forced actions, ensuring the simulated agent's utility function aligns with long-term bankroll preservation rather than impulsive engagement.",
+  "primitives": [
+    {
+      "primitive_id": "decision_quality_invariant",
+      "name": "Decision Quality Invariant",
+      "verbatim_quote": "> The culture line governs every call: **\"We do not force action.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "DQ: Decision Quality (dimensionless metric), A: Action space (set of permissible user inputs).",
+      "assumptions": "User agency is non-zero; the system does not apply external forcing functions to induce participation.",
+      "breakdown_regime": "Breaks down if platform incentives structurally require forced engagement (e.g., mandatory betting to access features).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the conservation of expected value in a frictionless market; the system acts as a passive observer rather than an active manipulator.",
+        "source_operator": "decision_quality_invariant",
+        "telemetry": "Ratio of voluntary vs. prompted user actions per session."
+      }
+    },
+    {
+      "primitive_id": "toxicity_gradient_descent",
+      "name": "Toxicity Gradient Descent",
+      "verbatim_quote": "**Nudge** — automated or moderator note, no penalty (first soft violation).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Toxicity score (0.0 to 1.0), N: Nudge operator (identity transformation on account status, delta on reputation).",
+      "assumptions": "Soft violations are stochastic fluctuations rather than systemic malice; corrective feedback reduces future T.",
+      "breakdown_regime": "Fails if the nudge frequency exceeds the user's cognitive processing capacity, leading to desensitization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a regularization term in the GSE loss function, penalizing deviation from the 'no harassment' constraint without terminating the process.",
+        "source_operator": "toxicity_gradient_descent",
+        "telemetry": "Recidivism rate following a 'Nudge' event within a 7-day window."
+      }
+    },
+    {
+      "primitive_id": "null_action_preservation",
+      "name": "Null Action Preservation",
+      "verbatim_quote": "**No shame for sitting out.** Passing on a slate is a respected decision.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_out: State of sitting out (boolean), U: Utility function (must assign U(S_out) >= 0).",
+      "assumptions": "The absence of a bet is a valid informational state containing negative alpha signals.",
+      "breakdown_regime": "Collapses under social pressure dynamics where group consensus artificially inflates the perceived cost of inaction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to the GSE 'Pass' primitive, allowing the situational reasoning engine to prune low-confidence branches without penalty.",
+        "source_operator": "null_action_preservation",
+        "telemetry": "Frequency of 'pass' actions correlated with subsequent market movement (validating the sit-out)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f113cbf02cd1d1b4_t0",
+      "think": "The moderation policy is mathematically equivalent to defining a bounded phase space for user interactions. The foundational axiom, 'We protect decision quality,' establishes a Lyapunov function where the system seeks to minimize entropy introduced by harassment and coercion. The 'Nudge' operator acts as a local correction mechanism, applying a small perturbation to a user's trajectory when they approach the boundary of acceptable behavior (soft violation). If the perturbation fails to restore the state to the invariant subspace, the 'Remove' and 'Ban' operators act as hard projections, effectively removing the high-entropy agent from the system to preserve global stability. Crucially, the 'No shame for sitting out' primitive ensures that the null action (inaction) is topologically equivalent to any other valid move in the decision tree. This prevents the system from developing a bias toward constant engagement, which would otherwise distort the underlying probability estimates derived from user parlays. The appeal process introduces a dual-review mechanism, acting as a variance reduction technique to ensure that the application of these operators is consistent and unbiased across the user base.\n\nDeep epistemic analysis for COMMUNITY_MODERATION_POLICY (f113cbf02cd1d1b4, domain=other, pages_read=2/2): Operator 'Decision Quality Invariant' (page 1, domain other) captures: > The culture line governs every call: **\"We do not force action. Assumptions: User agency is non-zero; the system does not apply external forcing functions to induce participation. Breakdown regime: Breaks down if platform incentives structurally require forced engagement (e.g., mandatory betting to access features). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the conservation of expected value in a frictionless market; the system acts as a passive observer rather than an active manipulator. Operator 'Toxicity Gradient Descent' (page 1, domain other) captures: **Nudge** — automated or moderator note, no penalty (first soft violation). Assumptions: Soft violations are stochastic fluctuations rather than systemic malice; corrective feedback reduces future T. Breakdown regime: Fails if the nudge frequency exceeds the user's cognitive processing capacity, leading to desensitization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a regularization term in the GSE loss function, penalizing deviation from the 'no harassment' constraint without terminating the process. Operator 'Null Action Preservation' (page 1, domain other) captures: **No shame for sitting out.** Passing on a slate is a respected decision. Assumptions: The absence of a bet is a valid informational state containing negative alpha signals. Breakdown regime: Collapses under social pressure dynamics where group consensus artificially inflates the perceived cost of inaction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to the GSE 'Pass' primitive, allowing the situational reasoning engine to prune low-confidence branches without penalty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for COMMUNITY_MODERATION_POLICY (f113cbf02cd1d1b4, domain=other, pages_read=2/2): Operator 'Decision Quality Invariant' (page 1, domain other) captures: > The culture line governs every call: **\"We do not force action. Assumptions: User agency is non-zero; the system does not apply external forcing functions to induce participation. Breakdown regime: Breaks down if platform incentives structurally require forced engagement (e.g., mandatory betting to access features). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the conservation of expected value in a frictionless market; the system acts as a passive observer rather than an active manipulator. Operator 'Toxicity Gradient Descent' (page 1, domain other) captures: **Nudge** — automated or moderator note, no penalty (first soft violation). Assumptions: Soft violations are stochastic fluctuations rather than systemic malice; corrective feedback reduces future T. Breakdown regime: Fails if the nudge frequency exceeds the user's cognitive processing capacity, leading to desensitization. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a regularization term in the GSE loss function, penalizing deviation from the 'no harassment' constraint without terminating the process. Operator 'Null Action Preservation' (page 1, domain other) captures: **No shame for sitting out.** Passing on a slate is a respected decision. Assumptions: The absence of a bet is a valid informational state containing negative alpha signals. Breakdown regime: Collapses under social pressure dynamics where group consensus artificially inflates the perceived cost of inaction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to the GSE 'Pass' primitive, allowing the situational reasoning engine to prune low-confidence branches without penalty. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework inherits from game theory's concept of repeated games with punishment strategies, but diverges by explicitly protecting the 'opt-out' strategy. It echoes the mathematical rigor of Kelly Criterion banking, where preserving capital (decision quality) takes precedence over maximizing short-term growth (forced action). The lineage traces back to early internet governance models but applies strict quantitative constraints akin to financial market circuit breakers.",
+      "theory_of_mind": "The policy models two primary opposing agents: the Impulsive Bettor, driven by FOMO and social pressure, and the Rational Analyst, seeking pure signal. The 'Nudge' targets the Impulsive Bettor's cognitive biases, while 'No shame for sitting out' validates the Rational Analyst's restraint. By treating both as valid states, the system avoids alienating either archetype, instead attempting to convert impulsive behavior into rational analysis through structured feedback loops.",
+      "cross_layer_veto": "A critical veto condition exists if the platform's revenue model requires high-frequency betting. If the 'decision quality' invariant conflicts with the business imperative to maximize handle, the moderation policy becomes mathematically inconsistent and will fail. Furthermore, if 'sitting out' is subtly stigmatized by algorithmic feed prioritization (e.g., hiding users who don't bet), the null action preservation primitive is violated, causing leakage between the social layer and the quantitative inference layer."
+    }
+  ]
+}

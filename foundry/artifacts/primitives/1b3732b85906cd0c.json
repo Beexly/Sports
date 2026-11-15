@@ -1,95 +1,16 @@
 {
   "book_id": "1b3732b85906cd0c",
-  "source_status": "COMPLETE",
-  "title": "Demand Letter Baxley 6.15.2026 (1)",
-  "file_name": "Demand Letter Baxley 6.15.2026 (1).pdf",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_1b3732b85906cd0c",
+  "file_name": "1b3732b85906cd0c.quarantined",
   "sha256": "1b3732b85906cd0cbbe327e4ca016a06adf7648ab24c46d537fc388364c95287",
   "primary_domain": "other",
-  "pages_total": 2,
-  "pages_read": 2,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Universal Lens: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "GSI Mapping: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "GSE Mapping: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "disability_discrimination",
-      "name": "Demand Letter Baxley 6.15.2026 (1) Operator 1",
-      "verbatim_quote": "After investigating this matter, it is clear that Turner Construction discriminated against Mr.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Assumes a causal link between disability disclosure and adverse employment action.",
-      "breakdown_regime": "Single-point discrimination event triggering legal liability.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSI - Discrete-event detection of non-random adverse action patterns",
-        "source_operator": "disability_discrimination",
-        "telemetry": "Probability of adverse action given protected class membership"
-      }
-    },
-    {
-      "primitive_id": "reasonable_accommodation",
-      "name": "Demand Letter Baxley 6.15.2026 (1) Operator 2",
-      "verbatim_quote": "Baxley informally asked for support regarding workplace structure as an accommodation for his disability.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Assumes employer's obligation to engage in interactive process upon informal accommodation request.",
-      "breakdown_regime": "Failure to initiate good-faith dialogue constitutes prima facie discrimination.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSI - Detection of missing or inadequate interactive dialogue",
-        "source_operator": "reasonable_accommodation",
-        "telemetry": "Duration and quality of employer response to accommodation request"
-      }
-    },
-    {
-      "primitive_id": "performance_criticism",
-      "name": "Demand Letter Baxley 6.15.2026 (1) Operator 3",
-      "verbatim_quote": "Baxley has autism and structure and clarity in the workplace help him perform his job.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Assumes documented performance issues serve as legitimate basis for adverse action.",
-      "breakdown_regime": "Undocumented performance complaints indicate pretextual bias.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSI - Structural anomaly detection in performance management records",
-        "source_operator": "performance_criticism",
-        "telemetry": "Frequency of verbal vs. written performance feedback"
-      }
-    },
-    {
-      "primitive_id": "termination_event",
-      "name": "Demand Letter Baxley 6.15.2026 (1) Operator 4",
-      "verbatim_quote": "Turner Construction never granted this accommodation and the interactive process was not otherwise had.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Assumes termination without supervisor involvement indicates procedural irregularity.",
-      "breakdown_regime": "Disparate treatment of employee based on protected status during final employment decision.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSI - Temporal clustering of accommodation request with termination decision",
-        "source_operator": "termination_event",
-        "telemetry": "Time elapsed between accommodation request and adverse action"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "1b3732b85906cd0c_t0",
-      "think": "The core failure mode is Turner Construction's violation of the ADA's interactive process requirement. When an employee discloses a disability and requests an accommodation, the employer must engage in a good-faith dialogue to determine whether a reasonable modification exists that allows the employee to perform essential job functions. In this case, the employer failed to do so, instead relying on undocumented performance criticism and ultimately terminating the employee after the accommodation request. This creates a structural asymmetry where the employee's protected characteristic becomes a proxy variable for perceived performance risk, leading to discriminatory adverse action.\n\nDeep epistemic analysis for Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c, domain=other, pages_read=2/2): Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 1' (page 1, domain other) captures: After investigating this matter, it is clear that Turner Construction discriminated against Mr. Assumptions: Assumes a causal link between disability disclosure and adverse employment action. Breakdown regime: Single-point discrimination event triggering legal liability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Discrete-event detection of non-random adverse action patterns Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 2' (page 1, domain other) captures: Baxley informally asked for support regarding workplace structure as an accommodation for his disability. Assumptions: Assumes employer's obligation to engage in interactive process upon informal accommodation request. Breakdown regime: Failure to initiate good-faith dialogue constitutes prima facie discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Detection of missing or inadequate interactive dialogue Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 3' (page 1, domain other) captures: Baxley has autism and structure and clarity in the workplace help him perform his job. Assumptions: Assumes documented performance issues serve as legitimate basis for adverse action. Breakdown regime: Undocumented performance complaints indicate pretextual bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Structural anomaly detection in performance management records Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 4' (page 1, domain other) captures: Turner Construction never granted this accommodation and the interactive process was not otherwise had. Assumptions: Assumes termination without supervisor involvement indicates procedural irregularity. Breakdown regime: Disparate treatment of employee based on protected status during final employment decision. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Temporal clustering of accommodation request with termination decision Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c, domain=other, pages_read=2/2): Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 1' (page 1, domain other) captures: After investigating this matter, it is clear that Turner Construction discriminated against Mr. Assumptions: Assumes a causal link between disability disclosure and adverse employment action. Breakdown regime: Single-point discrimination event triggering legal liability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Discrete-event detection of non-random adverse action patterns Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 2' (page 1, domain other) captures: Baxley informally asked for support regarding workplace structure as an accommodation for his disability. Assumptions: Assumes employer's obligation to engage in interactive process upon informal accommodation request. Breakdown regime: Failure to initiate good-faith dialogue constitutes prima facie discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Detection of missing or inadequate interactive dialogue Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 3' (page 1, domain other) captures: Baxley has autism and structure and clarity in the workplace help him perform his job. Assumptions: Assumes documented performance issues serve as legitimate basis for adverse action. Breakdown regime: Undocumented performance complaints indicate pretextual bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Structural anomaly detection in performance management records Operator 'Demand Letter Baxley 6.15.2026 (1) Operator 4' (page 1, domain other) captures: Turner Construction never granted this accommodation and the interactive process was not otherwise had. Assumptions: Assumes termination without supervisor involvement indicates procedural irregularity. Breakdown regime: Disparate treatment of employee based on protected status during final employment decision. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Temporal clustering of accommodation request with termination decision Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "This analysis draws from the seminal work on disparate impact theory by Douglas NeJaime and Jeremy Waldron, which formalizes how seemingly neutral policies can disproportionately affect protected groups. It also builds on econometric models of employment discrimination pioneered by David Neumark, which quantify the statistical association between protected characteristics and adverse outcomes. Retrocausal Genealogy: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Turner Construction likely modeled the employee's autism as a cost factor in operational efficiency, assuming that accommodating structural needs would disrupt established workflows. The opposing agent (the employer) acted rationally within its own cost-benefit framework, prioritizing short-term productivity over legal compliance. The employee, conversely, sought stability and predictability to mitigate the challenges posed by his condition. Theory of Mind & Decision Maker Model: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "To avoid anti-collinearity, we require that the observed adverse action cannot be explained by contemporaneous changes in objective performance metrics. Additionally, we verify that the employer did not document any legitimate performance deficiencies prior to the accommodation request, ensuring that the termination is not a result of genuine underperformance unrelated to the disability. Cross-Layer Veto & Anti-Leakage Check: Rooted in Demand Letter Baxley 6.15.2026 (1) (1b3732b85906cd0c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

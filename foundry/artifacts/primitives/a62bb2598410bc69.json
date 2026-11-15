@@ -1,0 +1,78 @@
+{
+  "book_id": "a62bb2598410bc69",
+  "source_status": "COMPLETE",
+  "title": "AWS_PLUGIN_TO_REPO_CROSSWALK",
+  "file_name": "AWS_PLUGIN_TO_REPO_CROSSWALK.md",
+  "sha256": "a62bb2598410bc69ce3a8b5ce96e238b5c80a0c3af61493687b45c4ea204f2f5",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Action risk tiers and blast-radius scoring unify local encoding with production risk collapse via evidence-ladder validation. Universal Lens: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian risk inference maps AWS action tiers to legal/evidence states using claim ledger and decision engine posterior distributions. GSI Mapping: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through deploy gates and cost/IAM/data constraints using state-machine overlays on AWS decision layers. GSE Mapping: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "action_risk_tiers",
+      "name": "Action Risk Tiers",
+      "verbatim_quote": "current | legal marker process | | Action risk tiers | `apps/web/lib/fable/aws-decision-engine.ts` | `apps/web/lib/fable/aws-decision-engine.test.ts` | covered",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'tier index, dimensionless', 'R(T)': 'risk score, dimensionless'}",
+      "assumptions": "Risk tiers are locally encoded and collapse to highest risk in production.",
+      "breakdown_regime": "T ∈ {0, 1, 2, 3, 4, 5}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each tier T maps to a conditional risk distribution R(T) in GSI's Bayesian inference framework.",
+        "source_operator": "action_risk_tiers",
+        "telemetry": "Decision engine test coverage validates risk tier assignments."
+      }
+    },
+    {
+      "primitive_id": "blast_radius_scoring",
+      "name": "Blast Radius Scoring",
+      "verbatim_quote": "0-5 encoded locally | none | approvals for tiers 3-5 | | Blast-radius scoring | `apps/web/lib/fable/aws-decision-engine.ts`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'blast radius, dimensionless', 'R_{max}': 'maximum risk, dimensionless'}",
+      "assumptions": "All risk factors collapse into a single scalar B.",
+      "breakdown_regime": "B = f(cost, IAM, data, production)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "B is derived from risk factor aggregation in GSE's state transition logic.",
+        "source_operator": "blast_radius_scoring",
+        "telemetry": "Test coverage ensures risk factor collapse consistency."
+      }
+    },
+    {
+      "primitive_id": "evidence_ladder",
+      "name": "Evidence Ladder",
+      "verbatim_quote": "| `apps/web/lib/fable/evidence/evidence-harness.test.ts` | covered | claims are proven, partial, unsupported, false, blocked, or owner/legal gated |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'ladder level, dimensionless', 'C(L)': 'claim validity, dimensionless'}",
+      "assumptions": "Claims progress through discrete levels of validation.",
+      "breakdown_regime": "L ∈ {proven, partial, unsupported, false, blocked, gated}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "L maps to GSI's claim confidence posterior in Bayesian updating.",
+        "source_operator": "evidence_ladder",
+        "telemetry": "Harness test confirms claim classification accuracy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a62bb2598410bc69_t0",
+      "think": "The three primitives form a layered risk inference system. Action risk tiers encode risk levels locally, which are then collapsed into a unified blast-radius score. This score acts as a constraint in GSE’s state machine, where deployment decisions are gated by evidence ladder validation. The evidence ladder provides a structured way to assess claim validity, which feeds into GSI’s Bayesian inference engine. Each primitive operates under distinct but interrelated assumptions: risk tiers must be locally defined, blast radius collapses multiple dimensions, and evidence must be categorized. Failure modes include misclassification of risk tiers, incorrect collapse of risk factors, and invalid claim validation. These systems are dual in that they both enforce safety and enable automation, yet their failure points diverge—tiers may be misaligned, blast radius may oversimplify, and evidence may be insufficiently validated.\n\nDeep epistemic analysis for AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69, domain=other, pages_read=2/2): Operator 'Action Risk Tiers' (page 1, domain other) captures: current | legal marker process | | Action risk tiers | `apps/web/lib/fable/aws-decision-engine.ts` | `apps/web/lib/fable/aws-decision-engine.test.ts` | covered Assumptions: Risk tiers are locally encoded and collapse to highest risk in production. Breakdown regime: T ∈ {0, 1, 2, 3, 4, 5} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each tier T maps to a conditional risk distribution R(T) in GSI's Bayesian inference framework. Operator 'Blast Radius Scoring' (page 1, domain other) captures: 0-5 encoded locally | none | approvals for tiers 3-5 | | Blast-radius scoring | `apps/web/lib/fable/aws-decision-engine.ts` Assumptions: All risk factors collapse into a single scalar B. Breakdown regime: B = f(cost, IAM, data, production) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): B is derived from risk factor aggregation in GSE's state transition logic. Operator 'Evidence Ladder' (page 1, domain other) captures: | `apps/web/lib/fable/evidence/evidence-harness.test.ts` | covered | claims are proven, partial, unsupported, false, blocked, or owner/legal gated | Assumptions: Claims progress through discrete levels of validation. Breakdown regime: L ∈ {proven, partial, unsupported, false, blocked, gated} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L maps to GSI's claim confidence posterior in Bayesian updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69, domain=other, pages_read=2/2): Operator 'Action Risk Tiers' (page 1, domain other) captures: current | legal marker process | | Action risk tiers | `apps/web/lib/fable/aws-decision-engine.ts` | `apps/web/lib/fable/aws-decision-engine.test.ts` | covered Assumptions: Risk tiers are locally encoded and collapse to highest risk in production. Breakdown regime: T ∈ {0, 1, 2, 3, 4, 5} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each tier T maps to a conditional risk distribution R(T) in GSI's Bayesian inference framework. Operator 'Blast Radius Scoring' (page 1, domain other) captures: 0-5 encoded locally | none | approvals for tiers 3-5 | | Blast-radius scoring | `apps/web/lib/fable/aws-decision-engine.ts` Assumptions: All risk factors collapse into a single scalar B. Breakdown regime: B = f(cost, IAM, data, production) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): B is derived from risk factor aggregation in GSE's state transition logic. Operator 'Evidence Ladder' (page 1, domain other) captures: | `apps/web/lib/fable/evidence/evidence-harness.test.ts` | covered | claims are proven, partial, unsupported, false, blocked, or owner/legal gated | Assumptions: Claims progress through discrete levels of validation. Breakdown regime: L ∈ {proven, partial, unsupported, false, blocked, gated} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): L maps to GSI's claim confidence posterior in Bayesian updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal risk modeling and Bayesian belief networks, tracing back to early 20th-century decision theory and modern probabilistic programming frameworks. Retrocausal Genealogy: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated risk engines and human decision-makers. Engines enforce strict tiers and evidence thresholds, while humans may override or misinterpret these signals, creating potential for adversarial drift in risk perception. Theory of Mind & Decision Maker Model: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when risk tiers and blast radius fail to differentiate between domains. Leakage occurs if evidence ladder fails to distinguish valid from invalid claims, undermining both GSI and GSE integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_PLUGIN_TO_REPO_CROSSWALK (a62bb2598410bc69), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

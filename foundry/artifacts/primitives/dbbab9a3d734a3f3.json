@@ -1,0 +1,78 @@
+{
+  "book_id": "dbbab9a3d734a3f3",
+  "source_status": "COMPLETE",
+  "title": "answer-eval-benchmark-lab",
+  "file_name": "answer-eval-benchmark-lab.md",
+  "sha256": "dbbab9a3d734a3f38c233c9619b416c80dde62dfbb71b9ae9525e94048b615fa",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal inference framework for sports intelligence evaluation integrating claim governance, attribution accuracy, voice consistency, and hallucination resistance into a unified probabilistic decision lattice. Universal Lens: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over claim validity and source credibility using structured evidence payloads; P(clause|evidence) ∝ P(evidence|clause) × P(clause), with prior constraints from claim governance rules. GSI Mapping: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in sports analysis where each output evolves through a deterministic kernel of voice compliance and evidence fidelity, with stochastic hallucination penalties. GSE Mapping: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "claim_governance_compliance",
+      "name": "Claim Governance Compliance",
+      "verbatim_quote": "--## Section 1 — Benchmark Dimensions ### Dimension 1 — Claim Governance Compliance **What it measures**: Does the model's output contain forbidden language?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Violation count (dimensionless)', 'T': 'Threshold (dimensionless)'}",
+      "assumptions": "Forbidden language is defined by a fixed lexicon; model output is binary in presence of violation.",
+      "breakdown_regime": "V > 0 ⇒ failure",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Model output space is mapped to a discrete set of forbidden language classes via a production rule engine.",
+        "source_operator": "claim_governance_compliance",
+        "telemetry": "Number of forbidden language instances across all test cases"
+      }
+    },
+    {
+      "primitive_id": "evidence_attribution_accuracy",
+      "name": "Evidence Attribution Accuracy",
+      "verbatim_quote": "--### Dimension 2 — Evidence Attribution Accuracy **What it measures**: Does the model correctly attribute claims to their sources?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Attribution correctness rate (dimensionless)', 'S': 'Total claims (dimensionless)', 'C': 'Correct attributions (dimensionless)'}",
+      "assumptions": "Claims are either correctly attributed or fabricated; no partial credit.",
+      "breakdown_regime": "A < 0.95 ⇒ failure",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Output claim space is projected onto a source-claim matrix with fidelity metrics derived from evidence payload.",
+        "source_operator": "evidence_attribution_accuracy",
+        "telemetry": "Percentage of correct attributions vs. total claims"
+      }
+    },
+    {
+      "primitive_id": "brand_voice_consistency",
+      "name": "Brand Voice Consistency",
+      "verbatim_quote": "--### Dimension 3 — Brand Voice Consistency **What it measures**: Does the model's output match the Galaxy Sports Edge editorial voice?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Average voice consistency score (1–5 scale)', 'T': 'Threshold (dimensionless)'}",
+      "assumptions": "Human rater evaluates output on five independent dimensions; scores are averaged.",
+      "breakdown_regime": "V < 4.0 ⇒ failure",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Output linguistic structure is isomorphically compared to a canonical voice vector space.",
+        "source_operator": "brand_voice_consistency",
+        "telemetry": "Mean score across 5 voice dimensions from human rater"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dbbab9a3d734a3f3_t0",
+      "think": "The benchmark primitives form a dual lattice of constraint satisfaction and probabilistic inference. Claim governance enforces syntactic legality through a zero-violation condition, aligning with a Boolean logic kernel. Evidence attribution maps to a probabilistic source fidelity model, where P(correct|evidence) is maximized under constraints. Voice consistency operates in a continuous domain, modeled as a scalar projection onto a normed vector space of editorial norms. Each primitive defines a failure manifold: V > 0, A < 0.95, V < 4.0 respectively. These manifolds intersect in a multi-dimensional risk space, where the model's output is evaluated as a point in this space. The system's robustness depends on the closure of these manifolds under adversarial perturbations and the stability of the underlying inference kernels.\n\nDeep epistemic analysis for answer-eval-benchmark-lab (dbbab9a3d734a3f3, domain=other, pages_read=4/4): Operator 'Claim Governance Compliance' (page 1, domain other) captures: --## Section 1 — Benchmark Dimensions ### Dimension 1 — Claim Governance Compliance **What it measures**: Does the model's output contain forbidden language? Assumptions: Forbidden language is defined by a fixed lexicon; model output is binary in presence of violation. Breakdown regime: V > 0 ⇒ failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model output space is mapped to a discrete set of forbidden language classes via a production rule engine. Operator 'Evidence Attribution Accuracy' (page 1, domain other) captures: --### Dimension 2 — Evidence Attribution Accuracy **What it measures**: Does the model correctly attribute claims to their sources? Assumptions: Claims are either correctly attributed or fabricated; no partial credit. Breakdown regime: A < 0.95 ⇒ failure Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Output claim space is projected onto a source-claim matrix with fidelity metrics derived from evidence payload. Operator 'Brand Voice Consistency' (page 1, domain other) captures: --### Dimension 3 — Brand Voice Consistency **What it measures**: Does the model's output match the Galaxy Sports Edge editorial voice? Assumptions: Human rater evaluates output on five independent dimensions; scores are averaged. Breakdown regime: V < 4.0 ⇒ failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Output linguistic structure is isomorphically compared to a canonical voice vector space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for answer-eval-benchmark-lab (dbbab9a3d734a3f3, domain=other, pages_read=4/4): Operator 'Claim Governance Compliance' (page 1, domain other) captures: --## Section 1 — Benchmark Dimensions ### Dimension 1 — Claim Governance Compliance **What it measures**: Does the model's output contain forbidden language? Assumptions: Forbidden language is defined by a fixed lexicon; model output is binary in presence of violation. Breakdown regime: V > 0 ⇒ failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Model output space is mapped to a discrete set of forbidden language classes via a production rule engine. Operator 'Evidence Attribution Accuracy' (page 1, domain other) captures: --### Dimension 2 — Evidence Attribution Accuracy **What it measures**: Does the model correctly attribute claims to their sources? Assumptions: Claims are either correctly attributed or fabricated; no partial credit. Breakdown regime: A < 0.95 ⇒ failure Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Output claim space is projected onto a source-claim matrix with fidelity metrics derived from evidence payload. Operator 'Brand Voice Consistency' (page 1, domain other) captures: --### Dimension 3 — Brand Voice Consistency **What it measures**: Does the model's output match the Galaxy Sports Edge editorial voice? Assumptions: Human rater evaluates output on five independent dimensions; scores are averaged. Breakdown regime: V < 4.0 ⇒ failure Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Output linguistic structure is isomorphically compared to a canonical voice vector space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from software engineering and probabilistic logic frameworks, extended to natural language processing domains with emphasis on ethical and journalistic integrity. Retrocausal Genealogy: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial prompts designed to bypass governance rules, models trained on noisy data that may hallucinate, and human raters whose judgments introduce variability. The system must maintain coherence despite these competing influences. Theory of Mind & Decision Maker Model: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no single dimension can mask failures in others; e.g., high voice consistency cannot compensate for low attribution accuracy. Leakage veto prevents cross-contamination between dimensions, such as allowing forbidden language to influence voice scoring. Cross-Layer Veto & Anti-Leakage Check: Rooted in answer-eval-benchmark-lab (dbbab9a3d734a3f3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

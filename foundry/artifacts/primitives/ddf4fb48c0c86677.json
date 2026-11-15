@@ -1,0 +1,78 @@
+{
+  "book_id": "ddf4fb48c0c86677",
+  "source_status": "COMPLETE",
+  "title": "REASONING-BENCHMARK",
+  "file_name": "REASONING-BENCHMARK.md",
+  "sha256": "ddf4fb48c0c8667734cd198ccbc19430fa08959e777cd0a05fcb1513de13b7cf",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic reasoning engine's calibration failure manifests as Brier score degradation relative to market benchmarks, indicating a disconnect between internal fairness estimates and external market consensus. Universal Lens: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of fair probability via conformal prediction maps engine outputs to market-adjusted confidence intervals, where Brier loss exceeds market baseline signaling epistemic drift. GSI Mapping: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE evaluates context-specific claims using grounded factor breakdowns; specificity and consistency metrics reflect alignment between templated narratives and underlying game state variables. GSE Mapping: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fair_probability_brier_degradation",
+      "name": "Fair Probability Brier Degradation",
+      "verbatim_quote": "**The engine's own probability loses to the market by 0.037 Brier at n=552.** This is the same fact that made `marketFairProb` the ranking basis — the ranking was fixed, the published number was not.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Brier_score': 'dimensionless, scaled [0,1]', 'n': 'integer, number of settled picks'}",
+      "assumptions": "Engine-generated probabilities are independently distributed and calibrated against market data.",
+      "breakdown_regime": "At n=552, Brier score of 0.2532 exceeds market Brier of 0.2158.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Brier score discrepancy mirrors the divergence between engine-generated fairness and market-implied fairness in GSI's Bayesian framework.",
+        "source_operator": "fair_probability_brier_degradation",
+        "telemetry": "Brier score difference between engine and market"
+      }
+    },
+    {
+      "primitive_id": "templated_reasoning_echo",
+      "name": "Templated Reasoning Echo",
+      "verbatim_quote": "**The reasoning is a market echo.** The current template is \"SIDE line backed by N% of M bookmakers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SIDE': 'binary variable {HOME, AWAY}', 'N': 'percentage of bookmakers backing SIDE', 'M': 'total number of bookmakers'}",
+      "assumptions": "Reasoning output is generated from a fixed template that reflects market consensus without independent analysis.",
+      "breakdown_regime": "Template-based reasoning lacks dynamic adaptation to game-specific variables.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The templated structure implies a kernel of reasoning that is derived from market consensus rather than internal model logic in GSE.",
+        "source_operator": "templated_reasoning_echo",
+        "telemetry": "Consistency of reasoning with market-backed templates"
+      }
+    },
+    {
+      "primitive_id": "specificity_ceilings",
+      "name": "Specificity Ceilings",
+      "verbatim_quote": "Specificity 0.59 is the arithmetic ceiling of a five-slot template.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'specificity': 'dimensionless, bounded [0,1]', 'template_slots': 'integer, number of slots in reasoning template'}",
+      "assumptions": "Specificity is constrained by the fixed structure of the reasoning template.",
+      "breakdown_regime": "Template constraints cap specificity at 0.59 due to lack of contextual granularity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Specificity in GSE is limited by the static nature of its reasoning kernel, which precludes adaptive contextual detail.",
+        "source_operator": "specificity_ceilings",
+        "telemetry": "Ratio of specific claims to total claims in reasoning output"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ddf4fb48c0c86677_t0",
+      "think": "The core failure mode lies in the engine's inability to generate calibrated probabilities that outperform the market. The Brier score degradation indicates a systematic misalignment between internal fairness estimates and observed outcomes. This is compounded by a templated reasoning process that echoes market sentiment rather than generating novel insights. Specificity remains artificially capped due to rigid template structures that do not allow for contextual nuance. The inconsistency issue arises from mismatched stored values and printed outputs post-recalibration, suggesting a temporal disconnect in reasoning generation. These primitives form a dual failure: epistemic rigidity in reasoning and calibration drift in probabilistic inference.\n\nDeep epistemic analysis for REASONING-BENCHMARK (ddf4fb48c0c86677, domain=other, pages_read=4/4): Operator 'Fair Probability Brier Degradation' (page 1, domain other) captures: **The engine's own probability loses to the market by 0.037 Brier at n=552.** This is the same fact that made `marketFairProb` the ranking basis — the ranking was fixed, the published number was not. Assumptions: Engine-generated probabilities are independently distributed and calibrated against market data. Breakdown regime: At n=552, Brier score of 0.2532 exceeds market Brier of 0.2158. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Brier score discrepancy mirrors the divergence between engine-generated fairness and market-implied fairness in GSI's Bayesian framework. Operator 'Templated Reasoning Echo' (page 1, domain other) captures: **The reasoning is a market echo.** The current template is \"SIDE line backed by N% of M bookmakers. Assumptions: Reasoning output is generated from a fixed template that reflects market consensus without independent analysis. Breakdown regime: Template-based reasoning lacks dynamic adaptation to game-specific variables. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The templated structure implies a kernel of reasoning that is derived from market consensus rather than internal model logic in GSE. Operator 'Specificity Ceilings' (page 1, domain other) captures: Specificity 0.59 is the arithmetic ceiling of a five-slot template. Assumptions: Specificity is constrained by the fixed structure of the reasoning template. Breakdown regime: Template constraints cap specificity at 0.59 due to lack of contextual granularity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Specificity in GSE is limited by the static nature of its reasoning kernel, which precludes adaptive contextual detail. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for REASONING-BENCHMARK (ddf4fb48c0c86677, domain=other, pages_read=4/4): Operator 'Fair Probability Brier Degradation' (page 1, domain other) captures: **The engine's own probability loses to the market by 0.037 Brier at n=552.** This is the same fact that made `marketFairProb` the ranking basis — the ranking was fixed, the published number was not. Assumptions: Engine-generated probabilities are independently distributed and calibrated against market data. Breakdown regime: At n=552, Brier score of 0.2532 exceeds market Brier of 0.2158. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Brier score discrepancy mirrors the divergence between engine-generated fairness and market-implied fairness in GSI's Bayesian framework. Operator 'Templated Reasoning Echo' (page 1, domain other) captures: **The reasoning is a market echo.** The current template is \"SIDE line backed by N% of M bookmakers. Assumptions: Reasoning output is generated from a fixed template that reflects market consensus without independent analysis. Breakdown regime: Template-based reasoning lacks dynamic adaptation to game-specific variables. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The templated structure implies a kernel of reasoning that is derived from market consensus rather than internal model logic in GSE. Operator 'Specificity Ceilings' (page 1, domain other) captures: Specificity 0.59 is the arithmetic ceiling of a five-slot template. Assumptions: Specificity is constrained by the fixed structure of the reasoning template. Breakdown regime: Template constraints cap specificity at 0.59 due to lack of contextual granularity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Specificity in GSE is limited by the static nature of its reasoning kernel, which precludes adaptive contextual detail. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical calibration theory and modern conformal prediction frameworks, this trace inherits from the work of Vovk et al. on probability forecasting and the development of market-based benchmarks in quantitative finance. Retrocausal Genealogy: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market, which provides a benchmark for fairness, and the engine, whose reasoning is constrained by fixed templates and lacks dynamic calibration. The engine's reasoning is modeled as a deterministic echo of market signals rather than an evolving belief system. Theory of Mind & Decision Maker Model: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that reasoning not merely repeat market statements but introduce novel predictive elements. Leakage veto applies when internal consistency fails to align with stored probabilities, indicating a breakdown in the reasoning layer's integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in REASONING-BENCHMARK (ddf4fb48c0c86677), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

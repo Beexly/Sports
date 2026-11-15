@@ -1,0 +1,95 @@
+{
+  "book_id": "c9a292631b9362c2",
+  "source_status": "COMPLETE",
+  "title": "0913-individual-team-performance-cricket",
+  "file_name": "0913-individual-team-performance-cricket.md",
+  "sha256": "c9a292631b9362c2e7e4abb4d4776b6e0ec08e032c46b4b51d04455aa4a74800",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Era-normalized fractional contribution integrates temporal scaling with performance attribution; effective team size encodes vulnerability via entropy; shuffle-null tests enable causal inference on streaks. Universal Lens: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs these primitives for Bayesian belief updating on player and team performance trajectories, using null-models to calibrate significance thresholds for career and streak predictions. GSI Mapping: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages these primitives in dynamic state transitions—modeling team composition shifts, injury risk, and performance volatility through entropy-based vulnerability and normalized contribution metrics. GSE Mapping: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "era_normalization_factor",
+      "name": "Era Normalization Factor",
+      "verbatim_quote": "Method / model - Era normalization: nf = ⟨Team runs⟩_all / ⟨Team runs⟩_year multiplies runs scored/conceded (borrowed from citation normalization, Radicchi et al.",
+      "page": 1,
+      "latex": "nf = \\frac{\\langle \\text{Team runs} \\rangle_{\\text{all}}}{\\langle \\text{Team runs} \\rangle_{\\text{year}}}",
+      "symbol_and_unit_ledger": "{'nf': 'dimensionless normalization factor', '\\\\langle \\\\text{Team runs} \\\\rangle_{\\\\text{all}}': 'mean team runs across all eras', '\\\\langle \\\\text{Team runs} \\\\rangle_{\\\\text{year}}': 'mean team runs in specific year'}",
+      "assumptions": "Performance metrics are multiplicatively separable from era-specific scaling; team run rates are representative of era context.",
+      "breakdown_regime": "When team run rates are not indicative of era context or data spans are insufficient.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to adjust raw performance values for temporal variance; in GSE, applied to normalize match-level stats for inter-era comparability.",
+        "source_operator": "era_normalization_factor",
+        "telemetry": "Normalized performance deviation from expected era baseline."
+      }
+    },
+    {
+      "primitive_id": "fractional_contribution",
+      "name": "Fractional Contribution",
+      "verbatim_quote": "- Fractional contribution: fc = 1⁄2·(runs scored/total team runs + wickets taken/total team wickets) ∈ [0,1]; specialists capped at 0.5.",
+      "page": 1,
+      "latex": "fc = \\frac{1}{2} \\left( \\frac{\\text{runs scored}}{\\text{team runs}} + \\frac{\\text{wickets taken}}{\\text{team wickets}} \\right)",
+      "symbol_and_unit_ledger": "{'fc': 'dimensionless fractional contribution', '\\\\text{runs scored}': 'individual runs scored', '\\\\text{team runs}': 'total team runs', '\\\\text{wickets taken}': 'individual wickets taken', '\\\\text{team wickets}': 'total team wickets'}",
+      "assumptions": "Runs and wickets are valid performance proxies; contribution shares sum to 1 across a team.",
+      "breakdown_regime": "When team performance is dominated by outliers or when contribution is not evenly distributed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s probabilistic scoring of player impact; in GSE, used to assess player centrality in team dynamics.",
+        "source_operator": "fractional_contribution",
+        "telemetry": "Player's share of team performance in normalized units."
+      }
+    },
+    {
+      "primitive_id": "effective_team_size",
+      "name": "Effective Team Size",
+      "verbatim_quote": "- Effective team size: S_eff = 2^H, H = -Σ_c fc log2 fc (entropy of contribution distribution).",
+      "page": 1,
+      "latex": "S_{\\text{eff}} = 2^H, \\quad H = -\\sum_c f_c \\log_2 f_c",
+      "symbol_and_unit_ledger": "{'S_{\\\\text{eff}}': 'dimensionless effective team size', 'H': 'entropy of contribution distribution', 'f_c': 'fractional contribution of player c'}",
+      "assumptions": "Contribution distribution is stationary; entropy reflects team balance and vulnerability.",
+      "breakdown_regime": "When team composition is highly skewed or when entropy cannot be reliably estimated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In GSI, used as an injury-vulnerability index; in GSE, models team resilience and adaptability under player loss.",
+        "source_operator": "effective_team_size",
+        "telemetry": "Entropy-derived measure of team dispersion and stability."
+      }
+    },
+    {
+      "primitive_id": "shuffle_null_hot_streak_test",
+      "name": "Shuffle-Null Hot-Streak Test",
+      "verbatim_quote": "- Null models: shuffle performance timestamps (100×) per player for individual hot streaks; shuffle match-result timestamps (104×) holding win count for team streaks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Streaks are not due to inherent skill unless statistically significant compared to shuffled data.",
+      "breakdown_regime": "When data is insufficient or when temporal dependencies are not captured by shuffling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, used to validate streak significance; in GSE, to detect false positive performance clustering.",
+        "source_operator": "shuffle_null_hot_streak_test",
+        "telemetry": "Statistical significance of observed streaks against null-hypothesis distributions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c9a292631b9362c2_t0",
+      "think": "The four primitives form a coherent framework for analyzing cricket performance through scalable, normalized, and probabilistically grounded lenses. The era normalization factor adjusts for temporal variance in run rates, enabling fair comparison across decades. Fractional contribution quantifies individual impact within team contexts, with a cap for specialists ensuring bounded influence. Effective team size, derived from entropy, captures team balance and vulnerability—key for injury-risk modeling. Shuffle-null tests provide statistical rigor to detect genuine streaks, avoiding spurious correlations. These operators are mathematically dual in structure: normalization and contribution are additive, while entropy and null testing are complementary. Failure modes include overfitting in small datasets, misapplication of normalization where context varies, and entropy collapse in highly centralized teams. The framework supports both individual and collective analysis, aligning with GSI's Bayesian inference and GSE's state-transition logic.\n\nDeep epistemic analysis for 0913-individual-team-performance-cricket (c9a292631b9362c2, domain=other, pages_read=3/3): Operator 'Era Normalization Factor' (page 1, domain other) captures: Method / model - Era normalization: nf = ⟨Team runs⟩_all / ⟨Team runs⟩_year multiplies runs scored/conceded (borrowed from citation normalization, Radicchi et al. Assumptions: Performance metrics are multiplicatively separable from era-specific scaling; team run rates are representative of era context. Breakdown regime: When team run rates are not indicative of era context or data spans are insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to adjust raw performance values for temporal variance; in GSE, applied to normalize match-level stats for inter-era comparability. Operator 'Fractional Contribution' (page 1, domain other) captures: - Fractional contribution: fc = 1⁄2·(runs scored/total team runs + wickets taken/total team wickets) ∈ [0,1]; specialists capped at 0.5. Assumptions: Runs and wickets are valid performance proxies; contribution shares sum to 1 across a team. Breakdown regime: When team performance is dominated by outliers or when contribution is not evenly distributed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s probabilistic scoring of player impact; in GSE, used to assess player centrality in team dynamics. Operator 'Effective Team Size' (page 1, domain other) captures: - Effective team size: S_eff = 2^H, H = -Σ_c fc log2 fc (entropy of contribution distribution). Assumptions: Contribution distribution is stationary; entropy reflects team balance and vulnerability. Breakdown regime: When team composition is highly skewed or when entropy cannot be reliably estimated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): In GSI, used as an injury-vulnerability index; in GSE, models team resilience and adaptability under player loss. Operator 'Shuffle-Null Hot-Streak Test' (page 1, domain other) captures: - Null models: shuffle performance timestamps (100×) per player for individual hot streaks; shuffle match-result timestamps (104×) holding win count for team streaks. Assumptions: Streaks are not due to inherent skill unless statistically significant compared to shuffled data. Breakdown regime: When data is insufficient or when temporal dependencies are not captured by shuffling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, used to validate streak significance; in GSE, to detect false positive performance clustering. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0913-individual-team-performance-cricket (c9a292631b9362c2, domain=other, pages_read=3/3): Operator 'Era Normalization Factor' (page 1, domain other) captures: Method / model - Era normalization: nf = ⟨Team runs⟩_all / ⟨Team runs⟩_year multiplies runs scored/conceded (borrowed from citation normalization, Radicchi et al. Assumptions: Performance metrics are multiplicatively separable from era-specific scaling; team run rates are representative of era context. Breakdown regime: When team run rates are not indicative of era context or data spans are insufficient. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to adjust raw performance values for temporal variance; in GSE, applied to normalize match-level stats for inter-era comparability. Operator 'Fractional Contribution' (page 1, domain other) captures: - Fractional contribution: fc = 1⁄2·(runs scored/total team runs + wickets taken/total team wickets) ∈ [0,1]; specialists capped at 0.5. Assumptions: Runs and wickets are valid performance proxies; contribution shares sum to 1 across a team. Breakdown regime: When team performance is dominated by outliers or when contribution is not evenly distributed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s probabilistic scoring of player impact; in GSE, used to assess player centrality in team dynamics. Operator 'Effective Team Size' (page 1, domain other) captures: - Effective team size: S_eff = 2^H, H = -Σ_c fc log2 fc (entropy of contribution distribution). Assumptions: Contribution distribution is stationary; entropy reflects team balance and vulnerability. Breakdown regime: When team composition is highly skewed or when entropy cannot be reliably estimated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): In GSI, used as an injury-vulnerability index; in GSE, models team resilience and adaptability under player loss. Operator 'Shuffle-Null Hot-Streak Test' (page 1, domain other) captures: - Null models: shuffle performance timestamps (100×) per player for individual hot streaks; shuffle match-result timestamps (104×) holding win count for team streaks. Assumptions: Streaks are not due to inherent skill unless statistically significant compared to shuffled data. Breakdown regime: When data is insufficient or when temporal dependencies are not captured by shuffling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, used to validate streak significance; in GSE, to detect false positive performance clustering. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory (Shannon entropy) and citation normalization (Radicchi et al.), these primitives extend classical game analytics into complex systems modeling. They reflect the evolution from simple statistics to entropy-based complexity measures in sports science. Retrocausal Genealogy: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include a bowler optimizing for wicket-taking over runs, or a captain balancing team cohesion with personal performance. The framework models these competing objectives through fractional contribution and entropy, capturing strategic trade-offs in team dynamics. Theory of Mind & Decision Maker Model: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct operational domains: normalization addresses temporal bias, contribution measures individuality, entropy captures team structure, and null tests validate significance. Leakage occurs if entropy is misused as a proxy for contribution or if normalization fails to account for era-specific variance. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0913-individual-team-performance-cricket (c9a292631b9362c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

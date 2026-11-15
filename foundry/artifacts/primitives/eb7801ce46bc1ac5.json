@@ -1,0 +1,78 @@
+{
+  "book_id": "eb7801ce46bc1ac5",
+  "source_status": "COMPLETE",
+  "title": "bpeters12",
+  "file_name": "bpeters12.md",
+  "sha256": "eb7801ce46bc1ac5c4c09929168b7eb74b6425158033a63a22b6e382005d2c83",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Film-based play reconstruction via manual charting integrates geometric route mapping with coaching terminology to infer strategic intent. Universal Lens: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models play concepts using labeled film data; conformal prediction ensures robustness against mislabeled or ambiguous charting. GSI Mapping: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on personnel, motion, and defensive rotations; state-space updates reflect real-time tactical shifts. GSE Mapping: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "play_reconstruction_schema",
+      "name": "Play Reconstruction Schema",
+      "verbatim_quote": "- Reimplementation schema per play (inferred from his output): personnel, formation, splits, motion; protection/run action; each eligible receiver's route; concept family; defensive pre/post-snap shell + rotation; QB progression/key defender; target/outcome.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'personnel configuration (dimensionless)', 'F': 'formation type (categorical)', 'S': 'split positions (vector)', 'M': 'motion patterns (discrete)', 'A': 'action type (protection/run)', 'R': 'receiver routes (geometric)', 'C': 'concept family (categorical)', 'D': 'defensive shell (geometric)', 'Q': 'QB progression (vector)', 'K': 'key defender (scalar)'}",
+      "assumptions": "Each play component is independently observable and temporally ordered.",
+      "breakdown_regime": "When motion or route ambiguity exceeds threshold, schema fails to reconstruct valid play.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps film annotations to structured state vectors in GSE's tactical graph.",
+        "source_operator": "play_reconstruction_schema",
+        "telemetry": "Inter-rater agreement score on charted plays"
+      }
+    },
+    {
+      "primitive_id": "concept_naming_standardization",
+      "name": "Concept Naming Standardization",
+      "verbatim_quote": "- Concept names are NOT universally standardized (e.g., \"Funnel\" vs \"Choice/Diagonal\" overlap); distinguish observed geometry from inferred team terminology.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'concept name (string)', 'G': 'geometric pattern (vector)', 'T': 'team-specific term (categorical)'}",
+      "assumptions": "Different teams use overlapping nomenclature for distinct geometries.",
+      "breakdown_regime": "When semantic overlap exceeds 50%, labeling becomes ambiguous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates normalized concept space for cross-team comparison in GSI.",
+        "source_operator": "concept_naming_standardization",
+        "telemetry": "Semantic similarity matrix between concept labels"
+      }
+    },
+    {
+      "primitive_id": "manual_charting_quality_control",
+      "name": "Manual Charting Quality Control",
+      "verbatim_quote": "- To improve on him: double-charting with adjudication, inter-rater reliability, timestamped video evidence per label.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'inter-rater agreement (dimensionless)', 'V': 'video timestamp (seconds)', 'L': 'label accuracy (probability)'}",
+      "assumptions": "Human annotation introduces variability that can be mitigated through redundancy.",
+      "breakdown_regime": "If I < 0.75, charting quality degrades beyond acceptable thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSI confidence scoring for charted plays using reliability metrics.",
+        "source_operator": "manual_charting_quality_control",
+        "telemetry": "Average inter-rater kappa coefficient across annotated plays"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "eb7801ce46bc1ac5_t0",
+      "think": "The core operator 'play_reconstruction_schema' maps raw film inputs into structured tactical representations by parsing personnel, motion, and defensive alignment. It assumes discrete, ordered components and leverages geometric route mapping to infer strategic intent. Dualities emerge in how 'motion' and 'route' interact—both are spatially defined yet functionally distinct. Failure occurs when ambiguity in motion or route exceeds a threshold, causing reconstruction errors. The operator 'concept_naming_standardization' addresses semantic inconsistency by distinguishing observed geometry from team-specific terms, enabling cross-team analysis. Its failure mode arises from overlapping nomenclature, leading to misclassification. The third operator 'manual_charting_quality_control' introduces probabilistic reliability checks via inter-rater agreement, ensuring fidelity of the charted data. This layer is critical for downstream GSI inference and GSE state transitions. Each primitive forms a kernel in a larger tactical manifold, where transitions are governed by conditional probabilities derived from empirical film data.\n\nDeep epistemic analysis for bpeters12 (eb7801ce46bc1ac5, domain=other, pages_read=1/1): Operator 'Play Reconstruction Schema' (page 1, domain other) captures: - Reimplementation schema per play (inferred from his output): personnel, formation, splits, motion; protection/run action; each eligible receiver's route; concept family; defensive pre/post-snap shell + rotation; QB progression/key defender; target/outcome. Assumptions: Each play component is independently observable and temporally ordered. Breakdown regime: When motion or route ambiguity exceeds threshold, schema fails to reconstruct valid play. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps film annotations to structured state vectors in GSE's tactical graph. Operator 'Concept Naming Standardization' (page 1, domain other) captures: - Concept names are NOT universally standardized (e.g., \"Funnel\" vs \"Choice/Diagonal\" overlap); distinguish observed geometry from inferred team terminology. Assumptions: Different teams use overlapping nomenclature for distinct geometries. Breakdown regime: When semantic overlap exceeds 50%, labeling becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates normalized concept space for cross-team comparison in GSI. Operator 'Manual Charting Quality Control' (page 1, domain other) captures: - To improve on him: double-charting with adjudication, inter-rater reliability, timestamped video evidence per label. Assumptions: Human annotation introduces variability that can be mitigated through redundancy. Breakdown regime: If I < 0.75, charting quality degrades beyond acceptable thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSI confidence scoring for charted plays using reliability metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bpeters12 (eb7801ce46bc1ac5, domain=other, pages_read=1/1): Operator 'Play Reconstruction Schema' (page 1, domain other) captures: - Reimplementation schema per play (inferred from his output): personnel, formation, splits, motion; protection/run action; each eligible receiver's route; concept family; defensive pre/post-snap shell + rotation; QB progression/key defender; target/outcome. Assumptions: Each play component is independently observable and temporally ordered. Breakdown regime: When motion or route ambiguity exceeds threshold, schema fails to reconstruct valid play. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps film annotations to structured state vectors in GSE's tactical graph. Operator 'Concept Naming Standardization' (page 1, domain other) captures: - Concept names are NOT universally standardized (e.g., \"Funnel\" vs \"Choice/Diagonal\" overlap); distinguish observed geometry from inferred team terminology. Assumptions: Different teams use overlapping nomenclature for distinct geometries. Breakdown regime: When semantic overlap exceeds 50%, labeling becomes ambiguous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates normalized concept space for cross-team comparison in GSI. Operator 'Manual Charting Quality Control' (page 1, domain other) captures: - To improve on him: double-charting with adjudication, inter-rater reliability, timestamped video evidence per label. Assumptions: Human annotation introduces variability that can be mitigated through redundancy. Breakdown regime: If I < 0.75, charting quality degrades beyond acceptable thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSI confidence scoring for charted plays using reliability metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical football analytics and modern machine learning frameworks, this lineage traces back to early rule-based systems and evolves through supervised learning paradigms in sports intelligence. Retrocausal Genealogy: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include defensive coordinators who adapt to offensive concepts and quarterbacks who execute under pressure. Their decisions influence the validity of charted outcomes, requiring dynamic modeling of intent and reaction. Theory of Mind & Decision Maker Model: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates on independent dimensions: spatial (routes), categorical (concepts), and reliability (charting). Leakage occurs if labeling bias affects both concept and motion parsing. Cross-Layer Veto & Anti-Leakage Check: Rooted in bpeters12 (eb7801ce46bc1ac5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

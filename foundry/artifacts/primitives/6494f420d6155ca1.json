@@ -1,0 +1,95 @@
+{
+  "book_id": "6494f420d6155ca1",
+  "source_status": "COMPLETE",
+  "title": "FLEET-HARDENING-CHECKLIST",
+  "file_name": "FLEET-HARDENING-CHECKLIST.md",
+  "sha256": "6494f420d6155ca116d183ec7db956ce7d9d422de91d0d1a69557a0783d6f02c",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fleet_bus_authentication",
+      "name": "Fleet Bus Authentication Isomorphism",
+      "verbatim_quote": "- **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential.",
+      "page": 1,
+      "latex": "\\text{Agent Identity } \\in \\{0,1\\}^n \\rightarrow \\text{Bus Request}",
+      "symbol_and_unit_ledger": "{'Agent Identity': 'Binary string (dimensionless)', 'Bus Request': 'Structured payload (dimensionless)'}",
+      "assumptions": "No bearer token, no origin validation, no per-agent credentials stored.",
+      "breakdown_regime": "Unauthorized access via forged agent parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI conformal prediction via adversarial calibration. The bus operates without a secure authentication kernel, creating a conformal gap where any request can masquerade as a legitimate agent, leading to mis-calibrated risk assessments.",
+        "source_operator": "fleet_bus_authentication",
+        "telemetry": "Anomalous request patterns from unknown identities, unauthorized task execution rates."
+      }
+    },
+    {
+      "primitive_id": "fleet_read_read_marking",
+      "name": "Fleet Read Marking Primitive",
+      "verbatim_quote": "`fleet_read` returns messages for the claimed name **and marks them read for that name**.",
+      "page": 1,
+      "latex": "R(m, a) \\rightarrow \\{0,1\\}, \\quad M' = M \\setminus \\{m | R(m,a)=1\\}",
+      "symbol_and_unit_ledger": "{'Read Function': 'Boolean indicator (dimensionless)', 'Marked Message Set': 'Set of messages (dimensionless)', 'Original Message Set': 'Set of messages (dimensionless)'}",
+      "assumptions": "Reading operation modifies the internal state of the message set for the claimed agent.",
+      "breakdown_regime": "Message suppression via read-marking for spoofed identities.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition logic. The read-marking acts as a control signal that permanently alters the observable state of the system, enabling denial-of-service (draining the unread queue) or information leakage through state observation.",
+        "source_operator": "fleet_read_read_marking",
+        "telemetry": "Discrepancies between expected and observed message counts post-read operations."
+      }
+    },
+    {
+      "primitive_id": "fleet_heartbeat_upsert",
+      "name": "Fleet Heartbeat Upsert Isomorphism",
+      "verbatim_quote": "- **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential.",
+      "page": 1,
+      "latex": "H(name, task) \\rightarrow \\text{Roster Update}",
+      "symbol_and_unit_ledger": "{'Heartbeat': 'String identifier (dimensionless)', 'Task Assignment': 'Task descriptor (dimensionless)'}",
+      "assumptions": "No verification of the heartbeat sender's identity or authority.",
+      "breakdown_regime": "Spoofed heartbeats can arbitrarily update the roster state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI predictive tracking. The lack of authentication creates a direct mapping from an adversary's forged heartbeat to a corrupted belief state about fleet composition, undermining the accuracy of predictive models.",
+        "source_operator": "fleet_heartbeat_upsert",
+        "telemetry": "Unexpected roster entries, inconsistent task assignments across clients."
+      }
+    },
+    {
+      "primitive_id": "fleet_bind_localhost",
+      "name": "Fleet Bus Bind-to-Localhost Constraint",
+      "verbatim_quote": "It runs bound to localhost only > (frontend :3000, backend :8000, Ollama :11434) on this VM and must never be > exposed on any other interface.",
+      "page": 1,
+      "latex": "\\text{Network Interface} \\in \\{loopback\\} \\subseteq \\mathbb{R}^k",
+      "symbol_and_unit_ledger": "{'Network Interface': 'Subset of possible interfaces (dimensionless)', 'Loopback Address': 'IPv4/IPv6 loopback address (dimensionless)'}",
+      "assumptions": "The service is restricted to the local machine's loopback interface, preventing external network reachability.",
+      "breakdown_regime": "Exposure to untrusted networks via misconfiguration or tunneling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE security boundaries. The bind-to-localhost rule defines a critical operational boundary; bypassing it (e.g., through insecure tunnels) collapses the isolation layer, exposing the system to remote attacks.",
+        "source_operator": "fleet_bind_localhost",
+        "telemetry": "External connection attempts detected on non-loopback ports."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6494f420d6155ca1_t0",
+      "think": "The core vulnerability is the absence of bearer tokens, which creates a direct mapping from an attacker's forged agent parameters to unauthorized actions. This breaks the fundamental authentication kernel needed for secure multi-agent coordination. Without authentication, the read-marking primitive becomes a weapon for message suppression, and heartbeats become tools for roster manipulation. Binding to localhost prevents external exploitation, but the lack of authentication means any process on the local machine can act as a phantom agent. The solution involves deriving a unique identity from a shared secret, enforcing strict parameter-identity alignment, and rate-limiting actions to prevent abuse. This aligns with GSI conformal prediction by requiring a calibrated risk model and GSE state-transition logic by ensuring actions are only taken after secure authorization.\n\nDeep epistemic analysis for FLEET-HARDENING-CHECKLIST (6494f420d6155ca1, domain=other, pages_read=7/7): Operator 'Fleet Bus Authentication Isomorphism' (page 1, domain other) captures: - **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential. Assumptions: No bearer token, no origin validation, no per-agent credentials stored. Breakdown regime: Unauthorized access via forged agent parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction via adversarial calibration. The bus operates without a secure authentication kernel, creating a conformal gap where any request can masquerade as a legitimate agent, leading to mis-calibrated risk assessments. Operator 'Fleet Read Marking Primitive' (page 1, domain other) captures: `fleet_read` returns messages for the claimed name **and marks them read for that name**. Assumptions: Reading operation modifies the internal state of the message set for the claimed agent. Breakdown regime: Message suppression via read-marking for spoofed identities. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition logic. The read-marking acts as a control signal that permanently alters the observable state of the system, enabling denial-of-service (draining the unread queue) or information leakage through state observation. Operator 'Fleet Heartbeat Upsert Isomorphism' (page 1, domain other) captures: - **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential. Assumptions: No verification of the heartbeat sender's identity or authority. Breakdown regime: Spoofed heartbeats can arbitrarily update the roster state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI predictive tracking. The lack of authentication creates a direct mapping from an adversary's forged heartbeat to a corrupted belief state about fleet composition, undermining the accuracy of predictive models. Operator 'Fleet Bus Bind-to-Localhost Constraint' (page 1, domain other) captures: It runs bound to localhost only > (frontend :3000, backend :8000, Ollama :11434) on this VM and must never be > exposed on any other interface. Assumptions: The service is restricted to the local machine's loopback interface, preventing external network reachability. Breakdown regime: Exposure to untrusted networks via misconfiguration or tunneling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE security boundaries. The bind-to-localhost rule defines a critical operational boundary; bypassing it (e.g., through insecure tunnels) collapses the isolation layer, exposing the system to remote attacks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FLEET-HARDENING-CHECKLIST (6494f420d6155ca1, domain=other, pages_read=7/7): Operator 'Fleet Bus Authentication Isomorphism' (page 1, domain other) captures: - **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential. Assumptions: No bearer token, no origin validation, no per-agent credentials stored. Breakdown regime: Unauthorized access via forged agent parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI conformal prediction via adversarial calibration. The bus operates without a secure authentication kernel, creating a conformal gap where any request can masquerade as a legitimate agent, leading to mis-calibrated risk assessments. Operator 'Fleet Read Marking Primitive' (page 1, domain other) captures: `fleet_read` returns messages for the claimed name **and marks them read for that name**. Assumptions: Reading operation modifies the internal state of the message set for the claimed agent. Breakdown regime: Message suppression via read-marking for spoofed identities. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition logic. The read-marking acts as a control signal that permanently alters the observable state of the system, enabling denial-of-service (draining the unread queue) or information leakage through state observation. Operator 'Fleet Heartbeat Upsert Isomorphism' (page 1, domain other) captures: - **No authentication or authorization anywhere.** No token, no origin check, no per-agent credential. Assumptions: No verification of the heartbeat sender's identity or authority. Breakdown regime: Spoofed heartbeats can arbitrarily update the roster state. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI predictive tracking. The lack of authentication creates a direct mapping from an adversary's forged heartbeat to a corrupted belief state about fleet composition, undermining the accuracy of predictive models. Operator 'Fleet Bus Bind-to-Localhost Constraint' (page 1, domain other) captures: It runs bound to localhost only > (frontend :3000, backend :8000, Ollama :11434) on this VM and must never be > exposed on any other interface. Assumptions: The service is restricted to the local machine's loopback interface, preventing external network reachability. Breakdown regime: Exposure to untrusted networks via misconfiguration or tunneling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE security boundaries. The bind-to-localhost rule defines a critical operational boundary; bypassing it (e.g., through insecure tunnels) collapses the isolation layer, exposing the system to remote attacks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This reasoning traces back to Kerberos authentication theory (1988) and the need for verifiable principals, combined with modern API security patterns like JWTs, addressing the foundational problem of establishing trust in distributed systems. Retrocausal Genealogy: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Adversaries model the system as a permissionless graph; defenders must model attackers as capable of forging identities and must therefore enforce strict identity-based access controls to prevent spoofing and state corruption. Theory of Mind & Decision Maker Model: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring that authentication credentials are independent of the data plane; leakage vetoes require that no observable metric (like request frequency) can reveal the underlying secret, preserving the integrity of the authentication mechanism. Cross-Layer Veto & Anti-Leakage Check: Rooted in FLEET-HARDENING-CHECKLIST (6494f420d6155ca1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

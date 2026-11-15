@@ -1,78 +1,16 @@
 {
   "book_id": "677ebaa3de048f45",
-  "source_status": "COMPLETE",
-  "title": "run_proactive_notification_phase-497638_high_item_1",
-  "file_name": "run_proactive_notification_phase-497638_high_item_1.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_677ebaa3de048f45",
+  "file_name": "677ebaa3de048f45.quarantined",
   "sha256": "677ebaa3de048f456408e00a1abdeea95d5dd2ac0930d5784d8f512c183575ed",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Proactive notification feedback loops in distributed systems, modeled as causal inference over temporal event streams with trust-weighted corrective signals. Universal Lens: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief updates on GPU autoscaler status using temporal evidence streams; conformal predictive intervals for cron execution windows. GSI Mapping: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine evaluates agent trust states and triggers corrective message dispatch upon temporal anomaly detection in GPU resource allocation. GSE Mapping: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "gpu_autoscaler_status_check",
-      "name": "GPU Autoscaler Status Check",
-      "verbatim_quote": "## Why this matters Why this matters now: at 5:09 PM CT I told Garrett the GPU autoscaler \"hasn't run in 5 hours\" and warned him to verify the cron before 5:45 PM CT or risk missing the TNF GPU window.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'t_{check}': 'time of check (CT)', 't_{cron}': 'cron execution time (CT)', 'Δt': 'time difference (hours)'}",
-      "assumptions": "Autoscaler must execute within Δt < 5 hrs to avoid window loss.",
-      "breakdown_regime": "Δt ≥ 5 hrs implies system failure or misconfiguration.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "State transition from 'unresponsive' to 'corrective action' in GSE; Bayesian update in GSI based on temporal discrepancy.",
-        "source_operator": "gpu_autoscaler_status_check",
-        "telemetry": "Timestamped cron execution log vs expected interval"
-      }
-    },
-    {
-      "primitive_id": "trust_corrective_signal",
-      "name": "Trust Corrective Signal",
-      "verbatim_quote": "Owning it in the same turn is the trust move.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'T_{trust}': 'agent trust level (dimensionless)', 'S_{signal}': 'corrective signal strength (unitless)'}",
-      "assumptions": "Corrective signal S_{signal} increases T_{trust} when delivered timely.",
-      "breakdown_regime": "T_{trust} < 0.5 implies signal rejection or delay.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "GSE trust model mirrors GSI's Bayesian confidence adjustment for error correction.",
-        "source_operator": "trust_corrective_signal",
-        "telemetry": "Agent response latency post-correction"
-      }
-    },
-    {
-      "primitive_id": "temporal_window_coverage",
-      "name": "Temporal Window Coverage",
-      "verbatim_quote": "<!-- proactive-explanation:run:proactive_notification:phase-497638:high:item:1 --> # I was wrong about the GPU autoscaler — it's alive, and tonight's",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'W_{window}': 'execution window duration (hours)', 't_{actual}': 'actual runtime start (CT)', 't_{expected}': 'expected runtime start (CT)'}",
-      "assumptions": "Window coverage requires t_{actual} ≤ t_{expected} + W_{window}.",
-      "breakdown_regime": "t_{actual} > t_{expected} + W_{window} implies missed opportunity.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "GSE evaluates temporal drift; GSI recalibrates prediction intervals.",
-        "source_operator": "temporal_window_coverage",
-        "telemetry": "Runtime vs scheduled execution timestamps"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "677ebaa3de048f45_t0",
-      "think": "The core operators define a temporal causal loop: an initial false positive status check (Δt ≥ 5 hrs) initiates a trust degradation signal, which is corrected by a timely acknowledgment. The trust corrective signal is modeled as a Bayesian update where S_{signal} acts as a confidence modifier. Temporal window coverage ensures that the system remains within operational bounds. Dualities emerge between system monitoring (status check) and agent behavior (trust signal), with failure modes including delayed correction or incorrect status reporting. The system's integrity depends on maintaining alignment between observed and expected temporal events.\n\nDeep epistemic analysis for run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45, domain=other, pages_read=1/1): Operator 'GPU Autoscaler Status Check' (page 1, domain other) captures: ## Why this matters Why this matters now: at 5:09 PM CT I told Garrett the GPU autoscaler \"hasn't run in 5 hours\" and warned him to verify the cron before 5:45 PM CT or risk missing the TNF GPU window. Assumptions: Autoscaler must execute within Δt < 5 hrs to avoid window loss. Breakdown regime: Δt ≥ 5 hrs implies system failure or misconfiguration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition from 'unresponsive' to 'corrective action' in GSE; Bayesian update in GSI based on temporal discrepancy. Operator 'Trust Corrective Signal' (page 1, domain other) captures: Owning it in the same turn is the trust move. Assumptions: Corrective signal S_{signal} increases T_{trust} when delivered timely. Breakdown regime: T_{trust} < 0.5 implies signal rejection or delay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE trust model mirrors GSI's Bayesian confidence adjustment for error correction. Operator 'Temporal Window Coverage' (page 1, domain other) captures: <!-- proactive-explanation:run:proactive_notification:phase-497638:high:item:1 --> # I was wrong about the GPU autoscaler — it's alive, and tonight's Assumptions: Window coverage requires t_{actual} ≤ t_{expected} + W_{window}. Breakdown regime: t_{actual} > t_{expected} + W_{window} implies missed opportunity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE evaluates temporal drift; GSI recalibrates prediction intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45, domain=other, pages_read=1/1): Operator 'GPU Autoscaler Status Check' (page 1, domain other) captures: ## Why this matters Why this matters now: at 5:09 PM CT I told Garrett the GPU autoscaler \"hasn't run in 5 hours\" and warned him to verify the cron before 5:45 PM CT or risk missing the TNF GPU window. Assumptions: Autoscaler must execute within Δt < 5 hrs to avoid window loss. Breakdown regime: Δt ≥ 5 hrs implies system failure or misconfiguration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition from 'unresponsive' to 'corrective action' in GSE; Bayesian update in GSI based on temporal discrepancy. Operator 'Trust Corrective Signal' (page 1, domain other) captures: Owning it in the same turn is the trust move. Assumptions: Corrective signal S_{signal} increases T_{trust} when delivered timely. Breakdown regime: T_{trust} < 0.5 implies signal rejection or delay. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE trust model mirrors GSI's Bayesian confidence adjustment for error correction. Operator 'Temporal Window Coverage' (page 1, domain other) captures: <!-- proactive-explanation:run:proactive_notification:phase-497638:high:item:1 --> # I was wrong about the GPU autoscaler — it's alive, and tonight's Assumptions: Window coverage requires t_{actual} ≤ t_{expected} + W_{window}. Breakdown regime: t_{actual} > t_{expected} + W_{window} implies missed opportunity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE evaluates temporal drift; GSI recalibrates prediction intervals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Roots in control theory and distributed system reliability, particularly in fault detection and recovery protocols. Influenced by temporal logic and Bayesian belief networks. Retrocausal Genealogy: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Agents are modeled as having bounded rationality: one agent (Garrett) distrusts the other due to prior errors, while the system must balance correction speed with trust restoration. Theory of Mind & Decision Maker Model: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity ensures that GSE's trust model does not overfit to GSI's Bayesian updates. Leakage vetoes prevent erroneous propagation of false positives across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in run_proactive_notification_phase-497638_high_item_1 (677ebaa3de048f45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

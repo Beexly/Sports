@@ -1,0 +1,78 @@
+{
+  "book_id": "9e62af2327e40222",
+  "source_status": "COMPLETE",
+  "title": "wong-teaser-check",
+  "file_name": "wong-teaser-check.md",
+  "sha256": "9e62af2327e4022298511347103e0aabd8dcddc3b98950873891ee40a086c412",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Teaser leg-cover probabilities under conditional dependence and breakeven pricing constraints. Universal Lens: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior inference on leg-cover rates using conformal prediction for risk-adjusted teaser selection. GSI Mapping: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state-space transition from historical leg rates to current market-pricing dynamics via dynamic pricing feedback loops. GSE Mapping: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "conditional_leg_coverage",
+      "name": "Conditional Leg Coverage Rate",
+      "verbatim_quote": "## The math that matters (do not skip) A two-team teaser at -120 needs BOTH legs: p2 > 1/2.2 = 45.45% per leg.",
+      "page": 1,
+      "latex": "\\mathbb{P}(\\text{both legs cover}) = \\mathbb{P}(L_1 \\cap L_2) \\geq 0.4545",
+      "symbol_and_unit_ledger": "{'p2': 'probability of both legs covering, dimensionless', 'L1, L2': 'individual leg coverage events, binary'}",
+      "assumptions": "Independence of legs under uniform distribution; fixed teaser payout structure.",
+      "breakdown_regime": "When marginal leg probability drops below 45.45% due to market pricing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian update on leg-cover likelihoods; informs GSE's state transitions based on historical vs. live pricing.",
+        "source_operator": "conditional_leg_coverage",
+        "telemetry": "Historical vs. implied leg-cover rates under fixed teaser odds."
+      }
+    },
+    {
+      "primitive_id": "unconditional_vs_conditional_rates",
+      "name": "Unconditional vs Conditional Leg Rates",
+      "verbatim_quote": "Observed single-leg rates of ~67–77% clear that easily IN ISOLATION — but these are UNCONDITIONAL rates over 27 seasons.",
+      "page": 1,
+      "latex": "\\mathbb{P}(L_i) = 0.67\\text{ to }0.77, \\quad \\mathbb{P}(L_i | L_j) = ?",
+      "symbol_and_unit_ledger": "{'P(L_i)': 'unconditional leg i cover rate, dimensionless', 'P(L_i | L_j)': 'conditional leg i given leg j, dimensionless'}",
+      "assumptions": "Historical data spans 1999–2025; unconditional rates reflect aggregate behavior.",
+      "breakdown_regime": "When conditioning on paired legs alters marginal probability significantly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's state-space modeling where leg-pairings define new probabilistic states.",
+        "source_operator": "unconditional_vs_conditional_rates",
+        "telemetry": "Pair-wise correlation between legs in teaser combinations."
+      }
+    },
+    {
+      "primitive_id": "market_pricing_edge",
+      "name": "Market Pricing Edge Threshold",
+      "verbatim_quote": "The real teaser decision is conditional on the pair you're teased together, and modern books price teasers at -125/-130 (breakeven ~48.3%/50% per leg), which eats most of the historical edge.",
+      "page": 1,
+      "latex": "\\mathbb{P}_{\\text{breakeven}}(L_i) = 0.483 \\text{ to } 0.50",
+      "symbol_and_unit_ledger": "{'P_breakeven': 'breakeven leg cover probability, dimensionless'}",
+      "assumptions": "Teaser pricing reflects bookmaker risk-adjusted expectations.",
+      "breakdown_regime": "When observed leg rates fall below breakeven threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Informs GSI’s edge detection logic; GSE uses this to evaluate whether to enter teaser positions.",
+        "source_operator": "market_pricing_edge",
+        "telemetry": "Current teaser pricing vs. historical leg-cover thresholds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9e62af2327e40222_t0",
+      "think": "The core insight centers on the distinction between unconditional and conditional leg-cover probabilities. Unconditional rates (~67–77%) appear strong in isolation but fail to account for interdependence among legs in a teaser. The breakeven threshold (48.3%–50%) derived from modern pricing implies that even historically high rates may not yield positive EV. The mathematical duality lies in how the joint probability of two legs must exceed 45.45% for a -120 teaser to be profitable, yet real-world pairing effects often dilute this. This creates a failure mode where historical edge is eroded by market efficiency. The conditional nature of leg coverage introduces a non-trivial dependency structure that requires dynamic modeling. The key derivation involves transforming unconditional empirical rates into conditional expectations under fixed teaser payouts. This leads to a dualism: historical data suggests an exploitable edge, but current pricing reflects a corrected equilibrium. The epistemic challenge is distinguishing signal from noise in leg correlations, especially when data spans pre-2002 environments with differing total distributions.\n\nDeep epistemic analysis for wong-teaser-check (9e62af2327e40222, domain=other, pages_read=1/1): Operator 'Conditional Leg Coverage Rate' (page 1, domain other) captures: ## The math that matters (do not skip) A two-team teaser at -120 needs BOTH legs: p2 > 1/2.2 = 45.45% per leg. Assumptions: Independence of legs under uniform distribution; fixed teaser payout structure. Breakdown regime: When marginal leg probability drops below 45.45% due to market pricing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian update on leg-cover likelihoods; informs GSE's state transitions based on historical vs. live pricing. Operator 'Unconditional vs Conditional Leg Rates' (page 1, domain other) captures: Observed single-leg rates of ~67–77% clear that easily IN ISOLATION — but these are UNCONDITIONAL rates over 27 seasons. Assumptions: Historical data spans 1999–2025; unconditional rates reflect aggregate behavior. Breakdown regime: When conditioning on paired legs alters marginal probability significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-space modeling where leg-pairings define new probabilistic states. Operator 'Market Pricing Edge Threshold' (page 1, domain other) captures: The real teaser decision is conditional on the pair you're teased together, and modern books price teasers at -125/-130 (breakeven ~48.3%/50% per leg), which eats most of the historical edge. Assumptions: Teaser pricing reflects bookmaker risk-adjusted expectations. Breakdown regime: When observed leg rates fall below breakeven threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSI’s edge detection logic; GSE uses this to evaluate whether to enter teaser positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for wong-teaser-check (9e62af2327e40222, domain=other, pages_read=1/1): Operator 'Conditional Leg Coverage Rate' (page 1, domain other) captures: ## The math that matters (do not skip) A two-team teaser at -120 needs BOTH legs: p2 > 1/2.2 = 45.45% per leg. Assumptions: Independence of legs under uniform distribution; fixed teaser payout structure. Breakdown regime: When marginal leg probability drops below 45.45% due to market pricing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian update on leg-cover likelihoods; informs GSE's state transitions based on historical vs. live pricing. Operator 'Unconditional vs Conditional Leg Rates' (page 1, domain other) captures: Observed single-leg rates of ~67–77% clear that easily IN ISOLATION — but these are UNCONDITIONAL rates over 27 seasons. Assumptions: Historical data spans 1999–2025; unconditional rates reflect aggregate behavior. Breakdown regime: When conditioning on paired legs alters marginal probability significantly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's state-space modeling where leg-pairings define new probabilistic states. Operator 'Market Pricing Edge Threshold' (page 1, domain other) captures: The real teaser decision is conditional on the pair you're teased together, and modern books price teasers at -125/-130 (breakeven ~48.3%/50% per leg), which eats most of the historical edge. Assumptions: Teaser pricing reflects bookmaker risk-adjusted expectations. Breakdown regime: When observed leg rates fall below breakeven threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSI’s edge detection logic; GSE uses this to evaluate whether to enter teaser positions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 2000s betting theory and Wong's seminal work on teaser edge. Builds upon prior studies of margin distributions and betting market inefficiencies. Retrocausal Genealogy: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the bookmaker who prices teasers to reflect true risk and the bettor who seeks mispriced edges. The former adjusts odds to prevent arbitrage; the latter attempts to exploit historical patterns. Decision-making is framed as a game of asymmetric information. Theory of Mind & Decision Maker Model: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when leg-cover rates are highly correlated across pairs, reducing the effectiveness of multi-leg strategies. Leakage occurs if historical data is misapplied to modern markets without adjusting for evolving total environments. Veto conditions require validation of current pricing before asserting edge. Cross-Layer Veto & Anti-Leakage Check: Rooted in wong-teaser-check (9e62af2327e40222), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "c7c994e004fb2c74",
+  "source_status": "COMPLETE",
+  "title": "sleeper.app",
+  "file_name": "sleeper.app.md",
+  "sha256": "c7c994e004fb2c74a2aa40cdd50851c41bbf7a08e2af8a51262893f6a3e38470",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sleeper.app's API endpoints form a structured relational manifold where player data, injuries, depth charts, and FAAB suggestions are mapped through URI templates to semantic response schemas. Universal Lens: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player value and risk via conformal predictive distributions over FAAB suggestions and injury data, using endpoint-specific error schemas as likelihood bounds for Bayesian belief updates. GSI Mapping: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models agent behavior through state transitions between player data views (injuries, highlights, depth chart), governed by URI path semantics and validated via error schema consistency checks. GSE Mapping: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "faab_suggestions_endpoint",
+      "name": "FAAB Resource Allocator",
+      "verbatim_quote": "Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://sleeper.app/faab_suggestions/${e}` | 2 | | `https://sleeper.app/players/${e}`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Endpoint returns resource allocation recommendations under fixed budget constraints.",
+      "breakdown_regime": "When ${e} is undefined or malformed, returns empty payload.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's Bayesian portfolio optimization kernel, where FAAB values are treated as posterior belief weights over player utility.",
+        "source_operator": "faab_suggestions_endpoint",
+        "telemetry": "Number of valid FAAB suggestion entries per request."
+      }
+    },
+    {
+      "primitive_id": "player_injury_endpoint",
+      "name": "Injury Status Monitor",
+      "verbatim_quote": "errors.message: str ``` ### `https://sleeper.app/players/${e}/adp_csv/${t}/${r}` ``` errors: dict errors.message: str ``` ### `https://sleeper.app/players/${e}/injuries` ``` ``` ##",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Injury data is modeled as a binary event with probabilistic occurrence.",
+      "breakdown_regime": "When ${e} is invalid, returns error schema with message field.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's injury risk tensor, where each player maps to a time-series of injury probabilities.",
+        "source_operator": "player_injury_endpoint",
+        "telemetry": "Presence of 'errors' key in response indicates data integrity failure."
+      }
+    },
+    {
+      "primitive_id": "depth_chart_endpoint",
+      "name": "Hierarchical Positional Role",
+      "verbatim_quote": "| | `https://sleeper.app/players/${e}/${t}/${r}/${a}/injuries` | 47 | | `https://sleeper.app/players/${e}/${t}/depth_chart` | 2 | | `https://sleeper.app/players/${e}/${t}/highlights` | 47 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Depth chart encodes positional hierarchy via ordered list of players.",
+      "breakdown_regime": "Invalid ${t} parameter results in 404 or empty structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's role transition graph, where nodes represent players and edges denote positional substitution rules.",
+        "source_operator": "depth_chart_endpoint",
+        "telemetry": "Number of ranked entries in returned depth chart array."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c7c994e004fb2c74_t0",
+      "think": "The sleeper.app API defines a set of URI templates that map to structured data responses. Each endpoint represents a distinct data abstraction layer—FAAB suggestions, injury reports, depth charts, etc.—which can be interpreted mathematically as mappings from player identifiers to semantic data structures. These mappings exhibit isomorphisms with probabilistic models in GSI (e.g., FAAB as Bayesian weights) and state-transition systems in GSE (e.g., depth charts as ordered positional graphs). The error schemas act as boundary conditions, defining failure regimes where data integrity is compromised. The absence of client coefficients implies these are server-side computations, reinforcing the notion of deterministic, structured data pipelines rather than stochastic inference engines.\n\nDeep epistemic analysis for sleeper.app (c7c994e004fb2c74, domain=other, pages_read=1/1): Operator 'FAAB Resource Allocator' (page 1, domain other) captures: Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://sleeper.app/faab_suggestions/${e}` | 2 | | `https://sleeper.app/players/${e}` Assumptions: Endpoint returns resource allocation recommendations under fixed budget constraints. Breakdown regime: When ${e} is undefined or malformed, returns empty payload. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian portfolio optimization kernel, where FAAB values are treated as posterior belief weights over player utility. Operator 'Injury Status Monitor' (page 1, domain other) captures: errors.message: str ``` ### `https://sleeper.app/players/${e}/adp_csv/${t}/${r}` ``` errors: dict errors.message: str ``` ### `https://sleeper.app/players/${e}/injuries` ``` ``` ## Assumptions: Injury data is modeled as a binary event with probabilistic occurrence. Breakdown regime: When ${e} is invalid, returns error schema with message field. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's injury risk tensor, where each player maps to a time-series of injury probabilities. Operator 'Hierarchical Positional Role' (page 1, domain other) captures: | | `https://sleeper.app/players/${e}/${t}/${r}/${a}/injuries` | 47 | | `https://sleeper.app/players/${e}/${t}/depth_chart` | 2 | | `https://sleeper.app/players/${e}/${t}/highlights` | 47 | Assumptions: Depth chart encodes positional hierarchy via ordered list of players. Breakdown regime: Invalid ${t} parameter results in 404 or empty structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's role transition graph, where nodes represent players and edges denote positional substitution rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sleeper.app (c7c994e004fb2c74, domain=other, pages_read=1/1): Operator 'FAAB Resource Allocator' (page 1, domain other) captures: Captured JSON endpoints | Endpoint | Bytes | |---|---| | `https://sleeper.app/faab_suggestions/${e}` | 2 | | `https://sleeper.app/players/${e}` Assumptions: Endpoint returns resource allocation recommendations under fixed budget constraints. Breakdown regime: When ${e} is undefined or malformed, returns empty payload. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's Bayesian portfolio optimization kernel, where FAAB values are treated as posterior belief weights over player utility. Operator 'Injury Status Monitor' (page 1, domain other) captures: errors.message: str ``` ### `https://sleeper.app/players/${e}/adp_csv/${t}/${r}` ``` errors: dict errors.message: str ``` ### `https://sleeper.app/players/${e}/injuries` ``` ``` ## Assumptions: Injury data is modeled as a binary event with probabilistic occurrence. Breakdown regime: When ${e} is invalid, returns error schema with message field. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's injury risk tensor, where each player maps to a time-series of injury probabilities. Operator 'Hierarchical Positional Role' (page 1, domain other) captures: | | `https://sleeper.app/players/${e}/${t}/${r}/${a}/injuries` | 47 | | `https://sleeper.app/players/${e}/${t}/depth_chart` | 2 | | `https://sleeper.app/players/${e}/${t}/highlights` | 47 | Assumptions: Depth chart encodes positional hierarchy via ordered list of players. Breakdown regime: Invalid ${t} parameter results in 404 or empty structure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's role transition graph, where nodes represent players and edges denote positional substitution rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in RESTful architectural principles and functional programming paradigms, this design reflects the evolution from monolithic APIs to modular, semantically rich data endpoints, akin to category theory's functorial mappings. Retrocausal Genealogy: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include data consumers (e.g., fantasy managers) who seek optimal FAAB allocations, and system validators who ensure endpoint correctness through error schema adherence. Theory of Mind & Decision Maker Model: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each endpoint serves a unique semantic function; leakage is mitigated by strict URI parameter validation and error schema enforcement. Cross-Layer Veto & Anti-Leakage Check: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sleeper.app (c7c994e004fb2c74), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

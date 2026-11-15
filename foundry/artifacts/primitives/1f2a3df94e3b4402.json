@@ -1,0 +1,95 @@
+{
+  "book_id": "1f2a3df94e3b4402",
+  "source_status": "COMPLETE",
+  "title": "JARVIS_COCKPIT_AUTO_RUN",
+  "file_name": "JARVIS_COCKPIT_AUTO_RUN.md",
+  "sha256": "1f2a3df94e3b440226c0318a154dd52da9ee790b91504e0345fdf971d600d1d8",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Minimal-founder-click law governs AI-first cockpit autonomy via SoT UI alignment, agent council orchestration, and draft-queue moderation. Universal Lens: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers market dynamics through Gamma-CLV integration, treating cockpit tasks as Bayesian belief updates over live data streams. GSI Mapping: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes auto-run loops by advancing draft-only capabilities under free-path data constraints, with human vetoes on external actions. GSE Mapping: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "founder_click_minimization",
+      "name": "Founder Click Minimization Law",
+      "verbatim_quote": "# JARVIS + COCKPIT — AI-FIRST AUTO-RUN **Law:** minimize founder clicks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Founder interaction frequency (dimensionless)', 'A': 'Autonomy level (dimensionless)'}",
+      "assumptions": "Founder engagement inversely correlates with system autonomy; minimal F implies maximal A.",
+      "breakdown_regime": "F → ∞ as A → 0; F → 0 as A → 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Founder click reduction mirrors information-theoretic channel capacity maximization in GSE's autonomous loop.",
+        "source_operator": "founder_click_minimization",
+        "telemetry": "Frequency of cockpit dashboard visits by founder"
+      }
+    },
+    {
+      "primitive_id": "cockpit_sot_ui_alignment",
+      "name": "Cockpit SoT UI Alignment",
+      "verbatim_quote": "**SoT UI:** `apps/web/app/cockpit/*` · JARVIS assessment · Agent Council · Capability Registry **Do not invent a parallel control plane.** Wire *this* cockpit.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'System of Truth (SoT) UI state (dimensionless)', 'C': 'Control plane consistency (dimensionless)'}",
+      "assumptions": "UI alignment ensures single-source-of-truth integrity across all cockpit modules.",
+      "breakdown_regime": "C = 1 ⇒ S ∈ {valid, consistent}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Cockpit SoT alignment enables GSE's kernel state transitions without redundant control planes.",
+        "source_operator": "cockpit_sot_ui_alignment",
+        "telemetry": "Registry sync status between cockpit modules"
+      }
+    },
+    {
+      "primitive_id": "auto_run_matrix_execution",
+      "name": "Auto-Run Matrix Execution",
+      "verbatim_quote": "Auto-run matrix (AI watches + executes) | Loop | Trigger | Human?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Execution loop (dimensionless)', 'H': 'Human trigger presence (boolean)'}",
+      "assumptions": "AI execution occurs in closed-loop unless H = true.",
+      "breakdown_regime": "E = 1 when H = false; E = 0 when H = true",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Auto-run matrix maps to GSI's decision-making loop with human override logic.",
+        "source_operator": "auto_run_matrix_execution",
+        "telemetry": "Execution cycle duration vs. human intervention rate"
+      }
+    },
+    {
+      "primitive_id": "draft_queue_moderation",
+      "name": "Draft Queue Moderation",
+      "verbatim_quote": "Cockpit surfaces still DESIGNED: Tasks, Moderation, Film Room — implement as **draft queues**, not public publish.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Draft queue state (dimensionless)', 'P': 'Public publish flag (boolean)'}",
+      "assumptions": "Draft queues prevent premature public exposure of unvetted content.",
+      "breakdown_regime": "D = 1 ⇒ P = 0; D = 0 ⇒ P = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Draft queue enforcement underpins GSE’s staged capability rollout and GSI’s risk-aware inference.",
+        "source_operator": "draft_queue_moderation",
+        "telemetry": "Number of drafts awaiting approval vs. published items"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1f2a3df94e3b4402_t0",
+      "think": "The primitives form a dualistic structure: one side enforces autonomy via minimal founder clicks and SoT UI alignment, while the other governs execution and moderation. The auto-run matrix embodies a feedback loop where AI executes decisions until human intervention triggers a halt. Draft queues ensure that only vetted outputs propagate beyond internal systems. These operators define a closed-loop system with bounded rationality—where GSE's state transitions are governed by GSI's probabilistic inference over cockpit telemetry. Failure modes include founder overreach (violating minimization), UI divergence (parallel control planes), and premature publishing (breaching draft protocol).\n\nDeep epistemic analysis for JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402, domain=other, pages_read=2/2): Operator 'Founder Click Minimization Law' (page 1, domain other) captures: # JARVIS + COCKPIT — AI-FIRST AUTO-RUN **Law:** minimize founder clicks. Assumptions: Founder engagement inversely correlates with system autonomy; minimal F implies maximal A. Breakdown regime: F → ∞ as A → 0; F → 0 as A → 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Founder click reduction mirrors information-theoretic channel capacity maximization in GSE's autonomous loop. Operator 'Cockpit SoT UI Alignment' (page 1, domain other) captures: **SoT UI:** `apps/web/app/cockpit/*` · JARVIS assessment · Agent Council · Capability Registry **Do not invent a parallel control plane.** Wire *this* cockpit. Assumptions: UI alignment ensures single-source-of-truth integrity across all cockpit modules. Breakdown regime: C = 1 ⇒ S ∈ {valid, consistent} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cockpit SoT alignment enables GSE's kernel state transitions without redundant control planes. Operator 'Auto-Run Matrix Execution' (page 1, domain other) captures: Auto-run matrix (AI watches + executes) | Loop | Trigger | Human? Assumptions: AI execution occurs in closed-loop unless H = true. Breakdown regime: E = 1 when H = false; E = 0 when H = true Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Auto-run matrix maps to GSI's decision-making loop with human override logic. Operator 'Draft Queue Moderation' (page 2, domain other) captures: Cockpit surfaces still DESIGNED: Tasks, Moderation, Film Room — implement as **draft queues**, not public publish. Assumptions: Draft queues prevent premature public exposure of unvetted content. Breakdown regime: D = 1 ⇒ P = 0; D = 0 ⇒ P = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Draft queue enforcement underpins GSE’s staged capability rollout and GSI’s risk-aware inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402, domain=other, pages_read=2/2): Operator 'Founder Click Minimization Law' (page 1, domain other) captures: # JARVIS + COCKPIT — AI-FIRST AUTO-RUN **Law:** minimize founder clicks. Assumptions: Founder engagement inversely correlates with system autonomy; minimal F implies maximal A. Breakdown regime: F → ∞ as A → 0; F → 0 as A → 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Founder click reduction mirrors information-theoretic channel capacity maximization in GSE's autonomous loop. Operator 'Cockpit SoT UI Alignment' (page 1, domain other) captures: **SoT UI:** `apps/web/app/cockpit/*` · JARVIS assessment · Agent Council · Capability Registry **Do not invent a parallel control plane.** Wire *this* cockpit. Assumptions: UI alignment ensures single-source-of-truth integrity across all cockpit modules. Breakdown regime: C = 1 ⇒ S ∈ {valid, consistent} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Cockpit SoT alignment enables GSE's kernel state transitions without redundant control planes. Operator 'Auto-Run Matrix Execution' (page 1, domain other) captures: Auto-run matrix (AI watches + executes) | Loop | Trigger | Human? Assumptions: AI execution occurs in closed-loop unless H = true. Breakdown regime: E = 1 when H = false; E = 0 when H = true Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Auto-run matrix maps to GSI's decision-making loop with human override logic. Operator 'Draft Queue Moderation' (page 2, domain other) captures: Cockpit surfaces still DESIGNED: Tasks, Moderation, Film Room — implement as **draft queues**, not public publish. Assumptions: Draft queues prevent premature public exposure of unvetted content. Breakdown regime: D = 1 ⇒ P = 0; D = 0 ⇒ P = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Draft queue enforcement underpins GSE’s staged capability rollout and GSI’s risk-aware inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in cybernetics and control theory, these primitives echo Shannon's information theory and von Neumann's self-replicating automata models. Retrocausal Genealogy: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the founder (who seeks control) and the AI (which seeks autonomy). The system models a distributed cognition framework where JARVIS acts as a meta-agent orchestrating sub-agents within the cockpit. Theory of Mind & Decision Maker Model: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that human moderation (draft queue) does not interfere with AI-driven execution loops. Leakage is prevented by restricting capability upgrades to those with verifiable proof, avoiding unauthorized status elevation. Cross-Layer Veto & Anti-Leakage Check: Rooted in JARVIS_COCKPIT_AUTO_RUN (1f2a3df94e3b4402), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

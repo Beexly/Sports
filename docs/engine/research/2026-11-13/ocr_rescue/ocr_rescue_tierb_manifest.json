@@ -1,18 +1,18 @@
 {
   "schema": "gse.gcp_vision_ocr_rescue.v1",
-  "generated_at_utc": "2026-11-14T18:34:25.278960+00:00",
+  "generated_at_utc": "2026-11-14T23:26:54.224383+00:00",
   "project_id": "galaxysportsedge",
   "vision_feature": "DOCUMENT_TEXT_DETECTION",
   "always_free_monthly_units": 1000,
   "circuit_breaker_max_pages": 120,
   "dry_run": false,
-  "planned_total_pages": 27,
-  "actual_pages_ocr": 27,
-  "cumulative_manifest_pages_ocr": 114,
-  "cumulative_monthly_all_manifests_pages_ocr": 213,
-  "always_free_pct_used": 21.3,
+  "planned_total_pages": 56,
+  "actual_pages_ocr": 56,
+  "cumulative_manifest_pages_ocr": 208,
+  "cumulative_monthly_all_manifests_pages_ocr": 307,
+  "always_free_pct_used": 30.7,
   "estimated_cost_usd": 0.0,
-  "vision_api_http_batches": 6,
+  "vision_api_http_batches": 12,
   "books_rescued": [
     {
       "book_id": "16eaf598c0a25b7d",
@@ -37,6 +37,18 @@
       "word_count": 2106,
       "char_count": 13372,
       "sample_opening_words": "US011107049B2 (12) United States Patent Hertzog et al. (54) METHODS FOR EXCHANGING AND EVALUATING VIRTUAL CURRENCY (71) Applicants:"
+    },
+    {
+      "book_id": "1e17e33e9c7dc608",
+      "file_name": "LS_Advanced_Calculus5.pdf",
+      "primary_domain": "math",
+      "pdf_total_pages": 592,
+      "pages_rescued": 15,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "1e17e33e9c7dc608_vision_ocr_core.txt",
+      "word_count": 3387,
+      "char_count": 20078,
+      "sample_opening_words": "LYNN H. LOOMIS and SHLOMO STERNBERG Department of Mathematics, Harvard University ADVANCED CALCULUS REVISED EDITION JONES AND BARTLETT"
     },
     {
       "book_id": "29608e585a889bd3",
@@ -109,6 +121,90 @@
       "word_count": 1058,
       "char_count": 5990,
       "sample_opening_words": "US007715982B2 (12) United States Patent (10) Patent No.: Grenfell et al. (45) Date of Patent: US 7,715,982 B2"
+    },
+    {
+      "book_id": "3fc9cd5fa560cf8a",
+      "file_name": "Intellions-US7330839-DynamicPricing.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 13,
+      "pages_rescued": 13,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "3fc9cd5fa560cf8a_vision_ocr_core.txt",
+      "word_count": 8361,
+      "char_count": 52701,
+      "sample_opening_words": "US007330839B2 (12) United States Patent Srinivasan et al. (54) METHOD AND SYSTEM FOR DYNAMIC PRICING (75) Inventors: Kannan"
+    },
+    {
+      "book_id": "8333d889557a095a",
+      "file_name": "monmonier001.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 23,
+      "pages_rescued": 15,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "8333d889557a095a_vision_ocr_core.txt",
+      "word_count": 7074,
+      "char_count": 44849,
+      "sample_opening_words": "HOW to LIE with MAPS MARK MONMONIER The University of Chicago Press Chicago and London"
+    },
+    {
+      "book_id": "9635f4fb4c6ec611",
+      "file_name": "Thorp-2006-KellyCriterionBlackjackSportsBettingStockMarket.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 11,
+      "pages_rescued": 11,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "9635f4fb4c6ec611_vision_ocr_core.txt",
+      "word_count": 4246,
+      "char_count": 24213,
+      "sample_opening_words": "Contents The American Mathematical Monthly Volume 99, Number 10/DECEMBER 1992 (ISSN 0002-9890) ARTICLES A History of the Lords"
+    },
+    {
+      "book_id": "c5e69cef38f47ea6",
+      "file_name": "lecture-01-world-models-overview.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 63,
+      "pages_rescued": 15,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "c5e69cef38f47ea6_vision_ocr_core.txt",
+      "word_count": 1304,
+      "char_count": 8683,
+      "sample_opening_words": "CIS 6280 FALL 2026 Penn Engineering UNIVERSITY of PENNSYLVANIA GMLR WORLD MODELS LECTURE 1 Jiatao Gu University of"
+    },
+    {
+      "book_id": "d7825ab8efaa5892",
+      "file_name": "1971 Operations Research on Football - Carter, Virgil and Machol, Robert E..pdf",
+      "primary_domain": "football",
+      "pdf_total_pages": 4,
+      "pages_rescued": 4,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "d7825ab8efaa5892_vision_ocr_core.txt",
+      "word_count": 1924,
+      "char_count": 11020,
+      "sample_opening_words": "Technical Notes OPERATIONS RESEARCH ON FOOTBALL Virgil Carter Cincinnati Bengals Football Team, Cincinnati, Ohio and Robert E. Machol"
+    },
+    {
+      "book_id": "e782f7e7af552de1",
+      "file_name": "monmonier001.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 23,
+      "pages_rescued": 15,
+      "coverage_mode": "TOC_AND_FOUNDATION_SLICE",
+      "output_txt_rel": "e782f7e7af552de1_vision_ocr_core.txt",
+      "word_count": 7074,
+      "char_count": 44849,
+      "sample_opening_words": "HOW to LIE with MAPS MARK MONMONIER The University of Chicago Press Chicago and London"
+    },
+    {
+      "book_id": "fcd06e030d1deb3e",
+      "file_name": "GPT-6 astra HEDGE FUND.pdf",
+      "primary_domain": "other",
+      "pdf_total_pages": 6,
+      "pages_rescued": 6,
+      "coverage_mode": "FULL_DOCUMENT",
+      "output_txt_rel": "fcd06e030d1deb3e_vision_ocr_core.txt",
+      "word_count": 4914,
+      "char_count": 33924,
+      "sample_opening_words": "How to Use GPT-6 Astra at Its Highest Benchmark To Build a 24/7 Self-Improving One-Person Hedge Fund A"
     }
   ]
 }

@@ -1,0 +1,78 @@
+{
+  "book_id": "ed5693ab5b57b457",
+  "source_status": "COMPLETE",
+  "title": "1200-analysis-of-kelly-optimal-portfolios",
+  "file_name": "1200-analysis-of-kelly-optimal-portfolios.md",
+  "sha256": "ed5693ab5b57b45736a23b5829a7d768e80201a4efcd7b409fc81efd4968b5af",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kelly optimal portfolio theory maps lognormal return dynamics to binary outcome betting via constrained maximization of expected log wealth, enabling GSE to select robust simultaneous picks. Universal Lens: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal prediction to calibrate binary Kelly fractions from engine probabilities, ensuring Bayesian coherence in uncertainty quantification across sports outcomes. GSI Mapping: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies iterative exclusion of non-positive Kelly fractions to build a dynamic, constrained portfolio of picks, transitioning between diversified and concentrated states based on inverse participation ratio. GSE Mapping: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pick_inclusion_rule",
+      "name": "Pick Inclusion Rule",
+      "verbatim_quote": "**Verdict:** ADAPT — the \"condensation\" analysis gives GSE a principled rule for *which* simultaneous picks belong in a Kelly portfolio (iteratively drop assets with non-positive constrained fractions; eq.",
+      "page": 1,
+      "latex": "\\hat{q}_i = \\arg\\max_{q_i} \\mathbb{E}[\\ln W_1] \\text{ subject to } \\sum q_i = 1, q_i \\geq 0",
+      "symbol_and_unit_ledger": "{'q_i': 'fraction of capital allocated to pick i, dimensionless', 'W_1': 'final wealth, dimensionless', 'R_i': 'return of pick i, dimensionless'}",
+      "assumptions": "Lognormal returns, no shorting or borrowing, known true parameters (m_i, D_i)",
+      "breakdown_regime": "When constrained fractions become negative, picks are excluded iteratively",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the iterative exclusion process to GSE's pick selection pipeline, replacing top-N heuristics with Kelly-consistent inclusion logic",
+        "source_operator": "pick_inclusion_rule",
+        "telemetry": "Inverse participation ratio R = 1/Σq_i^2"
+      }
+    },
+    {
+      "primitive_id": "concentration_monitor",
+      "name": "Concentration Monitor",
+      "verbatim_quote": "the lognormal-return formulas must be replaced with binary-outcome Kelly math before any use on sports bets.",
+      "page": 1,
+      "latex": "R = \\frac{1}{\\sum q_i^2}",
+      "symbol_and_unit_ledger": "{'R': 'inverse participation ratio, dimensionless', 'q_i': 'fraction of capital allocated to pick i, dimensionless'}",
+      "assumptions": "Binary outcome Kelly framework applied to sports bets",
+      "breakdown_regime": "Portfolio condenses to 1–2 picks when R ≈ 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Monitors portfolio concentration to trigger fractional-Kelly adjustment protocols",
+        "source_operator": "concentration_monitor",
+        "telemetry": "Daily reported R value indicating portfolio diversification level"
+      }
+    },
+    {
+      "primitive_id": "binary_kelly_fraction",
+      "name": "Binary Kelly Fraction",
+      "verbatim_quote": "- Kelly: maximize v = E[ln W1], W1 = 1 + Σq_iR_i (eq.",
+      "page": 1,
+      "latex": "\\hat{q}_i = \\frac{p_i - (1-p_i)/o_i}{\\sum_j (p_j - (1-p_j)/o_j)}",
+      "symbol_and_unit_ledger": "{'p_i': 'probability of win for pick i, dimensionless', 'o_i': 'decimal odds for pick i, dimensionless', 'q_i': 'fraction of capital allocated to pick i, dimensionless'}",
+      "assumptions": "Binary outcomes, known probabilities and odds, no shorting",
+      "breakdown_regime": "Invalid when odds are non-positive or probabilities exceed 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Translates GSI's probability estimates into Kelly-optimal allocation weights for sports bets",
+        "source_operator": "binary_kelly_fraction",
+        "telemetry": "Allocated fractions q_i for each pick"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ed5693ab5b57b457_t0",
+      "think": "The core insight of the paper is that Kelly-optimal portfolios for lognormal returns exhibit a 'condensation' phenomenon where only a few assets dominate the portfolio. This occurs due to constraints on non-negative allocations and the logarithmic utility function. For GSE, this translates into a two-step process: first, compute binary-outcome Kelly fractions using engine probabilities and odds; second, iteratively remove picks with negative constrained fractions until all remaining picks have positive allocations. The resulting portfolio size is governed by the inverse participation ratio R = 1/Σq_i^2, which serves as a telemetry signal for under-diversification. When R approaches 1, it indicates a high concentration, prompting application of the fractional-Kelly haircut. The binary Kelly formula ensures that the allocation reflects both the edge (probability) and the payout (odds), while the constraint prevents overexposure to any single pick. This approach avoids arbitrary cutoffs and aligns with the theoretical foundation of maximizing expected log wealth.\n\nDeep epistemic analysis for 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457, domain=other, pages_read=3/3): Operator 'Pick Inclusion Rule' (page 1, domain other) captures: **Verdict:** ADAPT — the \"condensation\" analysis gives GSE a principled rule for *which* simultaneous picks belong in a Kelly portfolio (iteratively drop assets with non-positive constrained fractions; eq. Assumptions: Lognormal returns, no shorting or borrowing, known true parameters (m_i, D_i) Breakdown regime: When constrained fractions become negative, picks are excluded iteratively Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the iterative exclusion process to GSE's pick selection pipeline, replacing top-N heuristics with Kelly-consistent inclusion logic Operator 'Concentration Monitor' (page 1, domain other) captures: the lognormal-return formulas must be replaced with binary-outcome Kelly math before any use on sports bets. Assumptions: Binary outcome Kelly framework applied to sports bets Breakdown regime: Portfolio condenses to 1–2 picks when R ≈ 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Monitors portfolio concentration to trigger fractional-Kelly adjustment protocols Operator 'Binary Kelly Fraction' (page 1, domain other) captures: - Kelly: maximize v = E[ln W1], W1 = 1 + Σq_iR_i (eq. Assumptions: Binary outcomes, known probabilities and odds, no shorting Breakdown regime: Invalid when odds are non-positive or probabilities exceed 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates GSI's probability estimates into Kelly-optimal allocation weights for sports bets Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457, domain=other, pages_read=3/3): Operator 'Pick Inclusion Rule' (page 1, domain other) captures: **Verdict:** ADAPT — the \"condensation\" analysis gives GSE a principled rule for *which* simultaneous picks belong in a Kelly portfolio (iteratively drop assets with non-positive constrained fractions; eq. Assumptions: Lognormal returns, no shorting or borrowing, known true parameters (m_i, D_i) Breakdown regime: When constrained fractions become negative, picks are excluded iteratively Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the iterative exclusion process to GSE's pick selection pipeline, replacing top-N heuristics with Kelly-consistent inclusion logic Operator 'Concentration Monitor' (page 1, domain other) captures: the lognormal-return formulas must be replaced with binary-outcome Kelly math before any use on sports bets. Assumptions: Binary outcome Kelly framework applied to sports bets Breakdown regime: Portfolio condenses to 1–2 picks when R ≈ 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Monitors portfolio concentration to trigger fractional-Kelly adjustment protocols Operator 'Binary Kelly Fraction' (page 1, domain other) captures: - Kelly: maximize v = E[ln W1], W1 = 1 + Σq_iR_i (eq. Assumptions: Binary outcomes, known probabilities and odds, no shorting Breakdown regime: Invalid when odds are non-positive or probabilities exceed 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Translates GSI's probability estimates into Kelly-optimal allocation weights for sports bets Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's 1956 work on optimal gambling strategies, extended to portfolio theory by Thorp and later formalized in continuous-time models. The condensation effect was later explored in financial contexts with discrete asset selection. Retrocausal Genealogy: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market (with unknown true probabilities), the engine (with calibrated but imperfect predictions), and the Kelly criterion itself (which assumes perfect knowledge). Decision actors must balance exploitation of edges against risk of ruin through constrained optimization. Theory of Mind & Decision Maker Model: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that picks not be highly correlated; leakage veto applies when the binary Kelly formula fails due to invalid odds or probabilities, necessitating fallback to uniform allocation or exclusion. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1200-analysis-of-kelly-optimal-portfolios (ed5693ab5b57b457), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

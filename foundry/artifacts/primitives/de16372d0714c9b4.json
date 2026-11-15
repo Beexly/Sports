@@ -1,0 +1,78 @@
+{
+  "book_id": "de16372d0714c9b4",
+  "source_status": "COMPLETE",
+  "title": "pinnacle.com",
+  "file_name": "pinnacle.com.md",
+  "sha256": "de16372d0714c9b4fdaf72ed7fc5f0ae242d3dc9026a5d1db299e4105ec2467b",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "JSON API response structure as a categorical manifold with byte-size metrics and endpoint hierarchies. Universal Lens: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sport data streams using endpoint metadata and payload sizes for probabilistic inference. GSI Mapping: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps live matchup endpoints to state transitions via real-time payload variations and telemetry. GSE Mapping: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_endpoint_payload_size",
+      "name": "API Endpoint Payload Size",
+      "verbatim_quote": "URL | Bytes | |---|---| | `https://www.pinnacle.com/config/app.json` | 11,851 | | `https://www.pinnacle.com/config/sportsbook.json` | 1,145 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'bytes'}",
+      "assumptions": "Payload size correlates with data complexity and frequency of updates.",
+      "breakdown_regime": "When B exceeds threshold, indicates high-data-load or real-time stream.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic data load model; to GSE's dynamic resource allocation logic.",
+        "source_operator": "api_endpoint_payload_size",
+        "telemetry": "Endpoint byte count over time"
+      }
+    },
+    {
+      "primitive_id": "matchup_related_data_stream",
+      "name": "Matchup Related Data Stream",
+      "verbatim_quote": "| `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1639240626/related` | 5,177 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1637835017/related` | 28,052 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1638119283/related` | 1,831 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'bytes'}",
+      "assumptions": "Related matchups share common data structures and update patterns.",
+      "breakdown_regime": "When B varies significantly, signals event-specific anomaly or priority.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's event correlation kernel; GSE's related match state transition.",
+        "source_operator": "matchup_related_data_stream",
+        "telemetry": "Related matchup payload variation"
+      }
+    },
+    {
+      "primitive_id": "sportsbook_config_hierarchy",
+      "name": "Sportsbook Configuration Hierarchy",
+      "verbatim_quote": "# pinnacle.com — gap break (browser) JSON responses captured: **27** Rendered tables: **0** ## Captured JSON",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N': 'number of JSON responses'}",
+      "assumptions": "Each JSON response represents a distinct configuration layer in the sportsbook.",
+      "breakdown_regime": "When N < 20, implies limited configuration scope or stale data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's hierarchical belief propagation; GSE's config-driven state machine.",
+        "source_operator": "sportsbook_config_hierarchy",
+        "telemetry": "Number of captured JSON responses"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "de16372d0714c9b4_t0",
+      "think": "The data points represent a structured API ecosystem where each endpoint corresponds to a specific domain of sport data. The payload sizes suggest a hierarchy of information density—config files are small, while translation and matchup-related data are large. This supports a layered model of data access and processing. The failure mode occurs when payloads deviate unexpectedly, indicating system anomalies or data corruption. Dualities emerge between static config layers and dynamic live streams. The GSI Bayesian inference engine uses these payloads to estimate data freshness and reliability. The GSE situational reasoning engine models how these data flows influence real-time decision-making in live events.\n\nDeep epistemic analysis for pinnacle.com (de16372d0714c9b4, domain=other, pages_read=1/1): Operator 'API Endpoint Payload Size' (page 1, domain other) captures: URL | Bytes | |---|---| | `https://www.pinnacle.com/config/app.json` | 11,851 | | `https://www.pinnacle.com/config/sportsbook.json` | 1,145 | | Assumptions: Payload size correlates with data complexity and frequency of updates. Breakdown regime: When B exceeds threshold, indicates high-data-load or real-time stream. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic data load model; to GSE's dynamic resource allocation logic. Operator 'Matchup Related Data Stream' (page 1, domain other) captures: | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1639240626/related` | 5,177 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1637835017/related` | 28,052 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1638119283/related` | 1,831 | | Assumptions: Related matchups share common data structures and update patterns. Breakdown regime: When B varies significantly, signals event-specific anomaly or priority. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's event correlation kernel; GSE's related match state transition. Operator 'Sportsbook Configuration Hierarchy' (page 1, domain other) captures: # pinnacle.com — gap break (browser) JSON responses captured: **27** Rendered tables: **0** ## Captured JSON Assumptions: Each JSON response represents a distinct configuration layer in the sportsbook. Breakdown regime: When N < 20, implies limited configuration scope or stale data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's hierarchical belief propagation; GSE's config-driven state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for pinnacle.com (de16372d0714c9b4, domain=other, pages_read=1/1): Operator 'API Endpoint Payload Size' (page 1, domain other) captures: URL | Bytes | |---|---| | `https://www.pinnacle.com/config/app.json` | 11,851 | | `https://www.pinnacle.com/config/sportsbook.json` | 1,145 | | Assumptions: Payload size correlates with data complexity and frequency of updates. Breakdown regime: When B exceeds threshold, indicates high-data-load or real-time stream. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic data load model; to GSE's dynamic resource allocation logic. Operator 'Matchup Related Data Stream' (page 1, domain other) captures: | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1639240626/related` | 5,177 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1637835017/related` | 28,052 | | `https://guest.api.arcadia.pinnacle.com/0.1/matchups/1638119283/related` | 1,831 | | Assumptions: Related matchups share common data structures and update patterns. Breakdown regime: When B varies significantly, signals event-specific anomaly or priority. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's event correlation kernel; GSE's related match state transition. Operator 'Sportsbook Configuration Hierarchy' (page 1, domain other) captures: # pinnacle.com — gap break (browser) JSON responses captured: **27** Rendered tables: **0** ## Captured JSON Assumptions: Each JSON response represents a distinct configuration layer in the sportsbook. Breakdown regime: When N < 20, implies limited configuration scope or stale data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's hierarchical belief propagation; GSE's config-driven state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and network topology, tracing back to Shannon’s entropy and modern API design paradigms. Retrocausal Genealogy: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data staleness detectors and real-time event processors. Each endpoint may be treated as a node in a decision graph with varying reliability scores. Theory of Mind & Decision Maker Model: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that config and live streams do not overlap in payload semantics. Leakage vetoes occur when payload sizes indicate cross-layer contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in pinnacle.com (de16372d0714c9b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

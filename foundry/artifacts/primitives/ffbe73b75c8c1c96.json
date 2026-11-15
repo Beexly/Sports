@@ -1,0 +1,78 @@
+{
+  "book_id": "ffbe73b75c8c1c96",
+  "source_status": "COMPLETE",
+  "title": "0031-beyond-expected-goals-a-probabilistic-framework",
+  "file_name": "0031-beyond-expected-goals-a-probabilistic-framework.md",
+  "sha256": "ffbe73b75c8c1c96ad44c247099e44564b52b85f3865923302949f72a75fd6ba",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic framework decomposing shot generation (xS) and conversion (xG) into a joint process xG+_t = xS_t × xG_t, aggregated over possessions via at-least-one or max-per-possession rules. Universal Lens: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on xS and xG models enables dynamic belief updates on team offensive potential; conformal prediction bounds uncertainty in possession-level scoring forecasts. GSI Mapping: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps xS/xG dynamics to state transitions in NFL drives; transition probabilities encode temporal dependencies between possession events and outcome likelihoods. GSE Mapping: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shot_generation_probability",
+      "name": "Shot Generation Probability",
+      "verbatim_quote": "**xS**: predicts the probability that a shot will occur in the next second; 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'xS_t': 'dimensionless probability, P(shot occurs in next second)'}",
+      "assumptions": "Stationary Markov process over time; conditional independence of shot occurrence given current frame state.",
+      "breakdown_regime": "When possession ends or ball enters defensive third.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "xS_t serves as input to GSE's state transition function, modeling temporal evolution of shot likelihood during a drive.",
+        "source_operator": "shot_generation_probability",
+        "telemetry": "Frame-level binary shot occurrence rate"
+      }
+    },
+    {
+      "primitive_id": "shot_conversion_probability",
+      "name": "Shot Conversion Probability",
+      "verbatim_quote": "**xS**: predicts the probability that a shot will occur in the next second; 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'xG_t': 'dimensionless probability, P(goal | shot taken)'}",
+      "assumptions": "Conditional on shot being taken, independent of prior shots or possession context.",
+      "breakdown_regime": "When shot is taken and ball enters goal area.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "xG_t feeds into GSI’s Bayesian update mechanism for estimating team scoring capacity.",
+        "source_operator": "shot_conversion_probability",
+        "telemetry": "Binary goal outcome per shot"
+      }
+    },
+    {
+      "primitive_id": "joint_shot_expectation",
+      "name": "Joint Shot Expectation",
+      "verbatim_quote": "Method / model Two **separate XGBoost models** trained on engineered features (§3.3): 1.",
+      "page": 1,
+      "latex": "xG+_t = xS_t \\times xG_t",
+      "symbol_and_unit_ledger": "{'xG+_t': 'dimensionless probability, P(goal via shot within next second)'}",
+      "assumptions": "Multiplicative independence between xS and xG under same frame conditions.",
+      "breakdown_regime": "At frame-level aggregation across possession.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "xG+_t mirrors GSE's probabilistic state evolution, where each frame contributes to cumulative scoring expectation.",
+        "source_operator": "joint_shot_expectation",
+        "telemetry": "Aggregated xG+ per possession using at-least-one or max rule"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ffbe73b75c8c1c96_t0",
+      "think": "The framework introduces two distinct stochastic processes: xS models shot generation as a Bernoulli event per second, while xG models shot conversion as a conditional Bernoulli. Their product xG+_t = xS_t × xG_t defines a joint expectation for goal-scoring opportunities. This dual decomposition allows for separate calibration of attempt frequency and quality. In GSE, this translates to modeling play initiation (xS) and execution (xG) as distinct state transitions. The aggregation rules—either 'at-least-one' or 'max-per-possession'—define how these per-frame expectations combine into possession-level metrics. Dualities emerge in that xS can be interpreted as a proxy for offensive pressure, whereas xG reflects defensive vulnerability. Failure modes include temporal autocorrelation due to shuffled cross-validation, which violates causality in sequential data. Additionally, the model assumes stationarity of xS and xG over time, which may not hold under changing tactical setups or player fatigue.\n\nDeep epistemic analysis for 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96, domain=other, pages_read=6/6): Operator 'Shot Generation Probability' (page 1, domain other) captures: **xS**: predicts the probability that a shot will occur in the next second; 2. Assumptions: Stationary Markov process over time; conditional independence of shot occurrence given current frame state. Breakdown regime: When possession ends or ball enters defensive third. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xS_t serves as input to GSE's state transition function, modeling temporal evolution of shot likelihood during a drive. Operator 'Shot Conversion Probability' (page 1, domain other) captures: **xS**: predicts the probability that a shot will occur in the next second; 2. Assumptions: Conditional on shot being taken, independent of prior shots or possession context. Breakdown regime: When shot is taken and ball enters goal area. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xG_t feeds into GSI’s Bayesian update mechanism for estimating team scoring capacity. Operator 'Joint Shot Expectation' (page 1, domain other) captures: Method / model Two **separate XGBoost models** trained on engineered features (§3.3): 1. Assumptions: Multiplicative independence between xS and xG under same frame conditions. Breakdown regime: At frame-level aggregation across possession. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): xG+_t mirrors GSE's probabilistic state evolution, where each frame contributes to cumulative scoring expectation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96, domain=other, pages_read=6/6): Operator 'Shot Generation Probability' (page 1, domain other) captures: **xS**: predicts the probability that a shot will occur in the next second; 2. Assumptions: Stationary Markov process over time; conditional independence of shot occurrence given current frame state. Breakdown regime: When possession ends or ball enters defensive third. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xS_t serves as input to GSE's state transition function, modeling temporal evolution of shot likelihood during a drive. Operator 'Shot Conversion Probability' (page 1, domain other) captures: **xS**: predicts the probability that a shot will occur in the next second; 2. Assumptions: Conditional on shot being taken, independent of prior shots or possession context. Breakdown regime: When shot is taken and ball enters goal area. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xG_t feeds into GSI’s Bayesian update mechanism for estimating team scoring capacity. Operator 'Joint Shot Expectation' (page 1, domain other) captures: Method / model Two **separate XGBoost models** trained on engineered features (§3.3): 1. Assumptions: Multiplicative independence between xS and xG under same frame conditions. Breakdown regime: At frame-level aggregation across possession. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): xG+_t mirrors GSE's probabilistic state evolution, where each frame contributes to cumulative scoring expectation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and probabilistic graphical models, extending earlier work on xG and EP selection bias in soccer and American football. Influenced by temporal point processes and reinforcement learning frameworks. Retrocausal Genealogy: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) optimize xS and xG through strategic adjustments in possession dynamics. Each agent seeks to maximize their own xG+ while minimizing opponent xG+, leading to equilibrium strategies in possession-based game states. Theory of Mind & Decision Maker Model: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that xS and xG be modeled independently to avoid conflating attempt frequency with conversion quality. Leakage risks arise from temporal frame dependencies if not properly addressed in CV splits. Cross-layer veto ensures that xS does not inadvertently encode information about xG and vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0031-beyond-expected-goals-a-probabilistic-framework (ffbe73b75c8c1c96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

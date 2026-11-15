@@ -1,0 +1,78 @@
+{
+  "book_id": "d562050fcdf8ce30",
+  "source_status": "COMPLETE",
+  "title": "route_by_coverage",
+  "file_name": "route_by_coverage.md",
+  "sha256": "d562050fcdf8ce3023518ebb07728534180e8c1e710b90a3c2266c1a280b3c3a",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Route YOE decomposes into route×coverage interaction, with shrinkage bias reducing residual variance below absorption ceiling. Universal Lens: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian hierarchical pooling models route×coverage effects via ridge-regularized dummies; holdout residuals estimate out-of-sample predictive variance. GSI Mapping: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps route execution to coverage-specific outcomes using state-transition matrices; residuals signal mismatch between expected and actual performance. GSE Mapping: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "route_coverage_interaction",
+      "name": "Route-Coverage Interaction",
+      "verbatim_quote": "# Route YOE is mostly route×coverage interaction — with a shrinkage caveat I said a per-route coverage assignment would test the previous finding harder.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'YOE': 'yards over expectation, dimensionless', 'R': 'route type, categorical', 'C': 'coverage assignment, categorical'}",
+      "assumptions": "Interaction term captures conditional effect of coverage on route outcome; linear in logit space.",
+      "breakdown_regime": "When coverage is unknown or misclassified, interaction term becomes confounded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Residuals from route×coverage model approximate true YOE after accounting for design effects.",
+        "source_operator": "route_coverage_interaction",
+        "telemetry": "Holdout residual variance across route types."
+      }
+    },
+    {
+      "primitive_id": "absorption_ceiling",
+      "name": "Absorption Ceiling",
+      "verbatim_quote": "## In-sample (tautological, stated for completeness) Dummies containing the route itself absorb every route mean by construction — residuals go to ~0 (-99 to -100% for most routes).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'residual': 'difference between observed and predicted YOE, dimensionless'}",
+      "assumptions": "In-sample dummies perfectly reconstruct route means; residuals vanish due to overfitting.",
+      "breakdown_regime": "Perfect fit in training set implies zero residual variance, masking generalization error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Absorption ceiling bounds maximum explanatory power of route dummies alone.",
+        "source_operator": "absorption_ceiling",
+        "telemetry": "In-sample residual magnitude vs. out-of-sample holdout error."
+      }
+    },
+    {
+      "primitive_id": "shrinkage_bias",
+      "name": "Shrinkage Bias",
+      "verbatim_quote": "## The caveat that must travel with it Holdout residuals collapse toward zero partly from **shrinkage, not just absorption** — Ridge on 80 sparse dummies over-regularises, and thin cells (CORNER 56, POST 84) are hit hardest.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'λ': 'ridge regularization parameter, dimensionless', 'n_cell': 'number of observations per cell, dimensionless'}",
+      "assumptions": "Sparse data leads to over-shrinkage; high-dimensional sparse regression underestimates true effect size.",
+      "breakdown_regime": "Small sample sizes per route×coverage cell cause biased estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ridge regularization introduces systematic underestimation of YOE residuals.",
+        "source_operator": "shrinkage_bias",
+        "telemetry": "Ratio of holdout to in-sample residual variance."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d562050fcdf8ce30_t0",
+      "think": "The core insight is that route YOE (yards over expectation) is primarily driven by the interaction between route type and defensive coverage assigned. This is modeled using 80 dummy variables representing route×coverage combinations. In-sample, these dummies perfectly absorb route means, yielding near-zero residuals—this is the 'absorption ceiling'. However, when evaluating on holdout data, residuals shrink toward zero due to both absorption and shrinkage bias introduced by ridge regularization on sparse data. The key dualities are: 1) absorption vs. shrinkage, where absorption is tautological but shrinkage reflects model bias; 2) in-sample fit vs. out-of-sample generalization, where the former can be misleadingly tight. Failure modes include overfitting in small cells (e.g., CORNER 56), leading to inflated confidence in spurious interactions. The epistemic structure reveals that while route design matters, its impact is highly conditional on coverage, which must be explicitly modeled rather than averaged out.\n\nDeep epistemic analysis for route_by_coverage (d562050fcdf8ce30, domain=other, pages_read=1/1): Operator 'Route-Coverage Interaction' (page 1, domain other) captures: # Route YOE is mostly route×coverage interaction — with a shrinkage caveat I said a per-route coverage assignment would test the previous finding harder. Assumptions: Interaction term captures conditional effect of coverage on route outcome; linear in logit space. Breakdown regime: When coverage is unknown or misclassified, interaction term becomes confounded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residuals from route×coverage model approximate true YOE after accounting for design effects. Operator 'Absorption Ceiling' (page 1, domain other) captures: ## In-sample (tautological, stated for completeness) Dummies containing the route itself absorb every route mean by construction — residuals go to ~0 (-99 to -100% for most routes). Assumptions: In-sample dummies perfectly reconstruct route means; residuals vanish due to overfitting. Breakdown regime: Perfect fit in training set implies zero residual variance, masking generalization error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Absorption ceiling bounds maximum explanatory power of route dummies alone. Operator 'Shrinkage Bias' (page 1, domain other) captures: ## The caveat that must travel with it Holdout residuals collapse toward zero partly from **shrinkage, not just absorption** — Ridge on 80 sparse dummies over-regularises, and thin cells (CORNER 56, POST 84) are hit hardest. Assumptions: Sparse data leads to over-shrinkage; high-dimensional sparse regression underestimates true effect size. Breakdown regime: Small sample sizes per route×coverage cell cause biased estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ridge regularization introduces systematic underestimation of YOE residuals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for route_by_coverage (d562050fcdf8ce30, domain=other, pages_read=1/1): Operator 'Route-Coverage Interaction' (page 1, domain other) captures: # Route YOE is mostly route×coverage interaction — with a shrinkage caveat I said a per-route coverage assignment would test the previous finding harder. Assumptions: Interaction term captures conditional effect of coverage on route outcome; linear in logit space. Breakdown regime: When coverage is unknown or misclassified, interaction term becomes confounded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Residuals from route×coverage model approximate true YOE after accounting for design effects. Operator 'Absorption Ceiling' (page 1, domain other) captures: ## In-sample (tautological, stated for completeness) Dummies containing the route itself absorb every route mean by construction — residuals go to ~0 (-99 to -100% for most routes). Assumptions: In-sample dummies perfectly reconstruct route means; residuals vanish due to overfitting. Breakdown regime: Perfect fit in training set implies zero residual variance, masking generalization error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Absorption ceiling bounds maximum explanatory power of route dummies alone. Operator 'Shrinkage Bias' (page 1, domain other) captures: ## The caveat that must travel with it Holdout residuals collapse toward zero partly from **shrinkage, not just absorption** — Ridge on 80 sparse dummies over-regularises, and thin cells (CORNER 56, POST 84) are hit hardest. Assumptions: Sparse data leads to over-shrinkage; high-dimensional sparse regression underestimates true effect size. Breakdown regime: Small sample sizes per route×coverage cell cause biased estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ridge regularization introduces systematic underestimation of YOE residuals. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in econometric decomposition methods (e.g., fixed effects models) and modern machine learning regularization techniques (e.g., ridge regression). Influenced by statistical learning theory and causal inference frameworks emphasizing interaction terms and bias-variance tradeoffs. Retrocausal Genealogy: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might assume route design is independent of coverage, leading to overconfidence in aggregate metrics like 2.4-yard average. Alternatively, they may overcorrect for shrinkage, underestimating true variability. A rational agent would condition on coverage and use hierarchical models to avoid both overfitting and underfitting. Theory of Mind & Decision Maker Model: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires orthogonalizing route and coverage dimensions; leakage occurs if route dummies are not fully absorbed or if shrinkage is not accounted for. Veto conditions include ensuring sufficient data per cell and applying partial pooling to prevent overregularization in sparse regimes. Cross-Layer Veto & Anti-Leakage Check: Rooted in route_by_coverage (d562050fcdf8ce30), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

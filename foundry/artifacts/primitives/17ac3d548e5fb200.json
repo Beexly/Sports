@@ -1,0 +1,95 @@
+{
+  "book_id": "17ac3d548e5fb200",
+  "source_status": "COMPLETE",
+  "title": "AIRWAVE_SOURCE_POLICY",
+  "file_name": "AIRWAVE_SOURCE_POLICY.md",
+  "sha256": "17ac3d548e5fb2009b1979c87079f1b3af1e395cc97cecd922960a6cd35bcd62",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_policy",
+      "name": "Airwave Source Policy Compliance",
+      "verbatim_quote": "# Airwave Source Policy Reference > All source policies are defined in `apps/web/lib/airwave/source-policy.ts`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operational constraints on data handling and public output generation.",
+      "breakdown_regime": "Compliance enforcement at runtime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes operational constraints as a state machine over data provenance and public safety flags.",
+        "source_operator": "source_policy",
+        "telemetry": "Monitoring of `rights_status` and `operator_status` transitions."
+      }
+    },
+    {
+      "primitive_id": "raw_audio_archive",
+      "name": "Raw Audio Archive Protocol",
+      "verbatim_quote": "**Raw audio archive** — no audio files are retained at any point 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Audio data is processed and discarded immediately after transcription.",
+      "breakdown_regime": "Data retention singularity at zero storage duration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces immediate consumption via a hard constraint on the storage operator.",
+        "source_operator": "raw_audio_archive",
+        "telemetry": "Volume of discarded audio segments per period."
+      }
+    },
+    {
+      "primitive_id": "verbatim_transcript_storage",
+      "name": "Verbatim Transcript Storage Policy",
+      "verbatim_quote": "**Verbatim transcript storage (public)** — no full transcript text is published 3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Only paraphrased claims are made public, not the original text.",
+      "breakdown_regime": "Text publication singularity at zero fidelity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Projects raw transcripts onto a public-safe subspace using a sanitization operator.",
+        "source_operator": "verbatim_transcript_storage",
+        "telemetry": "Ratio of sanitized to original transcript tokens."
+      }
+    },
+    {
+      "primitive_id": "auto_publish_control",
+      "name": "Automated Publishing Control",
+      "verbatim_quote": "**Auto-publish** — no output goes to any external channel without operator approval 4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Automated pipelines are blocked until manual review completes.",
+      "breakdown_regime": "Automation disabled, replaced by human oversight.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Inserts a mandatory approval checkpoint into the publish workflow graph.",
+        "source_operator": "auto_publish_control",
+        "telemetry": "Latency between pipeline completion and operator action."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "17ac3d548e5fb200_t0",
+      "think": "The Airwave Source Policy encodes a suite of operational constraints that form a closed-loop system for managing information flow from acquisition to public output. Each policy rule can be formalized as an operator acting on a data object that carries provenance metadata. The core primitives are projection operators that enforce sanitization (verbatim -> paraphrase), storage limits (zero retention), and access control (approval gates). These operators commute when applied sequentially, forming a lattice structure that prevents leakage across different security boundaries. The compliance check reduces to verifying that the data object remains within the intersection of all allowed subspaces after each transformation. Failure modes arise from violations of idempotence (applying a rule twice changes the result) or from cycles in the policy graph that bypass required checkpoints. Empirical monitoring focuses on the frequency of `REJECTED` and `SETTLED` states, which indicate either policy violations or successful containment of risks.\n\nDeep epistemic analysis for AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200, domain=other, pages_read=2/2): Operator 'Airwave Source Policy Compliance' (page 1, domain other) captures: # Airwave Source Policy Reference > All source policies are defined in `apps/web/lib/airwave/source-policy.ts`. Assumptions: Operational constraints on data handling and public output generation. Breakdown regime: Compliance enforcement at runtime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes operational constraints as a state machine over data provenance and public safety flags. Operator 'Raw Audio Archive Protocol' (page 1, domain other) captures: **Raw audio archive** — no audio files are retained at any point 2. Assumptions: Audio data is processed and discarded immediately after transcription. Breakdown regime: Data retention singularity at zero storage duration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces immediate consumption via a hard constraint on the storage operator. Operator 'Verbatim Transcript Storage Policy' (page 1, domain other) captures: **Verbatim transcript storage (public)** — no full transcript text is published 3. Assumptions: Only paraphrased claims are made public, not the original text. Breakdown regime: Text publication singularity at zero fidelity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Projects raw transcripts onto a public-safe subspace using a sanitization operator. Operator 'Automated Publishing Control' (page 1, domain other) captures: **Auto-publish** — no output goes to any external channel without operator approval 4. Assumptions: Automated pipelines are blocked until manual review completes. Breakdown regime: Automation disabled, replaced by human oversight. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inserts a mandatory approval checkpoint into the publish workflow graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200, domain=other, pages_read=2/2): Operator 'Airwave Source Policy Compliance' (page 1, domain other) captures: # Airwave Source Policy Reference > All source policies are defined in `apps/web/lib/airwave/source-policy.ts`. Assumptions: Operational constraints on data handling and public output generation. Breakdown regime: Compliance enforcement at runtime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes operational constraints as a state machine over data provenance and public safety flags. Operator 'Raw Audio Archive Protocol' (page 1, domain other) captures: **Raw audio archive** — no audio files are retained at any point 2. Assumptions: Audio data is processed and discarded immediately after transcription. Breakdown regime: Data retention singularity at zero storage duration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces immediate consumption via a hard constraint on the storage operator. Operator 'Verbatim Transcript Storage Policy' (page 1, domain other) captures: **Verbatim transcript storage (public)** — no full transcript text is published 3. Assumptions: Only paraphrased claims are made public, not the original text. Breakdown regime: Text publication singularity at zero fidelity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Projects raw transcripts onto a public-safe subspace using a sanitization operator. Operator 'Automated Publishing Control' (page 1, domain other) captures: **Auto-publish** — no output goes to any external channel without operator approval 4. Assumptions: Automated pipelines are blocked until manual review completes. Breakdown regime: Automation disabled, replaced by human oversight. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Inserts a mandatory approval checkpoint into the publish workflow graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The framework draws from information theory's data processing inequality and access control theory, adapting them to a streaming, multi-source context. Retrocausal Genealogy: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors seeking to extract sensitive information through side channels, and operators who may introduce errors during manual approval. Theory of Mind & Decision Maker Model: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each source type maps to a distinct subspace, preventing cross-pollination of risks between different feeds. Cross-Layer Veto & Anti-Leakage Check: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in AIRWAVE_SOURCE_POLICY (17ac3d548e5fb200), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

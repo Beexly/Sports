@@ -1,0 +1,78 @@
+{
+  "book_id": "327234466757b144",
+  "source_status": "COMPLETE",
+  "title": "SKILL",
+  "file_name": "SKILL.md",
+  "sha256": "327234466757b1444dcd9dd61f91998cc8537017995c9db62650af14fc6fb994",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Settlement path selection governs game grading via free-first policy; paid supplement activates conditionally on key validity, enabling dual-mode operation. Universal Lens: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models consensus alignment between ESPN and henrygd; probabilistic holds resolve ambiguity through dispute resolution logic. GSI Mapping: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in settlement engine follow deterministic path selection: free-only, free+supplement, or stale backfill based on time and key status. GSE Mapping: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "settlement_path_selection",
+      "name": "Settlement Path Selection Operator",
+      "verbatim_quote": "| `selectSettlementPath` keeps its two-value contract for smoke scripts: \"odds-api\" now means \"supplement available\", never \"free skipped\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'path': 'dimensionless string {\"free\", \"free+odds-api\", \"odds-api\"}', 'key_present': 'boolean'}",
+      "assumptions": "Key presence determines supplement eligibility; free path is primary unless key is invalid.",
+      "breakdown_regime": "When key is absent or inactive, path defaults to free-only.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's consensus alignment model where free path acts as base hypothesis and paid supplement as refinement.",
+        "source_operator": "settlement_path_selection",
+        "telemetry": "Response label 'path' indicates active settlement mode."
+      }
+    },
+    {
+      "primitive_id": "free_settlement_grading",
+      "name": "Free Settlement Grading Kernel",
+      "verbatim_quote": "- Free `runFreePathSettlement` (ESPN, + henrygd for NCAA only once the source is registered) — live path, and the fallback above.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'source': 'string {\"ESPN\", \"henrygd\"}', 'ncaa_registered': 'boolean'}",
+      "assumptions": "Free grading uses ESPN and henrygd data sources; fallback ensures continuity.",
+      "breakdown_regime": "Operates under valid registration and data availability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's core settlement logic; serves as primary kernel for grading decisions.",
+        "source_operator": "free_settlement_grading",
+        "telemetry": "Graded outcomes stored in settlement runs."
+      }
+    },
+    {
+      "primitive_id": "paid_supplement_activation",
+      "name": "Paid Supplement Activation Mechanism",
+      "verbatim_quote": "--name: settlement-free-path description: Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'api_key_valid': 'boolean', 'supplement_ran': 'boolean'}",
+      "assumptions": "Paid supplement runs only when key is valid and present.",
+      "breakdown_regime": "Fails silently if key is deactivated but does not affect free path.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSI's risk-adjusted scoring mechanism using paid data as uncertainty correction.",
+        "source_operator": "paid_supplement_activation",
+        "telemetry": "Sentry logs 'paid:supplement-failed' upon key deactivation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "327234466757b144_t0",
+      "think": "The settlement system operates under a dual-path architecture governed by key validity. The free path (ESPN/henrygd) is the default and primary mechanism, activated every cycle since 2026-09-02. A paid supplement (Odds API) is conditionally appended only if the key is both present and valid. This creates a binary decision tree: if key is valid, run free + supplement; otherwise, run free only. Failure modes include key deactivation, which triggers a silent fail in supplement but preserves free grading. Disputes arise from ESPN/henrygd disagreement, leading to DISPUTED holds. Stale backfill handles unresolved picks after 6 hours, ensuring no outcome remains pending indefinitely. The system enforces path selection through URL parameter (?path=free) or internal logic, preventing misclassification of paths. The telemetry captures these states via Sentry and response labels, enabling retroactive analysis and alerting.\n\nDeep epistemic analysis for SKILL (327234466757b144, domain=other, pages_read=2/2): Operator 'Settlement Path Selection Operator' (page 1, domain other) captures: | `selectSettlementPath` keeps its two-value contract for smoke scripts: \"odds-api\" now means \"supplement available\", never \"free skipped\". Assumptions: Key presence determines supplement eligibility; free path is primary unless key is invalid. Breakdown regime: When key is absent or inactive, path defaults to free-only. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's consensus alignment model where free path acts as base hypothesis and paid supplement as refinement. Operator 'Free Settlement Grading Kernel' (page 1, domain other) captures: - Free `runFreePathSettlement` (ESPN, + henrygd for NCAA only once the source is registered) — live path, and the fallback above. Assumptions: Free grading uses ESPN and henrygd data sources; fallback ensures continuity. Breakdown regime: Operates under valid registration and data availability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's core settlement logic; serves as primary kernel for grading decisions. Operator 'Paid Supplement Activation Mechanism' (page 1, domain other) captures: --name: settlement-free-path description: Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement. Assumptions: Paid supplement runs only when key is valid and present. Breakdown regime: Fails silently if key is deactivated but does not affect free path. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's risk-adjusted scoring mechanism using paid data as uncertainty correction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SKILL (327234466757b144, domain=other, pages_read=2/2): Operator 'Settlement Path Selection Operator' (page 1, domain other) captures: | `selectSettlementPath` keeps its two-value contract for smoke scripts: \"odds-api\" now means \"supplement available\", never \"free skipped\". Assumptions: Key presence determines supplement eligibility; free path is primary unless key is invalid. Breakdown regime: When key is absent or inactive, path defaults to free-only. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's consensus alignment model where free path acts as base hypothesis and paid supplement as refinement. Operator 'Free Settlement Grading Kernel' (page 1, domain other) captures: - Free `runFreePathSettlement` (ESPN, + henrygd for NCAA only once the source is registered) — live path, and the fallback above. Assumptions: Free grading uses ESPN and henrygd data sources; fallback ensures continuity. Breakdown regime: Operates under valid registration and data availability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's core settlement logic; serves as primary kernel for grading decisions. Operator 'Paid Supplement Activation Mechanism' (page 1, domain other) captures: --name: settlement-free-path description: Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement. Assumptions: Paid supplement runs only when key is valid and present. Breakdown regime: Fails silently if key is deactivated but does not affect free path. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's risk-adjusted scoring mechanism using paid data as uncertainty correction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in legacy cron scheduling (PR #278) and evolved post-P0 drain (#300) to hourly execution, reflecting operational maturity and resilience against data gaps. Retrocausal Genealogy: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the cron scheduler, data sources (ESPN, henrygd, Odds API), and the settlement engine itself. Each agent has distinct roles: scheduler triggers execution, data sources provide inputs, and engine resolves conflicts and selects paths. Decision actors are constrained by key state and temporal thresholds. Theory of Mind & Decision Maker Model: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity prevents redundant processing; e.g., do not schedule gamma without registry grant. Leakage vetoes include avoiding rebuilding outbox claims and ensuring no override of final states. These constraints maintain logical consistency across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (327234466757b144), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

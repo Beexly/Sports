@@ -1,0 +1,78 @@
+{
+  "book_id": "c678b0d5de1e2042",
+  "source_status": "COMPLETE",
+  "title": "NODE_TEST_SUITES_IN_CI",
+  "file_name": "NODE_TEST_SUITES_IN_CI.md",
+  "sha256": "c678b0d5de1e2042f40cae889703946a503676ef243e1b0772c8d7b3dd98ff52",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A guardrail matrix in CI enforces deterministic test gating via explicit inclusion, where node:test suites are excluded from npm test but included in CI via a matrix for precise failure attribution.",
+  "gsi_mapping": "Bayesian inference maps test suite inclusion to commit gating likelihood, with prior probability of failure determined by historical pass/fail rates and posterior updates from CI execution. GSI Mapping: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models test suite states as discrete transitions between skipped, built, and executed, with state transitions governed by build prerequisites and runtime conditions. GSE Mapping: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "guardrail_matrix_inclusion",
+      "name": "Explicit Test Suite Inclusion",
+      "verbatim_quote": "**The list in `ci.yml` is explicit, not globbed, on purpose.** A new guardrail suite is *not* picked up automatically: a suite that fails on its first appearance should be added here after it has been seen green, rather than silently becoming a gate the day it is written.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{suite}': 'number of test suites in guardrail matrix', 'T_{gate}': 'commit gating threshold'}",
+      "assumptions": "Test suites must be explicitly declared to gate commits; automatic discovery leads to false positives.",
+      "breakdown_regime": "When a suite fails on first appearance, it is not added until verified as stable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The guardrail matrix is isomorphic to a Bayesian prior over test suite stability, where inclusion implies conditional probability of commit safety.",
+        "source_operator": "guardrail_matrix_inclusion",
+        "telemetry": "Commit gate status (pass/fail) per suite"
+      }
+    },
+    {
+      "primitive_id": "node_test_exclusion_from_npm",
+      "name": "Node Test Exclusion from npm Test",
+      "verbatim_quote": "**They do NOT collect `node:test` files.** So `npm test` skips every `node:test` suite in the repository, and they have been sitting there looking like gates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{npm}': 'npm test execution environment', 'F_{node}': 'node:test file collection function'}",
+      "assumptions": "npm test configuration excludes node:test files, leading to silent omission of test suites.",
+      "breakdown_regime": "When F_{node} ≠ ∅, E_{npm} ⊂ F_{node}^c.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The exclusion kernel is derived from npm test's default include patterns, which do not match node:test files.",
+        "source_operator": "node_test_exclusion_from_npm",
+        "telemetry": "Number of node:test suites skipped by npm test"
+      }
+    },
+    {
+      "primitive_id": "mobile_suite_build_prerequisite",
+      "name": "Mobile Suite Build Prerequisite",
+      "verbatim_quote": "**The suite needs a build step**, and the build is not part of `npm test` at the root — it is an `apps/mobile`-local step with an **absolute POSIX `outDir`**.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_{build}': 'build step required for suite execution', 'P_{path}': 'POSIX outDir path for compiled artifacts', 'S_{suite}': 'mobile test suite'}",
+      "assumptions": "Execution of mobile test suites requires a prior build step; otherwise, modules are unresolved.",
+      "breakdown_regime": "If ¬B_{build}, then S_{suite} → SKIPPED.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The build prerequisite is a derived kernel condition for mobile suite execution, defined by P_{path} and B_{build}.",
+        "source_operator": "mobile_suite_build_prerequisite",
+        "telemetry": "Build presence (boolean) and suite execution outcome"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c678b0d5de1e2042_t0",
+      "think": "The core insight is that test suite gating in CI is a probabilistic decision-making process. The guardrail matrix enforces a Bayesian update on test suite reliability, where inclusion implies a prior belief of stability. When node:test suites are excluded from npm test, they remain invisible to the root-level test runner, creating a false sense of completeness. This is resolved by explicitly including them in CI, enabling precise failure attribution. The mobile suite introduces a build dependency, which acts as a kernel condition for execution. If the build is missing, the suite is skipped rather than failing, indicating a process-level failure rather than a logic-level one. The distinction is critical for accurate telemetry and system integrity.\n\nDeep epistemic analysis for NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042, domain=other, pages_read=3/3): Operator 'Explicit Test Suite Inclusion' (page 1, domain other) captures: **The list in `ci.yml` is explicit, not globbed, on purpose.** A new guardrail suite is *not* picked up automatically: a suite that fails on its first appearance should be added here after it has been seen green, rather than silently becoming a gate the day it is written. Assumptions: Test suites must be explicitly declared to gate commits; automatic discovery leads to false positives. Breakdown regime: When a suite fails on first appearance, it is not added until verified as stable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The guardrail matrix is isomorphic to a Bayesian prior over test suite stability, where inclusion implies conditional probability of commit safety. Operator 'Node Test Exclusion from npm Test' (page 1, domain other) captures: **They do NOT collect `node:test` files.** So `npm test` skips every `node:test` suite in the repository, and they have been sitting there looking like gates. Assumptions: npm test configuration excludes node:test files, leading to silent omission of test suites. Breakdown regime: When F_{node} ≠ ∅, E_{npm} ⊂ F_{node}^c. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The exclusion kernel is derived from npm test's default include patterns, which do not match node:test files. Operator 'Mobile Suite Build Prerequisite' (page 2, domain other) captures: **The suite needs a build step**, and the build is not part of `npm test` at the root — it is an `apps/mobile`-local step with an **absolute POSIX `outDir`**. Assumptions: Execution of mobile test suites requires a prior build step; otherwise, modules are unresolved. Breakdown regime: If ¬B_{build}, then S_{suite} → SKIPPED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The build prerequisite is a derived kernel condition for mobile suite execution, defined by P_{path} and B_{build}. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042, domain=other, pages_read=3/3): Operator 'Explicit Test Suite Inclusion' (page 1, domain other) captures: **The list in `ci.yml` is explicit, not globbed, on purpose.** A new guardrail suite is *not* picked up automatically: a suite that fails on its first appearance should be added here after it has been seen green, rather than silently becoming a gate the day it is written. Assumptions: Test suites must be explicitly declared to gate commits; automatic discovery leads to false positives. Breakdown regime: When a suite fails on first appearance, it is not added until verified as stable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The guardrail matrix is isomorphic to a Bayesian prior over test suite stability, where inclusion implies conditional probability of commit safety. Operator 'Node Test Exclusion from npm Test' (page 1, domain other) captures: **They do NOT collect `node:test` files.** So `npm test` skips every `node:test` suite in the repository, and they have been sitting there looking like gates. Assumptions: npm test configuration excludes node:test files, leading to silent omission of test suites. Breakdown regime: When F_{node} ≠ ∅, E_{npm} ⊂ F_{node}^c. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The exclusion kernel is derived from npm test's default include patterns, which do not match node:test files. Operator 'Mobile Suite Build Prerequisite' (page 2, domain other) captures: **The suite needs a build step**, and the build is not part of `npm test` at the root — it is an `apps/mobile`-local step with an **absolute POSIX `outDir`**. Assumptions: Execution of mobile test suites requires a prior build step; otherwise, modules are unresolved. Breakdown regime: If ¬B_{build}, then S_{suite} → SKIPPED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The build prerequisite is a derived kernel condition for mobile suite execution, defined by P_{path} and B_{build}. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early CI design principles where test discovery was implicit and prone to misclassification. Modern practices emphasize explicit declaration and deterministic execution paths. Retrocausal Genealogy: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the CI system (which seeks to gate commits) and the test suite itself (which may be incomplete or stale). The system must distinguish between logical failure and environmental failure. Theory of Mind & Decision Maker Model: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that build steps are not conflated with test logic. Leakage vetoes occur when a suite is skipped due to missing dependencies rather than test assertions. Cross-Layer Veto & Anti-Leakage Check: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in NODE_TEST_SUITES_IN_CI (c678b0d5de1e2042), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

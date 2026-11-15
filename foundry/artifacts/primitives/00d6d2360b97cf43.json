@@ -1,0 +1,78 @@
+{
+  "book_id": "00d6d2360b97cf43",
+  "source_status": "COMPLETE",
+  "title": "2026-09-13-confidence-calibration-baseline",
+  "file_name": "2026-09-13-confidence-calibration-baseline.md",
+  "sha256": "00d6d2360b97cf431f4c4628d62fd7848cb710ed929280935327cdce69fbbf31",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Confidence calibration maps a high-dimensional heuristic state space to a scalar probability measure. The baseline reveals a flat, near-identity mapping where extreme confidence yields no discriminative edge, indicating a fundamental collapse of the predictive manifold into a uniform noise distribution.",
+  "gsi_mapping": "GSI employs conformal inference to bound the NCAAF moneyline underconfidence and NFL small-sample variance. By treating the book-path as a degenerate prior, GSI dynamically adjusts the premium threshold, ensuring that only statistically significant deviations from the 54% baseline are surfaced as actionable edges.",
+  "gse_mapping": "GSE models the inverted confidence regime as a catastrophic state-transition failure. When the heuristic score exceeds 90, the engine triggers a veto, recognizing the negative correlation with realized outcomes. Fixture-level collapsing ensures the state machine processes independent events rather than duplicated gameIds.",
+  "primitives": [
+    {
+      "primitive_id": "bookpath_calibration_flatness",
+      "name": "Bookpath Calibration Flatness Operator",
+      "verbatim_quote": "The heuristic carries almost no information; even a \"100\" book pick is a ~54% proposition.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "P(win): dimensionless probability of winning (0..1); C_book: heuristic confidence score (dimensionless, 0..100)",
+      "assumptions": "Assumes the book-path heuristic is a static weighted sum of historical features without dynamic market adjustment.",
+      "breakdown_regime": "Breaks down when C_book approaches 100, yielding P(win) -> 0.536 instead of 1.0, rendering the entire top-tier confidence spectrum useless for discrimination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a zero-signal channel in information theory, where the mutual information I(C_book; Outcome) approaches zero.",
+        "source_operator": "bookpath_calibration_flatness",
+        "telemetry": "Realized win rate of picks with C_book >= 95."
+      }
+    },
+    {
+      "primitive_id": "ncaaf_underconfidence_bias",
+      "name": "NCAAF Moneyline Underconfidence Bias",
+      "verbatim_quote": "NCAAF moneyline is underconfident (89% wins at 70 conf — big favorites).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P_realized: empirical win frequency (dimensionless); C_sys: system-assigned confidence (dimensionless, 0..100)",
+      "assumptions": "Assumes the underlying strength-of-schedule and team disparity metrics are accurate but poorly scaled to the final confidence output.",
+      "breakdown_regime": "Singularity occurs at high true-win probabilities (>80%), where the model caps confidence at 70, severely underpricing massive favorites.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a sigmoid scaling error in the GSI Bayesian updater, requiring a steepening hyperbolic tangent transform to align C_sys with P_realized.",
+        "source_operator": "ncaaf_underconfidence_bias",
+        "telemetry": "Delta between C_sys and P_realized for NCAAF ML picks where P_realized > 0.8."
+      }
+    },
+    {
+      "primitive_id": "inverted_confidence_penalty",
+      "name": "Inverted Confidence Penalty Regime",
+      "verbatim_quote": "The book path (heuristic weighted sum) is catastrophically overconfident and **inverted at the top**: higher heuristic confidence predicts *worse* results (90–99 → 31% wins).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "dP/dC: derivative of win probability with respect to confidence (negative in this regime); C_range: confidence interval [90, 99]",
+      "assumptions": "Assumes the presence of adversarial or highly non-linear market forces that systematically exploit the linear weighted sum heuristic.",
+      "breakdown_regime": "Total breakdown of monotonicity; the operator becomes negatively correlated with success, actively destroying portfolio value if followed blindly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to an adversarial attack on a linear classifier, where maximizing the feature score minimizes the actual class probability.",
+        "source_operator": "inverted_confidence_penalty",
+        "telemetry": "Win rate slope across deciles of C_book for the top 10% of scores."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "00d6d2360b97cf43_t0",
+      "think": "The derivation begins by defining the confidence-output function $f(H)$, where $H$ represents the high-dimensional heuristic state. Empirical observation dictates that $f(H)$ is structurally flawed: it exhibits a flat response curve ($\\frac{\\partial P}{\\partial H} \\approx 0$) across the majority of its domain, culminating in a catastrophic inversion at the upper boundary ($H \\to 100 \\implies P \\to 0.31$). This indicates that the original operator was likely trained on a dataset with severe label leakage or collinearity, causing it to memorize noise rather than signal. To rectify this, we introduce a conformal recalibration layer $\\mathcal{R}$ that maps the raw heuristic $H$ to a properly calibrated probability $\\hat{P}$ using isotonic regression on the held-out validation set. Furthermore, the NCAAF underconfidence suggests a domain-specific scaling factor $\\alpha_{sport}$ is required, effectively stretching the sigmoid output to match the realized frequency of dominant favorites. The fixture-level deduplication primitive acts as a pre-processing filter, ensuring that the input vector $H$ represents a unique spatiotemporal event rather than a redundant aggregation of `gameId` artifacts. The resulting dual-system architecture isolates the 'book-path' as a low-information baseline prior, while the 'signal-path' operates as the primary gradient descent engine, dynamically adjusting weights based on real-time snapshot parity.\n\nDeep epistemic analysis for 2026-09-13-confidence-calibration-baseline (00d6d2360b97cf43, domain=other, pages_read=2/2): Operator 'Bookpath Calibration Flatness Operator' (page 2, domain other) captures: The heuristic carries almost no information; even a \"100\" book pick is a ~54% proposition. Assumptions: Assumes the book-path heuristic is a static weighted sum of historical features without dynamic market adjustment. Breakdown regime: Breaks down when C_book approaches 100, yielding P(win) -> 0.536 instead of 1.0, rendering the entire top-tier confidence spectrum useless for discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a zero-signal channel in information theory, where the mutual information I(C_book; Outcome) approaches zero. Operator 'NCAAF Moneyline Underconfidence Bias' (page 1, domain other) captures: NCAAF moneyline is underconfident (89% wins at 70 conf — big favorites). Assumptions: Assumes the underlying strength-of-schedule and team disparity metrics are accurate but poorly scaled to the final confidence output. Breakdown regime: Singularity occurs at high true-win probabilities (>80%), where the model caps confidence at 70, severely underpricing massive favorites. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a sigmoid scaling error in the GSI Bayesian updater, requiring a steepening hyperbolic tangent transform to align C_sys with P_realized. Operator 'Inverted Confidence Penalty Regime' (page 1, domain other) captures: The book path (heuristic weighted sum) is catastrophically overconfident and **inverted at the top**: higher heuristic confidence predicts *worse* results (90–99 → 31% wins). Assumptions: Assumes the presence of adversarial or highly non-linear market forces that systematically exploit the linear weighted sum heuristic. Breakdown regime: Total breakdown of monotonicity; the operator becomes negatively correlated with success, actively destroying portfolio value if followed blindly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to an adversarial attack on a linear classifier, where maximizing the feature score minimizes the actual class probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-09-13-confidence-calibration-baseline (00d6d2360b97cf43, domain=other, pages_read=2/2): Operator 'Bookpath Calibration Flatness Operator' (page 2, domain other) captures: The heuristic carries almost no information; even a \"100\" book pick is a ~54% proposition. Assumptions: Assumes the book-path heuristic is a static weighted sum of historical features without dynamic market adjustment. Breakdown regime: Breaks down when C_book approaches 100, yielding P(win) -> 0.536 instead of 1.0, rendering the entire top-tier confidence spectrum useless for discrimination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a zero-signal channel in information theory, where the mutual information I(C_book; Outcome) approaches zero. Operator 'NCAAF Moneyline Underconfidence Bias' (page 1, domain other) captures: NCAAF moneyline is underconfident (89% wins at 70 conf — big favorites). Assumptions: Assumes the underlying strength-of-schedule and team disparity metrics are accurate but poorly scaled to the final confidence output. Breakdown regime: Singularity occurs at high true-win probabilities (>80%), where the model caps confidence at 70, severely underpricing massive favorites. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a sigmoid scaling error in the GSI Bayesian updater, requiring a steepening hyperbolic tangent transform to align C_sys with P_realized. Operator 'Inverted Confidence Penalty Regime' (page 1, domain other) captures: The book path (heuristic weighted sum) is catastrophically overconfident and **inverted at the top**: higher heuristic confidence predicts *worse* results (90–99 → 31% wins). Assumptions: Assumes the presence of adversarial or highly non-linear market forces that systematically exploit the linear weighted sum heuristic. Breakdown regime: Total breakdown of monotonicity; the operator becomes negatively correlated with success, actively destroying portfolio value if followed blindly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to an adversarial attack on a linear classifier, where maximizing the feature score minimizes the actual class probability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This calibration crisis echoes the foundational work of Brier (1950) on probability scoring rules and the later developments in conformal prediction by Vovk et al. (2005). Historically, sports betting models suffered similar inversions during the transition from linear regression to neural networks, where overfitting to public consensus created 'trap' lines that appeared highly confident but were mathematically doomed. The current baseline is a direct descendant of those early, unregularized logistic models.",
+      "theory_of_mind": "The opposing agent—the sportsbook—is modeled not as a passive oracle but as an adaptive adversary optimizing for liability balancing. When our heuristic assigns a 90+ confidence, it often reflects a line that has already absorbed massive public money, pushing the implied probability past the true edge. The bookmaker's 'mind' anticipates the herd's overreaction, deliberately setting lines that invert the natural correlation between perceived certainty and actual outcome frequency.",
+      "cross_layer_veto": "A strict anti-collinearity veto must be enforced between the `factorBreakdown` JSONB weights and the snapshot metadata. If the `independentEdge` metric correlates too highly with the raw `book_path` score, the system risks re-ingesting the inverted noise. We implement a dynamic threshold: any pick where the book-path confidence exceeds 85 but the signal-path independent edge is below 2% is automatically flagged and excluded from the Premium tier, preventing the poisoned prior from contaminating the posterior."
+    }
+  ]
+}

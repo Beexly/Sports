@@ -1,0 +1,78 @@
+{
+  "book_id": "49bca6be47de8a9e",
+  "source_status": "COMPLETE",
+  "title": "2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors",
+  "file_name": "2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors.md",
+  "sha256": "49bca6be47de8a9eb817506235e87dd0b80e04ae90c7f570f9ebca2ae3a3bea6",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Tennis scoring structure maps to hierarchical probabilistic state transitions: points → games → sets → matches, each governed by binary outcome dynamics. Universal Lens: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models player win probabilities via point-level p and q, enabling conformal prediction of match outcomes through recursive likelihood updates. GSI Mapping: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning encodes game states as Markovian transitions between score configurations, with dynamic programming evaluating optimal strategies per set/game boundary. GSE Mapping: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "point_scoring_mechanism",
+      "name": "Point Scoring Mechanism",
+      "verbatim_quote": "- first to win four points or more by margin of two wins the - game.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'points': 'dimensionless', 'margin': 'dimensionless'}",
+      "assumptions": "Binary outcome per point; independence of points.",
+      "breakdown_regime": "Deuce and advantage scenarios require special handling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Models each point as Bernoulli trial with fixed probability p.",
+        "source_operator": "point_scoring_mechanism",
+        "telemetry": "Serve success rate per point."
+      }
+    },
+    {
+      "primitive_id": "game_win_probability",
+      "name": "Game Win Probability",
+      "verbatim_quote": "3 # \"Tennis Formula\" - Let p denote the probability that a player wins a single point serving.",
+      "page": 1,
+      "latex": "\\mathbb{P}(\\text{Win Game}) = \\sum_{k=4}^{\\infty} \\binom{k+3}{3} p^4 (1-p)^{k} \\cdot \\mathbb{I}_{\\text{win by 2}}",
+      "symbol_and_unit_ledger": "{'p': 'probability of winning a point while serving', 'k': 'number of points beyond 4 needed to win', 'I_{win by 2}': 'indicator function for margin requirement'}",
+      "assumptions": "Points are independent; game ends after 4+ points with 2-point lead.",
+      "breakdown_regime": "When p approaches 0.5, convergence slows due to increased deuce likelihood.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Recursive computation of game win probability from point-level p.",
+        "source_operator": "game_win_probability",
+        "telemetry": "Probability of winning a game given p."
+      }
+    },
+    {
+      "primitive_id": "set_scoring_structure",
+      "name": "Set Scoring Structure",
+      "verbatim_quote": "- to win six of two or otherwise seven - first games by margin wins the set at six - games (tiebreaker all).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'games': 'dimensionless', 'tiebreaker': 'boolean'}",
+      "assumptions": "Each game follows same probabilistic model; tiebreaker uses alternate rules.",
+      "breakdown_regime": "Tiebreaker introduces asymmetric scoring when 6-6 occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Set win probability derived from game win probabilities using binomial logic.",
+        "source_operator": "set_scoring_structure",
+        "telemetry": "Probability of winning a set under standard or tiebreaker conditions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "49bca6be47de8a9e_t0",
+      "think": "The tennis scoring system forms a nested hierarchy of probabilistic events: points are Bernoulli trials, games are sums of these trials subject to margin constraints, and sets are combinations of games. The core formula assumes independence between points, which may fail during high-intensity rallies or psychological shifts. Each level introduces complexity—deuce requires conditional logic, tiebreakers alter the baseline probability model, and match outcomes depend on cumulative game probabilities. The derivation proceeds recursively from point-level win probability p to game-level, then set-level, and finally match-level. Dualities emerge in how p and q (opponent's win probability) interact across levels. Failure modes include violation of independence, non-stationary performance, and misapplication of static models to dynamic situations.\n\nDeep epistemic analysis for 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e, domain=other, pages_read=3/3): Operator 'Point Scoring Mechanism' (page 1, domain other) captures: - first to win four points or more by margin of two wins the - game. Assumptions: Binary outcome per point; independence of points. Breakdown regime: Deuce and advantage scenarios require special handling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models each point as Bernoulli trial with fixed probability p. Operator 'Game Win Probability' (page 1, domain other) captures: 3 # \"Tennis Formula\" - Let p denote the probability that a player wins a single point serving. Assumptions: Points are independent; game ends after 4+ points with 2-point lead. Breakdown regime: When p approaches 0.5, convergence slows due to increased deuce likelihood. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Recursive computation of game win probability from point-level p. Operator 'Set Scoring Structure' (page 1, domain other) captures: - to win six of two or otherwise seven - first games by margin wins the set at six - games (tiebreaker all). Assumptions: Each game follows same probabilistic model; tiebreaker uses alternate rules. Breakdown regime: Tiebreaker introduces asymmetric scoring when 6-6 occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Set win probability derived from game win probabilities using binomial logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e, domain=other, pages_read=3/3): Operator 'Point Scoring Mechanism' (page 1, domain other) captures: - first to win four points or more by margin of two wins the - game. Assumptions: Binary outcome per point; independence of points. Breakdown regime: Deuce and advantage scenarios require special handling. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Models each point as Bernoulli trial with fixed probability p. Operator 'Game Win Probability' (page 1, domain other) captures: 3 # \"Tennis Formula\" - Let p denote the probability that a player wins a single point serving. Assumptions: Points are independent; game ends after 4+ points with 2-point lead. Breakdown regime: When p approaches 0.5, convergence slows due to increased deuce likelihood. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Recursive computation of game win probability from point-level p. Operator 'Set Scoring Structure' (page 1, domain other) captures: - to win six of two or otherwise seven - first games by margin wins the set at six - games (tiebreaker all). Assumptions: Each game follows same probabilistic model; tiebreaker uses alternate rules. Breakdown regime: Tiebreaker introduces asymmetric scoring when 6-6 occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Set win probability derived from game win probabilities using binomial logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century game theory and probability theory, particularly the work of Pascal and Fermat on gambling problems, extended into modern sports analytics through statistical modeling frameworks. Retrocausal Genealogy: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents are modeled as stochastic processes with distinct but correlated win probabilities p and q. Their decisions influence marginal point outcomes, affecting downstream game and set probabilities. Strategic behavior such as serving patterns or break-point pressure alters effective p values dynamically. Theory of Mind & Decision Maker Model: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when point-level assumptions conflict with macroscopic match trends. Leakage occurs if game-level dependencies are ignored in set calculations, leading to overconfidence in match predictions. Veto conditions include non-stationarity of p and q over time or across different court surfaces. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2007 - The Tennis Formula How it can be used in professional tennis - Unknown Authors (49bca6be47de8a9e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

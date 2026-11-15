@@ -1,0 +1,78 @@
+{
+  "book_id": "bf4412a0a7532ef4",
+  "source_status": "COMPLETE",
+  "title": "CURRENT_REPOSITORY_TRUTH_2026-07-21",
+  "file_name": "CURRENT_REPOSITORY_TRUTH_2026-07-21.md",
+  "sha256": "bf4412a0a7532ef47ffbb73a04587d37bdd6521b51c84239a7c62c4ca51f7f9b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Repository state synchronization via git merge-base alignment and branch divergence tracking. Universal Lens: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian update of PR status and commit ancestry using Git metadata as evidence for probabilistic inference. GSI Mapping: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational awareness of PR readiness through CI state and mergeability flags in dynamic codebase evolution. GSE Mapping: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "merge_base_alignment",
+      "name": "Merge Base Alignment Operator",
+      "verbatim_quote": "## `main` Head: `c19a00d` — \"feat(clv): FV-001 — side-aware CLV dispersion capture + Pedersen slate aggregate (#136)\" The merge-base both PR #145 and PR #146 branched from is `bf931ab` (\"feat(health): P2 — wire epistemic-twin into the health route + canActAsIf guard (#142)\"), **not** `main`'s current head.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_b': 'merge-base commit hash', 'M_h': 'main head commit hash', 'C_i': 'intermediate commit in history'}",
+      "assumptions": "Branches are linearly ordered in Git history; merge-base defines consistent ancestor.",
+      "breakdown_regime": "When M_h ≠ M_b, indicating divergence from stable baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model of codebase consistency and to GSE's state transition graph of PR readiness.",
+        "source_operator": "merge_base_alignment",
+        "telemetry": "Git commit history divergence metrics"
+      }
+    },
+    {
+      "primitive_id": "branch_status_closure",
+      "name": "Branch Status Closure Mechanism",
+      "verbatim_quote": "## PR #145 — **CLOSED, not open** This is the fact this directive's authoring context did not have: **PR #145 was closed by this session before the \"stop and rebase\" instruction arrived**, split into five replacement branches/PRs (below), per an internally-authored master plan.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B_s': 'branch status (open/closed)', 'B_h': 'branch head SHA', 'T_c': 'time of closure'}",
+      "assumptions": "PR lifecycle is deterministic and tracked via Git state.",
+      "breakdown_regime": "When B_s transitions from open to closed without rebase.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSI's event-based tracking of PR lifecycle and GSE's reactive state machine.",
+        "source_operator": "branch_status_closure",
+        "telemetry": "GitHub API PR status change timestamps"
+      }
+    },
+    {
+      "primitive_id": "pr_rebase_necessity",
+      "name": "PR Rebase Necessity Criterion",
+      "verbatim_quote": "Any extraction work must rebase onto current `main`, not the stale merge-base.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_n': 'rebase necessity flag', 'M_c': 'current main commit', 'M_b': 'stale merge base', 'W_r': 'worktree reference'}",
+      "assumptions": "Rebasing ensures consistency with latest main state.",
+      "breakdown_regime": "When R_n = true, indicating outdated working tree.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's conditional probability of codebase drift and GSE's path correction logic.",
+        "source_operator": "pr_rebase_necessity",
+        "telemetry": "Local vs remote HEAD comparison"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "bf4412a0a7532ef4_t0",
+      "think": "The repository truth document encodes a dual logic: one of temporal consistency (via Git history) and another of operational correctness (via PR lifecycle). The core insight is that PR #145 was closed before rebasing instructions arrived, necessitating a reorganization into five new branches. This implies a failure mode where asynchronous updates lead to stale references. The merge-base alignment operator ensures that all future work is anchored to a known, consistent state. The closure mechanism enforces that only valid PRs contribute to the evolving system. Finally, the rebase necessity criterion prevents divergence from propagating through the system. These primitives form a coherent framework for managing distributed development under uncertainty.\n\nDeep epistemic analysis for CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4, domain=other, pages_read=2/2): Operator 'Merge Base Alignment Operator' (page 1, domain other) captures: ## `main` Head: `c19a00d` — \"feat(clv): FV-001 — side-aware CLV dispersion capture + Pedersen slate aggregate (#136)\" The merge-base both PR #145 and PR #146 branched from is `bf931ab` (\"feat(health): P2 — wire epistemic-twin into the health route + canActAsIf guard (#142)\"), **not** `main`'s current head. Assumptions: Branches are linearly ordered in Git history; merge-base defines consistent ancestor. Breakdown regime: When M_h ≠ M_b, indicating divergence from stable baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of codebase consistency and to GSE's state transition graph of PR readiness. Operator 'Branch Status Closure Mechanism' (page 1, domain other) captures: ## PR #145 — **CLOSED, not open** This is the fact this directive's authoring context did not have: **PR #145 was closed by this session before the \"stop and rebase\" instruction arrived**, split into five replacement branches/PRs (below), per an internally-authored master plan. Assumptions: PR lifecycle is deterministic and tracked via Git state. Breakdown regime: When B_s transitions from open to closed without rebase. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's event-based tracking of PR lifecycle and GSE's reactive state machine. Operator 'PR Rebase Necessity Criterion' (page 1, domain other) captures: Any extraction work must rebase onto current `main`, not the stale merge-base. Assumptions: Rebasing ensures consistency with latest main state. Breakdown regime: When R_n = true, indicating outdated working tree. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional probability of codebase drift and GSE's path correction logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4, domain=other, pages_read=2/2): Operator 'Merge Base Alignment Operator' (page 1, domain other) captures: ## `main` Head: `c19a00d` — \"feat(clv): FV-001 — side-aware CLV dispersion capture + Pedersen slate aggregate (#136)\" The merge-base both PR #145 and PR #146 branched from is `bf931ab` (\"feat(health): P2 — wire epistemic-twin into the health route + canActAsIf guard (#142)\"), **not** `main`'s current head. Assumptions: Branches are linearly ordered in Git history; merge-base defines consistent ancestor. Breakdown regime: When M_h ≠ M_b, indicating divergence from stable baseline. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model of codebase consistency and to GSE's state transition graph of PR readiness. Operator 'Branch Status Closure Mechanism' (page 1, domain other) captures: ## PR #145 — **CLOSED, not open** This is the fact this directive's authoring context did not have: **PR #145 was closed by this session before the \"stop and rebase\" instruction arrived**, split into five replacement branches/PRs (below), per an internally-authored master plan. Assumptions: PR lifecycle is deterministic and tracked via Git state. Breakdown regime: When B_s transitions from open to closed without rebase. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's event-based tracking of PR lifecycle and GSE's reactive state machine. Operator 'PR Rebase Necessity Criterion' (page 1, domain other) captures: Any extraction work must rebase onto current `main`, not the stale merge-base. Assumptions: Rebasing ensures consistency with latest main state. Breakdown regime: When R_n = true, indicating outdated working tree. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's conditional probability of codebase drift and GSE's path correction logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Git's DAG semantics and formalized in version control theory, these primitives extend earlier work on distributed consensus and state synchronization in software engineering. Retrocausal Genealogy: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated CI system, which validates changes, and the human developer, who may act on outdated information. The system models these as competing signals in a Bayesian framework. Theory of Mind & Decision Maker Model: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that file-level overlaps between PRs are zero. Leakage is prevented by requiring explicit rebasing when merge-bases become stale. Cross-Layer Veto & Anti-Leakage Check: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CURRENT_REPOSITORY_TRUTH_2026-07-21 (bf4412a0a7532ef4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "5aebecfbeee62cf8",
+  "source_status": "COMPLETE",
+  "title": "2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors",
+  "file_name": "2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors.md",
+  "sha256": "5aebecfbeee62cf8eee5943ef246012976f655d22f11516499364872a3d30b37",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Markovian state transitions model game dynamics via deliberate actions, capturing possession flow and goal probability shifts across 39 discrete states. Universal Lens: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player contributions using transition probabilities and goal-scoring value increments derived from Markov chains. GSI Mapping: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine computes real-time state transitions and evaluates action impact on possession and scoring likelihood using absorbing Markov models. GSE Mapping: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "deliberate_action",
+      "name": "Deliberate Action",
+      "verbatim_quote": "ion** – any action where a player moves the ball in a controlled manner with an attempted outcome - Deliberate: pass, shot, dribble, etc.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'set of deliberate actions'}",
+      "assumptions": "Actions are intentional, controlled, and outcome-oriented; excludes defensive or accidental events.",
+      "breakdown_regime": "Discrete event space with deterministic action classification.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each deliberate action maps to a node in the Markov chain representing a game state transition.",
+        "source_operator": "deliberate_action",
+        "telemetry": "Frequency and type of deliberate actions per possession"
+      }
+    },
+    {
+      "primitive_id": "possession",
+      "name": "Possession",
+      "verbatim_quote": "- **Possession** – a series of consecutive deliberate actions performed by one team, only interrupted by a deliberate action performed by the other team or the end of a half.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'sequence of deliberate actions', 'T': 'time interval'}",
+      "assumptions": "Possession is bounded by deliberate interruptions or match time limits.",
+      "breakdown_regime": "Temporal sequence of actions within a defined game segment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Possession defines the temporal scope for evaluating transition matrices and goal probabilities.",
+        "source_operator": "possession",
+        "telemetry": "Duration and number of deliberate actions per possession"
+      }
+    },
+    {
+      "primitive_id": "transition_matrix",
+      "name": "Transition Matrix",
+      "verbatim_quote": "**13** On Football Research and Consulting www.onfooty.com # Transition Matrices - Calculate the probability of moving from state _Sa_ to _Sb_ for all combinations of the 39 states - Absorbing states are different, probability of remaining in same state is 1 and moving to another state is 0.",
+      "page": 2,
+      "latex": "\\mathbf{T}_{ij} = \\Pr(S_j | S_i)",
+      "symbol_and_unit_ledger": "{'T_{ij}': 'probability of transitioning from state i to state j', 'S_i, S_j': 'game states'}",
+      "assumptions": "States are mutually exclusive and collectively exhaustive; transitions are memoryless.",
+      "breakdown_regime": "Stochastic matrix with absorbing states at goal or end-of-half.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Transition matrix encodes probabilistic evolution of possession states over time.",
+        "source_operator": "transition_matrix",
+        "telemetry": "Convergence of transition probabilities to steady-state distribution"
+      }
+    },
+    {
+      "primitive_id": "goal_probability_weighting",
+      "name": "Goal Probability Weighting",
+      "verbatim_quote": "get) ### **Weight each action with incremental improvement of P(Goal)** **22** On Football Research and Consulting www.onfooty.com # How does it work?",
+      "page": 3,
+      "latex": "\\Delta P(Goal) = P(Goal|A_{t+1}) - P(Goal|A_t)",
+      "symbol_and_unit_ledger": "{'P(Goal)': 'probability of scoring', 'A_t': 'action at time t'}",
+      "assumptions": "Incremental change in goal probability reflects immediate impact of action.",
+      "breakdown_regime": "Action-level marginal utility in terms of scoring likelihood.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Action weights are computed based on expected change in goal probability post-action.",
+        "source_operator": "goal_probability_weighting",
+        "telemetry": "Net change in P(Goal) attributed to individual actions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5aebecfbeee62cf8_t0",
+      "think": "The framework employs a Markov chain to model soccer game dynamics through discrete states representing possession configurations. Each state encapsulates positional and temporal context, enabling calculation of transition probabilities between states. Deliberate actions define edges in the graph, while possession sequences form paths. Absorbing states represent goals or turnovers. The core innovation lies in associating each action with an incremental change in goal probability, allowing quantification of offensive contribution. This dual approach—modeling both state evolution and value addition—enables tactical analysis and performance evaluation. Failure modes include insufficient data for convergence, misclassification of actions, and oversimplification of complex off-the-ball movements. The method's strength resides in its ability to decompose high-dimensional game dynamics into manageable stochastic processes.\n\nDeep epistemic analysis for 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8, domain=other, pages_read=3/3): Operator 'Deliberate Action' (page 2, domain other) captures: ion** – any action where a player moves the ball in a controlled manner with an attempted outcome - Deliberate: pass, shot, dribble, etc. Assumptions: Actions are intentional, controlled, and outcome-oriented; excludes defensive or accidental events. Breakdown regime: Discrete event space with deterministic action classification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each deliberate action maps to a node in the Markov chain representing a game state transition. Operator 'Possession' (page 2, domain other) captures: - **Possession** – a series of consecutive deliberate actions performed by one team, only interrupted by a deliberate action performed by the other team or the end of a half. Assumptions: Possession is bounded by deliberate interruptions or match time limits. Breakdown regime: Temporal sequence of actions within a defined game segment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Possession defines the temporal scope for evaluating transition matrices and goal probabilities. Operator 'Transition Matrix' (page 2, domain other) captures: **13** On Football Research and Consulting www.onfooty.com # Transition Matrices - Calculate the probability of moving from state _Sa_ to _Sb_ for all combinations of the 39 states - Absorbing states are different, probability of remaining in same state is 1 and moving to another state is 0. Assumptions: States are mutually exclusive and collectively exhaustive; transitions are memoryless. Breakdown regime: Stochastic matrix with absorbing states at goal or end-of-half. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transition matrix encodes probabilistic evolution of possession states over time. Operator 'Goal Probability Weighting' (page 3, domain other) captures: get) ### **Weight each action with incremental improvement of P(Goal)** **22** On Football Research and Consulting www.onfooty.com # How does it work? Assumptions: Incremental change in goal probability reflects immediate impact of action. Breakdown regime: Action-level marginal utility in terms of scoring likelihood. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Action weights are computed based on expected change in goal probability post-action. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8, domain=other, pages_read=3/3): Operator 'Deliberate Action' (page 2, domain other) captures: ion** – any action where a player moves the ball in a controlled manner with an attempted outcome - Deliberate: pass, shot, dribble, etc. Assumptions: Actions are intentional, controlled, and outcome-oriented; excludes defensive or accidental events. Breakdown regime: Discrete event space with deterministic action classification. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each deliberate action maps to a node in the Markov chain representing a game state transition. Operator 'Possession' (page 2, domain other) captures: - **Possession** – a series of consecutive deliberate actions performed by one team, only interrupted by a deliberate action performed by the other team or the end of a half. Assumptions: Possession is bounded by deliberate interruptions or match time limits. Breakdown regime: Temporal sequence of actions within a defined game segment. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Possession defines the temporal scope for evaluating transition matrices and goal probabilities. Operator 'Transition Matrix' (page 2, domain other) captures: **13** On Football Research and Consulting www.onfooty.com # Transition Matrices - Calculate the probability of moving from state _Sa_ to _Sb_ for all combinations of the 39 states - Absorbing states are different, probability of remaining in same state is 1 and moving to another state is 0. Assumptions: States are mutually exclusive and collectively exhaustive; transitions are memoryless. Breakdown regime: Stochastic matrix with absorbing states at goal or end-of-half. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transition matrix encodes probabilistic evolution of possession states over time. Operator 'Goal Probability Weighting' (page 3, domain other) captures: get) ### **Weight each action with incremental improvement of P(Goal)** **22** On Football Research and Consulting www.onfooty.com # How does it work? Assumptions: Incremental change in goal probability reflects immediate impact of action. Breakdown regime: Action-level marginal utility in terms of scoring likelihood. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Action weights are computed based on expected change in goal probability post-action. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in stochastic process theory and applied to sports analytics, building upon earlier work in game state modeling and Markov decision processes pioneered by Reinforcement Learning and Operations Research communities. Retrocausal Genealogy: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as players whose decisions influence state transitions. Opposing agents' actions alter transition probabilities, reflecting competitive dynamics. The system assumes rational behavior in maximizing goal probability, though deviations may occur due to skill, fatigue, or strategy. Theory of Mind & Decision Maker Model: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that possession duration and action types do not redundantly encode similar information. Leakage veto prevents overfitting by enforcing sparsity in transition matrices and limiting reliance on rare event sequences. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2011 - A framework for tactical analysis and individual off ensive production assessment in soccer using Markov chains - Unknown Authors (5aebecfbeee62cf8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

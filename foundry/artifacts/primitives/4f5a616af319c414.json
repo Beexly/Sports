@@ -1,16 +1,16 @@
 {
   "book_id": "4f5a616af319c414",
-  "title": "medical release form.pdf",
-  "file_name": "medical release form.pdf.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_4f5a616af319c414",
+  "file_name": "4f5a616af319c414.quarantined",
   "sha256": "4f5a616af319c414d8da05dd063e33b1b5620afa2d72f771ce851619a988829b",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 113 extracted chars, 0 candidate quotes < 3 minimum): 'SOURCE_FILE: drive\\\\medical release form.pdf ============================================================ [page 1]'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

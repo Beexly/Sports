@@ -1,0 +1,78 @@
+{
+  "book_id": "194d9d3f58e4ca16",
+  "source_status": "COMPLETE",
+  "title": "rotoballer.com",
+  "file_name": "rotoballer.com.md",
+  "sha256": "194d9d3f58e4ca166a813386708e3bf5db44c5e8ef5c37388f21774ef6ba0abc",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph connectivity and crawlability as a proxy for information architecture robustness in analytics domains. Universal Lens: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sitemap availability and entry counts inform probabilistic data access models for fantasy sports intelligence. GSI Mapping: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in web crawling logic depend on sitemap status codes and entry counts to optimize resource allocation for real-time analytics. GSE Mapping: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_connectivity_index",
+      "name": "Sitemap Connectivity Index",
+      "verbatim_quote": "# rotoballer.com Category: **analytics** URLs discovered: **10,390** Sitemaps walked: 212 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Connectivity score (dimensionless)', 'U': 'URLs discovered (count)', 'S': 'Sitemaps walked (count)'}",
+      "assumptions": "Sitemap coverage correlates with data accessibility; higher U/S implies better indexing.",
+      "breakdown_regime": "When S → 0, C becomes undefined; when U → ∞, C approaches maximum value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The ratio of discovered URLs to sitemaps mirrors the inverse of indexing efficiency in GSI's belief networks.",
+        "source_operator": "sitemap_connectivity_index",
+        "telemetry": "Ratio of total URLs to sitemaps crawled per session"
+      }
+    },
+    {
+      "primitive_id": "crawl_status_code_classifier",
+      "name": "Crawl Status Code Classifier",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.rotoballer.com/sitemap.xml` | 200 | 200 | yes | | `https://www.rotoballer.com/google-news-sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Status code (integer)', 'E': 'Entry count (integer)', 'A': 'Accessible flag (boolean)'}",
+      "assumptions": "Status code 200 indicates valid sitemap; 404 implies missing resource.",
+      "breakdown_regime": "When S = 404, A = false; when S = 200, A = true.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Binary classification of sitemap validity drives GSE's adaptive crawling policy.",
+        "source_operator": "crawl_status_code_classifier",
+        "telemetry": "Boolean flag indicating sitemap accessibility"
+      }
+    },
+    {
+      "primitive_id": "entry_density_metric",
+      "name": "Entry Density Metric",
+      "verbatim_quote": "365 | no | | `https://www.rotoballer.com/wp-content/uploads/sitemaps/nfl_tools_index.xml` | 200 | 2 | yes | | `https://www.rotoballer.com/rankings-combos-sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Entry density (entries per sitemap)', 'E': 'Total entries (count)', 'S': 'Number of sitemaps (count)'}",
+      "assumptions": "Lower D suggests fragmented content distribution across sitemaps.",
+      "breakdown_regime": "As E increases while S remains constant, D grows linearly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entry density reflects content granularity and affects GSI’s data partitioning strategy.",
+        "source_operator": "entry_density_metric",
+        "telemetry": "Average number of entries per sitemap"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "194d9d3f58e4ca16_t0",
+      "think": "The sitemap structure provides a topological map of rotoballer.com’s information architecture. The connectivity index C = U/S measures how efficiently each sitemap serves its purpose. When S is large relative to U, it implies sparse indexing or redundant sitemaps. The crawl status classifier maps HTTP responses into binary accessibility flags, enabling GSE to prioritize crawling paths. Entry density D = E/S reveals whether content is consolidated or dispersed—critical for GSI’s data ingestion pipeline. These primitives form a dual framework: one for structural robustness (connectivity), another for operational reliability (status). Failure modes include 404s that break navigation chains, and low-density sitemaps that may indicate underutilized resources. Dualities emerge between indexing depth and data retrieval speed, where high connectivity supports faster inference but risks overloading servers.\n\nDeep epistemic analysis for rotoballer.com (194d9d3f58e4ca16, domain=other, pages_read=7/7): Operator 'Sitemap Connectivity Index' (page 1, domain other) captures: # rotoballer.com Category: **analytics** URLs discovered: **10,390** Sitemaps walked: 212 ## Sitemaps | Sitemap | Status Assumptions: Sitemap coverage correlates with data accessibility; higher U/S implies better indexing. Breakdown regime: When S → 0, C becomes undefined; when U → ∞, C approaches maximum value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The ratio of discovered URLs to sitemaps mirrors the inverse of indexing efficiency in GSI's belief networks. Operator 'Crawl Status Code Classifier' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.rotoballer.com/sitemap.xml` | 200 | 200 | yes | | `https://www.rotoballer.com/google-news-sitemap.xml` | Assumptions: Status code 200 indicates valid sitemap; 404 implies missing resource. Breakdown regime: When S = 404, A = false; when S = 200, A = true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Binary classification of sitemap validity drives GSE's adaptive crawling policy. Operator 'Entry Density Metric' (page 1, domain other) captures: 365 | no | | `https://www.rotoballer.com/wp-content/uploads/sitemaps/nfl_tools_index.xml` | 200 | 2 | yes | | `https://www.rotoballer.com/rankings-combos-sitemap.xml` | Assumptions: Lower D suggests fragmented content distribution across sitemaps. Breakdown regime: As E increases while S remains constant, D grows linearly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entry density reflects content granularity and affects GSI’s data partitioning strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for rotoballer.com (194d9d3f58e4ca16, domain=other, pages_read=7/7): Operator 'Sitemap Connectivity Index' (page 1, domain other) captures: # rotoballer.com Category: **analytics** URLs discovered: **10,390** Sitemaps walked: 212 ## Sitemaps | Sitemap | Status Assumptions: Sitemap coverage correlates with data accessibility; higher U/S implies better indexing. Breakdown regime: When S → 0, C becomes undefined; when U → ∞, C approaches maximum value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The ratio of discovered URLs to sitemaps mirrors the inverse of indexing efficiency in GSI's belief networks. Operator 'Crawl Status Code Classifier' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.rotoballer.com/sitemap.xml` | 200 | 200 | yes | | `https://www.rotoballer.com/google-news-sitemap.xml` | Assumptions: Status code 200 indicates valid sitemap; 404 implies missing resource. Breakdown regime: When S = 404, A = false; when S = 200, A = true. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Binary classification of sitemap validity drives GSE's adaptive crawling policy. Operator 'Entry Density Metric' (page 1, domain other) captures: 365 | no | | `https://www.rotoballer.com/wp-content/uploads/sitemaps/nfl_tools_index.xml` | 200 | 2 | yes | | `https://www.rotoballer.com/rankings-combos-sitemap.xml` | Assumptions: Lower D suggests fragmented content distribution across sitemaps. Breakdown regime: As E increases while S remains constant, D grows linearly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entry density reflects content granularity and affects GSI’s data partitioning strategy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web crawling algorithms of the 1990s, this formalism evolved through search engine optimization (SEO) and semantic web standards, particularly RDF and XML sitemaps. Retrocausal Genealogy: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers seeking maximal coverage versus servers enforcing rate limits. Decision actors are the site owner optimizing for SEO and users seeking timely fantasy insights. Theory of Mind & Decision Maker Model: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple sitemaps report identical entries, suggesting redundancy. Leakage occurs if status codes are misclassified, leading to invalid telemetry in GSI’s belief system. Cross-Layer Veto & Anti-Leakage Check: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in rotoballer.com (194d9d3f58e4ca16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

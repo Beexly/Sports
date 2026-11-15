@@ -1,0 +1,78 @@
+{
+  "book_id": "ab1bb44bcb643d96",
+  "source_status": "COMPLETE",
+  "title": "hermes_execution_prompt",
+  "file_name": "hermes_execution_prompt.md",
+  "sha256": "ab1bb44bcb643d961781982d7428d0fdc6a3a809044476a7dd285dcfa3d9ccbf",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Six discrete operational fixes mapped to atomic state transitions with guardrail verifications. Universal Lens: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian score disagreement detection via conformal prediction thresholds in game data persistence. GSI Mapping: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally aware state-machine updates with rollback guards for stale score resolution. GSE Mapping: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "score_disagreement_guard",
+      "name": "Score Disagreement Guard",
+      "verbatim_quote": "`apps/web/lib/data-sources/settle-backfill.ts` — `defaultPersist` missing score-disagreement guard.** `defaultPersist` writes `game.homeScore`/`awayScore` unconditionally whenever both are non-null, with no check against an existing differing score.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'score_diff': 'dimensionless', 'existing_score': 'points', 'new_score': 'points'}",
+      "assumptions": "Scores are numeric and can be compared directly.",
+      "breakdown_regime": "When new_score ≠ existing_score and both are non-null.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The guard enforces a causal constraint between incoming and stored scores, mirroring a Bayesian update where evidence conflicts with prior beliefs.",
+        "source_operator": "score_disagreement_guard",
+        "telemetry": "Count of prevented overwrites due to mismatched scores."
+      }
+    },
+    {
+      "primitive_id": "cap_reached_off_by_one",
+      "name": "Cap Reached Off-by-One Correction",
+      "verbatim_quote": "Same file — `capReached` off-by-one.** Currently `capReached: stale.length >= cap`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'stale_length': 'count', 'cap': 'count'}",
+      "assumptions": "Stale entries are ordered and represent time-sensitive data.",
+      "breakdown_regime": "When stale_length equals cap exactly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Corrects a logical boundary condition in batch processing to ensure correct truncation at threshold.",
+        "source_operator": "cap_reached_off_by_one",
+        "telemetry": "Number of times cap was correctly enforced vs. incorrect enforcement."
+      }
+    },
+    {
+      "primitive_id": "unpublished_season_signal",
+      "name": "Unpublished Season Signal Guard",
+      "verbatim_quote": "`apps/web/app/api/cron/backfill-team-efficiency/route.ts` and `apps/web/app/api/cron/ingest-player-stats/route.ts` — missing `isUnpublishedSeasonSignal` guard.** Neither route calls `isUnpublishedSeasonSignal` (from `apps/web/lib/ingestion/unpublished-season.ts`), while sibling routes `backfill-player-data/route.ts` and `refresh-player-stats/route.ts` already do.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'season_status': 'boolean', 'route_call': 'API endpoint invocation'}",
+      "assumptions": "Season status is deterministically known at runtime.",
+      "breakdown_regime": "During unpublished season periods.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces a conditional execution path based on temporal domain validity, akin to a temporal logic constraint.",
+        "source_operator": "unpublished_season_signal",
+        "telemetry": "Number of skipped executions during unpublished seasons."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ab1bb44bcb643d96_t0",
+      "think": "The three primitives form a coherent set of operational safeguards. The score disagreement guard prevents erroneous data overwrites by enforcing consistency checks. The cap correction ensures proper batch handling under boundary conditions. The unpublished season signal prevents invalid operations during inactive periods. These are not merely code corrections but reflect deeper principles of data integrity and temporal consistency. Each primitive operates within a well-defined regime and exhibits clear failure modes. The first two are derived from state transition constraints, while the third reflects a temporal logic gate. Together they embody a minimal yet robust framework for preventing systemic errors in data ingestion pipelines.\n\nDeep epistemic analysis for hermes_execution_prompt (ab1bb44bcb643d96, domain=other, pages_read=3/3): Operator 'Score Disagreement Guard' (page 1, domain other) captures: `apps/web/lib/data-sources/settle-backfill.ts` — `defaultPersist` missing score-disagreement guard.** `defaultPersist` writes `game.homeScore`/`awayScore` unconditionally whenever both are non-null, with no check against an existing differing score. Assumptions: Scores are numeric and can be compared directly. Breakdown regime: When new_score ≠ existing_score and both are non-null. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The guard enforces a causal constraint between incoming and stored scores, mirroring a Bayesian update where evidence conflicts with prior beliefs. Operator 'Cap Reached Off-by-One Correction' (page 1, domain other) captures: Same file — `capReached` off-by-one.** Currently `capReached: stale.length >= cap`. Assumptions: Stale entries are ordered and represent time-sensitive data. Breakdown regime: When stale_length equals cap exactly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corrects a logical boundary condition in batch processing to ensure correct truncation at threshold. Operator 'Unpublished Season Signal Guard' (page 1, domain other) captures: `apps/web/app/api/cron/backfill-team-efficiency/route.ts` and `apps/web/app/api/cron/ingest-player-stats/route.ts` — missing `isUnpublishedSeasonSignal` guard.** Neither route calls `isUnpublishedSeasonSignal` (from `apps/web/lib/ingestion/unpublished-season.ts`), while sibling routes `backfill-player-data/route.ts` and `refresh-player-stats/route.ts` already do. Assumptions: Season status is deterministically known at runtime. Breakdown regime: During unpublished season periods. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces a conditional execution path based on temporal domain validity, akin to a temporal logic constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for hermes_execution_prompt (ab1bb44bcb643d96, domain=other, pages_read=3/3): Operator 'Score Disagreement Guard' (page 1, domain other) captures: `apps/web/lib/data-sources/settle-backfill.ts` — `defaultPersist` missing score-disagreement guard.** `defaultPersist` writes `game.homeScore`/`awayScore` unconditionally whenever both are non-null, with no check against an existing differing score. Assumptions: Scores are numeric and can be compared directly. Breakdown regime: When new_score ≠ existing_score and both are non-null. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The guard enforces a causal constraint between incoming and stored scores, mirroring a Bayesian update where evidence conflicts with prior beliefs. Operator 'Cap Reached Off-by-One Correction' (page 1, domain other) captures: Same file — `capReached` off-by-one.** Currently `capReached: stale.length >= cap`. Assumptions: Stale entries are ordered and represent time-sensitive data. Breakdown regime: When stale_length equals cap exactly. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Corrects a logical boundary condition in batch processing to ensure correct truncation at threshold. Operator 'Unpublished Season Signal Guard' (page 1, domain other) captures: `apps/web/app/api/cron/backfill-team-efficiency/route.ts` and `apps/web/app/api/cron/ingest-player-stats/route.ts` — missing `isUnpublishedSeasonSignal` guard.** Neither route calls `isUnpublishedSeasonSignal` (from `apps/web/lib/ingestion/unpublished-season.ts`), while sibling routes `backfill-player-data/route.ts` and `refresh-player-stats/route.ts` already do. Assumptions: Season status is deterministically known at runtime. Breakdown regime: During unpublished season periods. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces a conditional execution path based on temporal domain validity, akin to a temporal logic constraint. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early software engineering practices around atomic transactions and state validation, evolving into modern CI/CD guardrails and temporal data models. Retrocausal Genealogy: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the data ingestion system and the external data sources. The system must detect and reject conflicting inputs while maintaining operational continuity during valid periods. Theory of Mind & Decision Maker Model: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "No cross-layer interference expected. Each primitive operates independently within its own domain without shared variables or dependencies that would cause leakage. Cross-Layer Veto & Anti-Leakage Check: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in hermes_execution_prompt (ab1bb44bcb643d96), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

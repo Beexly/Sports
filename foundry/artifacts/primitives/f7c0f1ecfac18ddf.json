@@ -1,0 +1,78 @@
+{
+  "book_id": "f7c0f1ecfac18ddf",
+  "source_status": "COMPLETE",
+  "title": "1146-data-replication-reject-option",
+  "file_name": "1146-data-replication-reject-option.md",
+  "sha256": "f7c0f1ecfac18ddfed4afea366e7927e5de98f8bbfbf9fe4dc706f2305331022",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Data replication embeds reject classification in binary space via extended input dimensions, enabling trainable abstention without post-hoc thresholds. Universal Lens: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages reject option via conformal prediction layers; rejoSVM's binary classifier maps to Bayesian uncertainty regions, enabling calibrated abstention. GSI Mapping: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE implements pick-abstention via trained binary classifiers on replicated data; abstention emerges as decision boundary overlap in extended feature space. GSE Mapping: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "data_replication_method",
+      "name": "Data Replication Method",
+      "verbatim_quote": "Replicate each training point twice into R^{d+1}: [x; h] and [x; 0] (h = const).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x': 'input feature vector in \\\\mathbb{R}^d', 'h': 'constant scalar in \\\\mathbb{R}', 'd': 'dimensionality of original space'}",
+      "assumptions": "Original data points are replicated with fixed offset h; binary classifier learns decision boundaries in extended space.",
+      "breakdown_regime": "When h → 0, boundaries collapse; when h → ∞, boundaries decouple.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each replicated point induces two distinct subspaces where binary classifiers define reject region as boundary intersection.",
+        "source_operator": "data_replication_method",
+        "telemetry": "Accuracy-reject curve performance under varying rejection costs."
+      }
+    },
+    {
+      "primitive_id": "binary_classifier_boundaries",
+      "name": "Binary Classifier Boundaries",
+      "verbatim_quote": "Train one binary classifier on the 2l replicated points; its intersection with each replica subspace yields two non-intersecting boundaries.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'l': 'number of training samples', 'w': 'weight vector in \\\\mathbb{R}^{d+1}', 'b': 'bias term in \\\\mathbb{R}'}",
+      "assumptions": "Classifier separates two classes in extended space; boundaries are linear in replicated coordinates.",
+      "breakdown_regime": "Boundaries become degenerate when classifier cannot distinguish classes in extended space.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Two boundary functions define ordered regions: C1 < C_reject < C2 in output space.",
+        "source_operator": "binary_classifier_boundaries",
+        "telemetry": "Boundary separation distance in replicated feature space."
+      }
+    },
+    {
+      "primitive_id": "reject_option_reduction",
+      "name": "Reject Option Reduction",
+      "verbatim_quote": "Method / model View the three outputs as ordered: C1 < C_reject < C2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C1': 'first class label', 'C_reject': 'abstention class', 'C2': 'second class label'}",
+      "assumptions": "Ordered class labels allow consistent interpretation of abstention as intermediate decision.",
+      "breakdown_regime": "Invalid if class ordering is not preserved in model output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Three-class problem mapped to binary classification through replicated inputs; abstention learned as boundary overlap.",
+        "source_operator": "reject_option_reduction",
+        "telemetry": "Rejection rate vs accuracy tradeoff across rejection cost parameter."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f7c0f1ecfac18ddf_t0",
+      "think": "The data replication method transforms a ternary classification task into a binary one by duplicating each sample in an extended feature space. Each point becomes two instances: one with a fixed offset h in the extra dimension, and another with zero in that dimension. Training a single binary classifier on these replicated points results in two distinct decision boundaries—one per replica—defining a reject region between them. This construction avoids intersecting boundaries typical in multi-class approaches and sidesteps complex optimization of embedded SVMs. The method is mathematically equivalent to defining a ternary classifier with ordered outputs C1 < C_reject < C2, where the reject region arises naturally from the geometric separation in the extended space. It supports any binary classifier type (e.g., SVMs, neural networks) and enables principled, trainable abstention without post-processing thresholds.\n\nDeep epistemic analysis for 1146-data-replication-reject-option (f7c0f1ecfac18ddf, domain=other, pages_read=4/4): Operator 'Data Replication Method' (page 1, domain other) captures: Replicate each training point twice into R^{d+1}: [x; h] and [x; 0] (h = const). Assumptions: Original data points are replicated with fixed offset h; binary classifier learns decision boundaries in extended space. Breakdown regime: When h → 0, boundaries collapse; when h → ∞, boundaries decouple. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each replicated point induces two distinct subspaces where binary classifiers define reject region as boundary intersection. Operator 'Binary Classifier Boundaries' (page 1, domain other) captures: Train one binary classifier on the 2l replicated points; its intersection with each replica subspace yields two non-intersecting boundaries. Assumptions: Classifier separates two classes in extended space; boundaries are linear in replicated coordinates. Breakdown regime: Boundaries become degenerate when classifier cannot distinguish classes in extended space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Two boundary functions define ordered regions: C1 < C_reject < C2 in output space. Operator 'Reject Option Reduction' (page 1, domain other) captures: Method / model View the three outputs as ordered: C1 < C_reject < C2. Assumptions: Ordered class labels allow consistent interpretation of abstention as intermediate decision. Breakdown regime: Invalid if class ordering is not preserved in model output. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Three-class problem mapped to binary classification through replicated inputs; abstention learned as boundary overlap. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1146-data-replication-reject-option (f7c0f1ecfac18ddf, domain=other, pages_read=4/4): Operator 'Data Replication Method' (page 1, domain other) captures: Replicate each training point twice into R^{d+1}: [x; h] and [x; 0] (h = const). Assumptions: Original data points are replicated with fixed offset h; binary classifier learns decision boundaries in extended space. Breakdown regime: When h → 0, boundaries collapse; when h → ∞, boundaries decouple. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each replicated point induces two distinct subspaces where binary classifiers define reject region as boundary intersection. Operator 'Binary Classifier Boundaries' (page 1, domain other) captures: Train one binary classifier on the 2l replicated points; its intersection with each replica subspace yields two non-intersecting boundaries. Assumptions: Classifier separates two classes in extended space; boundaries are linear in replicated coordinates. Breakdown regime: Boundaries become degenerate when classifier cannot distinguish classes in extended space. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Two boundary functions define ordered regions: C1 < C_reject < C2 in output space. Operator 'Reject Option Reduction' (page 1, domain other) captures: Method / model View the three outputs as ordered: C1 < C_reject < C2. Assumptions: Ordered class labels allow consistent interpretation of abstention as intermediate decision. Breakdown regime: Invalid if class ordering is not preserved in model output. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Three-class problem mapped to binary classification through replicated inputs; abstention learned as boundary overlap. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s work on multi-class classification and reject options, particularly influenced by SVM-based extensions and ordinal regression frameworks. Builds upon earlier ideas of embedding decisions in higher-dimensional spaces for improved separability. Retrocausal Genealogy: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional classifiers that require explicit thresholds or separate models for confidence estimation, and adversarial learners who may exploit misclassification boundaries. The method assumes rationality in model behavior and consistent ordering of class labels. Theory of Mind & Decision Maker Model: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the replicated features do not introduce redundant information; leakage occurs if the original features dominate the decision boundary in the extended space. Veto applies when h is chosen poorly or when classifier fails to learn meaningful boundaries in the new space. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1146-data-replication-reject-option (f7c0f1ecfac18ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

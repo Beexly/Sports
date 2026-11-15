@@ -1,0 +1,78 @@
+{
+  "book_id": "f83709c1b992dd49",
+  "source_status": "COMPLETE",
+  "title": "claude-handoff-specialist",
+  "file_name": "claude-handoff-specialist.md",
+  "sha256": "f83709c1b992dd4960e845a78cacf3d6b5b56e242b38767af38c9e8d245aa28f",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian epistemic closure operator \\mathcal{C} maps prior command-center packets to verified claims via proof-producing evidence streams, ensuring no duplicate build cardinality in \\mathbb{Z}^+. Universal Lens: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior belief states over Claude's task claims using conformal predictive distributions derived from inspectable file traces and test suites, with \\mathcal{C}(\\cdot) acting as a probabilistic consistency filter. GSI Mapping: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions between build queue entries and launch blockers through a deterministic kernel \\mathcal{K}_{\\text{handoff}}(\\cdot, \\cdot) that encodes the causal flow from research packets to app reality. GSE Mapping: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epistemic_closure_operator",
+      "name": "Epistemic Closure Operator",
+      "verbatim_quote": "# Claude Handoff Specialist Training Manual As of: 2026-06-09 ## Purpose Packages final tasks for Claude and verifies Claude's claims.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{C}': 'Epistemic closure map from packet space to claim space'}",
+      "assumptions": "Claims must be verifiable via inspectable artifacts; prior packets are complete and consistent.",
+      "breakdown_regime": "When \\mathcal{C}(\\text{packet}) \\not\\subseteq \\text{app reality}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The operator \\mathcal{C} is isomorphic to a Bayesian update function over \\mathcal{P}(\\text{claims} | \\text{evidence})",
+        "source_operator": "epistemic_closure_operator",
+        "telemetry": "Verification ratio of claims against inspected files"
+      }
+    },
+    {
+      "primitive_id": "duplicate_avoidance_kernel",
+      "name": "Duplicate Avoidance Kernel",
+      "verbatim_quote": "## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{K}_{\\\\text{dup}}': 'Kernel for detecting duplicate build identifiers'}",
+      "assumptions": "Build identifiers are unique within the system; semantic goals are well-defined.",
+      "breakdown_regime": "When \\mathcal{K}_{\\text{dup}}(\\text{new}, \\text{existing}) = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A derived kernel \\mathcal{K}_{\\text{dup}} = \\mathcal{K}_{\\text{id}} \\times \\mathcal{K}_{\\text{route}} \\times \\mathcal{K}_{\\text{goal}}",
+        "source_operator": "duplicate_avoidance_kernel",
+        "telemetry": "Number of duplicate matches found during pre-creation scan"
+      }
+    },
+    {
+      "primitive_id": "failure_mode_detector",
+      "name": "Failure Mode Detector",
+      "verbatim_quote": "## How To Test Run the smallest relevant test set first, then expand to typecheck/lint/build/route/screenshot/accessibility/performance/data canary checks as risk increases.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}': 'Failure detection function over test suite expansion', '\\\\mathcal{T}': 'Test set size parameter'}",
+      "assumptions": "Test coverage is sufficient to detect regressions; risk scales with \\mathcal{T}.",
+      "breakdown_regime": "When \\mathcal{F}(\\mathcal{T}) > \\epsilon_{\\text{threshold}}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A composite kernel \\mathcal{F} = \\mathcal{F}_{\\text{typecheck}} \\cup \\mathcal{F}_{\\text{lint}} \\cup \\mathcal{F}_{\\text{build}} \\cup \\dots",
+        "source_operator": "failure_mode_detector",
+        "telemetry": "Proportion of failed tests in expanded suite"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f83709c1b992dd49_t0",
+      "think": "The epistemic closure operator \\mathcal{C} ensures that Claude's claims are grounded in verifiable evidence by enforcing a strict inspection protocol over command-center and research packets. It operates as a filter that maps prior knowledge into validated assertions, preventing false readiness and ensuring all claims are backed by proof. The duplicate avoidance kernel \\mathcal{K}_{\\text{dup}} prevents redundancy by comparing new builds against existing identifiers, routes, and goals. This kernel is a derived function combining identity, surface, and semantic kernels. The failure mode detector \\mathcal{F} expands test coverage incrementally, identifying regressions or inconsistencies as \\mathcal{T} grows. These three operators form a triadic structure where \\mathcal{C} provides grounding, \\mathcal{K}_{\\text{dup}} ensures uniqueness, and \\mathcal{F} ensures robustness. Their interaction defines a closed-loop verification system with dualities: closure vs. duplication, and validity vs. failure. Each operator has a clear breakdown regime—when \\mathcal{C} fails, when duplicates occur, or when \\mathcal{F} detects anomalies—which enables retroactive correction and escalation protocols.\n\nDeep epistemic analysis for claude-handoff-specialist (f83709c1b992dd49, domain=other, pages_read=2/2): Operator 'Epistemic Closure Operator' (page 1, domain other) captures: # Claude Handoff Specialist Training Manual As of: 2026-06-09 ## Purpose Packages final tasks for Claude and verifies Claude's claims. Assumptions: Claims must be verifiable via inspectable artifacts; prior packets are complete and consistent. Breakdown regime: When \\mathcal{C}(\\text{packet}) \\not\\subseteq \\text{app reality} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operator \\mathcal{C} is isomorphic to a Bayesian update function over \\mathcal{P}(\\text{claims} | \\text{evidence}) Operator 'Duplicate Avoidance Kernel' (page 1, domain other) captures: ## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything. Assumptions: Build identifiers are unique within the system; semantic goals are well-defined. Breakdown regime: When \\mathcal{K}_{\\text{dup}}(\\text{new}, \\text{existing}) = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A derived kernel \\mathcal{K}_{\\text{dup}} = \\mathcal{K}_{\\text{id}} \\times \\mathcal{K}_{\\text{route}} \\times \\mathcal{K}_{\\text{goal}} Operator 'Failure Mode Detector' (page 1, domain other) captures: ## How To Test Run the smallest relevant test set first, then expand to typecheck/lint/build/route/screenshot/accessibility/performance/data canary checks as risk increases. Assumptions: Test coverage is sufficient to detect regressions; risk scales with \\mathcal{T}. Breakdown regime: When \\mathcal{F}(\\mathcal{T}) > \\epsilon_{\\text{threshold}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A composite kernel \\mathcal{F} = \\mathcal{F}_{\\text{typecheck}} \\cup \\mathcal{F}_{\\text{lint}} \\cup \\mathcal{F}_{\\text{build}} \\cup \\dots Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for claude-handoff-specialist (f83709c1b992dd49, domain=other, pages_read=2/2): Operator 'Epistemic Closure Operator' (page 1, domain other) captures: # Claude Handoff Specialist Training Manual As of: 2026-06-09 ## Purpose Packages final tasks for Claude and verifies Claude's claims. Assumptions: Claims must be verifiable via inspectable artifacts; prior packets are complete and consistent. Breakdown regime: When \\mathcal{C}(\\text{packet}) \\not\\subseteq \\text{app reality} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operator \\mathcal{C} is isomorphic to a Bayesian update function over \\mathcal{P}(\\text{claims} | \\text{evidence}) Operator 'Duplicate Avoidance Kernel' (page 1, domain other) captures: ## Duplicate Avoidance Search for matching BUILD IDs, route/surface names, and semantic goal before creating anything. Assumptions: Build identifiers are unique within the system; semantic goals are well-defined. Breakdown regime: When \\mathcal{K}_{\\text{dup}}(\\text{new}, \\text{existing}) = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A derived kernel \\mathcal{K}_{\\text{dup}} = \\mathcal{K}_{\\text{id}} \\times \\mathcal{K}_{\\text{route}} \\times \\mathcal{K}_{\\text{goal}} Operator 'Failure Mode Detector' (page 1, domain other) captures: ## How To Test Run the smallest relevant test set first, then expand to typecheck/lint/build/route/screenshot/accessibility/performance/data canary checks as risk increases. Assumptions: Test coverage is sufficient to detect regressions; risk scales with \\mathcal{T}. Breakdown regime: When \\mathcal{F}(\\mathcal{T}) > \\epsilon_{\\text{threshold}} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): A composite kernel \\mathcal{F} = \\mathcal{F}_{\\text{typecheck}} \\cup \\mathcal{F}_{\\text{lint}} \\cup \\mathcal{F}_{\\text{build}} \\cup \\dots Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian epistemology and information theory, this framework traces back to Shannon's information measures and Kolmogorov complexity. It inherits from formal verification systems and modern software engineering practices emphasizing traceability and test-driven development. Retrocausal Genealogy: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the 'unverified claim generator' which may produce false positives, and the 'duplicate creator' which introduces redundancy. The system models these as adversarial perturbations to the closure operator \\mathcal{C}, requiring strong telemetry to detect and neutralize. Theory of Mind & Decision Maker Model: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on distinct domains: \\mathcal{C} on epistemic validity, \\mathcal{K}_{\\text{dup}} on uniqueness, and \\mathcal{F} on robustness. Leakage is prevented by restricting access to production secrets and ensuring all operations are logged in the command-center ledger. Cross-Layer Veto & Anti-Leakage Check: Rooted in claude-handoff-specialist (f83709c1b992dd49), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

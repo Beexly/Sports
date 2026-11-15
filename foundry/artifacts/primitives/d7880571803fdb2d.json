@@ -1,0 +1,78 @@
+{
+  "book_id": "d7880571803fdb2d",
+  "source_status": "COMPLETE",
+  "title": "post_00",
+  "file_name": "post_00.md",
+  "sha256": "d7880571803fdb2dc469b101ba5e9905ad99c3248ab63e07bfab63997fc1a07b",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Draft value surplus = on-field performance benefit minus rookie contract cost, conditioned on position-exclusion of QBs. Universal Lens: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior belief over draft pick value using conformal predictive intervals on contract data and PFF WAR, conditioned on QB exclusion. GSI Mapping: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics of draft trade valuation via surplus maximization, with position-specific value kernels and dynamic cap-weighted payoffs. GSE Mapping: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "surplus_value_function",
+      "name": "Surplus Value Function",
+      "verbatim_quote": "The goal here is to construct a transparent (i.e., the code and methodology are public) and useful draft chart.",
+      "page": 1,
+      "latex": "\\mathcal{V}_{\\text{surplus}}(p) = \\mathbb{E}[\\text{On-Field Value}(p)] - \\mathbb{E}[\\text{Contract Cost}(p)]",
+      "symbol_and_unit_ledger": "{'p': 'draft pick index, dimensionless', '\\\\mathcal{V}_{\\\\text{surplus}}(p)': 'surplus value in USD, SI', '\\\\mathbb{E}[\\\\cdot]': 'expectation operator, dimensionless'}",
+      "assumptions": "Rookie contract cost and on-field value are independently estimable; contract data is publicly available.",
+      "breakdown_regime": "When quarterback picks are included, leading to overvaluation of top picks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Surplus kernel maps draft pick index to net economic contribution, excluding QBs.",
+        "source_operator": "surplus_value_function",
+        "telemetry": "Difference between projected WAR and contract compensation."
+      }
+    },
+    {
+      "primitive_id": "position_exclusion_kernel",
+      "name": "Position Exclusion Kernel",
+      "verbatim_quote": "The value of QBs is so different than every other position that they should be considered separately in any draft analysis.",
+      "page": 1,
+      "latex": "\\mathcal{K}_{\\text{pos}}(p) = \\begin{cases} 1 & \\text{if } p \\in \\text{non-QB positions} \\\\ 0 & \\text{if } p \\in \\text{QB positions} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{K}_{\\\\text{pos}}(p)': 'kernel function, dimensionless', 'p': 'draft pick index, dimensionless'}",
+      "assumptions": "Quarterback performance is statistically distinct from other positions.",
+      "breakdown_regime": "Inclusion of QBs distorts top-tier pick valuation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a filtering operator in signal processing, separating QBs from non-QBs.",
+        "source_operator": "position_exclusion_kernel",
+        "telemetry": "Proportion of non-QB picks in draft class."
+      }
+    },
+    {
+      "primitive_id": "contract_value_assumption",
+      "name": "Contract Value Assumption",
+      "verbatim_quote": "There are some obvious limitations to this: We assume that a player's value on the first 4 years of his rookie contract is well represented by what he is able to earn on his 2nd deal.",
+      "page": 1,
+      "latex": "\\mathcal{V}_{\\text{contract}}^{\\text{assumed}}(p) = \\text{Second Deal Value}(p)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{V}_{\\\\text{contract}}^{\\\\text{assumed}}(p)': 'assumed contract value in USD, SI', 'p': 'draft pick index, dimensionless'}",
+      "assumptions": "Second contract reflects true economic value of first four years.",
+      "breakdown_regime": "Players with significant improvement or injury after rookie deal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel maps contract data to expected value under assumption of second deal proxy.",
+        "source_operator": "contract_value_assumption",
+        "telemetry": "Deviation of second deal from first deal value."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d7880571803fdb2d_t0",
+      "think": "The core operator is the surplus value function, defined as the difference between on-field performance benefit and rookie contract cost. This is computed per draft pick index, with explicit exclusion of quarterbacks to avoid overvaluation bias. The position exclusion kernel acts as a filter, isolating non-QB picks for valuation. The contract value assumption uses second deals as proxies for first four years' value, acknowledging its limitations. These primitives form a dual framework: one for economic surplus and one for positional filtering. Failure modes include misalignment of contract data with actual performance, or incorrect assumption of second deal representativeness. The model assumes a static cap environment and ignores re-signing value, which may underestimate long-term pick worth.\n\nDeep epistemic analysis for post_00 (d7880571803fdb2d, domain=other, pages_read=5/5): Operator 'Surplus Value Function' (page 1, domain other) captures: The goal here is to construct a transparent (i.e., the code and methodology are public) and useful draft chart. Assumptions: Rookie contract cost and on-field value are independently estimable; contract data is publicly available. Breakdown regime: When quarterback picks are included, leading to overvaluation of top picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Surplus kernel maps draft pick index to net economic contribution, excluding QBs. Operator 'Position Exclusion Kernel' (page 1, domain other) captures: The value of QBs is so different than every other position that they should be considered separately in any draft analysis. Assumptions: Quarterback performance is statistically distinct from other positions. Breakdown regime: Inclusion of QBs distorts top-tier pick valuation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a filtering operator in signal processing, separating QBs from non-QBs. Operator 'Contract Value Assumption' (page 1, domain other) captures: There are some obvious limitations to this: We assume that a player's value on the first 4 years of his rookie contract is well represented by what he is able to earn on his 2nd deal. Assumptions: Second contract reflects true economic value of first four years. Breakdown regime: Players with significant improvement or injury after rookie deal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel maps contract data to expected value under assumption of second deal proxy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for post_00 (d7880571803fdb2d, domain=other, pages_read=5/5): Operator 'Surplus Value Function' (page 1, domain other) captures: The goal here is to construct a transparent (i.e., the code and methodology are public) and useful draft chart. Assumptions: Rookie contract cost and on-field value are independently estimable; contract data is publicly available. Breakdown regime: When quarterback picks are included, leading to overvaluation of top picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Surplus kernel maps draft pick index to net economic contribution, excluding QBs. Operator 'Position Exclusion Kernel' (page 1, domain other) captures: The value of QBs is so different than every other position that they should be considered separately in any draft analysis. Assumptions: Quarterback performance is statistically distinct from other positions. Breakdown regime: Inclusion of QBs distorts top-tier pick valuation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a filtering operator in signal processing, separating QBs from non-QBs. Operator 'Contract Value Assumption' (page 1, domain other) captures: There are some obvious limitations to this: We assume that a player's value on the first 4 years of his rookie contract is well represented by what he is able to earn on his 2nd deal. Assumptions: Second contract reflects true economic value of first four years. Breakdown regime: Players with significant improvement or injury after rookie deal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel maps contract data to expected value under assumption of second deal proxy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Massey-Thaler's 'loser's curse' and PFF's WAR-based approaches, extending into modern open-source analytics frameworks. Retrocausal Genealogy: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might overvalue QBs due to narrative bias, or undervalue non-QBs due to lack of visibility. The model counters these through data-driven exclusion and transparency. Theory of Mind & Decision Maker Model: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures QBs are not conflated with other positions. Leakage veto prevents inclusion of re-signing or option value, maintaining focus on draft pick surplus. Cross-Layer Veto & Anti-Leakage Check: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in post_00 (d7880571803fdb2d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

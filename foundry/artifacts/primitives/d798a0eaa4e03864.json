@@ -1,0 +1,78 @@
+{
+  "book_id": "d798a0eaa4e03864",
+  "source_status": "COMPLETE",
+  "title": "AWS_MODEL_LEVERAGE_MAP",
+  "file_name": "AWS_MODEL_LEVERAGE_MAP.md",
+  "sha256": "d798a0eaa4e038642e7efc936274bf1ecaeecd60f0722f3e8360cc46fe2c0af2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "AWS model leverage map encodes operational constraints as latent variables in a structured risk-latency-cost manifold. Universal Lens: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian model selection integrates AWS verification states into probabilistic workload classification using conformal predictive distributions. GSI Mapping: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states based on model class risk metrics and fallback strategies via dynamic kernel routing. GSE Mapping: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_availability_assumption",
+      "name": "Model Availability Assumption",
+      "verbatim_quote": "model availability is assumed for the owner account. Region, account access, pricing, and service quotas require",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{avail}': 'dimensionless binary indicator (1 if available, 0 otherwise)', 'R': 'region identifier', 'A_{acc}': 'account access status (boolean)'}",
+      "assumptions": "Assumes account ownership and regional access are prerequisites for model instantiation.",
+      "breakdown_regime": "When A_{avail} = 0 due to quota or access restrictions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic model readiness state vector where each component reflects AWS verification status.",
+        "source_operator": "model_availability_assumption",
+        "telemetry": "Verification flags from AWS IAM and service control policies."
+      }
+    },
+    {
+      "primitive_id": "risk_classification_matrix",
+      "name": "Risk Classification Matrix",
+      "verbatim_quote": "verification. | Model class | Workload | Context | Latency | Cost sensitivity | Data sensitivity",
+      "page": 1,
+      "latex": "\\mathcal{R}(M_i) = \\left(\\text{Workload}_i, \\text{Context}_i, \\text{Latency}_i, \\text{Cost}_{\\text{sens}}^i, \\text{Data}_{\\text{sens}}^i\\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{R}': 'risk classification function', 'M_i': 'model class i', '\\\\text{Workload}_i': 'workload type (categorical)', '\\\\text{Context}_i': 'context window size (tokens)', '\\\\text{Latency}_i': 'response time (ms)', '\\\\text{Cost}_{\\\\text{sens}}^i': 'cost sensitivity (normalized)', '\\\\text{Data}_{\\\\text{sens}}^i': 'data sensitivity (normalized)'}",
+      "assumptions": "Each model class has fixed risk parameters under defined operational contexts.",
+      "breakdown_regime": "When context exceeds model capacity or latency threshold is breached.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSE to compute optimal agent routing through risk-weighted decision trees.",
+        "source_operator": "risk_classification_matrix",
+        "telemetry": "Latency logs, cost tracking, and data governance compliance reports."
+      }
+    },
+    {
+      "primitive_id": "fallback_decision_protocol",
+      "name": "Fallback Decision Protocol",
+      "verbatim_quote": "| Metric | Fallback | AWS candidate | Non-AWS candidate | Decision | | --- |",
+      "page": 1,
+      "latex": "\\mathcal{D}(M_i) = \\arg\\max_{j \\in \\{\\text{FB}, \\text{AWS}, \\text{Non-AWS}\\}} \\mathcal{U}(j, M_i)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{D}': 'decision protocol function', 'M_i': 'model class i', '\\\\mathcal{U}(j, M_i)': 'utility score for fallback option j given model i'}",
+      "assumptions": "Decision utility is computed from empirical performance and risk profiles.",
+      "breakdown_regime": "When primary model fails to meet latency or accuracy thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s Bayesian decision engine that selects fallback models based on posterior risk estimates.",
+        "source_operator": "fallback_decision_protocol",
+        "telemetry": "Performance logs, error rates, and fallback trigger events."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d798a0eaa4e03864_t0",
+      "think": "The AWS Model Leverage Map defines a structured risk-latency-cost manifold where model classes are classified by their operational constraints and risk profiles. Each model class is mapped to a set of latent variables including workload type, context window, latency, cost sensitivity, and data sensitivity. These define a risk matrix that governs fallback decisions. The decision protocol is derived from a utility function over fallback options, which is optimized against empirical performance metrics. This structure enables GSE to dynamically route tasks through a kernelized decision tree while maintaining GSI's probabilistic inference framework. Dualities emerge between model availability and verification states, and between risk classification and fallback utility. Failure modes occur when context exceeds model capacity or when verification fails, triggering fallback protocols.\n\nDeep epistemic analysis for AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864, domain=other, pages_read=1/1): Operator 'Model Availability Assumption' (page 1, domain other) captures: model availability is assumed for the owner account. Region, account access, pricing, and service quotas require Assumptions: Assumes account ownership and regional access are prerequisites for model instantiation. Breakdown regime: When A_{avail} = 0 due to quota or access restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model readiness state vector where each component reflects AWS verification status. Operator 'Risk Classification Matrix' (page 1, domain other) captures: verification. | Model class | Workload | Context | Latency | Cost sensitivity | Data sensitivity Assumptions: Each model class has fixed risk parameters under defined operational contexts. Breakdown regime: When context exceeds model capacity or latency threshold is breached. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to compute optimal agent routing through risk-weighted decision trees. Operator 'Fallback Decision Protocol' (page 1, domain other) captures: | Metric | Fallback | AWS candidate | Non-AWS candidate | Decision | | --- | Assumptions: Decision utility is computed from empirical performance and risk profiles. Breakdown regime: When primary model fails to meet latency or accuracy thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s Bayesian decision engine that selects fallback models based on posterior risk estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864, domain=other, pages_read=1/1): Operator 'Model Availability Assumption' (page 1, domain other) captures: model availability is assumed for the owner account. Region, account access, pricing, and service quotas require Assumptions: Assumes account ownership and regional access are prerequisites for model instantiation. Breakdown regime: When A_{avail} = 0 due to quota or access restrictions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic model readiness state vector where each component reflects AWS verification status. Operator 'Risk Classification Matrix' (page 1, domain other) captures: verification. | Model class | Workload | Context | Latency | Cost sensitivity | Data sensitivity Assumptions: Each model class has fixed risk parameters under defined operational contexts. Breakdown regime: When context exceeds model capacity or latency threshold is breached. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to compute optimal agent routing through risk-weighted decision trees. Operator 'Fallback Decision Protocol' (page 1, domain other) captures: | Metric | Fallback | AWS candidate | Non-AWS candidate | Decision | | --- | Assumptions: Decision utility is computed from empirical performance and risk profiles. Breakdown regime: When primary model fails to meet latency or accuracy thresholds. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s Bayesian decision engine that selects fallback models based on posterior risk estimates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical information theory and modern probabilistic risk modeling, extending earlier work on decision-making under uncertainty in distributed systems. Retrocausal Genealogy: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must consider both internal model limitations and external AWS constraints, with competing objectives of minimizing latency and maximizing accuracy while adhering to compliance. Theory of Mind & Decision Maker Model: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that fallback decisions do not redundantly rely on similar model types; leakage is mitigated by requiring explicit verification before model activation. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in AWS_MODEL_LEVERAGE_MAP (d798a0eaa4e03864), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

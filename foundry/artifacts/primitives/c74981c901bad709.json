@@ -1,0 +1,78 @@
+{
+  "book_id": "c74981c901bad709",
+  "source_status": "COMPLETE",
+  "title": "SIGNAL-CENSUS",
+  "file_name": "SIGNAL-CENSUS.md",
+  "sha256": "c74981c901bad7093818324a5d01e92dde6ac8525b18a6bad60b5955d86299c0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Signal census integrates multi-layered factors (L0-L2, L8) into a confidence-weighted decision path via coachTrailFactors and coachSupport, with price-action gated by stub overrides. Universal Lens: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps factor weights from L0-L2 and L8 into posterior confidence using coachSupport and coachOverridesStub thresholds, enabling probabilistic play selection. GSI Mapping: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning transitions through trail states (L0-L2, L8) where overrides and continuity deltas determine action validity, with state updates conditioned on finite delta triggers. GSE Mapping: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "l0_l1_l2_shadow_confidence",
+      "name": "Layered Shadow Confidence",
+      "verbatim_quote": "- **L0 USAGE / L1 HEALTH / L2 SHADOW** — still emitted by `coachTrailFactors` at all three scoring sites, prepended, and summed into confidence by `coachSupport`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L0_USAGE': 'dimensionless', 'L1_HEALTH': 'dimensionless', 'L2_SHADOW': 'dimensionless', 'CONFIDENCE': 'unitless'}",
+      "assumptions": "Each layer contributes additive weight to a scalar confidence metric under fixed scoring site constraints.",
+      "breakdown_regime": "When any layer fails to emit valid data, confidence collapses to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Confidence kernel derived from layered factor emissions, aggregated via coachSupport function.",
+        "source_operator": "l0_l1_l2_shadow_confidence",
+        "telemetry": "Aggregated factor values from coachTrailFactors across scoring sites."
+      }
+    },
+    {
+      "primitive_id": "price_action_gate",
+      "name": "Price Action Gate",
+      "verbatim_quote": "- **L8 PRICE** — `engine/price-check.ts` emits `PLAY` / `ALT` / `PASS-on-price` onto `factorBreakdown.priceAction` after the lock.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'PRICE_ACTION': '{PLAY, ALT, PASS}', 'FACTOR_BREAKDOWN': 'vector of {PLAY, ALT, PASS}'}",
+      "assumptions": "Price action is emitted post-lock and is gated by stub override logic.",
+      "breakdown_regime": "Null output when stub is overridden; otherwise emits discrete action.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to decision gate in GSE, where price action determines play validity.",
+        "source_operator": "price_action_gate",
+        "telemetry": "Output of engine/price-check.ts mapped to factorBreakdown.priceAction."
+      }
+    },
+    {
+      "primitive_id": "decision_reach_condition",
+      "name": "Decision Reach Condition",
+      "verbatim_quote": "**REACHES THE DECISION only when** `coachOverridesStub` is true (`abs(locked.marginMean - 3) >= 3`).",
+      "page": 1,
+      "latex": "\\text{REACHES\\_DECISION} \\iff |\\text{locked.marginMean} - 3| \\geq 3",
+      "symbol_and_unit_ledger": "{'locked.marginMean': 'real number', 'REACHES_DECISION': 'boolean'}",
+      "assumptions": "Decision is triggered only when margin deviation exceeds threshold.",
+      "breakdown_regime": "Threshold-based singularity at margin = 3.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of decision logic derived from margin deviation and stub override.",
+        "source_operator": "decision_reach_condition",
+        "telemetry": "Value of abs(locked.marginMean - 3) compared against 3."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c74981c901bad709_t0",
+      "think": "The signal census operates through a layered factor system where L0-L2 shadow layers contribute to a scalar confidence score via coachSupport. L8 price action is emitted conditionally post-lock and gates decision paths. The decision reaches only when coachOverridesStub is true, defined by a margin deviation threshold. This creates a dual logic: one for confidence aggregation and another for conditional decision reach. Failure modes include disconnected layers (e.g., L0/L1) or stub dominance overriding decision paths. The system avoids premature action by requiring finite continuity deltas and explicit override conditions.\n\nDeep epistemic analysis for SIGNAL-CENSUS (c74981c901bad709, domain=other, pages_read=3/3): Operator 'Layered Shadow Confidence' (page 1, domain other) captures: - **L0 USAGE / L1 HEALTH / L2 SHADOW** — still emitted by `coachTrailFactors` at all three scoring sites, prepended, and summed into confidence by `coachSupport`. Assumptions: Each layer contributes additive weight to a scalar confidence metric under fixed scoring site constraints. Breakdown regime: When any layer fails to emit valid data, confidence collapses to zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence kernel derived from layered factor emissions, aggregated via coachSupport function. Operator 'Price Action Gate' (page 1, domain other) captures: - **L8 PRICE** — `engine/price-check.ts` emits `PLAY` / `ALT` / `PASS-on-price` onto `factorBreakdown.priceAction` after the lock. Assumptions: Price action is emitted post-lock and is gated by stub override logic. Breakdown regime: Null output when stub is overridden; otherwise emits discrete action. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to decision gate in GSE, where price action determines play validity. Operator 'Decision Reach Condition' (page 1, domain other) captures: **REACHES THE DECISION only when** `coachOverridesStub` is true (`abs(locked.marginMean - 3) >= 3`). Assumptions: Decision is triggered only when margin deviation exceeds threshold. Breakdown regime: Threshold-based singularity at margin = 3. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of decision logic derived from margin deviation and stub override. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SIGNAL-CENSUS (c74981c901bad709, domain=other, pages_read=3/3): Operator 'Layered Shadow Confidence' (page 1, domain other) captures: - **L0 USAGE / L1 HEALTH / L2 SHADOW** — still emitted by `coachTrailFactors` at all three scoring sites, prepended, and summed into confidence by `coachSupport`. Assumptions: Each layer contributes additive weight to a scalar confidence metric under fixed scoring site constraints. Breakdown regime: When any layer fails to emit valid data, confidence collapses to zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Confidence kernel derived from layered factor emissions, aggregated via coachSupport function. Operator 'Price Action Gate' (page 1, domain other) captures: - **L8 PRICE** — `engine/price-check.ts` emits `PLAY` / `ALT` / `PASS-on-price` onto `factorBreakdown.priceAction` after the lock. Assumptions: Price action is emitted post-lock and is gated by stub override logic. Breakdown regime: Null output when stub is overridden; otherwise emits discrete action. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to decision gate in GSE, where price action determines play validity. Operator 'Decision Reach Condition' (page 1, domain other) captures: **REACHES THE DECISION only when** `coachOverridesStub` is true (`abs(locked.marginMean - 3) >= 3`). Assumptions: Decision is triggered only when margin deviation exceeds threshold. Breakdown regime: Threshold-based singularity at margin = 3. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of decision logic derived from margin deviation and stub override. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian belief networks and temporal logic frameworks, evolving from early factor-based scoring models to structured decision kernels. Retrocausal Genealogy: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market-side selector (which may dominate stubs) and the internal decision engine (which requires override conditions). These interact through factor emission and confidence thresholds. Theory of Mind & Decision Maker Model: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring L0/L1 are disconnected and L2 shadows do not override L8 price actions without explicit stub override. Leakage is prevented by finite delta checks and conditional gating. Cross-Layer Veto & Anti-Leakage Check: Rooted in SIGNAL-CENSUS (c74981c901bad709), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

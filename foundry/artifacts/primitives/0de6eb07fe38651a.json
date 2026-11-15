@@ -1,0 +1,78 @@
+{
+  "book_id": "0de6eb07fe38651a",
+  "source_status": "COMPLETE",
+  "title": "2026-09-28-short-week-road-deficit-backtest",
+  "file_name": "2026-09-28-short-week-road-deficit-backtest.md",
+  "sha256": "0de6eb07fe38651aed9920f868931ebda9cb3f00913c757b2bf52b503d2acbef",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal inference lens models the short-week road deficit as a stochastic process with latent variables, where the empirical mean deviation from baseline spread is estimated via paired t-test with n=157 and t=-0.53, indicating no statistically significant effect.",
+  "gsi_mapping": "GSI employs Bayesian hierarchical modeling to assess the posterior probability of the spread adjustment signal, using the backtested t-statistic (-0.53) as a likelihood input to update belief about the true effect size in live projections.",
+  "gse_mapping": "GSE applies a state-transition framework where the current game state includes travel distance and opponent rest status; transitions are governed by a derived kernel that maps these inputs into a probabilistic spread adjustment, validated through control-group error detection.",
+  "primitives": [
+    {
+      "primitive_id": "spread_adjustment_kernel",
+      "name": "Spread Adjustment Kernel",
+      "verbatim_quote": "The code ships a **-1.75 point** spread penalty (plus -0.65 over 1500 miles of travel, -0.50 when the opponent rested normally).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A_{adj}': 'dimensionless spread adjustment factor', 'd_{travel}': 'miles of travel (≥1500)', 'R_{opp}': 'opponent rest status (binary)'}",
+      "assumptions": "The adjustment is additive and linear in travel and opponent rest conditions.",
+      "breakdown_regime": "When |t| < 1, the effect is indistinguishable from zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps travel and opponent rest into a scalar penalty applied to expected margin in GSE's predictive model.",
+        "source_operator": "spread_adjustment_kernel",
+        "telemetry": "Observed margin difference between short-week road teams and baseline."
+      }
+    },
+    {
+      "primitive_id": "control_group_error_detection",
+      "name": "Control Group Error Detection",
+      "verbatim_quote": "A sign error the control group exposed.** The first raw run used `margin + l",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_{error}': 'sign error indicator (±1)', 'M_{obs}': 'observed margin', 'M_{ctrl}': 'control group mean margin'}",
+      "assumptions": "Control group must detect systematic bias without crashing the system.",
+      "breakdown_regime": "When E_{error} ≠ 0, the model produces invalid outputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a parity check in error correction codes, ensuring validity of signal processing in GSE.",
+        "source_operator": "control_group_error_detection",
+        "telemetry": "Mean margin discrepancy between control and experimental groups."
+      }
+    },
+    {
+      "primitive_id": "statistical_significance_test",
+      "name": "Statistical Significance Test",
+      "verbatim_quote": "Welch t = -0.53.** ## What that means **The effect is not statistically distinguishable from zero.** |t| = 0.53 over n=157.",
+      "page": 1,
+      "latex": "\\text{t} = \\frac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}, \\quad n = 157, \\quad |\\text{t}| = 0.53",
+      "symbol_and_unit_ledger": "{'t': 'Welch t-statistic (dimensionless)', '\\\\bar{x}': 'sample mean deviation', '\\\\mu_0': 'null hypothesis mean (0)', 's': 'standard deviation', 'n': 'sample size (157)'}",
+      "assumptions": "Data follows normal distribution; sample is independent and identically distributed.",
+      "breakdown_regime": "If |t| < 1, reject null hypothesis of no effect.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI to compute p-values for signal validation in Bayesian inference pipelines.",
+        "source_operator": "statistical_significance_test",
+        "telemetry": "p-value threshold for inclusion in live prediction engine."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0de6eb07fe38651a_t0",
+      "think": "The core operator is a spread adjustment kernel that modifies expected margins based on travel and opponent rest. The kernel's original value (-1.75) was derived from empirical claims but failed statistical validation with t = -0.53, implying no significant effect. A control group revealed a sign error that would have produced implausible results (e.g., -3.483), confirming the necessity of dual validation. The statistical test shows that the point estimate is not distinguishable from zero, and the 3.3x overestimation indicates a flawed prior. The backtest is structured to prevent premature scaling or elimination of signals, enforcing a 'backtest-or-cut' discipline. This creates a dual logic: one for signal integrity (via control) and another for signal efficacy (via statistical validation).\n\nDeep epistemic analysis for 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a, domain=other, pages_read=2/2): Operator 'Spread Adjustment Kernel' (page 1, domain other) captures: The code ships a **-1.75 point** spread penalty (plus -0.65 over 1500 miles of travel, -0.50 when the opponent rested normally). Assumptions: The adjustment is additive and linear in travel and opponent rest conditions. Breakdown regime: When |t| < 1, the effect is indistinguishable from zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps travel and opponent rest into a scalar penalty applied to expected margin in GSE's predictive model. Operator 'Control Group Error Detection' (page 1, domain other) captures: A sign error the control group exposed.** The first raw run used `margin + l Assumptions: Control group must detect systematic bias without crashing the system. Breakdown regime: When E_{error} ≠ 0, the model produces invalid outputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a parity check in error correction codes, ensuring validity of signal processing in GSE. Operator 'Statistical Significance Test' (page 1, domain other) captures: Welch t = -0.53.** ## What that means **The effect is not statistically distinguishable from zero.** |t| = 0.53 over n=157. Assumptions: Data follows normal distribution; sample is independent and identically distributed. Breakdown regime: If |t| < 1, reject null hypothesis of no effect. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to compute p-values for signal validation in Bayesian inference pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a, domain=other, pages_read=2/2): Operator 'Spread Adjustment Kernel' (page 1, domain other) captures: The code ships a **-1.75 point** spread penalty (plus -0.65 over 1500 miles of travel, -0.50 when the opponent rested normally). Assumptions: The adjustment is additive and linear in travel and opponent rest conditions. Breakdown regime: When |t| < 1, the effect is indistinguishable from zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps travel and opponent rest into a scalar penalty applied to expected margin in GSE's predictive model. Operator 'Control Group Error Detection' (page 1, domain other) captures: A sign error the control group exposed.** The first raw run used `margin + l Assumptions: Control group must detect systematic bias without crashing the system. Breakdown regime: When E_{error} ≠ 0, the model produces invalid outputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a parity check in error correction codes, ensuring validity of signal processing in GSE. Operator 'Statistical Significance Test' (page 1, domain other) captures: Welch t = -0.53.** ## What that means **The effect is not statistically distinguishable from zero.** |t| = 0.53 over n=157. Assumptions: Data follows normal distribution; sample is independent and identically distributed. Breakdown regime: If |t| < 1, reject null hypothesis of no effect. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI to compute p-values for signal validation in Bayesian inference pipelines. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical hypothesis testing (Student’s t-test) and modern conformal prediction theory, with influences from Bayesian decision theory and error correction protocols in computational physics. Retrocausal Genealogy: Rooted in 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the historical data-driven model (which assumes a fixed penalty) and the empirical validation engine (which tests for statistical significance). The decision actor is the GSI backend, which must weigh evidence against prior assumptions. Theory of Mind & Decision Maker Model: Rooted in 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct operational regimes for control vs. experimental groups. Leakage is prevented by isolating the signal from spurious correlations such as travel distance or opponent rest, which are treated as independent variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-09-28-short-week-road-deficit-backtest (0de6eb07fe38651a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

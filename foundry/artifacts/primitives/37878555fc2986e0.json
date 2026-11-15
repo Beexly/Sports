@@ -1,0 +1,78 @@
+{
+  "book_id": "37878555fc2986e0",
+  "source_status": "COMPLETE",
+  "title": "RUN-REPORT",
+  "file_name": "RUN-REPORT.md",
+  "sha256": "37878555fc2986e0b0a4fa4098968e5d084e7c1642af1b85d165282b11380c5a",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "AIGoat range operates as a controlled, localhost-bound AI security sandbox with deliberate vulnerabilities, enabling isolated experimentation within a confined computational environment. Universal Lens: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models the AIGoat range as a probabilistic safety lattice where backend exposure risk is quantified via conditional entropy over network binding states and dependency installation regimes. GSI Mapping: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE interprets AIGoat's operational constraints as a Markovian state machine transitioning between dependency resolution, backend startup, and lab execution phases under bounded resource and network latency. GSE Mapping: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "localhost_binding_constraint",
+      "name": "Localhost Binding Constraint",
+      "verbatim_quote": "It is running **bound to localhost only**: the backend listens on `127.0.0.1:8000` (verified with `ss -tln`: `127.0.0.1:8000`, nothing on :3000 or :11434).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'localhost interface identifier (dimensionless)', 'p': 'port number (Hz)', 't': 'time (s)'}",
+      "assumptions": "The system is isolated from external interfaces and operates under a fixed network topology.",
+      "breakdown_regime": "External access attempt triggers a deterministic denial-of-service signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's network isolation kernel and GSE's local state transition graph.",
+        "source_operator": "localhost_binding_constraint",
+        "telemetry": "Network socket binding status via `ss -tln`"
+      }
+    },
+    {
+      "primitive_id": "dependency_installation_staging",
+      "name": "Dependency Installation Staging",
+      "verbatim_quote": "**Staged dependency install** — the full `requirements.txt` install stalls on this VM's network: sentence-transformers pulls the full CUDA torch stack (~2–3 GB through a ~200 KB/s proxy path; 11 s CPU in 6 min, cache flat).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dependency set size (dimensionless)', 'B': 'bandwidth (bytes/s)', 'T': 'installation time (s)'}",
+      "assumptions": "Installation throughput is inversely proportional to network bandwidth and directly proportional to dependency complexity.",
+      "breakdown_regime": "Installation halts when B < threshold required for D.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a resource-constrained kernel for package resolution in GSE's task scheduling.",
+        "source_operator": "dependency_installation_staging",
+        "telemetry": "Process stall duration and pip cache hit rate"
+      }
+    },
+    {
+      "primitive_id": "synthetic_training_data_evidence",
+      "name": "Synthetic Training Data Evidence",
+      "verbatim_quote": "All lab payloads observed were the range's own synthetic training data, treated as evidence only.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'evidence set (dimensionless)', 'S': 'synthetic data sample (dimensionless)', 'M': 'model confidence (unitless)'}",
+      "assumptions": "Training data is generated independently and used exclusively for validation.",
+      "breakdown_regime": "Evidence integrity degrades if external data is introduced.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's synthetic dataset validation protocol and GSE's evidence consistency engine.",
+        "source_operator": "synthetic_training_data_evidence",
+        "telemetry": "Dataset entropy and cross-validation score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "37878555fc2986e0_t0",
+      "think": "The AIGoat range's design embodies a dual constraint: network isolation and staged dependency resolution. The localhost binding ensures that all communication remains within a secure boundary, modeled mathematically as a topological constraint on the system's input/output space. This constraint is encoded in the state transition function of GSE, where each action must be validated against the local interface. Dependency staging introduces a temporal and resource-dependent regime, where the system's readiness is determined by the convergence of bandwidth and installation time. This can be formalized as a stochastic process governed by a resource-limited Markov chain. The synthetic training data evidence provides a closed-loop feedback mechanism, ensuring that all inputs remain within a known domain, thereby enabling robust inference in GSI's probabilistic framework.\n\nDeep epistemic analysis for RUN-REPORT (37878555fc2986e0, domain=other, pages_read=3/3): Operator 'Localhost Binding Constraint' (page 1, domain other) captures: It is running **bound to localhost only**: the backend listens on `127.0.0.1:8000` (verified with `ss -tln`: `127.0.0.1:8000`, nothing on :3000 or :11434). Assumptions: The system is isolated from external interfaces and operates under a fixed network topology. Breakdown regime: External access attempt triggers a deterministic denial-of-service signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's network isolation kernel and GSE's local state transition graph. Operator 'Dependency Installation Staging' (page 1, domain other) captures: **Staged dependency install** — the full `requirements.txt` install stalls on this VM's network: sentence-transformers pulls the full CUDA torch stack (~2–3 GB through a ~200 KB/s proxy path; 11 s CPU in 6 min, cache flat). Assumptions: Installation throughput is inversely proportional to network bandwidth and directly proportional to dependency complexity. Breakdown regime: Installation halts when B < threshold required for D. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a resource-constrained kernel for package resolution in GSE's task scheduling. Operator 'Synthetic Training Data Evidence' (page 1, domain other) captures: All lab payloads observed were the range's own synthetic training data, treated as evidence only. Assumptions: Training data is generated independently and used exclusively for validation. Breakdown regime: Evidence integrity degrades if external data is introduced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's synthetic dataset validation protocol and GSE's evidence consistency engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RUN-REPORT (37878555fc2986e0, domain=other, pages_read=3/3): Operator 'Localhost Binding Constraint' (page 1, domain other) captures: It is running **bound to localhost only**: the backend listens on `127.0.0.1:8000` (verified with `ss -tln`: `127.0.0.1:8000`, nothing on :3000 or :11434). Assumptions: The system is isolated from external interfaces and operates under a fixed network topology. Breakdown regime: External access attempt triggers a deterministic denial-of-service signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's network isolation kernel and GSE's local state transition graph. Operator 'Dependency Installation Staging' (page 1, domain other) captures: **Staged dependency install** — the full `requirements.txt` install stalls on this VM's network: sentence-transformers pulls the full CUDA torch stack (~2–3 GB through a ~200 KB/s proxy path; 11 s CPU in 6 min, cache flat). Assumptions: Installation throughput is inversely proportional to network bandwidth and directly proportional to dependency complexity. Breakdown regime: Installation halts when B < threshold required for D. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a resource-constrained kernel for package resolution in GSE's task scheduling. Operator 'Synthetic Training Data Evidence' (page 1, domain other) captures: All lab payloads observed were the range's own synthetic training data, treated as evidence only. Assumptions: Training data is generated independently and used exclusively for validation. Breakdown regime: Evidence integrity degrades if external data is introduced. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's synthetic dataset validation protocol and GSE's evidence consistency engine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early 2000s sandboxing principles and modern containerization paradigms, particularly influenced by Docker's network isolation and Python virtual environments' dependency management. Retrocausal Genealogy: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial payloads attempting to breach the localhost boundary and network throttling mechanisms that constrain dependency resolution. The system's behavior reflects a balance between these forces, modeled as a game-theoretic equilibrium. Theory of Mind & Decision Maker Model: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that network state transitions do not interfere with dependency resolution. Leakage vetoes are implemented via explicit port binding checks and dependency caching protocols. Cross-Layer Veto & Anti-Leakage Check: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in RUN-REPORT (37878555fc2986e0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

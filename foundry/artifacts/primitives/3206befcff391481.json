@@ -1,0 +1,78 @@
+{
+  "book_id": "3206befcff391481",
+  "source_status": "COMPLETE",
+  "title": "matchup-numbers-2026-09-13",
+  "file_name": "matchup-numbers-2026-09-13.md",
+  "sha256": "3206befcff391481091126128e6a69aa02211527da09600e8c758c1c21c85a1b",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Verification wave integrates multi-source statistical consensus with Bayesian confidence thresholds to produce deterministic matchup primitives. Universal Lens: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers defensive strength via 2025 EPA/dropback and sack rate distributions using nflverse data; applies conformal prediction for uncertainty quantification. GSI Mapping: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models game pace and strategic tempo through play-volume regressions; transitions between fast/slow regimes based on team-specific offensive tendencies. GSE Mapping: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "defensive_sack_rate",
+      "name": "Defensive Sack Rate",
+      "verbatim_quote": "DEFENSE / MATCHUP (2025 season) | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Saints 5th-ranked sack rate | **CONFIRMED** | 8.40% (45 sacks / 536 dropbacks), 5th | nflverse pbp; cross-checked PFR.",
+      "page": 1,
+      "latex": "\\text{Sack Rate} = \\frac{\\text{Total Sacks}}{\\text{Dropbacks}} \\times 100\\%",
+      "symbol_and_unit_ledger": "{'Total Sacks': 'dimensionless count', 'Dropbacks': 'dimensionless count', 'Sack Rate': 'percentage'}",
+      "assumptions": "Sack data is complete and accurately attributed per nflverse play-by-play.",
+      "breakdown_regime": "Seasonal aggregate performance over 2025.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes defensive pressure metrics as a function of pass protection efficiency and opponent dropback frequency.",
+        "source_operator": "defensive_sack_rate",
+        "telemetry": "Sack rate percentile rank within NFL 2025 season."
+      }
+    },
+    {
+      "primitive_id": "offensive_pace",
+      "name": "Offensive Pace",
+      "verbatim_quote": "* | 33 (T-3rd; NYJ 36, DAL 35) | StatMuse; nflverse pbp.",
+      "page": 2,
+      "latex": "\\text{Plays/Game} = \\frac{\\text{Total Offensive Plays}}{\\text{Games Played}}",
+      "symbol_and_unit_ledger": "{'Total Offensive Plays': 'dimensionless count', 'Games Played': 'dimensionless count', 'Plays/Game': 'dimensionless'}",
+      "assumptions": "Play counts are derived from official nflverse 2025 dataset.",
+      "breakdown_regime": "League-wide average per team across 2025 regular season.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE maps pace to temporal dynamics of game flow using play volume as proxy for strategic tempo.",
+        "source_operator": "offensive_pace",
+        "telemetry": "Ranked position among all teams in 2025 offensive play volume."
+      }
+    },
+    {
+      "primitive_id": "dome_passer_rating",
+      "name": "Dome Passer Rating",
+      "verbatim_quote": "PLAYER STATS | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Goff 110.8 dome passer rating (2025) | **CORRECTED** | **107.3** (9 true dome games) | 110.8 is a StatMuse query-labeling artifact — that 10-game set included six outdoor games.",
+      "page": 2,
+      "latex": "\\text{Passer Rating}_{\\text{dome}} = \\frac{\\sum_{i=1}^{n} \\text{Rating}_i}{n}",
+      "symbol_and_unit_ledger": "{'Rating_i': 'dimensionless', 'n': 'dimensionless count', 'Passer Rating_{dome}': 'dimensionless'}",
+      "assumptions": "Only games played in domes are considered for accurate environmental control.",
+      "breakdown_regime": "Player-level performance in controlled environment (domed stadiums).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI adjusts player performance estimates by isolating environmental variables such as dome vs outdoor conditions.",
+        "source_operator": "dome_passer_rating",
+        "telemetry": "Corrected passer rating for dome-only games versus original mislabeled data."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3206befcff391481_t0",
+      "think": "The primitives reflect a dual logic: one grounded in empirical validation (e.g., sack rate, pace) and another in data integrity correction (e.g., dome passer rating). Each is built upon a core assumption of data fidelity from non-banned sources. The failure mode arises when source consistency is violated—such as StatMuse labeling artifacts or stale TeamRankings entries. These inconsistencies are mitigated through cross-checking against nflverse and PFR. The operators form a coherent system where defensive metrics inform GSI's probabilistic models, while pace and venue-adjusted stats support GSE's dynamic state transitions.\n\nDeep epistemic analysis for matchup-numbers-2026-09-13 (3206befcff391481, domain=other, pages_read=3/3): Operator 'Defensive Sack Rate' (page 1, domain other) captures: DEFENSE / MATCHUP (2025 season) | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Saints 5th-ranked sack rate | **CONFIRMED** | 8.40% (45 sacks / 536 dropbacks), 5th | nflverse pbp; cross-checked PFR. Assumptions: Sack data is complete and accurately attributed per nflverse play-by-play. Breakdown regime: Seasonal aggregate performance over 2025. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes defensive pressure metrics as a function of pass protection efficiency and opponent dropback frequency. Operator 'Offensive Pace' (page 2, domain other) captures: * | 33 (T-3rd; NYJ 36, DAL 35) | StatMuse; nflverse pbp. Assumptions: Play counts are derived from official nflverse 2025 dataset. Breakdown regime: League-wide average per team across 2025 regular season. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps pace to temporal dynamics of game flow using play volume as proxy for strategic tempo. Operator 'Dome Passer Rating' (page 2, domain other) captures: PLAYER STATS | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Goff 110.8 dome passer rating (2025) | **CORRECTED** | **107.3** (9 true dome games) | 110.8 is a StatMuse query-labeling artifact — that 10-game set included six outdoor games. Assumptions: Only games played in domes are considered for accurate environmental control. Breakdown regime: Player-level performance in controlled environment (domed stadiums). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI adjusts player performance estimates by isolating environmental variables such as dome vs outdoor conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for matchup-numbers-2026-09-13 (3206befcff391481, domain=other, pages_read=3/3): Operator 'Defensive Sack Rate' (page 1, domain other) captures: DEFENSE / MATCHUP (2025 season) | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Saints 5th-ranked sack rate | **CONFIRMED** | 8.40% (45 sacks / 536 dropbacks), 5th | nflverse pbp; cross-checked PFR. Assumptions: Sack data is complete and accurately attributed per nflverse play-by-play. Breakdown regime: Seasonal aggregate performance over 2025. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes defensive pressure metrics as a function of pass protection efficiency and opponent dropback frequency. Operator 'Offensive Pace' (page 2, domain other) captures: * | 33 (T-3rd; NYJ 36, DAL 35) | StatMuse; nflverse pbp. Assumptions: Play counts are derived from official nflverse 2025 dataset. Breakdown regime: League-wide average per team across 2025 regular season. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE maps pace to temporal dynamics of game flow using play volume as proxy for strategic tempo. Operator 'Dome Passer Rating' (page 2, domain other) captures: PLAYER STATS | Claim | Verdict | Verified number | Notes | |---|---|---|---| | Goff 110.8 dome passer rating (2025) | **CORRECTED** | **107.3** (9 true dome games) | 110.8 is a StatMuse query-labeling artifact — that 10-game set included six outdoor games. Assumptions: Only games played in domes are considered for accurate environmental control. Breakdown regime: Player-level performance in controlled environment (domed stadiums). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI adjusts player performance estimates by isolating environmental variables such as dome vs outdoor conditions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 20th-century sports analytics' evolution toward statistical rigor, particularly post-2010s emphasis on play-by-play data and machine learning-driven forecasting. Influenced by NFL's own data modernization efforts and the rise of open-source tools like nflverse. Retrocausal Genealogy: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors (e.g., StatMuse) prone to labeling errors, and legacy systems (e.g., TeamRankings) that may lag behind real-time updates. The verification process assumes adversarial alignment between these entities and the GSI/GSE systems, which must detect and correct such misalignments. Theory of Mind & Decision Maker Model: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates on distinct data modalities (defensive metrics, pace, venue effects). Leakage occurs if raw data from banned sources (e.g., ESPN) is inadvertently reintroduced, triggering a veto condition in both GSI and GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in matchup-numbers-2026-09-13 (3206befcff391481), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

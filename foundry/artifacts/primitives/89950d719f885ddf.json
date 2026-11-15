@@ -1,0 +1,95 @@
+{
+  "book_id": "89950d719f885ddf",
+  "source_status": "COMPLETE",
+  "title": "env",
+  "file_name": "env.md",
+  "sha256": "89950d719f885ddfdacc862b8f8887f154164c1780e3fc03c1628b77ec1ca816",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Env encodes a typed address book and parameter store, mapping symbolic names to on-chain state via structured reads, enabling deterministic deployment and upgrade planning. Universal Lens: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic contract states and governance paths from Env's typed reads, using Bayesian belief updates over contract anchors, implementations, and staged upgrades. GSI Mapping: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions by interpreting Env's symbolic keys as conditional triggers for proxy targeting, implementation validation, and authority-based access control. GSE Mapping: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "addr",
+      "name": "Contract Anchor Resolver",
+      "verbatim_quote": "| Function | Reads | Use it when | |---|---|---| | `addr(name)` | `contracts.<name>.address` | You need the anchor — the proxy, beacon or singleton — a call targets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'name': 'string', 'anchor_address': 'address'}",
+      "assumptions": "The named contract exists and is deployed at a valid address.",
+      "breakdown_regime": "Reverts if contract name is not found in the book.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps symbolic contract names to runtime addresses for call routing in GSE.",
+        "source_operator": "addr",
+        "telemetry": "Contract address retrieved from .lattice/env.json"
+      }
+    },
+    {
+      "primitive_id": "implementation",
+      "name": "Current Implementation Address",
+      "verbatim_quote": "| | `implementation(name)` | `contracts.<name>.implementation.address` | You need what the proxy runs as the book records it: a pre-upgrade check, or a plan that compares old and new.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'name': 'string', 'implementation_address': 'address'}",
+      "assumptions": "Proxy contract exists and has an associated implementation.",
+      "breakdown_regime": "Reverts if no implementation is recorded for the given name.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives current logic address from proxy metadata for upgrade consistency checks in GSI.",
+        "source_operator": "implementation",
+        "telemetry": "Implementation address from .lattice/env.json under contracts.<name>.implementation"
+      }
+    },
+    {
+      "primitive_id": "staged",
+      "name": "Staged Upgrade Target",
+      "verbatim_quote": "| | `staged(name)` | `contracts.<name>.implementation.staged.address` | An upgrade plan: the implementation this release deployed and has not yet pointed the proxy at.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'name': 'string', 'staged_address': 'address'}",
+      "assumptions": "A staged upgrade exists for the named contract.",
+      "breakdown_regime": "Reverts if no staged implementation is present.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Identifies pending upgrade target for GSI's compliance and rollback planning.",
+        "source_operator": "staged",
+        "telemetry": "Staged implementation address from .lattice/env.json under contracts.<name>.implementation.staged"
+      }
+    },
+    {
+      "primitive_id": "authority",
+      "name": "Governance Authority Address",
+      "verbatim_quote": "| | `authority()` | `authority.address` | The Protocol Safe (or the EOA on a testnet): the account that holds admin roles, the sender of direct calls.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'authority_address': 'address'}",
+      "assumptions": "Authority is defined and accessible in the environment.",
+      "breakdown_regime": "Reverts if authority is not set in the book.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE to route privileged operations through the correct governance entity.",
+        "source_operator": "authority",
+        "telemetry": "Authority address from .lattice/env.json"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "89950d719f885ddf_t0",
+      "think": "Env's primitives define a symbolic interface to on-chain state, where each function resolves a key into a typed value. The addr primitive maps a name to a contract anchor, enabling GSE to route calls correctly. The implementation primitive provides the active logic address, supporting upgrade validation. The staged primitive exposes future logic, allowing GSI to model upgrade paths. The authority primitive identifies the governance actor, enabling access control in GSE. These form a closed-loop system where symbolic resolution drives deterministic execution and auditability. Failure modes include missing keys, invalid types, or misaligned state, which can cause reverts or incorrect behavior in both GSE and GSI.\n\nDeep epistemic analysis for env (89950d719f885ddf, domain=other, pages_read=2/2): Operator 'Contract Anchor Resolver' (page 1, domain other) captures: | Function | Reads | Use it when | |---|---|---| | `addr(name)` | `contracts.<name>.address` | You need the anchor — the proxy, beacon or singleton — a call targets. Assumptions: The named contract exists and is deployed at a valid address. Breakdown regime: Reverts if contract name is not found in the book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps symbolic contract names to runtime addresses for call routing in GSE. Operator 'Current Implementation Address' (page 1, domain other) captures: | | `implementation(name)` | `contracts.<name>.implementation.address` | You need what the proxy runs as the book records it: a pre-upgrade check, or a plan that compares old and new. Assumptions: Proxy contract exists and has an associated implementation. Breakdown regime: Reverts if no implementation is recorded for the given name. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives current logic address from proxy metadata for upgrade consistency checks in GSI. Operator 'Staged Upgrade Target' (page 1, domain other) captures: | | `staged(name)` | `contracts.<name>.implementation.staged.address` | An upgrade plan: the implementation this release deployed and has not yet pointed the proxy at. Assumptions: A staged upgrade exists for the named contract. Breakdown regime: Reverts if no staged implementation is present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies pending upgrade target for GSI's compliance and rollback planning. Operator 'Governance Authority Address' (page 1, domain other) captures: | | `authority()` | `authority.address` | The Protocol Safe (or the EOA on a testnet): the account that holds admin roles, the sender of direct calls. Assumptions: Authority is defined and accessible in the environment. Breakdown regime: Reverts if authority is not set in the book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to route privileged operations through the correct governance entity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for env (89950d719f885ddf, domain=other, pages_read=2/2): Operator 'Contract Anchor Resolver' (page 1, domain other) captures: | Function | Reads | Use it when | |---|---|---| | `addr(name)` | `contracts.<name>.address` | You need the anchor — the proxy, beacon or singleton — a call targets. Assumptions: The named contract exists and is deployed at a valid address. Breakdown regime: Reverts if contract name is not found in the book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps symbolic contract names to runtime addresses for call routing in GSE. Operator 'Current Implementation Address' (page 1, domain other) captures: | | `implementation(name)` | `contracts.<name>.implementation.address` | You need what the proxy runs as the book records it: a pre-upgrade check, or a plan that compares old and new. Assumptions: Proxy contract exists and has an associated implementation. Breakdown regime: Reverts if no implementation is recorded for the given name. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives current logic address from proxy metadata for upgrade consistency checks in GSI. Operator 'Staged Upgrade Target' (page 1, domain other) captures: | | `staged(name)` | `contracts.<name>.implementation.staged.address` | An upgrade plan: the implementation this release deployed and has not yet pointed the proxy at. Assumptions: A staged upgrade exists for the named contract. Breakdown regime: Reverts if no staged implementation is present. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Identifies pending upgrade target for GSI's compliance and rollback planning. Operator 'Governance Authority Address' (page 1, domain other) captures: | | `authority()` | `authority.address` | The Protocol Safe (or the EOA on a testnet): the account that holds admin roles, the sender of direct calls. Assumptions: Authority is defined and accessible in the environment. Breakdown regime: Reverts if authority is not set in the book. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE to route privileged operations through the correct governance entity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal systems theory and symbolic computation, tracing back to early programming languages and state machines. Influenced by smart contract design patterns and formal verification frameworks. Retrocausal Genealogy: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate symbolic keys for unauthorized upgrades or access. GSI models these adversarial paths through Bayesian inference, while GSE enforces constraints via access control and state validation. Theory of Mind & Decision Maker Model: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that symbolic resolution in GSI does not leak into GSE’s execution without explicit permission. Leakage vetoes occur if a primitive's output is used outside its intended scope, e.g., bypassing authority checks. Cross-Layer Veto & Anti-Leakage Check: Rooted in env (89950d719f885ddf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

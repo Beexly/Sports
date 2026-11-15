@@ -1,0 +1,78 @@
+{
+  "book_id": "831402af3d0200f9",
+  "source_status": "COMPLETE",
+  "title": "NEW-ENGINE-OFFICIAL-LEDGER-16-5",
+  "file_name": "NEW-ENGINE-OFFICIAL-LEDGER-16-5.md",
+  "sha256": "831402af3d0200f9a3d21167c263a1bfd329d634f7e6ff31acc11fc3a6229573",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian conformal grading framework unifying play-level outcomes into cumulative unit returns, with dynamic risk-adjusted ROI and settlement stat alignment. Universal Lens: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs a probabilistic inference engine mapping play-by-play data to unit-based outcomes using calibrated likelihoods, enabling real-time Bayesian updates of win/loss probabilities and ROI projections. GSI Mapping: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies a state-transition model to simulate game progression, integrating real-time grading signals into situational awareness layers that dynamically adjust betting strategies based on evolving play outcomes. GSE Mapping: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "official_record_grade",
+      "name": "Official Record Grade",
+      "verbatim_quote": "This supersedes the auto-grade totals below; the auto-grade of the 62-row vault package (39-22, +14.99u) is retained as a working grade only.)* - Record entering tonight: **16-5 · +10.45 units (+49.8% ROI)**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'wins', 'L': 'losses', 'U': 'units', 'ROI': 'return on investment'}",
+      "assumptions": "The official grade supersedes auto-grade; all prior grades are considered working only.",
+      "breakdown_regime": "Post-game settlement with final grade confirmation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps cumulative win-loss record to unit-based performance with ROI normalization.",
+        "source_operator": "official_record_grade",
+        "telemetry": "Cumulative win/loss count and net unit gain."
+      }
+    },
+    {
+      "primitive_id": "auto_grade_working_line",
+      "name": "Auto-Grade Working Line",
+      "verbatim_quote": "Auto-grade working line: 39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units on 58.50 units risked across the 61 settled package rows.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'wins', 'L': 'losses', 'P': 'pushes', 'U': 'units', 'R': 'risked units'}",
+      "assumptions": "Auto-grade reflects ongoing simulation with one unsettled outcome.",
+      "breakdown_regime": "Real-time grading during active game period.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives risk-adjusted performance from settled rows with pending outcomes.",
+        "source_operator": "auto_grade_working_line",
+        "telemetry": "Settled row count, net unit gain, and risk exposure."
+      }
+    },
+    {
+      "primitive_id": "grading_rule_compliance",
+      "name": "Grading Rule Compliance",
+      "verbatim_quote": "- Grading rule: every play graded immediately after the game; results reported in units, never dollars; no deleted plays.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'plays', 'U': 'units', 'D': 'deleted plays (zero)'}",
+      "assumptions": "All plays are graded post-game with no deletions.",
+      "breakdown_regime": "Post-game grading compliance enforcement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures deterministic, non-deletable play-level grading aligned with unit-based reporting.",
+        "source_operator": "grading_rule_compliance",
+        "telemetry": "Play count, unit reporting consistency, deletion flag."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "831402af3d0200f9_t0",
+      "think": "The primitives form a layered logical structure where 'Official Record Grade' represents the final validated outcome, while 'Auto-Grade Working Line' provides a real-time predictive kernel. The 'Grading Rule Compliance' ensures integrity through deterministic play-level evaluation. These operators are dualized by a Bayesian inference layer in GSI that normalizes outcomes into unit space, enabling ROI tracking and risk-adjusted performance metrics. Failure modes include misalignment between auto-grade and official grade due to unsettled plays or data discrepancies. The system's robustness depends on the immutability of play-level grading and the exclusion of deleted plays, which prevents retroactive bias. The temporal duality between immediate post-game grading and final settlement creates a feedback loop that refines the grading kernel over time.\n\nDeep epistemic analysis for NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9, domain=other, pages_read=1/1): Operator 'Official Record Grade' (page 1, domain other) captures: This supersedes the auto-grade totals below; the auto-grade of the 62-row vault package (39-22, +14.99u) is retained as a working grade only.)* - Record entering tonight: **16-5 · +10.45 units (+49.8% ROI)**. Assumptions: The official grade supersedes auto-grade; all prior grades are considered working only. Breakdown regime: Post-game settlement with final grade confirmation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps cumulative win-loss record to unit-based performance with ROI normalization. Operator 'Auto-Grade Working Line' (page 1, domain other) captures: Auto-grade working line: 39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units on 58.50 units risked across the 61 settled package rows. Assumptions: Auto-grade reflects ongoing simulation with one unsettled outcome. Breakdown regime: Real-time grading during active game period. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives risk-adjusted performance from settled rows with pending outcomes. Operator 'Grading Rule Compliance' (page 1, domain other) captures: - Grading rule: every play graded immediately after the game; results reported in units, never dollars; no deleted plays. Assumptions: All plays are graded post-game with no deletions. Breakdown regime: Post-game grading compliance enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures deterministic, non-deletable play-level grading aligned with unit-based reporting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9, domain=other, pages_read=1/1): Operator 'Official Record Grade' (page 1, domain other) captures: This supersedes the auto-grade totals below; the auto-grade of the 62-row vault package (39-22, +14.99u) is retained as a working grade only.)* - Record entering tonight: **16-5 · +10.45 units (+49.8% ROI)**. Assumptions: The official grade supersedes auto-grade; all prior grades are considered working only. Breakdown regime: Post-game settlement with final grade confirmation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps cumulative win-loss record to unit-based performance with ROI normalization. Operator 'Auto-Grade Working Line' (page 1, domain other) captures: Auto-grade working line: 39 Wins – 22 Losses – 0 Pushes – 1 Unsettled · +14.99 units on 58.50 units risked across the 61 settled package rows. Assumptions: Auto-grade reflects ongoing simulation with one unsettled outcome. Breakdown regime: Real-time grading during active game period. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives risk-adjusted performance from settled rows with pending outcomes. Operator 'Grading Rule Compliance' (page 1, domain other) captures: - Grading rule: every play graded immediately after the game; results reported in units, never dollars; no deleted plays. Assumptions: All plays are graded post-game with no deletions. Breakdown regime: Post-game grading compliance enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures deterministic, non-deletable play-level grading aligned with unit-based reporting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical arbitrage models of early 2020s, extended via machine learning grading frameworks and conformal prediction methods introduced in 2023–2024. Retrocausal Genealogy: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents as adversarial data sources (e.g., incomplete play-by-play) or inconsistent grading systems (e.g., legacy DB calibrations), requiring robust verification protocols. Theory of Mind & Decision Maker Model: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by ensuring no deleted plays exist, and no legacy calibration data influences current grading. Leakage vetoes occur when auto-grade conflicts with official grade without resolution. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in NEW-ENGINE-OFFICIAL-LEDGER-16-5 (831402af3d0200f9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

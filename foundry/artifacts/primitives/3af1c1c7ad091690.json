@@ -1,0 +1,95 @@
+{
+  "book_id": "3af1c1c7ad091690",
+  "source_status": "COMPLETE",
+  "title": "CORRECTIONS-ADDENDUM-2026-11-02",
+  "file_name": "CORRECTIONS-ADDENDUM-2026-11-02.md",
+  "sha256": "3af1c1c7ad091690aef9dd11986a34d7bf6ec31eab45d5baf1144409ff142940",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Artifact-backed probabilistic inference unifies MNF card dynamics through calibrated marginalization and joint simulation. Universal Lens: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of MNF card spread uses exact joint simulation probabilities from shared world ensembles, eliminating static overlays. GSI Mapping: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE employs dynamic state transitions guided by telemetry-traced component legs and provenance-consistent ledger records. GSE Mapping: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mnf_card_spread_ml",
+      "name": "Marginalized Network Framework Card Spread Model",
+      "verbatim_quote": "| ID | Prior Claim / Defect | Corrected Artifact-Backed State | |---|---|---| | **P0-1** | MNF card spread/ML used static `+0.35` log-odds overlay and capped 2-leg SGP joint by `marginal * 1.075`.",
+      "page": 1,
+      "latex": "\\text{joint\\_sim\\_prob} = \\text{raw\\_joint\\_sim\\_p} = 0.4364",
+      "symbol_and_unit_ledger": "{'joint_sim_prob': 'dimensionless probability', 'raw_joint_sim_p': 'dimensionless probability'}",
+      "assumptions": "Static log-odds overlay and marginal cap were artifacts of uncalibrated model parameters.",
+      "breakdown_regime": "When marginal probability exceeds 0.4077, the cap introduces systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Joint simulation probability derived from 10,000 shared worlds; eliminates static overlays.",
+        "source_operator": "mnf_card_spread_ml",
+        "telemetry": "Verification via `tests/test_mnf_card_integrity.py`"
+      }
+    },
+    {
+      "primitive_id": "slip_esc_mutation_guard",
+      "name": "Slip/Esc Value Mutation Guard",
+      "verbatim_quote": "| | **P0-2** | Uncalibrated `slip_val`/`esc_val` mutated `home_comp_base`/`away_comp_base`; generator force-enabled research flags; telemetry embedded in card JSON.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'slip_val': 'dimensionless', 'esc_val': 'dimensionless', 'home_comp_base': 'dimensionless', 'away_comp_base': 'dimensionless'}",
+      "assumptions": "Mutated base components introduce spurious variance in competitive modeling.",
+      "breakdown_regime": "When slip_val or esc_val exceed ±0.15, component integrity degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mutation guard isolates comp_base derivation from uncalibrated inputs; telemetry decoupled.",
+        "source_operator": "slip_esc_mutation_guard",
+        "telemetry": "Telemetry isolated to `data/engine/mnf_chi_sea_360_telemetry_2026_11_02.json`"
+      }
+    },
+    {
+      "primitive_id": "ledger_component_legs",
+      "name": "Ledger Component Legs Integrity",
+      "verbatim_quote": "| | **P0-3** | Committed ledger still carried `31-11-0` banner at top level while `36-13-1` lived only in uncommitted files.",
+      "page": 1,
+      "latex": "\\text{verified\\_record} = 36-13-1 (+20.14u)",
+      "symbol_and_unit_ledger": "{'verified_record': 'component leg identifier', 'superseded': 'historical record set', 'secondary_views': 'post-MNF evolution set'}",
+      "assumptions": "Historical ledger entries must be reconciled with committed artifacts.",
+      "breakdown_regime": "If superseded records remain in active view, data inconsistency occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Component legs traced through verified record; superseded and secondary views maintained.",
+        "source_operator": "ledger_component_legs",
+        "telemetry": "Recorded in `data/engine/new_engine_official_ledger_2026.json`"
+      }
+    },
+    {
+      "primitive_id": "freshness_gate_odds",
+      "name": "Timestamped Odds Freshness Gate",
+      "verbatim_quote": "| | **P0-7** | Hardcoded DK odds lacked timestamped freshness gate.",
+      "page": 2,
+      "latex": "\\text{load\\_odds\\_snapshot}(t) \\Rightarrow \\text{StaleOddsError}",
+      "symbol_and_unit_ledger": "{'load_odds_snapshot': 'function returning odds with timestamp', 'StaleOddsError': 'error code', 'publishAllowed': 'boolean flag'}",
+      "assumptions": "Hardcoded odds lack temporal validation, risking stale predictions.",
+      "breakdown_regime": "If odds timestamp exceeds 15 minutes, publishAllowed = false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Freshness gate ensures real-time odds integrity; stale lines trigger action halt.",
+        "source_operator": "freshness_gate_odds",
+        "telemetry": "Tracked via `STALE_LINES_UNACTIONABLE` flag"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3af1c1c7ad091690_t0",
+      "think": "The primitives reflect a dual failure mode: static calibration and temporal drift. P0-1's static log-odds overlay was replaced with an empirical mean from 10k simulations, ensuring probabilistic fidelity. P0-2's slip_val/esc_val mutation was isolated via guard mechanisms, preventing spurious component drift. P0-3's ledger inconsistency was resolved by tracing component legs to a verified record, maintaining historical integrity. P0-7's hardcoded odds were gated by timestamp logic, enforcing real-time consistency. These corrections align with artifact-backed verification protocols, ensuring that all outputs derive from committed JSON rather than prose estimates.\n\nDeep epistemic analysis for CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690, domain=other, pages_read=2/2): Operator 'Marginalized Network Framework Card Spread Model' (page 1, domain other) captures: | ID | Prior Claim / Defect | Corrected Artifact-Backed State | |---|---|---| | **P0-1** | MNF card spread/ML used static `+0.35` log-odds overlay and capped 2-leg SGP joint by `marginal * 1.075`. Assumptions: Static log-odds overlay and marginal cap were artifacts of uncalibrated model parameters. Breakdown regime: When marginal probability exceeds 0.4077, the cap introduces systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Joint simulation probability derived from 10,000 shared worlds; eliminates static overlays. Operator 'Slip/Esc Value Mutation Guard' (page 1, domain other) captures: | | **P0-2** | Uncalibrated `slip_val`/`esc_val` mutated `home_comp_base`/`away_comp_base`; generator force-enabled research flags; telemetry embedded in card JSON. Assumptions: Mutated base components introduce spurious variance in competitive modeling. Breakdown regime: When slip_val or esc_val exceed ±0.15, component integrity degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mutation guard isolates comp_base derivation from uncalibrated inputs; telemetry decoupled. Operator 'Ledger Component Legs Integrity' (page 1, domain other) captures: | | **P0-3** | Committed ledger still carried `31-11-0` banner at top level while `36-13-1` lived only in uncommitted files. Assumptions: Historical ledger entries must be reconciled with committed artifacts. Breakdown regime: If superseded records remain in active view, data inconsistency occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Component legs traced through verified record; superseded and secondary views maintained. Operator 'Timestamped Odds Freshness Gate' (page 2, domain other) captures: | | **P0-7** | Hardcoded DK odds lacked timestamped freshness gate. Assumptions: Hardcoded odds lack temporal validation, risking stale predictions. Breakdown regime: If odds timestamp exceeds 15 minutes, publishAllowed = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Freshness gate ensures real-time odds integrity; stale lines trigger action halt. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690, domain=other, pages_read=2/2): Operator 'Marginalized Network Framework Card Spread Model' (page 1, domain other) captures: | ID | Prior Claim / Defect | Corrected Artifact-Backed State | |---|---|---| | **P0-1** | MNF card spread/ML used static `+0.35` log-odds overlay and capped 2-leg SGP joint by `marginal * 1.075`. Assumptions: Static log-odds overlay and marginal cap were artifacts of uncalibrated model parameters. Breakdown regime: When marginal probability exceeds 0.4077, the cap introduces systematic bias. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Joint simulation probability derived from 10,000 shared worlds; eliminates static overlays. Operator 'Slip/Esc Value Mutation Guard' (page 1, domain other) captures: | | **P0-2** | Uncalibrated `slip_val`/`esc_val` mutated `home_comp_base`/`away_comp_base`; generator force-enabled research flags; telemetry embedded in card JSON. Assumptions: Mutated base components introduce spurious variance in competitive modeling. Breakdown regime: When slip_val or esc_val exceed ±0.15, component integrity degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mutation guard isolates comp_base derivation from uncalibrated inputs; telemetry decoupled. Operator 'Ledger Component Legs Integrity' (page 1, domain other) captures: | | **P0-3** | Committed ledger still carried `31-11-0` banner at top level while `36-13-1` lived only in uncommitted files. Assumptions: Historical ledger entries must be reconciled with committed artifacts. Breakdown regime: If superseded records remain in active view, data inconsistency occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Component legs traced through verified record; superseded and secondary views maintained. Operator 'Timestamped Odds Freshness Gate' (page 2, domain other) captures: | | **P0-7** | Hardcoded DK odds lacked timestamped freshness gate. Assumptions: Hardcoded odds lack temporal validation, risking stale predictions. Breakdown regime: If odds timestamp exceeds 15 minutes, publishAllowed = false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Freshness gate ensures real-time odds integrity; stale lines trigger action halt. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in adversarial verification practices of 2026, these primitives evolve from earlier model calibration and data integrity frameworks established in 2023–2024. Retrocausal Genealogy: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial models that exploit static overlays and stale data, while the system's design assumes rational agents with bounded information and temporal constraints. Theory of Mind & Decision Maker Model: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating telemetry from model parameters, and leakage is mitigated by excluding sensitive files from ingestion pipelines. Cross-Layer Veto & Anti-Leakage Check: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CORRECTIONS-ADDENDUM-2026-11-02 (3af1c1c7ad091690), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

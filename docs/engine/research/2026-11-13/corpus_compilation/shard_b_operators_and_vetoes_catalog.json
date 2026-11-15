@@ -1,32 +1,32 @@
 {
   "schema": "gse.shard_b_operators_and_vetoes_catalog.v1",
-  "generated_at_utc": "2026-11-14T18:07:24.935073+00:00",
+  "generated_at_utc": "2026-11-15T00:36:54.734535+00:00",
   "sync_dir": "C:\\Users\\Garrett\\Sports\\foundry\\artifacts\\gcp_sync",
-  "total_markdown_files": 8593,
-  "files_with_xml_sections": 8511,
-  "total_extracted_equations": 28657,
+  "total_markdown_files": 8585,
+  "files_with_xml_sections": 8503,
+  "total_extracted_equations": 28622,
   "family_counts": {
-    "weather": 5760,
+    "weather": 5754,
     "qbSkillScript": 165,
-    "marketMicrostructure": 1142,
+    "marketMicrostructure": 1141,
     "restFatigue": 672,
-    "coveragePersonnel": 526,
+    "coveragePersonnel": 525,
     "pressure": 328
   },
   "section_counts": {
-    "cross_layer_veto": 8419,
-    "operators": 8405,
-    "retrocausal_genealogy": 8408,
-    "rlvr_vetoes": 8197,
-    "theory_of_mind": 8236,
-    "think": 8389,
+    "cross_layer_veto": 8411,
+    "operators": 8397,
+    "retrocausal_genealogy": 8400,
+    "rlvr_vetoes": 8189,
+    "theory_of_mind": 8228,
+    "think": 8381,
     "source_anchor": 2,
     "synthesis": 1
   },
   "model_counts": {
-    "nvidia/nemotron-3.5-super-vl-120b-a12b": 2536,
+    "nvidia/nemotron-3.5-super-vl-120b-a12b": 2531,
     "alibaba_gse:qwen-plus-character": 1709,
-    "deepseek/deepseek-v4.1-flash-1017": 1664,
+    "deepseek/deepseek-v4.1-flash-1017": 1661,
     "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b": 1044,
     "nvidia_2:nvidia/nemotron-3.5-super-vl-120b-a12b": 817,
     "baidu/ernie-5.5-flash-preview:free": 555,
@@ -6974,31 +6974,6 @@
       "think_words": 2895,
       "equations": [],
       "veto_excerpt": "` - Physical/biomechanical/weather veto proof\n6. `<RLVR_COUNTERFACTUAL_VETOES>` - 3 verifiable RLVR veto scenarios + predictions\n\nConstraints:\n- ZERO BETTING LINES: No spreads, totals, moneylines, odds.\n- ZERO TOY EQUATIONS: No fake ratios like Force/Fatigue. State formal LaTeX equations, SI/information/probability units, assumptions, exact singularity/breakdown regimes. Cite exact [PAGE N] markers and verbatim quote"
-    },
-    {
-      "doc_hash": "09d91a0ac3",
-      "file_name": "09d91a0ac3_Charcuterie-Chick-Final_1_.pdf.md",
-      "source": "Charcuterie-Chick-Final (1).pdf",
-      "model": "deepseek/deepseek-v4.1-flash-1017",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 925,
-      "equations": [
-        "P_{\\text{Table}}=1500\\ \\text{USD},\\qquad P_{\\text{dep}}=750\\ \\text{USD},\\qquad P_{\\text{bal}}=750\\ \\text{USD},",
-        "P_{\\text{Table}}=P_{\\text{dep}}+P_{\\text{bal}}.",
-        "P_{\\text{workflows}}=500\\ \\text{USD}.",
-        "S_{\\text{sep}}=2400\\ \\text{USD},\\qquad T_{\\text{bundle}}=2250\\ \\text{USD},",
-        "\\Delta_{\\text{bundle}}=S_{\\text{sep}}-T_{\\text{bundle}}=150\\ \\text{USD}.",
-        "P_{\\text{charged}}=P_{\\text{taxable}}(1+\\tau_{\\text{TX}})+P_{\\text{nontaxable}}."
-      ],
-      "veto_excerpt": "Physical veto. The source’s event sheet includes “dietary notes, and a prep list scaled to the guest count from your own menu” [PAGE 2], but it does not state a food-safety time-temperature control plan. A prep list is a quantity plan, not a safety proof. Let \\(T_{\\text{food}}\\) be food temperature and \\(T_{\\text{safe}}\\) the applicable safety threshold; let \\(t_{\\text{exposure}}\\) be time outside control and \\(t_{\\t"
     },
     {
       "doc_hash": "09e9fb8ecb",
@@ -94501,24 +94476,6 @@
       "veto_excerpt": "- Physical/biomechanical/weather veto proof\n6. <RLVR_COUNTERFACTUAL_VETOES> - 3 verifiable RLVR veto scenarios + predictions\n\nConstraints:\n- ZERO BETTING LINES: Never mention spreads, totals, moneylines, or odds.\n- ZERO TOY EQUATIONS: No fake ratios like Force/Fatigue. State formal LaTeX equations, SI/information/probability units, assumptions, exact singularity/breakdown regimes.\n- Cite exact [PAGE N] markers and ve"
     },
     {
-      "doc_hash": "85d0eb49ef",
-      "file_name": "85d0eb49ef_CP_575_E.pdf.md",
-      "source": "CP_575_E.pdf",
-      "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 691,
-      "equations": [],
-      "veto_excerpt": "Physical/biomechanical/weather veto proof.\n\nDefine veto variables V_phys, V_bio, V_weather ∈ {0,1}. Compliance C_t = 1 iff the required return/notice is filed (F_t = 1) AND no veto blocks execution:\nC_t = F_t ∧ ¬(V_phys ∨ V_bio ∨ V_weather ∨ V_single_point).\n\nPhysical layer. The notice is paper delivered to 2047 RIVERLAWN DR, KINGWOOD, TX 77339 [PAGE 1]. Kingwood (greater Houston) is exposed to extreme rainfall, floo"
-    },
-    {
       "doc_hash": "85dfe58d7d",
       "file_name": "85dfe58d7d_2019_-_The_Path_to_Success_on_the_LPGA_Tour_-_Identifying_the_Three_Important_Di.md",
       "source": "2019 - The Path to Success on the LPGA Tour - Identifying the Three Important Dimensions in Stroke Play - Unknown Authors.pdf",
@@ -112336,31 +112293,6 @@
         "\\mu\\Big(E \\setminus \\bigcup_{i=1}^\\infty E_i\\Big) = 0, \\qquad f_n \\rightrightarrows f \\text{ uniformly on each } E_i."
       ],
       "veto_excerpt": "- <RLVR_COUNTERFACTUAL_VETOES> (3 verifiable RLVR veto scenarios + predictions)\n\nThe source text provided is from Halmos 1950 Measure Theory, p0105.txt, page 90 (the text says \"90\" at top, likely page 90 of the book, but the file says p0105.txt... wait, let me look. The source text header says \"90\" then \"MEASURABLE FUNCTIONS [Sec. 22]\". So this is page 90 of Halmos, Section 22? Actually looking closely: \"90 MEASURABL"
-    },
-    {
-      "doc_hash": "9d10015087",
-      "file_name": "9d10015087_OriginalDocument_.pdf.md",
-      "source": "OriginalDocument_.pdf",
-      "model": "deepseek/deepseek-v4.1-flash-1017",
-      "family": "coveragePersonnel",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 833,
-      "equations": [
-        "\\varepsilon(t) \\;=\\; \\Theta(t - t_f)\\;\\cdot\\;\\sigma(d), \\qquad \\varepsilon \\in \\{0,1\\}\\ \\text{(dimensionless)}",
-        "\\kappa \\;=\\; c_{\\text{claim}} \\wedge c_{\\text{held}}, \\qquad c_{\\text{claim}},\\,c_{\\text{held}} \\in \\{0,1\\}",
-        "\\mu:\\; M \\longrightarrow 2^{D}, \\qquad \\operatorname{dom}(\\mu)=M",
-        "M=\\varnothing \\;\\Longrightarrow\\; \\operatorname{dom}(\\mu)=\\varnothing \\;\\Longrightarrow\\; \\forall d\\in D:\\; \\neg\\exists m\\in M \\text{ such that } m \\text{ manages } d",
-        "\\rho(n,n') \\;=\\; \\frac{d_{L}\\!\\left(\\nu(n),\\,\\nu(n')\\right)}{\\max\\!\\left(|\\nu(n)|,\\,|\\nu(n')|\\right)} \\;\\in\\;[0,1]\\ \\text{(dimensionless)}",
-        "\\Phi \\;=\\; \\frac{\\left|\\mathcal{R}_{\\text{public}}\\right|}{\\left|\\mathcal{R}_{\\text{total}}\\right|}, \\qquad \\Phi\\in[0,1]\\ \\text{(dimensionless)}"
-      ],
-      "veto_excerpt": "**Null layers, stated explicitly.** This source contains no body in motion, no load path, no structural member, and no outdoor event. The physical, biomechanical, and meteorological layers are therefore **formally null** on this artifact: there is no mass, no acceleration, no force transmission, and no atmospheric variable whose value could veto any conclusion. Any claim to the contrary would be fabrication. The veto"
     },
     {
       "doc_hash": "9d103943aa",
@@ -178796,31 +178728,6 @@
     },
     {
       "doc_hash": "gdoc",
-      "file_name": "gdoc_1-8Dx_GSE_System_and_Repo_Review.md",
-      "source": "GSE System and Repo Review",
-      "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 2163,
-      "equations": [
-        "\\Delta W = 85 - 38 = 47,\\quad \\Delta L = 29 - 13 = 16,\\quad \\Delta P = 1 - 1 = 0,\\quad \\Delta u = 51.86 - 22.85 = +29.01\\text{u}",
-        "r_{\\text{phantom}} = \\frac{47}{47+16} = 0.7460,\\quad r_{\\text{audited}} = \\frac{38}{38+13} = 0.7451,\\quad |r_{\\text{phantom}} - r_{\\text{audited}}| = 0.0009",
-        "P_{\\text{clean}} = 0.95^4 \\times 0.60 = 0.489 \\quad \\text{vs.} \\quad \\bar{p}_{\\text{arith}} = \\frac{4(0.95)+0.60}{5} = 0.880",
-        "r[\\text{sha256}] = \\text{hexdigest}(\\text{SHA-256}(\\text{data})),\\quad r[\\text{status}] = \\begin{cases}\\text{EXTRACTED} & \\text{if }\\text{strip}(\\text{text}) \\neq \\emptyset\\\\\\text{EMPTY\\_TEXT} & \\text{otherwise}\\end{cases}",
-        "\\sum_{w \\in \\mathcal{W}} V_w = V_{\\text{total}},\\quad \\forall \\text{simulated worlds } w",
-        "\\text{route share} \\ge 0.35 \\;\\land\\; \\text{snap share} \\ge 0.25"
-      ],
-      "veto_excerpt": "- Physical/biomechanical/weather veto proof\n6. <RLVR_COUNTERFACTUAL_VETOES> - 3 verifiable RLVR veto scenarios + predictions\n\nWait, looking at the source text - it's about a sports data/analytics system called Galaxy Sports Edge. There's mention of betting ledgers (85-29-1, +51.86u etc.) but I must NOT mention betting lines, spreads, totals, moneylines, or odds. I can discuss ledger integrity, database idempotency, d"
-    },
-    {
-      "doc_hash": "gdoc",
       "file_name": "gdoc_1-b3x_10_13_update.md",
       "source": "10/13 update",
       "model": "alibaba_gse:qwen-plus-character",
@@ -182156,31 +182063,6 @@
     },
     {
       "doc_hash": "gdoc",
-      "file_name": "gdoc_1g2Nz_GSE_System_and_Repo_Review_2_.md",
-      "source": "GSE System and Repo Review (2)",
-      "model": "deepseek/deepseek-v4.1-flash-1017",
-      "family": "marketMicrostructure",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 922,
-      "equations": [
-        "k=(\\text{game\\_id},\\text{market\\_type},\\text{selection\\_hash}).",
-        "L_t=\\sum_{k\\in S_t} B(k),\\qquad B(k)\\in\\mathbb{R}\\ \\text{ledger units}.",
-        "L_{t+1}=L_t+\\sum_{k\\in N_t}B(k),",
-        "L'_{t+1}=L_t+\\sum_{k\\in N_t}B(k)+\\sum_{k\\in R}B(k),",
-        "R=(31\\text{-}11\\text{-}0)\\cup(16\\text{-}5\\text{-}0)=(47\\text{-}16\\text{-}0).",
-        "\\Delta L=+29.01\\ \\text{ledger units},"
-      ],
-      "veto_excerpt": "The physical and biomechanical layers should veto model layers when their assumptions contradict measured constraints. The weak-link OL proof is the cleanest example. For \\(p=(0.95,0.95,0.95,0.95,0.60)\\), the arithmetic mean is \\(0.88\\), but the compound survival probability is \\(0.95^4\\cdot0.60=0.4889\\). The arithmetic mean overstates clean-pocket probability by \\(39.1\\) percentage points. A model that uses the arit"
-    },
-    {
-      "doc_hash": "gdoc",
       "file_name": "gdoc_1G4Le_2026-10-30-ON1-BACKLOG.md.md",
       "source": "2026-10-30-ON1-BACKLOG.md",
       "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
@@ -184147,30 +184029,6 @@
     },
     {
       "doc_hash": "gdoc",
-      "file_name": "gdoc_1mxDB_GEMINI-AGENT-HANDOFF-DOUG-AS-BUILDERS.md.md",
-      "source": "GEMINI-AGENT-HANDOFF-DOUG-AS-BUILDERS.md",
-      "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 435,
-      "equations": [
-        "I_{\\text{total}} = P_0 + T_s = \\$128{,}875.00 + \\$8{,}900.00 = \\$137{,}775.00 \\quad [\\text{USD}]",
-        "\\mathcal{P}_k = \\alpha_k P_0, \\qquad \\boldsymbol{\\alpha} = (0.20,\\;0.40,\\;0.40),\\qquad \\sum_k \\alpha_k = 1.00",
-        "P_{\\text{stack}} = P_0 + \\Delta_1 + \\Delta_2,\\quad \\Delta_1 = \\$9{,}700.00,\\quad \\Delta_2 = \\$19{,}000.00,\\quad P_{\\text{stack}} = \\$157{,}575.00 \\quad [\\text{USD}, \\text{PAGE 1}]",
-        "\\tau_{\\text{eff}} = \\frac{T_s}{P_0} \\approx 0.06906 \\quad [\\text{dimensionless}]",
-        "t_{\\text{live}} \\approx 45\\,\\text{s} \\quad [\\text{seconds}]"
-      ],
-      "veto_excerpt": "Physical layer: ALT ADD 2 targets \"previously sealed areas\" of pedestrian flatwork with mechanical prep and dual-coat H&C Colortop; if the existing sealer or substrate moisture prevents mechanical bond, the coating system fails [PAGE 1]. Biomechanical layer: parapet and exterior-wall work at 1395 S. Voss Road requires scaffolding, fall protection, and elevated labor hours not itemized in the base price [PAGE 1]. Weat"
-    },
-    {
-      "doc_hash": "gdoc",
       "file_name": "gdoc_1N1AK_2026-10-30-AM.md.md",
       "source": "2026-10-30-AM.md",
       "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
@@ -185020,26 +184878,6 @@
     },
     {
       "doc_hash": "gdoc",
-      "file_name": "gdoc_1PTA6_BAKEOFF-REPORT_1_.md.md",
-      "source": "BAKEOFF-REPORT (1).md",
-      "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 2469,
-      "equations": [
-        "C(d) = \\frac{|\\mathcal{T}_{out}(d) \\cap \\mathcal{T}_{native}(d)|}{|\\mathcal{T}_{native}(d)|}"
-      ],
-      "veto_excerpt": ": Physical/biomechanical/weather veto proof. Physical: no GPU (physical layer veto), VM proxy (network layer veto), RAM 7 GB (memory layer veto). Biomechanical: not applicable? Maybe human factors: Garrett's Windows host has no GPU, only Kaggle lane. Weather: not applicable, but I can mention the DFS document mentions \"rain, 13 mph\" weather in a game cell, but I must not treat it as betting. I can mention weather as"
-    },
-    {
-      "doc_hash": "gdoc",
       "file_name": "gdoc_1q1rC_MEMORY.md.md",
       "source": "MEMORY.md",
       "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
@@ -185590,30 +185428,6 @@
         "\\mathcal{L} = \\mathrm{margin}_{\\mathrm{actual}} - \\mathrm{margin}_{\\mathrm{deserved}}"
       ],
       "veto_excerpt": "Physical/biomechanical/weather veto proof.\n- The model has no weather, no biomechanics, no special teams, no field position, no penalties, no opponent adjustment.\n- Vetoes: If a game outcome was decided by special teams (Carolina's 2 FGs = 6 points), missed XP, kickoff fumble, weather, injuries, the model is structurally blind and must be vetoed for grading those aspects.\n- Cross-layer: physical layer (turf, temperat"
-    },
-    {
-      "doc_hash": "gdoc",
-      "file_name": "gdoc_1s4dB_GSE_System_and_Repo_Review_1_.md",
-      "source": "GSE System and Repo Review (1)",
-      "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
-      "family": "weather",
-      "sections_present": [
-        "cross_layer_veto",
-        "operators",
-        "retrocausal_genealogy",
-        "rlvr_vetoes",
-        "theory_of_mind",
-        "think"
-      ],
-      "think_words": 2575,
-      "equations": [
-        "\\mathbf{L}_{\\text{audit}} = (38,\\,13,\\,1,\\,22.85), \\qquad \\mathbf{L}_{\\text{deploy}} = (85,\\,29,\\,1,\\,51.86)",
-        "\\Delta\\mathbf{L} = \\mathbf{L}_{\\text{deploy}} - \\mathbf{L}_{\\text{audit}} = (47,\\,16,\\,0,\\,29.01)",
-        "W_{\\Delta} = 16 + 31 = 47, \\qquad L_{\\Delta} = 5 + 11 = 16, \\qquad P_{\\Delta} = 0",
-        "p_{\\text{phantom}} = \\frac{47}{47+16} \\approx 0.74603, \\qquad p_{\\text{audit}} = \\frac{38}{38+13} \\approx 0.74510",
-        "|p_{\\text{phantom}} - p_{\\text{audit}}| \\approx 9.3 \\times 10^{-4} < 10^{-3}"
-      ],
-      "veto_excerpt": ": Physical/biomechanical/weather veto proof.\n- <RLVR_COUNTERFACTUAL_VETOES>: 3 verifiable RLVR veto scenarios + predictions.\n\nTotal >= 1000 words across these sections.\n\nLet me plan content:\n\nTHINK_TRACE (>=400 words):\n- Multi-hop derivation of the ledger corruption: source commit d5628b5 vs transcript 7be49767a. Delta = +47W -16L +29.01u. Mechanism: non-idempotent double-append of entering base cohort (16-5-0) plus"
     },
     {
       "doc_hash": "gdoc",

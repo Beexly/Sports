@@ -65,6 +65,7 @@ DEFAULT_TRAINER_FEED_JSONL = (
     / "2026-11-14"
     / "arxiv_sovereign_and_shard_b_trainer_feed.jsonl"
 )
+MAX_TRAINER_FEED_SHARD_BYTES: int = 45 * 1024 * 1024
 
 ARXIV_ID_RE = re.compile(r"\b(\d{4}\.\d{4,5})(?:v\d+)?\b")
 ARXIV_SLUG_ID_RE = re.compile(r"(?:arxiv[_\-\s:]*)(\d{4})[._](\d{4,5})(?:v\d+)?", re.IGNORECASE)
@@ -298,11 +299,14 @@ def synthesize_arxiv_and_sovereign_corpus(
     arxiv_docs_dir: Path = DEFAULT_ARXIV_DOCS_DIR,
     synthesis_out_path: Path = DEFAULT_SYNTHESIS_JSON,
     trainer_feed_out_path: Path = DEFAULT_TRAINER_FEED_JSONL,
+    max_feed_shard_bytes: int = MAX_TRAINER_FEED_SHARD_BYTES,
 ) -> Dict[str, Any]:
     """Run full read-only synthesis and emit dated ArXiv/Sovereign JSON + trainer feed JSONL."""
     # Guardrail: never allow writing directly to brain/mind.jsonl
     if trainer_feed_out_path.name == "mind.jsonl":
         raise ValueError("Forbidden target: single-writer rule prohibits writing brain/mind.jsonl directly.")
+    if max_feed_shard_bytes <= 0:
+        raise ValueError("max_feed_shard_bytes must be positive.")
 
     complete_docs, refused_docs, gk_failures = load_merged_sovereign_docs(
         wt_primitives_dir=wt_primitives_dir,
@@ -460,16 +464,61 @@ def synthesize_arxiv_and_sovereign_corpus(
         "tracks_sample": {k: v[:25] for k, v in sorted(track_catalog.items())},
     }
 
+    trainer_feed_out_path.parent.mkdir(parents=True, exist_ok=True)
+    stale_pattern = f"{trainer_feed_out_path.stem}_part*{trainer_feed_out_path.suffix}"
+    for stale_path in sorted(trainer_feed_out_path.parent.glob(stale_pattern)):
+        if stale_path.is_file():
+            stale_path.unlink()
+
+    encoded_lines: List[bytes] = [
+        (json.dumps(rec, ensure_ascii=False) + "\n").encode("utf-8")
+        for rec in trainer_records
+    ]
+    total_feed_bytes = sum(len(b) for b in encoded_lines)
+    written_paths: List[Path] = []
+
+    if total_feed_bytes <= max_feed_shard_bytes:
+        with trainer_feed_out_path.open("wb") as fh:
+            for line_bytes in encoded_lines:
+                fh.write(line_bytes)
+        written_paths.append(trainer_feed_out_path)
+    else:
+        if trainer_feed_out_path.exists():
+            trainer_feed_out_path.unlink()
+        chunks: List[List[bytes]] = []
+        current_chunk: List[bytes] = []
+        current_bytes = 0
+        for line_bytes in encoded_lines:
+            if current_chunk and (current_bytes + len(line_bytes) > max_feed_shard_bytes):
+                chunks.append(current_chunk)
+                current_chunk = [line_bytes]
+                current_bytes = len(line_bytes)
+            else:
+                current_chunk.append(line_bytes)
+                current_bytes += len(line_bytes)
+        if current_chunk:
+            chunks.append(current_chunk)
+
+        for idx, chunk in enumerate(chunks, start=1):
+            shard_path = trainer_feed_out_path.parent / (
+                f"{trainer_feed_out_path.stem}_part{idx:02d}{trainer_feed_out_path.suffix}"
+            )
+            with shard_path.open("wb") as fh:
+                for line_bytes in chunk:
+                    fh.write(line_bytes)
+            written_paths.append(shard_path)
+
+    synthesis_payload["counts"]["trainer_feed_shards_emitted"] = len(written_paths)
+    synthesis_payload["trainer_feed_shard_files"] = [
+        str(p.relative_to(REPO_ROOT)).replace("\\", "/") if p.is_relative_to(REPO_ROOT) else p.name
+        for p in written_paths
+    ]
+
     synthesis_out_path.parent.mkdir(parents=True, exist_ok=True)
     synthesis_out_path.write_text(
         json.dumps(synthesis_payload, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
-
-    trainer_feed_out_path.parent.mkdir(parents=True, exist_ok=True)
-    with trainer_feed_out_path.open("w", encoding="utf-8", newline="\n") as fh:
-        for rec in trainer_records:
-            fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
     return synthesis_payload
 

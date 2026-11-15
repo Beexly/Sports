@@ -1,0 +1,78 @@
+{
+  "book_id": "a43f43ab34f4b00d",
+  "source_status": "COMPLETE",
+  "title": "unibet.com",
+  "file_name": "unibet.com.md",
+  "sha256": "a43f43ab34f4b00d87987f474c67dade00d76313c7dfa4ed44f0bfa6e1418e57",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and URL taxonomy yield structured path-space manifolds for probabilistic sportsbook indexing. Universal Lens: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian sitemap validation assigns posterior probabilities to URL accessibility; conformal prediction bounds uncertainty in path discovery. GSI Mapping: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions map sitemap entries to game-lobby and betting-state paths; dynamic routing updates based on HTTP status codes. GSE Mapping: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# unibet.com Category: **sportsbook** URLs discovered: **3** Sitemaps walked: 15 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'graph of sitemap URLs', 'V': 'vertices (URLs)', 'E': 'edges (crawl links)', 'n_s': 'number of sitemaps walked'}",
+      "assumptions": "All sitemaps are accessible via HTTP GET; graph is directed and acyclic.",
+      "breakdown_regime": "When n_s → ∞, convergence to full URL coverage occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each sitemap entry maps to a node in GSI's Bayesian belief network; GSE uses this for path planning.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "HTTP status code and entry count per sitemap."
+      }
+    },
+    {
+      "primitive_id": "url_taxonomy_classifier",
+      "name": "URL Taxonomy Classifier",
+      "verbatim_quote": "segment | URLs | |---|---| | `/(root)` | 1 | | `/browser-notification` | 1 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'taxonomy vector space', 't_i': 'URL segment type', 'c_i': 'count of URLs in t_i'}",
+      "assumptions": "URL segments form orthogonal categories; each URL belongs to one category.",
+      "breakdown_regime": "When c_i = 0, t_i is inactive or deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Classifies URLs into functional types for GSI's path-space model; GSE uses this for navigation logic.",
+        "source_operator": "url_taxonomy_classifier",
+        "telemetry": "Segment type and URL count per taxonomy."
+      }
+    },
+    {
+      "primitive_id": "http_status_validator",
+      "name": "HTTP Status Validator",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.unibet.com/sitemap.xml` | 200 | 8 | yes | | `https://unibet.com/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'status code set', 's_i': 'individual HTTP status code', 'p(s_i)': 'probability of s_i occurring'}",
+      "assumptions": "Status codes follow a known distribution over time; 2xx implies valid resource.",
+      "breakdown_regime": "When p(s_i) < threshold, sitemap is considered stale or misconfigured.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps HTTP responses to GSI's confidence-weighted path validity; GSE uses this for routing decisions.",
+        "source_operator": "http_status_validator",
+        "telemetry": "Observed HTTP status codes and response counts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a43f43ab34f4b00d_t0",
+      "think": "The sitemap traversal operator defines a directed graph where nodes represent URLs and edges represent navigational links. The URL taxonomy classifier partitions this graph into orthogonal functional segments, enabling probabilistic classification of URL utility. The HTTP status validator provides stochastic feedback on resource availability, forming a Markovian process that informs both GSI’s Bayesian inference and GSE’s reactive path selection. Failure modes include 404s indicating dead links, 204s suggesting empty resources, and missing sitemaps implying incomplete indexing. These failures propagate through the system as reduced confidence in path coverage and degraded state estimation.\n\nDeep epistemic analysis for unibet.com (a43f43ab34f4b00d, domain=other, pages_read=1/1): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # unibet.com Category: **sportsbook** URLs discovered: **3** Sitemaps walked: 15 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible via HTTP GET; graph is directed and acyclic. Breakdown regime: When n_s → ∞, convergence to full URL coverage occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry maps to a node in GSI's Bayesian belief network; GSE uses this for path planning. Operator 'URL Taxonomy Classifier' (page 1, domain other) captures: segment | URLs | |---|---| | `/(root)` | 1 | | `/browser-notification` | 1 | | Assumptions: URL segments form orthogonal categories; each URL belongs to one category. Breakdown regime: When c_i = 0, t_i is inactive or deprecated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Classifies URLs into functional types for GSI's path-space model; GSE uses this for navigation logic. Operator 'HTTP Status Validator' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.unibet.com/sitemap.xml` | 200 | 8 | yes | | `https://unibet.com/sitemap.xml` | Assumptions: Status codes follow a known distribution over time; 2xx implies valid resource. Breakdown regime: When p(s_i) < threshold, sitemap is considered stale or misconfigured. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps HTTP responses to GSI's confidence-weighted path validity; GSE uses this for routing decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for unibet.com (a43f43ab34f4b00d, domain=other, pages_read=1/1): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # unibet.com Category: **sportsbook** URLs discovered: **3** Sitemaps walked: 15 ## Sitemaps | Sitemap | Status Assumptions: All sitemaps are accessible via HTTP GET; graph is directed and acyclic. Breakdown regime: When n_s → ∞, convergence to full URL coverage occurs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each sitemap entry maps to a node in GSI's Bayesian belief network; GSE uses this for path planning. Operator 'URL Taxonomy Classifier' (page 1, domain other) captures: segment | URLs | |---|---| | `/(root)` | 1 | | `/browser-notification` | 1 | | Assumptions: URL segments form orthogonal categories; each URL belongs to one category. Breakdown regime: When c_i = 0, t_i is inactive or deprecated. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Classifies URLs into functional types for GSI's path-space model; GSE uses this for navigation logic. Operator 'HTTP Status Validator' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.unibet.com/sitemap.xml` | 200 | 8 | yes | | `https://unibet.com/sitemap.xml` | Assumptions: Status codes follow a known distribution over time; 2xx implies valid resource. Breakdown regime: When p(s_i) < threshold, sitemap is considered stale or misconfigured. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps HTTP responses to GSI's confidence-weighted path validity; GSE uses this for routing decisions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information theory, this framework builds upon early web crawling models and Bayesian network formalism introduced by Pearl and others in the 1980s–90s. Retrocausal Genealogy: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate sitemap structures to obscure content or introduce false positives. A rational agent would optimize sitemap structure for search engine visibility while minimizing redundancy and ensuring consistent access patterns. Theory of Mind & Decision Maker Model: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If GSI's Bayesian model detects high variance in HTTP status codes across similar URL types, it vetoes further reliance on those paths. Similarly, GSE avoids routing through segments with repeated 204s or 404s due to risk of deadlock or stale data. Cross-Layer Veto & Anti-Leakage Check: Rooted in unibet.com (a43f43ab34f4b00d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

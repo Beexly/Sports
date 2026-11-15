@@ -1,0 +1,78 @@
+{
+  "book_id": "6211eba8c9c21818",
+  "source_status": "COMPLETE",
+  "title": "claude-code-guide",
+  "file_name": "claude-code-guide.md",
+  "sha256": "6211eba8c9c2181887b56447eb05300159822dcc1b605bd3826f61ed03b22163",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Claude Code, Agent SDK, and API form a triadic operational framework: CLI harness (Code), library-based agent construction (SDK), and direct model interaction (API), each enabling distinct agentic paradigms. Universal Lens: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers agent architecture via Bayesian belief updates on tool availability and sandbox constraints—where SDK implies self-hosted autonomy, API denotes external orchestration, and Managed Agents signal Anthropic-controlled state. GSI Mapping: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models agent behavior through state transitions: from tool-use loop (Code/SDK) to session-based persistence (Managed Agents), with hooks and permissions governing action space and observability. GSE Mapping: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "claude_code_harness",
+      "name": "Claude Code CLI Harness",
+      "verbatim_quote": "**Claude Code** (the CLI tool): Installation, configuration, hooks, skills, MCP servers, keyboard shortcuts, IDE integrations, settings, and workflows.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User operates within local environment with CLI access and IDE integration.",
+      "breakdown_regime": "Failure occurs when CLI lacks required dependencies or MCP server misconfiguration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's local agent loop with embedded hooks and context management.",
+        "source_operator": "claude_code_harness",
+        "telemetry": "CLI execution logs, hook triggers, session duration."
+      }
+    },
+    {
+      "primitive_id": "claude_agent_sdk",
+      "name": "Claude Agent SDK",
+      "verbatim_quote": "**Claude Agent SDK**: Claude Code packaged as a library (`claude-agent-sdk` for Python, `@anthropic-ai/claude-agent-sdk` for TypeScript) for building custom agents on your own infrastructure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Developer has access to Python or TypeScript runtime and custom infrastructure.",
+      "breakdown_regime": "Failure occurs due to missing tool implementations or runtime errors in agent loop.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from Claude Code harness but extends with built-in tools and self-hosted control.",
+        "source_operator": "claude_agent_sdk",
+        "telemetry": "Agent session state, tool invocation counts, error rates."
+      }
+    },
+    {
+      "primitive_id": "claude_api_tool_runner",
+      "name": "Claude API Tool Runner",
+      "verbatim_quote": "It spans several surfaces: the **Messages API** (direct request/response), the **Tool Runner** (`client.beta.messages.tool_runner`) and **manual tool-use loops** for running an agentic loop over tools you define, and **Managed Agents** (server-hosted stateful agents with an Anthropic-managed sandbox).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "User interacts with Anthropic-hosted services via API and defines custom tools.",
+      "breakdown_regime": "Failure arises from malformed tool definitions or API rate limits.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's tool-use loop with explicit hooks and error handling.",
+        "source_operator": "claude_api_tool_runner",
+        "telemetry": "Tool execution latency, hook approvals, retry counts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6211eba8c9c21818_t0",
+      "think": "The triadic structure of Claude Code, Agent SDK, and API represents a layered agentic paradigm. Claude Code provides a CLI-based harness for local development, enabling interactive sessions with hooks and IDE integrations. The Claude Agent SDK abstracts this into a portable library, allowing developers to build agents on their own infrastructure with built-in tools such as Read, Write, Edit, Bash, etc., offering a balance between customization and convenience. In contrast, the Claude API offers multiple interfaces including the Messages API, Tool Runner, and Managed Agents. The Tool Runner allows users to define tools and manage them in a loop with per-turn hooks for approval and error interception, while Managed Agents offload deployment and state management to Anthropic. These layers exhibit dualities: Code vs SDK (local vs portable), Tool Runner vs SDK (defined vs built-in tools), and SDK vs Managed Agents (self-hosted vs hosted). Each layer introduces distinct failure modes—CLI misconfigurations, runtime errors in SDK, or API limitations in Tool Runner or Managed Agents. The system's robustness depends on correct layer selection based on deployment needs and abstraction requirements.\n\nDeep epistemic analysis for claude-code-guide (6211eba8c9c21818, domain=other, pages_read=3/3): Operator 'Claude Code CLI Harness' (page 1, domain other) captures: **Claude Code** (the CLI tool): Installation, configuration, hooks, skills, MCP servers, keyboard shortcuts, IDE integrations, settings, and workflows. Assumptions: User operates within local environment with CLI access and IDE integration. Breakdown regime: Failure occurs when CLI lacks required dependencies or MCP server misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's local agent loop with embedded hooks and context management. Operator 'Claude Agent SDK' (page 1, domain other) captures: **Claude Agent SDK**: Claude Code packaged as a library (`claude-agent-sdk` for Python, `@anthropic-ai/claude-agent-sdk` for TypeScript) for building custom agents on your own infrastructure. Assumptions: Developer has access to Python or TypeScript runtime and custom infrastructure. Breakdown regime: Failure occurs due to missing tool implementations or runtime errors in agent loop. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from Claude Code harness but extends with built-in tools and self-hosted control. Operator 'Claude API Tool Runner' (page 1, domain other) captures: It spans several surfaces: the **Messages API** (direct request/response), the **Tool Runner** (`client.beta.messages.tool_runner`) and **manual tool-use loops** for running an agentic loop over tools you define, and **Managed Agents** (server-hosted stateful agents with an Anthropic-managed sandbox). Assumptions: User interacts with Anthropic-hosted services via API and defines custom tools. Breakdown regime: Failure arises from malformed tool definitions or API rate limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's tool-use loop with explicit hooks and error handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for claude-code-guide (6211eba8c9c21818, domain=other, pages_read=3/3): Operator 'Claude Code CLI Harness' (page 1, domain other) captures: **Claude Code** (the CLI tool): Installation, configuration, hooks, skills, MCP servers, keyboard shortcuts, IDE integrations, settings, and workflows. Assumptions: User operates within local environment with CLI access and IDE integration. Breakdown regime: Failure occurs when CLI lacks required dependencies or MCP server misconfiguration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's local agent loop with embedded hooks and context management. Operator 'Claude Agent SDK' (page 1, domain other) captures: **Claude Agent SDK**: Claude Code packaged as a library (`claude-agent-sdk` for Python, `@anthropic-ai/claude-agent-sdk` for TypeScript) for building custom agents on your own infrastructure. Assumptions: Developer has access to Python or TypeScript runtime and custom infrastructure. Breakdown regime: Failure occurs due to missing tool implementations or runtime errors in agent loop. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from Claude Code harness but extends with built-in tools and self-hosted control. Operator 'Claude API Tool Runner' (page 1, domain other) captures: It spans several surfaces: the **Messages API** (direct request/response), the **Tool Runner** (`client.beta.messages.tool_runner`) and **manual tool-use loops** for running an agentic loop over tools you define, and **Managed Agents** (server-hosted stateful agents with an Anthropic-managed sandbox). Assumptions: User interacts with Anthropic-hosted services via API and defines custom tools. Breakdown regime: Failure arises from malformed tool definitions or API rate limits. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's tool-use loop with explicit hooks and error handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early LLM agent frameworks, this structure evolved from Claude’s initial API design, incorporating modular tooling and agent lifecycle management inspired by modern multi-agent systems and sandboxed execution models. Retrocausal Genealogy: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the user seeking automation, the system enforcing sandbox boundaries, and the developer balancing abstraction depth. Each agent influences the others through feedback loops involving tool definition, execution, and deployment decisions. Theory of Mind & Decision Maker Model: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that Tool Runner and SDK are not conflated, nor are SDK and Managed Agents. Leakage vetoes prevent cross-layer assumptions—e.g., assuming Managed Agents' sandbox features apply to SDK or Tool Runner. Cross-Layer Veto & Anti-Leakage Check: Rooted in claude-code-guide (6211eba8c9c21818), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

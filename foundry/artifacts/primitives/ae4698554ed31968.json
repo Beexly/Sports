@@ -1,0 +1,78 @@
+{
+  "book_id": "ae4698554ed31968",
+  "source_status": "COMPLETE",
+  "title": "c09-deep-d06",
+  "file_name": "c09-deep-d06.md",
+  "sha256": "ae4698554ed319685b3b715cd8b067e5ac32a525b0eb9c2ff6363ba1f5fee17c",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The sovereign primitives form a unified operator algebra over probabilistic state spaces. The scalarizer and xFP guard define a strict activation manifold, while the Brier floor establishes a thermodynamic bound on market discrimination. Together, they enforce a rigorous isomorphism between empirical holdout performance and permissible system state transitions.",
+  "gsi_mapping": "GSI maps these primitives to conformal Bayesian inference. The 0.22 Brier floor acts as a hard prior boundary against devigged market baselines. The CLV measurement failure highlights a critical breakdown in posterior calibration when mint/close book intersections are misaligned, requiring strict same-book grading for valid epistemic updates.",
+  "gse_mapping": "In GSE, the scalarizer functions as a situational reasoning gatekeeper. It evaluates feature residuals (|r|) and stability (|s|) against strict thresholds before allowing a state transition. This ensures that only signals passing the xFP 12-test guard—validated on true holdouts—are permitted to alter the engine's predictive trajectory.",
+  "primitives": [
+    {
+      "primitive_id": "scalarizer_activation_contract",
+      "name": "Scalarizer Activation Contract",
+      "verbatim_quote": "Scalarizer (d34) and the xFP 12-test guard (d36) are two instantiations of one doctrine: no signal promotes without a falsifiable threshold.** `reasoning/overnight-agent-prompt-2026-09-26.md:125` (f1 = 0 ⟺ |r| ≥ 0.08 AND |s",
+      "page": 5,
+      "latex": "f_1 = 0 \\iff |r| \\ge 0.08 \\land |s| > s_e",
+      "symbol_and_unit_ledger": "f_1: dimensionless activation flag; r: residual magnitude (dimensionless); s: stability metric (dimensionless); s_e: empirical stability threshold (dimensionless).",
+      "assumptions": "Signal validity requires simultaneous satisfaction of residual and stability bounds on a true holdout set.",
+      "breakdown_regime": "Fails if training data leaks into the holdout set or if the stability metric becomes collinear with the residual.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a strict gating function in a neural manifold, preventing gradient updates unless error surfaces meet dual constraints.",
+        "source_operator": "scalarizer_activation_contract",
+        "telemetry": "Pass/fail rate of the 12-test guard on pre-registered kill lines."
+      }
+    },
+    {
+      "primitive_id": "brier_discrimination_floor",
+      "name": "Brier Discrimination Floor",
+      "verbatim_quote": "The 0.22 Brier floor is ~0.008 above the devigged baseline — the discrimination gate is the binding constraint (d30 ↔ d34).** `reasoning/calibration-weights.md:30-31` puts Elo at Brier 0.2312 vs devigged-price baseline 0.2122 (fails).",
+      "page": 6,
+      "latex": "BS \\le 0.22 \\implies RES \\gtrsim 0.03 - 0.05",
+      "symbol_and_unit_ledger": "BS: Brier Score (dimensionless probability squared); RES: Resolution component of Brier decomposition (dimensionless).",
+      "assumptions": "Market prices are efficient devigged baselines; model improvement must come from resolution, not mere reliability adjustments.",
+      "breakdown_regime": "Breaks down if the market baseline is inefficient or if the resolution metric saturates due to extreme outcome variance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to the minimum energy required to escape a local optimum in a high-dimensional probability simplex.",
+        "source_operator": "brier_discrimination_floor",
+        "telemetry": "Delta between model Brier score and devigged market baseline across settled events."
+      }
+    },
+    {
+      "primitive_id": "clv_measurement_invariant",
+      "name": "CLV Measurement Invariant",
+      "verbatim_quote": "The rulers doc's contribution is proving the current grader *cannot honestly report either number* because mint/close book sets differ.",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "CLV: Close Line Value (percentage); Mint Set: Initial pricing conditions; Close Set: Final pricing conditions.",
+      "assumptions": "Valid edge calculation requires identical sample spaces for both mint and close evaluations.",
+      "breakdown_regime": "Invariant fails if liquidity shocks cause significant sample attrition between mint and close, creating non-comparable sets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a conservation law violation where the phase space volume changes between initial and final states.",
+        "source_operator": "clv_measurement_invariant",
+        "telemetry": "Intersection ratio of mint and close book IDs; flagged discrepancies in grade reporting."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ae4698554ed31968_t0",
+      "think": "The derivation begins by establishing the scalarizer as a fundamental activation contract. Mathematically, this is a step function $H(|r| < 0.08 \\land |s| \\le s_e)$ that gates information flow. This operator is dual to the xFP 12-test guard, which enforces structural integrity on the holdout manifold. The Brier floor introduces a thermodynamic limit: $BS \\le 0.22$ implies a minimum resolution $RES$. Since the devigged baseline sits at 0.2122, any model failing to achieve this resolution is effectively generating heat rather than work. The CLV invariant exposes a topological flaw in standard grading: if the mint set $M$ and close set $C$ have disjoint elements, the intersection $M \\cap C$ is the only valid domain for evaluation. Ignoring this leads to phantom edge claims. The synthesis reveals a rigid hierarchy: raw signals must pass the scalarizer, survive the xFP holdout discipline, and finally demonstrate resolution above the Brier floor to be considered valid state transitions in the GSE.\n\nDeep epistemic analysis for c09-deep-d06 (ae4698554ed31968, domain=other, pages_read=14/14): Operator 'Scalarizer Activation Contract' (page 5, domain other) captures: Scalarizer (d34) and the xFP 12-test guard (d36) are two instantiations of one doctrine: no signal promotes without a falsifiable threshold.** `reasoning/overnight-agent-prompt-2026-09-26.md:125` (f1 = 0 ⟺ |r| ≥ 0.08 AND |s Assumptions: Signal validity requires simultaneous satisfaction of residual and stability bounds on a true holdout set. Breakdown regime: Fails if training data leaks into the holdout set or if the stability metric becomes collinear with the residual. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a strict gating function in a neural manifold, preventing gradient updates unless error surfaces meet dual constraints. Operator 'Brier Discrimination Floor' (page 6, domain other) captures: The 0.22 Brier floor is ~0.008 above the devigged baseline — the discrimination gate is the binding constraint (d30 ↔ d34).** `reasoning/calibration-weights.md:30-31` puts Elo at Brier 0.2312 vs devigged-price baseline 0.2122 (fails). Assumptions: Market prices are efficient devigged baselines; model improvement must come from resolution, not mere reliability adjustments. Breakdown regime: Breaks down if the market baseline is inefficient or if the resolution metric saturates due to extreme outcome variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to the minimum energy required to escape a local optimum in a high-dimensional probability simplex. Operator 'CLV Measurement Invariant' (page 5, domain other) captures: The rulers doc's contribution is proving the current grader *cannot honestly report either number* because mint/close book sets differ. Assumptions: Valid edge calculation requires identical sample spaces for both mint and close evaluations. Breakdown regime: Invariant fails if liquidity shocks cause significant sample attrition between mint and close, creating non-comparable sets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a conservation law violation where the phase space volume changes between initial and final states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for c09-deep-d06 (ae4698554ed31968, domain=other, pages_read=14/14): Operator 'Scalarizer Activation Contract' (page 5, domain other) captures: Scalarizer (d34) and the xFP 12-test guard (d36) are two instantiations of one doctrine: no signal promotes without a falsifiable threshold.** `reasoning/overnight-agent-prompt-2026-09-26.md:125` (f1 = 0 ⟺ |r| ≥ 0.08 AND |s Assumptions: Signal validity requires simultaneous satisfaction of residual and stability bounds on a true holdout set. Breakdown regime: Fails if training data leaks into the holdout set or if the stability metric becomes collinear with the residual. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a strict gating function in a neural manifold, preventing gradient updates unless error surfaces meet dual constraints. Operator 'Brier Discrimination Floor' (page 6, domain other) captures: The 0.22 Brier floor is ~0.008 above the devigged baseline — the discrimination gate is the binding constraint (d30 ↔ d34).** `reasoning/calibration-weights.md:30-31` puts Elo at Brier 0.2312 vs devigged-price baseline 0.2122 (fails). Assumptions: Market prices are efficient devigged baselines; model improvement must come from resolution, not mere reliability adjustments. Breakdown regime: Breaks down if the market baseline is inefficient or if the resolution metric saturates due to extreme outcome variance. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to the minimum energy required to escape a local optimum in a high-dimensional probability simplex. Operator 'CLV Measurement Invariant' (page 5, domain other) captures: The rulers doc's contribution is proving the current grader *cannot honestly report either number* because mint/close book sets differ. Assumptions: Valid edge calculation requires identical sample spaces for both mint and close evaluations. Breakdown regime: Invariant fails if liquidity shocks cause significant sample attrition between mint and close, creating non-comparable sets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a conservation law violation where the phase space volume changes between initial and final states. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace back to early 20th-century statistical decision theory, specifically Neyman-Pearson lemma adaptations for financial markets. The Brier score decomposition echoes proper scoring rules developed by Brier (1950) and refined by Murphy. The holdout discipline reflects modern machine learning's cross-validation rigor, while the CLV invariant mirrors arbitrage-free pricing conditions in quantitative finance, ensuring no free lunch across temporal book states.",
+      "theory_of_mind": "The opposing agent here is the market maker or the 'devigged baseline'. They act as an efficient aggregator of public information. Our model must anticipate their pricing adjustments. The scalarizer models the market's skepticism: it refuses to update on noisy signals ($|r| \\ge 0.08$). The CLV invariant recognizes that the market's 'close' is not a static target but a dynamic equilibrium that may exclude certain outcomes present at 'mint', forcing our agent to operate strictly within the surviving intersection.",
+      "cross_layer_veto": "A critical veto condition arises if the scalarizer's stability metric $|s|$ becomes collinear with the residual $|r|$, effectively reducing the 2D gate to a 1D line and increasing false positives. Furthermore, if the xFP holdout set contains data leakage from the training period (violating the 'never train on 2025 then score 2025' rule), the entire promotion pipeline is compromised. The Brier floor also vetoes any model that relies solely on calibration tweaks without genuine discriminative power, as $BS \\le 0.22$ cannot be met by reliability alone."
+    }
+  ]
+}

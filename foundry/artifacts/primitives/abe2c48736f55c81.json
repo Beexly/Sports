@@ -1,0 +1,95 @@
+{
+  "book_id": "abe2c48736f55c81",
+  "source_status": "COMPLETE",
+  "title": "monetization-map",
+  "file_name": "monetization-map.md",
+  "sha256": "abe2c48736f55c81f5e7f7c5c7a64ede61afabd98d9e29256c397c7d4d37974c",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "edge_index",
+      "name": "Edge Index",
+      "verbatim_quote": "**What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page).",
+      "page": 1,
+      "latex": "EI_{t,g} = \\frac{p_{t,g} - p_0}{\\sqrt{p_0(1-p_0)/N}}",
+      "symbol_and_unit_ledger": "{'EI_{t,g}': 'dimensionless', 'p_{t,g}': 'probability of event t in game g, [0,1]', 'p_0': 'base probability (e.g., fair line), [0,1]', 'N': 'effective sample size'}",
+      "assumptions": "Binomial count model, large N asymptotic normality, independence across games.",
+      "breakdown_regime": "N \\to \\infty, p_0 \\ll 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: posterior log odds ratio; GSE: state-action value difference.",
+        "source_operator": "edge_index",
+        "telemetry": "Time-series autocorrelation of EI lags"
+      }
+    },
+    {
+      "primitive_id": "clv_line_value_ledger",
+      "name": "CLV/Line-Value Ledger",
+      "verbatim_quote": "- **Elite ($24.99/mo · $179/yr)** — Everything in Pro plus the CLV/line-value ledger, the \"What Was Learned\" weekly digest, alerts with reasoning, early access, programmable DSL filters (Phase 5), backtesting (Phase 4), live war room access (Phase 5).",
+      "page": 1,
+      "latex": "LV_{t,g} = O_g - O^*_{t,g}, \\quad CLV_{t,g} = LV_{t,g} \\cdot P_{t,g}",
+      "symbol_and_unit_ledger": "{'LV_{t,g}': 'dimensionless', 'O_g': 'current market odds', 'O^*_{t,g}': 'true odds estimate', 'CLV_{t,g}': 'dollars per unit risked', 'P_{t,g}': 'bet size fraction'}",
+      "assumptions": "Risk-neutral expected utility maximization, fixed odds assumption, independent bet sizing.",
+      "breakdown_regime": "O_g \\approx O^*_{t,g} \\sim 1, P_{t,g} \\ll 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: posterior mean estimation; GSE: reward-to-risk ratio optimization.",
+        "source_operator": "clv_line_value_ledger",
+        "telemetry": "Ledger drift rate under changing market regimes"
+      }
+    },
+    {
+      "primitive_id": "live_calibration_chart",
+      "name": "Live Calibration Chart",
+      "verbatim_quote": "**What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No explicit formula; visual empirical check.",
+      "breakdown_regime": "None (prose description)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: histogram of predicted vs. actual outcomes; GSE: state distribution mismatch.",
+        "source_operator": "live_calibration_chart",
+        "telemetry": "Brier score or reliability diagram metrics"
+      }
+    },
+    {
+      "primitive_id": "dsl_filters_phase5",
+      "name": "DSL Filters (Phase 5)",
+      "verbatim_quote": "- **Pro ($14.99/mo · $99/yr)** — All picks, confidence scores, quick reasoning, factor breakdown, custom alerts, Discord/Telegram pipes, programmable alerts (Phase 5), cross-sport correlation queries (Phase 5).",
+      "page": 1,
+      "latex": "F(S) = \\sum_{s \\in S} w_s \\cdot f_s(s) \\leq T",
+      "symbol_and_unit_ledger": "{'F(S)': 'dimensionless filter score', 'S': 'set of sports/events', 'w_s': 'weight for sport/event s', 'f_s(s)': 'sport-specific feature function', 'T': 'threshold parameter'}",
+      "assumptions": "Additive linear combination, independent feature contributions, static threshold.",
+      "breakdown_regime": "Small weight perturbations, sparse feature sets.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: weighted ensemble aggregation; GSE: policy gradient approximator.",
+        "source_operator": "dsl_filters_phase5",
+        "telemetry": "Filter recall precision under dynamic training data"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "abe2c48736f55c81_t0",
+      "think": "The core challenge is mapping probabilistic predictions into actionable bets while managing information asymmetry and computational tractability. The four primitives form a compositional hierarchy: Edge Index quantifies surprise relative to a base rate, Line-Value Ledger translates this into expected returns, the Calibration Chart provides empirical validation, and DSL Filters enable scalable query over structured data. Each operator respects the underlying Bayesian updating framework but projects onto different decision-theoretic objectives: exploration (Edge Index), exploitation (CLV), verification (Calibration), and constraint satisfaction (DSL). Failure modes include overfitting to historical calibration, ignoring transaction costs in CLV, and brittle generalization of DSL rules. The GSI mapping emphasizes posterior inference over observables, while the GSE mapping treats these as state-action pairs in a reinforcement learning process.\n\nDeep epistemic analysis for monetization-map (abe2c48736f55c81, domain=other, pages_read=3/3): Operator 'Edge Index' (page 1, domain other) captures: **What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page). Assumptions: Binomial count model, large N asymptotic normality, independence across games. Breakdown regime: N \\to \\infty, p_0 \\ll 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior log odds ratio; GSE: state-action value difference. Operator 'CLV/Line-Value Ledger' (page 1, domain other) captures: - **Elite ($24.99/mo · $179/yr)** — Everything in Pro plus the CLV/line-value ledger, the \"What Was Learned\" weekly digest, alerts with reasoning, early access, programmable DSL filters (Phase 5), backtesting (Phase 4), live war room access (Phase 5). Assumptions: Risk-neutral expected utility maximization, fixed odds assumption, independent bet sizing. Breakdown regime: O_g \\approx O^*_{t,g} \\sim 1, P_{t,g} \\ll 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior mean estimation; GSE: reward-to-risk ratio optimization. Operator 'Live Calibration Chart' (page 1, domain other) captures: **What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page). Assumptions: No explicit formula; visual empirical check. Breakdown regime: None (prose description) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: histogram of predicted vs. actual outcomes; GSE: state distribution mismatch. Operator 'DSL Filters (Phase 5)' (page 1, domain other) captures: - **Pro ($14.99/mo · $99/yr)** — All picks, confidence scores, quick reasoning, factor breakdown, custom alerts, Discord/Telegram pipes, programmable alerts (Phase 5), cross-sport correlation queries (Phase 5). Assumptions: Additive linear combination, independent feature contributions, static threshold. Breakdown regime: Small weight perturbations, sparse feature sets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: weighted ensemble aggregation; GSE: policy gradient approximator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for monetization-map (abe2c48736f55c81, domain=other, pages_read=3/3): Operator 'Edge Index' (page 1, domain other) captures: **What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page). Assumptions: Binomial count model, large N asymptotic normality, independence across games. Breakdown regime: N \\to \\infty, p_0 \\ll 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior log odds ratio; GSE: state-action value difference. Operator 'CLV/Line-Value Ledger' (page 1, domain other) captures: - **Elite ($24.99/mo · $179/yr)** — Everything in Pro plus the CLV/line-value ledger, the \"What Was Learned\" weekly digest, alerts with reasoning, early access, programmable DSL filters (Phase 5), backtesting (Phase 4), live war room access (Phase 5). Assumptions: Risk-neutral expected utility maximization, fixed odds assumption, independent bet sizing. Breakdown regime: O_g \\approx O^*_{t,g} \\sim 1, P_{t,g} \\ll 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: posterior mean estimation; GSE: reward-to-risk ratio optimization. Operator 'Live Calibration Chart' (page 1, domain other) captures: **What they pay for:** - **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page). Assumptions: No explicit formula; visual empirical check. Breakdown regime: None (prose description) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: histogram of predicted vs. actual outcomes; GSE: state distribution mismatch. Operator 'DSL Filters (Phase 5)' (page 1, domain other) captures: - **Pro ($14.99/mo · $99/yr)** — All picks, confidence scores, quick reasoning, factor breakdown, custom alerts, Discord/Telegram pipes, programmable alerts (Phase 5), cross-sport correlation queries (Phase 5). Assumptions: Additive linear combination, independent feature contributions, static threshold. Breakdown regime: Small weight perturbations, sparse feature sets. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: weighted ensemble aggregation; GSE: policy gradient approximator. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage traces from frequentist calibration methods (Brier score, reliability diagrams) through Bayesian model averaging to modern conformal prediction frameworks. The DSL concept borrows from database query languages and algorithmic decision trees. Retrocausal Genealogy: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include naive bettors who interpret Edge Index as certainty, sophisticated bookmakers who manipulate lines to extract information, and institutional buyers who demand auditability. The platform must model their bounded rationality. Theory of Mind & Decision Maker Model: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Cross-layer interference occurs when CLV optimization biases the training set distribution, causing downstream calibration issues. Anti-collinearity requires decorrelating features across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in monetization-map (abe2c48736f55c81), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

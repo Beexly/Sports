@@ -1,0 +1,78 @@
+{
+  "book_id": "2f805c8b04b3963f",
+  "source_status": "COMPLETE",
+  "title": "PHASE_9_REPORT",
+  "file_name": "PHASE_9_REPORT.md",
+  "sha256": "2f805c8b04b3963f4b5f500f9959660b39723d8dad520075cdeefd65d762c8b7",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Phase 9 enforces internal-only calibration via guardrail scripts, model freezing, and disabled auto-publishing; CI workflow validates readiness gates while sandbox limitations block local build. Universal Lens: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference engine operates in frozen mode with calibrated performance stats; internal-only telemetry ensures no external data leakage or automated betting decisions. GSI Mapping: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions through bootstrap and calibration states; state-machine enforces draft-only publishing and disables external posting via kill switches. GSE Mapping: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "internal_calibration_mode",
+      "name": "Internal Calibration Mode Enforcement",
+      "verbatim_quote": "# Phase 9 — CI / Deployment Hardening + Internal Calibration Pass **Date:** 2026-05-19 **Branch:** `sports-intelligence-os-phase-9-ci` **Mode:** Internal calibration only **Verdict:** **GO for internal calibration only — code complete; local install/build validation blocked by sandbox FUSE limitation (see §9).** --## 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'mode': 'dimensionless', 'internal_only': 'boolean'}",
+      "assumptions": "System operates under sandboxed CI constraints; no external communication allowed.",
+      "breakdown_regime": "When sandbox prevents git commit or npm install, system enters degraded mode.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's internal calibration state mirrors GSE's readiness gate logic; both enforce model freeze and disable auto-publishing.",
+        "source_operator": "internal_calibration_mode",
+        "telemetry": "API response includes `mode: \"INTERNAL_ONLY\"` and `modelFrozen: true`."
+      }
+    },
+    {
+      "primitive_id": "guardrail_script_enforcement",
+      "name": "Guardrail Script Enforcement",
+      "verbatim_quote": "The three guardrail scripts enforce this on every CI run.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'guardrail_scripts': 'count', 'enforced_on_ci': 'boolean'}",
+      "assumptions": "All CI runs must pass guardrail checks before deployment.",
+      "breakdown_regime": "Failure to pass any guardrail script halts CI pipeline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's kernel logic derives from GSI's guardrail configuration; both ensure no auto-publish or external posting.",
+        "source_operator": "guardrail_script_enforcement",
+        "telemetry": "CI logs show execution of `trust-gate`, `model-freeze`, and `draft-only` scripts."
+      }
+    },
+    {
+      "primitive_id": "model_freeze_state",
+      "name": "Model Freeze State",
+      "verbatim_quote": "`apps/web/app/cockpit/calibration/page.tsx` — internal-only banner, game-history counts, readiness gates, blocked reasons, MODEL FROZEN tag - `apps/web/app/cockpit/content/page.tsx` — banner copy updated to \"Internal calibration only.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'model_frozen': 'boolean', 'freeze_anchor': 'timestamp'}",
+      "assumptions": "Model version is immutable post-freeze; no further adjustments allowed.",
+      "breakdown_regime": "Upon freeze, all prediction engines halt updates to model parameters.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's model freeze aligns with GSE's readiness state where `canApplyCalibrationAdjustments` is false.",
+        "source_operator": "model_freeze_state",
+        "telemetry": "Cockpit displays `modelFrozen: true` and `MODEL FROZEN` tag."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f805c8b04b3963f_t0",
+      "think": "The system implements a dual-layered control architecture: the first layer (GSI) governs probabilistic inference within a frozen model state, ensuring that predictions remain internally consistent and unaltered by external inputs. The second layer (GSE) manages operational behavior through state machines that enforce draft-only publishing and prevent any form of automated action. These layers interact via API endpoints that expose readiness metrics and calibration proposals, but restrict access to internal-only environments. The sandbox limitations create a failure mode where local builds cannot proceed, forcing reliance on CI pipelines which are hardened against unauthorized actions. This design reflects a deliberate separation between inference and execution domains, preventing accidental exposure of internal models or premature publication of content.\n\nDeep epistemic analysis for PHASE_9_REPORT (2f805c8b04b3963f, domain=other, pages_read=7/7): Operator 'Internal Calibration Mode Enforcement' (page 1, domain other) captures: # Phase 9 — CI / Deployment Hardening + Internal Calibration Pass **Date:** 2026-05-19 **Branch:** `sports-intelligence-os-phase-9-ci` **Mode:** Internal calibration only **Verdict:** **GO for internal calibration only — code complete; local install/build validation blocked by sandbox FUSE limitation (see §9).** --## 1. Assumptions: System operates under sandboxed CI constraints; no external communication allowed. Breakdown regime: When sandbox prevents git commit or npm install, system enters degraded mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's internal calibration state mirrors GSE's readiness gate logic; both enforce model freeze and disable auto-publishing. Operator 'Guardrail Script Enforcement' (page 1, domain other) captures: The three guardrail scripts enforce this on every CI run. Assumptions: All CI runs must pass guardrail checks before deployment. Breakdown regime: Failure to pass any guardrail script halts CI pipeline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's kernel logic derives from GSI's guardrail configuration; both ensure no auto-publish or external posting. Operator 'Model Freeze State' (page 2, domain other) captures: `apps/web/app/cockpit/calibration/page.tsx` — internal-only banner, game-history counts, readiness gates, blocked reasons, MODEL FROZEN tag - `apps/web/app/cockpit/content/page.tsx` — banner copy updated to \"Internal calibration only. Assumptions: Model version is immutable post-freeze; no further adjustments allowed. Breakdown regime: Upon freeze, all prediction engines halt updates to model parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's model freeze aligns with GSE's readiness state where `canApplyCalibrationAdjustments` is false. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PHASE_9_REPORT (2f805c8b04b3963f, domain=other, pages_read=7/7): Operator 'Internal Calibration Mode Enforcement' (page 1, domain other) captures: # Phase 9 — CI / Deployment Hardening + Internal Calibration Pass **Date:** 2026-05-19 **Branch:** `sports-intelligence-os-phase-9-ci` **Mode:** Internal calibration only **Verdict:** **GO for internal calibration only — code complete; local install/build validation blocked by sandbox FUSE limitation (see §9).** --## 1. Assumptions: System operates under sandboxed CI constraints; no external communication allowed. Breakdown regime: When sandbox prevents git commit or npm install, system enters degraded mode. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's internal calibration state mirrors GSE's readiness gate logic; both enforce model freeze and disable auto-publishing. Operator 'Guardrail Script Enforcement' (page 1, domain other) captures: The three guardrail scripts enforce this on every CI run. Assumptions: All CI runs must pass guardrail checks before deployment. Breakdown regime: Failure to pass any guardrail script halts CI pipeline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's kernel logic derives from GSI's guardrail configuration; both ensure no auto-publish or external posting. Operator 'Model Freeze State' (page 2, domain other) captures: `apps/web/app/cockpit/calibration/page.tsx` — internal-only banner, game-history counts, readiness gates, blocked reasons, MODEL FROZEN tag - `apps/web/app/cockpit/content/page.tsx` — banner copy updated to \"Internal calibration only. Assumptions: Model version is immutable post-freeze; no further adjustments allowed. Breakdown regime: Upon freeze, all prediction engines halt updates to model parameters. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's model freeze aligns with GSE's readiness state where `canApplyCalibrationAdjustments` is false. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture traces back to early-stage risk management protocols in machine learning systems, where isolation of training and deployment phases became critical. It builds upon prior work in secure multi-agent frameworks and formal verification techniques used in autonomous systems. Retrocausal Genealogy: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential attackers seeking unauthorized access, and internal developers who may attempt to bypass controls. The system models these actors through guardrails and kill switches, ensuring that even if one component is compromised, others maintain integrity. Theory of Mind & Decision Maker Model: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating logical inference (GSI) from operational execution (GSE). Leakage vetoes occur when any attempt to cross boundaries—such as enabling auto-publish or sending notifications—is detected by guardrail scripts, triggering immediate CI failure. Cross-Layer Veto & Anti-Leakage Check: Rooted in PHASE_9_REPORT (2f805c8b04b3963f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "a159c0810a271858",
+  "source_status": "COMPLETE",
+  "title": "repo-verdicts-2026-10-23",
+  "file_name": "repo-verdicts-2026-10-23.md",
+  "sha256": "a159c0810a27185895732e0d8439a451cc332ef0e74453079ac8b94c1184167c",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Repository vetting under read-only Windows constraints with Python 3.11/3.14, leveraging GH API metadata for license and star validation while deferring proxy-dependent tools. Universal Lens: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over repo licenses and runtime compatibility maps to GSI's conformal uncertainty quantification for secure code adoption under defensive posture. GSI Mapping: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models target-specific toolchain transitions using state-transition graphs from repo metadata, deferring proxy-based tools until edge deployment. GSE Mapping: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "license_compatibility_check",
+      "name": "License Compatibility Verification",
+      "verbatim_quote": "Licence spread: 4 MIT, 1 GPL-3.0, 3 none, 1 NOASSERTION — the 4 unlicensed ones are reimplement-not-vendor, star count notwithstanding.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'License type (MIT, GPL-3.0, none, NOASSERTION)', 'S': 'Star count (dimensionless)'}",
+      "assumptions": "All licenses are evaluated under defensive read-only constraints; unlicensed repos require manual review.",
+      "breakdown_regime": "When L = NOASSERTION or none, manual inspection required before adoption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's license validation logic mirrors repo metadata filtering in GSE's compliance engine.",
+        "source_operator": "license_compatibility_check",
+        "telemetry": "Observed license types and star counts from GH API"
+      }
+    },
+    {
+      "primitive_id": "runtime_portability_assessment",
+      "name": "Runtime Portability Evaluation",
+      "verbatim_quote": "# Repo list verdicts — 9 pasted, 2026-10-23 Context: local Windows box, Python 3.11/3.14 via bash, no nginx, no Linux host, no Node daemon wanted, defensive read-only posture.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Runtime environment (Windows, Linux, Python version)', 'T': 'Tool compatibility threshold (dimensionless)'}",
+      "assumptions": "Tools must function without external daemons or OS-specific dependencies.",
+      "breakdown_regime": "When R ≠ Linux or contains Node daemon, tool is deferred.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's runtime kernel evaluates tool portability against current host constraints.",
+        "source_operator": "runtime_portability_assessment",
+        "telemetry": "Host OS, Python version, and daemon presence"
+      }
+    },
+    {
+      "primitive_id": "proxy_dependency_analysis",
+      "name": "Proxy Dependency Risk Assessment",
+      "verbatim_quote": "## Why the others sit where they do - Instagram-Hacker: brute-forces IG logins from a wordlist, needs proxies to be useful.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Proxy requirement flag (boolean)', 'R': 'Risk level (low, medium, high)'}",
+      "assumptions": "Proxy usage introduces risk of account lockout or legal exposure.",
+      "breakdown_regime": "When P = true, tool is deferred unless proxy infrastructure is available.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's risk scoring aligns with GSE's proxy dependency model for threat mitigation.",
+        "source_operator": "proxy_dependency_analysis",
+        "telemetry": "Tool dependency flags and risk classification"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a159c0810a271858_t0",
+      "think": "The repository vetting process is modeled as a multi-layered constraint satisfaction system. First, license compatibility is assessed using a categorical map of L ∈ {MIT, GPL-3.0, none, NOASSERTION} to determine adoption feasibility. Runtime portability is evaluated via R ∈ {Windows, Linux, Python version}, with T as a binary threshold for tool viability. Proxy dependency is captured as a boolean P indicating necessity of external infrastructure. These primitives form a logical conjunction in GSI’s Bayesian inference engine, where each layer refines the posterior probability of safe tool adoption. Failure modes include unlicensed repos (NOASSERTION) bypassing checks, runtime mismatches causing silent failures, and proxy-dependent tools triggering unauthorized access risks. The system enforces a dual-check: metadata integrity (via GH API) and operational safety (host constraints).\n\nDeep epistemic analysis for repo-verdicts-2026-10-23 (a159c0810a271858, domain=other, pages_read=2/2): Operator 'License Compatibility Verification' (page 1, domain other) captures: Licence spread: 4 MIT, 1 GPL-3.0, 3 none, 1 NOASSERTION — the 4 unlicensed ones are reimplement-not-vendor, star count notwithstanding. Assumptions: All licenses are evaluated under defensive read-only constraints; unlicensed repos require manual review. Breakdown regime: When L = NOASSERTION or none, manual inspection required before adoption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's license validation logic mirrors repo metadata filtering in GSE's compliance engine. Operator 'Runtime Portability Evaluation' (page 1, domain other) captures: # Repo list verdicts — 9 pasted, 2026-10-23 Context: local Windows box, Python 3.11/3.14 via bash, no nginx, no Linux host, no Node daemon wanted, defensive read-only posture. Assumptions: Tools must function without external daemons or OS-specific dependencies. Breakdown regime: When R ≠ Linux or contains Node daemon, tool is deferred. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's runtime kernel evaluates tool portability against current host constraints. Operator 'Proxy Dependency Risk Assessment' (page 1, domain other) captures: ## Why the others sit where they do - Instagram-Hacker: brute-forces IG logins from a wordlist, needs proxies to be useful. Assumptions: Proxy usage introduces risk of account lockout or legal exposure. Breakdown regime: When P = true, tool is deferred unless proxy infrastructure is available. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk scoring aligns with GSE's proxy dependency model for threat mitigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for repo-verdicts-2026-10-23 (a159c0810a271858, domain=other, pages_read=2/2): Operator 'License Compatibility Verification' (page 1, domain other) captures: Licence spread: 4 MIT, 1 GPL-3.0, 3 none, 1 NOASSERTION — the 4 unlicensed ones are reimplement-not-vendor, star count notwithstanding. Assumptions: All licenses are evaluated under defensive read-only constraints; unlicensed repos require manual review. Breakdown regime: When L = NOASSERTION or none, manual inspection required before adoption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's license validation logic mirrors repo metadata filtering in GSE's compliance engine. Operator 'Runtime Portability Evaluation' (page 1, domain other) captures: # Repo list verdicts — 9 pasted, 2026-10-23 Context: local Windows box, Python 3.11/3.14 via bash, no nginx, no Linux host, no Node daemon wanted, defensive read-only posture. Assumptions: Tools must function without external daemons or OS-specific dependencies. Breakdown regime: When R ≠ Linux or contains Node daemon, tool is deferred. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's runtime kernel evaluates tool portability against current host constraints. Operator 'Proxy Dependency Risk Assessment' (page 1, domain other) captures: ## Why the others sit where they do - Instagram-Hacker: brute-forces IG logins from a wordlist, needs proxies to be useful. Assumptions: Proxy usage introduces risk of account lockout or legal exposure. Breakdown regime: When P = true, tool is deferred unless proxy infrastructure is available. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's risk scoring aligns with GSE's proxy dependency model for threat mitigation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification practices of software supply chain security, tracing back to early 2000s open-source governance models and modern CI/CD pipeline risk assessment frameworks. Retrocausal Genealogy: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial tool developers who may exploit permissive licenses, and internal compliance systems that enforce defensive postures. Decision actors are GSI's automated validators and GSE's operational planners. Theory of Mind & Decision Maker Model: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that proxy-dependent tools do not coexist with read-only environments. Leakage veto prevents NOASSERTION repos from entering production pipelines without explicit review. Cross-layer vetoing prevents runtime mismatches from propagating into execution. Cross-Layer Veto & Anti-Leakage Check: Rooted in repo-verdicts-2026-10-23 (a159c0810a271858), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

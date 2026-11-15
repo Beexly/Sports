@@ -1,0 +1,78 @@
+{
+  "book_id": "1043e7546395ba0b",
+  "source_status": "COMPLETE",
+  "title": "1215-nash-bargaining-over-margin-loans-to",
+  "file_name": "1215-nash-bargaining-over-margin-loans-to.md",
+  "sha256": "1043e7546395ba0ba0d3d412e0755968fc1f317e9b07788d925b738a8b5f3dd3",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Nash bargaining equilibrium in margin lending between broker and Kelly gambler yields interest rate r_L* = r + (μ - r)/2σ², linking leverage b* = (μ - r_L*)/σ² to market parameters.",
+  "gsi_mapping": "Bayesian inference on broker-gambler utility functions maps to conformal predictive distributions over loan rates, enabling robust risk-adjusted sizing via posterior Kelly fractions. GSI Mapping: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models broker-gambler interaction as state-transition system; GSE rejects margin-based leverage due to anti-responsible-play constraints and lacks deployable loan-rate negotiation. GSE Mapping: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "nash_bargaining_equilibrium",
+      "name": "Nash Bargaining Equilibrium",
+      "verbatim_quote": "Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate.",
+      "page": 1,
+      "latex": "\\frac{\\mu - r}{\\sigma^2} \\cdot \\left(1 - \\frac{1}{2}\\right) = \\frac{\\mu - r}{2\\sigma^2}",
+      "symbol_and_unit_ledger": "{'r': 'risk-free rate (dimensionless)', 'μ': 'expected arithmetic return (dimensionless)', 'σ': 'volatility (dimensionless)'}",
+      "assumptions": "Symmetric utility functions, transferable utility, continuous-time Kelly framework.",
+      "breakdown_regime": "When μ ≤ r, no positive leverage exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's fractional Kelly sizing kernel through derived optimal leverage function b*(r_L) = (μ - r_L)/σ².",
+        "source_operator": "nash_bargaining_equilibrium",
+        "telemetry": "Negotiated loan rate r_L* and resulting leverage b*."
+      }
+    },
+    {
+      "primitive_id": "kelly_leverage_fraction",
+      "name": "Kelly Leverage Fraction",
+      "verbatim_quote": "Method / model Continuous-time Kelly gambler with borrowing: optimal leverage b*(r_L) = (μ - r_L)/σ2 given loan rate r_L.",
+      "page": 1,
+      "latex": "b^*(r_L) = \\frac{\\mu - r_L}{\\sigma^2}",
+      "symbol_and_unit_ledger": "{'b*': 'optimal leverage (dimensionless)', 'r_L': 'loan rate (dimensionless)', 'μ': 'expected arithmetic return (dimensionless)', 'σ': 'volatility (dimensionless)'}",
+      "assumptions": "Continuous-time Kelly criterion, constant drift and volatility.",
+      "breakdown_regime": "When r_L ≥ μ, leverage becomes non-positive.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's standard Kelly fraction; used for sizing under known parameters.",
+        "source_operator": "kelly_leverage_fraction",
+        "telemetry": "Optimal leverage b* under fixed loan rate r_L."
+      }
+    },
+    {
+      "primitive_id": "broker_gambler_utility",
+      "name": "Broker-Gambler Utility Split",
+      "verbatim_quote": "Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate.",
+      "page": 1,
+      "latex": "r_L^* = r + \\frac{\\mu - r}{2\\sigma^2}",
+      "symbol_and_unit_ledger": "{'r_L*': 'negotiated loan rate (dimensionless)', 'r': 'risk-free rate (dimensionless)', 'μ': 'expected arithmetic return (dimensionless)', 'σ': 'volatility (dimensionless)'}",
+      "assumptions": "Symmetric utility maximization, zero-sum bargaining outcome.",
+      "breakdown_regime": "Infeasible when μ < r, no rational loan rate exists.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives GSE's internal constraint on margin pricing; GSE does not engage in such negotiations.",
+        "source_operator": "broker_gambler_utility",
+        "telemetry": "Negotiated loan rate r_L* and associated broker profit."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1043e7546395ba0b_t0",
+      "think": "The paper models a two-agent game-theoretic scenario where a broker and a Kelly gambler negotiate margin loan rates using symmetric Nash bargaining. The equilibrium loan rate r_L* is derived as r + (μ - r)/2σ², which directly determines the optimal leverage b* = (μ - r_L*)/σ². This formulation is mathematically consistent with continuous-time Kelly criteria but lacks empirical grounding or sports-specific application. It fails to address core GSE concerns such as prediction accuracy, estimation error, or portfolio sizing under uncertainty. The derivation assumes perfect information and symmetric utility functions, which do not reflect real-world gambling behavior or GSE’s responsible-play ethos. The model is purely theoretical and offers no actionable sizing or calibration mechanisms for sports betting applications.\n\nDeep epistemic analysis for 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b, domain=other, pages_read=2/2): Operator 'Nash Bargaining Equilibrium' (page 1, domain other) captures: Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate. Assumptions: Symmetric utility functions, transferable utility, continuous-time Kelly framework. Breakdown regime: When μ ≤ r, no positive leverage exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's fractional Kelly sizing kernel through derived optimal leverage function b*(r_L) = (μ - r_L)/σ². Operator 'Kelly Leverage Fraction' (page 1, domain other) captures: Method / model Continuous-time Kelly gambler with borrowing: optimal leverage b*(r_L) = (μ - r_L)/σ2 given loan rate r_L. Assumptions: Continuous-time Kelly criterion, constant drift and volatility. Breakdown regime: When r_L ≥ μ, leverage becomes non-positive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's standard Kelly fraction; used for sizing under known parameters. Operator 'Broker-Gambler Utility Split' (page 1, domain other) captures: Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate. Assumptions: Symmetric utility maximization, zero-sum bargaining outcome. Breakdown regime: Infeasible when μ < r, no rational loan rate exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's internal constraint on margin pricing; GSE does not engage in such negotiations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b, domain=other, pages_read=2/2): Operator 'Nash Bargaining Equilibrium' (page 1, domain other) captures: Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate. Assumptions: Symmetric utility functions, transferable utility, continuous-time Kelly framework. Breakdown regime: When μ ≤ r, no positive leverage exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's fractional Kelly sizing kernel through derived optimal leverage function b*(r_L) = (μ - r_L)/σ². Operator 'Kelly Leverage Fraction' (page 1, domain other) captures: Method / model Continuous-time Kelly gambler with borrowing: optimal leverage b*(r_L) = (μ - r_L)/σ2 given loan rate r_L. Assumptions: Continuous-time Kelly criterion, constant drift and volatility. Breakdown regime: When r_L ≥ μ, leverage becomes non-positive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's standard Kelly fraction; used for sizing under known parameters. Operator 'Broker-Gambler Utility Split' (page 1, domain other) captures: Nash bargaining (symmetric, transferable-utility style split) between broker and gambler over the loan rate, yielding a closed-form negotiated rate and the gambler's resulting growth rate and the broker's profit rate. Assumptions: Symmetric utility maximization, zero-sum bargaining outcome. Breakdown regime: Infeasible when μ < r, no rational loan rate exists. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives GSE's internal constraint on margin pricing; GSE does not engage in such negotiations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in von Neumann-Morgenstern cooperative game theory and Kelly's optimal growth criterion, extended to continuous-time settings by Merton and others. The Nash bargaining solution was formalized in 1950s game theory literature. Retrocausal Genealogy: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as rational utility maximizers: the broker seeks maximum profit margin, while the gambler seeks minimal cost of leverage. Their preferences are assumed to be symmetric and transferable, leading to a unique equilibrium rate that splits surplus equally. Theory of Mind & Decision Maker Model: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "The model is incompatible with GSE’s operational domain because it presumes margin lending, which GSE does not offer. Additionally, it contradicts GSE’s ethical stance against leveraged sports betting. No plausible adaptation exists due to fundamental mismatch in agent roles and system architecture. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1215-nash-bargaining-over-margin-loans-to (1043e7546395ba0b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

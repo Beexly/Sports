@@ -1,0 +1,78 @@
+{
+  "book_id": "f98d65de9bc3aa5d",
+  "source_status": "COMPLETE",
+  "title": "NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT",
+  "file_name": "NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT.md",
+  "sha256": "f98d65de9bc3aa5d077ecdb6f61614f3a6f4f7f104ca30b99946534ee62c830c",
+  "primary_domain": "physics",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multi-grid residual auditing of Harper seed vorticity dynamics reveals monotonic decay under spectral viscosity, yet convergence failure indicates persistent instability in vortex stretching. Universal Lens: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference maps vorticity decay ratios to posterior confidence in regularity, with cross-diffusion drift as a stochastic barrier to blowup events. GSI Mapping: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning models axisymmetric perturbations as state transitions, where helical modes trigger breakdowns in the absolute maximum principle for circulation. GSE Mapping: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vorticity_decay_rate",
+      "name": "Peak Vorticity Decay Ratio",
+      "verbatim_quote": "- Peak vorticity decays monotonically: $\\Vert\\boldsymbol{\\omega}\\Vert_{L^\\infty} = 1.0360 \\to 1.0188$ (decay ratio $\\omega_f / \\omega_0 = 0.9834$, per-step ratio $\\approx 0.9959$).",
+      "page": 1,
+      "latex": "\\omega_f / \\omega_0 = 0.9834",
+      "symbol_and_unit_ledger": "{'\\\\omega_f': 'dimensionless peak vorticity at final time', '\\\\omega_0': 'dimensionless peak vorticity at initial time'}",
+      "assumptions": "Spectral Leray projection and pure spectral viscosity used for numerical evolution.",
+      "breakdown_regime": "Algebraic convergence fails under grid refinement.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI posterior probability of regularity conditioned on vorticity decay rate.",
+        "source_operator": "vorticity_decay_rate",
+        "telemetry": "Monotonic decay ratio across nested grids."
+      }
+    },
+    {
+      "primitive_id": "cross_diffusion_drift",
+      "name": "Outward Cross-Diffusion Drift",
+      "verbatim_quote": "Outward cross-diffusion drift exceeds inward advection immediately from $t = 0$, long before completion of the first viscous timescale.",
+      "page": 2,
+      "latex": "\\mathbf{V}_{\\text{drift}} = 2\\nu \\nabla \\ln |\\boldsymbol{\\omega}|",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{V}_{\\\\text{drift}}': 'velocity field representing drift', '\\\\nu': 'kinematic viscosity (m²/s)', '\\\\boldsymbol{\\\\omega}': 'vorticity vector (s⁻¹)'}",
+      "assumptions": "Navier-Stokes equations with axisymmetric flow assumed.",
+      "breakdown_regime": "Drift dominates advection early, preventing blowup.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE state transition from stable to unstable core via drift-advection imbalance.",
+        "source_operator": "cross_diffusion_drift",
+        "telemetry": "Temporal evolution of drift vs advection dominance."
+      }
+    },
+    {
+      "primitive_id": "helical_perturbation_effect",
+      "name": "Helical Mode Perturbation Impact",
+      "verbatim_quote": "Breaking axisymmetry with helical mode ($k = 2$, amplitude $0.05 \\times \\text{peak swirl}$) on $64^3$ grid: - Phase Resultant $R$: $0.0210 \\to 0.0000$ by $t = 0.005$, stays $0.0000$.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'k': 'mode number (dimensionless)', 'R': 'phase resultant (dimensionless)'}",
+      "assumptions": "Pure axisymmetric baseline evolves to non-axisymmetric state.",
+      "breakdown_regime": "Non-axisymmetric perturbations cause loss of circulation bound.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI likelihood of circulation violation under helical perturbations.",
+        "source_operator": "helical_perturbation_effect",
+        "telemetry": "Phase resultant decay and circulation bound breach."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f98d65de9bc3aa5d_t0",
+      "think": "The Harper seed vorticity evolution under multi-grid residual audit exhibits monotonic decay but fails algebraic convergence. This suggests that while the system stabilizes locally, global regularity cannot be guaranteed due to insufficient grid refinement. The outward cross-diffusion drift dominates early advection, implying a dynamic suppression mechanism. However, this suppression is not robust enough to prevent eventual blowup under perturbations. The helical mode test shows that even small deviations from axisymmetry can lead to rapid loss of circulation bounds, indicating a sensitivity to initial conditions. These findings align with Grujic’s logarithmic depletion theorem, which implies that outward drift may deplete vortex stretching below critical thresholds, but only under specific conditions. The failure of hypothesis (H_k) underscores that Leray energy inequalities alone do not ensure regularity, necessitating stronger analytical tools. Thus, the system demonstrates a complex interplay between numerical stability, physical constraints, and theoretical limitations.\n\nDeep epistemic analysis for NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d, domain=physics, pages_read=3/3): Operator 'Peak Vorticity Decay Ratio' (page 1, domain physics) captures: - Peak vorticity decays monotonically: $\\Vert\\boldsymbol{\\omega}\\Vert_{L^\\infty} = 1.0360 \\to 1.0188$ (decay ratio $\\omega_f / \\omega_0 = 0.9834$, per-step ratio $\\approx 0.9959$). Assumptions: Spectral Leray projection and pure spectral viscosity used for numerical evolution. Breakdown regime: Algebraic convergence fails under grid refinement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI posterior probability of regularity conditioned on vorticity decay rate. Operator 'Outward Cross-Diffusion Drift' (page 2, domain physics) captures: Outward cross-diffusion drift exceeds inward advection immediately from $t = 0$, long before completion of the first viscous timescale. Assumptions: Navier-Stokes equations with axisymmetric flow assumed. Breakdown regime: Drift dominates advection early, preventing blowup. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition from stable to unstable core via drift-advection imbalance. Operator 'Helical Mode Perturbation Impact' (page 2, domain physics) captures: Breaking axisymmetry with helical mode ($k = 2$, amplitude $0.05 \\times \\text{peak swirl}$) on $64^3$ grid: - Phase Resultant $R$: $0.0210 \\to 0.0000$ by $t = 0.005$, stays $0.0000$. Assumptions: Pure axisymmetric baseline evolves to non-axisymmetric state. Breakdown regime: Non-axisymmetric perturbations cause loss of circulation bound. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI likelihood of circulation violation under helical perturbations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d, domain=physics, pages_read=3/3): Operator 'Peak Vorticity Decay Ratio' (page 1, domain physics) captures: - Peak vorticity decays monotonically: $\\Vert\\boldsymbol{\\omega}\\Vert_{L^\\infty} = 1.0360 \\to 1.0188$ (decay ratio $\\omega_f / \\omega_0 = 0.9834$, per-step ratio $\\approx 0.9959$). Assumptions: Spectral Leray projection and pure spectral viscosity used for numerical evolution. Breakdown regime: Algebraic convergence fails under grid refinement. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI posterior probability of regularity conditioned on vorticity decay rate. Operator 'Outward Cross-Diffusion Drift' (page 2, domain physics) captures: Outward cross-diffusion drift exceeds inward advection immediately from $t = 0$, long before completion of the first viscous timescale. Assumptions: Navier-Stokes equations with axisymmetric flow assumed. Breakdown regime: Drift dominates advection early, preventing blowup. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE state transition from stable to unstable core via drift-advection imbalance. Operator 'Helical Mode Perturbation Impact' (page 2, domain physics) captures: Breaking axisymmetry with helical mode ($k = 2$, amplitude $0.05 \\times \\text{peak swirl}$) on $64^3$ grid: - Phase Resultant $R$: $0.0210 \\to 0.0000$ by $t = 0.005$, stays $0.0000$. Assumptions: Pure axisymmetric baseline evolves to non-axisymmetric state. Breakdown regime: Non-axisymmetric perturbations cause loss of circulation bound. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI likelihood of circulation violation under helical perturbations. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Leray's foundational work on weak solutions to Navier-Stokes, extended through Grujic’s logarithmic depletion and Beirão da Veiga–Berselli Hölder continuity criteria. Retrocausal Genealogy: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the numerical solver enforcing stability and the physical drift attempting to destabilize the flow. The system's behavior reflects a balance between these forces, with perturbations acting as decision actors that tip the equilibrium toward blowup. Theory of Mind & Decision Maker Model: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when drift and advection directions oppose, leading to leakage of vorticity into unresolved scales. Leakage veto occurs when the spectral resolution fails to capture the full dynamics of the cross-diffusion term, invalidating the derived kernel mappings. Cross-Layer Veto & Anti-Leakage Check: Rooted in NAVIER_STOKES_HARPER_SEED_RESIDUAL_AUDIT (f98d65de9bc3aa5d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

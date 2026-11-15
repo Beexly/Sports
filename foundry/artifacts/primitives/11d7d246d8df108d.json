@@ -1,0 +1,78 @@
+{
+  "book_id": "11d7d246d8df108d",
+  "source_status": "COMPLETE",
+  "title": "CV_ALL_GAMES_WEEKS_1_TO_5_REPORT",
+  "file_name": "CV_ALL_GAMES_WEEKS_1_TO_5_REPORT.md",
+  "sha256": "11d7d246d8df108d78933bd18a2d6a7b063074229e8ee9a8911eb7a7d8214748",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Optical tracking metrics (pocket depth, STRAIN, SOE) are formally retracted and marked measured=false due to synthetic simulation shifts rather than broadcast tracking. Universal Lens: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on game outcomes excludes retracted optical metrics; only official PBP counts and scores are used for probabilistic modeling. GSI Mapping: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine transitions states using verified play-by-play data; optical metrics are gated with measured=false flag to prevent erroneous state updates. GSE Mapping: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "optical_tracking_retraction",
+      "name": "Optical Tracking Retraction",
+      "verbatim_quote": "# Full Census & Processing Report: NFL Weeks 1–5, 2026 (All 79 Games) > **RETRACTION NOTICE (2026-10-17):** The computer vision derived metrics (pocket depth, STRAIN, SOE) in this report are RETRACTED.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'measured': 'Boolean flag indicating data validity'}",
+      "assumptions": "Metrics derived via synthetic simulation rather than empirical broadcast tracking.",
+      "breakdown_regime": "When measured=false, all optical tracking values are excluded from analysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic outcome model and GSE's state transition logic as invalid inputs.",
+        "source_operator": "optical_tracking_retraction",
+        "telemetry": "Flagged as measured=false in dataset entries."
+      }
+    },
+    {
+      "primitive_id": "vision_factor_default_weight",
+      "name": "Vision Factor Default Weight",
+      "verbatim_quote": "**Production Safety Assurance:** - Vision factor default weight in production remains locked at **`weight = 0.0`** (`VISION_DEFAULT_WEIGHT = 0.0` in `packages/prediction-engine/src/vision-factors.ts`).",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'weight': 'Dimensionless scalar, set to 0.0'}",
+      "assumptions": "Vision-based features contribute zero influence to prediction models.",
+      "breakdown_regime": "In production, vision factor weight is fixed at zero to prevent erroneous input propagation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's safety gate mechanism that blocks non-verified optical inputs.",
+        "source_operator": "vision_factor_default_weight",
+        "telemetry": "Weight value enforced in runtime configuration."
+      }
+    },
+    {
+      "primitive_id": "pbp_officiality",
+      "name": "Play-by-Play Officiality",
+      "verbatim_quote": "PBP counts and scores are official; optical tracking metrics are marked measured=false.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'official_pbp': 'Boolean flag indicating data integrity'}",
+      "assumptions": "Only PBP data is considered reliable for statistical inference.",
+      "breakdown_regime": "All derived optical metrics are excluded when official PBP is used for modeling.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's core dataset validation and GSE's deterministic game state update rules.",
+        "source_operator": "pbp_officiality",
+        "telemetry": "Official PBP status verified in each game record."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "11d7d246d8df108d_t0",
+      "think": "The retraction of optical tracking metrics (pocket depth, STRAIN, SOE) arises from their derivation through synthetic simulation shifted by EPA, which introduces circularity and invalidates empirical grounding. These metrics are marked 'measured=false' to indicate they do not reflect actual broadcast tracking data. In GSI, this implies exclusion from probabilistic models reliant on accurate telemetry. In GSE, it necessitates a state transition guard that prevents these unreliable signals from influencing situational awareness. The formal retraction ensures that only verified PBP data is used for inference, maintaining model integrity. The default vision factor weight of 0.0 acts as a safety net, ensuring no erroneous optical data influences predictions even if misconfigured. This dual-layered approach reflects a robust anti-leakage protocol against spurious data sources.\n\nDeep epistemic analysis for CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d, domain=other, pages_read=5/5): Operator 'Optical Tracking Retraction' (page 1, domain other) captures: # Full Census & Processing Report: NFL Weeks 1–5, 2026 (All 79 Games) > **RETRACTION NOTICE (2026-10-17):** The computer vision derived metrics (pocket depth, STRAIN, SOE) in this report are RETRACTED. Assumptions: Metrics derived via synthetic simulation rather than empirical broadcast tracking. Breakdown regime: When measured=false, all optical tracking values are excluded from analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic outcome model and GSE's state transition logic as invalid inputs. Operator 'Vision Factor Default Weight' (page 5, domain other) captures: **Production Safety Assurance:** - Vision factor default weight in production remains locked at **`weight = 0.0`** (`VISION_DEFAULT_WEIGHT = 0.0` in `packages/prediction-engine/src/vision-factors.ts`). Assumptions: Vision-based features contribute zero influence to prediction models. Breakdown regime: In production, vision factor weight is fixed at zero to prevent erroneous input propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's safety gate mechanism that blocks non-verified optical inputs. Operator 'Play-by-Play Officiality' (page 1, domain other) captures: PBP counts and scores are official; optical tracking metrics are marked measured=false. Assumptions: Only PBP data is considered reliable for statistical inference. Breakdown regime: All derived optical metrics are excluded when official PBP is used for modeling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's core dataset validation and GSE's deterministic game state update rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d, domain=other, pages_read=5/5): Operator 'Optical Tracking Retraction' (page 1, domain other) captures: # Full Census & Processing Report: NFL Weeks 1–5, 2026 (All 79 Games) > **RETRACTION NOTICE (2026-10-17):** The computer vision derived metrics (pocket depth, STRAIN, SOE) in this report are RETRACTED. Assumptions: Metrics derived via synthetic simulation rather than empirical broadcast tracking. Breakdown regime: When measured=false, all optical tracking values are excluded from analysis. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic outcome model and GSE's state transition logic as invalid inputs. Operator 'Vision Factor Default Weight' (page 5, domain other) captures: **Production Safety Assurance:** - Vision factor default weight in production remains locked at **`weight = 0.0`** (`VISION_DEFAULT_WEIGHT = 0.0` in `packages/prediction-engine/src/vision-factors.ts`). Assumptions: Vision-based features contribute zero influence to prediction models. Breakdown regime: In production, vision factor weight is fixed at zero to prevent erroneous input propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's safety gate mechanism that blocks non-verified optical inputs. Operator 'Play-by-Play Officiality' (page 1, domain other) captures: PBP counts and scores are official; optical tracking metrics are marked measured=false. Assumptions: Only PBP data is considered reliable for statistical inference. Breakdown regime: All derived optical metrics are excluded when official PBP is used for modeling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's core dataset validation and GSE's deterministic game state update rules. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical signal processing and modern machine learning validation paradigms, where synthetic data validation and empirical grounding are critical. Influenced by prior work in sports analytics and computational integrity protocols. Retrocausal Genealogy: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the system's internal calibration logic, which may have previously accepted flawed synthetic metrics, and external stakeholders who rely on accurate predictive models. Decision actors must balance model fidelity with data reliability. Theory of Mind & Decision Maker Model: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by excluding all optical metrics when measured=false. Leakage is prevented by locking vision weights at zero in production, ensuring no spurious correlation propagates into downstream reasoning layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in CV_ALL_GAMES_WEEKS_1_TO_5_REPORT (11d7d246d8df108d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

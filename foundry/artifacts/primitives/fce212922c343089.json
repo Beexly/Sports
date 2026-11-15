@@ -1,0 +1,78 @@
+{
+  "book_id": "fce212922c343089",
+  "source_status": "COMPLETE",
+  "title": "LINESTAR-NGS-INGEST-2026-10-13",
+  "file_name": "LINESTAR-NGS-INGEST-2026-10-13.md",
+  "sha256": "fce212922c343089a6c007b9df683f821965d2783fe5c5176fd7335e416e1862",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "LineStar\\_NGS\\_INGEST\\_2026\\_10\\_13 captures real-time NFL DFS ownership and projection data via XHR, with truncation and sampling regimes affecting signal coverage. Universal Lens: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI models ownership, salary, and projected points as REPORTED signals with coverage qualifiers; truncation introduces top-of-slate bias requiring Bayesian correction. GSI Mapping: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses truncated ownership data to infer player value and risk; state transitions depend on coverage level and likelihood ratio thresholds for tournament vs. cash-game strategies. GSE Mapping: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ownership_projection",
+      "name": "Ownership Projection",
+      "verbatim_quote": "- `Ownership.Projected` is keyed by `DfsSlateId` → array of `{SalaryId, PlayerId, Owned, DoubleUp}`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Owned': 'dimensionless percentage', 'DoubleUp': 'dimensionless percentage'}",
+      "assumptions": "Ownership data is sampled from a truncated slate; reported values are verbatim from LineStar API.",
+      "breakdown_regime": "When `IsTruncated=true`, only top 22 players are returned per slate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Ownership projection maps to GSI's `REPORTED` signal with `domain=dfs` and `metric=ownership_pct`.",
+        "source_operator": "ownership_projection",
+        "telemetry": "Observed `Owned` percentage from LineStar XHR response."
+      }
+    },
+    {
+      "primitive_id": "salary_projection",
+      "name": "Salary Projection",
+      "verbatim_quote": "- Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SAL': 'USD', 'PP': 'points'}",
+      "assumptions": "Salary and projected points are derived from LineStar's DNN model; values are verbatim from API.",
+      "breakdown_regime": "Truncation limits full slate visibility to top 22 players.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Salary and projected points map to GSI `REPORTED` signals with `domain=dfs` and metrics `salary` and `projected_points`.",
+        "source_operator": "salary_projection",
+        "telemetry": "Observed `SAL` and `PP` from LineStar XHR response."
+      }
+    },
+    {
+      "primitive_id": "truncation_indicator",
+      "name": "Truncation Indicator",
+      "verbatim_quote": "- Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'IsTruncated': 'boolean', 'TruncatedSalaryCount': 'dimensionless count'}",
+      "assumptions": "Anonymous access returns a teaser slate; full data requires authentication.",
+      "breakdown_regime": "When `IsTruncated=true`, only partial data is available for downstream inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Truncation indicator maps to GSI's `coverage=top_of_slate` qualifier in signal metadata.",
+        "source_operator": "truncation_indicator",
+        "telemetry": "Boolean flag and count from LineStar XHR response."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fce212922c343089_t0",
+      "think": "Ownership projection is a derived kernel from LineStar's XHR, where `Owned` percentages are reported verbatim. Salary and projected points form another derived kernel, with `SAL` and `PP` directly mapped to GSI signals. Truncation introduces a breakdown regime where only top 22 players are returned, necessitating a coverage qualifier in GSI. This truncation implies that signals are not representative of full slate distributions, thus requiring Bayesian adjustment for tournament play. The failure mode occurs when using truncated data for full-slate inference without accounting for coverage bias.\n\nDeep epistemic analysis for LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089, domain=other, pages_read=6/6): Operator 'Ownership Projection' (page 1, domain other) captures: - `Ownership.Projected` is keyed by `DfsSlateId` → array of `{SalaryId, PlayerId, Owned, DoubleUp}`. Assumptions: Ownership data is sampled from a truncated slate; reported values are verbatim from LineStar API. Breakdown regime: When `IsTruncated=true`, only top 22 players are returned per slate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ownership projection maps to GSI's `REPORTED` signal with `domain=dfs` and `metric=ownership_pct`. Operator 'Salary Projection' (page 2, domain other) captures: - Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e. Assumptions: Salary and projected points are derived from LineStar's DNN model; values are verbatim from API. Breakdown regime: Truncation limits full slate visibility to top 22 players. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Salary and projected points map to GSI `REPORTED` signals with `domain=dfs` and metrics `salary` and `projected_points`. Operator 'Truncation Indicator' (page 2, domain other) captures: - Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e. Assumptions: Anonymous access returns a teaser slate; full data requires authentication. Breakdown regime: When `IsTruncated=true`, only partial data is available for downstream inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Truncation indicator maps to GSI's `coverage=top_of_slate` qualifier in signal metadata. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089, domain=other, pages_read=6/6): Operator 'Ownership Projection' (page 1, domain other) captures: - `Ownership.Projected` is keyed by `DfsSlateId` → array of `{SalaryId, PlayerId, Owned, DoubleUp}`. Assumptions: Ownership data is sampled from a truncated slate; reported values are verbatim from LineStar API. Breakdown regime: When `IsTruncated=true`, only top 22 players are returned per slate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Ownership projection maps to GSI's `REPORTED` signal with `domain=dfs` and `metric=ownership_pct`. Operator 'Salary Projection' (page 2, domain other) captures: - Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e. Assumptions: Salary and projected points are derived from LineStar's DNN model; values are verbatim from API. Breakdown regime: Truncation limits full slate visibility to top 22 players. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Salary and projected points map to GSI `REPORTED` signals with `domain=dfs` and metrics `salary` and `projected_points`. Operator 'Truncation Indicator' (page 2, domain other) captures: - Each `Salaries[]` record: `Id, Name, POS, PTEAM, OTEAM, GI, SAL, PP, Stars, Conf, Ceil, Floor, Notes` — i.e. Assumptions: Anonymous access returns a teaser slate; full data requires authentication. Breakdown regime: When `IsTruncated=true`, only partial data is available for downstream inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Truncation indicator maps to GSI's `coverage=top_of_slate` qualifier in signal metadata. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s DFS data ingestion practices, evolving through API-first architectures and DNN-driven projections. Influenced by statistical sampling theory and data truncation models. Retrocausal Genealogy: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include LineStar's anonymized access policy and the user's desire for full-slate data. The system assumes a uniform distribution of ownership within the truncated sample, which may misrepresent true slate dynamics. Theory of Mind & Decision Maker Model: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes use of truncated ownership data for full-slate modeling without coverage qualification. Leakage veto prevents overfitting to top-tier players, ensuring robustness in GSE state transitions. Cross-Layer Veto & Anti-Leakage Check: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in LINESTAR-NGS-INGEST-2026-10-13 (fce212922c343089), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

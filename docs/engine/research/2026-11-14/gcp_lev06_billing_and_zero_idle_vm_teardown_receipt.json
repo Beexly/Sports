@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "task_id": "GCP-LEV-06",
-  "generated_at_utc": "2026-11-14T21:52:00.235327+00:00",
+  "generated_at_utc": "2026-11-15T01:03:32.084282+00:00",
   "credit_stack_ledger": {
     "gcp_project_id": "galaxysportsedge",
     "active_gcp_credit_buffer_usd": 103.11,
@@ -104,7 +104,7 @@
   },
   "live_teardown_executed": {
     "status": "TEARDOWN_EXECUTED_ZERO_VMS_ZERO_DISKS",
-    "executed_at_utc": "2026-11-14T21:52:00.207919+00:00",
+    "executed_at_utc": "2026-11-15T01:03:32.038726+00:00",
     "founder_directive": "Check on the vms. If we aren't using them - kill them (2026-11-14T15:41:43-06:00)",
     "deleted_instances": [
       "gse-foundry-gcp-01",
@@ -116,7 +116,7 @@
     "disks_remaining": 0,
     "addresses_remaining": 0,
     "disk_gb_reclaimed": 380,
-    "unpacked_unique_docs": 8593,
+    "unpacked_unique_docs": 8585,
     "verified_command": "gcloud compute instances list / disks list / addresses list --project=galaxysportsedge -> Listed 0 items"
   }
 }

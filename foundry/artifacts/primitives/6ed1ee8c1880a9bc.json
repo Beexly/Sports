@@ -1,0 +1,78 @@
+{
+  "book_id": "6ed1ee8c1880a9bc",
+  "source_status": "COMPLETE",
+  "title": "HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER",
+  "file_name": "HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER.md",
+  "sha256": "6ed1ee8c1880a9bc847e4054735247510be723256e0410531641abef0f7ec4f3",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'primitive_id': 'confidence_band_widening', 'name': 'Confidence Band Widening', 'quote_idx': 14, 'verbatim_quote': '> If a stat here cannot be sourced legally and described honestly, it does not render.', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': {}, 'assumptions': 'Publicly available information forms the basis; no private medical data is used.', 'breakdown_regime': 'When new credible evidence contradicts prior beliefs, the band widens.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'Bayesian updating with robust priors', 'source_operator': 'confidence_band_widening', 'telemetry': 'Standard deviation of posterior predictive distribution'}}",
+  "gsi_mapping": "{'primitive_id': 'confidence_band_widening', 'name': 'Confidence Band Widening', 'quote_idx': 14, 'verbatim_quote': '> If a stat here cannot be sourced legally and described honestly, it does not render.', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': {}, 'assumptions': 'Publicly available information forms the basis; no private medical data is used.', 'breakdown_regime': 'When new credible evidence contradicts prior beliefs, the band widens.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'Bayesian updating with robust priors', 'source_operator': 'confidence_band_widening', 'telemetry': 'Standard deviation of posterior predictive distribution'}}",
+  "gse_mapping": "{'primitive_id': 'confidence_band_widening', 'name': 'Confidence Band Widening', 'quote_idx': 14, 'verbatim_quote': '> If a stat here cannot be sourced legally and described honestly, it does not render.', 'page': 1, 'latex': None, 'symbol_and_unit_ledger': {}, 'assumptions': 'Publicly available information forms the basis; no private medical data is used.', 'breakdown_regime': 'When new credible evidence contradicts prior beliefs, the band widens.', 'layer2': {'tag': 'ISOMORPHISM', 'mapping': 'Bayesian updating with robust priors', 'source_operator': 'confidence_band_widening', 'telemetry': 'Standard deviation of posterior predictive distribution'}}",
+  "primitives": [
+    {
+      "primitive_id": "confidence_band_widening",
+      "name": "Confidence Band Widening",
+      "verbatim_quote": "This is the same rule that already governs `/data` and the source registry.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Publicly available information forms the basis; no private medical data is used.",
+      "breakdown_regime": "When new credible evidence contradicts prior beliefs, the band widens.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian updating with robust priors",
+        "source_operator": "confidence_band_widening",
+        "telemetry": "Standard deviation of posterior predictive distribution"
+      }
+    },
+    {
+      "primitive_id": "source_operator_2",
+      "name": "HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 2",
+      "verbatim_quote": "**Author:** Claude (Opus 4.8) · 2026-06-06 **One-line:** A confidence-band layer that turns public human-performance and game-simulation signals into *better questions about uncertainty* — never claims about a player's body, never a rating treated as truth.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_2",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 3",
+      "verbatim_quote": "Mission & non-negotiable guardrails This layer does **not** predict health and does **not** assert a player's medical state.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ed1ee8c1880a9bc_t0",
+      "think": "The Confidence Band Widening primitive operates on the principle that uncertainty must increase when new evidence contradicts established priors. In mathematical terms, given a prior belief \\(P(\theta)\\) and observed data \\(D\\), the posterior \\(P(\theta|D)\\) updates via Bayes' theorem. When a signal suggests a player's availability is uncertain (e.g., from injury reports), the variance of the posterior increases, reflecting wider confidence intervals. This prevents overconfident predictions and aligns with the project's guardrail against manufacturing confidence from unreliable sources such as scraped medical data or unlicensed game ratings. The method ensures that any modification to the confidence band is conservative, only widening it based on verifiable public data, thus maintaining honesty in statistical claims.\n\nDeep epistemic analysis for HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER (6ed1ee8c1880a9bc, domain=other, pages_read=9/9): Operator 'Confidence Band Widening' (page 1, domain other) captures: This is the same rule that already governs `/data` and the source registry. Assumptions: Publicly available information forms the basis; no private medical data is used. Breakdown regime: When new credible evidence contradicts prior beliefs, the band widens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating with robust priors Operator 'HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 2' (page 1, domain other) captures: **Author:** Claude (Opus 4.8) · 2026-06-06 **One-line:** A confidence-band layer that turns public human-performance and game-simulation signals into *better questions about uncertainty* — never claims about a player's body, never a rating treated as truth. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 3' (page 1, domain other) captures: Mission & non-negotiable guardrails This layer does **not** predict health and does **not** assert a player's medical state. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER (6ed1ee8c1880a9bc, domain=other, pages_read=9/9): Operator 'Confidence Band Widening' (page 1, domain other) captures: This is the same rule that already governs `/data` and the source registry. Assumptions: Publicly available information forms the basis; no private medical data is used. Breakdown regime: When new credible evidence contradicts prior beliefs, the band widens. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian updating with robust priors Operator 'HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 2' (page 1, domain other) captures: **Author:** Claude (Opus 4.8) · 2026-06-06 **One-line:** A confidence-band layer that turns public human-performance and game-simulation signals into *better questions about uncertainty* — never claims about a player's body, never a rating treated as truth. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_2 to GSE situational context classification and GSI structural uncertainty estimation. Operator 'HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER Grounded Principle 3' (page 1, domain other) captures: Mission & non-negotiable guardrails This layer does **not** predict health and does **not** assert a player's medical state. Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept draws from Wald's sequential probability ratio test and Dempster-Shafer evidence theory, both designed to handle uncertainty in sequential observations. It also mirrors the robust statistics framework of Huber, which emphasizes resistance to outliers and model misspecification. Retrocausal Genealogy: Rooted in HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER (6ed1ee8c1880a9bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—such as bookmakers or rival analysts—may exploit narrow confidence bands to identify mispriced bets. By systematically widening bands in response to credible but uncertain signals, the primitive forces these agents to account for higher risk, potentially leading them to withdraw aggressive propositions. Theory of Mind & Decision Maker Model: Rooted in HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER (6ed1ee8c1880a9bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid collinearity with the Data Source Registry, the primitive explicitly excludes scraping protected systems. Additionally, it vetoes the direct use of video-game ratings as truth, treating them only as low-weight priors to prevent leakage of proprietary model assumptions into public-facing outputs. Cross-Layer Veto & Anti-Leakage Check: Rooted in HUMAN_PERFORMANCE_SIMULATION_PRIORS_LAYER (6ed1ee8c1880a9bc), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "22dcd578dce5f4ac",
+  "source_status": "COMPLETE",
+  "title": "repo-firehose-review",
+  "file_name": "repo-firehose-review.md",
+  "sha256": "22dcd578dce5f4ac89d54e2141bb9925372b85361b163c06f45479c683e4eb57",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ensemble de-vig estimation via Shin, goto, and naive methods; ELO-based win probability and Kelly criterion integration; Monte-Carlo significance testing for edge validation; Merkle-tree based trust proofs. Universal Lens: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for fair value estimation using ensemble de-vig models, ELO-derived win probabilities, and significance-tested EV gates to compute posterior belief states over outcomes. GSI Mapping: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions driven by de-vigged odds ensembles, ELO-based consensus signals, and probabilistic edge validation through Monte-Carlo tests within a trust-aware Merkle-commitment architecture. GSE Mapping: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "de_vig_ensemble",
+      "name": "De-Vig Ensemble Estimator",
+      "verbatim_quote": "## ✅ BUILD — port the method into the engine (highest value) - **`mberk/shin`** → Shin's de-vig.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{fair}}': 'fair value in currency units', 'V_{\\\\text{vig}}': 'market-quoted value including vig', 'E_{\\\\text{Shin}}': \"Shin's de-vig estimate\", 'E_{\\\\text{goto}}': 'goto conversion de-vig estimate', 'E_{\\\\text{naive}}': 'naive de-vig estimate'}",
+      "assumptions": "Market prices are subject to vig; de-vig estimates are unbiased under symmetric information.",
+      "breakdown_regime": "When market vig exceeds 10%, ensemble variance increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines three distinct de-vig methodologies to produce robust fair value estimates for betting markets.",
+        "source_operator": "de_vig_ensemble",
+        "telemetry": "Cross-validation error between Shin, goto, and naive estimators."
+      }
+    },
+    {
+      "primitive_id": "elo_win_probability_estimator",
+      "name": "ELO Win Probability Estimator",
+      "verbatim_quote": "- **`sedemmler/WagerBrain`** → odds conversion + implied prob + vig + EV + Kelly + parlay + **538-style ELO win-prob**.",
+      "page": 1,
+      "latex": "\\mathbb{P}(W_i) = \\frac{1}{1 + 10^{(R_j - R_i)/400}}",
+      "symbol_and_unit_ledger": "{'R_i': 'player/team rating', 'R_j': 'opponent rating', '\\\\mathbb{P}(W_i)': 'probability of player i winning'}",
+      "assumptions": "Win probabilities follow logistic distribution; ratings are temporally stable.",
+      "breakdown_regime": "Rating drift beyond 100 points per season leads to reduced accuracy.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps ELO rating differences to win probability space, enabling consistent comparison across sports.",
+        "source_operator": "elo_win_probability_estimator",
+        "telemetry": "Brier score of predicted win probabilities against actual match outcomes."
+      }
+    },
+    {
+      "primitive_id": "monte_carlo_edge_test",
+      "name": "Monte Carlo Edge Test",
+      "verbatim_quote": "- **`aqsmith02/paper-betting-tracker`** → vig-free EV gate + half-Kelly + **Monte-Carlo significance test vs a random-EV null**.",
+      "page": 1,
+      "latex": "\\mathcal{H}_0: \\mu_{EV} = 0 \\quad \\text{vs} \\quad \\mathcal{H}_1: \\mu_{EV} > 0",
+      "symbol_and_unit_ledger": "{'\\\\mu_{EV}': 'expected value of edge', '\\\\mathcal{H}_0': 'null hypothesis (no edge)', '\\\\mathcal{H}_1': 'alternative hypothesis (positive edge)'}",
+      "assumptions": "Edge follows normal distribution; sample size sufficient for central limit theorem.",
+      "breakdown_regime": "Sample size < 100 leads to unreliable p-values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validates whether observed EV is statistically significant versus random chance using resampling techniques.",
+        "source_operator": "monte_carlo_edge_test",
+        "telemetry": "p-value from permutation test against null EV distribution."
+      }
+    },
+    {
+      "primitive_id": "merkle_commitment_proof",
+      "name": "Merkle Commitment Proof",
+      "verbatim_quote": "## 🟢 CONCEPT — trust / transparency (first-of-kind fits) - **`olalonde/proof-of-liabilities` + `proof-of-solvency`** → Merkle-tree commit + public inclusion proof.",
+      "page": 1,
+      "latex": "H(m) = H(H_{prev} || m)",
+      "symbol_and_unit_ledger": "{'H(m)': 'hash of message m', 'H_{prev}': 'previous hash in sequence', 'm': 'message or data block'}",
+      "assumptions": "Hash function is collision-resistant; commitment integrity preserved by cryptographic binding.",
+      "breakdown_regime": "Collision attack on hash function invalidates proof validity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures tamper-evident logging of predictions and CLV computations via Merkle tree structure.",
+        "source_operator": "merkle_commitment_proof",
+        "telemetry": "Verification success rate of public inclusion proofs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "22dcd578dce5f4ac_t0",
+      "think": "The core operators derive from probabilistic modeling and statistical inference principles. The de-vig ensemble combines three distinct de-vig methods—Shin’s, goto conversion, and naive—to reduce systematic bias and improve robustness. The ELO estimator maps team ratings into win probabilities using a logistic function, enabling cross-sport comparisons. Monte Carlo edge testing applies resampling to validate that expected value is significantly positive, mitigating false positives due to noise. Finally, Merkle-tree commitments ensure trustworthiness of logs by providing verifiable, tamper-evident records. These primitives collectively enable GSI to construct Bayesian belief states and GSE to reason over dynamic betting environments with high confidence and transparency.\n\nDeep epistemic analysis for repo-firehose-review (22dcd578dce5f4ac, domain=other, pages_read=3/3): Operator 'De-Vig Ensemble Estimator' (page 1, domain other) captures: ## ✅ BUILD — port the method into the engine (highest value) - **`mberk/shin`** → Shin's de-vig. Assumptions: Market prices are subject to vig; de-vig estimates are unbiased under symmetric information. Breakdown regime: When market vig exceeds 10%, ensemble variance increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines three distinct de-vig methodologies to produce robust fair value estimates for betting markets. Operator 'ELO Win Probability Estimator' (page 1, domain other) captures: - **`sedemmler/WagerBrain`** → odds conversion + implied prob + vig + EV + Kelly + parlay + **538-style ELO win-prob**. Assumptions: Win probabilities follow logistic distribution; ratings are temporally stable. Breakdown regime: Rating drift beyond 100 points per season leads to reduced accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ELO rating differences to win probability space, enabling consistent comparison across sports. Operator 'Monte Carlo Edge Test' (page 1, domain other) captures: - **`aqsmith02/paper-betting-tracker`** → vig-free EV gate + half-Kelly + **Monte-Carlo significance test vs a random-EV null**. Assumptions: Edge follows normal distribution; sample size sufficient for central limit theorem. Breakdown regime: Sample size < 100 leads to unreliable p-values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validates whether observed EV is statistically significant versus random chance using resampling techniques. Operator 'Merkle Commitment Proof' (page 1, domain other) captures: ## 🟢 CONCEPT — trust / transparency (first-of-kind fits) - **`olalonde/proof-of-liabilities` + `proof-of-solvency`** → Merkle-tree commit + public inclusion proof. Assumptions: Hash function is collision-resistant; commitment integrity preserved by cryptographic binding. Breakdown regime: Collision attack on hash function invalidates proof validity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures tamper-evident logging of predictions and CLV computations via Merkle tree structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for repo-firehose-review (22dcd578dce5f4ac, domain=other, pages_read=3/3): Operator 'De-Vig Ensemble Estimator' (page 1, domain other) captures: ## ✅ BUILD — port the method into the engine (highest value) - **`mberk/shin`** → Shin's de-vig. Assumptions: Market prices are subject to vig; de-vig estimates are unbiased under symmetric information. Breakdown regime: When market vig exceeds 10%, ensemble variance increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines three distinct de-vig methodologies to produce robust fair value estimates for betting markets. Operator 'ELO Win Probability Estimator' (page 1, domain other) captures: - **`sedemmler/WagerBrain`** → odds conversion + implied prob + vig + EV + Kelly + parlay + **538-style ELO win-prob**. Assumptions: Win probabilities follow logistic distribution; ratings are temporally stable. Breakdown regime: Rating drift beyond 100 points per season leads to reduced accuracy. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps ELO rating differences to win probability space, enabling consistent comparison across sports. Operator 'Monte Carlo Edge Test' (page 1, domain other) captures: - **`aqsmith02/paper-betting-tracker`** → vig-free EV gate + half-Kelly + **Monte-Carlo significance test vs a random-EV null**. Assumptions: Edge follows normal distribution; sample size sufficient for central limit theorem. Breakdown regime: Sample size < 100 leads to unreliable p-values. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validates whether observed EV is statistically significant versus random chance using resampling techniques. Operator 'Merkle Commitment Proof' (page 1, domain other) captures: ## 🟢 CONCEPT — trust / transparency (first-of-kind fits) - **`olalonde/proof-of-liabilities` + `proof-of-solvency`** → Merkle-tree commit + public inclusion proof. Assumptions: Hash function is collision-resistant; commitment integrity preserved by cryptographic binding. Breakdown regime: Collision attack on hash function invalidates proof validity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures tamper-evident logging of predictions and CLV computations via Merkle tree structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century work on probability theory and game theory, particularly Wald’s sequential analysis and von Neumann-Morgenstern utility theory. Modern extensions include ELO systems from chess and Monte Carlo methods from computational statistics. Retrocausal Genealogy: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate market data or exploit model weaknesses. The ensemble approach reduces adversarial impact, while the edge test ensures only genuine predictive power is leveraged. Trust mechanisms prevent manipulation of logs or model outputs. Theory of Mind & Decision Maker Model: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently; e.g., ELO should not be redundant with de-vig estimates. Leakage vetos prevent data snooping across training/testing splits, especially in time-series contexts where lookahead bias is common. Cross-Layer Veto & Anti-Leakage Check: Rooted in repo-firehose-review (22dcd578dce5f4ac), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

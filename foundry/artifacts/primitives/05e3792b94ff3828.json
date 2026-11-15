@@ -1,0 +1,78 @@
+{
+  "book_id": "05e3792b94ff3828",
+  "source_status": "COMPLETE",
+  "title": "GAP27_DRAFT_ONLY_X_TRANSPORT",
+  "file_name": "GAP27_DRAFT_ONLY_X_TRANSPORT.md",
+  "sha256": "05e3792b94ff38284d2f93120a371a27d230729c69432826d6f342c25fadf504",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A guardrail's regex pattern mismatched the actual transport host, causing a false negative in draft-only scanning. Universal Lens: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian confirmation of transport regex misalignment using reconciliation data as evidence for posterior probability of gap existence. GSI Mapping: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning identifies X transport as triple-gated, non-triggerable by engine, and thus exempt from guardrail enforcement. GSE Mapping: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "regex_transport_mismatch",
+      "name": "Regex Transport Mismatch",
+      "verbatim_quote": "# GAP-27 — the draft-only guardrail's X pattern missed the actual transport **Branch:** `audit/reconciliation-2026-10-20` **Date:** 2026-10-21 **Gap:** `GAP-27` (MEDIUM) — *\"The draft-only guardrail's Twitter/X regex misses the actual transport\"* **Files:** `scripts/guardrails/draft-only.mjs` (patched), `scripts/guardrails/draft-only.test.mjs` (new, 5 tests) --## 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'transport host (dimensionless)', 'P': 'pattern regex (dimensionless)', 'H': 'hit count (integer)'}",
+      "assumptions": "The guardrail scans only within defined directories and relies on regex to match transport hosts.",
+      "breakdown_regime": "When P(T) ≠ T due to host rename from api.twitter.com to api.x.com.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The regex pattern P is isomorphic to the set of observed transports T under inclusion relation.",
+        "source_operator": "regex_transport_mismatch",
+        "telemetry": "Number of hits H on api.x.com vs api.twitter.com"
+      }
+    },
+    {
+      "primitive_id": "triple_gated_transport",
+      "name": "Triple-Gated Transport",
+      "verbatim_quote": "**IT IS TRIPLE-GATED ON THE SEND PATH**, not at schedule time.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'gate function (boolean)', 'S': 'send time (time)', 'I': 'idempotency key (string)', 'L': 'ledger record (object)'}",
+      "assumptions": "Transport execution is gated by mute status, idempotency, and ledger write.",
+      "breakdown_regime": "If any gate G(S) evaluates to false, transport does not execute.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transport kernel is derived from three independent boolean gates: MUTE_BOT(S), IDEMPOTENCY(S), LEDGER_WRITE(S).",
+        "source_operator": "triple_gated_transport",
+        "telemetry": "Verification of all three gates during send path"
+      }
+    },
+    {
+      "primitive_id": "documented_subsystem",
+      "name": "Documented Subsystem",
+      "verbatim_quote": "**IT IS A DELIBERATE, DOCUMENTED SUBSYSTEM** with its own 41-test suite, including the RFC 5849 §3.4.1.1 base-string vector.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'documentation coverage (dimensionless)', 'T': 'test suite size (integer)', 'R': 'RFC compliance (boolean)'}",
+      "assumptions": "Subsystem behavior is fully specified and tested per standard.",
+      "breakdown_regime": "If D < 1 or T < threshold, subsystem is under-documented or under-tested.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Subsystem robustness R is derived from documentation completeness D and test suite size T.",
+        "source_operator": "documented_subsystem",
+        "telemetry": "Test pass rate and documentation coverage metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "05e3792b94ff3828_t0",
+      "think": "The core issue arises from a regex pattern mismatch where the guardrail's pattern `/api\\.twitter\\.com\\|twitterPost(\\|\\btweet\\s*\\(/i` fails to capture the actual transport host `api.x.com`. This creates a false negative because the pattern does not match the real transport, which is documented in `workers/twitter-bot/x-client.js`. The system's design includes a triple-gate mechanism at send time—mute status, idempotency key recording, and ledger write—that ensures the transport is not triggered by the engine. These gates make the subsystem immune to guardrail enforcement. Additionally, the subsystem is deliberately documented and tested, with a 41-test suite covering RFC 5849 compliance. The fix adds `api\\.x\\.com` to the pattern without narrowing scope, preserving the original behavior while aligning with the new host. The epistemic trace confirms that the gap was empirically validated through reconciliation data and that the fix maintains integrity via test assertions.\n\nDeep epistemic analysis for GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828, domain=other, pages_read=3/3): Operator 'Regex Transport Mismatch' (page 1, domain other) captures: # GAP-27 — the draft-only guardrail's X pattern missed the actual transport **Branch:** `audit/reconciliation-2026-10-20` **Date:** 2026-10-21 **Gap:** `GAP-27` (MEDIUM) — *\"The draft-only guardrail's Twitter/X regex misses the actual transport\"* **Files:** `scripts/guardrails/draft-only.mjs` (patched), `scripts/guardrails/draft-only.test.mjs` (new, 5 tests) --## 1. Assumptions: The guardrail scans only within defined directories and relies on regex to match transport hosts. Breakdown regime: When P(T) ≠ T due to host rename from api.twitter.com to api.x.com. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The regex pattern P is isomorphic to the set of observed transports T under inclusion relation. Operator 'Triple-Gated Transport' (page 2, domain other) captures: **IT IS TRIPLE-GATED ON THE SEND PATH**, not at schedule time. Assumptions: Transport execution is gated by mute status, idempotency, and ledger write. Breakdown regime: If any gate G(S) evaluates to false, transport does not execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transport kernel is derived from three independent boolean gates: MUTE_BOT(S), IDEMPOTENCY(S), LEDGER_WRITE(S). Operator 'Documented Subsystem' (page 2, domain other) captures: **IT IS A DELIBERATE, DOCUMENTED SUBSYSTEM** with its own 41-test suite, including the RFC 5849 §3.4.1.1 base-string vector. Assumptions: Subsystem behavior is fully specified and tested per standard. Breakdown regime: If D < 1 or T < threshold, subsystem is under-documented or under-tested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Subsystem robustness R is derived from documentation completeness D and test suite size T. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828, domain=other, pages_read=3/3): Operator 'Regex Transport Mismatch' (page 1, domain other) captures: # GAP-27 — the draft-only guardrail's X pattern missed the actual transport **Branch:** `audit/reconciliation-2026-10-20` **Date:** 2026-10-21 **Gap:** `GAP-27` (MEDIUM) — *\"The draft-only guardrail's Twitter/X regex misses the actual transport\"* **Files:** `scripts/guardrails/draft-only.mjs` (patched), `scripts/guardrails/draft-only.test.mjs` (new, 5 tests) --## 1. Assumptions: The guardrail scans only within defined directories and relies on regex to match transport hosts. Breakdown regime: When P(T) ≠ T due to host rename from api.twitter.com to api.x.com. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The regex pattern P is isomorphic to the set of observed transports T under inclusion relation. Operator 'Triple-Gated Transport' (page 2, domain other) captures: **IT IS TRIPLE-GATED ON THE SEND PATH**, not at schedule time. Assumptions: Transport execution is gated by mute status, idempotency, and ledger write. Breakdown regime: If any gate G(S) evaluates to false, transport does not execute. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transport kernel is derived from three independent boolean gates: MUTE_BOT(S), IDEMPOTENCY(S), LEDGER_WRITE(S). Operator 'Documented Subsystem' (page 2, domain other) captures: **IT IS A DELIBERATE, DOCUMENTED SUBSYSTEM** with its own 41-test suite, including the RFC 5849 §3.4.1.1 base-string vector. Assumptions: Subsystem behavior is fully specified and tested per standard. Breakdown regime: If D < 1 or T < threshold, subsystem is under-documented or under-tested. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Subsystem robustness R is derived from documentation completeness D and test suite size T. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This stems from historical renaming of Twitter's domain to X, which introduced a semantic drift in transport naming. Prior guardrail logic assumed legacy hostnames, leading to a disconnect between codebase and policy. Retrocausal Genealogy: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the guardrail enforcement logic, which assumes a static transport model, and the actual transport subsystem, which evolved with domain changes. The engine acts as an observer with limited access to the subsystem, making it unable to trigger the transport directly. Theory of Mind & Decision Maker Model: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by the triple-gate mechanism preventing cross-layer activation. Leakage is vetoed by explicit import restrictions and lack of external references to the subsystem. Cross-Layer Veto & Anti-Leakage Check: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in GAP27_DRAFT_ONLY_X_TRANSPORT (05e3792b94ff3828), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

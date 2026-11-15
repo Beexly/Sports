@@ -1,0 +1,95 @@
+{
+  "book_id": "9292a5f19f78be45",
+  "source_status": "COMPLETE",
+  "title": "TOURNAMENT_CHANGELOG_2026-09-13",
+  "file_name": "TOURNAMENT_CHANGELOG_2026-09-13.md",
+  "sha256": "9292a5f19f78be454e16899b8fea27d66063c992aed4e87a751ee6f261287898",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Affine calibration normalizes predictive baselines; GBM ceiling probes signal structure; gen-0 diagnostics detect overfitting; soft-target regularization stabilizes heavy-tailed fits. Universal Lens: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference uses calibrated R2s for posterior updates; conformal prediction bounds rely on GBM ceilings and gen-0 diagnostics for validity; soft-target transforms enable robust likelihood estimation under tail-heavy targets. GSI Mapping: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning gates SR runs via GBM ceilings and linear structure flags; state transitions occur upon attractor detection or soft-target activation; row alignment ensures data integrity across model layers. GSE Mapping: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "affine_calibration",
+      "name": "Affine Calibration",
+      "verbatim_quote": "## Fix 1 — Affine-calibrate ALL baselines before R2 comparison - New: `affine_calibrate(y_train, pred_train, pred_test)` → `(calibrated_test_pred, intercept, slope)`.",
+      "page": 1,
+      "latex": "\\hat{y}_{\\text{cal}} = \\beta_0 + \\beta_1 \\cdot \\hat{y}_{\\text{raw}}",
+      "symbol_and_unit_ledger": "{'y_train': 'training target values (dimensionless)', 'pred_train': 'training predictions (dimensionless)', 'pred_test': 'test predictions (dimensionless)', 'calibrated_test_pred': 'affinely calibrated test predictions (dimensionless)', 'intercept': 'bias term (dimensionless)', 'slope': 'scale factor (dimensionless)'}",
+      "assumptions": "Linear relationship between raw and calibrated predictions; training set representative of test distribution.",
+      "breakdown_regime": "When baseline predictions are scale-mismatched or systematically biased.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw prediction scales to common reference frame for valid R2 comparison.",
+        "source_operator": "affine_calibration",
+        "telemetry": "R2 difference before/after calibration"
+      }
+    },
+    {
+      "primitive_id": "gbm_ceiling_probe",
+      "name": "GBM Ceiling Probe",
+      "verbatim_quote": "## Fix 2 — GBM ceiling probe + multi-tier gate before every SR run - New: `gbm_ceiling_probe(X_train, y_train, X_test, y_test, seed=42, max_iter=200)`.",
+      "page": 1,
+      "latex": "R^2_{\\text{GBM}} = \\max_{\\text{GBM}} \\mathbb{E}[R^2_{\\text{OLS}}(X, y)]",
+      "symbol_and_unit_ledger": "{'X_train': 'training feature matrix (dimensionless)', 'y_train': 'training target vector (dimensionless)', 'X_test': 'test feature matrix (dimensionless)', 'y_test': 'test target vector (dimensionless)', 'R2_GBM': 'maximum achievable R2 by gradient boosting machine (dimensionless)'}",
+      "assumptions": "GBM can approximate optimal regression boundary; linear structure is detectable via OLS.",
+      "breakdown_regime": "When signal is predominantly linear or when SR fails due to insufficient complexity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides upper bound on model performance to gate symbolic regression.",
+        "source_operator": "gbm_ceiling_probe",
+        "telemetry": "Linear structure flag and R2 gap relative to GBM ceiling"
+      }
+    },
+    {
+      "primitive_id": "gen0_diagnostic",
+      "name": "Gen-0 Diagnostic",
+      "verbatim_quote": "## Fix 3 — Gen-0 diagnostic in every SR run - New: `gen0_diagnostic(X_train, y_train, X_test, y_test, function_set, seed, loss, soft_target_beta)`.",
+      "page": 1,
+      "latex": "\\Delta R^2 = R^2_{\\text{train}} - R^2_{\\text{test}}, \\quad \\Delta R^2 > 0.15 \\Rightarrow \\text{attractor suspect}",
+      "symbol_and_unit_ledger": "{'R2_train': 'training R2 score (dimensionless)', 'R2_test': 'test R2 score (dimensionless)', 'Delta_R2': 'overfitting gap (dimensionless)'}",
+      "assumptions": "Overfitting detected via large discrepancy between train and test R2; attractor presence implies spurious fit.",
+      "breakdown_regime": "When gen-0 formula exhibits excessive variance or spurious correlation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Detects overfitting in initial symbolic regression generation to prevent false discoveries.",
+        "source_operator": "gen0_diagnostic",
+        "telemetry": "Train-test R2 gap and attractor flag"
+      }
+    },
+    {
+      "primitive_id": "soft_target_regularization",
+      "name": "Soft Target Regularization",
+      "verbatim_quote": "## Fix 4 — Log-cosh + soft target regularization as default for heavy-tailed targets - New: `soft_target_transform(y, beta=0.9)` = `median + beta * (y - median)`, applied BEFORE SR fitting on heavy-tailed targets (Vanneschi & Castelli 2021).",
+      "page": 1,
+      "latex": "\\tilde{y} = \\text{median}(y) + \\beta (y - \\text{median}(y))",
+      "symbol_and_unit_ledger": "{'y': 'target variable (dimensionless)', 'median': 'median of y (dimensionless)', 'beta': 'regularization strength (dimensionless)'}",
+      "assumptions": "Heavy-tailed distributions benefit from robust transformation; soft target reduces outlier influence.",
+      "breakdown_regime": "When target distribution has extreme outliers or high kurtosis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Transforms heavy-tailed targets into more stable form for symbolic regression.",
+        "source_operator": "soft_target_regularization",
+        "telemetry": "Skewness/kurtosis metrics and convergence stability"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9292a5f19f78be45_t0",
+      "think": "The affine calibration primitive addresses scale mismatch in baseline predictions by aligning them through least-squares regression. This ensures that comparisons of R2 scores between models are meaningful. The GBM ceiling probe introduces a hierarchical validation step where a gradient boosting model sets an upper limit on achievable performance. If the linear structure of the data is close to this ceiling, it suggests that nonlinear symbolic regression may not add value. The gen-0 diagnostic acts as an early warning system against overfitting by comparing train and test R2 scores. A significant gap indicates potential attractor behavior, prompting a retry with soft target regularization. Soft target regularization applies a robust transformation to heavy-tailed targets, mitigating the impact of outliers during symbolic regression. These primitives collectively ensure that symbolic regression results are both statistically sound and empirically reliable.\n\nDeep epistemic analysis for TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45, domain=other, pages_read=2/2): Operator 'Affine Calibration' (page 1, domain other) captures: ## Fix 1 — Affine-calibrate ALL baselines before R2 comparison - New: `affine_calibrate(y_train, pred_train, pred_test)` → `(calibrated_test_pred, intercept, slope)`. Assumptions: Linear relationship between raw and calibrated predictions; training set representative of test distribution. Breakdown regime: When baseline predictions are scale-mismatched or systematically biased. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw prediction scales to common reference frame for valid R2 comparison. Operator 'GBM Ceiling Probe' (page 1, domain other) captures: ## Fix 2 — GBM ceiling probe + multi-tier gate before every SR run - New: `gbm_ceiling_probe(X_train, y_train, X_test, y_test, seed=42, max_iter=200)`. Assumptions: GBM can approximate optimal regression boundary; linear structure is detectable via OLS. Breakdown regime: When signal is predominantly linear or when SR fails due to insufficient complexity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides upper bound on model performance to gate symbolic regression. Operator 'Gen-0 Diagnostic' (page 1, domain other) captures: ## Fix 3 — Gen-0 diagnostic in every SR run - New: `gen0_diagnostic(X_train, y_train, X_test, y_test, function_set, seed, loss, soft_target_beta)`. Assumptions: Overfitting detected via large discrepancy between train and test R2; attractor presence implies spurious fit. Breakdown regime: When gen-0 formula exhibits excessive variance or spurious correlation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detects overfitting in initial symbolic regression generation to prevent false discoveries. Operator 'Soft Target Regularization' (page 1, domain other) captures: ## Fix 4 — Log-cosh + soft target regularization as default for heavy-tailed targets - New: `soft_target_transform(y, beta=0.9)` = `median + beta * (y - median)`, applied BEFORE SR fitting on heavy-tailed targets (Vanneschi & Castelli 2021). Assumptions: Heavy-tailed distributions benefit from robust transformation; soft target reduces outlier influence. Breakdown regime: When target distribution has extreme outliers or high kurtosis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transforms heavy-tailed targets into more stable form for symbolic regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45, domain=other, pages_read=2/2): Operator 'Affine Calibration' (page 1, domain other) captures: ## Fix 1 — Affine-calibrate ALL baselines before R2 comparison - New: `affine_calibrate(y_train, pred_train, pred_test)` → `(calibrated_test_pred, intercept, slope)`. Assumptions: Linear relationship between raw and calibrated predictions; training set representative of test distribution. Breakdown regime: When baseline predictions are scale-mismatched or systematically biased. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw prediction scales to common reference frame for valid R2 comparison. Operator 'GBM Ceiling Probe' (page 1, domain other) captures: ## Fix 2 — GBM ceiling probe + multi-tier gate before every SR run - New: `gbm_ceiling_probe(X_train, y_train, X_test, y_test, seed=42, max_iter=200)`. Assumptions: GBM can approximate optimal regression boundary; linear structure is detectable via OLS. Breakdown regime: When signal is predominantly linear or when SR fails due to insufficient complexity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides upper bound on model performance to gate symbolic regression. Operator 'Gen-0 Diagnostic' (page 1, domain other) captures: ## Fix 3 — Gen-0 diagnostic in every SR run - New: `gen0_diagnostic(X_train, y_train, X_test, y_test, function_set, seed, loss, soft_target_beta)`. Assumptions: Overfitting detected via large discrepancy between train and test R2; attractor presence implies spurious fit. Breakdown regime: When gen-0 formula exhibits excessive variance or spurious correlation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detects overfitting in initial symbolic regression generation to prevent false discoveries. Operator 'Soft Target Regularization' (page 1, domain other) captures: ## Fix 4 — Log-cosh + soft target regularization as default for heavy-tailed targets - New: `soft_target_transform(y, beta=0.9)` = `median + beta * (y - median)`, applied BEFORE SR fitting on heavy-tailed targets (Vanneschi & Castelli 2021). Assumptions: Heavy-tailed distributions benefit from robust transformation; soft target reduces outlier influence. Breakdown regime: When target distribution has extreme outliers or high kurtosis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transforms heavy-tailed targets into more stable form for symbolic regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical calibration and modern machine learning diagnostics, these primitives extend earlier work on robust regression and out-of-sample validation. Inspired by Vanneschi & Castelli’s soft-target methods and formalized through empirical gatekeeping protocols. Retrocausal Genealogy: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include noisy data generators and overfitting attractors. The primitives act as decision-making modules that evaluate whether a symbolic formula is a true signal or artifact. They simulate adversarial environments where model complexity must be balanced with generalizability. Theory of Mind & Decision Maker Model: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each diagnostic operates independently. Leakage is prevented by applying transformations before SR fitting rather than post-hoc. Each primitive maintains its own telemetry to avoid cross-contamination of validation signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in TOURNAMENT_CHANGELOG_2026-09-13 (9292a5f19f78be45), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

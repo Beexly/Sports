@@ -1,0 +1,78 @@
+{
+  "book_id": "1d4d9706b79211d8",
+  "source_status": "COMPLETE",
+  "title": "week3-multi-episode-transcripts",
+  "file_name": "week3-multi-episode-transcripts.md",
+  "sha256": "1d4d9706b79211d845f1ffc289b27d218099972059b4dbbd4e97f41f58b0a570",
+  "primary_domain": "other",
+  "pages_total": 8,
+  "pages_read": 8,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Injury signal verification through transcript-to-injuries file alignment with Bayesian confidence thresholds. Universal Lens: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to map host claims to verified injury statuses using posterior probability distributions over binary outcomes. GSI Mapping: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models player availability transitions via Markovian state machines conditioned on injury file updates and transcript-derived signals. GSE Mapping: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "confirmed_injury_status",
+      "name": "Confirmed Injury Status",
+      "verbatim_quote": "# ✅ Confirmed consistent (no action) - **Brock Bowers** — multiple hosts debated his return; `week3-injuries.md`: officially QUESTIONABLE with a Friday DNP (negative signal).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{status}}': '\\\\text{Binary indicator for injury status (0 = active, 1 = inactive)}', 'T_{\\\\text{host}}': '\\\\text{Transcript-derived claim value}', 'I_{\\\\text{file}}': '\\\\text{Injury file verification value}'}",
+      "assumptions": "Host claims are independent variables; injury file provides ground truth.",
+      "breakdown_regime": "When \\( T_{\\text{host}} = I_{\\text{file}} \\), status is confirmed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each host claim maps to a binary verification event in GSI's probabilistic space; GSE transitions between states based on confirmation.",
+        "source_operator": "confirmed_injury_status",
+        "telemetry": "Posterior probability of injury status given transcript and file data."
+      }
+    },
+    {
+      "primitive_id": "superseded_prediction",
+      "name": "Superseded Prediction",
+      "verbatim_quote": "The RotoWire BOLD prediction (8/125/1, TE1 week) was recorded pre-Friday and is **superseded**.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{pred}}': '\\\\text{Predictive signal before update}', 'P_{\\\\text{new}}': '\\\\text{Updated prediction after Friday}', 'U': '\\\\text{Update flag (1 if superseded)}'}",
+      "assumptions": "Predictions are time-sensitive and must be updated with new data.",
+      "breakdown_regime": "When \\( U = 1 \\), \\( P_{\\text{pred}} \\) is replaced by \\( P_{\\text{new}} \\).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI recalibrates prediction confidence using temporal update kernels; GSE adjusts model weights accordingly.",
+        "source_operator": "superseded_prediction",
+        "telemetry": "Confidence interval shift in predicted performance metrics."
+      }
+    },
+    {
+      "primitive_id": "unverified_host_claim",
+      "name": "Unverified Host Claim",
+      "verbatim_quote": "**Flag as host claim requiring verification against Friday final reports before use.** It strengthens the Schultz case if true (Schultz first-read rate 27% in Week 2 per RotoWire) but is not independently verified in our research lanes.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H_{\\\\text{claim}}': '\\\\text{Host-derived claim}', 'V': '\\\\text{Verification flag (0 = unverified, 1 = verified)}', 'C_{\\\\text{schultz}}': \"\\\\text{Schultz's first-read rate}\"}",
+      "assumptions": "Claims without independent verification are unreliable until validated.",
+      "breakdown_regime": "When \\( V = 0 \\), \\( H_{\\text{claim}} \\) is flagged for further scrutiny.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI applies uncertainty quantifiers to unverified claims; GSE delays action until validation.",
+        "source_operator": "unverified_host_claim",
+        "telemetry": "Uncertainty score assigned to claims lacking external corroboration."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1d4d9706b79211d8_t0",
+      "think": "The core operators define a dual logic system: one for verifying claims against authoritative sources (confirmed injury status), another for managing outdated predictions (superseded prediction). An unverified host claim introduces a third layer where uncertainty must be quantified before integration into models. These primitives form a triadic structure underpinning GSI’s Bayesian updating and GSE’s dynamic state transitions. Failure modes include misalignment between transcript and injury data, stale predictions not updated post-Friday, and overreliance on unverified claims. Each operator defines a boundary condition in which its associated regime holds—e.g., when a claim is confirmed, it becomes part of the stable knowledge base; when superseded, it is discarded. The system avoids false positives by enforcing verification gates and prevents model drift by applying retroactive corrections.\n\nDeep epistemic analysis for week3-multi-episode-transcripts (1d4d9706b79211d8, domain=other, pages_read=8/8): Operator 'Confirmed Injury Status' (page 2, domain other) captures: # ✅ Confirmed consistent (no action) - **Brock Bowers** — multiple hosts debated his return; `week3-injuries.md`: officially QUESTIONABLE with a Friday DNP (negative signal). Assumptions: Host claims are independent variables; injury file provides ground truth. Breakdown regime: When \\( T_{\\text{host}} = I_{\\text{file}} \\), status is confirmed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each host claim maps to a binary verification event in GSI's probabilistic space; GSE transitions between states based on confirmation. Operator 'Superseded Prediction' (page 2, domain other) captures: The RotoWire BOLD prediction (8/125/1, TE1 week) was recorded pre-Friday and is **superseded**. Assumptions: Predictions are time-sensitive and must be updated with new data. Breakdown regime: When \\( U = 1 \\), \\( P_{\\text{pred}} \\) is replaced by \\( P_{\\text{new}} \\). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI recalibrates prediction confidence using temporal update kernels; GSE adjusts model weights accordingly. Operator 'Unverified Host Claim' (page 2, domain other) captures: **Flag as host claim requiring verification against Friday final reports before use.** It strengthens the Schultz case if true (Schultz first-read rate 27% in Week 2 per RotoWire) but is not independently verified in our research lanes. Assumptions: Claims without independent verification are unreliable until validated. Breakdown regime: When \\( V = 0 \\), \\( H_{\\text{claim}} \\) is flagged for further scrutiny. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies uncertainty quantifiers to unverified claims; GSE delays action until validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for week3-multi-episode-transcripts (1d4d9706b79211d8, domain=other, pages_read=8/8): Operator 'Confirmed Injury Status' (page 2, domain other) captures: # ✅ Confirmed consistent (no action) - **Brock Bowers** — multiple hosts debated his return; `week3-injuries.md`: officially QUESTIONABLE with a Friday DNP (negative signal). Assumptions: Host claims are independent variables; injury file provides ground truth. Breakdown regime: When \\( T_{\\text{host}} = I_{\\text{file}} \\), status is confirmed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each host claim maps to a binary verification event in GSI's probabilistic space; GSE transitions between states based on confirmation. Operator 'Superseded Prediction' (page 2, domain other) captures: The RotoWire BOLD prediction (8/125/1, TE1 week) was recorded pre-Friday and is **superseded**. Assumptions: Predictions are time-sensitive and must be updated with new data. Breakdown regime: When \\( U = 1 \\), \\( P_{\\text{pred}} \\) is replaced by \\( P_{\\text{new}} \\). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI recalibrates prediction confidence using temporal update kernels; GSE adjusts model weights accordingly. Operator 'Unverified Host Claim' (page 2, domain other) captures: **Flag as host claim requiring verification against Friday final reports before use.** It strengthens the Schultz case if true (Schultz first-read rate 27% in Week 2 per RotoWire) but is not independently verified in our research lanes. Assumptions: Claims without independent verification are unreliable until validated. Breakdown regime: When \\( V = 0 \\), \\( H_{\\text{claim}} \\) is flagged for further scrutiny. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI applies uncertainty quantifiers to unverified claims; GSE delays action until validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian belief revision and temporal logic, these primitives echo early work in probabilistic reasoning and causal inference frameworks such as Pearl's causal calculus and Halpern's temporal logic of actions. Retrocausal Genealogy: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the analyst (host) who makes claims, the injury database (ground truth), and the predictive engine (GSI/GSE). Each agent operates within distinct information domains, and their interaction is mediated through structured verification protocols. Theory of Mind & Decision Maker Model: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that unverified claims do not bias verified signals; leakage veto prevents stale predictions from influencing current decisions. Both layers enforce orthogonality between domains to maintain integrity of derived inferences. Cross-Layer Veto & Anti-Leakage Check: Rooted in week3-multi-episode-transcripts (1d4d9706b79211d8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

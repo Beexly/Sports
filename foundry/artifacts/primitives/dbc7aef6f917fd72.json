@@ -1,0 +1,78 @@
+{
+  "book_id": "dbc7aef6f917fd72",
+  "source_status": "COMPLETE",
+  "title": "SECURITY",
+  "file_name": "SECURITY.md",
+  "sha256": "dbc7aef6f917fd72f685a48883f8e25d49a9e3c039aa4f5363b8150c5fd35dec",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Security policy formalizes vulnerability reporting as a stochastic process with private disclosure and version-specific patching. Universal Lens: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models vulnerability likelihood and impact using reported details; conformal prediction ensures coverage of unknown risks in disclosed issues. GSI Mapping: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps vulnerability states through discrete transitions: report → review → fix coordination → disclosure; state space constrained by supported versions. GSE Mapping: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "vulnerability_reporting_process",
+      "name": "Vulnerability Reporting Process",
+      "verbatim_quote": "# Security Policy ## Reporting a Vulnerability Please do not report security vulnerabilities through public GitHub issues.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Vulnerabilities are stochastic events requiring private communication channels.",
+      "breakdown_regime": "Public disclosure leads to information leakage and exploitability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The reporting process mirrors Bayesian updating where prior knowledge is refined upon receipt of new evidence (vulnerability report).",
+        "source_operator": "vulnerability_reporting_process",
+        "telemetry": "Time between report submission and patch release indicates response efficiency."
+      }
+    },
+    {
+      "primitive_id": "supported_versions_constraint",
+      "name": "Supported Versions Constraint",
+      "verbatim_quote": "## Supported Versions Security fixes are focused on the latest published 0.x version and the current development branch.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Only active software versions receive security patches.",
+      "breakdown_regime": "Outdated versions become attack vectors post-patch release.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Version support defines a kernel of acceptable risk; older versions lie outside this kernel and are subject to increased exposure.",
+        "source_operator": "supported_versions_constraint",
+        "telemetry": "Number of patched vs. unpatched installations reflects compliance and exposure metrics."
+      }
+    },
+    {
+      "primitive_id": "private_disclosure_protocol",
+      "name": "Private Disclosure Protocol",
+      "verbatim_quote": "We will review reports and coordinate fixes before public disclosure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Coordination delays reduce immediate exploitation window.",
+      "breakdown_regime": "Failure to coordinate results in premature disclosure and widespread compromise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Private disclosure resembles a controlled experiment where variables (vulnerabilities) are isolated until validated and mitigated.",
+        "source_operator": "private_disclosure_protocol",
+        "telemetry": "Average time from report to patch deployment measures protocol efficacy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dbc7aef6f917fd72_t0",
+      "think": "The security policy establishes a structured vulnerability lifecycle governed by stochastic processes and temporal constraints. The reporting mechanism enforces a private channel to prevent information cascades that could enable exploitation. This aligns with Bayesian inference principles where initial uncertainty (unknown vulnerabilities) is reduced via empirical evidence (reports). The supported versions constraint introduces a discrete state space where only certain configurations are considered secure, effectively defining a kernel of operational safety. The private disclosure protocol acts as a temporal gatekeeper, delaying public exposure until mitigation strategies are deployed. These primitives form a dualistic framework: one side governs the probabilistic nature of threats, while the other manages their deterministic resolution within defined boundaries.\n\nDeep epistemic analysis for SECURITY (dbc7aef6f917fd72, domain=other, pages_read=1/1): Operator 'Vulnerability Reporting Process' (page 1, domain other) captures: # Security Policy ## Reporting a Vulnerability Please do not report security vulnerabilities through public GitHub issues. Assumptions: Vulnerabilities are stochastic events requiring private communication channels. Breakdown regime: Public disclosure leads to information leakage and exploitability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The reporting process mirrors Bayesian updating where prior knowledge is refined upon receipt of new evidence (vulnerability report). Operator 'Supported Versions Constraint' (page 1, domain other) captures: ## Supported Versions Security fixes are focused on the latest published 0.x version and the current development branch. Assumptions: Only active software versions receive security patches. Breakdown regime: Outdated versions become attack vectors post-patch release. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Version support defines a kernel of acceptable risk; older versions lie outside this kernel and are subject to increased exposure. Operator 'Private Disclosure Protocol' (page 1, domain other) captures: We will review reports and coordinate fixes before public disclosure. Assumptions: Coordination delays reduce immediate exploitation window. Breakdown regime: Failure to coordinate results in premature disclosure and widespread compromise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Private disclosure resembles a controlled experiment where variables (vulnerabilities) are isolated until validated and mitigated. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SECURITY (dbc7aef6f917fd72, domain=other, pages_read=1/1): Operator 'Vulnerability Reporting Process' (page 1, domain other) captures: # Security Policy ## Reporting a Vulnerability Please do not report security vulnerabilities through public GitHub issues. Assumptions: Vulnerabilities are stochastic events requiring private communication channels. Breakdown regime: Public disclosure leads to information leakage and exploitability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The reporting process mirrors Bayesian updating where prior knowledge is refined upon receipt of new evidence (vulnerability report). Operator 'Supported Versions Constraint' (page 1, domain other) captures: ## Supported Versions Security fixes are focused on the latest published 0.x version and the current development branch. Assumptions: Only active software versions receive security patches. Breakdown regime: Outdated versions become attack vectors post-patch release. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Version support defines a kernel of acceptable risk; older versions lie outside this kernel and are subject to increased exposure. Operator 'Private Disclosure Protocol' (page 1, domain other) captures: We will review reports and coordinate fixes before public disclosure. Assumptions: Coordination delays reduce immediate exploitation window. Breakdown regime: Failure to coordinate results in premature disclosure and widespread compromise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Private disclosure resembles a controlled experiment where variables (vulnerabilities) are isolated until validated and mitigated. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century information theory and cryptographic protocols, particularly those addressing secure communication under adversarial conditions. Influenced by formal methods in software engineering and modern threat modeling frameworks such as STRIDE and PASTA. Retrocausal Genealogy: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include attackers seeking to exploit vulnerabilities before patches are applied and defenders aiming to minimize exposure windows. Decision actors must balance transparency with confidentiality, ensuring that public trust is maintained without compromising system integrity during remediation phases. Theory of Mind & Decision Maker Model: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when public reporting undermines private channels, leading to race conditions between disclosure and patching. Leakage veto conditions ensure that sensitive data remains protected until coordinated action is complete, preventing unintended consequences from premature revelation. Cross-Layer Veto & Anti-Leakage Check: Rooted in SECURITY (dbc7aef6f917fd72), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

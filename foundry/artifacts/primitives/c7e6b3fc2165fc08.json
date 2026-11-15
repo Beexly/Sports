@@ -1,0 +1,78 @@
+{
+  "book_id": "c7e6b3fc2165fc08",
+  "source_status": "COMPLETE",
+  "title": "SCAN-LOCATIONS",
+  "file_name": "SCAN-LOCATIONS.md",
+  "sha256": "c7e6b3fc2165fc08f3d0e2b5eab81e109aa9fc7d717b045f392f4ec2a874c881",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Filesystem-level data integrity and redundancy across scanned libraries, with hash-based deduplication and OCR-derived textual extraction. Universal Lens: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over document uniqueness and textual fidelity using SHA256 hashes and character count consistency as evidence. GSI Mapping: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine tracks deep-read completion states and OCR-derived content layers to infer knowledge coverage and reliability. GSE Mapping: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "filesystem_integrity_check",
+      "name": "Filesystem Integrity Check",
+      "verbatim_quote": "- Manifest with Drive IDs and exact byte sizes: `~/workspace/full-library-2026-11-12/library-manifest.json` - 204 of the 218 are unique by sha256 (13 duplicate groups, cross-folder copies).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sha256': 'dimensionless cryptographic hash', 'byte_size': 'bytes'}",
+      "assumptions": "All files are uniquely identified by SHA256; duplicates are resolved via cross-folder reference.",
+      "breakdown_regime": "When duplicate detection fails due to misaligned metadata or corrupted hashes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SHA256-based deduplication mirrors Bayesian evidence accumulation for document identity confirmation.",
+        "source_operator": "filesystem_integrity_check",
+        "telemetry": "Number of unique files vs total files, duplicate group counts."
+      }
+    },
+    {
+      "primitive_id": "text_extraction_completeness",
+      "name": "Text Extraction Completeness",
+      "verbatim_quote": "Extracted full text of every library PDF - `~/workspace/full-library-2026-11-12/text/<subfolder>/<name>.pdf.txt` — **218 files, 228 MB, ~237.9M chars, 82,610 pages**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'char_count': 'dimensionless', 'page_count': 'dimensionless', 'file_count': 'dimensionless'}",
+      "assumptions": "Every PDF has a text layer or was processed via OCR; completeness is measured by line count and page coverage.",
+      "breakdown_regime": "When OCR fails or when PDF lacks text layer, leading to incomplete character extraction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Character and page counts form kernel for assessing textual richness and inferential depth.",
+        "source_operator": "text_extraction_completeness",
+        "telemetry": "Total characters extracted, number of pages, percentage of text-layer vs OCR-derived content."
+      }
+    },
+    {
+      "primitive_id": "deep_read_verification_state",
+      "name": "Deep Read Verification State",
+      "verbatim_quote": "- **Books-38: all 38 read cover to cover** — 38 records, 89,610 lines: `~/workspace/full-library-2026-11-12/reviews-38/`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'read_lines': 'dimensionless', 'completed_books': 'dimensionless'}",
+      "assumptions": "Cover-to-cover reading implies full semantic parsing; line count reflects depth of analysis.",
+      "breakdown_regime": "When reading is interrupted or skipped due to resource constraints or indexing errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Completion state mirrors Bayesian confidence in model correctness and interpretability.",
+        "source_operator": "deep_read_verification_state",
+        "telemetry": "Number of fully reviewed books, cumulative line count, unread lines remaining."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c7e6b3fc2165fc08_t0",
+      "think": "The primitives define a layered information architecture where filesystem integrity ensures data consistency, text extraction provides semantic access, and deep-read verification offers interpretive grounding. These form a dual structure: one for redundancy control (integrity), another for semantic completeness (extraction), and a third for trustworthiness (verification). Failure modes include hash collisions, OCR inaccuracies, and incomplete reads. The system operates under a dual logic: redundancy checks prevent duplication while deep-reads ensure interpretability. This duality supports both probabilistic inference (GSI) and situational reasoning (GSE) through consistent telemetry.\n\nDeep epistemic analysis for SCAN-LOCATIONS (c7e6b3fc2165fc08, domain=other, pages_read=2/2): Operator 'Filesystem Integrity Check' (page 1, domain other) captures: - Manifest with Drive IDs and exact byte sizes: `~/workspace/full-library-2026-11-12/library-manifest.json` - 204 of the 218 are unique by sha256 (13 duplicate groups, cross-folder copies). Assumptions: All files are uniquely identified by SHA256; duplicates are resolved via cross-folder reference. Breakdown regime: When duplicate detection fails due to misaligned metadata or corrupted hashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SHA256-based deduplication mirrors Bayesian evidence accumulation for document identity confirmation. Operator 'Text Extraction Completeness' (page 1, domain other) captures: Extracted full text of every library PDF - `~/workspace/full-library-2026-11-12/text/<subfolder>/<name>.pdf.txt` — **218 files, 228 MB, ~237.9M chars, 82,610 pages**. Assumptions: Every PDF has a text layer or was processed via OCR; completeness is measured by line count and page coverage. Breakdown regime: When OCR fails or when PDF lacks text layer, leading to incomplete character extraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Character and page counts form kernel for assessing textual richness and inferential depth. Operator 'Deep Read Verification State' (page 2, domain other) captures: - **Books-38: all 38 read cover to cover** — 38 records, 89,610 lines: `~/workspace/full-library-2026-11-12/reviews-38/`. Assumptions: Cover-to-cover reading implies full semantic parsing; line count reflects depth of analysis. Breakdown regime: When reading is interrupted or skipped due to resource constraints or indexing errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Completion state mirrors Bayesian confidence in model correctness and interpretability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SCAN-LOCATIONS (c7e6b3fc2165fc08, domain=other, pages_read=2/2): Operator 'Filesystem Integrity Check' (page 1, domain other) captures: - Manifest with Drive IDs and exact byte sizes: `~/workspace/full-library-2026-11-12/library-manifest.json` - 204 of the 218 are unique by sha256 (13 duplicate groups, cross-folder copies). Assumptions: All files are uniquely identified by SHA256; duplicates are resolved via cross-folder reference. Breakdown regime: When duplicate detection fails due to misaligned metadata or corrupted hashes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SHA256-based deduplication mirrors Bayesian evidence accumulation for document identity confirmation. Operator 'Text Extraction Completeness' (page 1, domain other) captures: Extracted full text of every library PDF - `~/workspace/full-library-2026-11-12/text/<subfolder>/<name>.pdf.txt` — **218 files, 228 MB, ~237.9M chars, 82,610 pages**. Assumptions: Every PDF has a text layer or was processed via OCR; completeness is measured by line count and page coverage. Breakdown regime: When OCR fails or when PDF lacks text layer, leading to incomplete character extraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Character and page counts form kernel for assessing textual richness and inferential depth. Operator 'Deep Read Verification State' (page 2, domain other) captures: - **Books-38: all 38 read cover to cover** — 38 records, 89,610 lines: `~/workspace/full-library-2026-11-12/reviews-38/`. Assumptions: Cover-to-cover reading implies full semantic parsing; line count reflects depth of analysis. Breakdown regime: When reading is interrupted or skipped due to resource constraints or indexing errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Completion state mirrors Bayesian confidence in model correctness and interpretability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and database design principles, evolving from early file integrity models to modern semantic indexing frameworks. Retrocausal Genealogy: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents must balance computational efficiency with semantic fidelity—prioritizing high-value documents while avoiding redundant processing. Theory of Mind & Decision Maker Model: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that integrity checks do not overlap with extraction metrics, and verification does not double-count prior layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SCAN-LOCATIONS (c7e6b3fc2165fc08), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

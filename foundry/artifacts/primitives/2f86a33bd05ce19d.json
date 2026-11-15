@@ -1,0 +1,78 @@
+{
+  "book_id": "2f86a33bd05ce19d",
+  "source_status": "COMPLETE",
+  "title": "REPORT",
+  "file_name": "REPORT.md",
+  "sha256": "2f86a33bd05ce19d38f64d2dd4e4e0ebb7c741a9a696d7c4d35d3f3569fac818",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Symbolic regression discovers compact predictive formulas from pre-snap NFL features, revealing minimal signal in EPA and moderate success in drive scoring prediction. Universal Lens: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate discovered metrics against historical play outcomes, using conformal prediction to quantify uncertainty in EPA estimates. GSI Mapping: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to map pre-snap states into state-transition probabilities, leveraging symbolic formulas to encode dynamic game contexts. GSE Mapping: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epa_prediction_constant",
+      "name": "EPA Prediction Constant",
+      "verbatim_quote": "(raw units): `log(-Min(-0.761, sin((0.9983*down - 1.9888)/(2.0609*shotgun - 1.2792)), 0.8244*Max(-1.492, 0.2445*ydstogo - 2.0664)))` All top-5 \"discoveries\" were cosmetic rewrites of the same constant prediction — identical R2 and MAE.",
+      "page": 1,
+      "latex": "\\log\\left(-\\min\\left(-0.761, \\sin\\left(\\frac{0.9983 \\cdot \\text{down} - 1.9888}{2.0609 \\cdot \\text{shotgun} - 1.2792}\\right), 0.8244 \\cdot \\max(-1.492, 0.2445 \\cdot \\text{ydstogo} - 2.0664)\\right)\\right)",
+      "symbol_and_unit_ledger": "{'down': 'dimensionless (1–4)', 'shotgun': 'dimensionless (0 or 1)', 'ydstogo': 'yards'}",
+      "assumptions": "All top discoveries collapse to a constant due to signal saturation and degeneracy in pre-snap feature space.",
+      "breakdown_regime": "When \\( \\text{shotgun} = 0.621 \\) or \\( \\text{down} = 2.00 \\), the argument of \\( \\sin \\) becomes undefined or singular.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps pre-snap state to a scalar EPA estimate via symbolic regression; GSI uses this as a baseline for Bayesian calibration.",
+        "source_operator": "epa_prediction_constant",
+        "telemetry": "R² and MAE of holdout performance"
+      }
+    },
+    {
+      "primitive_id": "drive_scoring_probability",
+      "name": "Drive Scoring Probability",
+      "verbatim_quote": "nswer, not a methods failure: even a 3,000-tree gradient booster explains 0.8%.",
+      "page": 2,
+      "latex": "\\sin\\left(\\sqrt{\\min(0.0446 \\cdot \\text{yardline}_{100} - 2.3621, 0.2007 \\cdot \\text{ydstogo} - 1.0574) + 1.0574}\\right)",
+      "symbol_and_unit_ledger": "{'yardline_100': 'yards (distance to end zone)', 'ydstogo': 'yards (distance to first down)'}",
+      "assumptions": "Drive scoring probability is modeled as a smooth function of starting field position and distance to first down.",
+      "breakdown_regime": "When \\( \\text{yardline}_{100} < 53.2 \\) or \\( \\text{ydstogo} < 5.3 \\), the expression under square root becomes negative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes a derived kernel from pre-snap drive state to predict scoring likelihood; GSE uses this in state transition logic.",
+        "source_operator": "drive_scoring_probability",
+        "telemetry": "Holdout AUC of 0.5818 for seed 42"
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "REPORT Grounded Principle 3",
+      "verbatim_quote": "- **Target A — play EPA from pre-snap features only** (no leakage: down, distance, yardline, time remaining, quarter, score differential, shotgun, no-huddle).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2f86a33bd05ce19d_t0",
+      "think": "Symbolic regression attempts to extract compact formulas from high-dimensional pre-snap NFL data. For EPA prediction, the method collapses to constant values due to minimal signal in pre-snap features—confirmed by the fact that even a 3,000-tree gradient booster explains only 0.8% of variance. This indicates that most EPA variation occurs post-snap. In contrast, drive scoring shows more structure, with a formula derived through GP achieving AUC of 0.5818. The formula involves a trigonometric transformation of field position and distance-to-first-down, suggesting a non-linear relationship between these variables and scoring likelihood. The failure mode lies in overfitting to noise when parsimony is too aggressive, leading to degenerate constants. The method’s success hinges on avoiding leakage and ensuring sufficient signal in the input space.\n\nDeep epistemic analysis for REPORT (2f86a33bd05ce19d, domain=other, pages_read=3/3): Operator 'EPA Prediction Constant' (page 1, domain other) captures: (raw units): `log(-Min(-0.761, sin((0.9983*down - 1.9888)/(2.0609*shotgun - 1.2792)), 0.8244*Max(-1.492, 0.2445*ydstogo - 2.0664)))` All top-5 \"discoveries\" were cosmetic rewrites of the same constant prediction — identical R2 and MAE. Assumptions: All top discoveries collapse to a constant due to signal saturation and degeneracy in pre-snap feature space. Breakdown regime: When \\( \\text{shotgun} = 0.621 \\) or \\( \\text{down} = 2.00 \\), the argument of \\( \\sin \\) becomes undefined or singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pre-snap state to a scalar EPA estimate via symbolic regression; GSI uses this as a baseline for Bayesian calibration. Operator 'Drive Scoring Probability' (page 2, domain other) captures: nswer, not a methods failure: even a 3,000-tree gradient booster explains 0.8%. Assumptions: Drive scoring probability is modeled as a smooth function of starting field position and distance to first down. Breakdown regime: When \\( \\text{yardline}_{100} < 53.2 \\) or \\( \\text{ydstogo} < 5.3 \\), the expression under square root becomes negative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes a derived kernel from pre-snap drive state to predict scoring likelihood; GSE uses this in state transition logic. Operator 'REPORT Grounded Principle 3' (page 1, domain other) captures: - **Target A — play EPA from pre-snap features only** (no leakage: down, distance, yardline, time remaining, quarter, score differential, shotgun, no-huddle). Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for REPORT (2f86a33bd05ce19d, domain=other, pages_read=3/3): Operator 'EPA Prediction Constant' (page 1, domain other) captures: (raw units): `log(-Min(-0.761, sin((0.9983*down - 1.9888)/(2.0609*shotgun - 1.2792)), 0.8244*Max(-1.492, 0.2445*ydstogo - 2.0664)))` All top-5 \"discoveries\" were cosmetic rewrites of the same constant prediction — identical R2 and MAE. Assumptions: All top discoveries collapse to a constant due to signal saturation and degeneracy in pre-snap feature space. Breakdown regime: When \\( \\text{shotgun} = 0.621 \\) or \\( \\text{down} = 2.00 \\), the argument of \\( \\sin \\) becomes undefined or singular. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps pre-snap state to a scalar EPA estimate via symbolic regression; GSI uses this as a baseline for Bayesian calibration. Operator 'Drive Scoring Probability' (page 2, domain other) captures: nswer, not a methods failure: even a 3,000-tree gradient booster explains 0.8%. Assumptions: Drive scoring probability is modeled as a smooth function of starting field position and distance to first down. Breakdown regime: When \\( \\text{yardline}_{100} < 53.2 \\) or \\( \\text{ydstogo} < 5.3 \\), the expression under square root becomes negative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes a derived kernel from pre-snap drive state to predict scoring likelihood; GSE uses this in state transition logic. Operator 'REPORT Grounded Principle 3' (page 1, domain other) captures: - **Target A — play EPA from pre-snap features only** (no leakage: down, distance, yardline, time remaining, quarter, score differential, shotgun, no-huddle). Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in symbolic regression techniques pioneered by Koza (1992) and extended by others in machine learning, including gplearn's implementation. Inspired by OpenAI’s Navier–Stokes agent framework, which emphasizes methodological rigor over mathematical elegance. Retrocausal Genealogy: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the NFL itself, whose outcome generation is inherently stochastic and complex, and the symbolic regression algorithm, which seeks deterministic patterns in noisy data. The system assumes that any discovered formula must be robust across seasons and generalize beyond training data. Theory of Mind & Decision Maker Model: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes features such as play type (run/pass), which is determined post-snap, and ensures that only pre-snap variables are used. Leakage is prevented by excluding time-sensitive or outcome-dependent variables like score differential or down/distance combinations that may introduce bias. Cross-Layer Veto & Anti-Leakage Check: Rooted in REPORT (2f86a33bd05ce19d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

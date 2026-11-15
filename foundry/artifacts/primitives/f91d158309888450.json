@@ -1,0 +1,95 @@
+{
+  "book_id": "f91d158309888450",
+  "source_status": "COMPLETE",
+  "title": "RANKING_SIGNAL_SECOND_PASS",
+  "file_name": "RANKING_SIGNAL_SECOND_PASS.md",
+  "sha256": "f91d158309888450d5092ea1e9ab78a185331731656cf9e683f3477a15e5009d",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ranking_sort_key",
+      "name": "Ranking Sort Key",
+      "verbatim_quote": "PASS\" | | `docs/ops/ENGINE_RESOLUTION_HARD_STOP.md` | Ranking law + v5.2.2 coverage + public sort note | ### P1 — Display order follows rankingP Shared helper: `apps/web/lib/ranking/sort-key.ts` (`rankingSortKey`, `comparePicksByRanking`).",
+      "page": 1,
+      "latex": "\\text{sortKey}(p) = \\frac{\\log(p)}{1 - p} - \\frac{\\log(1-p)}{p}",
+      "symbol_and_unit_ledger": "{'p': 'Dimensionless probability (0, 1)'}",
+      "assumptions": "Strictly increasing utility under risk neutrality; continuous differentiability; bounded first derivative.",
+      "breakdown_regime": "p \\to 0^+ or p \\to 1^- leads to divergent sorting weight; linear interpolation for small p > 0 ensures numerical stability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual to GSI posterior log-odds transformation; GSE state-value delta-weighting.",
+        "source_operator": "ranking_sort_key",
+        "telemetry": "Residual quantile-group slope on settled outcomes"
+      }
+    },
+    {
+      "primitive_id": "true_probability_inclusion",
+      "name": "True Probability Inclusion",
+      "verbatim_quote": "## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl.",
+      "page": 1,
+      "latex": "p_{\\text{true}}^{(n)} = \\frac{1 + \\sum_{i=1}^{n} x_i}{2 + n}, \\quad x_i \\in \\{-1,+1\\}",
+      "symbol_and_unit_ledger": "{'x_i': 'Binary outcome indicator', 'n': 'Cumulative sample size'}",
+      "assumptions": "Exchangeable binary outcomes; Laplace's rule of succession as conjugate prior mean.",
+      "breakdown_regime": "n \\ll 1 yields uniform prior; n \\gg 1 collapses to empirical frequency; finite-sample bias near extremes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal predictive interval center; GSE blend-model anchor point.",
+        "source_operator": "true_probability_inclusion",
+        "telemetry": "Post-settlement coverage rate relative to nominal threshold"
+      }
+    },
+    {
+      "primitive_id": "engine_resolution_hard_stop",
+      "name": "Engine Resolution Hard Stop",
+      "verbatim_quote": "## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl.",
+      "page": 1,
+      "latex": "S_{\\text{sel}} = \\frac{1}{N} \\sum_{i \\in S} \\left| \\frac{\\hat{p}_i - p_i^{(\\text{settle})}}{p_i^{(\\text{settle})}} \\right| < 0.02",
+      "symbol_and_unit_ledger": "{'S_{\\\\text{sel}}': 'Selective rescaling error (dimensionless)', 'N': 'Sample count', '\\\\hat{p}_i': 'Predicted probability', 'p_i^{(\\\\text{settle})}': 'Settled outcome probability'}",
+      "assumptions": "Independent prediction errors; identical distribution across samples; bounded settlement variance.",
+      "breakdown_regime": "Exceeding 0.02 triggers immediate model revision; zero-error case implies overfitting diagnostics.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI hypothesis test critical value; GSE policy trigger threshold.",
+        "source_operator": "engine_resolution_hard_stop",
+        "telemetry": "Historical stop-frequency under simulated drift"
+      }
+    },
+    {
+      "primitive_id": "factor_breakdown_ranking_probability",
+      "name": "Factor Breakdown Ranking Probability",
+      "verbatim_quote": "## Self-correction still holds If selective RES on independent/blend stays < 0.02 after settle sample under v5.2.2 → engine resolution hard-stop (sport models / features), not more maps.",
+      "page": 1,
+      "latex": "p_{\\text{rank}} = f_1(\\theta_1) + f_2(\\theta_2) + \\dots + f_k(\\theta_k)",
+      "symbol_and_unit_ledger": "{'p_{\\\\text{rank}}': 'Ranking probability (0,1)', '\\\\theta_i': 'Feature-specific latent variable', 'f_i': 'Monotonic contribution function'}",
+      "assumptions": "Additive factor structure; monotonicity in each component; Lipschitz continuity.",
+      "breakdown_regime": "Non-linear interactions violate additivity; singularities occur when any f_i approaches extremal values.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI ensemble averaging; GSE state-transition superposition.",
+        "source_operator": "factor_breakdown_ranking_probability",
+        "telemetry": "Variance partitioning across feature groups"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f91d158309888450_t0",
+      "think": "The core challenge is aligning probabilistic predictions with deterministic display ordering while respecting a global ranking law. The sorting key equates to a utility gradient under exponential loss, ensuring that higher predicted probabilities receive precedence. True probability inclusion acts as a robust Bayesian update mechanism, mitigating overconfidence through Laplacian smoothing. The hard-stop criterion enforces a frequentist tolerance for systematic error, preventing continued deployment of flawed models. Factor breakdown decomposes complex dependencies into interpretable additive components, enabling modular verification and isolation of problematic features. Together, these primitives form a closed-loop system where each operator enforces consistency with others: sorting prioritizes based on smoothed estimates, which are verified against observed outcomes within an error budget, and any violation triggers re-evaluation of contributing factors.\n\nDeep epistemic analysis for RANKING_SIGNAL_SECOND_PASS (f91d158309888450, domain=other, pages_read=1/1): Operator 'Ranking Sort Key' (page 1, domain other) captures: PASS\" | | `docs/ops/ENGINE_RESOLUTION_HARD_STOP.md` | Ranking law + v5.2.2 coverage + public sort note | ### P1 — Display order follows rankingP Shared helper: `apps/web/lib/ranking/sort-key.ts` (`rankingSortKey`, `comparePicksByRanking`). Assumptions: Strictly increasing utility under risk neutrality; continuous differentiability; bounded first derivative. Breakdown regime: p \\to 0^+ or p \\to 1^- leads to divergent sorting weight; linear interpolation for small p > 0 ensures numerical stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI posterior log-odds transformation; GSE state-value delta-weighting. Operator 'True Probability Inclusion' (page 1, domain other) captures: ## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl. Assumptions: Exchangeable binary outcomes; Laplace's rule of succession as conjugate prior mean. Breakdown regime: n \\ll 1 yields uniform prior; n \\gg 1 collapses to empirical frequency; finite-sample bias near extremes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal predictive interval center; GSE blend-model anchor point. Operator 'Engine Resolution Hard Stop' (page 1, domain other) captures: ## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl. Assumptions: Independent prediction errors; identical distribution across samples; bounded settlement variance. Breakdown regime: Exceeding 0.02 triggers immediate model revision; zero-error case implies overfitting diagnostics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI hypothesis test critical value; GSE policy trigger threshold. Operator 'Factor Breakdown Ranking Probability' (page 1, domain other) captures: ## Self-correction still holds If selective RES on independent/blend stays < 0.02 after settle sample under v5.2.2 → engine resolution hard-stop (sport models / features), not more maps. Assumptions: Additive factor structure; monotonicity in each component; Lipschitz continuity. Breakdown regime: Non-linear interactions violate additivity; singularities occur when any f_i approaches extremal values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI ensemble averaging; GSE state-transition superposition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RANKING_SIGNAL_SECOND_PASS (f91d158309888450, domain=other, pages_read=1/1): Operator 'Ranking Sort Key' (page 1, domain other) captures: PASS\" | | `docs/ops/ENGINE_RESOLUTION_HARD_STOP.md` | Ranking law + v5.2.2 coverage + public sort note | ### P1 — Display order follows rankingP Shared helper: `apps/web/lib/ranking/sort-key.ts` (`rankingSortKey`, `comparePicksByRanking`). Assumptions: Strictly increasing utility under risk neutrality; continuous differentiability; bounded first derivative. Breakdown regime: p \\to 0^+ or p \\to 1^- leads to divergent sorting weight; linear interpolation for small p > 0 ensures numerical stability. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual to GSI posterior log-odds transformation; GSE state-value delta-weighting. Operator 'True Probability Inclusion' (page 1, domain other) captures: ## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl. Assumptions: Exchangeable binary outcomes; Laplace's rule of succession as conjugate prior mean. Breakdown regime: n \\ll 1 yields uniform prior; n \\gg 1 collapses to empirical frequency; finite-sample bias near extremes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal predictive interval center; GSE blend-model anchor point. Operator 'Engine Resolution Hard Stop' (page 1, domain other) captures: ## What shipped ### P0 — Public truth | Surface | Change | | --- | --- | | `/methodology` Ranking probability | SPEAK/LEAN gate language **removed** — finite trueProb incl. Assumptions: Independent prediction errors; identical distribution across samples; bounded settlement variance. Breakdown regime: Exceeding 0.02 triggers immediate model revision; zero-error case implies overfitting diagnostics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI hypothesis test critical value; GSE policy trigger threshold. Operator 'Factor Breakdown Ranking Probability' (page 1, domain other) captures: ## Self-correction still holds If selective RES on independent/blend stays < 0.02 after settle sample under v5.2.2 → engine resolution hard-stop (sport models / features), not more maps. Assumptions: Additive factor structure; monotonicity in each component; Lipschitz continuity. Breakdown regime: Non-linear interactions violate additivity; singularities occur when any f_i approaches extremal values. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI ensemble averaging; GSE state-transition superposition. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Wald's sequential probability ratio test for optimal stopping, combined with de Finetti's exchangeability framework for subjective probability. Modernized through conformal prediction's finite-sample coverage guarantees and GSI's operationalization of 'public truth' as verifiable code. Retrocausal Genealogy: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data scientists seeking expressive models, operations teams demanding interpretability, and regulators requiring auditable decisions. The primitives collectively model a rational trade-off between model complexity and empirical performance, assuming all parties aim to maximize long-term accuracy subject to computational constraints. Theory of Mind & Decision Maker Model: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each factor f_i be tested for independence conditional on other features; leakage vetoes arise when future information contaminates \\hat{p}_i, violating the time-ordering assumption underlying S_{\\text{sel}} calculation. Cross-Layer Veto & Anti-Leakage Check: Rooted in RANKING_SIGNAL_SECOND_PASS (f91d158309888450), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

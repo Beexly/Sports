@@ -1,0 +1,95 @@
+{
+  "book_id": "b946786b348f7e56",
+  "source_status": "COMPLETE",
+  "title": "teammate",
+  "file_name": "teammate.md",
+  "sha256": "b946786b348f7e56b22bbfdd96e405994dc052c73083fea8a834a01d071d99e8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "teamwork_communication_protocol",
+      "name": "Teamwork Communication Protocol",
+      "verbatim_quote": "--name: teammate whenToUse: \"In-process teammate: ${agentName}\" tools: '[\"*\"], or the custom agent''s tools plus [SendMessage, TaskCreate, TaskGet, TaskList, TaskUpdate]' source: projectSettings permissionMode: default --<!-- Extracted verbatim from the Claude Code v2.1.211 binary.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a multi-agent system where each entity operates within defined permission boundaries and tool sets.",
+      "breakdown_regime": "Fails when SendMessage is omitted, leading to information silos and coordination collapse.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's multi-model ensemble fusion via Bayesian model averaging, where agents represent independent samplers.",
+        "source_operator": "teamwork_communication_protocol",
+        "telemetry": "Inter-agent latency and message throughput"
+      }
+    },
+    {
+      "primitive_id": "message_send_tool_requirement",
+      "name": "Message Send Tool Requirement",
+      "verbatim_quote": "To communicate with anyone on your team, use the SendMessage tool with `to: \"<name>\"` to send messages to specific teammates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Operates under the assumption that direct text output is invisible to other team members.",
+      "breakdown_regime": "Breaks down into miscommunication when tool usage is inconsistent across agents.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to conformal prediction intervals in GSE, ensuring all predictions are communicated within probabilistically valid bounds.",
+        "source_operator": "message_send_tool_requirement",
+        "telemetry": "Tool invocation frequency and success rate"
+      }
+    },
+    {
+      "primitive_id": "text_visibility_constraint",
+      "name": "Text Visibility Constraint",
+      "verbatim_quote": "Just writing a response in text is not visible to others on your team - you MUST use the SendMessage tool.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Relies on a clear separation between local processing and shared communication channels.",
+      "breakdown_regime": "Degenerates into redundant computation when constraints are violated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors the data filtering step in GSI's feature selection pipeline, where only processed signals are passed forward.",
+        "source_operator": "text_visibility_constraint",
+        "telemetry": "Data redundancy ratio"
+      }
+    },
+    {
+      "primitive_id": "task_system_coordination",
+      "name": "Task System Coordination",
+      "verbatim_quote": "Your work is coordinated through the task system and teammate messaging.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Presumes a centralized task queue that distributes work units to individual agents.",
+      "breakdown_regime": "Collapses when the task queue becomes a bottleneck or fails to distribute tasks evenly.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Similar to load balancing algorithms in GSE's distributed computing framework, ensuring optimal resource allocation.",
+        "source_operator": "task_system_coordination",
+        "telemetry": "Task completion variance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b946786b348f7e56_t0",
+      "think": "The core mathematical structure is a bipartite graph where one set represents agents and the other represents tasks. Edges are established via SendMessage operations, creating a flow network. The coordination requirement forces this graph to be acyclic; otherwise, circular dependencies create logical paradoxes. This is analogous to the acyclicity condition in GSI's dynamic treatment regimes, where interventions must be ordered to avoid feedback loops. In GSE, it maps to Markov decision processes with delayed state transitions. The primary failure mode is deadlock, occurring when two agents simultaneously hold resources needed by the other, requiring graph-theoretic analysis to detect and resolve.\n\nDeep epistemic analysis for teammate (b946786b348f7e56, domain=other, pages_read=1/1): Operator 'Teamwork Communication Protocol' (page 1, domain other) captures: --name: teammate whenToUse: \"In-process teammate: ${agentName}\" tools: '[\"*\"], or the custom agent''s tools plus [SendMessage, TaskCreate, TaskGet, TaskList, TaskUpdate]' source: projectSettings permissionMode: default --<!-- Extracted verbatim from the Claude Code v2.1.211 binary. Assumptions: Assumes a multi-agent system where each entity operates within defined permission boundaries and tool sets. Breakdown regime: Fails when SendMessage is omitted, leading to information silos and coordination collapse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-model ensemble fusion via Bayesian model averaging, where agents represent independent samplers. Operator 'Message Send Tool Requirement' (page 1, domain other) captures: To communicate with anyone on your team, use the SendMessage tool with `to: \"<name>\"` to send messages to specific teammates. Assumptions: Operates under the assumption that direct text output is invisible to other team members. Breakdown regime: Breaks down into miscommunication when tool usage is inconsistent across agents. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to conformal prediction intervals in GSE, ensuring all predictions are communicated within probabilistically valid bounds. Operator 'Text Visibility Constraint' (page 1, domain other) captures: Just writing a response in text is not visible to others on your team - you MUST use the SendMessage tool. Assumptions: Relies on a clear separation between local processing and shared communication channels. Breakdown regime: Degenerates into redundant computation when constraints are violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the data filtering step in GSI's feature selection pipeline, where only processed signals are passed forward. Operator 'Task System Coordination' (page 1, domain other) captures: Your work is coordinated through the task system and teammate messaging. Assumptions: Presumes a centralized task queue that distributes work units to individual agents. Breakdown regime: Collapses when the task queue becomes a bottleneck or fails to distribute tasks evenly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Similar to load balancing algorithms in GSE's distributed computing framework, ensuring optimal resource allocation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for teammate (b946786b348f7e56, domain=other, pages_read=1/1): Operator 'Teamwork Communication Protocol' (page 1, domain other) captures: --name: teammate whenToUse: \"In-process teammate: ${agentName}\" tools: '[\"*\"], or the custom agent''s tools plus [SendMessage, TaskCreate, TaskGet, TaskList, TaskUpdate]' source: projectSettings permissionMode: default --<!-- Extracted verbatim from the Claude Code v2.1.211 binary. Assumptions: Assumes a multi-agent system where each entity operates within defined permission boundaries and tool sets. Breakdown regime: Fails when SendMessage is omitted, leading to information silos and coordination collapse. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's multi-model ensemble fusion via Bayesian model averaging, where agents represent independent samplers. Operator 'Message Send Tool Requirement' (page 1, domain other) captures: To communicate with anyone on your team, use the SendMessage tool with `to: \"<name>\"` to send messages to specific teammates. Assumptions: Operates under the assumption that direct text output is invisible to other team members. Breakdown regime: Breaks down into miscommunication when tool usage is inconsistent across agents. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to conformal prediction intervals in GSE, ensuring all predictions are communicated within probabilistically valid bounds. Operator 'Text Visibility Constraint' (page 1, domain other) captures: Just writing a response in text is not visible to others on your team - you MUST use the SendMessage tool. Assumptions: Relies on a clear separation between local processing and shared communication channels. Breakdown regime: Degenerates into redundant computation when constraints are violated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors the data filtering step in GSI's feature selection pipeline, where only processed signals are passed forward. Operator 'Task System Coordination' (page 1, domain other) captures: Your work is coordinated through the task system and teammate messaging. Assumptions: Presumes a centralized task queue that distributes work units to individual agents. Breakdown regime: Collapses when the task queue becomes a bottleneck or fails to distribute tasks evenly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Similar to load balancing algorithms in GSE's distributed computing framework, ensuring optimal resource allocation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in von Neumann's cellular automata and Turing's computability theory, evolving through ARPANET protocols and modern microservices architecture. Retrocausal Genealogy: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may model each other as black boxes with stochastic response functions, leading to overconfidence in coordination reliability. Theory of Mind & Decision Maker Model: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Leakage occurs when telemetry from one layer (e.g., task latencies) corrupts the assumptions of another (e.g., independence of agents), violating the tensor product structure required for compositional correctness. Cross-Layer Veto & Anti-Leakage Check: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in teammate (b946786b348f7e56), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

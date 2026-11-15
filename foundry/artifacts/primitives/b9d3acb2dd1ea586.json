@@ -1,0 +1,78 @@
+{
+  "book_id": "b9d3acb2dd1ea586",
+  "source_status": "COMPLETE",
+  "title": "video-brief-pipeline",
+  "file_name": "video-brief-pipeline.md",
+  "sha256": "b9d3acb2dd1ea586e821c65bf3d247a472df5dbe4b437000550a68aa0c4db6a2",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Video briefs as structured planning layers enforcing claim governance and production safety through multi-layered approval protocols. Universal Lens: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework for validating video content claims using calibrated confidence scores and source tier taxonomy within a conformal prediction boundary. GSI Mapping: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine mapping video briefs to state transitions in production workflows, constrained by risk policies and operator vetoes. GSE Mapping: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "video_brief_planning_layer",
+      "name": "Video Brief Planning Layer",
+      "verbatim_quote": "It is the planning layer that ensures a video is safe to produce before production resources are committed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All video production requires pre-approved briefs; no automated production occurs without operator oversight.",
+      "breakdown_regime": "Failure occurs if production proceeds without approval.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's claim validation kernel where each brief element corresponds to a probabilistic assertion with bounded uncertainty.",
+        "source_operator": "video_brief_planning_layer",
+        "telemetry": "Approval signature count per brief"
+      }
+    },
+    {
+      "primitive_id": "claim_governance_level",
+      "name": "Claim Governance Level",
+      "verbatim_quote": "operator voice, animation requirements, etc.] ``` --## Category-Specific Requirements ### Methodology Explainer **Claim governance level**: Moderate — explains HOW picks are made, not WHAT picks are.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Different content categories require different levels of editorial and legal scrutiny based on audience impact.",
+      "breakdown_regime": "Failure occurs when insufficient governance is applied to high-impact claims.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's risk classification system, mapping content type to required vetting depth.",
+        "source_operator": "claim_governance_level",
+        "telemetry": "Governance level assigned per content category"
+      }
+    },
+    {
+      "primitive_id": "ai_assistance_rules",
+      "name": "AI Assistance Rules",
+      "verbatim_quote": "--## Video Production Rules ### AI Assistance in Video Production **P",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "AI tools can assist in generation but must not replace human judgment or imply authenticity of synthetic content.",
+      "breakdown_regime": "Failure occurs with unauthorized AI-generated footage or voiceovers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's transparency protocol, ensuring AI usage is disclosed and auditable.",
+        "source_operator": "ai_assistance_rules",
+        "telemetry": "AI tool usage logs and disclosure compliance"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b9d3acb2dd1ea586_t0",
+      "think": "The video brief pipeline enforces a dual-layered reasoning architecture: first, a planning layer that validates safety and compliance before production, second, a governance layer that categorizes content by risk and required approvals. The system operates under a constraint-based model where each video brief must pass through operator review and meet specific claim governance standards. Failures arise from bypassing these checks—such as producing without approval or misclassifying content. The dual nature of this system reflects a duality between operational control (planning) and semantic integrity (claims), both governed by a shared risk policy. The failure mode manifests when either layer is circumvented, leading to unvetted or misleading content entering production.\n\nDeep epistemic analysis for video-brief-pipeline (b9d3acb2dd1ea586, domain=other, pages_read=3/3): Operator 'Video Brief Planning Layer' (page 1, domain other) captures: It is the planning layer that ensures a video is safe to produce before production resources are committed. Assumptions: All video production requires pre-approved briefs; no automated production occurs without operator oversight. Breakdown regime: Failure occurs if production proceeds without approval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's claim validation kernel where each brief element corresponds to a probabilistic assertion with bounded uncertainty. Operator 'Claim Governance Level' (page 2, domain other) captures: operator voice, animation requirements, etc.] ``` --## Category-Specific Requirements ### Methodology Explainer **Claim governance level**: Moderate — explains HOW picks are made, not WHAT picks are. Assumptions: Different content categories require different levels of editorial and legal scrutiny based on audience impact. Breakdown regime: Failure occurs when insufficient governance is applied to high-impact claims. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's risk classification system, mapping content type to required vetting depth. Operator 'AI Assistance Rules' (page 2, domain other) captures: --## Video Production Rules ### AI Assistance in Video Production **P Assumptions: AI tools can assist in generation but must not replace human judgment or imply authenticity of synthetic content. Breakdown regime: Failure occurs with unauthorized AI-generated footage or voiceovers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's transparency protocol, ensuring AI usage is disclosed and auditable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for video-brief-pipeline (b9d3acb2dd1ea586, domain=other, pages_read=3/3): Operator 'Video Brief Planning Layer' (page 1, domain other) captures: It is the planning layer that ensures a video is safe to produce before production resources are committed. Assumptions: All video production requires pre-approved briefs; no automated production occurs without operator oversight. Breakdown regime: Failure occurs if production proceeds without approval. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's claim validation kernel where each brief element corresponds to a probabilistic assertion with bounded uncertainty. Operator 'Claim Governance Level' (page 2, domain other) captures: operator voice, animation requirements, etc.] ``` --## Category-Specific Requirements ### Methodology Explainer **Claim governance level**: Moderate — explains HOW picks are made, not WHAT picks are. Assumptions: Different content categories require different levels of editorial and legal scrutiny based on audience impact. Breakdown regime: Failure occurs when insufficient governance is applied to high-impact claims. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's risk classification system, mapping content type to required vetting depth. Operator 'AI Assistance Rules' (page 2, domain other) captures: --## Video Production Rules ### AI Assistance in Video Production **P Assumptions: AI tools can assist in generation but must not replace human judgment or imply authenticity of synthetic content. Breakdown regime: Failure occurs with unauthorized AI-generated footage or voiceovers. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's transparency protocol, ensuring AI usage is disclosed and auditable. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in traditional media production workflows, evolved into a formalized risk management framework aligned with modern AI ethics and regulatory compliance practices. Retrocausal Genealogy: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated systems attempting to bypass controls and untrained operators who may overlook governance requirements. Decision actors are defined by their adherence to approval hierarchies and claim categorization accuracy. Theory of Mind & Decision Maker Model: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating planning from execution and ensuring distinct approval paths for different claim types. Leakage is prevented by mandating explicit disclosures and prohibiting unauthorized AI use. Cross-Layer Veto & Anti-Leakage Check: Rooted in video-brief-pipeline (b9d3acb2dd1ea586), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

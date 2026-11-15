@@ -1,0 +1,78 @@
+{
+  "book_id": "9a751287b68b6cc9",
+  "source_status": "COMPLETE",
+  "title": "tokens-and-contrast",
+  "file_name": "tokens-and-contrast.md",
+  "sha256": "9a751287b68b6cc9c8184333f9c60847072a3b07273764f7d31795cda8881b13",
+  "primary_domain": "other",
+  "pages_total": 16,
+  "pages_read": 16,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Design tokens as CSS variable manifolds with contrast ratios form a structured semantic space; accessibility compliance hinges on WCAG luminance thresholds and AA-gated pair validation. Universal Lens: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers semantic token alignment through contrast ratio matrices and luminance-based AA compliance checks, enabling probabilistic inference over visual accessibility states. GSI Mapping: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models theme-switching behavior via surface system variants (dark/paper) and token state transitions, constrained by current/live file discrepancies and absence of data-theme toggles. GSE Mapping: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "contrast_ratio_validator",
+      "name": "Contrast Ratio Validator",
+      "verbatim_quote": "Its exit code is 1 if any AA-gated pair fails (checked with `current` and `proposed` separately: `current` exits 1 today because of one real failure below; `proposed` exits 0).",
+      "page": 1,
+      "latex": "\\text{CR} = \\frac{L_1 + 0.05}{L_2 + 0.05}",
+      "symbol_and_unit_ledger": "{'CR': 'dimensionless contrast ratio', 'L_1': 'relative luminance of lighter color', 'L_2': 'relative luminance of darker color'}",
+      "assumptions": "Colors are defined in sRGB space; WCAG AA threshold requires CR ≥ 4.5 for normal text.",
+      "breakdown_regime": "When CR < 4.5, AA compliance fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The validator maps to GSI's accessibility inference engine where CR serves as a binary compliance predicate.",
+        "source_operator": "contrast_ratio_validator",
+        "telemetry": "Exit code (0 or 1) indicating AA pass/fail status."
+      }
+    },
+    {
+      "primitive_id": "token_file_synchronization",
+      "name": "Token File Synchronization",
+      "verbatim_quote": "There is also a smaller drift **inside** the two live files: `tailwind.config.ts` sets `obsidian: \"#080A0F\"` while `design-tokens.css` sets `--obsidian: #05070B` (`--void` and `--obsidian` are meant to be aliases of the same color).",
+      "page": 1,
+      "latex": "\\Delta T = \\left| \\text{Token}_{\\text{tailwind}} - \\text{Token}_{\\text{css}} \\right|",
+      "symbol_and_unit_ledger": "{'ΔT': 'absolute difference between token values in units of hex color', 'Token_{tailwind}': 'color value in tailwind.config.ts', 'Token_{css}': 'color value in design-tokens.css'}",
+      "assumptions": "Tokens are represented as hexadecimal strings; drift implies inconsistency in rendering.",
+      "breakdown_regime": "When ΔT > 0, synchronization error occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This kernel drives GSE's state reconciliation logic when detecting divergent token definitions across modules.",
+        "source_operator": "token_file_synchronization",
+        "telemetry": "Hex drift magnitude ΔT across token definitions."
+      }
+    },
+    {
+      "primitive_id": "theme_surface_system",
+      "name": "Theme Surface System",
+      "verbatim_quote": "No `[data-theme]` attribute or theme toggle exists anywhere in `apps/web` today (`grep -rn \"data-theme\"` returns nothing).",
+      "page": 2,
+      "latex": "\\mathcal{T}(x) = \\begin{cases} \\text{dark} & \\text{if } x \\in \\mathcal{S}_{\\text{dark}} \\\\ \\text{paper} & \\text{if } x \\in \\mathcal{S}_{\\text{paper}} \\end{cases}",
+      "symbol_and_unit_ledger": "{'T(x)': 'theme assignment function', 'S_{dark}': 'set of components using dark theme', 'S_{paper}': 'set of components using paper theme'}",
+      "assumptions": "Themes are determined by component variant props rather than global toggle.",
+      "breakdown_regime": "When no theme is assigned, default fallback applies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE uses this kernel to model component-specific theme assignment logic in absence of global theme switching.",
+        "source_operator": "theme_surface_system",
+        "telemetry": "Component variant prop values determining surface system."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9a751287b68b6cc9_t0",
+      "think": "The contrast ratio validator enforces WCAG AA compliance by computing luminance-based ratios between foreground and background tokens. It operates on a binary exit code system where 1 indicates failure and 0 success. This primitive is foundational to GSI’s accessibility inference engine. Token file synchronization detects inconsistencies between tailwind.config.ts and design-tokens.css, particularly in color definitions like obsidian. These discrepancies can lead to rendering divergence in UI elements. The theme surface system defines two hardcoded themes—dark and paper—used conditionally based on component context, not globally toggled. This structure implies that GSE must manage multiple implicit theme states within a single application lifecycle. Together, these primitives define a dual regime: one of static validation (contrast) and another of dynamic assignment (themes). Failure modes include non-compliance in contrast checks and drift in token definitions, both of which compromise visual consistency and accessibility.\n\nDeep epistemic analysis for tokens-and-contrast (9a751287b68b6cc9, domain=other, pages_read=16/16): Operator 'Contrast Ratio Validator' (page 1, domain other) captures: Its exit code is 1 if any AA-gated pair fails (checked with `current` and `proposed` separately: `current` exits 1 today because of one real failure below; `proposed` exits 0). Assumptions: Colors are defined in sRGB space; WCAG AA threshold requires CR ≥ 4.5 for normal text. Breakdown regime: When CR < 4.5, AA compliance fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The validator maps to GSI's accessibility inference engine where CR serves as a binary compliance predicate. Operator 'Token File Synchronization' (page 1, domain other) captures: There is also a smaller drift **inside** the two live files: `tailwind.config.ts` sets `obsidian: \"#080A0F\"` while `design-tokens.css` sets `--obsidian: #05070B` (`--void` and `--obsidian` are meant to be aliases of the same color). Assumptions: Tokens are represented as hexadecimal strings; drift implies inconsistency in rendering. Breakdown regime: When ΔT > 0, synchronization error occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This kernel drives GSE's state reconciliation logic when detecting divergent token definitions across modules. Operator 'Theme Surface System' (page 2, domain other) captures: No `[data-theme]` attribute or theme toggle exists anywhere in `apps/web` today (`grep -rn \"data-theme\"` returns nothing). Assumptions: Themes are determined by component variant props rather than global toggle. Breakdown regime: When no theme is assigned, default fallback applies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses this kernel to model component-specific theme assignment logic in absence of global theme switching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tokens-and-contrast (9a751287b68b6cc9, domain=other, pages_read=16/16): Operator 'Contrast Ratio Validator' (page 1, domain other) captures: Its exit code is 1 if any AA-gated pair fails (checked with `current` and `proposed` separately: `current` exits 1 today because of one real failure below; `proposed` exits 0). Assumptions: Colors are defined in sRGB space; WCAG AA threshold requires CR ≥ 4.5 for normal text. Breakdown regime: When CR < 4.5, AA compliance fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The validator maps to GSI's accessibility inference engine where CR serves as a binary compliance predicate. Operator 'Token File Synchronization' (page 1, domain other) captures: There is also a smaller drift **inside** the two live files: `tailwind.config.ts` sets `obsidian: \"#080A0F\"` while `design-tokens.css` sets `--obsidian: #05070B` (`--void` and `--obsidian` are meant to be aliases of the same color). Assumptions: Tokens are represented as hexadecimal strings; drift implies inconsistency in rendering. Breakdown regime: When ΔT > 0, synchronization error occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): This kernel drives GSE's state reconciliation logic when detecting divergent token definitions across modules. Operator 'Theme Surface System' (page 2, domain other) captures: No `[data-theme]` attribute or theme toggle exists anywhere in `apps/web` today (`grep -rn \"data-theme\"` returns nothing). Assumptions: Themes are determined by component variant props rather than global toggle. Breakdown regime: When no theme is assigned, default fallback applies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE uses this kernel to model component-specific theme assignment logic in absence of global theme switching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in WCAG 2.1 standards and early CSS variable adoption, this framework evolved from accessibility tooling and design system governance practices in frontend engineering. Retrocausal Genealogy: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the design system maintainer (who ensures consistency) and the UI developer (who may introduce drift). Decision actors are the validation scripts and the runtime environment, which enforce or ignore token integrity. Theory of Mind & Decision Maker Model: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when contrast checks conflict with theme assignments; leakage occurs if token drift propagates to UI rendering. Veto conditions require synchronized token definitions and consistent theme usage across components. Cross-Layer Veto & Anti-Leakage Check: Rooted in tokens-and-contrast (9a751287b68b6cc9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

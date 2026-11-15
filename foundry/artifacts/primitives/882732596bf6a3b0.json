@@ -1,0 +1,78 @@
+{
+  "book_id": "882732596bf6a3b0",
+  "source_status": "COMPLETE",
+  "title": "injury-report.php",
+  "file_name": "injury-report.php.md",
+  "sha256": "882732596bf6a3b08d1897d080dd3980ecadf2f38e8f0abb1e1fd70fa9f555e2",
+  "primary_domain": "other",
+  "pages_total": 51,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Asynchronous injury data fetching with preconnect optimization and fallback mechanisms for client-side rendering. Universal Lens: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian injury probability inference using status classifications (questionable, doubtful, out) as evidence variables in a conformal predictive framework. GSI Mapping: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models player availability transitions from injury status to game participation through practice response and IR/PUP designations. GSE Mapping: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "asynchronous_injury_fetch",
+      "name": "Asynchronous Injury Data Fetch",
+      "verbatim_quote": "Initiate a low-priority, asynchronous fetch that gets applied to the page - only after it's arrived.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Client-side JavaScript execution environment exists; network latency is variable but bounded.",
+      "breakdown_regime": "JavaScript disabled or network failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables dynamic injury report updates without blocking initial page load, aligning with GSI's need for real-time probabilistic inference.",
+        "source_operator": "asynchronous_injury_fetch",
+        "telemetry": "Fetch completion time and success/failure rate."
+      }
+    },
+    {
+      "primitive_id": "status_classification_probability",
+      "name": "Status Classification Probability",
+      "verbatim_quote": "Questionable means there's roughly a 50\\/50 chance they'll participate in the upcoming game, often depending on how they respond in the final practice sessions.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Practice response is a strong indicator of game participation; binary outcome model applies.",
+      "breakdown_regime": "Insufficient practice data or ambiguous status update.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps injury status labels (questionable, doubtful, out) to probabilistic game participation states in GSI's Bayesian network.",
+        "source_operator": "status_classification_probability",
+        "telemetry": "Probability estimates for each status category over time."
+      }
+    },
+    {
+      "primitive_id": "injury_reserve_distinction",
+      "name": "Injury Reserve Distinction",
+      "verbatim_quote": "Doubtful signals a low chance to play, and out confirms they won't.<\\/p>\"}},{\"@type\":\"Question\",\"name\":\"What's the difference between injured reserve and physically unable to perform?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"<p>Injured reserve (IR) is used for players who have a serious injury, like a knee, shoulder or hamstring issue, and will miss a minimum of four games.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "IR designation implies long-term absence; PUP is a shorter-term restriction.",
+      "breakdown_regime": "Misclassification between IR and PUP categories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Differentiates between IR (minimum 4-game absence) and PUP (shorter-term) in GSE's temporal state transition models.",
+        "source_operator": "injury_reserve_distinction",
+        "telemetry": "Player return timeline accuracy from IR/PUP designations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "882732596bf6a3b0_t0",
+      "think": "The primitives form a coherent system where asynchronous data fetching ensures timely updates without UI blocking. The status classification primitive maps qualitative injury descriptors into probabilistic game participation, enabling GSI to compute posterior beliefs about player availability. The injury reserve distinction provides a temporal granularity for GSE's state transitions, differentiating between short-term (PUP) and long-term (IR) absences. Failure modes include JavaScript disablement, insufficient practice data, or misclassification between IR and PUP. Dualities emerge in the trade-off between data freshness and computational overhead, with preconnect optimizing latency while fallbacks ensure robustness.\n\nDeep epistemic analysis for injury-report.php (882732596bf6a3b0, domain=other, pages_read=18/51): Operator 'Asynchronous Injury Data Fetch' (page 2, domain other) captures: Initiate a low-priority, asynchronous fetch that gets applied to the page - only after it's arrived. Assumptions: Client-side JavaScript execution environment exists; network latency is variable but bounded. Breakdown regime: JavaScript disabled or network failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dynamic injury report updates without blocking initial page load, aligning with GSI's need for real-time probabilistic inference. Operator 'Status Classification Probability' (page 3, domain other) captures: Questionable means there's roughly a 50\\/50 chance they'll participate in the upcoming game, often depending on how they respond in the final practice sessions. Assumptions: Practice response is a strong indicator of game participation; binary outcome model applies. Breakdown regime: Insufficient practice data or ambiguous status update. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps injury status labels (questionable, doubtful, out) to probabilistic game participation states in GSI's Bayesian network. Operator 'Injury Reserve Distinction' (page 3, domain other) captures: Doubtful signals a low chance to play, and out confirms they won't.<\\/p>\"}},{\"@type\":\"Question\",\"name\":\"What's the difference between injured reserve and physically unable to perform?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"<p>Injured reserve (IR) is used for players who have a serious injury, like a knee, shoulder or hamstring issue, and will miss a minimum of four games. Assumptions: IR designation implies long-term absence; PUP is a shorter-term restriction. Breakdown regime: Misclassification between IR and PUP categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Differentiates between IR (minimum 4-game absence) and PUP (shorter-term) in GSE's temporal state transition models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for injury-report.php (882732596bf6a3b0, domain=other, pages_read=18/51): Operator 'Asynchronous Injury Data Fetch' (page 2, domain other) captures: Initiate a low-priority, asynchronous fetch that gets applied to the page - only after it's arrived. Assumptions: Client-side JavaScript execution environment exists; network latency is variable but bounded. Breakdown regime: JavaScript disabled or network failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables dynamic injury report updates without blocking initial page load, aligning with GSI's need for real-time probabilistic inference. Operator 'Status Classification Probability' (page 3, domain other) captures: Questionable means there's roughly a 50\\/50 chance they'll participate in the upcoming game, often depending on how they respond in the final practice sessions. Assumptions: Practice response is a strong indicator of game participation; binary outcome model applies. Breakdown regime: Insufficient practice data or ambiguous status update. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps injury status labels (questionable, doubtful, out) to probabilistic game participation states in GSI's Bayesian network. Operator 'Injury Reserve Distinction' (page 3, domain other) captures: Doubtful signals a low chance to play, and out confirms they won't.<\\/p>\"}},{\"@type\":\"Question\",\"name\":\"What's the difference between injured reserve and physically unable to perform?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"<p>Injured reserve (IR) is used for players who have a serious injury, like a knee, shoulder or hamstring issue, and will miss a minimum of four games. Assumptions: IR designation implies long-term absence; PUP is a shorter-term restriction. Breakdown regime: Misclassification between IR and PUP categories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Differentiates between IR (minimum 4-game absence) and PUP (shorter-term) in GSE's temporal state transition models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in web performance optimization principles from HTTP/2 and progressive enhancement paradigms, evolving into modern SPA architectures with asynchronous data loading and client-side rendering. Retrocausal Genealogy: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models opposing agents such as injury severity, team strategy, and player recovery dynamics, where GSI infers hidden states from observable status reports and GSE predicts future states based on these inferences. Theory of Mind & Decision Maker Model: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each primitive addresses distinct aspects: fetch behavior, probabilistic inference, and temporal categorization. Leakage is prevented by isolating the impact of each primitive on its respective layer—GSI's belief updating and GSE's state evolution. Cross-Layer Veto & Anti-Leakage Check: Rooted in injury-report.php (882732596bf6a3b0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

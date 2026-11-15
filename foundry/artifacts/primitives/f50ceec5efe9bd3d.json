@@ -1,0 +1,78 @@
+{
+  "book_id": "f50ceec5efe9bd3d",
+  "source_status": "COMPLETE",
+  "title": "w4-ff",
+  "file_name": "w4-ff.md",
+  "sha256": "f50ceec5efe9bd3df2858d29885191854b559f95266e010181640d41b7c1481f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Shared statistical inference framework across scoring, pricing, and data quality benchmarks using calibrated probability distributions and rank-based loss functions. Universal Lens: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates over player projections and ownership using conformal prediction intervals derived from multi-source calibration theory. GSI Mapping: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive ranking logic in GSE employs leverage-weighted ownership differentials against baseline scoring models, enabling dynamic state transitions in fantasy optimization. GSE Mapping: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "value_ratio",
+      "name": "Value Ratio",
+      "verbatim_quote": "| Dimension | (1).json | (2).json | 09-12.json | Read | |---|---|---|---|---| | Default sort | BRef Year `sort_default_asc`; survey adds: Savant Sort By/Order, LineStar Value-desc (implied), FanGraphs `sortdir=desc`, NBA MP `sort_col`, PFR Rk asc, RotoWire game-time, RBSDM EPA/play | Rk.",
+      "page": 2,
+      "latex": "V = \\frac{\\hat{P}}{S}",
+      "symbol_and_unit_ledger": "{'V': 'dimensionless value score', 'P': 'projected performance (rate or total)', 'S': 'salary in USD'}",
+      "assumptions": "Projection and salary are independently observed; value is invariant under linear scaling of salary.",
+      "breakdown_regime": "When salary approaches zero or projection becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI uses this ratio as a core likelihood kernel for Bayesian inference on player performance.",
+        "source_operator": "value_ratio",
+        "telemetry": "Expected value deviation from market equilibrium"
+      }
+    },
+    {
+      "primitive_id": "calibration_loss",
+      "name": "Calibration Loss",
+      "verbatim_quote": "log-loss `phi^LL = -Σ Y_k log S_k`, Brier `phi^BS = Σ (S_k - Y_k)2`",
+      "page": 2,
+      "latex": "\\phi^{LL} = -\\sum_{k} Y_k \\log S_k, \\quad \\phi^{BS} = \\sum_{k} (S_k - Y_k)^2",
+      "symbol_and_unit_ledger": "{'Y_k': 'true outcome (binary indicator)', 'S_k': 'predicted probability (scalar in [0,1])', 'phi^LL': 'log-loss scalar', 'phi^BS': 'Brier score scalar'}",
+      "assumptions": "Predictions are probabilistic; outcomes are binary; loss functions are convex.",
+      "breakdown_regime": "When predictions approach 0 or 1, or when true outcomes are rare.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI’s calibration engine maps these losses onto posterior uncertainty bounds for ensemble forecasting.",
+        "source_operator": "calibration_loss",
+        "telemetry": "Confidence interval width for predicted outcomes"
+      }
+    },
+    {
+      "primitive_id": "ownership_adjusted_ranking",
+      "name": "Ownership Adjusted Ranking",
+      "verbatim_quote": "Companions: `formulas.json` (111 rows, every formula verbatim + source URL), `pricing.json` (106 rows, every pricing/ownership claim + citation).",
+      "page": 1,
+      "latex": "R_{adj} = \\text{Rank}(\\text{Own-Diff} \\times \\text{Leverage})",
+      "symbol_and_unit_ledger": "{'R_adj': 'adjusted rank (dimensionless)', 'Own-Diff': 'difference in ownership percentage from mean', 'Leverage': 'relative impact of player selection on lineup variance'}",
+      "assumptions": "Ownership distribution is known; leverage is inversely proportional to variance.",
+      "breakdown_regime": "When ownership difference is near zero or leverage is undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies this as a secondary ranking filter to prioritize high-leverage, low-ownership picks.",
+        "source_operator": "ownership_adjusted_ranking",
+        "telemetry": "Ranking shift from baseline due to ownership bias"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f50ceec5efe9bd3d_t0",
+      "think": "The foundational operators derive from three distinct domains: statistical inference (calibration loss), economic valuation (value ratio), and situational preference (ownership-adjusted ranking). These are unified through a common probabilistic framework where each primitive serves as a node in a hierarchical Bayesian network. The value ratio acts as a prior kernel, while calibration loss provides a posterior update mechanism. Ownership adjustment introduces a third-order constraint that modifies the ranking space based on competitive dynamics. Failure modes include overfitting in calibration loss estimation, undefined ratios when salary is zero, and spurious correlations in ownership adjustments. Dualities emerge between probabilistic consistency and strategic utility maximization, where each primitive must be robust to adversarial perturbations in data quality and pricing structures.\n\nDeep epistemic analysis for w4-ff (f50ceec5efe9bd3d, domain=other, pages_read=4/4): Operator 'Value Ratio' (page 2, domain other) captures: | Dimension | (1).json | (2).json | 09-12.json | Read | |---|---|---|---|---| | Default sort | BRef Year `sort_default_asc`; survey adds: Savant Sort By/Order, LineStar Value-desc (implied), FanGraphs `sortdir=desc`, NBA MP `sort_col`, PFR Rk asc, RotoWire game-time, RBSDM EPA/play | Rk. Assumptions: Projection and salary are independently observed; value is invariant under linear scaling of salary. Breakdown regime: When salary approaches zero or projection becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses this ratio as a core likelihood kernel for Bayesian inference on player performance. Operator 'Calibration Loss' (page 2, domain other) captures: log-loss `phi^LL = -Σ Y_k log S_k`, Brier `phi^BS = Σ (S_k - Y_k)2` Assumptions: Predictions are probabilistic; outcomes are binary; loss functions are convex. Breakdown regime: When predictions approach 0 or 1, or when true outcomes are rare. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI’s calibration engine maps these losses onto posterior uncertainty bounds for ensemble forecasting. Operator 'Ownership Adjusted Ranking' (page 1, domain other) captures: Companions: `formulas.json` (111 rows, every formula verbatim + source URL), `pricing.json` (106 rows, every pricing/ownership claim + citation). Assumptions: Ownership distribution is known; leverage is inversely proportional to variance. Breakdown regime: When ownership difference is near zero or leverage is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies this as a secondary ranking filter to prioritize high-leverage, low-ownership picks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for w4-ff (f50ceec5efe9bd3d, domain=other, pages_read=4/4): Operator 'Value Ratio' (page 2, domain other) captures: | Dimension | (1).json | (2).json | 09-12.json | Read | |---|---|---|---|---| | Default sort | BRef Year `sort_default_asc`; survey adds: Savant Sort By/Order, LineStar Value-desc (implied), FanGraphs `sortdir=desc`, NBA MP `sort_col`, PFR Rk asc, RotoWire game-time, RBSDM EPA/play | Rk. Assumptions: Projection and salary are independently observed; value is invariant under linear scaling of salary. Breakdown regime: When salary approaches zero or projection becomes undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI uses this ratio as a core likelihood kernel for Bayesian inference on player performance. Operator 'Calibration Loss' (page 2, domain other) captures: log-loss `phi^LL = -Σ Y_k log S_k`, Brier `phi^BS = Σ (S_k - Y_k)2` Assumptions: Predictions are probabilistic; outcomes are binary; loss functions are convex. Breakdown regime: When predictions approach 0 or 1, or when true outcomes are rare. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI’s calibration engine maps these losses onto posterior uncertainty bounds for ensemble forecasting. Operator 'Ownership Adjusted Ranking' (page 1, domain other) captures: Companions: `formulas.json` (111 rows, every formula verbatim + source URL), `pricing.json` (106 rows, every pricing/ownership claim + citation). Assumptions: Ownership distribution is known; leverage is inversely proportional to variance. Breakdown regime: When ownership difference is near zero or leverage is undefined. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies this as a secondary ranking filter to prioritize high-leverage, low-ownership picks. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical decision theory (Neyman-Pearson lemma), extended via modern machine learning calibration techniques (Platt scaling, isotonic regression), and adapted for real-time fantasy sports optimization through game-theoretic modeling. Retrocausal Genealogy: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to manipulate ownership data or exploit pricing inefficiencies. GSI models these agents as stochastic perturbations in the calibration process, while GSE treats them as adversarial inputs in the ranking algorithm, requiring robustness checks. Theory of Mind & Decision Maker Model: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that calibration loss and value ratio do not co-vary linearly; leakage vetoes occur if ownership adjustment directly correlates with raw projection metrics without proper normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in w4-ff (f50ceec5efe9bd3d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

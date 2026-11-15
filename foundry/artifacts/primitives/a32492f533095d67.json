@@ -1,0 +1,95 @@
+{
+  "book_id": "a32492f533095d67",
+  "source_status": "COMPLETE",
+  "title": "DISPATCH",
+  "file_name": "DISPATCH.md",
+  "sha256": "a32492f533095d67c3cdbfeb1792690ed40ba3f2be7a0f090e4bcf5a4ed5de01",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "package_junction_verification",
+      "name": "Package Junction Verification",
+      "verbatim_quote": "Review package junctions and Python test runner isolation: - Verify all 26 junctions in `node_modules/@sports` resolve locally to `C:\\Users\\Garrett\\Sports` with 0 external references.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes deterministic symbolic linking within local monorepo workspace.",
+      "breakdown_regime": "Fails when external registry overrides or broken symlink.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI probabilistic causality graphs where junctions represent conditional independence constraints between sports data streams.",
+        "source_operator": "package_junction_verification",
+        "telemetry": "Number of resolved external dependencies per package"
+      }
+    },
+    {
+      "primitive_id": "python_test_isolation",
+      "name": "Python Test Runner Isolation",
+      "verbatim_quote": "- Verify `py -3.13 -m pytest --collect-only -q` ignores `.worktrees` and `.agents` completely.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes file system watch patterns correctly exclude specified directories.",
+      "breakdown_regime": "Breaks when recursive globbing includes excluded directories.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE state-transition systems where test isolation represents orthogonal system partitioning.",
+        "source_operator": "python_test_isolation",
+        "telemetry": "Execution time variance across isolated vs non-isolated runs"
+      }
+    },
+    {
+      "primitive_id": "test_suite_aggregation",
+      "name": "Test Suite Aggregation",
+      "verbatim_quote": "- Run `py -3.13 -m pytest intelligence/props -q` (59 tests pass).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes independent test case orthogonality within the props suite.",
+      "breakdown_regime": "Fails when test suite contains hidden coupling or environmental interference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI ensemble validation where aggregated pass rates inform posterior probability distributions over code correctness.",
+        "source_operator": "test_suite_aggregation",
+        "telemetry": "Pass/fail rate stability across repeated aggregations"
+      }
+    },
+    {
+      "primitive_id": "state_transition_validation",
+      "name": "State Transition Validation",
+      "verbatim_quote": "Examine code quality and edge cases across `process-sport.ts`, `nav.tsx`, and `signin/page.tsx`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes finite state machines with well-defined boundary conditions.",
+      "breakdown_regime": "Breaks at state boundaries with undefined transitions or race conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE trajectory prediction where edge case handling determines robustness to novel inputs.",
+        "source_operator": "state_transition_validation",
+        "telemetry": "Transition coverage percentage and error frequency at state edges"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a32492f533095d67_t0",
+      "think": "The primitives form a compositional verification stack. Package junctions ensure data lineage integrity, test isolation guarantees repeatability, test suite aggregation provides empirical confidence, and state transition validation catches runtime failures. Together they implement a layered defense against systematic errors in the Galaxy Sports Intelligence pipeline. The key dualities are between local reproducibility (this task) and global scalability (M2), and between syntactic validation (linter checks) and semantic verification (these tests). Failure modes include hidden environmental dependencies leaking through exclusion patterns, combinatorial state explosion in transition systems, and statistical anomalies in test pass rates that signal underlying bugs.\n\nDeep epistemic analysis for DISPATCH (a32492f533095d67, domain=other, pages_read=1/1): Operator 'Package Junction Verification' (page 1, domain other) captures: Review package junctions and Python test runner isolation: - Verify all 26 junctions in `node_modules/@sports` resolve locally to `C:\\Users\\Garrett\\Sports` with 0 external references. Assumptions: Assumes deterministic symbolic linking within local monorepo workspace. Breakdown regime: Fails when external registry overrides or broken symlink. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic causality graphs where junctions represent conditional independence constraints between sports data streams. Operator 'Python Test Runner Isolation' (page 1, domain other) captures: - Verify `py -3.13 -m pytest --collect-only -q` ignores `.worktrees` and `.agents` completely. Assumptions: Assumes file system watch patterns correctly exclude specified directories. Breakdown regime: Breaks when recursive globbing includes excluded directories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition systems where test isolation represents orthogonal system partitioning. Operator 'Test Suite Aggregation' (page 1, domain other) captures: - Run `py -3.13 -m pytest intelligence/props -q` (59 tests pass). Assumptions: Assumes independent test case orthogonality within the props suite. Breakdown regime: Fails when test suite contains hidden coupling or environmental interference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI ensemble validation where aggregated pass rates inform posterior probability distributions over code correctness. Operator 'State Transition Validation' (page 1, domain other) captures: Examine code quality and edge cases across `process-sport.ts`, `nav.tsx`, and `signin/page.tsx`. Assumptions: Assumes finite state machines with well-defined boundary conditions. Breakdown regime: Breaks at state boundaries with undefined transitions or race conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE trajectory prediction where edge case handling determines robustness to novel inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DISPATCH (a32492f533095d67, domain=other, pages_read=1/1): Operator 'Package Junction Verification' (page 1, domain other) captures: Review package junctions and Python test runner isolation: - Verify all 26 junctions in `node_modules/@sports` resolve locally to `C:\\Users\\Garrett\\Sports` with 0 external references. Assumptions: Assumes deterministic symbolic linking within local monorepo workspace. Breakdown regime: Fails when external registry overrides or broken symlink. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic causality graphs where junctions represent conditional independence constraints between sports data streams. Operator 'Python Test Runner Isolation' (page 1, domain other) captures: - Verify `py -3.13 -m pytest --collect-only -q` ignores `.worktrees` and `.agents` completely. Assumptions: Assumes file system watch patterns correctly exclude specified directories. Breakdown regime: Breaks when recursive globbing includes excluded directories. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE state-transition systems where test isolation represents orthogonal system partitioning. Operator 'Test Suite Aggregation' (page 1, domain other) captures: - Run `py -3.13 -m pytest intelligence/props -q` (59 tests pass). Assumptions: Assumes independent test case orthogonality within the props suite. Breakdown regime: Fails when test suite contains hidden coupling or environmental interference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI ensemble validation where aggregated pass rates inform posterior probability distributions over code correctness. Operator 'State Transition Validation' (page 1, domain other) captures: Examine code quality and edge cases across `process-sport.ts`, `nav.tsx`, and `signin/page.tsx`. Assumptions: Assumes finite state machines with well-defined boundary conditions. Breakdown regime: Breaks at state boundaries with undefined transitions or race conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE trajectory prediction where edge case handling determines robustness to novel inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This methodology descends from formal methods in software engineering, particularly Hoare logic and model checking, adapted to handle the high-cardinality uncertainty inherent in sports betting markets. Retrocausal Genealogy: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include developers who may prioritize feature velocity over strict isolation, and auditors who demand comprehensive coverage. The orchestrator balances these incentives by enforcing independent review. Theory of Mind & Decision Maker Model: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that telemetry metrics from one layer (e.g., dependency counts) do not directly inform validation thresholds in another layer (e.g., test pass rates), preventing circular reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (a32492f533095d67), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

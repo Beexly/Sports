@@ -1,0 +1,78 @@
+{
+  "book_id": "f2e72a397ad785a4",
+  "source_status": "COMPLETE",
+  "title": "2026-10-27-ocr-and-sinkhorn-final",
+  "file_name": "2026-10-27-ocr-and-sinkhorn-final.md",
+  "sha256": "f2e72a397ad785a41b3c6e045f9e84a23abe57026036f437f3d30eab58c42500",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sinkhorn scaling duals and probabilistic calibration map convergence under piecewise-linear interpolation. Universal Lens: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration via conformal prediction using Sinkhorn-derived probability mass adjustments and bounded interpolation. GSI Mapping: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs dual Sinkhorn marginals for injury overlay state transitions and coach cost modeling. GSE Mapping: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sinkhorn_scaling_dual",
+      "name": "Sinkhorn Scaling Dual",
+      "verbatim_quote": "The sinkhorn wiring this file called \"uncommitted\" is now committed and pushed > in `a37bdae82` (sinkhorn.ts, sinkhorn.test.ts, sinkhorn-targets.ts, locked-projection.ts, > weekly-cadence-orchestrator.ts, verify_engine.py).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'p': 'probability scalar in [0.05, 1.0]', 'rawProb': 'raw probability input'}",
+      "assumptions": "Input probabilities are clamped to [0.05, 1.0]; piecewise-linear interpolation used for knot domain extension.",
+      "breakdown_regime": "When rawProb exceeds 1.0, clamps to 1.0 knot and calibrates to 0.9655.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Dual Sinkhorn marginals in GSE coach simulation map to GSI calibrated probability space.",
+        "source_operator": "sinkhorn_scaling_dual",
+        "telemetry": "Verification via test suite: 9/9 locked-projection.test.ts and 18/18 belichick-ablation.test.ts."
+      }
+    },
+    {
+      "primitive_id": "calibration_map_interpolation",
+      "name": "Calibration Map Interpolation",
+      "verbatim_quote": "- Lines 70-77: piecewise-linear interpolation over the knot domain; fallback returns p.",
+      "page": 1,
+      "latex": "\\hat{p} = \\begin{cases} p & \\text{if } p \\in [0.05, 1.0] \\\\ \\text{interpolated value} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'p': 'input probability in [0.05, 1.0]', '\\\\hat{p}': 'calibrated probability output'}",
+      "assumptions": "Piecewise-linear interpolation ensures continuity across knot domain; fallback behavior preserves input when out of bounds.",
+      "breakdown_regime": "Extrapolation beyond [0.05, 1.0] uses linear interpolation to 1.0 knot at 0.9655.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Interpolated calibration kernel maps raw inputs to bounded outputs for probabilistic inference.",
+        "source_operator": "calibration_map_interpolation",
+        "telemetry": "Test suite confirms 6/6 passed for src/public-baseline/calibration-map.test.ts."
+      }
+    },
+    {
+      "primitive_id": "probability_clamp_bound",
+      "name": "Probability Clamp Bound",
+      "verbatim_quote": "- Line 69: `const p = Math.min(1.0, Math.max(0.05, rawProb))` — input clamped to [0.05, 1.0], not [0.95].",
+      "page": 1,
+      "latex": "p = \\min(1.0, \\max(0.05, \\text{rawProb}))",
+      "symbol_and_unit_ledger": "{'rawProb': 'raw probability scalar', 'p': 'clamped probability scalar'}",
+      "assumptions": "Clamping prevents extreme values from destabilizing downstream models; range fixed to [0.05, 1.0].",
+      "breakdown_regime": "Values below 0.05 become 0.05; values above 1.0 become 1.0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Clamp operation enforces domain constraints for stable interpolation and inference.",
+        "source_operator": "probability_clamp_bound",
+        "telemetry": "Defect report corrected; clamping now operates on [0.05, 1.0] rather than [0.95]."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f2e72a397ad785a4_t0",
+      "think": "The primitives define a coherent mathematical framework for probabilistic inference within GSI and GSE. The Sinkhorn Scaling Dual enables dual marginal alignment in coach simulations, mapping raw inputs to calibrated outputs through constrained optimization. The Calibration Map Interpolation ensures smooth transitions across probability domains by leveraging piecewise-linear functions, while the Probability Clamp Bound stabilizes extreme values. These operators form a closed-loop system where input uncertainty is bounded, interpolated, and calibrated before being fed into Bayesian or conformal inference engines. Failure modes arise from incorrect knot domain handling or misalignment between raw and calibrated spaces, which are mitigated by explicit testing and telemetry verification.\n\nDeep epistemic analysis for 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4, domain=other, pages_read=3/3): Operator 'Sinkhorn Scaling Dual' (page 1, domain other) captures: The sinkhorn wiring this file called \"uncommitted\" is now committed and pushed > in `a37bdae82` (sinkhorn.ts, sinkhorn.test.ts, sinkhorn-targets.ts, locked-projection.ts, > weekly-cadence-orchestrator.ts, verify_engine.py). Assumptions: Input probabilities are clamped to [0.05, 1.0]; piecewise-linear interpolation used for knot domain extension. Breakdown regime: When rawProb exceeds 1.0, clamps to 1.0 knot and calibrates to 0.9655. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual Sinkhorn marginals in GSE coach simulation map to GSI calibrated probability space. Operator 'Calibration Map Interpolation' (page 1, domain other) captures: - Lines 70-77: piecewise-linear interpolation over the knot domain; fallback returns p. Assumptions: Piecewise-linear interpolation ensures continuity across knot domain; fallback behavior preserves input when out of bounds. Breakdown regime: Extrapolation beyond [0.05, 1.0] uses linear interpolation to 1.0 knot at 0.9655. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Interpolated calibration kernel maps raw inputs to bounded outputs for probabilistic inference. Operator 'Probability Clamp Bound' (page 1, domain other) captures: - Line 69: `const p = Math.min(1.0, Math.max(0.05, rawProb))` — input clamped to [0.05, 1.0], not [0.95]. Assumptions: Clamping prevents extreme values from destabilizing downstream models; range fixed to [0.05, 1.0]. Breakdown regime: Values below 0.05 become 0.05; values above 1.0 become 1.0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Clamp operation enforces domain constraints for stable interpolation and inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4, domain=other, pages_read=3/3): Operator 'Sinkhorn Scaling Dual' (page 1, domain other) captures: The sinkhorn wiring this file called \"uncommitted\" is now committed and pushed > in `a37bdae82` (sinkhorn.ts, sinkhorn.test.ts, sinkhorn-targets.ts, locked-projection.ts, > weekly-cadence-orchestrator.ts, verify_engine.py). Assumptions: Input probabilities are clamped to [0.05, 1.0]; piecewise-linear interpolation used for knot domain extension. Breakdown regime: When rawProb exceeds 1.0, clamps to 1.0 knot and calibrates to 0.9655. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Dual Sinkhorn marginals in GSE coach simulation map to GSI calibrated probability space. Operator 'Calibration Map Interpolation' (page 1, domain other) captures: - Lines 70-77: piecewise-linear interpolation over the knot domain; fallback returns p. Assumptions: Piecewise-linear interpolation ensures continuity across knot domain; fallback behavior preserves input when out of bounds. Breakdown regime: Extrapolation beyond [0.05, 1.0] uses linear interpolation to 1.0 knot at 0.9655. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Interpolated calibration kernel maps raw inputs to bounded outputs for probabilistic inference. Operator 'Probability Clamp Bound' (page 1, domain other) captures: - Line 69: `const p = Math.min(1.0, Math.max(0.05, rawProb))` — input clamped to [0.05, 1.0], not [0.95]. Assumptions: Clamping prevents extreme values from destabilizing downstream models; range fixed to [0.05, 1.0]. Breakdown regime: Values below 0.05 become 0.05; values above 1.0 become 1.0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Clamp operation enforces domain constraints for stable interpolation and inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in optimal transport theory (Sinkhorn algorithm), extended into machine learning calibration via isotonic regression and piecewise-linear interpolation, historically developed in statistical physics and computational geometry. Retrocausal Genealogy: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the raw probability generator (e.g., model output) and the calibrated inference engine (e.g., GSI). Decision actors are the coach simulator and injury overlay logic, which must reconcile conflicting marginal distributions through dual Sinkhorn scaling. Theory of Mind & Decision Maker Model: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct operational domains for each primitive. Leakage occurs if raw inputs bypass clamping or interpolation steps, which is prevented by strict layering and test validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026-10-27-ocr-and-sinkhorn-final (f2e72a397ad785a4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

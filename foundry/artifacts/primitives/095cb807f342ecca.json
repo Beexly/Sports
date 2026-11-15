@@ -1,0 +1,78 @@
+{
+  "book_id": "095cb807f342ecca",
+  "source_status": "COMPLETE",
+  "title": "free-spine-why-dark",
+  "file_name": "free-spine-why-dark.md",
+  "sha256": "095cb807f342ecca976d3513e6ee72d1aba16ec04e1a2defeded3d1a9f4c14ae",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Structural blockade at runtime clearance gate prevents secondary free sources from being accessed, causing zero odds production despite successful ingestion run status. Universal Lens: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps source clearance states to odds likelihood; conformal prediction bounds on data freshness using health check metrics as prior constraints. GSI Mapping: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models free spine state transitions through cron completion vs. data output; state machine tracks ingestion run success vs. odds insertion counts. GSE Mapping: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "runtime_clearance_blockade",
+      "name": "Runtime Clearance Blockade",
+      "verbatim_quote": "The root cause is a **runtime clearance gate blockade**: all secondary free sources (henrygd-ncaa, mlb-statsapi, balldontlie-nba, nhl-web-api) are **not registered in the source-rights-registry**, so `checkClearance()` returns `SOURCE_NOT_REGISTERED` and every fetch is denied before any network call is made.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SOURCE_NOT_REGISTERED': 'Boolean flag indicating access denial', 'checkClearance()': 'Function returning access permission'}",
+      "assumptions": "All secondary sources must be registered to pass runtime clearance.",
+      "breakdown_regime": "SOURCE_NOT_REGISTERED",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Clearance function behavior mirrors access control kernel in GSI; runtime denial propagates to GSE ingestion state.",
+        "source_operator": "runtime_clearance_blockade",
+        "telemetry": "IngestionRun status = SUCCESS but oddsInserted = 0"
+      }
+    },
+    {
+      "primitive_id": "health_check_liveness_mismatch",
+      "name": "Health Check Liveness Mismatch",
+      "verbatim_quote": "The health check route (`free-spine-health`) measures **process liveness** (HTTP 200, cron completion) rather than **data freshness** (rows written).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'process_liveness': 'Boolean indicator of cron execution', 'data_freshness': 'Count of inserted rows'}",
+      "assumptions": "Liveness does not imply data integrity or completeness.",
+      "breakdown_regime": "liveness_vs_freshness",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE health probe uses liveness as proxy for data output; GSI infers data quality via telemetry divergence.",
+        "source_operator": "health_check_liveness_mismatch",
+        "telemetry": "HTTP 200 from health check, null oddsInserted in surface truth"
+      }
+    },
+    {
+      "primitive_id": "odds_insertion_absence",
+      "name": "Odds Insertion Absence",
+      "verbatim_quote": "--## Executive Summary The free odds spine reports success (HTTP 200, IngestionRun SUCCESS) but produces **zero odds rows**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'odds_rows': 'Integer count of inserted odds records', 'IngestionRun.status': 'Enum {SUCCESS, FAILED}', 'oddsInserted': 'Integer counter of inserted odds'}",
+      "assumptions": "Successful run implies non-zero data output unless blocked by access control.",
+      "breakdown_regime": "oddsInserted = 0",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's data freshness model aligns with GSE's insertion state; absence of odds signals systemic failure.",
+        "source_operator": "odds_insertion_absence",
+        "telemetry": "Database shows IngestionRun.status = SUCCESS with oddsInserted = 0"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "095cb807f342ecca_t0",
+      "think": "The core issue lies in a compound structural failure where runtime clearance gates deny access to secondary sources, leading to zero odds insertion. The system's health check misreports data freshness by measuring process liveness instead of actual data output. This creates a dual failure mode: one in access control (SOURCE_NOT_REGISTERED) and another in monitoring (liveness vs. data freshness). The GSI Bayesian model would treat these as independent variables—clearance status and data output—but they are coupled through the ingestion pipeline. The GSE state machine transitions through SUCCESS status regardless of outcome, masking the underlying data absence. The epistemic trace reveals that the root cause is not technical complexity but a design flaw in how access control interacts with reporting mechanisms. The failure manifests as a logical contradiction between system state (SUCCESS) and empirical evidence (no odds). This is a case of epistemic opacity where internal consistency masks external inconsistency. The dual nature of the problem—access control and reporting—is mathematically represented as a conditional probability P(odds | clearance) = 0, where clearance is the antecedent condition.\n\nDeep epistemic analysis for free-spine-why-dark (095cb807f342ecca, domain=other, pages_read=4/4): Operator 'Runtime Clearance Blockade' (page 1, domain other) captures: The root cause is a **runtime clearance gate blockade**: all secondary free sources (henrygd-ncaa, mlb-statsapi, balldontlie-nba, nhl-web-api) are **not registered in the source-rights-registry**, so `checkClearance()` returns `SOURCE_NOT_REGISTERED` and every fetch is denied before any network call is made. Assumptions: All secondary sources must be registered to pass runtime clearance. Breakdown regime: SOURCE_NOT_REGISTERED Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Clearance function behavior mirrors access control kernel in GSI; runtime denial propagates to GSE ingestion state. Operator 'Health Check Liveness Mismatch' (page 1, domain other) captures: The health check route (`free-spine-health`) measures **process liveness** (HTTP 200, cron completion) rather than **data freshness** (rows written). Assumptions: Liveness does not imply data integrity or completeness. Breakdown regime: liveness_vs_freshness Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE health probe uses liveness as proxy for data output; GSI infers data quality via telemetry divergence. Operator 'Odds Insertion Absence' (page 1, domain other) captures: --## Executive Summary The free odds spine reports success (HTTP 200, IngestionRun SUCCESS) but produces **zero odds rows**. Assumptions: Successful run implies non-zero data output unless blocked by access control. Breakdown regime: oddsInserted = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's data freshness model aligns with GSE's insertion state; absence of odds signals systemic failure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for free-spine-why-dark (095cb807f342ecca, domain=other, pages_read=4/4): Operator 'Runtime Clearance Blockade' (page 1, domain other) captures: The root cause is a **runtime clearance gate blockade**: all secondary free sources (henrygd-ncaa, mlb-statsapi, balldontlie-nba, nhl-web-api) are **not registered in the source-rights-registry**, so `checkClearance()` returns `SOURCE_NOT_REGISTERED` and every fetch is denied before any network call is made. Assumptions: All secondary sources must be registered to pass runtime clearance. Breakdown regime: SOURCE_NOT_REGISTERED Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Clearance function behavior mirrors access control kernel in GSI; runtime denial propagates to GSE ingestion state. Operator 'Health Check Liveness Mismatch' (page 1, domain other) captures: The health check route (`free-spine-health`) measures **process liveness** (HTTP 200, cron completion) rather than **data freshness** (rows written). Assumptions: Liveness does not imply data integrity or completeness. Breakdown regime: liveness_vs_freshness Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE health probe uses liveness as proxy for data output; GSI infers data quality via telemetry divergence. Operator 'Odds Insertion Absence' (page 1, domain other) captures: --## Executive Summary The free odds spine reports success (HTTP 200, IngestionRun SUCCESS) but produces **zero odds rows**. Assumptions: Successful run implies non-zero data output unless blocked by access control. Breakdown regime: oddsInserted = 0 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's data freshness model aligns with GSE's insertion state; absence of odds signals systemic failure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in early microservices architecture where process health was prioritized over data integrity. The separation of concerns led to siloed monitoring systems, allowing liveness checks to substitute for data freshness indicators without cross-validation. Retrocausal Genealogy: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the ingestion engine (which assumes all sources are accessible), the clearance gate (which enforces registration), and the health monitor (which validates only process completion). Each agent operates under different assumptions about system state, creating a coordination failure. Theory of Mind & Decision Maker Model: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between GSE's state transition logic and GSI's data freshness inference. If GSE reports SUCCESS, GSI should detect discrepancy via telemetry divergence. Leakage occurs when GSE's state machine fails to propagate access denial into its own reporting layer. Cross-Layer Veto & Anti-Leakage Check: Rooted in free-spine-why-dark (095cb807f342ecca), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

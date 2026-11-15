@@ -1,0 +1,78 @@
+{
+  "book_id": "3fb25b236ff6c48a",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "3fb25b236ff6c48a18e5a00baad19f37649432b0d41241111cf960a5c8186fa7",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Polymarket US API formalizes a discrete event-driven state machine over financial assets. It unifies authenticated order routing, real-time WebSocket streaming, and exact decimal arithmetic into a rigorous algebraic structure of market microstructure, mapping raw protocol signals to precise quantitative primitives.",
+  "gsi_mapping": "GSI maps the SDK's `subscribeOrders` and `positionSubscription` streams into conformal prediction sets for market impact. Exact decimal strings (`netPositionDecimal`) provide zero-loss ground truth, while absent fields (e.g., `displayedCash`) define structural missingness priors in Bayesian inference models for liquidity depth.",
+  "gse_mapping": "GSE treats the WebSocket lifecycle as a continuous-time Markov chain. State transitions are driven by `orderUpdate` and `accountBalancesUpdate`. The explicit distinction between a present zero and an absent value acts as a boundary condition for situational reasoning and execution failure modes.",
+  "primitives": [
+    {
+      "primitive_id": "exact_decimal_positioning",
+      "name": "Exact Decimal Position Operator",
+      "verbatim_quote": "Position quantities are available as exact decimal strings such as `netPositionDecimal`, alongside cost/fee fields and `comboLegDetails`.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "netPositionDecimal: dimensionless string representing exact rational quantity; cost/fee: currency units (USD).",
+      "assumptions": "Floating-point IEEE 754 errors are strictly avoided via string-encoded rationals.",
+      "breakdown_regime": "Fails if downstream parsers cast decimals to floats, reintroducing rounding artifacts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's lossless ledger states, ensuring PnL calculations remain algebraically closed without numerical drift.",
+        "source_operator": "exact_decimal_positioning",
+        "telemetry": "Variance between float-cast position and string-decimal position."
+      }
+    },
+    {
+      "primitive_id": "structural_missingness",
+      "name": "Structural Missingness Indicator",
+      "verbatim_quote": "Balance reservation and display fields, such as `displayedCash`, are absent when the gateway cannot determine them; a present `0` is distinct from an absent value.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "displayedCash: currency units or undefined; presence: boolean indicator of gateway observability.",
+      "assumptions": "API responses encode epistemic uncertainty via field omission rather than null/zero padding.",
+      "breakdown_regime": "Breaks under naive JSON deserialization that defaults missing keys to zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's sensor occlusion flags; dictates when a state estimator must rely on prior distributions versus direct observation.",
+        "source_operator": "structural_missingness",
+        "telemetry": "Frequency of absent balance fields during high-frequency updates."
+      }
+    },
+    {
+      "primitive_id": "websocket_state_transition",
+      "name": "WebSocket State Transition Kernel",
+      "verbatim_quote": "found'); } } ``` ## Configuration ```typescript const client = new PolymarketUS({ keyId: 'your-key-id', secretKey: 'your-secret-key', timeout: 30000, // Request timeout in ms (default: 30000) }); ``` ### WebSocket (Real-Time Data) `subscribeOrders()` subscribes to live order updates.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "subscribeOrders: function triggering continuous stream; update_rate: Hz.",
+      "assumptions": "Network connectivity maintains a persistent, ordered sequence of state deltas.",
+      "breakdown_regime": "Singularity occurs during network partition, causing state divergence between client and exchange.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly maps to GSE's event-loop architecture, where each `orderUpdate` triggers a deterministic transition in the local order book graph.",
+        "source_operator": "websocket_state_transition",
+        "telemetry": "Latency distribution of order updates relative to exchange timestamps."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3fb25b236ff6c48a_t0",
+      "think": "The Polymarket US SDK exposes a highly structured interface for interacting with a decentralized prediction market. Mathematically, this can be modeled as a filtered probability space where the filtration is generated by the arrival of WebSocket messages (`orderUpdate`, `positionSubscription`). The primitive `exact_decimal_positioning` ensures that the state variables (positions) reside in a discrete, error-free lattice ($\\mathbb{Q}$), avoiding the topological pathologies of floating-point arithmetic. This is crucial for maintaining conservation laws in portfolio accounting. The `structural_missingness` primitive introduces a partial observability framework. When `displayedCash` is absent, the system enters a regime of incomplete information, requiring the agent to rely on predictive filters (e.g., Kalman or particle filters) rather than direct measurement. The `websocket_state_transition` defines the dynamics operator $T_t$, which evolves the local state $S_t$ to $S_{t+\\Delta t}$ based on incoming deltas. The breaking type changes in version 2.0.0 (referenced in quote 10) represent a renormalization of the underlying type theory, aligning legacy aliases with modern, stricter definitions to prevent runtime singularities. The interplay between these primitives forms a robust computational kernel for high-frequency trading strategies, where latency, precision, and state consistency are paramount.\n\nDeep epistemic analysis for README (3fb25b236ff6c48a, domain=other, pages_read=4/4): Operator 'Exact Decimal Position Operator' (page 3, domain other) captures: Position quantities are available as exact decimal strings such as `netPositionDecimal`, alongside cost/fee fields and `comboLegDetails`. Assumptions: Floating-point IEEE 754 errors are strictly avoided via string-encoded rationals. Breakdown regime: Fails if downstream parsers cast decimals to floats, reintroducing rounding artifacts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's lossless ledger states, ensuring PnL calculations remain algebraically closed without numerical drift. Operator 'Structural Missingness Indicator' (page 3, domain other) captures: Balance reservation and display fields, such as `displayedCash`, are absent when the gateway cannot determine them; a present `0` is distinct from an absent value. Assumptions: API responses encode epistemic uncertainty via field omission rather than null/zero padding. Breakdown regime: Breaks under naive JSON deserialization that defaults missing keys to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's sensor occlusion flags; dictates when a state estimator must rely on prior distributions versus direct observation. Operator 'WebSocket State Transition Kernel' (page 2, domain other) captures: found'); } } ``` ## Configuration ```typescript const client = new PolymarketUS({ keyId: 'your-key-id', secretKey: 'your-secret-key', timeout: 30000, // Request timeout in ms (default: 30000) }); ``` ### WebSocket (Real-Time Data) `subscribeOrders()` subscribes to live order updates. Assumptions: Network connectivity maintains a persistent, ordered sequence of state deltas. Breakdown regime: Singularity occurs during network partition, causing state divergence between client and exchange. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSE's event-loop architecture, where each `orderUpdate` triggers a deterministic transition in the local order book graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (3fb25b236ff6c48a, domain=other, pages_read=4/4): Operator 'Exact Decimal Position Operator' (page 3, domain other) captures: Position quantities are available as exact decimal strings such as `netPositionDecimal`, alongside cost/fee fields and `comboLegDetails`. Assumptions: Floating-point IEEE 754 errors are strictly avoided via string-encoded rationals. Breakdown regime: Fails if downstream parsers cast decimals to floats, reintroducing rounding artifacts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's lossless ledger states, ensuring PnL calculations remain algebraically closed without numerical drift. Operator 'Structural Missingness Indicator' (page 3, domain other) captures: Balance reservation and display fields, such as `displayedCash`, are absent when the gateway cannot determine them; a present `0` is distinct from an absent value. Assumptions: API responses encode epistemic uncertainty via field omission rather than null/zero padding. Breakdown regime: Breaks under naive JSON deserialization that defaults missing keys to zero. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's sensor occlusion flags; dictates when a state estimator must rely on prior distributions versus direct observation. Operator 'WebSocket State Transition Kernel' (page 2, domain other) captures: found'); } } ``` ## Configuration ```typescript const client = new PolymarketUS({ keyId: 'your-key-id', secretKey: 'your-secret-key', timeout: 30000, // Request timeout in ms (default: 30000) }); ``` ### WebSocket (Real-Time Data) `subscribeOrders()` subscribes to live order updates. Assumptions: Network connectivity maintains a persistent, ordered sequence of state deltas. Breakdown regime: Singularity occurs during network partition, causing state divergence between client and exchange. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly maps to GSE's event-loop architecture, where each `orderUpdate` triggers a deterministic transition in the local order book graph. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This API design inherits from the rigorous state-machine architectures of traditional electronic communication networks (ECNs) like NASDAQ ITCH, but adapts them for a blockchain-anchored environment. The shift from integer-based tick sizes to exact decimal strings reflects a broader trend in quantitative finance towards arbitrary-precision arithmetic to eliminate slippage-induced biases. The explicit handling of missing fields echoes the evolution of database theory from SQL's nullable columns to Rust/TypeScript's Option/Maybe monads, enforcing compile-time safety against epistemic gaps.",
+      "theory_of_mind": "The SDK implicitly models two primary agents: the user (quantitative trader) and the exchange gateway. The user seeks to maximize expected utility by exploiting price discrepancies, relying on the `subscribeOrders` stream for low-latency signals. The gateway acts as an adversarial or at least non-cooperative oracle, occasionally withholding data (`displayedCash` absent) due to internal processing constraints or network congestion. The error handling classes (`RateLimitError`, `AuthenticationError`) represent the gateway's enforcement of boundary conditions, punishing aggressive probing. A sophisticated agent must infer the gateway's internal state (e.g., load levels) from these error signals and adapt its request cadence accordingly.",
+      "cross_layer_veto": "A critical veto condition arises if the client's local clock diverges significantly from the exchange's `transactTime`. If `transactTime` is `null` (as noted in quote 14), the agent loses the ability to synchronize its filtration, rendering causal inference invalid. Another veto occurs if the `netPositionDecimal` exceeds the bounds of the allocated margin, triggering a forced liquidation that bypasses the standard state-transition kernel. Finally, if the WebSocket connection drops, the agent must veto all trading actions until a full snapshot (`SUBSCRIPTION_TYPE_ORDER_SNAPSHOT`) is received and reconciled, preventing trades based on stale or phantom liquidity."
+    }
+  ]
+}

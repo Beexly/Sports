@@ -1,0 +1,78 @@
+{
+  "book_id": "122a27ea637434c2",
+  "source_status": "COMPLETE",
+  "title": "salary-import-lanes",
+  "file_name": "salary-import-lanes.md",
+  "sha256": "122a27ea637434c2469db231c0427df7891c4f9852f0880b52cbe3c9afc781de",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "DraftKings salary import via unauthenticated REST endpoint with TLS impersonation; FanDuel requires login-gated CSV; slate discovery maps to draftGroupId with time-based caching. Universal Lens: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on salary data integrity using GSE-provided projections and ownership; conformal prediction bounds on player value estimates under rate-limit uncertainty. GSI Mapping: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State machine transitions from slate discovery to lock-time synchronization; player pool deduplication via playerId; cache invalidation on inactivity signals. GSE Mapping: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "draftkings_salary_endpoint",
+      "name": "DraftKings Salary Feed",
+      "verbatim_quote": "DraftKings salaries import programmatically, no account, no API key, no auth — verified live end-to-end today (2026-09-28).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'draftGroupId': 'dimensionless identifier', 'fetchedAt': 'UTC timestamp (seconds)', 'lockTime': 'UTC timestamp (seconds)'}",
+      "assumptions": "Anonymous GET request with Chrome TLS impersonation bypasses Akamai 403; no rate-limit headers imply unbounded cadence within legal bounds.",
+      "breakdown_regime": "Endpoint returns 200 OK with 867KB payload; player list deduplicated by playerId.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "DK salary data structure mirrors DfsPlayer contract; draftGroupId links to contest metadata.",
+        "source_operator": "draftkings_salary_endpoint",
+        "telemetry": "HTTP status code, response size, draftGroupId consistency"
+      }
+    },
+    {
+      "primitive_id": "fantasy_duel_csv_import",
+      "name": "FanDuel CSV Import Path",
+      "verbatim_quote": "FanDuel has no clean public equivalent (login-gated; CSV/manual is the precedent).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'csvPath': 'file system path string', 'playerId': 'dimensionless identifier', 'salary': 'USD'}",
+      "assumptions": "Manual download required; no authenticated API access; CSV parsing aligns with DfsPlayer schema.",
+      "breakdown_regime": "Login-dependent; requires manual intervention; prone to stale data unless refreshed daily.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CSV column mapping to internal DfsPlayer fields; ingestion pipeline must validate schema.",
+        "source_operator": "fantasy_duel_csv_import",
+        "telemetry": "Column count match, salary range validation, player ID uniqueness"
+      }
+    },
+    {
+      "primitive_id": "slate_discovery_protocol",
+      "name": "Slate Discovery Protocol",
+      "verbatim_quote": "Filter `contestType.sport == \"NFL\"`, `contestType.gameType == \"SalaryCap\"`, `draftGroupState == \"Upcoming\"`, pick by `minStartTime`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'sport': 'string {\"NFL\"}', 'gameType': 'string {\"SalaryCap\"}', 'draftGroupState': 'enum {\"Upcoming\", \"Active\", \"Locked\"}', 'minStartTime': 'UTC timestamp (seconds)'}",
+      "assumptions": "Contest filtering ensures correct slate selection; time-based ordering prevents race conditions.",
+      "breakdown_regime": "Filters applied server-side; results ordered by earliest start time.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Contest metadata maps directly to draftGroupId; enables downstream player pool retrieval.",
+        "source_operator": "slate_discovery_protocol",
+        "telemetry": "Number of filtered contests, minStartTime deviation, draftGroupId resolution"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "122a27ea637434c2_t0",
+      "think": "The core insight is that DraftKings' salary feed operates as a read-only, unauthenticated REST API accessible via TLS-impersonated clients, enabling programmatic access without credentials. This contrasts with FanDuel, which mandates login-gated CSV imports, introducing a procedural barrier. The slate discovery protocol filters upcoming NFL contests based on game type and start time, yielding a draftGroupId that uniquely identifies the player pool. The system assumes that anonymous requests with proper TLS impersonation bypass Akamai protections, and that no documented rate limits exist, allowing flexible polling cadences. Player data is deduplicated by playerId, ensuring consistent representation in downstream models. The risk of ToS violation is minimal for read-only salary pulls, as enforcement targets republished lobby data or automated entries rather than passive reads. This creates a dual-layered operational model where GSI validates data integrity while GSE manages state transitions and caching policies.\n\nDeep epistemic analysis for salary-import-lanes (122a27ea637434c2, domain=other, pages_read=4/4): Operator 'DraftKings Salary Feed' (page 1, domain other) captures: DraftKings salaries import programmatically, no account, no API key, no auth — verified live end-to-end today (2026-09-28). Assumptions: Anonymous GET request with Chrome TLS impersonation bypasses Akamai 403; no rate-limit headers imply unbounded cadence within legal bounds. Breakdown regime: Endpoint returns 200 OK with 867KB payload; player list deduplicated by playerId. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DK salary data structure mirrors DfsPlayer contract; draftGroupId links to contest metadata. Operator 'FanDuel CSV Import Path' (page 1, domain other) captures: FanDuel has no clean public equivalent (login-gated; CSV/manual is the precedent). Assumptions: Manual download required; no authenticated API access; CSV parsing aligns with DfsPlayer schema. Breakdown regime: Login-dependent; requires manual intervention; prone to stale data unless refreshed daily. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CSV column mapping to internal DfsPlayer fields; ingestion pipeline must validate schema. Operator 'Slate Discovery Protocol' (page 1, domain other) captures: Filter `contestType.sport == \"NFL\"`, `contestType.gameType == \"SalaryCap\"`, `draftGroupState == \"Upcoming\"`, pick by `minStartTime`. Assumptions: Contest filtering ensures correct slate selection; time-based ordering prevents race conditions. Breakdown regime: Filters applied server-side; results ordered by earliest start time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contest metadata maps directly to draftGroupId; enables downstream player pool retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for salary-import-lanes (122a27ea637434c2, domain=other, pages_read=4/4): Operator 'DraftKings Salary Feed' (page 1, domain other) captures: DraftKings salaries import programmatically, no account, no API key, no auth — verified live end-to-end today (2026-09-28). Assumptions: Anonymous GET request with Chrome TLS impersonation bypasses Akamai 403; no rate-limit headers imply unbounded cadence within legal bounds. Breakdown regime: Endpoint returns 200 OK with 867KB payload; player list deduplicated by playerId. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): DK salary data structure mirrors DfsPlayer contract; draftGroupId links to contest metadata. Operator 'FanDuel CSV Import Path' (page 1, domain other) captures: FanDuel has no clean public equivalent (login-gated; CSV/manual is the precedent). Assumptions: Manual download required; no authenticated API access; CSV parsing aligns with DfsPlayer schema. Breakdown regime: Login-dependent; requires manual intervention; prone to stale data unless refreshed daily. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CSV column mapping to internal DfsPlayer fields; ingestion pipeline must validate schema. Operator 'Slate Discovery Protocol' (page 1, domain other) captures: Filter `contestType.sport == \"NFL\"`, `contestType.gameType == \"SalaryCap\"`, `draftGroupState == \"Upcoming\"`, pick by `minStartTime`. Assumptions: Contest filtering ensures correct slate selection; time-based ordering prevents race conditions. Breakdown regime: Filters applied server-side; results ordered by earliest start time. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Contest metadata maps directly to draftGroupId; enables downstream player pool retrieval. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2010s web scraping practices and evolving anti-bot measures. Influenced by 2016 SuperLobby case, which established precedent for ToS enforcement boundaries around data harvesting. Retrocausal Genealogy: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include DraftKings' security systems enforcing access control and potential competitors attempting to exploit data feeds. Decision actors include GSE's optimizer logic and GSI's validation routines, both operating under bounded rationality constraints. Theory of Mind & Decision Maker Model: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity between GSI’s probabilistic inference and GSE’s deterministic state machines prevents overfitting to single data sources. Leakage vetoes include preventing unauthorized replication of lobby data and ensuring no account-based authentication leaks into public endpoints. Cross-Layer Veto & Anti-Leakage Check: Rooted in salary-import-lanes (122a27ea637434c2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

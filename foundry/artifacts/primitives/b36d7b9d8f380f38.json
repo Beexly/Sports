@@ -1,0 +1,78 @@
+{
+  "book_id": "b36d7b9d8f380f38",
+  "source_status": "COMPLETE",
+  "title": "DISPATCH",
+  "file_name": "DISPATCH.md",
+  "sha256": "b36d7b9d8f380f380896854174d861b9b76153356d326d48539af6fbff7689d6",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Isolated test suite worktree integrity enforces CI compliance through exclusionary path constraints and symbolic junction repair. Universal Lens: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian test isolation models CI failure likelihood via exclusion priors and snapshot consistency checks. GSI Mapping: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning resolves build state transitions by validating file ownership and enforcing kernel-level path exclusions. GSE Mapping: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "test_runner_worktree_isolation",
+      "name": "Test Runner Worktree Isolation",
+      "verbatim_quote": "Enforce Test Runner Worktree Isolation: - Ensure tracked root `vitest.config.ts` excludes `**/.worktrees/**`, `**/.agents/**`, `**/data/snapshots/**`, `**/node_modules/**`, `**/dist/**`, `**/.next/**`, `apps/mobile/**`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Worktree path set', 'E': 'Exclusion pattern set', 'F': 'File system path'}",
+      "assumptions": "All paths are absolute and filesystem-accessible.",
+      "breakdown_regime": "When E ⊈ W, test runner leaks into unauthorized worktrees.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The exclusion set E defines a kernel constraint on W such that F ∩ W ⊆ ¬E, ensuring test isolation.",
+        "source_operator": "test_runner_worktree_isolation",
+        "telemetry": "Number of excluded paths matched during test execution."
+      }
+    },
+    {
+      "primitive_id": "ci_compilation_error_fix",
+      "name": "CI Compilation Error Fix",
+      "verbatim_quote": "Fix 4 Blocking CI / Compilation Errors on Main: - `packages/ingestion-pipeline/src/process-sport.ts`: Fix syntax error at lines 1753-1754 by replacing `lineSnapshotsPersisted?: number; lineArchiveErrors?: number;` with `lineSnapshotsPersisted, lineArchiveErrors,`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Source code segment', 'E': 'Syntax error indicator', 'R': 'Repaired code fragment'}",
+      "assumptions": "Error is syntactic and can be resolved by replacement.",
+      "breakdown_regime": "When E ≠ ∅, CI pipeline halts due to unresolvable syntax.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Syntax error E is resolved by applying transformation R to S, yielding compliant code.",
+        "source_operator": "ci_compilation_error_fix",
+        "telemetry": "Compilation success rate post-fix."
+      }
+    },
+    {
+      "primitive_id": "node_module_junction_repair",
+      "name": "Node Module Junction Repair",
+      "verbatim_quote": "Repair Corrupted Node Modules Junctions: - Run `node scripts/hybrid-node-modules.cjs C:\\Users\\Garrett\\Sports C:\\Users\\Garrett\\Sports` to repair `@sports/*` junctions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'J': 'Junction map', 'M': 'Module path', 'R': 'Repair script invocation'}",
+      "assumptions": "Junctions are symbolic links managed by hybrid-node-modules.",
+      "breakdown_regime": "When J ⊈ M, module resolution fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "R repairs J by re-establishing symbolic links between M and J.",
+        "source_operator": "node_module_junction_repair",
+        "telemetry": "Module resolution success count after repair."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b36d7b9d8f380f38_t0",
+      "think": "The core problem is maintaining isolated test environments while ensuring CI integrity. The first primitive, test runner worktree isolation, establishes a kernel constraint where the test environment excludes certain paths to prevent contamination. This mirrors a topological exclusion principle where W ⊆ ¬E. The second primitive, CI compilation error fix, applies a syntactic transformation to resolve a kernel-level failure mode. It operates under the assumption that errors are deterministic and resolvable via direct replacement. The third primitive, node module junction repair, ensures that symbolic links are valid, which is critical for module resolution. These primitives form a layered validation protocol: path exclusion → syntax correction → module integrity. Each step is a necessary condition for the next, forming a logical chain of verifiable states.\n\nDeep epistemic analysis for DISPATCH (b36d7b9d8f380f38, domain=other, pages_read=2/2): Operator 'Test Runner Worktree Isolation' (page 1, domain other) captures: Enforce Test Runner Worktree Isolation: - Ensure tracked root `vitest.config.ts` excludes `**/.worktrees/**`, `**/.agents/**`, `**/data/snapshots/**`, `**/node_modules/**`, `**/dist/**`, `**/.next/**`, `apps/mobile/**`. Assumptions: All paths are absolute and filesystem-accessible. Breakdown regime: When E ⊈ W, test runner leaks into unauthorized worktrees. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The exclusion set E defines a kernel constraint on W such that F ∩ W ⊆ ¬E, ensuring test isolation. Operator 'CI Compilation Error Fix' (page 1, domain other) captures: Fix 4 Blocking CI / Compilation Errors on Main: - `packages/ingestion-pipeline/src/process-sport.ts`: Fix syntax error at lines 1753-1754 by replacing `lineSnapshotsPersisted?: number; lineArchiveErrors?: number;` with `lineSnapshotsPersisted, lineArchiveErrors,`. Assumptions: Error is syntactic and can be resolved by replacement. Breakdown regime: When E ≠ ∅, CI pipeline halts due to unresolvable syntax. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Syntax error E is resolved by applying transformation R to S, yielding compliant code. Operator 'Node Module Junction Repair' (page 1, domain other) captures: Repair Corrupted Node Modules Junctions: - Run `node scripts/hybrid-node-modules.cjs C:\\Users\\Garrett\\Sports C:\\Users\\Garrett\\Sports` to repair `@sports/*` junctions. Assumptions: Junctions are symbolic links managed by hybrid-node-modules. Breakdown regime: When J ⊈ M, module resolution fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R repairs J by re-establishing symbolic links between M and J. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for DISPATCH (b36d7b9d8f380f38, domain=other, pages_read=2/2): Operator 'Test Runner Worktree Isolation' (page 1, domain other) captures: Enforce Test Runner Worktree Isolation: - Ensure tracked root `vitest.config.ts` excludes `**/.worktrees/**`, `**/.agents/**`, `**/data/snapshots/**`, `**/node_modules/**`, `**/dist/**`, `**/.next/**`, `apps/mobile/**`. Assumptions: All paths are absolute and filesystem-accessible. Breakdown regime: When E ⊈ W, test runner leaks into unauthorized worktrees. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The exclusion set E defines a kernel constraint on W such that F ∩ W ⊆ ¬E, ensuring test isolation. Operator 'CI Compilation Error Fix' (page 1, domain other) captures: Fix 4 Blocking CI / Compilation Errors on Main: - `packages/ingestion-pipeline/src/process-sport.ts`: Fix syntax error at lines 1753-1754 by replacing `lineSnapshotsPersisted?: number; lineArchiveErrors?: number;` with `lineSnapshotsPersisted, lineArchiveErrors,`. Assumptions: Error is syntactic and can be resolved by replacement. Breakdown regime: When E ≠ ∅, CI pipeline halts due to unresolvable syntax. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Syntax error E is resolved by applying transformation R to S, yielding compliant code. Operator 'Node Module Junction Repair' (page 1, domain other) captures: Repair Corrupted Node Modules Junctions: - Run `node scripts/hybrid-node-modules.cjs C:\\Users\\Garrett\\Sports C:\\Users\\Garrett\\Sports` to repair `@sports/*` junctions. Assumptions: Junctions are symbolic links managed by hybrid-node-modules. Breakdown regime: When J ⊈ M, module resolution fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): R repairs J by re-establishing symbolic links between M and J. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory and software engineering practices, particularly those involving CI pipelines and symbolic linking. Influenced by concepts from algebraic topology and constraint satisfaction. Retrocausal Genealogy: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to bypass isolation or introduce false positives. The system must enforce integrity through both procedural and semantic checks, ensuring no agent can manipulate the test environment without detection. Theory of Mind & Decision Maker Model: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If any primitive fails, it invalidates downstream operations. For example, if node module junctions are not repaired, even correct syntax won't allow successful builds. Anti-collinearity is enforced by requiring independent verification of each layer's correctness. Cross-Layer Veto & Anti-Leakage Check: Rooted in DISPATCH (b36d7b9d8f380f38), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

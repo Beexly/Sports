@@ -1,0 +1,78 @@
+{
+  "book_id": "1c0561cdea0ac3fa",
+  "source_status": "COMPLETE",
+  "title": "MASTER-PAPER-INDEX",
+  "file_name": "MASTER-PAPER-INDEX.md",
+  "sha256": "1c0561cdea0ac3fa8330e932b3d52ed1da7b1461d4101ed6f8b27bff1f1746a7",
+  "primary_domain": "other",
+  "pages_total": 151,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "ArXiv-ID indexed modular corpus with dual code-documentation alignment and task-area classification for predictive modeling. Universal Lens: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework maps arXiv modules to probabilistic forecasting gates via conformal prediction intervals and structural causal models. GSI Mapping: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine uses state-transition models to map task-area tags (JS, SUTVA, forecasting) to dynamic module execution paths. GSE Mapping: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "code_discovery",
+      "name": "Code Discovery",
+      "verbatim_quote": "## How this was enumerated (observed, not assumed) - **Code discovery.** `packages/prediction-engine/src/**/*.ts` excluding `*.test.ts` and matching `^(\\d{4})-(\\d{4,5})(v\\d+)?-.+\\.ts$` → **308 files, 308 unique arXiv IDs, zero duplicate IDs** (checked by grouping on the normalized dotted id).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'files': 'dimensionless', 'arXiv_IDs': 'dimensionless'}",
+      "assumptions": "All modules follow a consistent naming convention and are uniquely mapped to arXiv IDs.",
+      "breakdown_regime": "Zero duplicates detected via normalized dotted ID grouping.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each code module corresponds to a unique arXiv paper through its filename pattern, enabling bidirectional indexing between code and documentation.",
+        "source_operator": "code_discovery",
+        "telemetry": "File count consistency check against arXiv ID uniqueness."
+      }
+    },
+    {
+      "primitive_id": "task_area_classification",
+      "name": "Task Area Classification",
+      "verbatim_quote": "- Doc side → code side: **1,186 ledgers have no code module** (Part B: 1,174 `no file`, 12 `duplicate`); the other 299 primaries do have one.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'task_area': 'categorical {JS, SUTVA, tracking, forecasting, DFS, other}'}",
+      "assumptions": "Each module's acceptance gate determines its task area based on specific test criteria.",
+      "breakdown_regime": "Modules must pass a single, well-defined gate test to be assigned a task area.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Module behavior is derived from the structure of its acceptance gate tests, which define its functional role in the system.",
+        "source_operator": "task_area_classification",
+        "telemetry": "Gate test outcomes determine module categorization."
+      }
+    },
+    {
+      "primitive_id": "documentary_alignment",
+      "name": "Documentary Alignment",
+      "verbatim_quote": "- Code side → doc side: a looser scan of the first 30 lines of every ledger (not just the heading) matches **306 of the 308** code IDs.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ledgers': 'dimensionless', 'code_modules': 'dimensionless'}",
+      "assumptions": "First 30 lines of documentation sufficiently describe the corresponding code module.",
+      "breakdown_regime": "Two modules lack direct alignment due to citation-only references.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Documentation entries are aligned with code modules using header and body content scanning, ensuring semantic correspondence.",
+        "source_operator": "documentary_alignment",
+        "telemetry": "Match rate between code and document IDs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1c0561cdea0ac3fa_t0",
+      "think": "The core insight is that the GSE research corpus operates under a dual alignment principle: code modules are indexed by arXiv IDs, while documentation is scanned for these same identifiers. This creates a structured knowledge base where each module is both executable and describable. Task areas are determined by acceptance gate tests, which act as functional classifiers. The alignment between code and docs ensures that every module has a verifiable purpose and context. Failures occur when documents don't cite arXiv IDs directly or when modules exist without corresponding documentation. The system's robustness stems from its ability to maintain this duality across 308 unique modules, with only two exceptions. This architecture supports both formal verification and practical deployment by grounding abstract concepts in concrete implementations.\n\nDeep epistemic analysis for MASTER-PAPER-INDEX (1c0561cdea0ac3fa, domain=other, pages_read=18/151): Operator 'Code Discovery' (page 1, domain other) captures: ## How this was enumerated (observed, not assumed) - **Code discovery.** `packages/prediction-engine/src/**/*.ts` excluding `*.test.ts` and matching `^(\\d{4})-(\\d{4,5})(v\\d+)?-.+\\.ts$` → **308 files, 308 unique arXiv IDs, zero duplicate IDs** (checked by grouping on the normalized dotted id). Assumptions: All modules follow a consistent naming convention and are uniquely mapped to arXiv IDs. Breakdown regime: Zero duplicates detected via normalized dotted ID grouping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each code module corresponds to a unique arXiv paper through its filename pattern, enabling bidirectional indexing between code and documentation. Operator 'Task Area Classification' (page 1, domain other) captures: - Doc side → code side: **1,186 ledgers have no code module** (Part B: 1,174 `no file`, 12 `duplicate`); the other 299 primaries do have one. Assumptions: Each module's acceptance gate determines its task area based on specific test criteria. Breakdown regime: Modules must pass a single, well-defined gate test to be assigned a task area. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Module behavior is derived from the structure of its acceptance gate tests, which define its functional role in the system. Operator 'Documentary Alignment' (page 1, domain other) captures: - Code side → doc side: a looser scan of the first 30 lines of every ledger (not just the heading) matches **306 of the 308** code IDs. Assumptions: First 30 lines of documentation sufficiently describe the corresponding code module. Breakdown regime: Two modules lack direct alignment due to citation-only references. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Documentation entries are aligned with code modules using header and body content scanning, ensuring semantic correspondence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MASTER-PAPER-INDEX (1c0561cdea0ac3fa, domain=other, pages_read=18/151): Operator 'Code Discovery' (page 1, domain other) captures: ## How this was enumerated (observed, not assumed) - **Code discovery.** `packages/prediction-engine/src/**/*.ts` excluding `*.test.ts` and matching `^(\\d{4})-(\\d{4,5})(v\\d+)?-.+\\.ts$` → **308 files, 308 unique arXiv IDs, zero duplicate IDs** (checked by grouping on the normalized dotted id). Assumptions: All modules follow a consistent naming convention and are uniquely mapped to arXiv IDs. Breakdown regime: Zero duplicates detected via normalized dotted ID grouping. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each code module corresponds to a unique arXiv paper through its filename pattern, enabling bidirectional indexing between code and documentation. Operator 'Task Area Classification' (page 1, domain other) captures: - Doc side → code side: **1,186 ledgers have no code module** (Part B: 1,174 `no file`, 12 `duplicate`); the other 299 primaries do have one. Assumptions: Each module's acceptance gate determines its task area based on specific test criteria. Breakdown regime: Modules must pass a single, well-defined gate test to be assigned a task area. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Module behavior is derived from the structure of its acceptance gate tests, which define its functional role in the system. Operator 'Documentary Alignment' (page 1, domain other) captures: - Code side → doc side: a looser scan of the first 30 lines of every ledger (not just the heading) matches **306 of the 308** code IDs. Assumptions: First 30 lines of documentation sufficiently describe the corresponding code module. Breakdown regime: Two modules lack direct alignment due to citation-only references. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Documentation entries are aligned with code modules using header and body content scanning, ensuring semantic correspondence. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the mathematical formalism of structured data indexing and probabilistic modeling, tracing back to early work on Bayesian networks and causal inference frameworks such as DAGs with NO TEARS. Retrocausal Genealogy: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the formalism of module classification (e.g., JS vs SUTVA) and the implicit assumption that all modules will align perfectly with documentation—this tension drives the need for dual validation mechanisms. Theory of Mind & Decision Maker Model: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring each module to belong to exactly one task area, preventing ambiguity in functional assignment. Leakage is mitigated by ensuring that no module is silently omitted during enumeration, maintaining full coverage of the corpus. Cross-Layer Veto & Anti-Leakage Check: Rooted in MASTER-PAPER-INDEX (1c0561cdea0ac3fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

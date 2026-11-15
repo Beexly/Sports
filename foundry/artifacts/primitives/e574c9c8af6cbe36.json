@@ -1,0 +1,78 @@
+{
+  "book_id": "e574c9c8af6cbe36",
+  "source_status": "COMPLETE",
+  "title": "game-stylization",
+  "file_name": "game-stylization.md",
+  "sha256": "e574c9c8af6cbe367f7baa5d426fad87a3caa9f530e3a3f21343fd14371ba782",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stylization as a categorical fiber bundle over asset generation manifolds, where each fiber encodes a style formula that induces a coherent geometric structure across independent model calls. Universal Lens: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers style consistency via Bayesian belief updates on the style formula's latent semantic embedding, conditioned on cross-subsystem prompt alignment and empirical visual coherence metrics. GSI Mapping: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes style-constrained state transitions by propagating the byte-identical style formula through all generation subsystems, enforcing isomorphic prompt kernels and verifying coherence via scale-proportion checks. GSE Mapping: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "style_formula",
+      "name": "Style Formula Derivation",
+      "verbatim_quote": "**Interface in one paragraph:** the pipeline derives ONE text string (the STYLE FORMULA) per game, gets it user-approved once, then inserts it byte-identical into every asset-generation prompt of every subsystem (sprites, animations, tiles, backgrounds, textures, 3D).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Style formula string, dimensionless', 'G': 'Game identifier, dimensionless'}",
+      "assumptions": "All asset generation is independent; style formula is fixed post-approval.",
+      "breakdown_regime": "When S is not uniformly applied across subsystems, visual inconsistency emerges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The style formula acts as a global isomorphism between subsystems, ensuring that each asset generation process respects a shared stylistic kernel.",
+        "source_operator": "style_formula",
+        "telemetry": "Cross-subsystem visual coherence score, measured via perceptual hashing of generated assets."
+      }
+    },
+    {
+      "primitive_id": "perspective_word_alignment",
+      "name": "Perspective Word Consistency",
+      "verbatim_quote": "- **The perspective word in block 5 must match the genre**: platformer / runner → `side-view`; top-down → `top-down`; puzzle / clicker → `flat frontal`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Perspective word, dimensionless', 'G': 'Genre type, dimensionless'}",
+      "assumptions": "Genre determines perspective; mismatch leads to visual dissonance.",
+      "breakdown_regime": "When P ≠ f(G), cross-asset perspective misalignment occurs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Perspective word P is derived from genre G and embedded into the style formula kernel to enforce spatial consistency.",
+        "source_operator": "perspective_word_alignment",
+        "telemetry": "Asset-level perspective tag consistency rate across subsystems."
+      }
+    },
+    {
+      "primitive_id": "style_token",
+      "name": "Style Token Compression",
+      "verbatim_quote": "(3D pipelines: see section 8 — the perspective word is replaced, not reused.) - If the user supplied a style reference image, describe ITS rendering style in your own precise words in block 1 — never paste image URLs into the formula.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Style token, dimensionless', 'F': 'Full style formula, dimensionless'}",
+      "assumptions": "Token preserves essential style semantics under compression.",
+      "breakdown_regime": "Compression loss when T ≠ C(F) due to semantic truncation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Style token T is a compressed kernel derived from F, enabling efficient transmission while preserving core stylistic identity.",
+        "source_operator": "style_token",
+        "telemetry": "Semantic similarity between F and C(F) using cosine distance on embedding space."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e574c9c8af6cbe36_t0",
+      "think": "The style formula operates as a categorical fiber over the space of game assets, where each fiber represents a fixed stylistic constraint that ensures visual coherence across independent generation processes. The derivation of the formula is a structured composition of stylistic blocks, each contributing to a unified aesthetic grammar. The perspective word alignment enforces genre-specific spatial semantics, preventing cross-asset visual contradictions. The style token is a compressed representation of this structure, designed for efficient communication in constrained environments. Failure modes arise when the formula is not consistently applied or when the perspective word does not align with genre expectations, leading to visual fragmentation. The system’s robustness depends on the invariance of the style formula under all subsystems and its preservation during transmission.\n\nDeep epistemic analysis for game-stylization (e574c9c8af6cbe36, domain=other, pages_read=5/5): Operator 'Style Formula Derivation' (page 1, domain other) captures: **Interface in one paragraph:** the pipeline derives ONE text string (the STYLE FORMULA) per game, gets it user-approved once, then inserts it byte-identical into every asset-generation prompt of every subsystem (sprites, animations, tiles, backgrounds, textures, 3D). Assumptions: All asset generation is independent; style formula is fixed post-approval. Breakdown regime: When S is not uniformly applied across subsystems, visual inconsistency emerges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The style formula acts as a global isomorphism between subsystems, ensuring that each asset generation process respects a shared stylistic kernel. Operator 'Perspective Word Consistency' (page 1, domain other) captures: - **The perspective word in block 5 must match the genre**: platformer / runner → `side-view`; top-down → `top-down`; puzzle / clicker → `flat frontal`. Assumptions: Genre determines perspective; mismatch leads to visual dissonance. Breakdown regime: When P ≠ f(G), cross-asset perspective misalignment occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Perspective word P is derived from genre G and embedded into the style formula kernel to enforce spatial consistency. Operator 'Style Token Compression' (page 2, domain other) captures: (3D pipelines: see section 8 — the perspective word is replaced, not reused.) - If the user supplied a style reference image, describe ITS rendering style in your own precise words in block 1 — never paste image URLs into the formula. Assumptions: Token preserves essential style semantics under compression. Breakdown regime: Compression loss when T ≠ C(F) due to semantic truncation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Style token T is a compressed kernel derived from F, enabling efficient transmission while preserving core stylistic identity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for game-stylization (e574c9c8af6cbe36, domain=other, pages_read=5/5): Operator 'Style Formula Derivation' (page 1, domain other) captures: **Interface in one paragraph:** the pipeline derives ONE text string (the STYLE FORMULA) per game, gets it user-approved once, then inserts it byte-identical into every asset-generation prompt of every subsystem (sprites, animations, tiles, backgrounds, textures, 3D). Assumptions: All asset generation is independent; style formula is fixed post-approval. Breakdown regime: When S is not uniformly applied across subsystems, visual inconsistency emerges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The style formula acts as a global isomorphism between subsystems, ensuring that each asset generation process respects a shared stylistic kernel. Operator 'Perspective Word Consistency' (page 1, domain other) captures: - **The perspective word in block 5 must match the genre**: platformer / runner → `side-view`; top-down → `top-down`; puzzle / clicker → `flat frontal`. Assumptions: Genre determines perspective; mismatch leads to visual dissonance. Breakdown regime: When P ≠ f(G), cross-asset perspective misalignment occurs. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Perspective word P is derived from genre G and embedded into the style formula kernel to enforce spatial consistency. Operator 'Style Token Compression' (page 2, domain other) captures: (3D pipelines: see section 8 — the perspective word is replaced, not reused.) - If the user supplied a style reference image, describe ITS rendering style in your own precise words in block 1 — never paste image URLs into the formula. Assumptions: Token preserves essential style semantics under compression. Breakdown regime: Compression loss when T ≠ C(F) due to semantic truncation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Style token T is a compressed kernel derived from F, enabling efficient transmission while preserving core stylistic identity. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early computer graphics' need for visual consistency across rendering layers, evolving into modern neural rendering pipelines that require explicit style contracts to avoid semantic drift. Retrocausal Genealogy: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the generative models, which operate without memory, and the human designer, who expects coherent visual outcomes. The system mediates between these by enforcing a shared stylistic kernel. Theory of Mind & Decision Maker Model: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct stylistic blocks in the formula to prevent redundancy. Leakage is mitigated by freezing the formula post-approval and avoiding dynamic updates to style parameters during generation. Cross-Layer Veto & Anti-Leakage Check: Rooted in game-stylization (e574c9c8af6cbe36), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

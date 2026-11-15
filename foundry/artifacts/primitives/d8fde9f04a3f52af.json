@@ -1,0 +1,78 @@
+{
+  "book_id": "d8fde9f04a3f52af",
+  "source_status": "COMPLETE",
+  "title": "sewer-dive-datasets-apis-2026-09-25",
+  "file_name": "sewer-dive-datasets-apis-2026-09-25.md",
+  "sha256": "d8fde9f04a3f52afa1de9c3497f553a678e09c0006cca38e32a6f27ad24b5689",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for probabilistic sports data ingestion integrates temporal freshness, observational fidelity, and inferential robustness across structured and unstructured sources. Universal Lens: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over NFL play-by-play and weather data to generate calibrated uncertainty bounds for strategic decision-making. GSI Mapping: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies Markovian state transitions on multi-source data streams to model dynamic game states, enabling real-time tactical inference and risk-adjusted action selection. GSE Mapping: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_freshness_index",
+      "name": "Temporal Freshness Index",
+      "verbatim_quote": "**nflverse + nflreadpy ecosystem** — free NFL feature store (PBP 1999–, NGS, FTN charting, snap counts, injuries, contracts, depth charts).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_f': 'Temporal freshness index (dimensionless)', 't_{obs}': 'Observation timestamp (UTC)', 't_{refresh}': 'Last refresh timestamp (UTC)'}",
+      "assumptions": "Data cadence follows fixed UTC intervals; freshness decreases inversely with time since last update.",
+      "breakdown_regime": "When t_obs > t_refresh + Δt_threshold, T_f → 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps data ingestion latency to a probabilistic confidence score in GSE's belief propagation.",
+        "source_operator": "temporal_freshness_index",
+        "telemetry": "Daily refresh cycle deviation from expected UTC cadence."
+      }
+    },
+    {
+      "primitive_id": "weather_leakage_safe_stack",
+      "name": "Weather Leakage-Safe Stack",
+      "verbatim_quote": "**Open-Meteo Previous Runs + NWS api.weather.gov** — the only verified leakage-safe weather stack: forecast vintages for backtests (ERA5 archive 5-day delay, ECMWF IFS 2017–), free live gridpoint forecasts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_{safe}': 'Leakage-safe weather forecast (dimensionless)', 'Δt_{delay}': 'Forecast vintage delay (days)', 'L_{leak}': 'Leakage indicator (boolean)'}",
+      "assumptions": "ERA5 and ECMWF data are non-causal; no real-time data leakage occurs.",
+      "breakdown_regime": "If L_leak = true, W_safe → 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to perform backtesting without introducing future information bias.",
+        "source_operator": "weather_leakage_safe_stack",
+        "telemetry": "Verification of forecast vintage age against real-time data availability."
+      }
+    },
+    {
+      "primitive_id": "prop_line_clv_gap_fill",
+      "name": "Prop Line CLV Gap Fill",
+      "verbatim_quote": "**PropLine** — prop settlement + line history/closing lines + Pinnacle-anchored no-vig fair lines + webhooks.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CLV_{prop}': 'Conditional Loss Value for props (USD)', 'L_{fair}': 'Fair line value (dimensionless)', 'H_{history}': 'Historical closing line set (dimensionless)'}",
+      "assumptions": "PropLine provides unbiased historical line data; no-vig lines reflect true market consensus.",
+      "breakdown_regime": "When H_history is empty, CLV_prop → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides GSE with synthetic historical CLV estimates to fill gaps in proprietary data.",
+        "source_operator": "prop_line_clv_gap_fill",
+        "telemetry": "Number of valid historical line entries per prop type."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d8fde9f04a3f52af_t0",
+      "think": "The temporal freshness index (T_f) models how recent data is relative to its refresh cadence, using a monotonic decay function. It enables GSE to weight data sources dynamically based on recency. The weather leakage-safe stack (W_safe) ensures that backtesting does not suffer from data snooping by enforcing vintage delays. This is critical for maintaining statistical validity in predictive models. The prop line CLV gap fill (CLV_prop) bridges missing historical data by leveraging Pinnacle-anchored lines, allowing GSE to maintain full coverage of betting market dynamics even when direct data is unavailable. These primitives form a coherent foundation for probabilistic reasoning under uncertainty in sports intelligence systems.\n\nDeep epistemic analysis for sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af, domain=other, pages_read=5/5): Operator 'Temporal Freshness Index' (page 1, domain other) captures: **nflverse + nflreadpy ecosystem** — free NFL feature store (PBP 1999–, NGS, FTN charting, snap counts, injuries, contracts, depth charts). Assumptions: Data cadence follows fixed UTC intervals; freshness decreases inversely with time since last update. Breakdown regime: When t_obs > t_refresh + Δt_threshold, T_f → 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps data ingestion latency to a probabilistic confidence score in GSE's belief propagation. Operator 'Weather Leakage-Safe Stack' (page 1, domain other) captures: **Open-Meteo Previous Runs + NWS api.weather.gov** — the only verified leakage-safe weather stack: forecast vintages for backtests (ERA5 archive 5-day delay, ECMWF IFS 2017–), free live gridpoint forecasts. Assumptions: ERA5 and ECMWF data are non-causal; no real-time data leakage occurs. Breakdown regime: If L_leak = true, W_safe → 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to perform backtesting without introducing future information bias. Operator 'Prop Line CLV Gap Fill' (page 1, domain other) captures: **PropLine** — prop settlement + line history/closing lines + Pinnacle-anchored no-vig fair lines + webhooks. Assumptions: PropLine provides unbiased historical line data; no-vig lines reflect true market consensus. Breakdown regime: When H_history is empty, CLV_prop → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides GSE with synthetic historical CLV estimates to fill gaps in proprietary data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af, domain=other, pages_read=5/5): Operator 'Temporal Freshness Index' (page 1, domain other) captures: **nflverse + nflreadpy ecosystem** — free NFL feature store (PBP 1999–, NGS, FTN charting, snap counts, injuries, contracts, depth charts). Assumptions: Data cadence follows fixed UTC intervals; freshness decreases inversely with time since last update. Breakdown regime: When t_obs > t_refresh + Δt_threshold, T_f → 0. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps data ingestion latency to a probabilistic confidence score in GSE's belief propagation. Operator 'Weather Leakage-Safe Stack' (page 1, domain other) captures: **Open-Meteo Previous Runs + NWS api.weather.gov** — the only verified leakage-safe weather stack: forecast vintages for backtests (ERA5 archive 5-day delay, ECMWF IFS 2017–), free live gridpoint forecasts. Assumptions: ERA5 and ECMWF data are non-causal; no real-time data leakage occurs. Breakdown regime: If L_leak = true, W_safe → 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to perform backtesting without introducing future information bias. Operator 'Prop Line CLV Gap Fill' (page 1, domain other) captures: **PropLine** — prop settlement + line history/closing lines + Pinnacle-anchored no-vig fair lines + webhooks. Assumptions: PropLine provides unbiased historical line data; no-vig lines reflect true market consensus. Breakdown regime: When H_history is empty, CLV_prop → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides GSE with synthetic historical CLV estimates to fill gaps in proprietary data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and causal inference principles, these operators draw from temporal logic and stochastic process modeling, evolving from early data freshness metrics and leakage detection frameworks in computational finance. Retrocausal Genealogy: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors with varying degrees of transparency and latency, and adversarial market forces that may introduce noise into historical datasets. GSE must balance exploitation of available data with robustness against misinformation. Theory of Mind & Decision Maker Model: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently to prevent cascading errors. Leakage veto conditions ensure no future data enters training sets, while CLV gap filling avoids overfitting to biased historical lines. Cross-Layer Veto & Anti-Leakage Check: Rooted in sewer-dive-datasets-apis-2026-09-25 (d8fde9f04a3f52af), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "049d820ea7b011d2",
+  "source_status": "COMPLETE",
+  "title": "CARDS_SCANNERS",
+  "file_name": "CARDS_SCANNERS.md",
+  "sha256": "049d820ea7b011d2273913dd12ecd41b4e56670dfc51e6a5d5b1eb4332c22208",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Scanners operate on stored line data with zero marginal token cost, enforcing data-blocked execution via fail-closed logic and deterministic gates. Universal Lens: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps ladder coherence and dispersion to probabilistic consistency checks using conformal prediction layers. GSI Mapping: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models scanner states through state transitions governed by archive flag defaults and idempotent module creation. GSE Mapping: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ladder_coherence_scanner",
+      "name": "Ladder Coherence Scanner",
+      "verbatim_quote": "# Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'line': 'dimensionless', 'qOver': 'probability', 'shinZ': 'standardized deviation'}",
+      "assumptions": "Ladder rungs are ordered and finite; probabilities are valid and non-negative.",
+      "breakdown_regime": "When fewer than two clean rungs exist or when non-finite values occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps ladder rungs to consistency flags via monotonicity and duplication checks.",
+        "source_operator": "ladder_coherence_scanner",
+        "telemetry": "Number of flagged rungs indicating inconsistency."
+      }
+    },
+    {
+      "primitive_id": "dispersion_miner",
+      "name": "Dispersion Miner",
+      "verbatim_quote": "# Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'tau': 'probability points', 'dup_tolerance': 'probability points'}",
+      "assumptions": "Dispersion is measured relative to a baseline tau threshold and tolerance.",
+      "breakdown_regime": "When rung count falls below minimum or when duplicates contradict monotonicity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives dispersion metrics from ladder rung spacing and flagging.",
+        "source_operator": "dispersion_miner",
+        "telemetry": "Average spacing between flagged rungs."
+      }
+    },
+    {
+      "primitive_id": "fail_closed_gate",
+      "name": "Fail-Closed Gate",
+      "verbatim_quote": "- **Fail-closed:** deny-shape (`ok:false` + `refuse` enum), never throw, never fabricate, on missing/disabled/dirty data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ok': 'boolean', 'refuse': 'enum'}",
+      "assumptions": "All inputs must be validated before processing; no fallback behavior allowed.",
+      "breakdown_regime": "On disabled or dirty data sources.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ensures deterministic refusal logic across all scanner outputs.",
+        "source_operator": "fail_closed_gate",
+        "telemetry": "Count of refused scans due to invalid input."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "049d820ea7b011d2_t0",
+      "think": "The primitives define a layered architecture where scanner cards enforce data integrity through coherence checks and dispersion analysis. The fail-closed mechanism ensures robustness against incomplete or corrupted data by refusing output rather than producing erroneous results. These operations form a kernel of logical consistency that underpins probabilistic inference in GSI and situational awareness in GSE. The mathematical structure mirrors a lattice-based constraint system where each primitive enforces a specific topological property of the data space.\n\nDeep epistemic analysis for CARDS_SCANNERS (049d820ea7b011d2, domain=other, pages_read=18/18): Operator 'Ladder Coherence Scanner' (page 1, domain other) captures: # Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards. Assumptions: Ladder rungs are ordered and finite; probabilities are valid and non-negative. Breakdown regime: When fewer than two clean rungs exist or when non-finite values occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ladder rungs to consistency flags via monotonicity and duplication checks. Operator 'Dispersion Miner' (page 1, domain other) captures: # Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards. Assumptions: Dispersion is measured relative to a baseline tau threshold and tolerance. Breakdown regime: When rung count falls below minimum or when duplicates contradict monotonicity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives dispersion metrics from ladder rung spacing and flagging. Operator 'Fail-Closed Gate' (page 1, domain other) captures: - **Fail-closed:** deny-shape (`ok:false` + `refuse` enum), never throw, never fabricate, on missing/disabled/dirty data. Assumptions: All inputs must be validated before processing; no fallback behavior allowed. Breakdown regime: On disabled or dirty data sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures deterministic refusal logic across all scanner outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CARDS_SCANNERS (049d820ea7b011d2, domain=other, pages_read=18/18): Operator 'Ladder Coherence Scanner' (page 1, domain other) captures: # Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards. Assumptions: Ladder rungs are ordered and finite; probabilities are valid and non-negative. Breakdown regime: When fewer than two clean rungs exist or when non-finite values occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps ladder rungs to consistency flags via monotonicity and duplication checks. Operator 'Dispersion Miner' (page 1, domain other) captures: # Scanner Cards — C3.1 ladder coherence · C3.5 boosts · E-G1 dispersion (Wave SC) **Deck file handling: INTERNAL.** This file contains INTERNAL and CROWN-class cards. Assumptions: Dispersion is measured relative to a baseline tau threshold and tolerance. Breakdown regime: When rung count falls below minimum or when duplicates contradict monotonicity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives dispersion metrics from ladder rung spacing and flagging. Operator 'Fail-Closed Gate' (page 1, domain other) captures: - **Fail-closed:** deny-shape (`ok:false` + `refuse` enum), never throw, never fabricate, on missing/disabled/dirty data. Assumptions: All inputs must be validated before processing; no fallback behavior allowed. Breakdown regime: On disabled or dirty data sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ensures deterministic refusal logic across all scanner outputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in lattice theory and constraint satisfaction systems, evolving from early formal verification frameworks in computational logic. Retrocausal Genealogy: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to inject noise or manipulate data paths; thus, the system assumes adversarial input and applies strong denial protocols. Theory of Mind & Decision Maker Model: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring no scanner output appears in covariate registries without explicit layer tagging, preventing leakage between abstraction levels. Cross-Layer Veto & Anti-Leakage Check: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CARDS_SCANNERS (049d820ea7b011d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

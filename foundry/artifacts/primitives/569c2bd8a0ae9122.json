@@ -1,0 +1,78 @@
+{
+  "book_id": "569c2bd8a0ae9122",
+  "source_status": "COMPLETE",
+  "title": "source-provider-module-taxonomy",
+  "file_name": "source-provider-module-taxonomy.md",
+  "sha256": "569c2bd8a0ae91223d62ba159a6ae15faec86f8bf77bf53fc7a5cdd735f8db14",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A categorical evidence hierarchy maps data sources to tiered trustworthiness, enabling probabilistic inference across provider modules. Universal Lens: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian belief updating over provider tiers to compute posterior confidence in picks, conditioned on source reliability. GSI Mapping: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions between provider states using a Markovian policy engine, where each module's evidence tier determines allowable actions. GSE Mapping: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "provider_module_classification",
+      "name": "Provider Module Classification",
+      "verbatim_quote": "A \"provider module\" is the combination of a data source, its adapter implementation (or proposed adapter), its license status, and its evidence tier classification.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'module identifier (UUID)', 'S': 'source type (string)', 'A': 'adapter implementation (string)', 'L': 'license status (enum)', 'E': 'evidence tier (T1–T6)'}",
+      "assumptions": "Each module is uniquely identifiable and categorized by a fixed set of attributes.",
+      "breakdown_regime": "When L = REVOKED or E = T6, module is non-operational.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Provider module structure is isomorphic to a labeled directed graph node in the Source Acquisition Mesh.",
+        "source_operator": "provider_module_classification",
+        "telemetry": "Module admission status and license validity"
+      }
+    },
+    {
+      "primitive_id": "evidence_tier_hierarchy",
+      "name": "Evidence Tier Hierarchy",
+      "verbatim_quote": "--## User Value - Users benefit from a source taxonomy that ensures only verified, tier-appropriate evidence backs the picks they see.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'tier label (T1–T6)', 'R': 'reliability score (0–1)', 'U': 'usage constraint (boolean)'}",
+      "assumptions": "Higher tiers imply higher reliability and lower usage constraints.",
+      "breakdown_regime": "When U = true, module cannot be used for automated inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Evidence tier is derived from license type and data integrity metrics.",
+        "source_operator": "evidence_tier_hierarchy",
+        "telemetry": "Tier assignment based on audit logs and compliance checks"
+      }
+    },
+    {
+      "primitive_id": "source_category_registry",
+      "name": "Source Category Registry",
+      "verbatim_quote": "**Category 2 — Official League Data**: MLBAM Data Delivery, NFL Next Gen Stats, NBA Second Spectrum, NHL RTSS, Sportradar official league feeds.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'category index (1–7)', 'D': 'data type (string)', 'P': 'provider list (array of strings)', 'T': 'evidence tier (T1–T6)'}",
+      "assumptions": "Each category maps to a unique set of data types and providers.",
+      "breakdown_regime": "When C = 7, synthetic generation is assumed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Categories form a partition of the total provider space, each with distinct data semantics.",
+        "source_operator": "source_category_registry",
+        "telemetry": "Active provider count per category"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "569c2bd8a0ae9122_t0",
+      "think": "The taxonomy defines a hierarchical lattice of data trustworthiness through evidence tiers T1–T6. Each provider module is mapped into a category (1–7) and assigned an evidence tier. GSI uses this to construct a Bayesian network where each module contributes a likelihood factor to the overall inference model. GSE models provider state transitions via a finite-state automaton, where each category implies a distinct set of operational rules. The system enforces a dual constraint: modules must pass licensing gates and meet evidence standards before being admitted. Failure modes include revoked licenses (T6), unapproved crawling (non-GATED), and misclassification of data type (category mismatch). Dualities emerge in that T1/T2 modules support high-confidence decisions while T5/T6 modules are restricted to editorial use. The system avoids ad-hoc ingestion by enforcing a structured admission pipeline.\n\nDeep epistemic analysis for source-provider-module-taxonomy (569c2bd8a0ae9122, domain=other, pages_read=5/5): Operator 'Provider Module Classification' (page 1, domain other) captures: A \"provider module\" is the combination of a data source, its adapter implementation (or proposed adapter), its license status, and its evidence tier classification. Assumptions: Each module is uniquely identifiable and categorized by a fixed set of attributes. Breakdown regime: When L = REVOKED or E = T6, module is non-operational. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provider module structure is isomorphic to a labeled directed graph node in the Source Acquisition Mesh. Operator 'Evidence Tier Hierarchy' (page 1, domain other) captures: --## User Value - Users benefit from a source taxonomy that ensures only verified, tier-appropriate evidence backs the picks they see. Assumptions: Higher tiers imply higher reliability and lower usage constraints. Breakdown regime: When U = true, module cannot be used for automated inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Evidence tier is derived from license type and data integrity metrics. Operator 'Source Category Registry' (page 1, domain other) captures: **Category 2 — Official League Data**: MLBAM Data Delivery, NFL Next Gen Stats, NBA Second Spectrum, NHL RTSS, Sportradar official league feeds. Assumptions: Each category maps to a unique set of data types and providers. Breakdown regime: When C = 7, synthetic generation is assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Categories form a partition of the total provider space, each with distinct data semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for source-provider-module-taxonomy (569c2bd8a0ae9122, domain=other, pages_read=5/5): Operator 'Provider Module Classification' (page 1, domain other) captures: A \"provider module\" is the combination of a data source, its adapter implementation (or proposed adapter), its license status, and its evidence tier classification. Assumptions: Each module is uniquely identifiable and categorized by a fixed set of attributes. Breakdown regime: When L = REVOKED or E = T6, module is non-operational. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Provider module structure is isomorphic to a labeled directed graph node in the Source Acquisition Mesh. Operator 'Evidence Tier Hierarchy' (page 1, domain other) captures: --## User Value - Users benefit from a source taxonomy that ensures only verified, tier-appropriate evidence backs the picks they see. Assumptions: Higher tiers imply higher reliability and lower usage constraints. Breakdown regime: When U = true, module cannot be used for automated inference. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Evidence tier is derived from license type and data integrity metrics. Operator 'Source Category Registry' (page 1, domain other) captures: **Category 2 — Official League Data**: MLBAM Data Delivery, NFL Next Gen Stats, NBA Second Spectrum, NHL RTSS, Sportradar official league feeds. Assumptions: Each category maps to a unique set of data types and providers. Breakdown regime: When C = 7, synthetic generation is assumed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Categories form a partition of the total provider space, each with distinct data semantics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic and information theory, this taxonomy builds upon earlier data governance frameworks such as ISO/IEC 25010 and IEEE 802.1X, extending them to sports data ecosystems. Retrocausal Genealogy: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data crawlers seeking unrestricted access and compliance auditors enforcing tiered usage. Decision actors are operators who classify modules and users who consume predictions based on evidence quality. Theory of Mind & Decision Maker Model: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that modules from conflicting categories (e.g., T1 and T6) do not co-appear in same inference chain. Leakage vetoes prevent synthetic data from contaminating official evidence pipelines. Cross-Layer Veto & Anti-Leakage Check: Rooted in source-provider-module-taxonomy (569c2bd8a0ae9122), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

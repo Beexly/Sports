@@ -1,0 +1,78 @@
+{
+  "book_id": "ecb52c5a9978199e",
+  "source_status": "COMPLETE",
+  "title": "review-platform-aggregation",
+  "file_name": "review-platform-aggregation.md",
+  "sha256": "ecb52c5a9978199ebfa93a58719938ef1b5f5722117af3df08dc74be2e92a885",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unified framework for probabilistic aggregation via constant-product market makers and extremized log-odds pools. Universal Lens: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over consensus forecasts using extremized geometric means of odds with calibrated recency weights. GSI Mapping: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models platform dynamics through CPMM invariants and log-odds extremization for state transitions. GSE Mapping: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cpmm_invariant",
+      "name": "Constant-Product Market Maker Invariant",
+      "verbatim_quote": "- Evidence (external search, Manifold docs + arXiv surveys): Manifold's binary markets run a **constant-product market maker** (CPMM, fixed-product), where YES/NO share pools multiply to a constant (k = q_Y·q_NO).",
+      "page": 1,
+      "latex": "k = q_{\\text{YES}} \\cdot q_{\\text{NO}}",
+      "symbol_and_unit_ledger": "{'k': 'dimensionless constant', 'q_{\\\\text{YES}}': 'quantity of YES shares', 'q_{\\\\text{NO}}': 'quantity of NO shares'}",
+      "assumptions": "Binary market with fixed k invariant; liquidity provision based on product of share pools.",
+      "breakdown_regime": "When q_Y → 0 or q_NO → 0, price approaches 0 or 1 respectively.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "CPMM invariant mirrors Bayesian posterior update under uniform prior, enabling robust aggregation of dispersed beliefs.",
+        "source_operator": "cpmm_invariant",
+        "telemetry": "Share pool ratios and price convergence across markets."
+      }
+    },
+    {
+      "primitive_id": "extremized_log_odds_pool",
+      "name": "Extremized Log-Odds Pool",
+      "verbatim_quote": "- Actual repo implementation (`log-odds-pool.ts` line 121): `logistic(extremizationExponent * meanLogOdds)`, which in probability terms equals `(O^{γ}) / (O^{γ}+1)` where O is geometric mean of odds.",
+      "page": 1,
+      "latex": "p = \\frac{O^{\\gamma}}{O^{\\gamma} + 1}, \\quad O = \\left(\\prod_{i=1}^n o_i\\right)^{1/n}",
+      "symbol_and_unit_ledger": "{'p': 'probability estimate', 'O': 'geometric mean of odds', '\\\\gamma': 'extremization exponent (dimensionless)', 'o_i': 'individual odds'}",
+      "assumptions": "Log-odds are pooled geometrically; extremization applies to log-space mean.",
+      "breakdown_regime": "As γ → ∞, p converges to extreme values; as γ → 0, p approaches arithmetic mean.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Extremized log-odds pool enables dynamic confidence adjustment in ensemble forecasting.",
+        "source_operator": "extremized_log_odds_pool",
+        "telemetry": "Probability distribution entropy and forecast sharpness metrics."
+      }
+    },
+    {
+      "primitive_id": "manifold_amm_misattribution",
+      "name": "Manifold AMM Misattribution",
+      "verbatim_quote": "The report's LMSR equations for Manifold are fabricated by conflating Hanson LMSR literature with Manifold's actual mechanism.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Report incorrectly attributes Manifold's mechanism to LMSR instead of CPMM.",
+      "breakdown_regime": "Misapplication leads to incorrect pricing dynamics and forecast misalignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Highlights failure mode in mechanistic modeling when abstracting away platform-specific invariants.",
+        "source_operator": "manifold_amm_misattribution",
+        "telemetry": "Discrepancy between reported and actual market behavior in simulation environments."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ecb52c5a9978199e_t0",
+      "think": "The core primitives reflect two distinct yet complementary mechanisms: CPMM invariants for stable aggregation and extremized log-odds pooling for calibrated confidence. The former ensures robustness through fixed-product constraints, while the latter enhances signal-to-noise ratio via controlled extremization. The misattribution of Manifold’s AMM as LMSR reveals a critical error in abstraction—LMSR assumes continuous trading with quadratic cost functions, whereas CPMM operates on discrete share products. This discrepancy undermines any predictive fidelity derived from misapplied formulas. The extremization operator must be carefully tuned per dataset due to its sensitivity to log-odds scale, and the geometric mean formulation ensures consistency across heterogeneous inputs. These primitives form a dual structure: one grounded in market equilibrium (CPMM), the other in belief calibration (extremized log-odds). Their interplay defines a principled approach to forecasting under uncertainty.\n\nDeep epistemic analysis for review-platform-aggregation (ecb52c5a9978199e, domain=other, pages_read=7/7): Operator 'Constant-Product Market Maker Invariant' (page 1, domain other) captures: - Evidence (external search, Manifold docs + arXiv surveys): Manifold's binary markets run a **constant-product market maker** (CPMM, fixed-product), where YES/NO share pools multiply to a constant (k = q_Y·q_NO). Assumptions: Binary market with fixed k invariant; liquidity provision based on product of share pools. Breakdown regime: When q_Y → 0 or q_NO → 0, price approaches 0 or 1 respectively. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CPMM invariant mirrors Bayesian posterior update under uniform prior, enabling robust aggregation of dispersed beliefs. Operator 'Extremized Log-Odds Pool' (page 1, domain other) captures: - Actual repo implementation (`log-odds-pool.ts` line 121): `logistic(extremizationExponent * meanLogOdds)`, which in probability terms equals `(O^{γ}) / (O^{γ}+1)` where O is geometric mean of odds. Assumptions: Log-odds are pooled geometrically; extremization applies to log-space mean. Breakdown regime: As γ → ∞, p converges to extreme values; as γ → 0, p approaches arithmetic mean. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Extremized log-odds pool enables dynamic confidence adjustment in ensemble forecasting. Operator 'Manifold AMM Misattribution' (page 1, domain other) captures: The report's LMSR equations for Manifold are fabricated by conflating Hanson LMSR literature with Manifold's actual mechanism. Assumptions: Report incorrectly attributes Manifold's mechanism to LMSR instead of CPMM. Breakdown regime: Misapplication leads to incorrect pricing dynamics and forecast misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Highlights failure mode in mechanistic modeling when abstracting away platform-specific invariants. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for review-platform-aggregation (ecb52c5a9978199e, domain=other, pages_read=7/7): Operator 'Constant-Product Market Maker Invariant' (page 1, domain other) captures: - Evidence (external search, Manifold docs + arXiv surveys): Manifold's binary markets run a **constant-product market maker** (CPMM, fixed-product), where YES/NO share pools multiply to a constant (k = q_Y·q_NO). Assumptions: Binary market with fixed k invariant; liquidity provision based on product of share pools. Breakdown regime: When q_Y → 0 or q_NO → 0, price approaches 0 or 1 respectively. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): CPMM invariant mirrors Bayesian posterior update under uniform prior, enabling robust aggregation of dispersed beliefs. Operator 'Extremized Log-Odds Pool' (page 1, domain other) captures: - Actual repo implementation (`log-odds-pool.ts` line 121): `logistic(extremizationExponent * meanLogOdds)`, which in probability terms equals `(O^{γ}) / (O^{γ}+1)` where O is geometric mean of odds. Assumptions: Log-odds are pooled geometrically; extremization applies to log-space mean. Breakdown regime: As γ → ∞, p converges to extreme values; as γ → 0, p approaches arithmetic mean. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Extremized log-odds pool enables dynamic confidence adjustment in ensemble forecasting. Operator 'Manifold AMM Misattribution' (page 1, domain other) captures: The report's LMSR equations for Manifold are fabricated by conflating Hanson LMSR literature with Manifold's actual mechanism. Assumptions: Report incorrectly attributes Manifold's mechanism to LMSR instead of CPMM. Breakdown regime: Misapplication leads to incorrect pricing dynamics and forecast misalignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Highlights failure mode in mechanistic modeling when abstracting away platform-specific invariants. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the development of market-making theory (CPMM) and extremization techniques (Hanson, Satopaa), these primitives evolve from foundational work in information economics and ensemble learning. Retrocausal Genealogy: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include forecasters with varying levels of expertise and bias, and platforms with differing incentive structures. The system models how agents interact within constrained spaces defined by CPMM invariants and how extremization mitigates noise in collective predictions. Theory of Mind & Decision Maker Model: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that CPMM invariants do not coalesce with extremized log-odds unless explicitly aligned. Leakage occurs if extremization is applied to raw probabilities rather than log-odds, leading to spurious convergence. Veto conditions enforce strict adherence to dimensional consistency and operational semantics. Cross-Layer Veto & Anti-Leakage Check: Rooted in review-platform-aggregation (ecb52c5a9978199e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

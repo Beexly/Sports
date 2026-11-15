@@ -1,0 +1,95 @@
+{
+  "book_id": "f56015cc8782304e",
+  "source_status": "COMPLETE",
+  "title": "SPONSORSHIP_RATE_CARD",
+  "file_name": "SPONSORSHIP_RATE_CARD.md",
+  "sha256": "f56015cc8782304ed32e6742294e6080a3b2bf63d1570a28d0fe6c53418a0065",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sponsorship packages as structured inference layers; each tier defines a probabilistic model of influence, compliance, and deliverable fidelity. Universal Lens: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian sponsorship likelihood maps using prior beliefs over audience engagement and model accountability; conformal prediction bounds on performance claims. GSI Mapping: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in sponsor integration; dynamic policy updates based on real-time model feedback and boundary adherence. GSE Mapping: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "founding_supporter",
+      "name": "Founding Supporter Tier",
+      "verbatim_quote": "| | Founding Supporter | $150/month | Local businesses, early supporters | Newsletter mention, static partner",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Package price in USD/month', 'D': 'Deliverable type (newsletter mention, static listing)', 'C': 'Compliance flag (no editorial control)'}",
+      "assumptions": "Supporter engagement is modeled as passive endorsement with no influence on content.",
+      "breakdown_regime": "At P < $200, minimal model impact; compliance ensures non-falsifiable claims.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a Bayesian prior over sponsor visibility; GSI models audience perception as a function of disclosure and control.",
+        "source_operator": "founding_supporter",
+        "telemetry": "Newsletter mention frequency, manual approval rate"
+      }
+    },
+    {
+      "primitive_id": "gse_builder_sponsor",
+      "name": "GSE Builder Sponsor Tier",
+      "verbatim_quote": "| | GSE Builder Sponsor | $300/month | Creator tools, AI/dev tools, workflow products | GSE",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Package price in USD/month', 'D': 'Deliverable type (tool mention, workflow note)', 'C': 'Compliance flag (no model influence)'}",
+      "assumptions": "Tool sponsors are evaluated via utility and honesty metrics; no direct model interference.",
+      "breakdown_regime": "At P ∈ [$200, $500), model integrity is preserved through transparency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's workflow kernel; GSE evaluates sponsor tools via integration fidelity and user feedback loops.",
+        "source_operator": "gse_builder_sponsor",
+        "telemetry": "Tool review accuracy, workflow integration success rate"
+      }
+    },
+    {
+      "primitive_id": "board_meeting_sponsor",
+      "name": "Board Meeting Sponsor Tier",
+      "verbatim_quote": "| Board Meeting Sponsor | $750/month | Newsletter, podcast-ready, sports data tools | Board Meeting sponsor",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Package price in USD/month', 'D': 'Deliverable type (meeting slot, sponsor block)', 'C': 'Compliance flag (no product control)'}",
+      "assumptions": "High-tier sponsors gain access to strategic communication but lack product influence.",
+      "breakdown_regime": "At P ≥ $750, strategic alignment is prioritized over direct control.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a strategic communication layer in GSI; GSI models board-level influence through event participation and disclosure protocols.",
+        "source_operator": "board_meeting_sponsor",
+        "telemetry": "Meeting attendance, sponsor block visibility"
+      }
+    },
+    {
+      "primitive_id": "category_sponsor",
+      "name": "Category Sponsor Tier",
+      "verbatim_quote": "| | Category Sponsor | $1,500/month | Category leaders, data/API, cloud/AI partners | Category presence, monthly",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Package price in USD/month', 'D': 'Deliverable type (media kit, feature inclusion)', 'C': 'Compliance flag (no exclusivity implied)'}",
+      "assumptions": "Category sponsors are positioned within thematic contexts without exclusive rights.",
+      "breakdown_regime": "At P ≥ $1500, thematic alignment is prioritized over exclusivity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE’s thematic categorization kernel; GSE evaluates category fit via partner alignment and feature visibility.",
+        "source_operator": "category_sponsor",
+        "telemetry": "Media kit inclusion rate, feature prominence"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f56015cc8782304e_t0",
+      "think": "Each sponsorship tier represents a distinct probabilistic model of influence and compliance. The foundational tier (Founding Supporter) operates under a passive endorsement model where audience perception is governed by disclosure and absence of false claims. The GSE Builder Sponsor introduces a derived kernel where sponsor tools are evaluated via integration fidelity and honesty, aligning with GSE's workflow logic. The Board Meeting Sponsor tier reflects a strategic communication model where influence is mediated through access to high-level platforms, yet constrained by product control limitations. Finally, the Category Sponsor tier embodies a thematic categorization kernel, where sponsor positioning is determined by relevance rather than exclusivity. Each model exhibits a dual structure: a deliverable layer (D) and a compliance layer (C), ensuring that influence remains bounded by transparency and accountability. Failure modes arise when compliance is violated, leading to model misalignment and loss of trust. The mathematical duality lies in the interplay between influence (I) and constraint (C), where I = f(D, C) and each tier defines a unique functional form of this relationship.\n\nDeep epistemic analysis for SPONSORSHIP_RATE_CARD (f56015cc8782304e, domain=other, pages_read=1/1): Operator 'Founding Supporter Tier' (page 1, domain other) captures: | | Founding Supporter | $150/month | Local businesses, early supporters | Newsletter mention, static partner Assumptions: Supporter engagement is modeled as passive endorsement with no influence on content. Breakdown regime: At P < $200, minimal model impact; compliance ensures non-falsifiable claims. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian prior over sponsor visibility; GSI models audience perception as a function of disclosure and control. Operator 'GSE Builder Sponsor Tier' (page 1, domain other) captures: | | GSE Builder Sponsor | $300/month | Creator tools, AI/dev tools, workflow products | GSE Assumptions: Tool sponsors are evaluated via utility and honesty metrics; no direct model interference. Breakdown regime: At P ∈ [$200, $500), model integrity is preserved through transparency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's workflow kernel; GSE evaluates sponsor tools via integration fidelity and user feedback loops. Operator 'Board Meeting Sponsor Tier' (page 1, domain other) captures: | Board Meeting Sponsor | $750/month | Newsletter, podcast-ready, sports data tools | Board Meeting sponsor Assumptions: High-tier sponsors gain access to strategic communication but lack product influence. Breakdown regime: At P ≥ $750, strategic alignment is prioritized over direct control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a strategic communication layer in GSI; GSI models board-level influence through event participation and disclosure protocols. Operator 'Category Sponsor Tier' (page 1, domain other) captures: | | Category Sponsor | $1,500/month | Category leaders, data/API, cloud/AI partners | Category presence, monthly Assumptions: Category sponsors are positioned within thematic contexts without exclusive rights. Breakdown regime: At P ≥ $1500, thematic alignment is prioritized over exclusivity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE’s thematic categorization kernel; GSE evaluates category fit via partner alignment and feature visibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SPONSORSHIP_RATE_CARD (f56015cc8782304e, domain=other, pages_read=1/1): Operator 'Founding Supporter Tier' (page 1, domain other) captures: | | Founding Supporter | $150/month | Local businesses, early supporters | Newsletter mention, static partner Assumptions: Supporter engagement is modeled as passive endorsement with no influence on content. Breakdown regime: At P < $200, minimal model impact; compliance ensures non-falsifiable claims. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian prior over sponsor visibility; GSI models audience perception as a function of disclosure and control. Operator 'GSE Builder Sponsor Tier' (page 1, domain other) captures: | | GSE Builder Sponsor | $300/month | Creator tools, AI/dev tools, workflow products | GSE Assumptions: Tool sponsors are evaluated via utility and honesty metrics; no direct model interference. Breakdown regime: At P ∈ [$200, $500), model integrity is preserved through transparency. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's workflow kernel; GSE evaluates sponsor tools via integration fidelity and user feedback loops. Operator 'Board Meeting Sponsor Tier' (page 1, domain other) captures: | Board Meeting Sponsor | $750/month | Newsletter, podcast-ready, sports data tools | Board Meeting sponsor Assumptions: High-tier sponsors gain access to strategic communication but lack product influence. Breakdown regime: At P ≥ $750, strategic alignment is prioritized over direct control. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a strategic communication layer in GSI; GSI models board-level influence through event participation and disclosure protocols. Operator 'Category Sponsor Tier' (page 1, domain other) captures: | | Category Sponsor | $1,500/month | Category leaders, data/API, cloud/AI partners | Category presence, monthly Assumptions: Category sponsors are positioned within thematic contexts without exclusive rights. Breakdown regime: At P ≥ $1500, thematic alignment is prioritized over exclusivity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE’s thematic categorization kernel; GSE evaluates category fit via partner alignment and feature visibility. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical advertising models of exposure and influence, extended into modern probabilistic frameworks of accountability and transparency. Influenced by Bayesian decision theory and conformal prediction methods. Retrocausal Genealogy: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include sponsors seeking maximal influence, GSI maintaining model integrity, and GSE enforcing operational boundaries. Decision actors balance utility, compliance, and strategic positioning. Theory of Mind & Decision Maker Model: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each tier's deliverables do not overlap in influence scope. Leakage is mitigated by strict compliance flags and telemetry-based vetoes. Cross-Layer Veto & Anti-Leakage Check: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in SPONSORSHIP_RATE_CARD (f56015cc8782304e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

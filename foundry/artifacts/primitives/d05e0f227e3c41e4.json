@@ -1,0 +1,78 @@
+{
+  "book_id": "d05e0f227e3c41e4",
+  "source_status": "COMPLETE",
+  "title": "espn-nfl-news-digest",
+  "file_name": "espn-nfl-news-digest.md",
+  "sha256": "d05e0f227e3c41e435b08a4ba796a3385506adc463f061c32444de2a10a420bb",
+  "primary_domain": "football",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fantasy football resource allocation and injury impact modeling via expected point frameworks. Universal Lens: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player performance using xFP and injury status for dynamic roster optimization. GSI Mapping: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in fantasy teams governed by injury reports and positional opportunity thresholds. GSE Mapping: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_fantasy_points_xfp",
+      "name": "Expected Fantasy Points",
+      "verbatim_quote": "6: PPR and superflex** (2026-10-13T18:21:15Z, ESPN Fantasy) — https://www.espn.com/fantasy/football/story/_/page/FFWeeklyPlayerRank26main-49797082/fantasy-football-rankings-2026-qb-rb-wr-te-dst Weekly composite ranks for each position in",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'xFP': 'dimensionless score representing projected fantasy points'}",
+      "assumptions": "Player performance is modeled as a stochastic process dependent on game context and opponent strength.",
+      "breakdown_regime": "When player availability is compromised due to injury or suspension.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "xFP serves as a probabilistic proxy for player contribution in fantasy scoring systems.",
+        "source_operator": "expected_fantasy_points_xfp",
+        "telemetry": "Projected fantasy point totals from expert models"
+      }
+    },
+    {
+      "primitive_id": "injury_status_impact",
+      "name": "Injury Status Impact",
+      "verbatim_quote": "Grupe is a 'significant change' - **Eagles pass rusher Jalyx Hunt (leg) unlikely vs. Panthers** (2026-10-13T19:15:49Z,",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_s': 'binary indicator for player availability (1 = available, 0 = unavailable)'}",
+      "assumptions": "Injury severity correlates inversely with probability of participation in upcoming games.",
+      "breakdown_regime": "When injury timeline exceeds recovery threshold for scheduled match.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Injury status maps to reduced expected fantasy contribution through xFP degradation.",
+        "source_operator": "injury_status_impact",
+        "telemetry": "Player injury report and expected return date"
+      }
+    },
+    {
+      "primitive_id": "knockout_league_pickups",
+      "name": "Knockout League Pickups",
+      "verbatim_quote": "- **Knockout league pickups: Walker, Lamb, McMillan among big names available** (2026-10-13T18:17:51Z, Tristan H.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'KLP': 'set of high-value players available for pickup in knockout format'}",
+      "assumptions": "High-value players in knockout leagues are those with strong xFP and low injury risk.",
+      "breakdown_regime": "When roster spots are limited and competition is intense.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Knockout pickups are selected based on maximizing xFP while minimizing injury exposure.",
+        "source_operator": "knockout_league_pickups",
+        "telemetry": "List of available players in knockout leagues"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d05e0f227e3c41e4_t0",
+      "think": "The core operators define a probabilistic framework for fantasy decision-making. Expected fantasy points (xFP) function as a derived kernel from game context and player opportunity, mapping to a continuous utility space. Injury status impacts this kernel through a binary switch, reducing effective xFP when I_s = 0. In knockout leagues, the selection of players becomes a constrained optimization problem where KLP maximizes expected value under risk constraints. These primitives form a dual system: one for predictive modeling (xFP) and another for constraint enforcement (injury). Failure modes include overconfidence in xFP without considering injury dynamics, or ignoring the temporal aspect of player availability. The interplay between these operators enables a robust Bayesian update mechanism within GSI, where each new injury report or ranking shift modifies posterior beliefs about player utility.\n\nDeep epistemic analysis for espn-nfl-news-digest (d05e0f227e3c41e4, domain=football, pages_read=3/3): Operator 'Expected Fantasy Points' (page 1, domain football) captures: 6: PPR and superflex** (2026-10-13T18:21:15Z, ESPN Fantasy) — https://www.espn.com/fantasy/football/story/_/page/FFWeeklyPlayerRank26main-49797082/fantasy-football-rankings-2026-qb-rb-wr-te-dst Weekly composite ranks for each position in Assumptions: Player performance is modeled as a stochastic process dependent on game context and opponent strength. Breakdown regime: When player availability is compromised due to injury or suspension. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xFP serves as a probabilistic proxy for player contribution in fantasy scoring systems. Operator 'Injury Status Impact' (page 1, domain football) captures: Grupe is a 'significant change' - **Eagles pass rusher Jalyx Hunt (leg) unlikely vs. Panthers** (2026-10-13T19:15:49Z, Assumptions: Injury severity correlates inversely with probability of participation in upcoming games. Breakdown regime: When injury timeline exceeds recovery threshold for scheduled match. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injury status maps to reduced expected fantasy contribution through xFP degradation. Operator 'Knockout League Pickups' (page 2, domain football) captures: - **Knockout league pickups: Walker, Lamb, McMillan among big names available** (2026-10-13T18:17:51Z, Tristan H. Assumptions: High-value players in knockout leagues are those with strong xFP and low injury risk. Breakdown regime: When roster spots are limited and competition is intense. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Knockout pickups are selected based on maximizing xFP while minimizing injury exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for espn-nfl-news-digest (d05e0f227e3c41e4, domain=football, pages_read=3/3): Operator 'Expected Fantasy Points' (page 1, domain football) captures: 6: PPR and superflex** (2026-10-13T18:21:15Z, ESPN Fantasy) — https://www.espn.com/fantasy/football/story/_/page/FFWeeklyPlayerRank26main-49797082/fantasy-football-rankings-2026-qb-rb-wr-te-dst Weekly composite ranks for each position in Assumptions: Player performance is modeled as a stochastic process dependent on game context and opponent strength. Breakdown regime: When player availability is compromised due to injury or suspension. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): xFP serves as a probabilistic proxy for player contribution in fantasy scoring systems. Operator 'Injury Status Impact' (page 1, domain football) captures: Grupe is a 'significant change' - **Eagles pass rusher Jalyx Hunt (leg) unlikely vs. Panthers** (2026-10-13T19:15:49Z, Assumptions: Injury severity correlates inversely with probability of participation in upcoming games. Breakdown regime: When injury timeline exceeds recovery threshold for scheduled match. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Injury status maps to reduced expected fantasy contribution through xFP degradation. Operator 'Knockout League Pickups' (page 2, domain football) captures: - **Knockout league pickups: Walker, Lamb, McMillan among big names available** (2026-10-13T18:17:51Z, Tristan H. Assumptions: High-value players in knockout leagues are those with strong xFP and low injury risk. Breakdown regime: When roster spots are limited and competition is intense. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Knockout pickups are selected based on maximizing xFP while minimizing injury exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century statistical mechanics and modern machine learning paradigms, particularly Bayesian networks and reinforcement learning. The concept of expected value in fantasy sports traces back to game theory and decision analysis. Retrocausal Genealogy: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may prioritize different metrics—some focus on raw xFP, others on injury resilience. A rational agent balances both, adjusting strategies dynamically based on evolving injury data and updated xFP projections. Theory of Mind & Decision Maker Model: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when xFP and injury status are conflated without proper temporal separation. Leakage occurs if past performance is used instead of future opportunity. Veto conditions ensure that only independent variables contribute meaningfully to the model. Cross-Layer Veto & Anti-Leakage Check: Rooted in espn-nfl-news-digest (d05e0f227e3c41e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

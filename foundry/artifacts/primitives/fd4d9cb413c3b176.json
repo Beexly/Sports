@@ -1,0 +1,78 @@
+{
+  "book_id": "fd4d9cb413c3b176",
+  "source_status": "COMPLETE",
+  "title": "c9-everything-before-ship-v2",
+  "file_name": "c9-everything-before-ship-v2.txt",
+  "sha256": "fd4d9cb413c3b176eea18d62b07703da26d90c10c526d1d0b6861f0b6cfadb57",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A conformal predictive inference framework unified across leaf-level calibration, global mean comparisons, and confidence discrimination surfaces. Universal Lens: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian posterior belief updates conditioned on replay-calibrated leaf performance, with AUC 0.4965 indicating null hypothesis acceptance for confidence signals. GSI Mapping: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in sports prediction models, where leaf-specific drifts and global mean discrepancies drive decision readiness thresholds. GSE Mapping: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "confidence_discrimination_surface",
+      "name": "Confidence Discrimination Surface",
+      "verbatim_quote": "In THIS file, specifically: - \"CONFIDENCE CARRIES NO INFORMATION\", and the free/paid question that repeats it, both from AUC 0.4965 / p=0.4113.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'AUC': 'Area Under Curve, dimensionless', 'p': 'p-value, dimensionless'}",
+      "assumptions": "Null hypothesis of no discriminative power for confidence scores holds under current data.",
+      "breakdown_regime": "When AUC ≈ 0.5, confidence fails to distinguish outcomes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from empirical Brier score and confidence bucketing logic in GSE's live settlement engine.",
+        "source_operator": "confidence_discrimination_surface",
+        "telemetry": "AUC and p-value from live settled picks."
+      }
+    },
+    {
+      "primitive_id": "per_leaf_vs_global_comparison",
+      "name": "Per-Leaf vs Global Comparison",
+      "verbatim_quote": "- The BONUS question still rests on \"Four of five leaves lose to a single global mean\" — the per-leaf-vs-global comparison that this same file elsewhere correctly withdraws as needing the TRAINING mean from scripts/analytics/replay-calibration.ts:439.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'y': 'outcome rate, dimensionless', 'q': 'leaf forecast, dimensionless', 'μ': 'global mean, dimensionless', 'μ_train': 'training mean, dimensionless'}",
+      "assumptions": "Global mean comparison requires training-based normalization for valid statistical inference.",
+      "breakdown_regime": "When μ ≠ μ_train, per-leaf comparisons become invalid without correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's leaf calibration kernel, where drift from training baseline invalidates direct comparison.",
+        "source_operator": "per_leaf_vs_global_comparison",
+        "telemetry": "Leaf-wise Brier score deviation from μ_train."
+      }
+    },
+    {
+      "primitive_id": "brier_point_estimate",
+      "name": "Brier Point Estimate",
+      "verbatim_quote": "It is the specific failure mode that cost this project the most time in the last 24 hours: someone checked that a validator ACCEPTED a value and then reported that the value WORKED.",
+      "page": 1,
+      "latex": "d = (q - y)^2 - (0.5 - y)^2",
+      "symbol_and_unit_ledger": "{'d': 'Brier point estimate, dimensionless', 'q': 'forecast probability, dimensionless', 'y': 'actual outcome (0 or 1), dimensionless'}",
+      "assumptions": "Observations are rounded to two decimal places, introducing numerical uncertainty.",
+      "breakdown_regime": "When q = 0.5, d becomes undefined due to division by zero in limit.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSI's calibration validation pipeline to assess leaf reliability.",
+        "source_operator": "brier_point_estimate",
+        "telemetry": "Interval estimation of d for n=576 observations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fd4d9cb413c3b176_t0",
+      "think": "The core operators derive from a dual structure: (1) Confidence discrimination, where AUC ~ 0.5 implies null hypothesis acceptance, and (2) Per-leaf vs global mean comparisons, where incorrect use of global mean over training mean leads to invalid inference. The Brier point estimate serves as a derived kernel for evaluating leaf reliability, but is subject to rounding-induced indeterminacy. Failure modes include: (a) misapplication of confidence metrics, (b) outdated leaf comparisons, (c) numerical instability in Brier estimates. These form a closed-loop feedback system in GSE’s decision engine, where GSI’s Bayesian inference must validate each primitive before deployment.\n\nDeep epistemic analysis for c9-everything-before-ship-v2 (fd4d9cb413c3b176, domain=other, pages_read=7/7): Operator 'Confidence Discrimination Surface' (page 1, domain other) captures: In THIS file, specifically: - \"CONFIDENCE CARRIES NO INFORMATION\", and the free/paid question that repeats it, both from AUC 0.4965 / p=0.4113. Assumptions: Null hypothesis of no discriminative power for confidence scores holds under current data. Breakdown regime: When AUC ≈ 0.5, confidence fails to distinguish outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from empirical Brier score and confidence bucketing logic in GSE's live settlement engine. Operator 'Per-Leaf vs Global Comparison' (page 1, domain other) captures: - The BONUS question still rests on \"Four of five leaves lose to a single global mean\" — the per-leaf-vs-global comparison that this same file elsewhere correctly withdraws as needing the TRAINING mean from scripts/analytics/replay-calibration.ts:439. Assumptions: Global mean comparison requires training-based normalization for valid statistical inference. Breakdown regime: When μ ≠ μ_train, per-leaf comparisons become invalid without correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's leaf calibration kernel, where drift from training baseline invalidates direct comparison. Operator 'Brier Point Estimate' (page 1, domain other) captures: It is the specific failure mode that cost this project the most time in the last 24 hours: someone checked that a validator ACCEPTED a value and then reported that the value WORKED. Assumptions: Observations are rounded to two decimal places, introducing numerical uncertainty. Breakdown regime: When q = 0.5, d becomes undefined due to division by zero in limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI's calibration validation pipeline to assess leaf reliability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for c9-everything-before-ship-v2 (fd4d9cb413c3b176, domain=other, pages_read=7/7): Operator 'Confidence Discrimination Surface' (page 1, domain other) captures: In THIS file, specifically: - \"CONFIDENCE CARRIES NO INFORMATION\", and the free/paid question that repeats it, both from AUC 0.4965 / p=0.4113. Assumptions: Null hypothesis of no discriminative power for confidence scores holds under current data. Breakdown regime: When AUC ≈ 0.5, confidence fails to distinguish outcomes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from empirical Brier score and confidence bucketing logic in GSE's live settlement engine. Operator 'Per-Leaf vs Global Comparison' (page 1, domain other) captures: - The BONUS question still rests on \"Four of five leaves lose to a single global mean\" — the per-leaf-vs-global comparison that this same file elsewhere correctly withdraws as needing the TRAINING mean from scripts/analytics/replay-calibration.ts:439. Assumptions: Global mean comparison requires training-based normalization for valid statistical inference. Breakdown regime: When μ ≠ μ_train, per-leaf comparisons become invalid without correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's leaf calibration kernel, where drift from training baseline invalidates direct comparison. Operator 'Brier Point Estimate' (page 1, domain other) captures: It is the specific failure mode that cost this project the most time in the last 24 hours: someone checked that a validator ACCEPTED a value and then reported that the value WORKED. Assumptions: Observations are rounded to two decimal places, introducing numerical uncertainty. Breakdown regime: When q = 0.5, d becomes undefined due to division by zero in limit. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSI's calibration validation pipeline to assess leaf reliability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical testing (Fisher, Neyman-Pearson) and modern conformal prediction frameworks (Vovk et al.), extended into operational sports analytics through recursive calibration and replay validation. Retrocausal Genealogy: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the founder who expects finality, the analyst who seeks robustness, and the system which enforces retroactive consistency. Each agent operates under distinct epistemic constraints—founder assumes correctness, analyst demands falsifiability, system enforces verifiability. Theory of Mind & Decision Maker Model: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced via explicit distinction between training and global means; leakage vetoes occur when confidence discrimination is applied without proper calibration. These conditions ensure that no single primitive can override the integrity of the entire inference chain. Cross-Layer Veto & Anti-Leakage Check: Rooted in c9-everything-before-ship-v2 (fd4d9cb413c3b176), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "dba89868e1a69ada",
+  "source_status": "COMPLETE",
+  "title": "EDGE_SUPREMACY_DOCTRINE",
+  "file_name": "EDGE_SUPREMACY_DOCTRINE.md",
+  "sha256": "dba89868e1a69ada76ec5cc52dea6bc926fd5706d7bc72b666f54475cd7af6c0",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Edge Supremacy Doctrine unifies information processing and temporal dynamics into a hierarchical Bayesian framework where\\( \\mathcal{E} = \\mathcal{M} \\times \\mathcal{T} \\times \\mathcal{C} \\) represents the total edge space, with\\( \\mathcal{M} \\) as model class,\\( \\mathcal{T} \\) as temporal layer, and\\( \\mathcal{C} \\) as causal context.",
+  "gsi_mapping": "GSI maps edge space\\( \\mathcal{E} \\) via conformal predictive distributions using\\( \\mathbb{P}(X|\\mathcal{D}) \\), where\\( \\mathcal{D} \\) is the data stack and\\( X \\) is the outcome variable, enabling robust uncertainty quantification across all\\( \\mathcal{C} \\)-classes.",
+  "gse_mapping": "GSE encodes\\( \\mathcal{E} \\) as a Markovian state transition system\\( \\mathcal{S}_{t+1} = f(\\mathcal{S}_t, \\mathcal{I}_t) \\), where\\( \\mathcal{I}_t \\) is the information input stream, enabling real-time tactical reasoning and dynamic policy updates.",
+  "primitives": [
+    {
+      "primitive_id": "transaction_wire_scanner",
+      "name": "Transaction-Wire Scanner",
+      "verbatim_quote": "- **C1.2 · Transaction-wire scanner.** Official league transaction feeds (elevations, activations, waivers — legal, public).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time of transaction (seconds since epoch)', 'P': 'player identifier (dimensionless)', 'R': 'role change signal (binary)'}",
+      "assumptions": "Transaction data is timestamped, publicly available, and causally linked to performance metrics.",
+      "breakdown_regime": "When T < T_{\\text{usage}} and R=1, indicates preemptive role shift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps official transaction data to probabilistic role transition vectors in GSE state space.",
+        "source_operator": "transaction_wire_scanner",
+        "telemetry": "Practice squad elevation time vs. usage data lag"
+      }
+    },
+    {
+      "primitive_id": "practice_report_trajectories",
+      "name": "Practice-Report Trajectories",
+      "verbatim_quote": "- **C1.3 · Practice-report trajectories.** Already seeded as masterplan territory (DNP–LP–FP patterns → play probability *and* effectiveness discount).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'DNP': 'Did Not Play (binary)', 'LP': 'Limited Participation (binary)', 'FP': 'Full Participation (binary)', 'P_{\\\\text{play}}': 'Play probability (unitless)', 'E_{\\\\text{eff}}': 'Effectiveness discount factor (unitless)'}",
+      "assumptions": "Practice reports are indicative of future game behavior and decay within days.",
+      "breakdown_regime": "When DNP=1, P_{\\text{play}} → 0; when FP=1, E_{\\text{eff}} → 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes DNP–LP–FP sequences into stochastic play probability and effectiveness tensors in GSI.",
+        "source_operator": "practice_report_trajectories",
+        "telemetry": "Change in play probability over 24h windows"
+      }
+    },
+    {
+      "primitive_id": "weather_nowcasting",
+      "name": "Weather Nowcasting",
+      "verbatim_quote": "- **C1.4 · Weather nowcasting.** METAR/NOAA (public domain) hourly, not daily: the morning-line vs kickoff-forecast delta is a repricing event books handle unevenly.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_{\\\\text{now}}': 'Current weather condition (categorical)', 'W_{\\\\text{kickoff}}': 'Forecasted weather at kickoff (categorical)', 'ΔW': 'Delta between nowcast and forecast (unitless)', 'P_{\\\\text{reprice}}': 'Repricing event indicator (binary)'}",
+      "assumptions": "Hourly weather data is available and impacts game outcomes and betting behavior.",
+      "breakdown_regime": "When ΔW > threshold, P_{\\text{reprice}} = 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Transforms weather deltas into dynamic pricing adjustments in GSI's risk layer.",
+        "source_operator": "weather_nowcasting",
+        "telemetry": "Frequency of repricing events per game"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dba89868e1a69ada_t0",
+      "think": "The Edge Supremacy Doctrine constructs a layered edge space\\( \\mathcal{E} = \\mathcal{M} \\times \\mathcal{T} \\times \\mathcal{C} \\), where\\( \\mathcal{M} \\) is the model class (information processing),\\( \\mathcal{T} \\) is temporal dynamics (timing of actions), and\\( \\mathcal{C} \\) is causal context (league-specific rules). Each primitive is a kernel in this space, with C1.2, C1.3, and C1.4 representing information sources that feed into\\( \\mathcal{M} \\). The doctrine's core insight is that edges are not static but emerge from the interaction of these layers. For example, the transaction wire scanner (C1.2) provides a temporal signal that informs model predictions, while practice report trajectories (C1.3) introduce a decayed probabilistic structure. Weather nowcasting (C1.4) introduces a dynamic perturbation that triggers repricing events. These primitives form a dual structure: one side is the information processing pipeline (GSI), the other is the tactical execution engine (GSE). Failure modes arise when temporal signals are misaligned with model expectations, or when contextual rules are not updated in response to new data. The doctrine's strength lies in its recursive validation through masterplan gates, ensuring each edge is vetted before deployment.\n\nDeep epistemic analysis for EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada, domain=other, pages_read=7/7): Operator 'Transaction-Wire Scanner' (page 1, domain other) captures: - **C1.2 · Transaction-wire scanner.** Official league transaction feeds (elevations, activations, waivers — legal, public). Assumptions: Transaction data is timestamped, publicly available, and causally linked to performance metrics. Breakdown regime: When T < T_{\\text{usage}} and R=1, indicates preemptive role shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps official transaction data to probabilistic role transition vectors in GSE state space. Operator 'Practice-Report Trajectories' (page 2, domain other) captures: - **C1.3 · Practice-report trajectories.** Already seeded as masterplan territory (DNP–LP–FP patterns → play probability *and* effectiveness discount). Assumptions: Practice reports are indicative of future game behavior and decay within days. Breakdown regime: When DNP=1, P_{\\text{play}} → 0; when FP=1, E_{\\text{eff}} → 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes DNP–LP–FP sequences into stochastic play probability and effectiveness tensors in GSI. Operator 'Weather Nowcasting' (page 2, domain other) captures: - **C1.4 · Weather nowcasting.** METAR/NOAA (public domain) hourly, not daily: the morning-line vs kickoff-forecast delta is a repricing event books handle unevenly. Assumptions: Hourly weather data is available and impacts game outcomes and betting behavior. Breakdown regime: When ΔW > threshold, P_{\\text{reprice}} = 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms weather deltas into dynamic pricing adjustments in GSI's risk layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada, domain=other, pages_read=7/7): Operator 'Transaction-Wire Scanner' (page 1, domain other) captures: - **C1.2 · Transaction-wire scanner.** Official league transaction feeds (elevations, activations, waivers — legal, public). Assumptions: Transaction data is timestamped, publicly available, and causally linked to performance metrics. Breakdown regime: When T < T_{\\text{usage}} and R=1, indicates preemptive role shift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps official transaction data to probabilistic role transition vectors in GSE state space. Operator 'Practice-Report Trajectories' (page 2, domain other) captures: - **C1.3 · Practice-report trajectories.** Already seeded as masterplan territory (DNP–LP–FP patterns → play probability *and* effectiveness discount). Assumptions: Practice reports are indicative of future game behavior and decay within days. Breakdown regime: When DNP=1, P_{\\text{play}} → 0; when FP=1, E_{\\text{eff}} → 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes DNP–LP–FP sequences into stochastic play probability and effectiveness tensors in GSI. Operator 'Weather Nowcasting' (page 2, domain other) captures: - **C1.4 · Weather nowcasting.** METAR/NOAA (public domain) hourly, not daily: the morning-line vs kickoff-forecast delta is a repricing event books handle unevenly. Assumptions: Hourly weather data is available and impacts game outcomes and betting behavior. Breakdown regime: When ΔW > threshold, P_{\\text{reprice}} = 1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Transforms weather deltas into dynamic pricing adjustments in GSI's risk layer. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and information geometry, with influences from temporal logic and game-theoretic modeling. The doctrine builds upon earlier frameworks of edge discovery in financial markets and sports analytics. Retrocausal Genealogy: Rooted in EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional sportsbooks that rely on static models and delayed signals, and speculative traders who exploit information asymmetries. The doctrine assumes these agents operate under bounded rationality and are subject to systematic biases in processing temporal and causal data. Theory of Mind & Decision Maker Model: Rooted in EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates in distinct information domains (e.g., transaction data ≠ weather data). Leakage is mitigated by strict validation gates that prevent spurious correlations from propagating into higher-order models. Cross-Layer Veto & Anti-Leakage Check: Rooted in EDGE_SUPREMACY_DOCTRINE (dba89868e1a69ada), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

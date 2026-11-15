@@ -1,0 +1,78 @@
+{
+  "book_id": "4238cf1fa1948829",
+  "source_status": "COMPLETE",
+  "title": "INDEX-BOOKS-MUST",
+  "file_name": "INDEX-BOOKS-MUST.md",
+  "sha256": "4238cf1fa19488297f141e2398de31b28aa6a8e3d79ffec6858c3cf3b1975d57",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Information-theoretic entropy and mutual information as foundational measures for quantifying uncertainty, redundancy, and information flow across probabilistic models. Universal Lens: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference and conformal prediction leverage Shannon entropy and KL-divergence to calibrate uncertainty estimates and construct valid predictive intervals. GSI Mapping: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition dynamics in stochastic games are governed by channel capacity and rate-distortion functions, enabling efficient representation and planning under information constraints. GSE Mapping: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shannon_entropy",
+      "name": "Shannon Entropy",
+      "verbatim_quote": "| Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g...",
+      "page": 1,
+      "latex": "H(X) = -\\sum_{x \\in \\mathcal{X}} p(x) \\log p(x)",
+      "symbol_and_unit_ledger": "{'H(X)': 'dimensionless (nats or bits)', 'p(x)': 'probability measure, 0 \\\\leq p(x) \\\\leq 1'}",
+      "assumptions": "Discrete random variable X with probability mass function p(x); finite support.",
+      "breakdown_regime": "When p(x) approaches zero, H(X) diverges logarithmically.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Shannon entropy maps to GSI's uncertainty quantification via information-theoretic priors and to GSE's state-space compression through minimal sufficient statistics.",
+        "source_operator": "shannon_entropy",
+        "telemetry": "Empirical entropy estimation from sample paths using plug-in estimators or nonparametric density estimation."
+      }
+    },
+    {
+      "primitive_id": "mutual_information",
+      "name": "Mutual Information",
+      "verbatim_quote": "| Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g...",
+      "page": 1,
+      "latex": "I(X;Y) = \\sum_{x,y} p(x,y) \\log \\frac{p(x,y)}{p(x)p(y)}",
+      "symbol_and_unit_ledger": "{'I(X;Y)': 'dimensionless (nats or bits)', 'p(x,y)': 'joint probability distribution', 'p(x), p(y)': 'marginal probabilities'}",
+      "assumptions": "Random variables X and Y have joint distribution p(x,y) and marginals p(x), p(y).",
+      "breakdown_regime": "Zero when X and Y are independent; undefined if distributions are not absolutely continuous.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mutual information serves as a kernel for GSI's feature selection and GSE's agent interaction modeling by measuring shared information between states and actions.",
+        "source_operator": "mutual_information",
+        "telemetry": "Estimation via empirical cross-entropy or variational approximations in high-dimensional settings."
+      }
+    },
+    {
+      "primitive_id": "kl_divergence",
+      "name": "Kullback–Leibler Divergence",
+      "verbatim_quote": "| Fano's inequality, Le Cam/Assouad methods, metric entropy, minimax rate derivations — label-grade lower bounds for what any model can extract from fi...",
+      "page": 1,
+      "latex": "D_{\\text{KL}}(P \\parallel Q) = \\int p(x) \\log \\frac{p(x)}{q(x)} dx",
+      "symbol_and_unit_ledger": "{'D_{\\\\text{KL}}(P \\\\parallel Q)': 'dimensionless (nats or bits)', 'p(x), q(x)': 'probability density functions'}",
+      "assumptions": "P and Q are probability distributions over same space; P absolutely continuous w.r.t. Q.",
+      "breakdown_regime": "Infinite when support of P is not contained in support of Q.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "KL divergence enables GSI to compute model discrepancy and GSE to evaluate policy robustness against distributional shifts.",
+        "source_operator": "kl_divergence",
+        "telemetry": "Empirical estimation using importance sampling or variational inference techniques."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4238cf1fa1948829_t0",
+      "think": "Shannon entropy provides a fundamental measure of information content in a random variable, defined as the expected value of the negative logarithm of its probability. It forms the basis for mutual information, which quantifies dependence between variables. KL divergence extends this by comparing two probability distributions, offering insight into how much information is lost when one distribution is used to approximate another. These primitives underpin both GSI’s Bayesian inference framework—where entropy guides prior construction and KL helps assess model fit—and GSE’s state-transition modeling, where mutual information captures dependencies among system components and KL divergence evaluates policy performance under uncertainty.\n\nDeep epistemic analysis for INDEX-BOOKS-MUST (4238cf1fa1948829, domain=other, pages_read=10/10): Operator 'Shannon Entropy' (page 1, domain other) captures: | Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g... Assumptions: Discrete random variable X with probability mass function p(x); finite support. Breakdown regime: When p(x) approaches zero, H(X) diverges logarithmically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shannon entropy maps to GSI's uncertainty quantification via information-theoretic priors and to GSE's state-space compression through minimal sufficient statistics. Operator 'Mutual Information' (page 1, domain other) captures: | Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g... Assumptions: Random variables X and Y have joint distribution p(x,y) and marginals p(x), p(y). Breakdown regime: Zero when X and Y are independent; undefined if distributions are not absolutely continuous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Mutual information serves as a kernel for GSI's feature selection and GSE's agent interaction modeling by measuring shared information between states and actions. Operator 'Kullback–Leibler Divergence' (page 1, domain other) captures: | Fano's inequality, Le Cam/Assouad methods, metric entropy, minimax rate derivations — label-grade lower bounds for what any model can extract from fi... Assumptions: P and Q are probability distributions over same space; P absolutely continuous w.r.t. Q. Breakdown regime: Infinite when support of P is not contained in support of Q. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): KL divergence enables GSI to compute model discrepancy and GSE to evaluate policy robustness against distributional shifts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX-BOOKS-MUST (4238cf1fa1948829, domain=other, pages_read=10/10): Operator 'Shannon Entropy' (page 1, domain other) captures: | Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g... Assumptions: Discrete random variable X with probability mass function p(x); finite support. Breakdown regime: When p(x) approaches zero, H(X) diverges logarithmically. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Shannon entropy maps to GSI's uncertainty quantification via information-theoretic priors and to GSE's state-space compression through minimal sufficient statistics. Operator 'Mutual Information' (page 1, domain other) captures: | Entropy H(X), mutual information, channel capacity, source/channel coding theorems — the definitional layer for entropy-based features, information-g... Assumptions: Random variables X and Y have joint distribution p(x,y) and marginals p(x), p(y). Breakdown regime: Zero when X and Y are independent; undefined if distributions are not absolutely continuous. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Mutual information serves as a kernel for GSI's feature selection and GSE's agent interaction modeling by measuring shared information between states and actions. Operator 'Kullback–Leibler Divergence' (page 1, domain other) captures: | Fano's inequality, Le Cam/Assouad methods, metric entropy, minimax rate derivations — label-grade lower bounds for what any model can extract from fi... Assumptions: P and Q are probability distributions over same space; P absolutely continuous w.r.t. Q. Breakdown regime: Infinite when support of P is not contained in support of Q. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): KL divergence enables GSI to compute model discrepancy and GSE to evaluate policy robustness against distributional shifts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Shannon's 1948 work on communication theory and extended by Kolmogorov's axiomatic probability theory. Laplace’s rule of succession and Fano’s inequality further contextualize these concepts within decision-making and statistical learning. Retrocausal Genealogy: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may optimize different aspects of information: one might minimize entropy for efficiency while another maximizes mutual information for coordination. Agents could also differ in their tolerance for KL divergence, leading to distinct strategies in belief updating and action selection. Theory of Mind & Decision Maker Model: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If entropy estimates become unstable due to sparse data, mutual information becomes unreliable; similarly, KL divergence fails when distributions lack overlap. These instabilities necessitate robust estimation methods and careful validation across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX-BOOKS-MUST (4238cf1fa1948829), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

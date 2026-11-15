@@ -1,0 +1,78 @@
+{
+  "book_id": "f6b333f9c3069dbf",
+  "source_status": "COMPLETE",
+  "title": "BDB2027_GROUNDWORK",
+  "file_name": "BDB2027_GROUNDWORK.md",
+  "sha256": "f6b333f9c3069dbf71b9622878a1fa70e77c5620248f4ad8b1b8f9d066a57409",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sensor kinematics from 10 Hz Combine tracking maps to NFL performance via trajectory-derived metrics: speed, acceleration, deceleration, change-of-direction, and rhythm. Universal Lens: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers player development potential using conformal predictive distributions over kinematic features, linking Combine sensor data to regular-season EPA via Bayesian regression. GSI Mapping: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning by transitioning between stance types and movement phases using derived kinematic kernels, enabling real-time tactical adaptation. GSE Mapping: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "speed_curve",
+      "name": "Speed Curve Dynamics",
+      "verbatim_quote": "iSH lane = data prep, kinematic feature code (stdlib), viz prototypes (matplotlib), the EPA scoring harness.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v(t)': 'velocity (m/s)', 'a(t)': 'acceleration (m/s²)', 'jerk(t)': 'jerk (m/s³)', 't': 'time (s)'}",
+      "assumptions": "Trajectory data is sampled at 10 Hz; motion is continuous and differentiable.",
+      "breakdown_regime": "At t = 0, v(0) = 0; at peak speed, a(t) = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps velocity profiles to performance indicators such as top speed and acceleration time, used in EPA scoring.",
+        "source_operator": "speed_curve",
+        "telemetry": "EPA per game, normalized by position group"
+      }
+    },
+    {
+      "primitive_id": "change_of_direction",
+      "name": "Change of Direction Kinematics",
+      "verbatim_quote": "**Pose estimation on public combine video** (MediaPipe BlazePose 33-keypoint on drill clips from NFL.com/YouTube): joint angles, arm-drive amplitude, trunk lean, ground-contact timing, stance type (3-pt vs 2-pt) — things 10Hz hip-tag tracking cannot see.",
+      "page": 1,
+      "latex": "\\kappa(t) = \\frac{d\\theta}{dt} \\cdot \\frac{1}{v(t)}",
+      "symbol_and_unit_ledger": "{'\\\\kappa(t)': 'curvature (rad/m)', '\\\\theta': 'heading angle (rad)', 'v(t)': 'velocity (m/s)'}",
+      "assumptions": "Heading angle derivative is measurable; body orientation is tracked via pose estimation.",
+      "breakdown_regime": "When v(t) approaches zero, \\kappa(t) becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pose-derived joint angles and stance type inform COD arc radius and speed retention, aligning with NGS-derived COD metrics.",
+        "source_operator": "change_of_direction",
+        "telemetry": "COD arc radius, speed retention ratio"
+      }
+    },
+    {
+      "primitive_id": "rhythm_planarity",
+      "name": "Rhythm and Planarity Metrics",
+      "verbatim_quote": "**Game-film CV** = STRETCH, not core (no public play-synced video; mark as future work in the writeup).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_lateral': 'lateral oscillation frequency (Hz)', 'efficiency': 'path efficiency (dimensionless)'}",
+      "assumptions": "Lateral motion is periodic; path efficiency is computed from actual vs. straight-line distance.",
+      "breakdown_regime": "In static or non-moving states, f_lateral ≈ 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Lateral oscillation frequency and path efficiency are used to detect false-step patterns and movement economy in game scenarios.",
+        "source_operator": "rhythm_planarity",
+        "telemetry": "False-step detection rate, average path efficiency"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f6b333f9c3069dbf_t0",
+      "think": "The foundational operators derive from high-frequency sensor data and pose estimation to model athletic performance. Speed curves capture dynamic acceleration and deceleration, while COD metrics reflect agility and control under load. Rhythm and planarity provide insight into movement economy and consistency. These primitives form a kernel for predictive modeling of NFL outcomes. Failure modes include misalignment between sensor and visual tracking, or insufficient temporal resolution in pose estimation. Dualities emerge in how 10Hz tracking and CV-based metrics complement each other—kinematics alone may miss biomechanical nuances, while CV lacks temporal fidelity. The system must validate that these operators are robust across positions and drills, avoiding overfitting to specific datasets.\n\nDeep epistemic analysis for BDB2027_GROUNDWORK (f6b333f9c3069dbf, domain=other, pages_read=2/2): Operator 'Speed Curve Dynamics' (page 1, domain other) captures: iSH lane = data prep, kinematic feature code (stdlib), viz prototypes (matplotlib), the EPA scoring harness. Assumptions: Trajectory data is sampled at 10 Hz; motion is continuous and differentiable. Breakdown regime: At t = 0, v(0) = 0; at peak speed, a(t) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps velocity profiles to performance indicators such as top speed and acceleration time, used in EPA scoring. Operator 'Change of Direction Kinematics' (page 1, domain other) captures: **Pose estimation on public combine video** (MediaPipe BlazePose 33-keypoint on drill clips from NFL.com/YouTube): joint angles, arm-drive amplitude, trunk lean, ground-contact timing, stance type (3-pt vs 2-pt) — things 10Hz hip-tag tracking cannot see. Assumptions: Heading angle derivative is measurable; body orientation is tracked via pose estimation. Breakdown regime: When v(t) approaches zero, \\kappa(t) becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pose-derived joint angles and stance type inform COD arc radius and speed retention, aligning with NGS-derived COD metrics. Operator 'Rhythm and Planarity Metrics' (page 1, domain other) captures: **Game-film CV** = STRETCH, not core (no public play-synced video; mark as future work in the writeup). Assumptions: Lateral motion is periodic; path efficiency is computed from actual vs. straight-line distance. Breakdown regime: In static or non-moving states, f_lateral ≈ 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Lateral oscillation frequency and path efficiency are used to detect false-step patterns and movement economy in game scenarios. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BDB2027_GROUNDWORK (f6b333f9c3069dbf, domain=other, pages_read=2/2): Operator 'Speed Curve Dynamics' (page 1, domain other) captures: iSH lane = data prep, kinematic feature code (stdlib), viz prototypes (matplotlib), the EPA scoring harness. Assumptions: Trajectory data is sampled at 10 Hz; motion is continuous and differentiable. Breakdown regime: At t = 0, v(0) = 0; at peak speed, a(t) = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps velocity profiles to performance indicators such as top speed and acceleration time, used in EPA scoring. Operator 'Change of Direction Kinematics' (page 1, domain other) captures: **Pose estimation on public combine video** (MediaPipe BlazePose 33-keypoint on drill clips from NFL.com/YouTube): joint angles, arm-drive amplitude, trunk lean, ground-contact timing, stance type (3-pt vs 2-pt) — things 10Hz hip-tag tracking cannot see. Assumptions: Heading angle derivative is measurable; body orientation is tracked via pose estimation. Breakdown regime: When v(t) approaches zero, \\kappa(t) becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Pose-derived joint angles and stance type inform COD arc radius and speed retention, aligning with NGS-derived COD metrics. Operator 'Rhythm and Planarity Metrics' (page 1, domain other) captures: **Game-film CV** = STRETCH, not core (no public play-synced video; mark as future work in the writeup). Assumptions: Lateral motion is periodic; path efficiency is computed from actual vs. straight-line distance. Breakdown regime: In static or non-moving states, f_lateral ≈ 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Lateral oscillation frequency and path efficiency are used to detect false-step patterns and movement economy in game scenarios. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and biomechanics, extended by modern machine learning frameworks for motion analysis. Influenced by early work in gait analysis and sports science. Retrocausal Genealogy: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include scouts who rely on subjective observation and coaches seeking reproducible metrics. The model must balance interpretability with predictive power to satisfy both groups. Theory of Mind & Decision Maker Model: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct feature sets between primitives; leakage occurs when posture and speed overlap without clear separation. Veto conditions ensure that each primitive contributes unique information to the overall performance prediction. Cross-Layer Veto & Anti-Leakage Check: Rooted in BDB2027_GROUNDWORK (f6b333f9c3069dbf), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

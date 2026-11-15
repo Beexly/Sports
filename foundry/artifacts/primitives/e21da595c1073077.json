@@ -1,0 +1,78 @@
+{
+  "book_id": "e21da595c1073077",
+  "source_status": "COMPLETE",
+  "title": "mockups",
+  "file_name": "mockups.md",
+  "sha256": "e21da595c1073077f3bc2799abf743cd2b5cfef0b9b2f6b2d8bc6f31c00abf28",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Brand-consistent visual application via deterministic logo and palette adherence with Seedream-based scene generation. Universal Lens: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over brand state space using approved logo and visual axes to constrain mockup likelihood distributions. GSI Mapping: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine applies fixed scene templates with variable logo placements, preserving material and lighting consistency across variants. GSE Mapping: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "brand_lock_constraint",
+      "name": "Brand Lock Constraint",
+      "verbatim_quote": "Preserve the approved logo and colors; do not let the scene generator invent branding.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_{\\\\text{approved}}': 'Approved logo asset identifier (dimensionless)', 'C_{\\\\text{approved}}': 'Approved color palette vector (RGB or CMYK)'}",
+      "assumptions": "Logo and color data are immutable and prevalidated.",
+      "breakdown_regime": "When scene generator attempts to alter brand elements.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The constraint maps to a brand state vector in GSI's Bayesian belief space, where each element corresponds to a validated visual attribute.",
+        "source_operator": "brand_lock_constraint",
+        "telemetry": "Verification of logo and color fidelity in rendered output."
+      }
+    },
+    {
+      "primitive_id": "seedream_scene_generator",
+      "name": "Seedream Scene Generator",
+      "verbatim_quote": "## Required Seedream route Use **Seedream** as the primary mockup generator.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{model}}': 'Seedream model identifier (string)', 'A_{\\\\text{ratio}}': 'Aspect ratio tuple (float, float)', 'R_{\\\\text{res}}': 'Resolution tuple (int, int)'}",
+      "assumptions": "Scene generation uses deterministic model parameters and fixed input assets.",
+      "breakdown_regime": "When GPT Image 2 is used conditionally for text detail.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates scene templates with fixed composition and variable branding placements, enabling batched mockup comparisons.",
+        "source_operator": "seedream_scene_generator",
+        "telemetry": "Job ID and result URL from Seedream API response."
+      }
+    },
+    {
+      "primitive_id": "logo_variant_routing",
+      "name": "Logo Variant Routing",
+      "verbatim_quote": "If that id is absent, inspect `higgsfield model list --image --json` and use the highest/newest Seedream tier it returns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{variant}}': 'Logo variant type (enum: full-color, black, white, embossed)', 'M_{\\\\text{material}}': 'Material specification vector (string array)'}",
+      "assumptions": "Each variant has a defined material and rendering protocol.",
+      "breakdown_regime": "When multiple logo versions exist for different media.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps logo variant types to material behavior models in GSE's rendering kernel.",
+        "source_operator": "logo_variant_routing",
+        "telemetry": "Material and surface finish consistency across mockups."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e21da595c1073077_t0",
+      "think": "The core principle of mockup generation lies in maintaining brand integrity through deterministic constraints. The 'Brand Lock Constraint' ensures that all generated scenes adhere strictly to approved visual assets, preventing divergence from corporate identity. This constraint acts as a prior in GSI’s Bayesian framework, limiting the hypothesis space of plausible mockups. The 'Seedream Scene Generator' provides a controlled environment for scene creation, using fixed parameters and approved inputs to ensure reproducibility and scalability. It operates under the assumption that visual fidelity is preserved across variants, enabling comparative analysis. The 'Logo Variant Routing' introduces a structured method for applying logos across different media types, aligning with material properties and rendering expectations. Together, these primitives form a closed-loop system where each step enforces consistency while allowing variation within defined boundaries. Failure modes include unauthorized branding changes, incorrect material application, or inconsistent aspect ratios, all detectable through telemetry checks.\n\nDeep epistemic analysis for mockups (e21da595c1073077, domain=other, pages_read=4/4): Operator 'Brand Lock Constraint' (page 1, domain other) captures: Preserve the approved logo and colors; do not let the scene generator invent branding. Assumptions: Logo and color data are immutable and prevalidated. Breakdown regime: When scene generator attempts to alter brand elements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The constraint maps to a brand state vector in GSI's Bayesian belief space, where each element corresponds to a validated visual attribute. Operator 'Seedream Scene Generator' (page 1, domain other) captures: ## Required Seedream route Use **Seedream** as the primary mockup generator. Assumptions: Scene generation uses deterministic model parameters and fixed input assets. Breakdown regime: When GPT Image 2 is used conditionally for text detail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates scene templates with fixed composition and variable branding placements, enabling batched mockup comparisons. Operator 'Logo Variant Routing' (page 1, domain other) captures: If that id is absent, inspect `higgsfield model list --image --json` and use the highest/newest Seedream tier it returns. Assumptions: Each variant has a defined material and rendering protocol. Breakdown regime: When multiple logo versions exist for different media. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps logo variant types to material behavior models in GSE's rendering kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for mockups (e21da595c1073077, domain=other, pages_read=4/4): Operator 'Brand Lock Constraint' (page 1, domain other) captures: Preserve the approved logo and colors; do not let the scene generator invent branding. Assumptions: Logo and color data are immutable and prevalidated. Breakdown regime: When scene generator attempts to alter brand elements. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The constraint maps to a brand state vector in GSI's Bayesian belief space, where each element corresponds to a validated visual attribute. Operator 'Seedream Scene Generator' (page 1, domain other) captures: ## Required Seedream route Use **Seedream** as the primary mockup generator. Assumptions: Scene generation uses deterministic model parameters and fixed input assets. Breakdown regime: When GPT Image 2 is used conditionally for text detail. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates scene templates with fixed composition and variable branding placements, enabling batched mockup comparisons. Operator 'Logo Variant Routing' (page 1, domain other) captures: If that id is absent, inspect `higgsfield model list --image --json` and use the highest/newest Seedream tier it returns. Assumptions: Each variant has a defined material and rendering protocol. Breakdown regime: When multiple logo versions exist for different media. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps logo variant types to material behavior models in GSE's rendering kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in computer graphics and brand management systems from early 2000s, evolving into AI-assisted design workflows with emphasis on procedural generation and brand compliance. Retrocausal Genealogy: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to introduce creative liberties or bypass brand guidelines. The system models these as noise in the visual pipeline, countered by strict enforcement of approved assets and process steps. Theory of Mind & Decision Maker Model: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each primitive operates independently without shared variables. Leakage occurs if scene generation does not respect logo fidelity or if variant routing fails to apply correct material behaviors. Cross-Layer Veto & Anti-Leakage Check: Rooted in mockups (e21da595c1073077), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

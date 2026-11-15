@@ -1,0 +1,663 @@
+========== PAGE 1 ==========
+LYNN H. LOOMIS and SHLOMO STERNBERG
+Department of Mathematics, Harvard University
+ADVANCED CALCULUS
+REVISED EDITION
+JONES AND BARTLETT PUBLISHERS
+Boston
+London
+
+========== PAGE 2 ==========
+Editorial, Sales, and Customer Service Offices:
+Jones and Bartlett Publishers, Inc.
+One Exeter Plaza
+Boston, MA 02116
+Jones and Bartlett Publishers International
+PO Box 1498
+London W6 7RS
+England
+Copyright 1990 by Jones and Bartlett Publishers, Inc.
+Copyright 1968 by Addison-Wesley Publishing Company, Inc.
+All rights reserved. No part of the material protected by this copyright notice
+may be reproduced or utilized in any form, electronic or mechanical, including
+photocopying, recording, or by any information storage and retrieval system,
+without written permission from the copyright owner.
+Printed in the United States of America.
+10 9 8 7 6 5 4 3 2
+Library of Congress Cataloging-in-Publication Data
+Loomis, Lynn H.
+Advanced calculus / Lynn H. Loomis and Shlomo Sternberg. - Rev. ed.
+p.
+cm.
+Originally published: Reading, Mass.: Addison-Wesley Pub. Co., 1968.
+ISBN 0-86720-122-3
+1. Calculus. I. Sternberg, Shlomo. II. Title.
+QA303.L87 1990
+515--dc20
+89-15620
+CIP
+
+========== PAGE 3 ==========
+PREFACE
+This book is based on an honors course in advanced calculus that we gave in the
+1960's. The foundational material, presented in the unstarred sections of Chap-
+ters 1 through 11, was normally covered, but different applications of this basic
+material were stressed from year to year, and the book therefore contains more
+material than was covered in any one year. It can accordingly be used (with
+omissions) as a text for a year's course in advanced calculus, or as a text for a
+three-semester introduction to analysis.
+These prerequisites are a good grounding in the calculus of one variable
+from a mathematically rigorous point of view, together with some acquaintance
+with linear algebra. The reader should be familiar with limit and continuity type
+arguments and have a certain amount of mathematical sophistication. As possi-
+ble introductory texts, we mention Differential and Integral Calculus by R. Cou-
+rant, Calculus by T. Apostol, Calculus by M. Spivak, and Pure Mathematics by
+G. Hardy. The reader should also have some experience with partial derivatives.
+In overall plan the book divides roughly into a first half which develops the
+calculus (principally the differential calculus) in the setting of normed vector
+spaces, and a second half which deals with the calculus of differentiable manifolds.
+Vector space calculus is treated in two chapters, the differential calculus in
+Chapter 3, and the basic theory of ordinary differential equations in Chapter 6.
+The other early chapters are auxiliary. The first two chapters develop the neces-
+sary purely algebraic theory of vector spaces, Chapter 4 presents the material
+on compactness and completeness needed for the more substantive results of
+the calculus, and Chapter 5 contains a brief account of the extra structure en-
+countered in scalar product spaces. Chapter 7 is devoted to multilinear (tensor)
+algebra and is, in the main, a reference chapter for later use. Chapter 8 deals
+with the theory of (Riemann) integration on Euclidean spaces and includes (in
+exercise form) the fundamental facts about the Fourier transform. Chapters 9
+and 10 develop the differential and integral calculus on manifolds, while Chapter
+11 treats the exterior calculus of E. Cartan.
+The first eleven chapters form a logical unit, each chapter depending on the
+results of the preceding chapters. (Of course, many chapters contain material
+that can be omitted on first reading; this is generally found in starred sections.)
+
+========== PAGE 4 ==========
+On the other hand, Chapters 12, 13, and the latter parts of Chapters 6 and 11
+are independent of each other, and are to be regarded as illustrative applications
+of the methods developed in the earlier chapters. Presented here are elementary
+Sturm-Liouville theory and Fourier series, elementary differential geometry,
+potential theory, and classical mechanics. We usually covered only one or two
+of these topics in our one-year course.
+We have not hesitated to present the same material more than once from
+different points of view. For example, although we have selected the contraction
+mapping fixed-point theorem as our basic approach to the implicit-function
+theorem, we have also outlined a "Newton's method" proof in the text and have
+sketched still a third proof in the exercises. Similarly, the calculus of variations
+is encountered twice-once in the context of the differential calculus of an
+infinite-dimensional vector space and later in the context of classical mechanics.
+The notion of a submanifold of a vector space is introduced in the early chapters,
+while the invariant definition of a manifold is given later on.
+In the introductory treatment of vector space theory, we are more careful
+and precise than is customary. In fact, this level of precision of language is not
+maintained in the later chapters. Our feeling is that in linear algebra, where the
+concepts are so clear and the axioms so familiar, it is pedagogically sound to
+illustrate various subtle points, such as distinguishing between spaces that are
+normally identified, discussing the naturality of various maps, and so on. Later
+on, when overly precise language would be more cumbersome, the reader should
+be able to produce for himself a more precise version of any assertions that he
+finds to be formulated too loosely. Similarly, the proofs in the first few chapters
+are presented in more formal detail. Again, the philosophy is that once the
+student has mastered the notion of what constitutes a formal mathematical
+proof, it is safe and more convenient to present arguments in the usual mathe-
+matical colloquialisms.
+While the level of formality decreases, the level of mathematical sophisti-
+cation does not. Thus increasingly abstract and sophisticated mathematical
+objects are introduced. It has been our experience that Chapter 9 contains the
+concepts most difficult for students to absorb, especially the notions of the
+tangent space to a manifold and the Lie derivative of various objects with
+respect to a vector field.
+
+========== PAGE 5 ==========
+There are exercises of many different kinds spread throughout the book.
+Some are in the nature of routine applications. Others ask the reader to fill in
+or extend various proofs of results presented in the text. Sometimes whole
+topics, such as the Fourier transform or the residue calculus, are presented in
+exercise form. Due to the rather abstract nature of the textual material, the stu-
+dent is strongly advised to work out as many of the exercises as he possibly can.
+Any enterprise of this nature owes much to many people besides the authors,
+but we particularly wish to acknowledge the help of L. Ahlfors, A. Gleason,
+R. Kulkami, R. Rasala, and G. Mackey and the general influence of the book by
+Dieudonné. We also wish to thank the staff of Jones and Bartlett for their invaluable
+help in preparing this revised edition.
+Cambridge, Massachusetts
+1968, 1989
+L.H.L.
+S.S.
+
+========== PAGE 6 ==========
+
+
+========== PAGE 7 ==========
+CONTENTS
+Chapter 0
+Introduction
+1
+Logic: quantifiers
+2
+The logical connectives
+3
+4
+Sets
+5
+Negations of quantifiers
+Restricted variables
+6
+Ordered pairs and relations.
+7 Functions and mappings
+8
+Product sets; index notation
+9
+Composition
+10
+Duality
+11
+The Boolean operations.
+1
+3
+6
+6
+8
+9
+10
+12
+14
+15
+17
+19
+Chapter 1
+1
+12 Partitions and equivalence relations
+Vector Spaces
+Fundamental notions
+2 Vector spaces and geometry
+3 Product spaces and Hom (V, W)
+4
+Affine subspaces and quotient spaces
+5
+Direct sums
+6
+Bilinearity
+67
+21
+43
+263265
+Chapter 2
+Finite-Dimensional Vector Spaces
+1
+Bases
+2
+Dimension
+71
+77
+3 The dual space
+81
+4
+Matrices
+88
+5
+Trace and determinant
+99
+6 Matrix computations
+102
+*7
+The diagonalization of a quadratic form
+111
+Chapter 3
+The Differential Calculus
+1 Review in R
+2 Norms.
+3 Continuity
+117
+121
+126
+
+========== PAGE 8 ==========
+4 Equivalent norms
+5
+6 The differential
+132
+Infinitesimals.
+136
+140
+7
+Directional derivatives; the mean-value theorem
+146
+8
+The differential and product spaces
+152
+9
+The differential and Rn
+156
+10 Elementary applications
+161
+11
+The implicit-function theorem
+164
+12 Submanifolds and Lagrange multipliers
+172
+*13 Functional dependence
+175
+*14 Uniform continuity and function-valued mappings
+179
+*15 The calculus of variations
+182
+*16 The second differential and the classification of critical points
+*17 The Taylor formula
+186
+191
+Chapter 4
+Compactness and Completeness
+1 Metric spaces; open and closed sets
+*2 Topology
+3 Sequential convergence
+4 Sequential compactness
+5 Compactness and uniformity
+6 Equicontinuity
+7 Completeness.
+8
+A first look at Banach algebras
+9 The contraction mapping fixed-point theorem
+10 The integral of a parametrized arc
+11 The complex number system
+195
+201
+202
+205
+210
+215
+216
+223
+228
+236
+240
+245
+*12 Weak methods
+Chapter 5
+Scalar Product Spaces
+1 Scalar products
+2 Orthogonal projection
+3 Self-adjoint transformations
+4 Orthogonal transformations
+5 Compact transformations
+248
+252
+257
+262
+264
+
+========== PAGE 9 ==========
+Chapter 6 Differential Equations
+1
+The fundamental theorem
+266
+2 Differentiable dependence on parameters
+274
+3 The linear equation
+276
+4
+The nth-order linear equation
+281
+6
+The boundary-value problem
+7
+5 Solving the inhomogeneous equation
+Fourier series.
+288
+294
+301
+Chapter 7
+Multilinear Functionals
+1
+2
+3
+Bilinear functionals
+Multilinear functionals
+Permutations.
+4 The sign of a permutation
+5 The subspace a" of alternating tensors
+6 The determinant.
+305
+306
+308
+309
+310
+312
+7
+The exterior algebra.
+316
+8 Exterior powers of scalar product spaces
+319
+9 The star operator
+320
+Chapter 8
+Integration
+1
+Introduction
+321
+2
+Axioms
+322
+3 Rectangles and paved sets
+324
+4 The minimal theory
+327
+5
+The minimal theory (continued)
+328
+6
+Contented sets
+331
+7
+When is a set contented?
+333
+8
+Behavior under linear distortions
+335
+9 Axioms for integration
+10 Integration of contented functions
+336
+338
+11 The change of variables formula
+342
+12 Successive integration
+346
+13 Absolutely integrable functions
+351
+14 Problem set: The Fourier transform
+355
+
+========== PAGE 10 ==========
+Chapter 9
+Differentiable Manifolds
+1
+Atlases
+364
+3
+4
+The tangent space
+2 Functions, convergence
+Differentiable manifolds
+367
+369
+373
+.
+5 Flows and vector fields
+6 Lie derivatives
+376
+383
+7
+Linear differential forms
+390
+8
+Computations with coordinates
+393
+9
+Riemann metrics.
+397
+Chapter 10
+The Integral Calculus on Manifolds
+1
+Compactness
+403
+2 Partitions of unity
+405
+3 Densities
+408
+4 Volume density of a Riemann metric
+411
+5
+Pullback and Lie derivatives of densities
+416
+6
+The divergence theorem
+419
+7 More complicated domains
+424
+Chapter 11
+Exterior Calculus
+1
+Exterior differential forms
+429
+2 Oriented manifolds and the integration of exterior differential forms 433
+3 The operator d
+4
+Stokes' theorem
+5 Some illustrations of Stokes' theorem
+438
+442
+449
+6 The Lie derivative of a differential form
+452
+Appendix I. "Vector analysis".
+457
+Appendix II. Elementary differential geometry of surfaces in E³
+459
+Chapter 12 Potential Theory in E"
+1
+Solid angle
+2
+Green's formulas
+3 The maximum principle
+4
+Green's functions
+474
+476
+477
+479
+
+========== PAGE 11 ==========
+5 The Poisson integral formula
+6 Consequences of the Poisson integral formula
+7
+Harnack's theorem
+8
+Subharmonic functions
+9
+Dirichlet's problem
+10 Behavior near the boundary
+11 Dirichlet's principle
+12 Physical applications
+13
+Problem set: The calculus of residues
+482
+485
+487
+489
+491
+495
+499
+501
+503
+Chapter 13
+Classical Mechanics
+1
+The tangent and cotangent bundles
+511
+2 Equations of variation
+513
+3
+The fundamental linear differential form on T*(M)
+515
+4
+The fundamental exterior two-form on T*(M)
+517
+5
+Hamiltonian mechanics
+520
+6 The central-force problem
+521
+7
+The two-body problem
+528
+8
+Lagrange's equations
+9 Variational principles
+530
+532
+10
+Geodesic coordinates
+537
+11
+Euler's equations
+541
+12 Rigid-body motion
+544
+13 Small oscillations
+551
+14 Small oscillations (continued)
+553
+15
+Canonical transformations
+558
+Selected References
+Notation Index
+Index
+569
+572
+575
+
+========== PAGE 12 ==========
+
+
+========== PAGE 13 ==========
+CHAPTER 0
+INTRODUCTION
+This preliminary chapter contains a short exposition of the set theory that
+forms the substratum of mathematical thinking today. It begins with a brief
+discussion of logic, so that set theory can be discussed with some precision, and
+continues with a review of the way in which mathematical objects can be defined
+as sets. The chapter ends with four sections which treat specific set-theoretic
+topics.
+It is intended that this material be used mainly for reference. Some of it
+will be familiar to the reader and some of it will probably be new. We suggest
+that he read the chapter through "lightly" at first, and then refer back to it
+for details as needed.
+1. LOGIC: QUANTIFIERS
+A statement is a sentence which is true or false as it stands. Thus '1 < 2' and
+'4+3 5' are, respectively, true and false mathematical statements. Many
+sentences occurring in mathematics contain variables and are therefore not true
+or false as they stand, but become statements when the variables are given
+values. Simple examples are 'x < 4', 'x < y', ‘x is an integer', '3x² + y² = 10'.
+Such sentences will be called statement frames. If P(x) is a frame containing the
+one variable 'x', then P(5) is the statement obtained by replacing 'x' in P(x) by
+the numeral '5'. For example, if P(x) is 'x < 4', then P(5) is '5 < 4', P(√2)
+is '√24', and so on.
+Another way to obtain a statement from the frame P(x) is to assert that P(x)
+is always true. We do this by prefixing the phrase 'for every x'. Thus, 'for every
+x, x < 4' is a false statement, and 'for every x, x 2. 1 = (x 1)(x+1)' is a
+true statement. This prefixing phrase is called a universal quantifier. Syn-
+onymous phrases are 'for each x' and 'for all x', and the symbol customarily
+used is '(Vx)', which can be read in any of these ways. One frequently presents
+sentences containing variables as being always true without explicitly writing
+the universal quantifiers. For instance, the associative law for the addition of
+numbers is often written
+x + (y + z):
+=
+(x + y) + z,
+where it is understood that the equation is true for all x, y and z. Thus the
+1
+
+========== PAGE 14 ==========
+2
+INTRODUCTION
+0.1
+actual statement being made is
+(Vx)(Vy)(Vz)[x + (y + z) = (x + y) + z].
+Finally, we can convert the frame P(x) into a statement by asserting that
+it is sometimes true, which we do by writing 'there exists an x such that P(x)'.
+This process is called existential quantification. Synonymous prefixing phrases
+here are 'there is an x such that', 'for some x', and, symbolically, '(x)'.
+The statement ‘(Vx) (x < 4)' still contains the variable 'x', of course, but
+'x' is no longer free to be given values, and is now called a bound variable.
+Roughly speaking, quantified variables are bound and unquantified variables
+are free. The notation 'P(x)' is used only when 'x' is free in the sentence being
+discussed.
+Now suppose that we have a sentence P(x, y) containing two free variables.
+Clearly, we need two quantifiers to obtain a statement from this sentence.
+This brings us to a very important observation. If quantifiers of both types are
+used, then the order in which they are written affects the meaning of the statement;
+(y)(Vx)P(x, y) and (Vx) (y)P(x, y) say different things. The first says that one y
+can be found that works for all x: "there exists a y such that for all x ...".
+The second says that for each x a y can be found that works: "for each x there
+exists a y such that...". But in the second case, it may very well happen that
+when x is changed, the y that can be found will also have to be changed. The
+existence of a single y that serves for all x is thus the stronger statement. For
+example, it is true that (Vx) (y) (x < y) and false that (y) (Vx) (x < y). The
+reader must be absolutely clear on this point; his whole mathematical future is
+at stake. The second statement says that there exists a y, call it yo, such that
+(Vx) (x < yo), that is, such that every number is less than yo. This is false;
+yo+1, in particular, is not less than yo. The first statement says that for each x
+we can find a corresponding y. And we can: take y = x + 1.
+On the other hand, among a group of quantifiers of the same type the order
+does not affect the meaning. Thus ‘(Vx) (Vy)' and '(Vy) (Vx)' have the same mean-
+ing. We often abbreviate such clumps of similar quantifiers by using the quan-
+tification symbol only once, as in ‘(Vx, y)', which can be read 'for every x and y'.
+Thus the strictly correct '(Vx) (Vy)(Vz)[x + (y + z) = (x + y) + 2]' receives the
+slightly more idiomatic rendition ‘(Vx, y, z)[x + (y + z): (xy)]'. The
+situation is clearly the same for a group of existential quantifiers.
+=
+The beginning student generally feels that the prefixing phrases 'for every x
+there exists a y such that' and 'there exists a y such that for every x' sound
+artificial and are unidiomatic. This is indeed the case, but this awkwardness is the
+price that has to be paid for the order of the quantifiers to be fixed, so that the
+meaning of the quantified statement is clear and unambiguous. Quantifiers do
+occur in ordinary idiomatic discourse, but their idiomatic occurrences often
+house ambiguity. The following two sentences are good examples of such
+ambiguous idiomatic usage: "Every x is less than some y" and "Some y is greater
+than every x". If a poll were taken, it would be found that most men on the
+
+========== PAGE 15 ==========
+0.2
+THE LOGICAL CONNECTIVES
+3
+street feel that these two sentences say the same thing, but half will feel that the
+common assertion is false and half will think it true! The trouble here is that
+the matrix is preceded by one quantifier and followed by another, and the poor
+reader doesn't know which to take as the inside, or first applied, quantifier. The
+two possible symbolic renditions of our first sentence, '((Vx) (x < y)](³y)' and
+'(Vx)[(x < y)(y)]', are respectively false and true. Mathematicians do use
+hanging quantifiers in the interests of more idiomatic writing, but only if they
+are sure the reader will understand their order of application, either from the
+context or by comparison with standard usage. In general, a hanging quantifier
+would probably be read as the inside, or first applied, quantifier, and with this
+understanding our two ambiguous sentences become true and false in that order.
+After this apology the reader should be able to tolerate the definition of
+sequential convergence. It involves three quantifiers and runs as follows: The
+sequence {x} converges to x if (Ve) (N) (Vn) (if n > N then |x − x < €).
+In exactly the same format, we define a function f to be continuous at a if
+(Ve) (38) (Vx) (if |x a < 8 then |f(x) − f(a)| < €). We often omit an inside
+universal quantifier by displaying the final frame, so that the universal quanti-
+fication is understood. Thus we define f to be continuous at a if for every e
+there is a such that
+-
+if xa d, then
+f(x)f(a)| < e.
+We shall study these definitions later. We remark only that it is perfectly
+possible to build up an intuitive understanding of what these and similar
+quantified statements actually say.
+2. THE LOGICAL CONNECTIVES
+When the word 'and' is inserted between two sentences, the resulting sentence
+is true if both constituent sentences are true and is false otherwise. That is, the
+"truth value", T or F, of the compound sentence depends only on the truth
+values of the constituent sentences. We can thus describe the way 'and' acts in
+compounding sentences in the simple "truth table"
+P
+Q
+P and Q
+T
+T
+T
+T
+F
+F
+F
+T
+F
+F
+F
+F
+where 'P' and 'Q' stand for arbitrary statement frames. Words like 'and' are
+called logical connectives. It is often convenient to use symbols for connectives,
+and a standard symbol for 'and' is the ampersand '&'. Thus 'P & Q' is read
+'P and Q'.

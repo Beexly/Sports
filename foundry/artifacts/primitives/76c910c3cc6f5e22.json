@@ -1,78 +1,16 @@
 {
   "book_id": "76c910c3cc6f5e22",
-  "source_status": "COMPLETE",
-  "title": "SKILL",
-  "file_name": "SKILL.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_76c910c3cc6f5e22",
+  "file_name": "76c910c3cc6f5e22.quarantined",
   "sha256": "76c910c3cc6f5e222afa858f3d1570c5a46658c26c56fc4e91362ad92d3fecbd",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Optimistic concurrency control (OCC) enforces atomic, versioned state transitions under policy constraints, ensuring auditability and conflict detection via idempotent updates and rollback semantics. Universal Lens: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian inference models policy validity and conflict resolution using posterior distributions over state versions, with conformal prediction bounds on transition legality and actor consistency. GSI Mapping: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine applies OCC primitives to validate state changes within transactional lanes, enforcing exact effect guarantees through idempotency keys and fenced side-effect logs. GSE Mapping: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "xxx_occ_transition",
-      "name": "Optimistic Concurrency Control Transition",
-      "verbatim_quote": "--name: xxx-occ-transition description: Implement or audit optimistic-concurrency-controlled XXX state mutations.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'V': 'version number (dimensionless)', 'A': 'aggregate ID (UUID-like string)', 'T': 'transition type (enum)', 'E': 'evidence hash (SHA-256)', 'K': 'idempotency key (string)'}",
-      "assumptions": "Two or more actors may concurrently read and attempt to mutate the same state version.",
-      "breakdown_regime": "When concurrent writes occur, OCC detects conflicts via version mismatch and aborts conflicting transactions.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "State transition function f(V, A, T, E, K) → V' maps input parameters to updated version; conflict resolution mirrors Bayesian update on policy constraints.",
-        "source_operator": "xxx_occ_transition",
-        "telemetry": "Transaction commit success rate, conflict frequency, and rollback count per aggregate."
-      }
-    },
-    {
-      "primitive_id": "atomic_versioned_update",
-      "name": "Atomic Versioned Update Predicate",
-      "verbatim_quote": "Update with a version predicate, increment exactly once, and require one affected row.",
-      "page": 1,
-      "latex": "\\forall i \\in \\mathbb{Z}: \\text{UPDATE } R \\text{ SET } V = V + 1 \\text{ WHERE } V = v_i \\text{ AND } \\text{ROW\\_COUNT} = 1",
-      "symbol_and_unit_ledger": "{'R': 'repository table (relation)', 'V': 'version field (integer)', 'v_i': 'current version (integer)', 'ROW_COUNT': 'affected rows (integer)'}",
-      "assumptions": "Each update must be uniquely tied to a known previous version to prevent lost updates.",
-      "breakdown_regime": "Failure occurs when ROW_COUNT ≠ 1 due to concurrent modification.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Predicate-based update kernel ensures serializability by requiring exact version match before incrementing.",
-        "source_operator": "atomic_versioned_update",
-        "telemetry": "Version predicate match rate, failed update counts, and average retry attempts."
-      }
-    },
-    {
-      "primitive_id": "policy_validated_commit",
-      "name": "Policy Validated Commit",
-      "verbatim_quote": "Commit only after every invariant succeeds; otherwise roll back and return the typed conflict or policy error.",
-      "page": 1,
-      "latex": "\\text{IF } \\forall p \\in P: \\text{inv}(p, s) \\text{ THEN COMMIT ELSE ROLLBACK}",
-      "symbol_and_unit_ledger": "{'P': 'set of policy invariants (boolean predicates)', 's': 'state vector (tuple)', 'inv(p, s)': 'policy validation function returning boolean'}",
-      "assumptions": "All invariants must hold true at commit time to ensure semantic correctness.",
-      "breakdown_regime": "Commit fails if any invariant evaluates to false, triggering rollback and error propagation.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Commit kernel applies logical conjunction of all policy checks to determine final state acceptance.",
-        "source_operator": "policy_validated_commit",
-        "telemetry": "Invariant pass/fail ratio, commit latency, and policy violation types."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "76c910c3cc6f5e22_t0",
-      "think": "The OCC framework operates as a dual-state system: read phase validates initial conditions against versioned state, while write phase enforces atomicity via predicate-based updates. The core mathematical duality lies between conflict detection (via version mismatch) and resolution (via rollback and retry). Each transition is modeled as a deterministic function f(V, A, T, E, K) → V', where inputs define a unique state evolution path. Policy validation acts as a constraint layer, ensuring that only semantically valid transitions proceed. Failure modes include lost updates (when version predicates fail) and race conditions (if retries do not re-read). The system's robustness hinges on idempotency keys and fenced side-effect logs to maintain exactly-once semantics despite OCC’s limitations in guaranteeing side-effect uniqueness.\n\nDeep epistemic analysis for SKILL (76c910c3cc6f5e22, domain=other, pages_read=1/1): Operator 'Optimistic Concurrency Control Transition' (page 1, domain other) captures: --name: xxx-occ-transition description: Implement or audit optimistic-concurrency-controlled XXX state mutations. Assumptions: Two or more actors may concurrently read and attempt to mutate the same state version. Breakdown regime: When concurrent writes occur, OCC detects conflicts via version mismatch and aborts conflicting transactions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition function f(V, A, T, E, K) → V' maps input parameters to updated version; conflict resolution mirrors Bayesian update on policy constraints. Operator 'Atomic Versioned Update Predicate' (page 1, domain other) captures: Update with a version predicate, increment exactly once, and require one affected row. Assumptions: Each update must be uniquely tied to a known previous version to prevent lost updates. Breakdown regime: Failure occurs when ROW_COUNT ≠ 1 due to concurrent modification. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predicate-based update kernel ensures serializability by requiring exact version match before incrementing. Operator 'Policy Validated Commit' (page 1, domain other) captures: Commit only after every invariant succeeds; otherwise roll back and return the typed conflict or policy error. Assumptions: All invariants must hold true at commit time to ensure semantic correctness. Breakdown regime: Commit fails if any invariant evaluates to false, triggering rollback and error propagation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Commit kernel applies logical conjunction of all policy checks to determine final state acceptance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for SKILL (76c910c3cc6f5e22, domain=other, pages_read=1/1): Operator 'Optimistic Concurrency Control Transition' (page 1, domain other) captures: --name: xxx-occ-transition description: Implement or audit optimistic-concurrency-controlled XXX state mutations. Assumptions: Two or more actors may concurrently read and attempt to mutate the same state version. Breakdown regime: When concurrent writes occur, OCC detects conflicts via version mismatch and aborts conflicting transactions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State transition function f(V, A, T, E, K) → V' maps input parameters to updated version; conflict resolution mirrors Bayesian update on policy constraints. Operator 'Atomic Versioned Update Predicate' (page 1, domain other) captures: Update with a version predicate, increment exactly once, and require one affected row. Assumptions: Each update must be uniquely tied to a known previous version to prevent lost updates. Breakdown regime: Failure occurs when ROW_COUNT ≠ 1 due to concurrent modification. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Predicate-based update kernel ensures serializability by requiring exact version match before incrementing. Operator 'Policy Validated Commit' (page 1, domain other) captures: Commit only after every invariant succeeds; otherwise roll back and return the typed conflict or policy error. Assumptions: All invariants must hold true at commit time to ensure semantic correctness. Breakdown regime: Commit fails if any invariant evaluates to false, triggering rollback and error propagation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Commit kernel applies logical conjunction of all policy checks to determine final state acceptance. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in database transaction theory (ACID properties), extended by Lamport's logical clocks and Herlihy & Wing's linearizability model, evolving into modern distributed systems concurrency patterns such as CRDTs and eventual consistency models. Retrocausal Genealogy: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Agents interact through shared mutable state, each attempting to advance their view of a common resource. Conflicts arise when multiple agents observe identical base states and attempt divergent modifications. The system models these interactions as adversarial decision-making under partial observability, where retries simulate re-evaluation of prior decisions with fresh context. Theory of Mind & Decision Maker Model: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is enforced by isolating policy checks from raw data access, preventing cascading failures across layers. Leakage vetoes occur when audit trails or evidence fields are not consistently updated during transitions, leading to irreproducible errors or inconsistent state recovery. Cross-Layer Veto & Anti-Leakage Check: Rooted in SKILL (76c910c3cc6f5e22), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

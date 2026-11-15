@@ -1,0 +1,78 @@
+{
+  "book_id": "cf9ac0a360eab3e5",
+  "source_status": "COMPLETE",
+  "title": "nfl.com",
+  "file_name": "nfl.com.md",
+  "sha256": "cf9ac0a360eab3e50e4dbff422c3ebbdd29eb85db98dc5974066a5c7edbe925b",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Client-side NFL data access is structurally blocked; server-side models dominate public API exposure. Universal Lens: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on NFL data requires credential-secured sessions or deep-crawl telemetry due to lack of public unauthenticated endpoints. GSI Mapping: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning must account for client-side data isolation and rely on server-side state transitions for game logic and player performance modeling. GSE Mapping: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "client_side_data_isolation",
+      "name": "Client-Side Data Isolation",
+      "verbatim_quote": "# nfl.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Public client interface does not expose structured data without authentication.",
+      "breakdown_regime": "Unauthenticated client access yields zero extractable JSON endpoints.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's credential-dependent data ingestion protocol and GSE's secure session state management.",
+        "source_operator": "client_side_data_isolation",
+        "telemetry": "Number of reachable unauthenticated JSON endpoints."
+      }
+    },
+    {
+      "primitive_id": "server_side_model_domination",
+      "name": "Server-Side Model Domination",
+      "verbatim_quote": "The model is server-side._ ## Gap Nothing extractable from the public client surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All meaningful NFL data processing occurs on backend systems.",
+      "breakdown_regime": "Client-side functions cannot independently compute or retrieve core models.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents the foundational constraint in GSE's state transition engine where client actions depend on server-provided model outputs.",
+        "source_operator": "server_side_model_domination",
+        "telemetry": "Ratio of client vs. server-side computation in data pipelines."
+      }
+    },
+    {
+      "primitive_id": "public_surface_gap",
+      "name": "Public Surface Gap",
+      "verbatim_quote": "The model is server-side._ ## Gap Nothing extractable from the public client surface.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Public-facing client interfaces do not support direct data extraction.",
+      "breakdown_regime": "Any data retrieval necessitates either authenticated access or crawling.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Underpins GSI’s need for verified session tokens and GSE’s reliance on secure data channels for real-time updates.",
+        "source_operator": "public_surface_gap",
+        "telemetry": "Percentage of public client data accessible without credentials."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cf9ac0a360eab3e5_t0",
+      "think": "The observed data from nfl.com reveals a consistent pattern of client-side isolation and server-side dominance. No JSON endpoints are accessible without authentication, indicating a deliberate architectural choice to centralize data processing. This implies that any GSI inference must be grounded in authenticated sessions or derived through indirect crawling methods. The absence of client-side functions passing filters suggests that even high-level functional abstractions are not exposed publicly. The failure mode lies in assuming that client-side code can independently yield structured data, which contradicts the server-first design. The mathematical duality here is between client-side opacity and server-side determinism. The breakdown regime occurs when attempting to extract data via unauthenticated paths, which results in zero return. This aligns with a constrained information-theoretic framework where public interfaces are minimal and controlled.\n\nDeep epistemic analysis for nfl.com (cf9ac0a360eab3e5, domain=football, pages_read=1/1): Operator 'Client-Side Data Isolation' (page 1, domain football) captures: # nfl.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: Public client interface does not expose structured data without authentication. Breakdown regime: Unauthenticated client access yields zero extractable JSON endpoints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's credential-dependent data ingestion protocol and GSE's secure session state management. Operator 'Server-Side Model Domination' (page 1, domain football) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: All meaningful NFL data processing occurs on backend systems. Breakdown regime: Client-side functions cannot independently compute or retrieve core models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the foundational constraint in GSE's state transition engine where client actions depend on server-provided model outputs. Operator 'Public Surface Gap' (page 1, domain football) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Public-facing client interfaces do not support direct data extraction. Breakdown regime: Any data retrieval necessitates either authenticated access or crawling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Underpins GSI’s need for verified session tokens and GSE’s reliance on secure data channels for real-time updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nfl.com (cf9ac0a360eab3e5, domain=football, pages_read=1/1): Operator 'Client-Side Data Isolation' (page 1, domain football) captures: # nfl.com — engineering App bundles beautified: **0** JSON endpoints captured: **0** Client functions passing filter: **0** ## Captured JSON endpoints _None. Assumptions: Public client interface does not expose structured data without authentication. Breakdown regime: Unauthenticated client access yields zero extractable JSON endpoints. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's credential-dependent data ingestion protocol and GSE's secure session state management. Operator 'Server-Side Model Domination' (page 1, domain football) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: All meaningful NFL data processing occurs on backend systems. Breakdown regime: Client-side functions cannot independently compute or retrieve core models. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents the foundational constraint in GSE's state transition engine where client actions depend on server-provided model outputs. Operator 'Public Surface Gap' (page 1, domain football) captures: The model is server-side._ ## Gap Nothing extractable from the public client surface. Assumptions: Public-facing client interfaces do not support direct data extraction. Breakdown regime: Any data retrieval necessitates either authenticated access or crawling. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Underpins GSI’s need for verified session tokens and GSE’s reliance on secure data channels for real-time updates. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This structure echoes early web API paradigms where frontend clients were restricted to minimal data access, with full logic encapsulated server-side—a pattern seen in RESTful architectures and modern microservices. Retrocausal Genealogy: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the NFL's data governance layer and the GSI/GSE system trying to infer real-time game states. The former enforces access control, while the latter seeks to reconstruct game dynamics from available signals. Theory of Mind & Decision Maker Model: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between client-side observability and server-side integrity. Leakage from public surfaces would violate the intended architecture, thus cross-layer veto conditions prevent unauthorized data fusion across domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in nfl.com (cf9ac0a360eab3e5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

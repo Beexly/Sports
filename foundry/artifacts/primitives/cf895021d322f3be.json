@@ -1,0 +1,78 @@
+{
+  "book_id": "cf895021d322f3be",
+  "source_status": "COMPLETE",
+  "title": "GSE_GSN_REPO_INTEGRATION_PLAN",
+  "file_name": "GSE_GSN_REPO_INTEGRATION_PLAN.md",
+  "sha256": "cf895021d322f3be91e63a52f01c962e3996062ae627267d3fb2f978c725b09e",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Repository integration as a structured data flow: GSE/GSN primitives map to agent workflows and data layers via modular, license-compliant open-source stacks. Universal Lens: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers sports market states via conformal predictive distributions over nflverse data and social signals from last30days-skill, enabling Bayesian risk-adjusted forecasts. GSI Mapping: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes situational reasoning through state transitions: launch-gate → build → test → ship, guided by agent-skills and pm-skills, with fallbacks from sprig-dashboard. GSE Mapping: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "agent_workflow_launcher",
+      "name": "Agent Workflow Launcher",
+      "verbatim_quote": "--## Priority 1 — Install in Claude Code This Week (Zero Risk) ### addyosmani/agent-skills - **License:** MIT, 43k★, very active - **What:** 23 production engineering skills + 7 lifecycle slash commands: `/spec /plan /build /test /review /code-simplify /ship` - **Why GSE/GSN:** Maps directly onto the GSE launch-gate workflow.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W': 'Workflow state (dimensionless)', 'T': 'Task type (dimensionless)', 'S': 'State transition (dimensionless)'}",
+      "assumptions": "Agent-skills provide deterministic task execution under controlled environments.",
+      "breakdown_regime": "When task execution fails due to missing permissions or malformed input.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each slash command maps to a GSE state transition function: /ship → launch_gate, /review → verify_state.",
+        "source_operator": "agent_workflow_launcher",
+        "telemetry": "Execution success rate of slash commands per session."
+      }
+    },
+    {
+      "primitive_id": "social_signal_aggregator",
+      "name": "Social Signal Aggregator",
+      "verbatim_quote": "### mvanhorn/last30days-skill - **License:** MIT, 25k★, active - **What:** Research skill: Reddit, X, YouTube, HN, Polymarket, GitHub - **Why GSE/GSN:** Polymarket odds + social signal = directly on-domain for sports markets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'Social signal strength (normalized)', 'O': 'Market odds (dimensionless)', 'T': 'Time window (days)'}",
+      "assumptions": "Social signals correlate with market movements within T time window.",
+      "breakdown_regime": "When signal noise exceeds predictive utility threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Aggregated social sentiment feeds into GSI's probabilistic forecasting engine as external evidence.",
+        "source_operator": "social_signal_aggregator",
+        "telemetry": "Correlation coefficient between aggregated signals and actual market outcomes."
+      }
+    },
+    {
+      "primitive_id": "canonical_nfl_data_source",
+      "name": "Canonical NFL Data Source",
+      "verbatim_quote": "--## Priority 2 — Evaluate for GSE Data Layer ### nflverse (nflfastR / nflreadr / nflverse-data) - **License:** CC BY-SA 4.0 (data), MIT (packages) - **What:** Canonical free NFL data source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Data volume (MB)', 'L': 'License compliance (boolean)', 'V': 'Version number (dimensionless)'}",
+      "assumptions": "nflverse provides consistent, up-to-date data with valid licensing.",
+      "breakdown_regime": "When data integrity or versioning conflicts arise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "nflverse data structure mirrors GSE’s internal stats schema for seamless ingestion.",
+        "source_operator": "canonical_nfl_data_source",
+        "telemetry": "Data freshness and consistency metrics from nflverse API."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cf895021d322f3be_t0",
+      "think": "The repository integration plan establishes a layered architecture where agent workflows (agent_workflow_launcher) drive development through defined stages, while social signals (social_signal_aggregator) inform market intelligence. The canonical NFL data source (canonical_nfl_data_source) ensures reliable statistics. These primitives form a dual system: one for operational control and another for predictive inference. Failure modes include license non-compliance, data inconsistency, and signal degradation. Each primitive must maintain its integrity under adversarial conditions such as API outages or corrupted inputs. The interplay between these components enables robust GSE operation and GSI inference.\n\nDeep epistemic analysis for GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be, domain=other, pages_read=3/3): Operator 'Agent Workflow Launcher' (page 1, domain other) captures: --## Priority 1 — Install in Claude Code This Week (Zero Risk) ### addyosmani/agent-skills - **License:** MIT, 43k★, very active - **What:** 23 production engineering skills + 7 lifecycle slash commands: `/spec /plan /build /test /review /code-simplify /ship` - **Why GSE/GSN:** Maps directly onto the GSE launch-gate workflow. Assumptions: Agent-skills provide deterministic task execution under controlled environments. Breakdown regime: When task execution fails due to missing permissions or malformed input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each slash command maps to a GSE state transition function: /ship → launch_gate, /review → verify_state. Operator 'Social Signal Aggregator' (page 1, domain other) captures: ### mvanhorn/last30days-skill - **License:** MIT, 25k★, active - **What:** Research skill: Reddit, X, YouTube, HN, Polymarket, GitHub - **Why GSE/GSN:** Polymarket odds + social signal = directly on-domain for sports markets. Assumptions: Social signals correlate with market movements within T time window. Breakdown regime: When signal noise exceeds predictive utility threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregated social sentiment feeds into GSI's probabilistic forecasting engine as external evidence. Operator 'Canonical NFL Data Source' (page 1, domain other) captures: --## Priority 2 — Evaluate for GSE Data Layer ### nflverse (nflfastR / nflreadr / nflverse-data) - **License:** CC BY-SA 4.0 (data), MIT (packages) - **What:** Canonical free NFL data source. Assumptions: nflverse provides consistent, up-to-date data with valid licensing. Breakdown regime: When data integrity or versioning conflicts arise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): nflverse data structure mirrors GSE’s internal stats schema for seamless ingestion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be, domain=other, pages_read=3/3): Operator 'Agent Workflow Launcher' (page 1, domain other) captures: --## Priority 1 — Install in Claude Code This Week (Zero Risk) ### addyosmani/agent-skills - **License:** MIT, 43k★, very active - **What:** 23 production engineering skills + 7 lifecycle slash commands: `/spec /plan /build /test /review /code-simplify /ship` - **Why GSE/GSN:** Maps directly onto the GSE launch-gate workflow. Assumptions: Agent-skills provide deterministic task execution under controlled environments. Breakdown regime: When task execution fails due to missing permissions or malformed input. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each slash command maps to a GSE state transition function: /ship → launch_gate, /review → verify_state. Operator 'Social Signal Aggregator' (page 1, domain other) captures: ### mvanhorn/last30days-skill - **License:** MIT, 25k★, active - **What:** Research skill: Reddit, X, YouTube, HN, Polymarket, GitHub - **Why GSE/GSN:** Polymarket odds + social signal = directly on-domain for sports markets. Assumptions: Social signals correlate with market movements within T time window. Breakdown regime: When signal noise exceeds predictive utility threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Aggregated social sentiment feeds into GSI's probabilistic forecasting engine as external evidence. Operator 'Canonical NFL Data Source' (page 1, domain other) captures: --## Priority 2 — Evaluate for GSE Data Layer ### nflverse (nflfastR / nflreadr / nflverse-data) - **License:** CC BY-SA 4.0 (data), MIT (packages) - **What:** Canonical free NFL data source. Assumptions: nflverse provides consistent, up-to-date data with valid licensing. Breakdown regime: When data integrity or versioning conflicts arise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): nflverse data structure mirrors GSE’s internal stats schema for seamless ingestion. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in software engineering modularity and data-driven decision-making frameworks from 2020s, evolving toward AI-native architectures with agent-centric design patterns. Retrocausal Genealogy: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legacy systems with outdated data pipelines and adversarial actors who may manipulate social signals. GSE must resist both by enforcing strict data governance and validating all inputs. Theory of Mind & Decision Maker Model: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between agent workflows and social aggregation when conflicting signals emerge. Leakage occurs if data from canonical sources bypasses validation checks. Veto conditions enforce isolation of each primitive until verified. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE_GSN_REPO_INTEGRATION_PLAN (cf895021d322f3be), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

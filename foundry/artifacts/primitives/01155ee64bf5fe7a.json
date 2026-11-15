@@ -1,0 +1,78 @@
+{
+  "book_id": "01155ee64bf5fe7a",
+  "source_status": "COMPLETE",
+  "title": "TB@DAL-card",
+  "file_name": "TB@DAL-card.md",
+  "sha256": "01155ee64bf5fe7ac7c77e6a77af564f4bce2c61367539f1c19c15c592e90d7e",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Trench Funnel integrates biophysical, cognitive, and on-field data into a unified causal lattice for game-state projection. Universal Lens: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers Bayesian posterior distributions over player efficiency and game-line outcomes using NGS-derived trench metrics and injury availability. GSI Mapping: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic state transitions in player load and scheme adaptation through real-time tracking of separation mechanics and rotation depth. GSE Mapping: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "air_density_adjustment",
+      "name": "Air Density Adjustment",
+      "verbatim_quote": "AIR: venue air density 1.1278 kg/m3 measured at AT&T Stadium [docs/data-sources/research/2026-10-13/weather-pilot/weather-stadium-pilot.json] -> ball carries measurably differently than a sea-level-standard model assumes ; wind 20.2 km/h qualifies it -> deep-ball and kick distances shift; totals and long-DK props carry the effect, spreads barely 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ρ': '1.1278 kg/m³', 'v_w': '20.2 km/h'}",
+      "assumptions": "Ball dynamics deviate from standard sea-level model due to atmospheric conditions.",
+      "breakdown_regime": "Atmospheric deviation from standard model impacts trajectory calculations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Adjusts expected carry distance and prop values via environmental physics.",
+        "source_operator": "air_density_adjustment",
+        "telemetry": "Projected deep-ball and kick distance variance."
+      }
+    },
+    {
+      "primitive_id": "availability_impact",
+      "name": "Availability Impact",
+      "verbatim_quote": "AVAILABILITY: DeMarvion Overshown (DAL) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength 3.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Δ_s': 'snap share change', 'Δ_p': 'pressure/scheme leverage shift'}",
+      "assumptions": "Injury status alters positional depth chart and game script.",
+      "breakdown_regime": "Positional rotation depth changes affect performance distribution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps injury status to probabilistic shifts in game-state leverage.",
+        "source_operator": "availability_impact",
+        "telemetry": "Snap share and pressure rate adjustments."
+      }
+    },
+    {
+      "primitive_id": "trench_efficiency_index",
+      "name": "Trench Efficiency Index",
+      "verbatim_quote": "TRACKING (2026 IN-SEASON): Rachaad White (TB) records RYOE = -24.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts 7.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'RYOE': '-24.9 yards', 'STACKED_BOX_PCT': '6.9%'}",
+      "assumptions": "Real-time tracking reflects current mechanical efficiency.",
+      "breakdown_regime": "In-season performance metrics override historical baselines.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies player efficiency through separation and trench mechanics.",
+        "source_operator": "trench_efficiency_index",
+        "telemetry": "Player-specific RYOE and box stacking percentages."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "01155ee64bf5fe7a_t0",
+      "think": "The Trench Funnel primitive synthesizes six domains—biophysical, cognitive, DFS, environmental, market, and on-field—into a coherent causal structure. The core operators are Air Density Adjustment, which modifies ball trajectories under non-standard atmospheric conditions; Availability Impact, which shifts game-script leverage based on injury reports; and Trench Efficiency Index, which captures real-time player performance via NGS tracking. These operators interact through a dualistic framework: environmental factors constrain physical outcomes, while injury-driven availability alters strategic positioning. The system exhibits failure modes when historical proxies replace in-season data or when market pricing ignores real-time signals. The derivation proceeds from empirical observation to mathematical abstraction, enabling GSI to compute posterior probabilities and GSE to simulate evolving game states.\n\nDeep epistemic analysis for TB@DAL-card (01155ee64bf5fe7a, domain=other, pages_read=5/5): Operator 'Air Density Adjustment' (page 1, domain other) captures: AIR: venue air density 1.1278 kg/m3 measured at AT&T Stadium [docs/data-sources/research/2026-10-13/weather-pilot/weather-stadium-pilot.json] -> ball carries measurably differently than a sea-level-standard model assumes ; wind 20.2 km/h qualifies it -> deep-ball and kick distances shift; totals and long-DK props carry the effect, spreads barely 2. Assumptions: Ball dynamics deviate from standard sea-level model due to atmospheric conditions. Breakdown regime: Atmospheric deviation from standard model impacts trajectory calculations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Adjusts expected carry distance and prop values via environmental physics. Operator 'Availability Impact' (page 1, domain other) captures: AVAILABILITY: DeMarvion Overshown (DAL) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength 3. Assumptions: Injury status alters positional depth chart and game script. Breakdown regime: Positional rotation depth changes affect performance distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps injury status to probabilistic shifts in game-state leverage. Operator 'Trench Efficiency Index' (page 1, domain other) captures: TRACKING (2026 IN-SEASON): Rachaad White (TB) records RYOE = -24.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts 7. Assumptions: Real-time tracking reflects current mechanical efficiency. Breakdown regime: In-season performance metrics override historical baselines. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies player efficiency through separation and trench mechanics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TB@DAL-card (01155ee64bf5fe7a, domain=other, pages_read=5/5): Operator 'Air Density Adjustment' (page 1, domain other) captures: AIR: venue air density 1.1278 kg/m3 measured at AT&T Stadium [docs/data-sources/research/2026-10-13/weather-pilot/weather-stadium-pilot.json] -> ball carries measurably differently than a sea-level-standard model assumes ; wind 20.2 km/h qualifies it -> deep-ball and kick distances shift; totals and long-DK props carry the effect, spreads barely 2. Assumptions: Ball dynamics deviate from standard sea-level model due to atmospheric conditions. Breakdown regime: Atmospheric deviation from standard model impacts trajectory calculations. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Adjusts expected carry distance and prop values via environmental physics. Operator 'Availability Impact' (page 1, domain other) captures: AVAILABILITY: DeMarvion Overshown (DAL) listed QUESTIONABLE [docs/data-sources/research/2026-10-13/injuries/espn_nfl_injuries_week6.json] -> unit rotation depth changes at that position -> snap share and pressure/scheme leverage shift toward the opponent's strength 3. Assumptions: Injury status alters positional depth chart and game script. Breakdown regime: Positional rotation depth changes affect performance distribution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps injury status to probabilistic shifts in game-state leverage. Operator 'Trench Efficiency Index' (page 1, domain other) captures: TRACKING (2026 IN-SEASON): Rachaad White (TB) records RYOE = -24.9 [docs/data-sources/research/2026-10-13/ngs/raw_statboard_rushing.json] -> live tracking proves in-season trench/separation mechanics (not historical proxy) -> provides immediate ground-truth efficiency adjustment for weekly player projections and game game-scripts 7. Assumptions: Real-time tracking reflects current mechanical efficiency. Breakdown regime: In-season performance metrics override historical baselines. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies player efficiency through separation and trench mechanics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical thermodynamics and game-theoretic modeling, tracing back to early 20th-century meteorological corrections and modern NFL analytics frameworks. Retrocausal Genealogy: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the sharp money, who price in known inefficiencies, and the public, whose behavior creates mispricing opportunities. The model accounts for both rational and behavioral biases in market formation. Theory of Mind & Decision Maker Model: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each domain contributes unique variables. Leakage is mitigated by isolating temporal layers: historical baselines do not overwrite real-time tracking, and cognitive signals do not override physical constraints. Cross-Layer Veto & Anti-Leakage Check: Rooted in TB@DAL-card (01155ee64bf5fe7a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

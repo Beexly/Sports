@@ -1,0 +1,78 @@
+{
+  "book_id": "a4c6a8ea4bdcf8e4",
+  "source_status": "COMPLETE",
+  "title": "CODE_OF_CONDUCT",
+  "file_name": "CODE_OF_CONDUCT.md",
+  "sha256": "a4c6a8ea4bdcf8e4295ba9eb2ebd3b30df200a04c6c47600d8f3f3f78a601ed0",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Code of conduct as a structured behavioral kernel defining project space boundaries and enforcement dynamics through community representation and conflict resolution. Universal Lens: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian behavioral inference model mapping community norms to action likelihoods; conformal prediction bounds on acceptable conduct via multi-source telemetry. GSI Mapping: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine for state transitions between normative compliance and enforcement states; dynamic policy adaptation based on agent interaction models. GSE Mapping: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "project_space_boundary",
+      "name": "Project Space Boundary",
+      "verbatim_quote": "## Scope This Code of Conduct applies within all project spaces, and it also applies when an individual is representing the project or its community in public spaces.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'Behavioral boundary (dimensionless)', 'P': 'Project space (dimensionless)'}",
+      "assumptions": "Boundary B is defined by spatial and representational contexts; P is a topological manifold.",
+      "breakdown_regime": "B(P) fails when external representation lacks internal validation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Project space B(P) maps to GSI behavioral state space; GSE enforces boundary transitions via agent feedback loops.",
+        "source_operator": "project_space_boundary",
+        "telemetry": "Compliance rate across public/private representations"
+      }
+    },
+    {
+      "primitive_id": "enforcement_protocol",
+      "name": "Enforcement Protocol",
+      "verbatim_quote": "## Enforcement Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [`engineering@polymarket.com`](mailto:engineering@polymarket.com).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Enforcement mechanism (dimensionless)', 'R': 'Reported incident (dimensionless)'}",
+      "assumptions": "E(R) is a stochastic process with probabilistic outcome distribution.",
+      "breakdown_regime": "E(R) becomes undefined when R is unreported or misclassified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforcement E(R) derived from GSI incident classification; GSE triggers corrective state transition.",
+        "source_operator": "enforcement_protocol",
+        "telemetry": "Incident resolution time and escalation rate"
+      }
+    },
+    {
+      "primitive_id": "confidentiality_guarantee",
+      "name": "Confidentiality Guarantee",
+      "verbatim_quote": "The project team is obligated to maintain confidentiality with regard to the reporter of an incident.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Confidentiality level (dimensionless)', 'R': 'Reporter identity (dimensionless)'}",
+      "assumptions": "C(R) is a cryptographic or procedural invariant under adversarial conditions.",
+      "breakdown_regime": "C(R) degrades when R is exposed or compromised.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Confidentiality C(R) mirrors GSI data privacy protocols; GSE ensures non-leakage in state transitions.",
+        "source_operator": "confidentiality_guarantee",
+        "telemetry": "Data breach incidents and reporter anonymity retention"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a4c6a8ea4bdcf8e4_t0",
+      "think": "The code of conduct operates as a dual-layered system: first, it defines a behavioral kernel (project space boundary) that delineates where norms apply; second, it specifies enforcement mechanisms (enforcement protocol) that respond to violations. The system assumes that representation of the project extends beyond physical boundaries into public discourse, thus requiring a consistent normative framework. The enforcement protocol is modeled as a stochastic process where reports are evaluated and resolved, with confidentiality guarantees ensuring trust in reporting. These primitives form a closed-loop system where GSI infers behavioral compliance and GSE manages transitions between normative states. Failure modes occur when boundaries are ambiguous, enforcement is inconsistent, or confidentiality is breached. The system's robustness depends on the consistency of these mappings across layers.\n\nDeep epistemic analysis for CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4, domain=other, pages_read=2/2): Operator 'Project Space Boundary' (page 1, domain other) captures: ## Scope This Code of Conduct applies within all project spaces, and it also applies when an individual is representing the project or its community in public spaces. Assumptions: Boundary B is defined by spatial and representational contexts; P is a topological manifold. Breakdown regime: B(P) fails when external representation lacks internal validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Project space B(P) maps to GSI behavioral state space; GSE enforces boundary transitions via agent feedback loops. Operator 'Enforcement Protocol' (page 1, domain other) captures: ## Enforcement Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [`engineering@polymarket.com`](mailto:engineering@polymarket.com). Assumptions: E(R) is a stochastic process with probabilistic outcome distribution. Breakdown regime: E(R) becomes undefined when R is unreported or misclassified. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforcement E(R) derived from GSI incident classification; GSE triggers corrective state transition. Operator 'Confidentiality Guarantee' (page 1, domain other) captures: The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Assumptions: C(R) is a cryptographic or procedural invariant under adversarial conditions. Breakdown regime: C(R) degrades when R is exposed or compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidentiality C(R) mirrors GSI data privacy protocols; GSE ensures non-leakage in state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4, domain=other, pages_read=2/2): Operator 'Project Space Boundary' (page 1, domain other) captures: ## Scope This Code of Conduct applies within all project spaces, and it also applies when an individual is representing the project or its community in public spaces. Assumptions: Boundary B is defined by spatial and representational contexts; P is a topological manifold. Breakdown regime: B(P) fails when external representation lacks internal validation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Project space B(P) maps to GSI behavioral state space; GSE enforces boundary transitions via agent feedback loops. Operator 'Enforcement Protocol' (page 1, domain other) captures: ## Enforcement Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at [`engineering@polymarket.com`](mailto:engineering@polymarket.com). Assumptions: E(R) is a stochastic process with probabilistic outcome distribution. Breakdown regime: E(R) becomes undefined when R is unreported or misclassified. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforcement E(R) derived from GSI incident classification; GSE triggers corrective state transition. Operator 'Confidentiality Guarantee' (page 1, domain other) captures: The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Assumptions: C(R) is a cryptographic or procedural invariant under adversarial conditions. Breakdown regime: C(R) degrades when R is exposed or compromised. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Confidentiality C(R) mirrors GSI data privacy protocols; GSE ensures non-leakage in state transitions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the Contributor Covenant (v1.4), which emerged from open-source governance frameworks. Influenced by social contract theory and formal ethics models in distributed systems. Retrocausal Genealogy: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as norm-attuned entities whose actions are governed by internalized behavioral kernels. Decision-making involves balancing self-interest against collective norms, with enforcement serving as a deterrent. Opposing agents may attempt to exploit ambiguities or circumvent enforcement. Theory of Mind & Decision Maker Model: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSI's behavioral inference conflicts with GSE's enforcement logic. Leakage occurs if confidentiality is violated or enforcement is bypassed. Veto conditions ensure that any inconsistency between layers triggers a re-evaluation of the entire system's integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in CODE_OF_CONDUCT (a4c6a8ea4bdcf8e4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "book_id": "1f42b9a8199a96b8",
+  "source_status": "COMPLETE",
+  "title": "stat-adversary",
+  "file_name": "stat-adversary.md",
+  "sha256": "1f42b9a8199a96b8adb924d99dfeea2508a4d9c2b8a44fb5f075c89fac4aca25",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scan_then_lock",
+      "name": "Scan-Then-Lock",
+      "verbatim_quote": "**Multiplicity.** How many hypotheses were actually examined before this one was singled out?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Multiple hypothesis testing without proper correction; the specific effect was selected after examining the data.",
+      "breakdown_regime": "Data Snooping Regime - where the apparent signal is an artifact of exploration rather than genuine discovery.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior collapse under non-invariant priors; conformal prediction intervals fail to cover true parameters due to adaptive selection bias.",
+        "source_operator": "scan_then_lock",
+        "telemetry": "Observed p-value distribution deviating from uniformity under the null hypothesis."
+      }
+    },
+    {
+      "primitive_id": "acceptance_harness",
+      "name": "Acceptance Harness",
+      "verbatim_quote": "## Standing laws you enforce - **No instrument's verdict counts** until that instrument has killed known-bad and passed known-planted-good at multiple n.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The statistical tool has not undergone rigorous validation against both false positives (known-bad) and true positives (known-good).",
+      "breakdown_regime": "Tool Reliability Degradation - when the instrument's outputs are unverified and potentially corrupted.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Algorithmic accountability through adversarial robustness testing; ensures that predictive models maintain valid uncertainty quantification.",
+        "source_operator": "acceptance_harness",
+        "telemetry": "Failure rate of the instrument on synthetic benchmark datasets with known ground truth."
+      }
+    },
+    {
+      "primitive_id": "statistical_power_bar",
+      "name": "Statistical Power Bar",
+      "verbatim_quote": "- **Statistical power bar (R62):** any new edge preregistration needs n >= 500, alpha = 0.05/33 family-corrected, frozen rules, prospective only.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Minimum sample size of 500 to achieve adequate sensitivity; Bonferroni correction applied to control family-wise error rate across 33 tests.",
+      "breakdown_regime": "Underpowered Detection - where small true effects are indistinguishable from noise due to insufficient data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Minimum detectable effect size (MDES) calculation in A/B testing; requires pre-specified significance levels and effect sizes to avoid type-II errors.",
+        "source_operator": "statistical_power_bar",
+        "telemetry": "Observed statistical power (1 - \\beta) below the desired threshold of 0.8 for the given effect size and sample size."
+      }
+    },
+    {
+      "primitive_id": "hostile_statistical_referee",
+      "name": "Hostile Statistical Referee",
+      "verbatim_quote": "Not how many were reported -- how many were *looked at*.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Results are derived from post-hoc examination of data, undermining the predictive validity of the claim.",
+      "breakdown_regime": "Overfitting Catastrophe - where the model memorizes idiosyncratic noise rather than generalizable patterns.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Cross-validation as a surrogate for external validation; separates training and testing phases to prevent information leakage.",
+        "source_operator": "hostile_statistical_referee",
+        "telemetry": "Large discrepancy between in-sample fit metrics and out-of-sample performance metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1f42b9a8199a96b8_t0",
+      "think": "The sovereign primitives formalize the core adversarial relationship between a claimant and a skeptical referee. The referee operates under a null hypothesis of \"no edge,\" demanding that any positive result withstand systematic attacks. These include checking whether the instrument has been properly validated (Acceptance Harness), ensuring the study had sufficient power to detect the effect (Statistical Power Bar), verifying that the result was not found by searching through many possibilities (Multiplicity), and confirming that the analysis was prospective rather than a hindsight fit (Scan-Then-Lock). Together, they constitute a minimal set of requirements for credible evidence in high-stakes decision-making environments where prior failures have demonstrated the catastrophic cost of trusting unvetted algorithms.\n\nDeep epistemic analysis for stat-adversary (1f42b9a8199a96b8, domain=other, pages_read=2/2): Operator 'Scan-Then-Lock' (page 1, domain other) captures: **Multiplicity.** How many hypotheses were actually examined before this one was singled out? Assumptions: Multiple hypothesis testing without proper correction; the specific effect was selected after examining the data. Breakdown regime: Data Snooping Regime - where the apparent signal is an artifact of exploration rather than genuine discovery. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior collapse under non-invariant priors; conformal prediction intervals fail to cover true parameters due to adaptive selection bias. Operator 'Acceptance Harness' (page 1, domain other) captures: ## Standing laws you enforce - **No instrument's verdict counts** until that instrument has killed known-bad and passed known-planted-good at multiple n. Assumptions: The statistical tool has not undergone rigorous validation against both false positives (known-bad) and true positives (known-good). Breakdown regime: Tool Reliability Degradation - when the instrument's outputs are unverified and potentially corrupted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Algorithmic accountability through adversarial robustness testing; ensures that predictive models maintain valid uncertainty quantification. Operator 'Statistical Power Bar' (page 1, domain other) captures: - **Statistical power bar (R62):** any new edge preregistration needs n >= 500, alpha = 0.05/33 family-corrected, frozen rules, prospective only. Assumptions: Minimum sample size of 500 to achieve adequate sensitivity; Bonferroni correction applied to control family-wise error rate across 33 tests. Breakdown regime: Underpowered Detection - where small true effects are indistinguishable from noise due to insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Minimum detectable effect size (MDES) calculation in A/B testing; requires pre-specified significance levels and effect sizes to avoid type-II errors. Operator 'Hostile Statistical Referee' (page 1, domain other) captures: Not how many were reported -- how many were *looked at*. Assumptions: Results are derived from post-hoc examination of data, undermining the predictive validity of the claim. Breakdown regime: Overfitting Catastrophe - where the model memorizes idiosyncratic noise rather than generalizable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cross-validation as a surrogate for external validation; separates training and testing phases to prevent information leakage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for stat-adversary (1f42b9a8199a96b8, domain=other, pages_read=2/2): Operator 'Scan-Then-Lock' (page 1, domain other) captures: **Multiplicity.** How many hypotheses were actually examined before this one was singled out? Assumptions: Multiple hypothesis testing without proper correction; the specific effect was selected after examining the data. Breakdown regime: Data Snooping Regime - where the apparent signal is an artifact of exploration rather than genuine discovery. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior collapse under non-invariant priors; conformal prediction intervals fail to cover true parameters due to adaptive selection bias. Operator 'Acceptance Harness' (page 1, domain other) captures: ## Standing laws you enforce - **No instrument's verdict counts** until that instrument has killed known-bad and passed known-planted-good at multiple n. Assumptions: The statistical tool has not undergone rigorous validation against both false positives (known-bad) and true positives (known-good). Breakdown regime: Tool Reliability Degradation - when the instrument's outputs are unverified and potentially corrupted. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Algorithmic accountability through adversarial robustness testing; ensures that predictive models maintain valid uncertainty quantification. Operator 'Statistical Power Bar' (page 1, domain other) captures: - **Statistical power bar (R62):** any new edge preregistration needs n >= 500, alpha = 0.05/33 family-corrected, frozen rules, prospective only. Assumptions: Minimum sample size of 500 to achieve adequate sensitivity; Bonferroni correction applied to control family-wise error rate across 33 tests. Breakdown regime: Underpowered Detection - where small true effects are indistinguishable from noise due to insufficient data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Minimum detectable effect size (MDES) calculation in A/B testing; requires pre-specified significance levels and effect sizes to avoid type-II errors. Operator 'Hostile Statistical Referee' (page 1, domain other) captures: Not how many were reported -- how many were *looked at*. Assumptions: Results are derived from post-hoc examination of data, undermining the predictive validity of the claim. Breakdown regime: Overfitting Catastrophe - where the model memorizes idiosyncratic noise rather than generalizable patterns. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Cross-validation as a surrogate for external validation; separates training and testing phases to prevent information leakage. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The primitives descend from frequentist hypothesis testing, sequential probability ratio tests, and the replication crisis literature in social science, adapting these ideas into operational checks for algorithmic systems. Retrocausal Genealogy: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The model assumes that the claimant may be biased towards reporting favorable outcomes, while the referee aims to expose such biases by applying rigorous, automated scrutiny. Theory of Mind & Decision Maker Model: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid cross-layer leakage, each primitive must be applied independently; for instance, passing the Acceptance Harness does not exempt a study from addressing Multiplicity concerns, and vice versa. Cross-Layer Veto & Anti-Leakage Check: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in stat-adversary (1f42b9a8199a96b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

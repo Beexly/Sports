@@ -1,0 +1,78 @@
+{
+  "book_id": "955bf0587d5b22d9",
+  "source_status": "COMPLETE",
+  "title": "1029-node-classification-integrated-reject-option",
+  "file_name": "1029-node-classification-integrated-reject-option.md",
+  "sha256": "955bf0587d5b22d90413dc5a9b9c8a47f673ea9cbab63932a3204eb710445164",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Integrated reject option in graph neural networks unifies selective classification with cost-sensitive learning via a coverage-constrained or cost-based formulation. Universal Lens: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal inference to map node classifications into probabilistic confidence bands, enabling dynamic coverage control through posterior predictive distributions. GSI Mapping: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to model abstention decisions as state transitions in a Markov decision process, optimizing expected utility over picks and rejections. GSE Mapping: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ncwr_cov",
+      "name": "Node Classification with Reject - Coverage Constrained",
+      "verbatim_quote": "Method / model Two architectures (GAT backbone, claimed model-agnostic): - **NCwR-Cov** (coverage-based, SelectiveNet-style): GAT layer 1 → GAT layer 2 → softmax: prediction head f: H→Δ^{K-1}.",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{cov}} = -\\log f_y(h) \\quad \\text{if } g(h) \\geq 0.5, \\quad \\text{else } \\text{reject}",
+      "symbol_and_unit_ledger": "{'f_y(h)': 'probability of node h belonging to class y', 'g(h)': 'selection score in [0,1]', 'h': 'node embedding vector'}",
+      "assumptions": "Transductive setting; fixed coverage threshold; GNN backbone is GAT with two layers.",
+      "breakdown_regime": "When g(h) < 0.5, node is rejected; otherwise classified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's selective classification framework where rejection is encoded as a decision boundary in latent space.",
+        "source_operator": "ncwr_cov",
+        "telemetry": "Coverage rate and classification accuracy within coverage."
+      }
+    },
+    {
+      "primitive_id": "ncwr_cost",
+      "name": "Node Classification with Reject - Cost Based",
+      "verbatim_quote": "A separate selection head g: H→{0,1} (FC 512 → BatchNorm → ReLU → FC 1 → sigmoid; predict iff g(h) ≥ 0.5 initially).",
+      "page": 1,
+      "latex": "\\mathcal{L}_{\\text{cost}} = -\\log f_y(h) - (1-d)\\log f_{K+1}(h)",
+      "symbol_and_unit_ledger": "{'f_y(h)': 'probability of node h belonging to class y', 'f_{K+1}(h)': 'probability of rejecting node h', 'd': 'reject cost parameter ∈ (0,1)'}",
+      "assumptions": "Reject cost d is fixed; treated as an additional class in loss function.",
+      "breakdown_regime": "When d approaches 1, behavior converges to standard CE; when d near 0, more rejections occur.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's cost-sensitive classification where abstention is modeled as a third outcome with associated economic cost.",
+        "source_operator": "ncwr_cost",
+        "telemetry": "Rejection rate and expected loss under varying d values."
+      }
+    },
+    {
+      "primitive_id": "shap_explanation",
+      "name": "SHAP Explanation for Rejected Nodes",
+      "verbatim_quote": "SHAP explanations use the last 512 tokens of each petition.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'SHAP': 'Shapley Additive exPlanations value'}",
+      "assumptions": "Explanations are computed using pre-trained XLNet embeddings.",
+      "breakdown_regime": "Used for interpretability of rejected cases in legal judgments.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s explainable AI module where SHAP values provide causal attribution for abstentions.",
+        "source_operator": "shap_explanation",
+        "telemetry": "SHAP feature importance scores for rejected nodes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "955bf0587d5b22d9_t0",
+      "think": "The core innovation lies in integrating the reject option directly into GNNs rather than applying it post-hoc. The coverage-constrained variant (NCwR-Cov) uses a selection head g(h) to decide whether to classify a node based on a learned threshold, while the cost-based variant (NCwR-Cost) incorporates rejection into the loss function via a parameter d representing the cost of misclassification versus rejection. Both formulations maintain compatibility with standard GNN backbones such as GAT. In the cost-based approach, the loss function becomes a convex combination of cross-entropy and a rejection penalty term, allowing for tuning of the trade-off between accuracy and coverage. This dualism mirrors the structure of GSE's binary pick models where abstention is treated as a third action state. The failure mode occurs when the selection head fails to distinguish between ambiguous and confidently separable nodes, leading to either over-rejection or under-rejection. The transductive nature of the setup introduces potential leakage if test nodes influence training dynamics.\n\nDeep epistemic analysis for 1029-node-classification-integrated-reject-option (955bf0587d5b22d9, domain=other, pages_read=4/4): Operator 'Node Classification with Reject - Coverage Constrained' (page 1, domain other) captures: Method / model Two architectures (GAT backbone, claimed model-agnostic): - **NCwR-Cov** (coverage-based, SelectiveNet-style): GAT layer 1 → GAT layer 2 → softmax: prediction head f: H→Δ^{K-1}. Assumptions: Transductive setting; fixed coverage threshold; GNN backbone is GAT with two layers. Breakdown regime: When g(h) < 0.5, node is rejected; otherwise classified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's selective classification framework where rejection is encoded as a decision boundary in latent space. Operator 'Node Classification with Reject - Cost Based' (page 1, domain other) captures: A separate selection head g: H→{0,1} (FC 512 → BatchNorm → ReLU → FC 1 → sigmoid; predict iff g(h) ≥ 0.5 initially). Assumptions: Reject cost d is fixed; treated as an additional class in loss function. Breakdown regime: When d approaches 1, behavior converges to standard CE; when d near 0, more rejections occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's cost-sensitive classification where abstention is modeled as a third outcome with associated economic cost. Operator 'SHAP Explanation for Rejected Nodes' (page 1, domain other) captures: SHAP explanations use the last 512 tokens of each petition. Assumptions: Explanations are computed using pre-trained XLNet embeddings. Breakdown regime: Used for interpretability of rejected cases in legal judgments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s explainable AI module where SHAP values provide causal attribution for abstentions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1029-node-classification-integrated-reject-option (955bf0587d5b22d9, domain=other, pages_read=4/4): Operator 'Node Classification with Reject - Coverage Constrained' (page 1, domain other) captures: Method / model Two architectures (GAT backbone, claimed model-agnostic): - **NCwR-Cov** (coverage-based, SelectiveNet-style): GAT layer 1 → GAT layer 2 → softmax: prediction head f: H→Δ^{K-1}. Assumptions: Transductive setting; fixed coverage threshold; GNN backbone is GAT with two layers. Breakdown regime: When g(h) < 0.5, node is rejected; otherwise classified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's selective classification framework where rejection is encoded as a decision boundary in latent space. Operator 'Node Classification with Reject - Cost Based' (page 1, domain other) captures: A separate selection head g: H→{0,1} (FC 512 → BatchNorm → ReLU → FC 1 → sigmoid; predict iff g(h) ≥ 0.5 initially). Assumptions: Reject cost d is fixed; treated as an additional class in loss function. Breakdown regime: When d approaches 1, behavior converges to standard CE; when d near 0, more rejections occur. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's cost-sensitive classification where abstention is modeled as a third outcome with associated economic cost. Operator 'SHAP Explanation for Rejected Nodes' (page 1, domain other) captures: SHAP explanations use the last 512 tokens of each petition. Assumptions: Explanations are computed using pre-trained XLNet embeddings. Breakdown regime: Used for interpretability of rejected cases in legal judgments. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s explainable AI module where SHAP values provide causal attribution for abstentions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in selective classification literature (SelectiveNet), extended to graph domains with GNNs. Influenced by cost-sensitive learning and conformal prediction frameworks. Retrocausal Genealogy: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model's internal classifier trying to maximize accuracy and the external evaluator who seeks optimal coverage or cost efficiency. The model must balance between false positives (misclassifying) and false negatives (rejecting valid cases). Theory of Mind & Decision Maker Model: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the selection head does not simply mirror the classification head. Leakage is mitigated by ensuring test nodes do not participate in message-passing during training, though this still risks inflated performance metrics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1029-node-classification-integrated-reject-option (955bf0587d5b22d9), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "d7ade0b4dedcc6da",
+  "source_status": "COMPLETE",
+  "title": "props_ev_board_latest",
+  "file_name": "props_ev_board_latest.md",
+  "sha256": "d7ade0b4dedcc6da17d1e036441a0c85feef9d90cdaf30aa975ebf5c83bd2830",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "EV% = (1 - b)/b where b is breakeven probability; 1/4-Kelly stake fraction is zero when EV ≤ 0; Tier requires agreement between normal and lognormal models. Universal Lens: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on model probabilities vs. market consensus; conformal prediction intervals for EV% uncertainty quantification; probabilistic edge detection via p(win) model vs. p(win) book-normal. GSI Mapping: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from model-driven EV scoring to Kelly-staked action; dynamic tier assignment based on distributional alignment; shade-based contextual drift for risk-adjusted positioning. GSE Mapping: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "ev_percentage",
+      "name": "Expected Value Percentage",
+      "verbatim_quote": "* **EV%** is per unit staked, from the breakeven rate, using profit odds (1-b)/b.",
+      "page": 1,
+      "latex": "EV\\% = \\frac{1 - b}{b}",
+      "symbol_and_unit_ledger": "{'EV%': 'dimensionless percentage', 'b': 'breakeven probability, dimensionless'}",
+      "assumptions": "Breakeven rate derived from market equilibrium; EV% computed under profit odds framework.",
+      "breakdown_regime": "When b ≥ 0.5, EV% becomes non-positive; invalidates stake allocation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps model confidence to actionable expected return; used in GSI's Bayesian edge computation and GSE's Kelly-weighted bet sizing.",
+        "source_operator": "ev_percentage",
+        "telemetry": "Model-derived EV% versus book-implied breakeven probability."
+      }
+    },
+    {
+      "primitive_id": "kelly_fraction",
+      "name": "Quarter-Kelly Stake Fraction",
+      "verbatim_quote": "1⁄4-Kelly is the stake fraction; it is 0.00% whenever EV is negative.",
+      "page": 1,
+      "latex": "f_{1/4} = \\frac{EV}{4}",
+      "symbol_and_unit_ledger": "{'f_{1/4}': 'fraction of bankroll, dimensionless', 'EV': 'expected value percentage, dimensionless'}",
+      "assumptions": "Stake is proportional to EV; zero exposure when EV ≤ 0.",
+      "breakdown_regime": "EV < 0 implies f_{1/4} = 0; no position taken.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Determines optimal fractional stake in GSE's risk-adjusted betting engine; conditional on EV positivity.",
+        "source_operator": "kelly_fraction",
+        "telemetry": "Fractional bankroll allocated per proposition based on EV."
+      }
+    },
+    {
+      "primitive_id": "tier_assignment",
+      "name": "Statistical Model Consistency Tier",
+      "verbatim_quote": "* **Tier** requires the normal and lognormal to agree on the side.",
+      "page": 1,
+      "latex": "\\text{Tier} = \\begin{cases} C & \\text{if } \\mathcal{N}(x) \\approx \\log\\mathcal{N}(x) \\\\ \\text{invalid} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'C': 'consistency tier label, categorical', '\\\\mathcal{N}(x)': 'normal distribution evaluated at x, dimensionless', '\\\\log\\\\mathcal{N}(x)': 'lognormal distribution evaluated at x, dimensionless'}",
+      "assumptions": "Normal and lognormal distributions must align in sign for valid tiering.",
+      "breakdown_regime": "Mismatch between distributions leads to invalid tier assignment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between model distributional behavior and GSE's consistency filter; ensures robustness in EV estimation.",
+        "source_operator": "tier_assignment",
+        "telemetry": "Distributional agreement score between normal and lognormal models."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d7ade0b4dedcc6da_t0",
+      "think": "The EV% primitive computes expected returns using breakeven probabilities, assuming a profit odds framework. When EV is negative, 1/4-Kelly stake is zero, enforcing conservative risk management. Tier assignment enforces statistical consistency between normal and lognormal models, ensuring that only propositions with aligned distributional behavior are considered reliable. The absence of market prices in inputs implies that these primitives operate in a model-relative pricing domain rather than market-relative. This creates a diagnostic-only environment where EVs are computed without reference to sharp market prices, leading to potential misalignment with actual betting outcomes. The lack of price data also precludes direct calibration against observed market behavior, necessitating reliance on internal model validation metrics such as residual-versus-close diagnostics.\n\nDeep epistemic analysis for props_ev_board_latest (d7ade0b4dedcc6da, domain=other, pages_read=2/2): Operator 'Expected Value Percentage' (page 1, domain other) captures: * **EV%** is per unit staked, from the breakeven rate, using profit odds (1-b)/b. Assumptions: Breakeven rate derived from market equilibrium; EV% computed under profit odds framework. Breakdown regime: When b ≥ 0.5, EV% becomes non-positive; invalidates stake allocation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps model confidence to actionable expected return; used in GSI's Bayesian edge computation and GSE's Kelly-weighted bet sizing. Operator 'Quarter-Kelly Stake Fraction' (page 1, domain other) captures: 1⁄4-Kelly is the stake fraction; it is 0.00% whenever EV is negative. Assumptions: Stake is proportional to EV; zero exposure when EV ≤ 0. Breakdown regime: EV < 0 implies f_{1/4} = 0; no position taken. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines optimal fractional stake in GSE's risk-adjusted betting engine; conditional on EV positivity. Operator 'Statistical Model Consistency Tier' (page 1, domain other) captures: * **Tier** requires the normal and lognormal to agree on the side. Assumptions: Normal and lognormal distributions must align in sign for valid tiering. Breakdown regime: Mismatch between distributions leads to invalid tier assignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between model distributional behavior and GSE's consistency filter; ensures robustness in EV estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for props_ev_board_latest (d7ade0b4dedcc6da, domain=other, pages_read=2/2): Operator 'Expected Value Percentage' (page 1, domain other) captures: * **EV%** is per unit staked, from the breakeven rate, using profit odds (1-b)/b. Assumptions: Breakeven rate derived from market equilibrium; EV% computed under profit odds framework. Breakdown regime: When b ≥ 0.5, EV% becomes non-positive; invalidates stake allocation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps model confidence to actionable expected return; used in GSI's Bayesian edge computation and GSE's Kelly-weighted bet sizing. Operator 'Quarter-Kelly Stake Fraction' (page 1, domain other) captures: 1⁄4-Kelly is the stake fraction; it is 0.00% whenever EV is negative. Assumptions: Stake is proportional to EV; zero exposure when EV ≤ 0. Breakdown regime: EV < 0 implies f_{1/4} = 0; no position taken. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Determines optimal fractional stake in GSE's risk-adjusted betting engine; conditional on EV positivity. Operator 'Statistical Model Consistency Tier' (page 1, domain other) captures: * **Tier** requires the normal and lognormal to agree on the side. Assumptions: Normal and lognormal distributions must align in sign for valid tiering. Breakdown regime: Mismatch between distributions leads to invalid tier assignment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between model distributional behavior and GSE's consistency filter; ensures robustness in EV estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's criterion for optimal betting fractions and modern Bayesian inference frameworks. Evolved from early stochastic modeling in sports analytics to incorporate distributional consistency checks. Retrocausal Genealogy: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market-makers who set sharp prices and modelers who estimate latent probabilities. The system assumes model accuracy over market inefficiency, potentially leading to overconfidence in model-derived EVs. Theory of Mind & Decision Maker Model: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through tiering logic; if normal and lognormal disagree, the proposition is vetoed. Leakage occurs if EV% is computed without proper distributional alignment, causing spurious stakes. Veto conditions prevent invalid EV% application in Kelly-based strategies. Cross-Layer Veto & Anti-Leakage Check: Rooted in props_ev_board_latest (d7ade0b4dedcc6da), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

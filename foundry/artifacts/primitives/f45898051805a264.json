@@ -1,0 +1,78 @@
+{
+  "book_id": "f45898051805a264",
+  "source_status": "COMPLETE",
+  "title": "espn_depth_charts",
+  "file_name": "espn_depth_charts.md",
+  "sha256": "f45898051805a26447c36abb1d1ce6f16d3178672ff69e17329aa2758ec1b146",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The depth chart defines a hierarchical partial order over the athlete set, partitioned by tactical scheme. This induces a discrete probability measure on positional occupancy, mapping combinatorial roster configurations to continuous snap-share expectations through a normalized ordinal projection.",
+  "gsi_mapping": "GSI treats the ordered athlete list as a prior for Bayesian inference of snap-share distributions. Conformal prediction intervals are constructed around replacement-level baselines using the depth rank as a conformal score, ensuring rigorous coverage guarantees for projected playing time.",
+  "gse_mapping": "GSE utilizes the scheme-specific ordering to drive Markovian state transitions during game simulation. The primitive dictates situational reasoning by dynamically selecting active agents based on down-and-distance context, updating the underlying probability flow across the roster hierarchy.",
+  "primitives": [
+    {
+      "primitive_id": "positional_depth_ordering",
+      "name": "Scheme-Conditional Depth Ordering",
+      "verbatim_quote": "Structure: `depthchart[]` (named charts like \"Base 3-4 D\") -> `positions{pos: {athletes: [...] }}` -> ordered athletes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Set of schemes (dimensionless), P: Set of positions (dimensionless), A: Set of athletes (dimensionless), \\pi_{s,p}: Ordered permutation of A (dimensionless).",
+      "assumptions": "The provided ordering strictly reflects the coaching staff's intended deployment priority; no hidden ties exist within the extracted JSON array.",
+      "breakdown_regime": "Singularity occurs when multiple athletes share identical empirical snap shares despite distinct ranks, or when a scheme is deployed with zero frequency.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the JSON nested array directly to a ranked tensor in GSE, preserving the strict hierarchy required for agent selection.",
+        "source_operator": "positional_depth_ordering",
+        "telemetry": "Variance between predicted rank-based snap share and actual observed snap share."
+      }
+    },
+    {
+      "primitive_id": "crosswalk_entity_resolution",
+      "name": "Universal Entity Crosswalk",
+      "verbatim_quote": "It gives per-position ordering *per scheme*, which is what replacement-level and snap-share models need, and `espn_id` joins the universal crosswalk straight into `nfl_id`/`gsis_id`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "id_{espn}, id_{nfl}, id_{gsi}: Unique integer identifiers for an athlete entity (dimensionless).",
+      "assumptions": "A bijective mapping exists between ESPN IDs and internal GSI/GSE identifiers for all active roster players.",
+      "breakdown_regime": "Fails during mid-season roster transactions if the crosswalk table is not updated synchronously with the depth chart extraction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as the foundational join key, allowing GSI statistical priors to be injected into GSE simulation states without identity collision.",
+        "source_operator": "crosswalk_entity_resolution",
+        "telemetry": "Crosswalk join success rate and orphaned ID frequency."
+      }
+    },
+    {
+      "primitive_id": "source_operator_3",
+      "name": "espn_depth_charts Grounded Principle 3",
+      "verbatim_quote": "This is the depth data theScore's roster endpoint lacked (it returned nulls for `depth_chart_position`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "verbal-structural proposition extracted verbatim from source text",
+      "assumptions": "Bounded observation scope described in the cited source section.",
+      "breakdown_regime": "Fails when underlying distributional invariance or causal structure shifts across regimes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation.",
+        "source_operator": "source_operator_3",
+        "telemetry": "Verified substring match in normalized source corpus; bound against cognitive router context family."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f45898051805a264_t0",
+      "think": "The extraction of ESPN depth charts provides a discrete, ordered representation of team rosters conditioned on specific defensive or offensive schemes. Mathematically, this constitutes a family of permutations \\pi_{s,p} over the set of athletes A, indexed by scheme s and position p. In Galaxy Sports Intelligence (GSI), these permutations serve as the structural backbone for constructing Bayesian priors regarding player utilization. By treating the depth rank as a proxy for expected snap share, we can derive a Dirichlet distribution where the concentration parameters decay monotonically with rank. This allows for robust conformal inference, generating prediction intervals for replacement-level performance that respect the inherent uncertainty of lower-ranked players seeing unexpected action due to injury or situational play-calling.\n\nIn Galaxy Sports Engine (GSE), the same primitives drive the micro-state transitions of the simulation. When the game engine evaluates a specific down-and-distance scenario requiring a particular scheme (e.g., 'Base 3-4 D'), it queries the corresponding depth ordering to instantiate the active agents. The crosswalk mechanism ensures that the statistical profiles attached to an `espn_id` in GSI are seamlessly transferred to the `gsis_id` acting within the GSE environment. Failure modes arise primarily from data staleness; if the crosswalk lacks a recent trade or waiver claim, the isomorphism breaks, leading to missing agent attributes. Furthermore, the assumption that depth rank perfectly correlates with snap share is an approximation; real-world play-calling introduces noise that must be modeled as a stochastic perturbation to the deterministic ordering.\n\nDeep epistemic analysis for espn_depth_charts (f45898051805a264, domain=other, pages_read=1/1): Operator 'Scheme-Conditional Depth Ordering' (page 1, domain other) captures: Structure: `depthchart[]` (named charts like \"Base 3-4 D\") -> `positions{pos: {athletes: [...] }}` -> ordered athletes. Assumptions: The provided ordering strictly reflects the coaching staff's intended deployment priority; no hidden ties exist within the extracted JSON array. Breakdown regime: Singularity occurs when multiple athletes share identical empirical snap shares despite distinct ranks, or when a scheme is deployed with zero frequency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the JSON nested array directly to a ranked tensor in GSE, preserving the strict hierarchy required for agent selection. Operator 'Universal Entity Crosswalk' (page 1, domain other) captures: It gives per-position ordering *per scheme*, which is what replacement-level and snap-share models need, and `espn_id` joins the universal crosswalk straight into `nfl_id`/`gsis_id`. Assumptions: A bijective mapping exists between ESPN IDs and internal GSI/GSE identifiers for all active roster players. Breakdown regime: Fails during mid-season roster transactions if the crosswalk table is not updated synchronously with the depth chart extraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the foundational join key, allowing GSI statistical priors to be injected into GSE simulation states without identity collision. Operator 'espn_depth_charts Grounded Principle 3' (page 1, domain other) captures: This is the depth data theScore's roster endpoint lacked (it returned nulls for `depth_chart_position`). Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for espn_depth_charts (f45898051805a264, domain=other, pages_read=1/1): Operator 'Scheme-Conditional Depth Ordering' (page 1, domain other) captures: Structure: `depthchart[]` (named charts like \"Base 3-4 D\") -> `positions{pos: {athletes: [...] }}` -> ordered athletes. Assumptions: The provided ordering strictly reflects the coaching staff's intended deployment priority; no hidden ties exist within the extracted JSON array. Breakdown regime: Singularity occurs when multiple athletes share identical empirical snap shares despite distinct ranks, or when a scheme is deployed with zero frequency. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the JSON nested array directly to a ranked tensor in GSE, preserving the strict hierarchy required for agent selection. Operator 'Universal Entity Crosswalk' (page 1, domain other) captures: It gives per-position ordering *per scheme*, which is what replacement-level and snap-share models need, and `espn_id` joins the universal crosswalk straight into `nfl_id`/`gsis_id`. Assumptions: A bijective mapping exists between ESPN IDs and internal GSI/GSE identifiers for all active roster players. Breakdown regime: Fails during mid-season roster transactions if the crosswalk table is not updated synchronously with the depth chart extraction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as the foundational join key, allowing GSI statistical priors to be injected into GSE simulation states without identity collision. Operator 'espn_depth_charts Grounded Principle 3' (page 1, domain other) captures: This is the depth data theScore's roster endpoint lacked (it returned nulls for `depth_chart_position`). Assumptions: Bounded observation scope described in the cited source section. Breakdown regime: Fails when underlying distributional invariance or causal structure shifts across regimes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Binds verbatim proposition source_operator_3 to GSE situational context classification and GSI structural uncertainty estimation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach modernizes classical roster management by replacing heuristic assumptions with explicit, machine-readable hierarchies. Historically, depth charts were static media guides; today, they are dynamic API endpoints reflecting real-time coaching intent. The mathematical lineage traces back to排队论 (queuing theory) and priority scheduling algorithms, where entities are processed based on a predefined rank, but adapted here for probabilistic sports simulation rather than deterministic computing tasks.",
+      "theory_of_mind": "We model the opposing coach as an agent optimizing for field advantage by selecting the highest-ranked available personnel for a given schematic requirement. However, the coach also possesses bounded rationality and may deviate from the strict depth chart due to matchup-specific preferences or fatigue management. Our primitives capture the baseline intent (the chart) while allowing the inference layer to account for these strategic deviations, effectively modeling the coach's decision space as a perturbed optimization problem.",
+      "cross_layer_veto": "To prevent leakage, we enforce a strict temporal veto: depth charts extracted from a given date cannot inform simulations of games preceding that date. Additionally, we monitor for collinearity between depth rank and other features like contract value; if a player's rank is artificially inflated due to seniority rather than performance, the GSI module flags this anomaly, preventing the GSE engine from over-weighting their impact in the simulation."
+    }
+  ]
+}

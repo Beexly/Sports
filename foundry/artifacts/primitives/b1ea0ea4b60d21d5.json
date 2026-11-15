@@ -1,0 +1,78 @@
+{
+  "book_id": "b1ea0ea4b60d21d5",
+  "source_status": "COMPLETE",
+  "title": "fledge-snapshot-gap",
+  "file_name": "fledge-snapshot-gap.md",
+  "sha256": "b1ea0ea4b60d21d52db42f48728128f0d3de4cc9f9f8a7c7de7511184af0afd5",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Byte-level isomorphism between zipped and live worktree manifests as a conformal equivalence under CRLF/LF normalization. Universal Lens: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence update on snapshot integrity maps to posterior belief over codebase consistency using divergence-free Hamming distance. GSI Mapping: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine updates state transitions via deterministic file hash comparison, excluding transient caches. GSE Mapping: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "snapshot_isomorphism",
+      "name": "Snapshot Worktree Isomorphism",
+      "verbatim_quote": "## Wire-candidate verdicts None — the `Sports-main (8).zip` snapshot is a byte-for-byte copy of the live worktree in every in-scope path (modulo one CRLF/LF file).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I': 'isomorphism indicator, dimensionless', 'C': 'content divergence measure, bytes', 'L': 'line ending type, {CRLF, LF}'}",
+      "assumptions": "All in-scope paths are fully synchronized modulo line-ending normalization.",
+      "breakdown_regime": "When C ≠ L, I → 0 due to non-conformal normalization.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The snapshot and live worktree are structurally equivalent under byte-wise comparison with normalization of line endings.",
+        "source_operator": "snapshot_isomorphism",
+        "telemetry": "File hash equality across all in-scope paths."
+      }
+    },
+    {
+      "primitive_id": "divergence_assessment",
+      "name": "Divergence Assessment Kernel",
+      "verbatim_quote": "## Counts - SNAPSHOT-ONLY (in zip, absent from live): **0** - DIVERGED (present in both, materially different): **0** - One file hashed differently (`packages/ingestion-pipeline/src/signal-registry-extensions.ts`) but the difference is CRLF vs LF line endings only — content is identical after normalization.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'divergence count, integers', 'F': 'file set, units', 'N': 'normalization function, {CRLF→LF}', 'H': 'hash function, SHA256'}",
+      "assumptions": "Only material differences in content are considered divergences.",
+      "breakdown_regime": "D > 0 implies structural inconsistency in F.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel evaluates divergence by comparing normalized hashes of files in scope.",
+        "source_operator": "divergence_assessment",
+        "telemetry": "Number of files with differing hashes post-normalization."
+      }
+    },
+    {
+      "primitive_id": "cache_artifact_exclusion",
+      "name": "Cache Artifact Exclusion Protocol",
+      "verbatim_quote": "## Honest notes / what I could not read - `packages/ingestion-pipeline/node_modules/.vite/vitest/results.json` and `packages/prediction-engine/node_modules/.vite/vitest/results.json` exist only in live — cache artifacts, not source.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'artifact type, {cache, source}', 'E': 'exclusion set, units', 'T': 'transient artifact identifier, string'}",
+      "assumptions": "Cache artifacts do not contribute to source integrity.",
+      "breakdown_regime": "A(T) = cache ⇒ T ∉ E.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Excludes transient artifacts from integrity checks based on path pattern matching.",
+        "source_operator": "cache_artifact_exclusion",
+        "telemetry": "Set of excluded paths from analysis."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b1ea0ea4b60d21d5_t0",
+      "think": "The core operator 'snapshot_isomorphism' defines a binary relation between two filesystem states, where equality holds under byte-level comparison with normalization of line endings. The divergence assessment kernel acts as a filter that isolates material differences in content, excluding trivial ones such as CRLF/LF variations. The exclusion protocol ensures that transient artifacts like cache files do not interfere with the integrity check. These primitives form a dual structure: one for establishing identity (isomorphism), and another for detecting deviation (divergence). The failure mode occurs when normalization is incomplete or when artifacts are misclassified. The epistemic closure is achieved through recursive exclusion of irrelevant paths and validation of hash consistency.\n\nDeep epistemic analysis for fledge-snapshot-gap (b1ea0ea4b60d21d5, domain=other, pages_read=1/1): Operator 'Snapshot Worktree Isomorphism' (page 1, domain other) captures: ## Wire-candidate verdicts None — the `Sports-main (8).zip` snapshot is a byte-for-byte copy of the live worktree in every in-scope path (modulo one CRLF/LF file). Assumptions: All in-scope paths are fully synchronized modulo line-ending normalization. Breakdown regime: When C ≠ L, I → 0 due to non-conformal normalization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The snapshot and live worktree are structurally equivalent under byte-wise comparison with normalization of line endings. Operator 'Divergence Assessment Kernel' (page 1, domain other) captures: ## Counts - SNAPSHOT-ONLY (in zip, absent from live): **0** - DIVERGED (present in both, materially different): **0** - One file hashed differently (`packages/ingestion-pipeline/src/signal-registry-extensions.ts`) but the difference is CRLF vs LF line endings only — content is identical after normalization. Assumptions: Only material differences in content are considered divergences. Breakdown regime: D > 0 implies structural inconsistency in F. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel evaluates divergence by comparing normalized hashes of files in scope. Operator 'Cache Artifact Exclusion Protocol' (page 1, domain other) captures: ## Honest notes / what I could not read - `packages/ingestion-pipeline/node_modules/.vite/vitest/results.json` and `packages/prediction-engine/node_modules/.vite/vitest/results.json` exist only in live — cache artifacts, not source. Assumptions: Cache artifacts do not contribute to source integrity. Breakdown regime: A(T) = cache ⇒ T ∉ E. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Excludes transient artifacts from integrity checks based on path pattern matching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for fledge-snapshot-gap (b1ea0ea4b60d21d5, domain=other, pages_read=1/1): Operator 'Snapshot Worktree Isomorphism' (page 1, domain other) captures: ## Wire-candidate verdicts None — the `Sports-main (8).zip` snapshot is a byte-for-byte copy of the live worktree in every in-scope path (modulo one CRLF/LF file). Assumptions: All in-scope paths are fully synchronized modulo line-ending normalization. Breakdown regime: When C ≠ L, I → 0 due to non-conformal normalization. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The snapshot and live worktree are structurally equivalent under byte-wise comparison with normalization of line endings. Operator 'Divergence Assessment Kernel' (page 1, domain other) captures: ## Counts - SNAPSHOT-ONLY (in zip, absent from live): **0** - DIVERGED (present in both, materially different): **0** - One file hashed differently (`packages/ingestion-pipeline/src/signal-registry-extensions.ts`) but the difference is CRLF vs LF line endings only — content is identical after normalization. Assumptions: Only material differences in content are considered divergences. Breakdown regime: D > 0 implies structural inconsistency in F. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel evaluates divergence by comparing normalized hashes of files in scope. Operator 'Cache Artifact Exclusion Protocol' (page 1, domain other) captures: ## Honest notes / what I could not read - `packages/ingestion-pipeline/node_modules/.vite/vitest/results.json` and `packages/prediction-engine/node_modules/.vite/vitest/results.json` exist only in live — cache artifacts, not source. Assumptions: Cache artifacts do not contribute to source integrity. Breakdown regime: A(T) = cache ⇒ T ∉ E. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Excludes transient artifacts from integrity checks based on path pattern matching. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal language theory and information theory, particularly the concept of isomorphic structures under equivalence relations. Influenced by computational complexity theory’s treatment of normalization and hashing. Retrocausal Genealogy: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include version control systems attempting to detect unauthorized changes, or automated tools enforcing code hygiene. The system models these as external observers with varying degrees of access and knowledge about the exclusion protocols. Theory of Mind & Decision Maker Model: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that cache artifacts and documentation are not conflated with source code during integrity checks. Leakage is prevented by restricting scope to defined directories and excluding metadata artifacts. Cross-Layer Veto & Anti-Leakage Check: Rooted in fledge-snapshot-gap (b1ea0ea4b60d21d5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

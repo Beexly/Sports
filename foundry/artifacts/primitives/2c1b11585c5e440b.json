@@ -1,16 +1,16 @@
 {
   "book_id": "2c1b11585c5e440b",
-  "title": "search-roots",
-  "file_name": "search-roots.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_2c1b11585c5e440b",
+  "file_name": "2c1b11585c5e440b.quarantined",
   "sha256": "2c1b11585c5e440bf83b9ed019ecf2f1addf5558c968e7cd6da5ee8072f791ba",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 371 extracted chars, 2 candidate quotes < 3 minimum): 'C:\\\\Users\\\\Garrett C:\\\\Users\\\\Garrett\\\\OneDrive C:\\\\Users\\\\Garrett\\\\AppData C:\\\\Users\\\\Garrett\\\\FAMILY_RUNWAY_COMMAND_CENTER C:\\\\Users\\\\Garrett\\\\Documents'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

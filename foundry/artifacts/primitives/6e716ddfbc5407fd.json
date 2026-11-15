@@ -1,0 +1,78 @@
+{
+  "book_id": "6e716ddfbc5407fd",
+  "source_status": "COMPLETE",
+  "title": "2017 Shooting Styles Body Shots - SportVu",
+  "file_name": "2017 Shooting Styles Body Shots - SportVu.md",
+  "sha256": "6e716ddfbc5407fd0008b835813cbac84cbe563b9ee7adfc31ddbc310bd47f59",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Body pose attributes encode kinematic style distinctiveness in NBA shooting, enabling statistical discrimination between made and missed shots via chi-squared divergence. Universal Lens: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference over attribute distributions to classify shooting styles, leveraging chi-squared test outcomes for probabilistic shot outcome prediction. GSI Mapping: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models shooting transitions through state-space paths defined by body movement attributes, capturing dynamic balance and motion style for situational decision-making. GSE Mapping: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "kinematic_style_attribute",
+      "name": "Kinematic Style Attribute",
+      "verbatim_quote": "The attributes are designed to capture the highlevel body movements of a player during the different phases of his shot, e.g., the jump and release.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Player body pose is captured via broadcast video and annotated for movement style.",
+      "breakdown_regime": "When body pose data is unavailable or mislabeled.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each attribute maps to a probabilistic distribution over movement types (walk, run, hop) in shot phases, enabling GSI classification.",
+        "source_operator": "kinematic_style_attribute",
+        "telemetry": "Chi-squared divergence between made vs. missed shot attribute distributions."
+      }
+    },
+    {
+      "primitive_id": "movement_type_distribution",
+      "name": "Movement Type Distribution",
+      "verbatim_quote": "Normalized for game context, we use Pearson's Chi-squaredtest toquantify differencesin attributedistributions for made and missed shots, where we observe statistically signi󰅭icant differences in distributions of attributes describing the style of movement, e.g., walk, run, or hop, in various phases of the shot.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Movement styles are mutually exclusive and independently distributed per shot phase.",
+      "breakdown_regime": "When shot outcomes are indistinguishable due to low variance in movement attributes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Distributional kernel derived from chi-squared divergence enables GSE to model shot success likelihood based on movement type.",
+        "source_operator": "movement_type_distribution",
+        "telemetry": "Statistical significance of chi-squared test p-values across shot categories."
+      }
+    },
+    {
+      "primitive_id": "off_balance_shot_frequency",
+      "name": "Off-Balance Shot Frequency",
+      "verbatim_quote": "We also present a case study for Stephen Curry, where we observe that Curry moves much more than the average player in all phases of his shot and he takes a higher proportion of off-balance shots compared to the average player.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Off-balance shots are identifiable through body pose and correlate with shot outcome variability.",
+      "breakdown_regime": "When off-balance indicators are ambiguous or absent in motion data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Frequency of off-balance shots is modeled as a stochastic process in GSI, linked to shot accuracy via regression.",
+        "source_operator": "off_balance_shot_frequency",
+        "telemetry": "Proportion of off-balance shots in player's total three-point attempts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6e716ddfbc5407fd_t0",
+      "think": "The core insight is that shooting mechanics in basketball are not fully described by positional coordinates alone—body pose provides critical kinematic descriptors. Each shot is segmented into five temporal bins, and for each bin, 17 anatomical attributes are extracted. These include directional movement, limb usage, and balance. The chi-squared test is applied to compare these attribute distributions between made and missed shots. This creates a statistical signature of shooting style. The failure mode arises when attributes are not clearly distinguishable or when the sample size is insufficient for reliable chi-squared estimation. The dual nature of the approach lies in its ability to both characterize individual shooting styles (via descriptive attributes) and predict outcomes (via statistical divergence).\n\nDeep epistemic analysis for 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd, domain=other, pages_read=9/9): Operator 'Kinematic Style Attribute' (page 1, domain other) captures: The attributes are designed to capture the highlevel body movements of a player during the different phases of his shot, e.g., the jump and release. Assumptions: Player body pose is captured via broadcast video and annotated for movement style. Breakdown regime: When body pose data is unavailable or mislabeled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each attribute maps to a probabilistic distribution over movement types (walk, run, hop) in shot phases, enabling GSI classification. Operator 'Movement Type Distribution' (page 1, domain other) captures: Normalized for game context, we use Pearson's Chi-squaredtest toquantify differencesin attributedistributions for made and missed shots, where we observe statistically signi󰅭icant differences in distributions of attributes describing the style of movement, e.g., walk, run, or hop, in various phases of the shot. Assumptions: Movement styles are mutually exclusive and independently distributed per shot phase. Breakdown regime: When shot outcomes are indistinguishable due to low variance in movement attributes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distributional kernel derived from chi-squared divergence enables GSE to model shot success likelihood based on movement type. Operator 'Off-Balance Shot Frequency' (page 1, domain other) captures: We also present a case study for Stephen Curry, where we observe that Curry moves much more than the average player in all phases of his shot and he takes a higher proportion of off-balance shots compared to the average player. Assumptions: Off-balance shots are identifiable through body pose and correlate with shot outcome variability. Breakdown regime: When off-balance indicators are ambiguous or absent in motion data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Frequency of off-balance shots is modeled as a stochastic process in GSI, linked to shot accuracy via regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd, domain=other, pages_read=9/9): Operator 'Kinematic Style Attribute' (page 1, domain other) captures: The attributes are designed to capture the highlevel body movements of a player during the different phases of his shot, e.g., the jump and release. Assumptions: Player body pose is captured via broadcast video and annotated for movement style. Breakdown regime: When body pose data is unavailable or mislabeled. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each attribute maps to a probabilistic distribution over movement types (walk, run, hop) in shot phases, enabling GSI classification. Operator 'Movement Type Distribution' (page 1, domain other) captures: Normalized for game context, we use Pearson's Chi-squaredtest toquantify differencesin attributedistributions for made and missed shots, where we observe statistically signi󰅭icant differences in distributions of attributes describing the style of movement, e.g., walk, run, or hop, in various phases of the shot. Assumptions: Movement styles are mutually exclusive and independently distributed per shot phase. Breakdown regime: When shot outcomes are indistinguishable due to low variance in movement attributes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Distributional kernel derived from chi-squared divergence enables GSE to model shot success likelihood based on movement type. Operator 'Off-Balance Shot Frequency' (page 1, domain other) captures: We also present a case study for Stephen Curry, where we observe that Curry moves much more than the average player in all phases of his shot and he takes a higher proportion of off-balance shots compared to the average player. Assumptions: Off-balance shots are identifiable through body pose and correlate with shot outcome variability. Breakdown regime: When off-balance indicators are ambiguous or absent in motion data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Frequency of off-balance shots is modeled as a stochastic process in GSI, linked to shot accuracy via regression. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical mechanics and biomechanics, extended by machine learning and computer vision techniques in sports analytics. Inspired by early work in motion capture and statistical modeling of human behavior. Retrocausal Genealogy: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (defenders, referees) perceive shooting opportunities differently than the shooter’s own body pose. The model assumes the shooter's internal state is encoded in body posture, which is then externally validated through statistical inference. Theory of Mind & Decision Maker Model: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring mutual exclusivity of attribute values. Leakage is mitigated by restricting telemetry to verified broadcast frames and excluding unobservable attributes. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2017 Shooting Styles Body Shots - SportVu (6e716ddfbc5407fd), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

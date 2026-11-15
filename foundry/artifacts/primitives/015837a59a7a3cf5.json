@@ -1,78 +1,16 @@
 {
   "book_id": "015837a59a7a3cf5",
-  "source_status": "COMPLETE",
-  "title": "OriginalDocument_",
-  "file_name": "OriginalDocument_.pdf",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_015837a59a7a3cf5",
+  "file_name": "015837a59a7a3cf5.quarantined",
   "sha256": "015837a59a7a3cf54ddeaa7a5a183ea339b1d6289d5fd177f741ec215bdc85e7",
   "primary_domain": "other",
-  "pages_total": 3,
-  "pages_read": 3,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Nonprofit entity formation with dual governance and purpose alignment to 501(c)(3) scientific research. Universal Lens: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian inference framework for validating organizational intent and compliance with charitable scientific objectives. GSI Mapping: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine mapping membership structure to governance authority and operational purpose. GSE Mapping: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "entity_name",
-      "name": "Filing Entity Identifier",
-      "verbatim_quote": "The name of the entity is: Galaxy Science Institute Article 2 - Registered Agent & Registered Office The initial registered agent is an individual resident of the state whose name is set forth below: Garrett Baxley First Name M.I.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Entity name is unique and non-falsely implying government affiliation.",
-      "breakdown_regime": "Name conflict resolution under state filing protocols.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's identity kernel for institutional alignment.",
-        "source_operator": "entity_name",
-        "telemetry": "Registry validation of name uniqueness."
-      }
-    },
-    {
-      "primitive_id": "registered_agent",
-      "name": "Agent Consensus Protocol",
-      "verbatim_quote": "Last Name Suffix 2047 RIVERLAWN DR KINGWOOD TX 77339-2375 USA Street or Mailing Address City State Zip Code Country Consent of Agent Consent to serve as registered agent is on file with the entity.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Registered agent is legally competent and consents to service.",
-      "breakdown_regime": "Legal liability and communication channel integrity.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derives from GSE's agent-state transition logic.",
-        "source_operator": "registered_agent",
-        "telemetry": "Agent consent verification timestamp."
-      }
-    },
-    {
-      "primitive_id": "purpose_statement",
-      "name": "Organizational Purpose Kernel",
-      "verbatim_quote": "This corporation is organized exclusively for charitable, educational, and scientific purposes within the meaning of Section 501(c)(3) of the Internal Revenue Code.",
-      "page": 2,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Purpose strictly aligns with IRS tax-exempt status requirements.",
-      "breakdown_regime": "Compliance failure under tax code enforcement.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's mission kernel for scientific endeavor.",
-        "source_operator": "purpose_statement",
-        "telemetry": "IRS classification confirmation."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "015837a59a7a3cf5_t0",
-      "think": "The primitives form a coherent logical architecture where entity identification anchors the legal framework, agent consensus ensures operational continuity, and purpose statement defines the scope of permissible activity. These elements interact through a dual regime: one of formal compliance (legal validity), and another of functional alignment (scientific mission). The failure mode occurs when purpose misalignment leads to regulatory disqualification or when agent inconsistency undermines institutional trust. The derivation proceeds from the foundational assumption of lawful intent to the operational instantiation of that intent via structured governance and defined scope.\n\nDeep epistemic analysis for OriginalDocument_ (015837a59a7a3cf5, domain=other, pages_read=3/3): Operator 'Filing Entity Identifier' (page 1, domain other) captures: The name of the entity is: Galaxy Science Institute Article 2 - Registered Agent & Registered Office The initial registered agent is an individual resident of the state whose name is set forth below: Garrett Baxley First Name M.I. Assumptions: Entity name is unique and non-falsely implying government affiliation. Breakdown regime: Name conflict resolution under state filing protocols. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's identity kernel for institutional alignment. Operator 'Agent Consensus Protocol' (page 1, domain other) captures: Last Name Suffix 2047 RIVERLAWN DR KINGWOOD TX 77339-2375 USA Street or Mailing Address City State Zip Code Country Consent of Agent Consent to serve as registered agent is on file with the entity. Assumptions: Registered agent is legally competent and consents to service. Breakdown regime: Legal liability and communication channel integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's agent-state transition logic. Operator 'Organizational Purpose Kernel' (page 2, domain other) captures: This corporation is organized exclusively for charitable, educational, and scientific purposes within the meaning of Section 501(c)(3) of the Internal Revenue Code. Assumptions: Purpose strictly aligns with IRS tax-exempt status requirements. Breakdown regime: Compliance failure under tax code enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's mission kernel for scientific endeavor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for OriginalDocument_ (015837a59a7a3cf5, domain=other, pages_read=3/3): Operator 'Filing Entity Identifier' (page 1, domain other) captures: The name of the entity is: Galaxy Science Institute Article 2 - Registered Agent & Registered Office The initial registered agent is an individual resident of the state whose name is set forth below: Garrett Baxley First Name M.I. Assumptions: Entity name is unique and non-falsely implying government affiliation. Breakdown regime: Name conflict resolution under state filing protocols. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's identity kernel for institutional alignment. Operator 'Agent Consensus Protocol' (page 1, domain other) captures: Last Name Suffix 2047 RIVERLAWN DR KINGWOOD TX 77339-2375 USA Street or Mailing Address City State Zip Code Country Consent of Agent Consent to serve as registered agent is on file with the entity. Assumptions: Registered agent is legally competent and consents to service. Breakdown regime: Legal liability and communication channel integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's agent-state transition logic. Operator 'Organizational Purpose Kernel' (page 2, domain other) captures: This corporation is organized exclusively for charitable, educational, and scientific purposes within the meaning of Section 501(c)(3) of the Internal Revenue Code. Assumptions: Purpose strictly aligns with IRS tax-exempt status requirements. Breakdown regime: Compliance failure under tax code enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's mission kernel for scientific endeavor. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in 19th-century corporate law evolution and modern tax-exempt nonprofit frameworks, particularly post-1969 IRS regulations defining 501(c)(3) entities. Retrocausal Genealogy: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing actors include regulatory bodies enforcing compliance and potential stakeholders seeking to exploit the entity's charitable status for private gain. Theory of Mind & Decision Maker Model: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity arises if purpose is diluted or if governance structure fails to maintain alignment between stated goals and actual operations. Cross-Layer Veto & Anti-Leakage Check: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in OriginalDocument_ (015837a59a7a3cf5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

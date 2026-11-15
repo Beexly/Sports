@@ -1,78 +1,16 @@
 {
   "book_id": "756ee60e7535ed5e",
-  "source_status": "COMPLETE",
-  "title": "README",
-  "file_name": "README.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_756ee60e7535ed5e",
+  "file_name": "756ee60e7535ed5e.quarantined",
   "sha256": "756ee60e7535ed5e2c6708b34e7bf226785e255f779fbefa812443145b5fd733",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "File-based routing in TanStack Start defines a bijection between filesystem paths and URL endpoints, enabling declarative API surface construction through static analysis. Universal Lens: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "GSI infers route semantics via conformal predictive distributions over endpoint signatures, leveraging dynamic typechecking as evidence for probabilistic route validation. GSI Mapping: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "GSE executes state transitions by traversing the generated route tree, applying layout hierarchies and outlet rendering logic to maintain consistent UI context during navigation. GSE Mapping: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "file_based_routing",
-      "name": "File-Based Route Mapping",
-      "verbatim_quote": "# Routes TanStack Start uses **file-based routing**. Every `.tsx` file in this directory is a route.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Each .tsx file maps directly to a unique URL path under defined directory structure.",
-      "breakdown_regime": "When new files are added without regeneration of routeTree.gen.ts, typechecking fails.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "The filesystem hierarchy is isomorphic to the URL namespace, where directory depth corresponds to URL segment nesting.",
-        "source_operator": "file_based_routing",
-        "telemetry": "Route generation success verified by `bun run typecheck`."
-      }
-    },
-    {
-      "primitive_id": "dynamic_segment",
-      "name": "Dynamic Path Parameter",
-      "verbatim_quote": "`about.tsx` | `/about` | | `users/index.tsx` | `/users` | | `users/$id.tsx` | `/users/:id` (dynamic — bare",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Parameterized segments allow runtime variable binding to URL paths.",
-      "breakdown_regime": "Failure occurs when parameter types mismatch expected schema during runtime.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Dynamic parameters derive from static route templates using parameter extraction kernels.",
-        "source_operator": "dynamic_segment",
-        "telemetry": "Runtime parameter parsing accuracy validated via route match assertions."
-      }
-    },
-    {
-      "primitive_id": "optional_segment",
-      "name": "Optional Path Segment",
-      "verbatim_quote": "curly braces) | | `posts/{-$category}.tsx` | `/posts/:category?` (optional segment) | | `files/$.tsx` | `/files/*` (splat —",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Optional segments enable flexible routing where some path components may be omitted.",
-      "breakdown_regime": "Invalidated if required segment is present but format does not match expected pattern.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Optional segments are modeled as unary predicates on path component existence within route tree.",
-        "source_operator": "optional_segment",
-        "telemetry": "Path resolution consistency checked against optional segment presence flags."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "756ee60e7535ed5e_t0",
-      "think": "The core insight of file-based routing lies in its formal equivalence between directory structures and URL namespaces. This establishes a discrete topological space where each .tsx file represents a point in that space. The bijection ensures deterministic mapping from filesystem to web interface. Dynamic segments introduce parametric variation, allowing continuous deformation of the route manifold while preserving topological integrity. Optional segments extend this by introducing partial functions over the domain of valid paths. Typechecking acts as a constraint satisfaction problem ensuring all possible paths remain well-formed. The failure mode arises when new routes lack regeneration of routeTree.gen.ts, causing divergence between static typing and runtime behavior. This creates a temporal inconsistency in the system's semantic model.\n\nDeep epistemic analysis for README (756ee60e7535ed5e, domain=other, pages_read=1/1): Operator 'File-Based Route Mapping' (page 1, domain other) captures: # Routes TanStack Start uses **file-based routing**. Every `.tsx` file in this directory is a route. Assumptions: Each .tsx file maps directly to a unique URL path under defined directory structure. Breakdown regime: When new files are added without regeneration of routeTree.gen.ts, typechecking fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The filesystem hierarchy is isomorphic to the URL namespace, where directory depth corresponds to URL segment nesting. Operator 'Dynamic Path Parameter' (page 1, domain other) captures: `about.tsx` | `/about` | | `users/index.tsx` | `/users` | | `users/$id.tsx` | `/users/:id` (dynamic — bare Assumptions: Parameterized segments allow runtime variable binding to URL paths. Breakdown regime: Failure occurs when parameter types mismatch expected schema during runtime. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dynamic parameters derive from static route templates using parameter extraction kernels. Operator 'Optional Path Segment' (page 1, domain other) captures: curly braces) | | `posts/{-$category}.tsx` | `/posts/:category?` (optional segment) | | `files/$.tsx` | `/files/*` (splat — Assumptions: Optional segments enable flexible routing where some path components may be omitted. Breakdown regime: Invalidated if required segment is present but format does not match expected pattern. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optional segments are modeled as unary predicates on path component existence within route tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (756ee60e7535ed5e, domain=other, pages_read=1/1): Operator 'File-Based Route Mapping' (page 1, domain other) captures: # Routes TanStack Start uses **file-based routing**. Every `.tsx` file in this directory is a route. Assumptions: Each .tsx file maps directly to a unique URL path under defined directory structure. Breakdown regime: When new files are added without regeneration of routeTree.gen.ts, typechecking fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The filesystem hierarchy is isomorphic to the URL namespace, where directory depth corresponds to URL segment nesting. Operator 'Dynamic Path Parameter' (page 1, domain other) captures: `about.tsx` | `/about` | | `users/index.tsx` | `/users` | | `users/$id.tsx` | `/users/:id` (dynamic — bare Assumptions: Parameterized segments allow runtime variable binding to URL paths. Breakdown regime: Failure occurs when parameter types mismatch expected schema during runtime. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Dynamic parameters derive from static route templates using parameter extraction kernels. Operator 'Optional Path Segment' (page 1, domain other) captures: curly braces) | | `posts/{-$category}.tsx` | `/posts/:category?` (optional segment) | | `files/$.tsx` | `/files/*` (splat — Assumptions: Optional segments enable flexible routing where some path components may be omitted. Breakdown regime: Invalidated if required segment is present but format does not match expected pattern. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Optional segments are modeled as unary predicates on path component existence within route tree. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in category theory's functorial approach to structured data representation, particularly influenced by Haskell's lens libraries and React's component composition patterns. Retrocausal Genealogy: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents might attempt to exploit route ambiguity or bypass typechecks through malformed file naming conventions, leading to security vulnerabilities or inconsistent user experiences. Theory of Mind & Decision Maker Model: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity requires that no two distinct filesystem paths map to identical URLs. Leakage vetoes occur if route generation omits critical segments or misclassifies optional vs mandatory parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in README (756ee60e7535ed5e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

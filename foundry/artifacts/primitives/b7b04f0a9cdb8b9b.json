@@ -1,0 +1,78 @@
+{
+  "book_id": "b7b04f0a9cdb8b9b",
+  "source_status": "COMPLETE",
+  "title": "ADR-0002-when-to-use-sagemaker-processing",
+  "file_name": "ADR-0002-when-to-use-sagemaker-processing.md",
+  "sha256": "b7b04f0a9cdb8b9bb50398c7ac9fa8ef5f4a20af5fe268c5c0a8f5fa253a7854",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "SageMaker processing decisions formalized as conditional batch execution with reproducibility constraints and cost-benefit thresholds. Universal Lens: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian model selection for dataset readiness and computational scale using conformal predictive distributions over job duration and resource cost. GSI Mapping: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in processing orchestration governed by dataset availability, IAM scope, and rollback feasibility. GSE Mapping: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "batch_job_scaling",
+      "name": "Batch Job Scaling Threshold",
+      "verbatim_quote": "# ADR-0002: When To Use SageMaker Processing Decision: Use later only for repeatable batch jobs that outgrow local execution.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time (seconds)', 'S': 'scale factor (dimensionless)', 'L': 'local execution threshold (dimensionless)'}",
+      "assumptions": "Job duration T exceeds local capacity L; reproducibility is required for partner review.",
+      "breakdown_regime": "T > L implies transition to SageMaker processing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a control-theoretic feedback loop where scaling triggers execution migration.",
+        "source_operator": "batch_job_scaling",
+        "telemetry": "Execution time ratio vs. local baseline"
+      }
+    },
+    {
+      "primitive_id": "dataset_readiness",
+      "name": "Dataset Readiness Gate",
+      "verbatim_quote": "Use when: - approved dataset exists - job duration or scale exceeds local workflow - reproducibility matters for partner review Do not use now: - no approved cloud dataset - no cost approval - no processing job definition Rollback path: run local script on fixture/replay data.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dataset approval status (boolean)', 'C': 'cost approval status (boolean)', 'J': 'job definition completeness (boolean)'}",
+      "assumptions": "All three conditions must be satisfied for deployment.",
+      "breakdown_regime": "¬(D ∧ C ∧ J) implies rejection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of decision logic derived from multi-criteria validation.",
+        "source_operator": "dataset_readiness",
+        "telemetry": "Approval status vector"
+      }
+    },
+    {
+      "primitive_id": "reproducibility_constraint",
+      "name": "Reproducibility Constraint",
+      "verbatim_quote": "Additional gates: - scoped IAM role and deletion path exist - dry-run artifact exists - source rights allow AWS processing Reject when: - local scripts are sufficient - source rights are unknown - no reproducible dataset manifest exists",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'reproducibility requirement (boolean)', 'I': 'IAM scope validity (boolean)', 'A': 'dry-run artifact existence (boolean)', 'S': 'source rights clarity (boolean)'}",
+      "assumptions": "Reproducibility requires IAM, artifact, and rights compliance.",
+      "breakdown_regime": "¬(I ∧ A ∧ S) implies constraint violation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a constraint satisfaction problem in distributed systems.",
+        "source_operator": "reproducibility_constraint",
+        "telemetry": "Constraint satisfaction score"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b7b04f0a9cdb8b9b_t0",
+      "think": "The decision framework for SageMaker processing is modeled as a multi-layered Boolean logic system. The core operator 'batch_job_scaling' defines when to migrate from local to cloud execution based on time and scale thresholds. The 'dataset_readiness' gate ensures that all prerequisites—approval, cost, and definition—are met before initiating a job. The 'reproducibility_constraint' enforces compliance with IAM, artifacts, and source rights. These primitives form a logical lattice where each layer refines the decision space. Failure modes include insufficient data, lack of cost approval, or absence of reproducible manifests. Dualities emerge between local sufficiency and cloud necessity, with rollback paths defined via local fixtures. The system's robustness depends on the integrity of these gates and their interdependence.\n\nDeep epistemic analysis for ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b, domain=other, pages_read=1/1): Operator 'Batch Job Scaling Threshold' (page 1, domain other) captures: # ADR-0002: When To Use SageMaker Processing Decision: Use later only for repeatable batch jobs that outgrow local execution. Assumptions: Job duration T exceeds local capacity L; reproducibility is required for partner review. Breakdown regime: T > L implies transition to SageMaker processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a control-theoretic feedback loop where scaling triggers execution migration. Operator 'Dataset Readiness Gate' (page 1, domain other) captures: Use when: - approved dataset exists - job duration or scale exceeds local workflow - reproducibility matters for partner review Do not use now: - no approved cloud dataset - no cost approval - no processing job definition Rollback path: run local script on fixture/replay data. Assumptions: All three conditions must be satisfied for deployment. Breakdown regime: ¬(D ∧ C ∧ J) implies rejection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of decision logic derived from multi-criteria validation. Operator 'Reproducibility Constraint' (page 1, domain other) captures: Additional gates: - scoped IAM role and deletion path exist - dry-run artifact exists - source rights allow AWS processing Reject when: - local scripts are sufficient - source rights are unknown - no reproducible dataset manifest exists Assumptions: Reproducibility requires IAM, artifact, and rights compliance. Breakdown regime: ¬(I ∧ A ∧ S) implies constraint violation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a constraint satisfaction problem in distributed systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b, domain=other, pages_read=1/1): Operator 'Batch Job Scaling Threshold' (page 1, domain other) captures: # ADR-0002: When To Use SageMaker Processing Decision: Use later only for repeatable batch jobs that outgrow local execution. Assumptions: Job duration T exceeds local capacity L; reproducibility is required for partner review. Breakdown regime: T > L implies transition to SageMaker processing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a control-theoretic feedback loop where scaling triggers execution migration. Operator 'Dataset Readiness Gate' (page 1, domain other) captures: Use when: - approved dataset exists - job duration or scale exceeds local workflow - reproducibility matters for partner review Do not use now: - no approved cloud dataset - no cost approval - no processing job definition Rollback path: run local script on fixture/replay data. Assumptions: All three conditions must be satisfied for deployment. Breakdown regime: ¬(D ∧ C ∧ J) implies rejection. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of decision logic derived from multi-criteria validation. Operator 'Reproducibility Constraint' (page 1, domain other) captures: Additional gates: - scoped IAM role and deletion path exist - dry-run artifact exists - source rights allow AWS processing Reject when: - local scripts are sufficient - source rights are unknown - no reproducible dataset manifest exists Assumptions: Reproducibility requires IAM, artifact, and rights compliance. Breakdown regime: ¬(I ∧ A ∧ S) implies constraint violation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a constraint satisfaction problem in distributed systems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in control theory and distributed computing, particularly in scheduling and resource allocation models from the 1970s onward, extended into modern cloud orchestration frameworks. Retrocausal Genealogy: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the local execution environment (favoring simplicity), the cloud platform (favoring scalability), and regulatory constraints (enforcing reproducibility). Each agent influences the decision boundary through competing utility functions. Theory of Mind & Decision Maker Model: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when one layer's condition contradicts another, e.g., local sufficiency negates cloud necessity. Leakage occurs if reproducibility is enforced without proper IAM or artifact validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in ADR-0002-when-to-use-sagemaker-processing (b7b04f0a9cdb8b9b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

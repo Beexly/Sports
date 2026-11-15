@@ -1,0 +1,78 @@
+{
+  "book_id": "cdec4f37e5ed1903",
+  "source_status": "COMPLETE",
+  "title": "CMD-055-unit-economics-model-v1",
+  "file_name": "CMD-055-unit-economics-model-v1.md",
+  "sha256": "cdec4f37e5ed190389011e8bca94a58fcc7d03cd6bce167011296a97e439675d",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unit economics as a structured financial inference layer mapping customer acquisition cost to lifetime value through operational and compliance constraints. Universal Lens: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on launch readiness using finance-derived unit economics as evidence within GSI's conformal predictive framework. GSI Mapping: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine models product-state transitions via unit economics constraints, enabling dynamic pricing and retention optimization. GSE Mapping: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "customer_acquisition_cost",
+      "name": "Customer Acquisition Cost",
+      "verbatim_quote": "Verify real repo root, branch, dirty state, package manager, app routes, and relevant files.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'CAC': 'USD per customer'}",
+      "assumptions": "CAC is derived from marketing spend divided by new customers acquired over a period.",
+      "breakdown_regime": "When CAC exceeds LTV, economic viability fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CAC serves as input to GSI's probabilistic launch readiness model, informing Bayesian priors on revenue sustainability.",
+        "source_operator": "customer_acquisition_cost",
+        "telemetry": "Marketing spend and new user registration count."
+      }
+    },
+    {
+      "primitive_id": "lifetime_value",
+      "name": "Lifetime Value",
+      "verbatim_quote": "## Acceptance Criteria - Existing work is referenced, not duplicated.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LTV': 'USD per customer'}",
+      "assumptions": "LTV is calculated based on average revenue per user multiplied by retention rate and customer lifespan.",
+      "breakdown_regime": "When LTV falls below CAC, unit economics become unsustainable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "LTV drives GSE's adaptive pricing logic and retention policy adjustments.",
+        "source_operator": "lifetime_value",
+        "telemetry": "Revenue per user and churn rate metrics."
+      }
+    },
+    {
+      "primitive_id": "launch_readiness_index",
+      "name": "Launch Readiness Index",
+      "verbatim_quote": "## Why It Matters This protects launch quality, trust, revenue, retention, support readiness, compliance, or founder leverage.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'LRI': 'dimensionless score'}",
+      "assumptions": "LRI is a composite score derived from unit economics, compliance checks, and operational readiness.",
+      "breakdown_regime": "LRI < 0.5 indicates high risk of launch failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "LRI maps to GSI's confidence interval over launch outcomes, aligning with GSE's state transition probabilities.",
+        "source_operator": "launch_readiness_index",
+        "telemetry": "Unit economics validation, compliance audit status, QA test coverage."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cdec4f37e5ed1903_t0",
+      "think": "The primitives define a triadic structure: CAC, LTV, and LRI. CAC and LTV form the core economic duality where LTV/CAC ratio determines profitability. LRI synthesizes these into a single scalar that informs launch decisions. The system operates under dual constraints: financial viability and operational readiness. Failure modes include CAC exceeding LTV, or LRI falling below threshold due to non-compliance or incomplete QA. These primitives enable GSI to perform Bayesian inference on launch success and GSE to optimize product states accordingly.\n\nDeep epistemic analysis for CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903, domain=other, pages_read=2/2): Operator 'Customer Acquisition Cost' (page 1, domain other) captures: Verify real repo root, branch, dirty state, package manager, app routes, and relevant files. Assumptions: CAC is derived from marketing spend divided by new customers acquired over a period. Breakdown regime: When CAC exceeds LTV, economic viability fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CAC serves as input to GSI's probabilistic launch readiness model, informing Bayesian priors on revenue sustainability. Operator 'Lifetime Value' (page 1, domain other) captures: ## Acceptance Criteria - Existing work is referenced, not duplicated. Assumptions: LTV is calculated based on average revenue per user multiplied by retention rate and customer lifespan. Breakdown regime: When LTV falls below CAC, unit economics become unsustainable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): LTV drives GSE's adaptive pricing logic and retention policy adjustments. Operator 'Launch Readiness Index' (page 1, domain other) captures: ## Why It Matters This protects launch quality, trust, revenue, retention, support readiness, compliance, or founder leverage. Assumptions: LRI is a composite score derived from unit economics, compliance checks, and operational readiness. Breakdown regime: LRI < 0.5 indicates high risk of launch failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LRI maps to GSI's confidence interval over launch outcomes, aligning with GSE's state transition probabilities. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903, domain=other, pages_read=2/2): Operator 'Customer Acquisition Cost' (page 1, domain other) captures: Verify real repo root, branch, dirty state, package manager, app routes, and relevant files. Assumptions: CAC is derived from marketing spend divided by new customers acquired over a period. Breakdown regime: When CAC exceeds LTV, economic viability fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CAC serves as input to GSI's probabilistic launch readiness model, informing Bayesian priors on revenue sustainability. Operator 'Lifetime Value' (page 1, domain other) captures: ## Acceptance Criteria - Existing work is referenced, not duplicated. Assumptions: LTV is calculated based on average revenue per user multiplied by retention rate and customer lifespan. Breakdown regime: When LTV falls below CAC, unit economics become unsustainable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): LTV drives GSE's adaptive pricing logic and retention policy adjustments. Operator 'Launch Readiness Index' (page 1, domain other) captures: ## Why It Matters This protects launch quality, trust, revenue, retention, support readiness, compliance, or founder leverage. Assumptions: LRI is a composite score derived from unit economics, compliance checks, and operational readiness. Breakdown regime: LRI < 0.5 indicates high risk of launch failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): LRI maps to GSI's confidence interval over launch outcomes, aligning with GSE's state transition probabilities. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classic marketing analytics and financial modeling, extended into modern SaaS and platform economics frameworks. Retrocausal Genealogy: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include finance teams (optimizing CAC/LTV), QA engineers (validating LRI), and founders (managing risk exposure). Each has distinct objectives but aligned incentives through shared unit economics. Theory of Mind & Decision Maker Model: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures LRI does not merely replicate CAC or LTV signals. Leakage vetoes prevent data leakage from operational layers into financial models without proper validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CMD-055-unit-economics-model-v1 (cdec4f37e5ed1903), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

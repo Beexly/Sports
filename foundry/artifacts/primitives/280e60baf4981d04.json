@@ -1,0 +1,78 @@
+{
+  "book_id": "280e60baf4981d04",
+  "source_status": "COMPLETE",
+  "title": "2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors",
+  "file_name": "2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors.md",
+  "sha256": "280e60baf4981d0473ddf7e3b97da216719280f6f212c62c8c174bf5ecb3e790",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Geometric random variables model seed advancement probabilities; Bernoulli trials underpin round-by-round survival dynamics. Universal Lens: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on seed performance uses historical Bernoulli trials to estimate win probabilities per round, updating beliefs via conformal prediction. GSI Mapping: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in tournament rounds modeled as Markov chains with geometrically distributed step times; seed positions evolve through probabilistic state updates. GSE Mapping: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "geometric_seed_advancement",
+      "name": "Geometric Seed Advancement",
+      "verbatim_quote": "Then Z is a geometric random variable with probability p iff P{Xi = 1 | h=1,2,...,i-1 Xh = 0} = p for all i = 1,2,....",
+      "page": 3,
+      "latex": "P\\{Z = k\\} = (1-p)^{k-1} p, \\quad k = 1, 2, \\ldots",
+      "symbol_and_unit_ledger": "{'Z': 'number of Bernoulli trials until first success (dimensionless)', 'p': 'probability of success in each trial (dimensionless)'}",
+      "assumptions": "Each seed has fixed probability p of advancing given prior failures; independence across trials.",
+      "breakdown_regime": "When p approaches 0 or 1, variance diverges; model fails near boundary cases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models how many rounds a seed survives before elimination using geometric distribution.",
+        "source_operator": "geometric_seed_advancement",
+        "telemetry": "Observed seed survival rates compared to theoretical geometric expectations."
+      }
+    },
+    {
+      "primitive_id": "bernoulli_tournament_outcome",
+      "name": "Bernoulli Tournament Outcome",
+      "verbatim_quote": "- If Y is distributed geometric with probability p, then P{Y=k} = (1-p)<sup>k-1</sup> p, k=1,2,....",
+      "page": 3,
+      "latex": "P\\{Y = k\\} = (1-p)^{k-1} p",
+      "symbol_and_unit_ledger": "{'Y': 'number of trials until first success (dimensionless)', 'p': 'probability of success in each trial (dimensionless)'}",
+      "assumptions": "Independent Bernoulli trials represent match outcomes; seed strength determines p.",
+      "breakdown_regime": "Model invalid when seed strength varies significantly within a round.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tournament progression mirrors geometric waiting time for success in Bernoulli process.",
+        "source_operator": "bernoulli_tournament_outcome",
+        "telemetry": "Historical seed vs. actual tournament outcome alignment."
+      }
+    },
+    {
+      "primitive_id": "seed_performance_regression",
+      "name": "Seed Performance Regression",
+      "verbatim_quote": "3 or better – 76% in round 5 (National Semi-final) have been seeded No.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Higher seeds historically perform better; regression captures trend over rounds.",
+      "breakdown_regime": "Regression becomes unreliable for lower-seeded teams due to small sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Statistical regression maps seed rank to probability of surviving to later rounds.",
+        "source_operator": "seed_performance_regression",
+        "telemetry": "Percentage of top seeds reaching final rounds versus expected values."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "280e60baf4981d04_t0",
+      "think": "The core mathematical structure models tournament progression using geometric distributions where each seed's advancement follows a Bernoulli trial sequence. The key insight is that if we define a random variable Z as the number of trials until the first success, then P(Z = k) = (1−p)^(k−1)p, which reflects the probability that a seed survives exactly k−1 rounds before being eliminated. This formulation assumes that each seed has a fixed probability p of advancing to the next round, independent of previous outcomes—a simplification but useful for modeling. As the tournament progresses, the effective probability p changes based on historical data and seed matchups. For instance, in Round 5 (Semi-finals), 76% of teams were seeded 3 or better, indicating strong correlation between seed quality and late-stage survival. The geometric distribution allows us to compute cumulative probabilities of survival up to any round, enabling predictive analytics. However, this model breaks down when p approaches 0 or 1, or when external factors disrupt the assumed independence of trials. Additionally, the assumption of constant p per seed may not hold across different matchups or years, limiting generalizability.\n\nDeep epistemic analysis for 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04, domain=other, pages_read=6/6): Operator 'Geometric Seed Advancement' (page 3, domain other) captures: Then Z is a geometric random variable with probability p iff P{Xi = 1 | h=1,2,...,i-1 Xh = 0} = p for all i = 1,2,.... Assumptions: Each seed has fixed probability p of advancing given prior failures; independence across trials. Breakdown regime: When p approaches 0 or 1, variance diverges; model fails near boundary cases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models how many rounds a seed survives before elimination using geometric distribution. Operator 'Bernoulli Tournament Outcome' (page 3, domain other) captures: - If Y is distributed geometric with probability p, then P{Y=k} = (1-p)<sup>k-1</sup> p, k=1,2,.... Assumptions: Independent Bernoulli trials represent match outcomes; seed strength determines p. Breakdown regime: Model invalid when seed strength varies significantly within a round. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tournament progression mirrors geometric waiting time for success in Bernoulli process. Operator 'Seed Performance Regression' (page 2, domain other) captures: 3 or better – 76% in round 5 (National Semi-final) have been seeded No. Assumptions: Higher seeds historically perform better; regression captures trend over rounds. Breakdown regime: Regression becomes unreliable for lower-seeded teams due to small sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Statistical regression maps seed rank to probability of surviving to later rounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04, domain=other, pages_read=6/6): Operator 'Geometric Seed Advancement' (page 3, domain other) captures: Then Z is a geometric random variable with probability p iff P{Xi = 1 | h=1,2,...,i-1 Xh = 0} = p for all i = 1,2,.... Assumptions: Each seed has fixed probability p of advancing given prior failures; independence across trials. Breakdown regime: When p approaches 0 or 1, variance diverges; model fails near boundary cases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models how many rounds a seed survives before elimination using geometric distribution. Operator 'Bernoulli Tournament Outcome' (page 3, domain other) captures: - If Y is distributed geometric with probability p, then P{Y=k} = (1-p)<sup>k-1</sup> p, k=1,2,.... Assumptions: Independent Bernoulli trials represent match outcomes; seed strength determines p. Breakdown regime: Model invalid when seed strength varies significantly within a round. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tournament progression mirrors geometric waiting time for success in Bernoulli process. Operator 'Seed Performance Regression' (page 2, domain other) captures: 3 or better – 76% in round 5 (National Semi-final) have been seeded No. Assumptions: Higher seeds historically perform better; regression captures trend over rounds. Breakdown regime: Regression becomes unreliable for lower-seeded teams due to small sample size. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Statistical regression maps seed rank to probability of surviving to later rounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century stochastic processes and applied to sports by Jacobson et al. (2009), extending earlier work on tournament modeling and Bernoulli trials in combinatorial game theory. Retrocausal Genealogy: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the NCAA bracket designers aiming for competitive balance, and historical data suggesting that higher seeds dominate, creating an implicit bias toward seeding strategies that favor top-ranked teams. Theory of Mind & Decision Maker Model: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises because seed rankings do not perfectly predict outcomes due to randomness and upsets. Leakage occurs when model assumptions fail under varying conditions such as changing team strengths or rule modifications affecting match dynamics. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2011 - Seed distributions for NCAA men's basketball tournament Why it may not matter who plays whom - Unknown Authors (280e60baf4981d04), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

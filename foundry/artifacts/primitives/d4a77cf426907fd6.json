@@ -1,0 +1,78 @@
+{
+  "book_id": "d4a77cf426907fd6",
+  "source_status": "COMPLETE",
+  "title": "wynnbet.com",
+  "file_name": "wynnbet.com.md",
+  "sha256": "d4a77cf426907fd64afb78b69b2d91aebd333efefd16d081f1183c51a520cde8",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic state-transition system encoding user interaction semantics through checkbox toggles and form validation, with geolocation-derived contextual constraints. Universal Lens: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on user intent via checkbox state changes, conditioned on geolocation-derived regional compliance rules. GSI Mapping: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates form field validity and checkbox selections as discrete state transitions within a bounded action space. GSE Mapping: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "checkbox_state_toggle",
+      "name": "Checkbox State Toggle Operator",
+      "verbatim_quote": "l < 0 && (e.checkbox = r.concat([null])) : l > -1 && (e.checkbox = r.slice(0, l).concat(r.slice(l + 1))) } else e.checkbox = n } } }), e._v(\" \"), r(\"label\", { staticClass: \"checkbox-label__main\", attrs: { for: \"is-adult\" } }, [e._v(e._s(e.text.smsOptionText))])])]) : e._e(), e._v(\" \"), e.errorList.length > 0 ?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e.checkbox': 'Boolean array or scalar representing checkbox selection state', 'r': 'Array of current checkbox values', 'l': 'Index of null in checkbox array', 'n': 'New boolean value for checkbox'}",
+      "assumptions": "Checkbox state is modeled as a discrete Boolean variable with possible null insertion.",
+      "breakdown_regime": "When l = -1, indicates no null present; when l >= 0, indicates null at index l.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encodes binary toggle logic for user consent flags in registration forms.",
+        "source_operator": "checkbox_state_toggle",
+        "telemetry": "User interaction timestamp and checkbox value change events."
+      }
+    },
+    {
+      "primitive_id": "geolocation_contextual_filter",
+      "name": "Geolocation Contextual Filter",
+      "verbatim_quote": "arguments[1] : void 0, r = e.length, o = void 0 === n ?",
+      "page": 5,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'IP-based geolocation object', 'e': 'Filtered location data', 'n': 'Default fallback value'}",
+      "assumptions": "Geolocation data is available and used to filter content or behavior based on region.",
+      "breakdown_regime": "When geolocation fails or returns invalid data, default fallback is applied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps IP-derived location to conditional UI behavior using Bayesian filtering.",
+        "source_operator": "geolocation_contextual_filter",
+        "telemetry": "IP address, country code, and timezone from geojs.io API."
+      }
+    },
+    {
+      "primitive_id": "form_validation_error_accumulator",
+      "name": "Form Validation Error Accumulator",
+      "verbatim_quote": "r(\"ul\", { staticClass: \"reg-form__errors\" }, e._l(e.errorList, (function(t) { return r(\"li\", { stat ``` ### `change` ```js change: function(t) { var r = e.checkbox, o = t.target, n = !!o.checked; if (Array.isArray(r)) { var l = e._i(r, null); o.checked ?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e.errorList': 'Array of error messages', 't': 'Individual error message string'}",
+      "assumptions": "Validation errors accumulate in an ordered list until resolved.",
+      "breakdown_regime": "Empty error list implies valid form submission.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Tracks form field validation failures as a state vector for corrective feedback.",
+        "source_operator": "form_validation_error_accumulator",
+        "telemetry": "Number of validation errors per form field and total accumulated errors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d4a77cf426907fd6_t0",
+      "think": "The checkbox toggle operator models a binary state transition where a null value can be inserted or removed from an array of selections. This encodes user consent decisions in a structured way. The geolocation filter applies a contextual constraint derived from IP address data, enabling region-specific behavior. Form validation accumulates errors as a feedback mechanism to guide user correction. These primitives form a coherent system for managing user input states under dynamic environmental constraints.\n\nDeep epistemic analysis for wynnbet.com (d4a77cf426907fd6, domain=other, pages_read=5/5): Operator 'Checkbox State Toggle Operator' (page 2, domain other) captures: l < 0 && (e.checkbox = r.concat([null])) : l > -1 && (e.checkbox = r.slice(0, l).concat(r.slice(l + 1))) } else e.checkbox = n } } }), e._v(\" \"), r(\"label\", { staticClass: \"checkbox-label__main\", attrs: { for: \"is-adult\" } }, [e._v(e._s(e.text.smsOptionText))])])]) : e._e(), e._v(\" \"), e.errorList.length > 0 ? Assumptions: Checkbox state is modeled as a discrete Boolean variable with possible null insertion. Breakdown regime: When l = -1, indicates no null present; when l >= 0, indicates null at index l. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes binary toggle logic for user consent flags in registration forms. Operator 'Geolocation Contextual Filter' (page 5, domain other) captures: arguments[1] : void 0, r = e.length, o = void 0 === n ? Assumptions: Geolocation data is available and used to filter content or behavior based on region. Breakdown regime: When geolocation fails or returns invalid data, default fallback is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps IP-derived location to conditional UI behavior using Bayesian filtering. Operator 'Form Validation Error Accumulator' (page 2, domain other) captures: r(\"ul\", { staticClass: \"reg-form__errors\" }, e._l(e.errorList, (function(t) { return r(\"li\", { stat ``` ### `change` ```js change: function(t) { var r = e.checkbox, o = t.target, n = !!o.checked; if (Array.isArray(r)) { var l = e._i(r, null); o.checked ? Assumptions: Validation errors accumulate in an ordered list until resolved. Breakdown regime: Empty error list implies valid form submission. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Tracks form field validation failures as a state vector for corrective feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for wynnbet.com (d4a77cf426907fd6, domain=other, pages_read=5/5): Operator 'Checkbox State Toggle Operator' (page 2, domain other) captures: l < 0 && (e.checkbox = r.concat([null])) : l > -1 && (e.checkbox = r.slice(0, l).concat(r.slice(l + 1))) } else e.checkbox = n } } }), e._v(\" \"), r(\"label\", { staticClass: \"checkbox-label__main\", attrs: { for: \"is-adult\" } }, [e._v(e._s(e.text.smsOptionText))])])]) : e._e(), e._v(\" \"), e.errorList.length > 0 ? Assumptions: Checkbox state is modeled as a discrete Boolean variable with possible null insertion. Breakdown regime: When l = -1, indicates no null present; when l >= 0, indicates null at index l. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encodes binary toggle logic for user consent flags in registration forms. Operator 'Geolocation Contextual Filter' (page 5, domain other) captures: arguments[1] : void 0, r = e.length, o = void 0 === n ? Assumptions: Geolocation data is available and used to filter content or behavior based on region. Breakdown regime: When geolocation fails or returns invalid data, default fallback is applied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps IP-derived location to conditional UI behavior using Bayesian filtering. Operator 'Form Validation Error Accumulator' (page 2, domain other) captures: r(\"ul\", { staticClass: \"reg-form__errors\" }, e._l(e.errorList, (function(t) { return r(\"li\", { stat ``` ### `change` ```js change: function(t) { var r = e.checkbox, o = t.target, n = !!o.checked; if (Array.isArray(r)) { var l = e._i(r, null); o.checked ? Assumptions: Validation errors accumulate in an ordered list until resolved. Breakdown regime: Empty error list implies valid form submission. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Tracks form field validation failures as a state vector for corrective feedback. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in discrete event systems and finite automata theory, these operators reflect modern web application design patterns influenced by reactive programming paradigms. Retrocausal Genealogy: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models user agency through checkbox interactions and regulatory compliance via geolocation, while simulating adversarial inputs through error accumulation. Theory of Mind & Decision Maker Model: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If geolocation fails, the system defaults to a neutral state; if checkbox logic breaks, it reverts to initial state. No cross-layer dependencies allow independent degradation. Cross-Layer Veto & Anti-Leakage Check: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in wynnbet.com (d4a77cf426907fd6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

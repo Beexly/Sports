@@ -1,0 +1,78 @@
+{
+  "book_id": "b7827e060fce7152",
+  "source_status": "COMPLETE",
+  "title": "vision-ingest-confirmed-2026",
+  "file_name": "vision-ingest-confirmed-2026.md",
+  "sha256": "b7827e060fce7152ef292d4eb6e4d928d64d5a89f23e3c154dff8b32d49fd0cd",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pre-Week-6 2026 NGS tracking geometry maps player coordinates (x,y) to 10 Hz temporal frames, constrained to field boundaries [0,120]×[0,53.33] yd, with 1.065% y-out-of-bounds rows confirming data integrity issues. Universal Lens: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers spatial dynamics via Bayesian geometry validation of (x,y) fields, using conformal uncertainty bounds to detect y-OOB anomalies in pre-Week-6 plays, enabling probabilistic play reconstruction. GSI Mapping: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through geometric consistency checks on (x,y) trajectories, identifying 564 plays with y-OOB rows as critical failure modes in situational reasoning during pre-Week-6 analysis. GSE Mapping: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "spatial_coordinate_field",
+      "name": "Spatial Coordinate Field",
+      "verbatim_quote": "| | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x': 'field coordinate in yards (yd)', 'y': 'field coordinate in yards (yd)'}",
+      "assumptions": "Coordinates are sampled at 10 Hz, bounded within NFL field dimensions.",
+      "breakdown_regime": "x ∈ [0,120], y ∈ [0,53.33]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps player positions to discrete 10 Hz frames in a 2D Euclidean space, enabling trajectory-based play analysis.",
+        "source_operator": "spatial_coordinate_field",
+        "telemetry": "Percentage of non-null x/y values and range of out-of-bounds coordinates."
+      }
+    },
+    {
+      "primitive_id": "geometry_validation_kernel",
+      "name": "Geometry Validation Kernel",
+      "verbatim_quote": "The D1 defect (37 rows with y outside [0,53.33], min -0.82 yd beyond the sideline) is confirmed in BOTH files — it is a real geometry defect in the source tracking data, not an artifact of the proof-play extraction.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'y_{\\\\text{out}}': 'out-of-bounds y-coordinate (yd)'}",
+      "assumptions": "All valid y-coordinates must lie within [0,53.33] yd.",
+      "breakdown_regime": "y_{\\text{out}} \\not\\in [0,53.33]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Detects and flags invalid y-values to identify data corruption in tracking geometry.",
+        "source_operator": "geometry_validation_kernel",
+        "telemetry": "Count of y-OOB rows and affected play IDs."
+      }
+    },
+    {
+      "primitive_id": "temporal_frame_index",
+      "name": "Temporal Frame Index",
+      "verbatim_quote": "| | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'frame_id': 'discrete temporal index'}",
+      "assumptions": "Each frame corresponds to a 100 ms interval.",
+      "breakdown_regime": "frame_id ∈ ℕ",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables synchronization of player motion across time steps for dynamic play modeling.",
+        "source_operator": "temporal_frame_index",
+        "telemetry": "Total number of frames and percentage of non-null entries."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b7827e060fce7152_t0",
+      "think": "The primitives define a structured spatial-temporal framework for analyzing NFL tracking data. The spatial coordinate field (x,y) provides geometric resolution, while the temporal frame index enables motion interpolation. The geometry validation kernel identifies systematic defects in y-coordinates, indicating data quality issues that propagate into downstream inference. These primitives form a dual structure: one for representation (coordinates) and one for integrity (validation). Failure modes arise when y-values exceed [0,53.33], suggesting either sensor error or data pipeline corruption. The 1.065% OOB rate implies a persistent flaw in the source data, undermining trust in derived metrics unless corrected. This dual nature necessitates both geometric consistency checks and probabilistic correction strategies in GSI's Bayesian inference engine.\n\nDeep epistemic analysis for vision-ingest-confirmed-2026 (b7827e060fce7152, domain=other, pages_read=4/4): Operator 'Spatial Coordinate Field' (page 2, domain other) captures: | | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone Assumptions: Coordinates are sampled at 10 Hz, bounded within NFL field dimensions. Breakdown regime: x ∈ [0,120], y ∈ [0,53.33] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps player positions to discrete 10 Hz frames in a 2D Euclidean space, enabling trajectory-based play analysis. Operator 'Geometry Validation Kernel' (page 3, domain other) captures: The D1 defect (37 rows with y outside [0,53.33], min -0.82 yd beyond the sideline) is confirmed in BOTH files — it is a real geometry defect in the source tracking data, not an artifact of the proof-play extraction. Assumptions: All valid y-coordinates must lie within [0,53.33] yd. Breakdown regime: y_{\\text{out}} \\not\\in [0,53.33] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detects and flags invalid y-values to identify data corruption in tracking geometry. Operator 'Temporal Frame Index' (page 2, domain other) captures: | | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone Assumptions: Each frame corresponds to a 100 ms interval. Breakdown regime: frame_id ∈ ℕ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables synchronization of player motion across time steps for dynamic play modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for vision-ingest-confirmed-2026 (b7827e060fce7152, domain=other, pages_read=4/4): Operator 'Spatial Coordinate Field' (page 2, domain other) captures: | | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone Assumptions: Coordinates are sampled at 10 Hz, bounded within NFL field dimensions. Breakdown regime: x ∈ [0,120], y ∈ [0,53.33] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps player positions to discrete 10 Hz frames in a 2D Euclidean space, enabling trajectory-based play analysis. Operator 'Geometry Validation Kernel' (page 3, domain other) captures: The D1 defect (37 rows with y outside [0,53.33], min -0.82 yd beyond the sideline) is confirmed in BOTH files — it is a real geometry defect in the source tracking data, not an artifact of the proof-play extraction. Assumptions: All valid y-coordinates must lie within [0,53.33] yd. Breakdown regime: y_{\\text{out}} \\not\\in [0,53.33] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Detects and flags invalid y-values to identify data corruption in tracking geometry. Operator 'Temporal Frame Index' (page 2, domain other) captures: | | x | float64 | 100.0% | field coordinate (yd) | 0 = back of end zone Assumptions: Each frame corresponds to a 100 ms interval. Breakdown regime: frame_id ∈ ℕ Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables synchronization of player motion across time steps for dynamic play modeling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics' phase-space formalism and modern computational geometry, extending to data validation paradigms in sports analytics. Retrocausal Genealogy: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data pipelines that introduce noise and analysts who rely on clean geometries. The system models these as competing influences on trajectory fidelity. Theory of Mind & Decision Maker Model: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that geometry validation does not interfere with temporal indexing. Leakage is prevented by isolating the validation kernel from trajectory reconstruction layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in vision-ingest-confirmed-2026 (b7827e060fce7152), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

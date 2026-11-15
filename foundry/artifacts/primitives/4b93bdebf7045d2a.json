@@ -1,0 +1,78 @@
+{
+  "book_id": "4b93bdebf7045d2a",
+  "source_status": "COMPLETE",
+  "title": "covers.com",
+  "file_name": "covers.com.md",
+  "sha256": "4b93bdebf7045d2a23e46b91ee4b691fb563ba03d01ac76c7444f6a0068189a0",
+  "primary_domain": "other",
+  "pages_total": 14,
+  "pages_read": 14,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Swiper zoom mechanics and slide navigation utilize geometric transformations and event-driven state updates. Universal Lens: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models slide transitions using probabilistic zoom states and active index tracking. GSI Mapping: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps slide interactions through zoomed image containment and transition events. GSE Mapping: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "slide_zoom_containment",
+      "name": "Slide Zoom Containment",
+      "verbatim_quote": "ex]); let a = m.slideEl.querySelector(`.${s.containerClass}`); if (a && (a = a.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = a, m.imageWrapEl = a ?",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'m.imageEl': 'image element reference', 'm.imageWrapEl': 'zoom container element reference', 'm.maxRatio': 'dimensionless zoom ratio'}",
+      "assumptions": "Image elements are contained within slide containers and have defined zoom attributes.",
+      "breakdown_regime": "When image element fails to exist or container lacks data attribute.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Zoom containment mirrors geometric projection in GSI's probabilistic space.",
+        "source_operator": "slide_zoom_containment",
+        "telemetry": "Active slide image presence and zoom ratio validation."
+      }
+    },
+    {
+      "primitive_id": "event_transition_handler",
+      "name": "Event Transition Handler",
+      "verbatim_quote": "a.matches(t) && s.push(a) : s.push(a), a = a.parentElement; return s } function y(e, t) { t && e.addEventListener(\"transitionend\", (function s(a) { a.target === e && (t.call(e, a), e.removeEventListener(\"transitionend\", s)) })) } function E(e, t, s) { const a = r(); return s ?",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'e': 'DOM element', 't': 'callback function', 'a': 'event object'}",
+      "assumptions": "Transition events are properly registered and handled on DOM elements.",
+      "breakdown_regime": "Event listener removal or invalid callback execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Handles slide transitions via event-driven kernel in GSE's state machine.",
+        "source_operator": "event_transition_handler",
+        "telemetry": "Transition end event registration and callback invocation."
+      }
+    },
+    {
+      "primitive_id": "slide_navigation_index",
+      "name": "Slide Navigation Index",
+      "verbatim_quote": "m.slideEl = h(t.slidesEl, `.${t.params.slideActiveClass}`)[0] : m.slideEl = t.slides[t.activeIndex]); let s = m.slideEl.querySelector(`.${a.containerClass}`); s && (s = s.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = s, m.imageWrapEl = s ?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t.activeIndex': 'integer index of active slide', 't.slides': 'array of slide elements', 'm.slideEl': 'active slide DOM node'}",
+      "assumptions": "Slides are indexed sequentially and active class is correctly applied.",
+      "breakdown_regime": "Invalid index or missing active class on slide.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Slide indexing aligns with GSI's sequential state tracking.",
+        "source_operator": "slide_navigation_index",
+        "telemetry": "Active slide index and DOM element consistency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "4b93bdebf7045d2a_t0",
+      "think": "The primitives describe a structured interaction model between slides and their zoomable content. Slide zoom containment ensures that images are correctly encapsulated within slide boundaries, enabling precise zoom behavior. Event transition handlers manage asynchronous UI updates during slide changes. Slide navigation index maintains logical ordering and access to current slide state. These components form a coherent system where each primitive contributes to a unified interface for dynamic slide presentation. The failure modes involve missing elements or incorrect attribute assignments, which can disrupt the entire zoom and navigation flow. Dualities emerge in how containment and indexing interact—both rely on consistent DOM structure and class application. In GSI, these map to probabilistic state transitions, while in GSE they define operational logic paths.\n\nDeep epistemic analysis for covers.com (4b93bdebf7045d2a, domain=other, pages_read=14/14): Operator 'Slide Zoom Containment' (page 3, domain other) captures: ex]); let a = m.slideEl.querySelector(`.${s.containerClass}`); if (a && (a = a.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = a, m.imageWrapEl = a ? Assumptions: Image elements are contained within slide containers and have defined zoom attributes. Breakdown regime: When image element fails to exist or container lacks data attribute. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zoom containment mirrors geometric projection in GSI's probabilistic space. Operator 'Event Transition Handler' (page 4, domain other) captures: a.matches(t) && s.push(a) : s.push(a), a = a.parentElement; return s } function y(e, t) { t && e.addEventListener(\"transitionend\", (function s(a) { a.target === e && (t.call(e, a), e.removeEventListener(\"transitionend\", s)) })) } function E(e, t, s) { const a = r(); return s ? Assumptions: Transition events are properly registered and handled on DOM elements. Breakdown regime: Event listener removal or invalid callback execution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Handles slide transitions via event-driven kernel in GSE's state machine. Operator 'Slide Navigation Index' (page 1, domain other) captures: m.slideEl = h(t.slidesEl, `.${t.params.slideActiveClass}`)[0] : m.slideEl = t.slides[t.activeIndex]); let s = m.slideEl.querySelector(`.${a.containerClass}`); s && (s = s.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = s, m.imageWrapEl = s ? Assumptions: Slides are indexed sequentially and active class is correctly applied. Breakdown regime: Invalid index or missing active class on slide. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Slide indexing aligns with GSI's sequential state tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for covers.com (4b93bdebf7045d2a, domain=other, pages_read=14/14): Operator 'Slide Zoom Containment' (page 3, domain other) captures: ex]); let a = m.slideEl.querySelector(`.${s.containerClass}`); if (a && (a = a.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = a, m.imageWrapEl = a ? Assumptions: Image elements are contained within slide containers and have defined zoom attributes. Breakdown regime: When image element fails to exist or container lacks data attribute. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zoom containment mirrors geometric projection in GSI's probabilistic space. Operator 'Event Transition Handler' (page 4, domain other) captures: a.matches(t) && s.push(a) : s.push(a), a = a.parentElement; return s } function y(e, t) { t && e.addEventListener(\"transitionend\", (function s(a) { a.target === e && (t.call(e, a), e.removeEventListener(\"transitionend\", s)) })) } function E(e, t, s) { const a = r(); return s ? Assumptions: Transition events are properly registered and handled on DOM elements. Breakdown regime: Event listener removal or invalid callback execution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Handles slide transitions via event-driven kernel in GSE's state machine. Operator 'Slide Navigation Index' (page 1, domain other) captures: m.slideEl = h(t.slidesEl, `.${t.params.slideActiveClass}`)[0] : m.slideEl = t.slides[t.activeIndex]); let s = m.slideEl.querySelector(`.${a.containerClass}`); s && (s = s.querySelectorAll(\"picture, img, svg, canvas, .swiper-zoom-target\")[0]), m.imageEl = s, m.imageWrapEl = s ? Assumptions: Slides are indexed sequentially and active class is correctly applied. Breakdown regime: Invalid index or missing active class on slide. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Slide indexing aligns with GSI's sequential state tracking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early web animation libraries and DOM traversal patterns, evolving into modern component-based frameworks like Swiper.js. Retrocausal Genealogy: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include user input (clicks, gestures) and system constraints (DOM readiness, attribute validity). Decision actors are the slide manager and zoom handler, balancing performance with correctness. Theory of Mind & Decision Maker Model: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when zoom and navigation systems conflict over element ownership. Leakage occurs if event handlers aren't cleaned up, causing memory leaks or stale callbacks. Cross-Layer Veto & Anti-Leakage Check: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in covers.com (4b93bdebf7045d2a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

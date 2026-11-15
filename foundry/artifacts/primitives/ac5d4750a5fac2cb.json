@@ -1,0 +1,95 @@
+{
+  "book_id": "ac5d4750a5fac2cb",
+  "source_status": "COMPLETE",
+  "title": "ragflow-governance",
+  "file_name": "ragflow-governance.md",
+  "sha256": "ac5d4750a5fac2cb9f0530723845c0c5f9d49d840acbc24118bbd3a4a6567adc",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "rag_evidence_retrieval_rules",
+      "name": "RAG Evidence Retrieval Rules",
+      "verbatim_quote": "--## User Value When RAG governance is active: - Brain answers are always grounded in verifiable, dated, tier-classified evidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a tiered evidence classification system exists with defined tiers T1 through T6.",
+      "breakdown_regime": "Fails if any rule is violated, leading to unverified answers or parametric hallucinations.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps RAG Evidence Retrieval Rules to conformal prediction intervals in GSI, ensuring every forecast includes verifiable empirical evidence.",
+        "source_operator": "rag_evidence_retrieval_rules",
+        "telemetry": "Proportion of queries returning \"insufficient evidence\" vs. those with retrieved evidence."
+      }
+    },
+    {
+      "primitive_id": "evidence_vault_injection",
+      "name": "Evidence Vault Injection Protocol",
+      "verbatim_quote": "- Users can see exactly what sources backed an answer (Evidence Drawer).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the existence of an immutable evidence vault and a deterministic claim governance scanner.",
+      "breakdown_regime": "Breaks down if vault integrity is compromised or scanner is bypassed, allowing unvetted outputs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the injection protocol to a conformal calibration loop in GSI, where each prediction is anchored to a specific piece of historical data.",
+        "source_operator": "evidence_vault_injection",
+        "telemetry": "Rate of claims flagged as requiring manual override after scanner pass."
+      }
+    },
+    {
+      "primitive_id": "tiered_evidence_classification",
+      "name": "Tiered Evidence Classification System",
+      "verbatim_quote": "- The model never fills evidence gaps with parametric sports knowledge — an unanswered question produces \"insufficient evidence\" rather than a confident but fabricated answer.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes a strict hierarchy of evidence quality with T1 being the highest and T6 the lowest.",
+      "breakdown_regime": "Degenerates into parametric fallback if T4 or lower evidence is forced into the retrieval pool.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps tier classifications to GSI probability thresholds, where T1 corresponds to high-certainty events and T4 to low-confidence predictions.",
+        "source_operator": "tiered_evidence_classification",
+        "telemetry": "Average tier level of evidence used per query type and subscription tier."
+      }
+    },
+    {
+      "primitive_id": "rag_retrieval_audit_log",
+      "name": "RAG Retrieval Audit Logging",
+      "verbatim_quote": "This is forbidden in Sports OS — empty retrieval must produce a \"cannot answer without evidence\" response, not a hallucinated answer.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Assumes the ability to deterministically log all retrieval metadata.",
+      "breakdown_regime": "Fails if logging is incomplete or tampered with, breaking reproducibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the audit log to a state-transition record in GSE, tracking the exact sequence of retrievals and their outcomes.",
+        "source_operator": "rag_retrieval_audit_log",
+        "telemetry": "Completeness rate of audit logs per retrieval event."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ac5d4750a5fac2cb_t0",
+      "think": "The core challenge is preventing RAG systems from hallucinating when evidence is absent. This is addressed by enforcing a strict tiered evidence gating mechanism. When no evidence above a minimum threshold is found, the system must return a definitive `INSUFFICIENT_EVIDENCE` signal rather than generating an answer from parametric knowledge. This is mathematically equivalent to a conformal prediction set that shrinks to a null set when data fails a coverage test. The audit trail ensures that every answer can be traced back to its original source, providing a transparent and verifiable chain of reasoning. In GSI, this maps directly to the requirement that every probabilistic forecast must be accompanied by a set of historical calibration data points. In GSE, it enforces that state transitions are only executed when there is sufficient empirical confirmation, preventing speculative actions based on incomplete information.\n\nDeep epistemic analysis for ragflow-governance (ac5d4750a5fac2cb, domain=other, pages_read=5/5): Operator 'RAG Evidence Retrieval Rules' (page 1, domain other) captures: --## User Value When RAG governance is active: - Brain answers are always grounded in verifiable, dated, tier-classified evidence. Assumptions: Assumes a tiered evidence classification system exists with defined tiers T1 through T6. Breakdown regime: Fails if any rule is violated, leading to unverified answers or parametric hallucinations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps RAG Evidence Retrieval Rules to conformal prediction intervals in GSI, ensuring every forecast includes verifiable empirical evidence. Operator 'Evidence Vault Injection Protocol' (page 1, domain other) captures: - Users can see exactly what sources backed an answer (Evidence Drawer). Assumptions: Assumes the existence of an immutable evidence vault and a deterministic claim governance scanner. Breakdown regime: Breaks down if vault integrity is compromised or scanner is bypassed, allowing unvetted outputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the injection protocol to a conformal calibration loop in GSI, where each prediction is anchored to a specific piece of historical data. Operator 'Tiered Evidence Classification System' (page 1, domain other) captures: - The model never fills evidence gaps with parametric sports knowledge — an unanswered question produces \"insufficient evidence\" rather than a confident but fabricated answer. Assumptions: Assumes a strict hierarchy of evidence quality with T1 being the highest and T6 the lowest. Breakdown regime: Degenerates into parametric fallback if T4 or lower evidence is forced into the retrieval pool. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps tier classifications to GSI probability thresholds, where T1 corresponds to high-certainty events and T4 to low-confidence predictions. Operator 'RAG Retrieval Audit Logging' (page 1, domain other) captures: This is forbidden in Sports OS — empty retrieval must produce a \"cannot answer without evidence\" response, not a hallucinated answer. Assumptions: Assumes the ability to deterministically log all retrieval metadata. Breakdown regime: Fails if logging is incomplete or tampered with, breaking reproducibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the audit log to a state-transition record in GSE, tracking the exact sequence of retrievals and their outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ragflow-governance (ac5d4750a5fac2cb, domain=other, pages_read=5/5): Operator 'RAG Evidence Retrieval Rules' (page 1, domain other) captures: --## User Value When RAG governance is active: - Brain answers are always grounded in verifiable, dated, tier-classified evidence. Assumptions: Assumes a tiered evidence classification system exists with defined tiers T1 through T6. Breakdown regime: Fails if any rule is violated, leading to unverified answers or parametric hallucinations. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps RAG Evidence Retrieval Rules to conformal prediction intervals in GSI, ensuring every forecast includes verifiable empirical evidence. Operator 'Evidence Vault Injection Protocol' (page 1, domain other) captures: - Users can see exactly what sources backed an answer (Evidence Drawer). Assumptions: Assumes the existence of an immutable evidence vault and a deterministic claim governance scanner. Breakdown regime: Breaks down if vault integrity is compromised or scanner is bypassed, allowing unvetted outputs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the injection protocol to a conformal calibration loop in GSI, where each prediction is anchored to a specific piece of historical data. Operator 'Tiered Evidence Classification System' (page 1, domain other) captures: - The model never fills evidence gaps with parametric sports knowledge — an unanswered question produces \"insufficient evidence\" rather than a confident but fabricated answer. Assumptions: Assumes a strict hierarchy of evidence quality with T1 being the highest and T6 the lowest. Breakdown regime: Degenerates into parametric fallback if T4 or lower evidence is forced into the retrieval pool. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps tier classifications to GSI probability thresholds, where T1 corresponds to high-certainty events and T4 to low-confidence predictions. Operator 'RAG Retrieval Audit Logging' (page 1, domain other) captures: This is forbidden in Sports OS — empty retrieval must produce a \"cannot answer without evidence\" response, not a hallucinated answer. Assumptions: Assumes the ability to deterministically log all retrieval metadata. Breakdown regime: Fails if logging is incomplete or tampered with, breaking reproducibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the audit log to a state-transition record in GSE, tracking the exact sequence of retrievals and their outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early work on automated theorem proving and proof verifiability, evolving through the development of trusted computing base principles and modern machine learning safety. Retrocausal Genealogy: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include sportsbook operators who may prefer faster, less cautious models, and regulatory bodies demanding transparency and accountability. Decision actors model these trade-offs to design incentives for adherence to evidence standards. Theory of Mind & Decision Maker Model: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that different layers (e.g., retrieval and scoring) do not share identical failure modes. Leakage is prevented by strictly separating the parametric model from the evidence store, avoiding information contamination. Cross-Layer Veto & Anti-Leakage Check: Rooted in ragflow-governance (ac5d4750a5fac2cb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

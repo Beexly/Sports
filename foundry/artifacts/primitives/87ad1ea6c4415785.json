@@ -1,0 +1,78 @@
+{
+  "book_id": "87ad1ea6c4415785",
+  "source_status": "COMPLETE",
+  "title": "UQ_HANDOFF_2026-07-24",
+  "file_name": "UQ_HANDOFF_2026-07-24.md",
+  "sha256": "87ad1ea6c4415785088d4b2922d36a51a944bbee632788b45f6b182b6d9568b1",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Inductive Venn-Abers calibration framework unified with conformal prediction and multicalibration audits through isotonic patching and geometric aggregation. Universal Lens: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference via calibrated multiprobabilities and conformal intervals enables uncertainty quantification for predictive sports models under GSI's honesty stack. GSI Mapping: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE leverages partitioned taxonomies and iterative calibration patches to refine state transitions across sport-specific contexts. GSE Mapping: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "linear_time_weighted_pav",
+      "name": "Linear-Time Weighted PAV",
+      "verbatim_quote": "**`packages/prediction-engine/src/calibration/pav.ts`** Extract the linear-time weighted PAV (already inside ivap.ts) into a reusable pure function + Neumaier-safe variants if needed.",
+      "page": 1,
+      "latex": "\\text{PAV}(\\mathbf{x}, \\mathbf{w}) = \\arg\\min_{\\mathbf{y} \\in \\mathcal{S}} \\sum_{i=1}^n w_i (x_i - y_i)^2",
+      "symbol_and_unit_ledger": "{'x_i': 'observation scalar, dimensionless', 'w_i': 'weight scalar, dimensionless', 'y_i': 'output scalar, dimensionless'}",
+      "assumptions": "Data is ordered and weights are non-negative; algorithm maintains monotonicity.",
+      "breakdown_regime": "When input data violates ordering constraints or weight distribution becomes degenerate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used within IVAP and CVAP to compute isotonic regression estimates with linear time complexity.",
+        "source_operator": "linear_time_weighted_pav",
+        "telemetry": "Isotonicity violation rate during training."
+      }
+    },
+    {
+      "primitive_id": "cross_venn_abers_predictor",
+      "name": "Cross Venn-Abers Predictor",
+      "verbatim_quote": "**`packages/prediction-engine/src/calibration/cvap.ts`** Cross Venn-Abers Predictor: K-fold IVAP + geometric-mean aggregation (log-space + Neumaier summation).",
+      "page": 1,
+      "latex": "\\hat{p}_{\\text{CVAP}} = \\left( \\prod_{k=1}^{K} p_k \\right)^{1/K}",
+      "symbol_and_unit_ledger": "{'p_k': 'probability estimate from k-th fold, dimensionless', 'K': 'number of folds, integer'}",
+      "assumptions": "Each fold produces independent and identically distributed predictions; geometric mean reduces variance.",
+      "breakdown_regime": "When folds produce highly disparate or inconsistent estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables robust ensemble prediction by combining multiple IVAP outputs using log-space geometric averaging.",
+        "source_operator": "cross_venn_abers_predictor",
+        "telemetry": "Prediction entropy across folds."
+      }
+    },
+    {
+      "primitive_id": "local_isotonic_patch",
+      "name": "Local Isotonic Patch",
+      "verbatim_quote": "**Local Isotonic Patch** (for multicalibration audit-and-patch) `packages/prediction-engine/src/calibration/local-isotonic-patch.ts` ### Mondrian & Tree-Based Partitioning 5.",
+      "page": 1,
+      "latex": "\\hat{f}_{\\text{patch}}(x) = \\arg\\min_{f \\in \\mathcal{F}} \\sum_{i:x_i \\in B} (y_i - f(x_i))^2 \\quad \\text{s.t. } f \\text{ is monotonic on } B",
+      "symbol_and_unit_ledger": "{'B': 'bin region, dimensionless', 'f': 'monotonic function, dimensionless', 'y_i': 'target value, dimensionless'}",
+      "assumptions": "Bin-wise monotonicity holds; patching preserves global calibration properties.",
+      "breakdown_regime": "When local bins exhibit conflicting trends or insufficient sample size.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps multicalibration audit results to isotonic adjustments that correct calibration drifts in subgroups.",
+        "source_operator": "local_isotonic_patch",
+        "telemetry": "Calibration error reduction post-patch."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "87ad1ea6c4415785_t0",
+      "think": "The primitives form a coherent hierarchy where PAV provides foundational isotonic regression, CVAP aggregates these into robust ensembles, and Local Isotonic Patch ensures subgroup calibration. The mathematical structure supports recursive refinement through audit-and-patch loops. Each operator maintains consistency with the underlying probabilistic model while enabling modular extension. Failure modes arise when assumptions about data order or independence are violated, leading to biased or overconfident predictions. The use of log-space geometric mean in CVAP mitigates extreme outliers, ensuring stable aggregation. The isotonic patching mechanism allows for localized correction without disrupting global calibration, supporting adaptive learning in dynamic environments.\n\nDeep epistemic analysis for UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785, domain=other, pages_read=2/2): Operator 'Linear-Time Weighted PAV' (page 1, domain other) captures: **`packages/prediction-engine/src/calibration/pav.ts`** Extract the linear-time weighted PAV (already inside ivap.ts) into a reusable pure function + Neumaier-safe variants if needed. Assumptions: Data is ordered and weights are non-negative; algorithm maintains monotonicity. Breakdown regime: When input data violates ordering constraints or weight distribution becomes degenerate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used within IVAP and CVAP to compute isotonic regression estimates with linear time complexity. Operator 'Cross Venn-Abers Predictor' (page 1, domain other) captures: **`packages/prediction-engine/src/calibration/cvap.ts`** Cross Venn-Abers Predictor: K-fold IVAP + geometric-mean aggregation (log-space + Neumaier summation). Assumptions: Each fold produces independent and identically distributed predictions; geometric mean reduces variance. Breakdown regime: When folds produce highly disparate or inconsistent estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables robust ensemble prediction by combining multiple IVAP outputs using log-space geometric averaging. Operator 'Local Isotonic Patch' (page 1, domain other) captures: **Local Isotonic Patch** (for multicalibration audit-and-patch) `packages/prediction-engine/src/calibration/local-isotonic-patch.ts` ### Mondrian & Tree-Based Partitioning 5. Assumptions: Bin-wise monotonicity holds; patching preserves global calibration properties. Breakdown regime: When local bins exhibit conflicting trends or insufficient sample size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps multicalibration audit results to isotonic adjustments that correct calibration drifts in subgroups. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785, domain=other, pages_read=2/2): Operator 'Linear-Time Weighted PAV' (page 1, domain other) captures: **`packages/prediction-engine/src/calibration/pav.ts`** Extract the linear-time weighted PAV (already inside ivap.ts) into a reusable pure function + Neumaier-safe variants if needed. Assumptions: Data is ordered and weights are non-negative; algorithm maintains monotonicity. Breakdown regime: When input data violates ordering constraints or weight distribution becomes degenerate. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used within IVAP and CVAP to compute isotonic regression estimates with linear time complexity. Operator 'Cross Venn-Abers Predictor' (page 1, domain other) captures: **`packages/prediction-engine/src/calibration/cvap.ts`** Cross Venn-Abers Predictor: K-fold IVAP + geometric-mean aggregation (log-space + Neumaier summation). Assumptions: Each fold produces independent and identically distributed predictions; geometric mean reduces variance. Breakdown regime: When folds produce highly disparate or inconsistent estimates. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables robust ensemble prediction by combining multiple IVAP outputs using log-space geometric averaging. Operator 'Local Isotonic Patch' (page 1, domain other) captures: **Local Isotonic Patch** (for multicalibration audit-and-patch) `packages/prediction-engine/src/calibration/local-isotonic-patch.ts` ### Mondrian & Tree-Based Partitioning 5. Assumptions: Bin-wise monotonicity holds; patching preserves global calibration properties. Breakdown regime: When local bins exhibit conflicting trends or insufficient sample size. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps multicalibration audit results to isotonic adjustments that correct calibration drifts in subgroups. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Venn-Abers calibration theory (Venn, 1989), extended through Inductive Venn-Abers (Alaa et al., 2020) and generalized to multicalibration frameworks (van der Laan & Alaa, 2025). Retrocausal Genealogy: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial predictors seeking to exploit calibration gaps, and honest calibration auditors enforcing consistency. The system models these interactions through dual feedback loops: one for prediction accuracy and another for calibration integrity. Theory of Mind & Decision Maker Model: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each module operates on distinct data partitions or functional domains. Leakage is prevented by isolating telemetry signals between layers, particularly in the audit-and-patch cycle. Cross-Layer Veto & Anti-Leakage Check: Rooted in UQ_HANDOFF_2026-07-24 (87ad1ea6c4415785), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

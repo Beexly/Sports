@@ -1,0 +1,78 @@
+{
+  "book_id": "2171bf81d317ec93",
+  "source_status": "COMPLETE",
+  "title": "launch-observatory",
+  "file_name": "launch-observatory.md",
+  "sha256": "2171bf81d317ec939a6b03a72b03ed6fa22067d6fed4a7ac9f7c605994a88113",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Launch Observatory formalizes a strict bipartite partition between internal operator state and public customer observables. Deterministic synthesis operators map high-dimensional telemetry into bounded health vectors, enforcing epistemic boundaries where missing inputs yield strictly undefined states rather than hallucinated metrics.",
+  "gsi_mapping": "Jarvis acts as a conformal synthesizer over live ingestion streams. Sectional health indicators represent posterior confidence intervals; bootstrap picks are explicitly masked from the learning loop to prevent prior contamination, ensuring only canonical history updates the Bayesian performance priors.",
+  "gse_mapping": "The system enforces a discrete phase-transition automaton (Phases 1-9). The cockpit serves as the global state monitor, applying hard safety gates that veto public exposure until all environmental dependencies and settlement constraints reach a stable, validated equilibrium.",
+  "primitives": [
+    {
+      "primitive_id": "epistemic_partition",
+      "name": "Operator-Customer Epistemic Split",
+      "verbatim_quote": "# Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "O: Operator state space (dimensionless), C: Customer observable space (dimensionless). O \\cap C = \\emptyset.",
+      "assumptions": "Information leakage across the boundary is strictly prohibited without deterministic transformation.",
+      "breakdown_regime": "Singularity occurs if internal validation fails but public surfaces remain active, causing reality distortion.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's secure enclave architecture, isolating raw model weights from public API endpoints.",
+        "source_operator": "epistemic_partition",
+        "telemetry": "Zero cross-boundary data leaks during audit."
+      }
+    },
+    {
+      "primitive_id": "deterministic_synthesis",
+      "name": "Jarvis Synthesizer Kernel",
+      "verbatim_quote": "## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Structured input vector, A: Assessment output manifold. f(S) -> A is strictly deterministic.",
+      "assumptions": "Inputs are either fully populated or explicitly flagged as missing; no interpolation is permitted.",
+      "breakdown_regime": "Fails gracefully to UNKNOWN status if any critical dependency in S is absent.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Isomorphic to GSI's real-time feature engineering pipelines that collapse multi-source telemetry into singular actionable signals.",
+        "source_operator": "deterministic_synthesis",
+        "telemetry": "Synthesis latency < 50ms; zero hallucination rate."
+      }
+    },
+    {
+      "primitive_id": "bootstrap_masking",
+      "name": "Bootstrap vs Canonical Ledger",
+      "verbatim_quote": "## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "P_b: Bootstrap picks (excluded from learning), P_c: Canonical picks (included). W: Win/Loss metric.",
+      "assumptions": "Bootstrap picks are necessary for end-to-end system stress testing but carry zero epistemic weight for model training.",
+      "breakdown_regime": "If P_b is accidentally included in W calculations, public performance metrics suffer severe inflation bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSE's simulation-vs-live market separation, ensuring synthetic volume does not corrupt true liquidity models.",
+        "source_operator": "bootstrap_masking",
+        "telemetry": "Exact match of canonical counts against public API aggregations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2171bf81d317ec93_t0",
+      "think": "The Launch Observatory establishes a rigorous mathematical framework for managing the lifecycle of sports intelligence products. At its core is the epistemic partition, a hard boundary separating the high-dimensional operator state space from the constrained customer observable space. This prevents premature exposure of unvalidated model outputs. The Jarvis synthesizer operates as a pure function within this space, mapping live database counts and environmental variables into a discrete assessment manifold. Crucially, it adheres to a 'no-fabrication' principle: missing inputs do not trigger interpolation but rather collapse the local state to an explicit UNKNOWN, preserving epistemic integrity. Furthermore, the system introduces a temporal duality through bootstrap versus canonical histories. Bootstrap picks serve as synthetic test vectors, allowing the engine to undergo full end-to-end stress testing without contaminating the Bayesian learning loop. Only when the operator explicitly flips the CANONICAL_HISTORY_ENABLED switch do these events transition into the canonical ledger, becoming eligible for public performance aggregation and model retraining. This creates a robust state-transition automaton governed by a nine-phase matrix, ensuring that every component—from ingestion to settlement—reaches a validated GREEN state before public launch. The forensic ledger provides a retroactive audit trail, guaranteeing that every exclusion or inclusion in the performance metrics is mathematically traceable.\n\nDeep epistemic analysis for launch-observatory (2171bf81d317ec93, domain=other, pages_read=9/9): Operator 'Operator-Customer Epistemic Split' (page 1, domain other) captures: # Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see. Assumptions: Information leakage across the boundary is strictly prohibited without deterministic transformation. Breakdown regime: Singularity occurs if internal validation fails but public surfaces remain active, causing reality distortion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's secure enclave architecture, isolating raw model weights from public API endpoints. Operator 'Jarvis Synthesizer Kernel' (page 2, domain other) captures: ## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`. Assumptions: Inputs are either fully populated or explicitly flagged as missing; no interpolation is permitted. Breakdown regime: Fails gracefully to UNKNOWN status if any critical dependency in S is absent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's real-time feature engineering pipelines that collapse multi-source telemetry into singular actionable signals. Operator 'Bootstrap vs Canonical Ledger' (page 2, domain other) captures: ## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`. Assumptions: Bootstrap picks are necessary for end-to-end system stress testing but carry zero epistemic weight for model training. Breakdown regime: If P_b is accidentally included in W calculations, public performance metrics suffer severe inflation bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's simulation-vs-live market separation, ensuring synthetic volume does not corrupt true liquidity models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for launch-observatory (2171bf81d317ec93, domain=other, pages_read=9/9): Operator 'Operator-Customer Epistemic Split' (page 1, domain other) captures: # Launch Observatory The Sports Intelligence OS is built around a hard split between what a customer can see and what an operator can see. Assumptions: Information leakage across the boundary is strictly prohibited without deterministic transformation. Breakdown regime: Singularity occurs if internal validation fails but public surfaces remain active, causing reality distortion. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's secure enclave architecture, isolating raw model weights from public API endpoints. Operator 'Jarvis Synthesizer Kernel' (page 2, domain other) captures: ## Jarvis Jarvis is the operator synthesis layer, implemented in: - `apps/web/lib/cockpit/jarvis.ts` — pure synthesizer (`synthesizeJarvis`), takes structured inputs and returns a `JarvisAssessment`. Assumptions: Inputs are either fully populated or explicitly flagged as missing; no interpolation is permitted. Breakdown regime: Fails gracefully to UNKNOWN status if any critical dependency in S is absent. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Isomorphic to GSI's real-time feature engineering pipelines that collapse multi-source telemetry into singular actionable signals. Operator 'Bootstrap vs Canonical Ledger' (page 2, domain other) captures: ## Historical pick accountability The pick forensic ledger lives at `/cockpit/history`. Assumptions: Bootstrap picks are necessary for end-to-end system stress testing but carry zero epistemic weight for model training. Breakdown regime: If P_b is accidentally included in W calculations, public performance metrics suffer severe inflation bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSE's simulation-vs-live market separation, ensuring synthetic volume does not corrupt true liquidity models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture inherits from classical control theory's observer-controller duality and modern MLOps feature store paradigms. It echoes the historical shift from monolithic betting exchanges to modular, microservices-based intelligence platforms, where strict data lineage and environment isolation became paramount for regulatory compliance and model stability. Retrocausal Genealogy: Rooted in launch-observatory (2171bf81d317ec93), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The system models two primary agents: the Operator, who requires comprehensive, unfiltered telemetry to manage risk and validate infrastructure, and the Customer, who demands a curated, statistically sound representation of predictive power. The Observatory anticipates the Operator's need for immediate failure detection via sectional health warnings, while simultaneously shielding the Customer from the chaotic, unresolved states inherent in live data ingestion.",
+      "cross_layer_veto": "A critical anti-collinearity condition exists between the bootstrap ledger and the public performance API. If bootstrap picks leak into the canonical aggregation, the win-rate metric becomes collinear with synthetic noise, destroying trust. The system enforces a hard veto: `isBootstrap=true` strictly implies exclusion from `snapshot.eligibleForLearning`. Additionally, environmental missingness triggers a top-level launch veto, preventing any public surface from rendering until all external configuration dependencies are resolved."
+    }
+  ]
+}

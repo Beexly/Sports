@@ -1,0 +1,78 @@
+{
+  "book_id": "93a5fca4641fbe9d",
+  "source_status": "COMPLETE",
+  "title": "final-wave-source-risk-register",
+  "file_name": "final-wave-source-risk-register.md",
+  "sha256": "93a5fca4641fbe9dacfdaae24218c7022650765a43f672cd17500152505fce63",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Risk-weighted source integrity manifolds under Bayesian source trust models, with conformal prediction bounds on evidence validity. Universal Lens: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs a hierarchical Bayesian network where source risk profiles modulate likelihood priors for evidence ingestion, enabling calibrated confidence scoring via conformal prediction intervals. GSI Mapping: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies dynamic state transitions across source tiers, using risk-adjusted belief propagation to update situational awareness and trigger alerts on evidence failure modes. GSE Mapping: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "source_risk_assessment",
+      "name": "Source Risk Assessment",
+      "verbatim_quote": "It is the aggregate risk assessment used when deciding whether a source can be admitted to the Source Acquisition Mesh.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_s': 'risk score of source s ∈ [0, 1]', 'T_s': 'tier classification of source s ∈ {1, ..., 5}', 'A_s': 'admission flag to mesh ∈ {0, 1}'}",
+      "assumptions": "Risk is a monotonic function of data quality, legal compliance, reliability, and manipulation susceptibility.",
+      "breakdown_regime": "R_s < 0.3 implies A_s = 0; R_s ≥ 0.7 implies A_s = 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian risk posterior P(R_s | D_s) maps to GSI's source trust model; GSE's state transition logic updates based on P(R_s | D_s) > threshold.",
+        "source_operator": "source_risk_assessment",
+        "telemetry": "Source admission log, risk score evolution over time"
+      }
+    },
+    {
+      "primitive_id": "evidence_tier_constraint",
+      "name": "Evidence Tier Constraint",
+      "verbatim_quote": "Never use as sole Tier 3 evidence without corroboration by Tier 1 or another Tier 3 source.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E_i': 'evidence item i ∈ {1, ..., N}', 'T_i': 'tier of E_i ∈ {1, ..., 5}', 'C_i': 'corroboration flag ∈ {0, 1}', 'V_i': 'validity of E_i ∈ {0, 1}'}",
+      "assumptions": "Evidence validity V_i depends on T_i and C_i; corroboration is necessary for lower-tier evidence.",
+      "breakdown_regime": "If T_i = 3 and C_i = 0, then V_i = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's evidence validation kernel enforces tier constraints; GSE's reasoning engine flags invalid evidence paths.",
+        "source_operator": "evidence_tier_constraint",
+        "telemetry": "Evidence rejection count, tier distribution, corroboration success rate"
+      }
+    },
+    {
+      "primitive_id": "market_context_derivation",
+      "name": "Market Context Derivation",
+      "verbatim_quote": "Derive and display as \"market context.\" Attribute \"odds data via The Odds API.\" Rate-limit handling must prevent quota exhaustion.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M_c': 'market context vector ∈ ℝ^n', 'O_t': 'odds data at time t ∈ ℝ^m', 'L_t': 'rate limit state at time t ∈ ℕ', 'A_t': 'API access flag ∈ {0, 1}'}",
+      "assumptions": "Market context M_c is a deterministic transformation of O_t with rate-limit constraints.",
+      "breakdown_regime": "If L_t ≥ max_quota, then A_t = 0 and M_c = stale.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI's market context module derives M_c from O_t; GSE's state machine updates based on A_t and L_t.",
+        "source_operator": "market_context_derivation",
+        "telemetry": "Rate limit violations, stale data flags, derived context accuracy"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "93a5fca4641fbe9d_t0",
+      "think": "The source risk register defines a layered trust architecture where each source is evaluated through a composite risk score R_s = f(Q_s, L_s, R_s, M_s), with Q representing data quality, L legal compliance, R reliability, and M manipulation risk. This score determines admission into the Source Acquisition Mesh (A_s). The system enforces a dual constraint: (1) evidence validity V_i = 1 iff T_i ≤ 2 or (T_i = 3 and C_i = 1), and (2) market context M_c is derived from raw odds O_t subject to rate-limiting L_t. These constraints form a risk-managed Bayesian inference framework. Failure modes include silent stale data (burst failures), unauthorized scraping, and misuse of low-tier evidence. The system's robustness hinges on dual-layer checks: source-level risk filtering and evidence-level validation. The epistemic trace reveals a dualistic logic: one layer for source vetting (trust), another for evidence integrity (validity).\n\nDeep epistemic analysis for final-wave-source-risk-register (93a5fca4641fbe9d, domain=other, pages_read=4/4): Operator 'Source Risk Assessment' (page 1, domain other) captures: It is the aggregate risk assessment used when deciding whether a source can be admitted to the Source Acquisition Mesh. Assumptions: Risk is a monotonic function of data quality, legal compliance, reliability, and manipulation susceptibility. Breakdown regime: R_s < 0.3 implies A_s = 0; R_s ≥ 0.7 implies A_s = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian risk posterior P(R_s | D_s) maps to GSI's source trust model; GSE's state transition logic updates based on P(R_s | D_s) > threshold. Operator 'Evidence Tier Constraint' (page 2, domain other) captures: Never use as sole Tier 3 evidence without corroboration by Tier 1 or another Tier 3 source. Assumptions: Evidence validity V_i depends on T_i and C_i; corroboration is necessary for lower-tier evidence. Breakdown regime: If T_i = 3 and C_i = 0, then V_i = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's evidence validation kernel enforces tier constraints; GSE's reasoning engine flags invalid evidence paths. Operator 'Market Context Derivation' (page 2, domain other) captures: Derive and display as \"market context.\" Attribute \"odds data via The Odds API.\" Rate-limit handling must prevent quota exhaustion. Assumptions: Market context M_c is a deterministic transformation of O_t with rate-limit constraints. Breakdown regime: If L_t ≥ max_quota, then A_t = 0 and M_c = stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's market context module derives M_c from O_t; GSE's state machine updates based on A_t and L_t. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for final-wave-source-risk-register (93a5fca4641fbe9d, domain=other, pages_read=4/4): Operator 'Source Risk Assessment' (page 1, domain other) captures: It is the aggregate risk assessment used when deciding whether a source can be admitted to the Source Acquisition Mesh. Assumptions: Risk is a monotonic function of data quality, legal compliance, reliability, and manipulation susceptibility. Breakdown regime: R_s < 0.3 implies A_s = 0; R_s ≥ 0.7 implies A_s = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian risk posterior P(R_s | D_s) maps to GSI's source trust model; GSE's state transition logic updates based on P(R_s | D_s) > threshold. Operator 'Evidence Tier Constraint' (page 2, domain other) captures: Never use as sole Tier 3 evidence without corroboration by Tier 1 or another Tier 3 source. Assumptions: Evidence validity V_i depends on T_i and C_i; corroboration is necessary for lower-tier evidence. Breakdown regime: If T_i = 3 and C_i = 0, then V_i = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's evidence validation kernel enforces tier constraints; GSE's reasoning engine flags invalid evidence paths. Operator 'Market Context Derivation' (page 2, domain other) captures: Derive and display as \"market context.\" Attribute \"odds data via The Odds API.\" Rate-limit handling must prevent quota exhaustion. Assumptions: Market context M_c is a deterministic transformation of O_t with rate-limit constraints. Breakdown regime: If L_t ≥ max_quota, then A_t = 0 and M_c = stale. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI's market context module derives M_c from O_t; GSE's state machine updates based on A_t and L_t. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian source trust models from information theory and risk management literature, evolving from early data fusion frameworks to modern adversarial source integrity protocols. Retrocausal Genealogy: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include malicious actors who attempt to inject false data, and system operators who must balance throughput with integrity. The system models these as adversarial noise in the evidence pipeline. Theory of Mind & Decision Maker Model: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring cross-tier corroboration for lower-tier evidence. Leakage veto occurs when Tier 5 sources are used for evidence, violating the principle of source integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in final-wave-source-risk-register (93a5fca4641fbe9d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

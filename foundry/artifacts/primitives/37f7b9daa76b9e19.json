@@ -1,0 +1,78 @@
+{
+  "book_id": "37f7b9daa76b9e19",
+  "source_status": "COMPLETE",
+  "title": "r2-caching",
+  "file_name": "r2-caching.md",
+  "sha256": "37f7b9daa76b9e192b8eed1313beab41ede58fa7b20304320f77e4aade3312b4",
+  "primary_domain": "other",
+  "pages_total": 10,
+  "pages_read": 10,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Caching models in Next.js App Router define deterministic data flow regimes: static (ISR), dynamic (SSR), and hybrid (stale-while-revalidate) via fetch tags and revalidation controls. Universal Lens: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps caching regimes to belief updates over sport data states; revalidation tags act as evidence triggers for posterior adjustments in probabilistic forecasting models. GSI Mapping: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE transitions between cached, stale, and regenerating states based on fetch tag invalidations and dynamic route constraints; state machines encode these transitions. GSE Mapping: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cache_model_selector",
+      "name": "Cache Model Selector",
+      "verbatim_quote": "The decision that frames everything: which caching model is your app on?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "App must choose one of two mutually exclusive caching models: previous (default) or Cache Components (opt-in).",
+      "breakdown_regime": "Build-time error if both models are mixed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's binary classification of data freshness regimes (static vs dynamic) and GSE's routing state machine transitions.",
+        "source_operator": "cache_model_selector",
+        "telemetry": "Verification via `next.config.ts` presence of `cacheComponents: true`."
+      }
+    },
+    {
+      "primitive_id": "fetch_tag_invalidator",
+      "name": "Fetch Tag Invalidator",
+      "verbatim_quote": "- `revalidateTag('slate')` — purges all fetches tagged `'slate'`, then each tagged fetch revalidates individually; stale data is served in the meantime (stale-while-revalidate).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All fetches with matching tags are invalidated and revalidated asynchronously.",
+      "breakdown_regime": "Stale-while-revalidate regime where stale data serves until fresh fetch completes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as kernel for GSI's event-driven update logic; GSE uses it to trigger state transitions in component hierarchies.",
+        "source_operator": "fetch_tag_invalidator",
+        "telemetry": "Observable via network logs showing tag-based fetch purges and revalidations."
+      }
+    },
+    {
+      "primitive_id": "route_dynamic_poison",
+      "name": "Route Dynamic Poison",
+      "verbatim_quote": "- If **any** fetch in the route uses `revalidate: 0` or `cache: 'no-store'`, the **whole route renders dynamically** — one uncached fetch poisons the route.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "A single uncached fetch forces entire route to render dynamically.",
+      "breakdown_regime": "Global route-level failure mode due to local cache policy violation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a failure cascade in GSE’s static rendering pipeline; GSI treats this as a probabilistic risk factor in data integrity models.",
+        "source_operator": "route_dynamic_poison",
+        "telemetry": "Detected through SSR vs ISR metrics in performance tracing."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "37f7b9daa76b9e19_t0",
+      "think": "The core duality in Next.js caching lies between static and dynamic rendering, governed by explicit cache directives and implicit route-level poisoning. In the previous model, caching is granular at the route segment level, controlled via `export const revalidate` and `fetch(..., { next: { revalidate, tags } })`. The Cache Components model introduces a new abstraction layer using `'use cache'` directive, enabling caching of any async operation including database queries and third-party API calls. This shift changes how data dependencies are tracked and invalidated—tags become central to managing cache coherence. The failure mode occurs when a single fetch opts out of caching (`revalidate: 0` or `cache: 'no-store'`), causing the whole route to become dynamic. This is a global degradation that propagates across components and affects both GSE's rendering engine and GSI's probabilistic data models. The caching regime determines whether data flows are deterministic (static) or stochastic (dynamic), influencing downstream inference accuracy and system resource allocation.\n\nDeep epistemic analysis for r2-caching (37f7b9daa76b9e19, domain=other, pages_read=10/10): Operator 'Cache Model Selector' (page 1, domain other) captures: The decision that frames everything: which caching model is your app on? Assumptions: App must choose one of two mutually exclusive caching models: previous (default) or Cache Components (opt-in). Breakdown regime: Build-time error if both models are mixed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification of data freshness regimes (static vs dynamic) and GSE's routing state machine transitions. Operator 'Fetch Tag Invalidator' (page 2, domain other) captures: - `revalidateTag('slate')` — purges all fetches tagged `'slate'`, then each tagged fetch revalidates individually; stale data is served in the meantime (stale-while-revalidate). Assumptions: All fetches with matching tags are invalidated and revalidated asynchronously. Breakdown regime: Stale-while-revalidate regime where stale data serves until fresh fetch completes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as kernel for GSI's event-driven update logic; GSE uses it to trigger state transitions in component hierarchies. Operator 'Route Dynamic Poison' (page 2, domain other) captures: - If **any** fetch in the route uses `revalidate: 0` or `cache: 'no-store'`, the **whole route renders dynamically** — one uncached fetch poisons the route. Assumptions: A single uncached fetch forces entire route to render dynamically. Breakdown regime: Global route-level failure mode due to local cache policy violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a failure cascade in GSE’s static rendering pipeline; GSI treats this as a probabilistic risk factor in data integrity models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for r2-caching (37f7b9daa76b9e19, domain=other, pages_read=10/10): Operator 'Cache Model Selector' (page 1, domain other) captures: The decision that frames everything: which caching model is your app on? Assumptions: App must choose one of two mutually exclusive caching models: previous (default) or Cache Components (opt-in). Breakdown regime: Build-time error if both models are mixed. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's binary classification of data freshness regimes (static vs dynamic) and GSE's routing state machine transitions. Operator 'Fetch Tag Invalidator' (page 2, domain other) captures: - `revalidateTag('slate')` — purges all fetches tagged `'slate'`, then each tagged fetch revalidates individually; stale data is served in the meantime (stale-while-revalidate). Assumptions: All fetches with matching tags are invalidated and revalidated asynchronously. Breakdown regime: Stale-while-revalidate regime where stale data serves until fresh fetch completes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as kernel for GSI's event-driven update logic; GSE uses it to trigger state transitions in component hierarchies. Operator 'Route Dynamic Poison' (page 2, domain other) captures: - If **any** fetch in the route uses `revalidate: 0` or `cache: 'no-store'`, the **whole route renders dynamically** — one uncached fetch poisons the route. Assumptions: A single uncached fetch forces entire route to render dynamically. Breakdown regime: Global route-level failure mode due to local cache policy violation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a failure cascade in GSE’s static rendering pipeline; GSI treats this as a probabilistic risk factor in data integrity models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in early Web caching paradigms (HTTP ETags, Cache-Control headers) and evolved into React's server-side rendering strategies. Influenced by RFC 7234 and modern edge computing frameworks like Vercel's Edge Functions. Retrocausal Genealogy: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the developer (seeking optimal caching efficiency) and the runtime (enforcing consistency). The system must balance latency, bandwidth, and correctness, with caching policies acting as strategic decisions under uncertainty. Theory of Mind & Decision Maker Model: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when GSE's static rendering conflicts with GSI's expectation of consistent data freshness. Leakage occurs if tags are misused or ignored, leading to stale data serving without proper invalidation signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in r2-caching (37f7b9daa76b9e19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

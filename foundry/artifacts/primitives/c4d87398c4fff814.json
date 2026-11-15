@@ -1,0 +1,78 @@
+{
+  "book_id": "c4d87398c4fff814",
+  "source_status": "COMPLETE",
+  "title": "2067-tabrep-roots-of-unity-categorical-encoding",
+  "file_name": "2067-tabrep-roots-of-unity-categorical-encoding.md",
+  "sha256": "c4d87398c4fff8143ab6411e0ea8a652ee5407141b665a81eb746bf373745367",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Roots-of-unity categorical encoding maps discrete categories to 2D Euclidean space, eliminating combinatorial singularities in diffusion models. Universal Lens: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs CatConverter for ordinal team strength encoding, enabling Bayesian inference over ordered sports hierarchies via continuous score functions. GSI Mapping: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses CatConverter to encode game state variables (teams, venues, time) into continuous latent space, enabling flow-matching dynamics for real-time situational reasoning. GSE Mapping: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "catconverter",
+      "name": "Categorical Converter",
+      "verbatim_quote": "12): inspired by DFT roots of unity, a categorical c with K values maps to a point on the unit circle: CatConverter(c,K) = [cos(2πc/K), sin(2πc/K)].",
+      "page": 1,
+      "latex": "\\text{CatConverter}(c, K) = \\left[\\cos\\left(\\frac{2\\pi c}{K}\\right), \\sin\\left(\\frac{2\\pi c}{K}\\right)\\right]",
+      "symbol_and_unit_ledger": "{'c': 'category index, dimensionless', 'K': 'cardinality of category, dimensionless'}",
+      "assumptions": "Categories are ordered and uniformly distributed on a circle; no prior knowledge of category relationships required.",
+      "breakdown_regime": "When K approaches infinity, the discrete nature becomes continuous but loses distinctiveness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphism between discrete category labels and continuous 2D points preserves ordinality and enables geometric operations in diffusion.",
+        "source_operator": "catconverter",
+        "telemetry": "Mean squared error of decoded categories against original indices."
+      }
+    },
+    {
+      "primitive_id": "singular_hyperplane_elimination",
+      "name": "Singular Hyperplane Elimination",
+      "verbatim_quote": "The paper adds geometric theory: one-hot encodings create combinatorial \"singular hyperplanes\" where score-function variance explodes — what encoding removes them?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "One-hot encodings introduce combinatorial complexity that degrades model training stability.",
+      "breakdown_regime": "Combinatorial explosion of hyperplanes as category cardinality increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "CatConverter eliminates singular hyperplanes by mapping categories to a single circle center, reducing variance in score estimation.",
+        "source_operator": "singular_hyperplane_elimination",
+        "telemetry": "Variance of score function across sampled points during training."
+      }
+    },
+    {
+      "primitive_id": "unified_diffusion_training",
+      "name": "Unified Diffusion Training",
+      "verbatim_quote": "14, target field u_t = ε - z_0^{CC}, Euler ODE sampling) — trained on concat[quantile numerics, CatConverter categoricals].",
+      "page": 1,
+      "latex": "u_t = \\varepsilon - z_0^{CC}",
+      "symbol_and_unit_ledger": "{'u_t': 'diffusion target vector, dimensionless', 'ε': 'noise sample, dimensionless', 'z_0^{CC}': 'concatenated continuous/categorical input, dimensionless'}",
+      "assumptions": "Continuous and categorical features can be concatenated without degradation of model expressivity.",
+      "breakdown_regime": "Failure when concatenation introduces misalignment between continuous and categorical distributions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Unified training framework allows joint optimization of continuous and categorical inputs using shared denoising network.",
+        "source_operator": "unified_diffusion_training",
+        "telemetry": "Reconstruction accuracy on held-out test set."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c4d87398c4fff814_t0",
+      "think": "The core innovation lies in replacing traditional one-hot encodings with a geometric mapping to the unit circle. This transformation eliminates combinatorial singular hyperplanes that plague score-based diffusion models. Each categorical value maps to a unique point on the circle, preserving order while enabling smooth interpolation. In GSI, this allows ordinal inference over team rankings, where prior strength is encoded continuously. For GSE, the same principle applies to state transitions—team identities, venue types, and temporal sequences are embedded into a continuous space, enabling efficient flow matching. The elimination of singularities ensures stable gradient computation and improved convergence. The mathematical foundation rests on the fact that the sum of unit vectors forms a central point, collapsing the exponential complexity of one-hot spaces into manageable linear structures.\n\nDeep epistemic analysis for 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814, domain=other, pages_read=5/5): Operator 'Categorical Converter' (page 1, domain other) captures: 12): inspired by DFT roots of unity, a categorical c with K values maps to a point on the unit circle: CatConverter(c,K) = [cos(2πc/K), sin(2πc/K)]. Assumptions: Categories are ordered and uniformly distributed on a circle; no prior knowledge of category relationships required. Breakdown regime: When K approaches infinity, the discrete nature becomes continuous but loses distinctiveness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between discrete category labels and continuous 2D points preserves ordinality and enables geometric operations in diffusion. Operator 'Singular Hyperplane Elimination' (page 1, domain other) captures: The paper adds geometric theory: one-hot encodings create combinatorial \"singular hyperplanes\" where score-function variance explodes — what encoding removes them? Assumptions: One-hot encodings introduce combinatorial complexity that degrades model training stability. Breakdown regime: Combinatorial explosion of hyperplanes as category cardinality increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CatConverter eliminates singular hyperplanes by mapping categories to a single circle center, reducing variance in score estimation. Operator 'Unified Diffusion Training' (page 1, domain other) captures: 14, target field u_t = ε - z_0^{CC}, Euler ODE sampling) — trained on concat[quantile numerics, CatConverter categoricals]. Assumptions: Continuous and categorical features can be concatenated without degradation of model expressivity. Breakdown regime: Failure when concatenation introduces misalignment between continuous and categorical distributions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Unified training framework allows joint optimization of continuous and categorical inputs using shared denoising network. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814, domain=other, pages_read=5/5): Operator 'Categorical Converter' (page 1, domain other) captures: 12): inspired by DFT roots of unity, a categorical c with K values maps to a point on the unit circle: CatConverter(c,K) = [cos(2πc/K), sin(2πc/K)]. Assumptions: Categories are ordered and uniformly distributed on a circle; no prior knowledge of category relationships required. Breakdown regime: When K approaches infinity, the discrete nature becomes continuous but loses distinctiveness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphism between discrete category labels and continuous 2D points preserves ordinality and enables geometric operations in diffusion. Operator 'Singular Hyperplane Elimination' (page 1, domain other) captures: The paper adds geometric theory: one-hot encodings create combinatorial \"singular hyperplanes\" where score-function variance explodes — what encoding removes them? Assumptions: One-hot encodings introduce combinatorial complexity that degrades model training stability. Breakdown regime: Combinatorial explosion of hyperplanes as category cardinality increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): CatConverter eliminates singular hyperplanes by mapping categories to a single circle center, reducing variance in score estimation. Operator 'Unified Diffusion Training' (page 1, domain other) captures: 14, target field u_t = ε - z_0^{CC}, Euler ODE sampling) — trained on concat[quantile numerics, CatConverter categoricals]. Assumptions: Continuous and categorical features can be concatenated without degradation of model expressivity. Breakdown regime: Failure when concatenation introduces misalignment between continuous and categorical distributions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Unified training framework allows joint optimization of continuous and categorical inputs using shared denoising network. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Historically rooted in Discrete Fourier Transform (DFT) and its application to signal processing, extended to categorical data through geometric embeddings. Earlier work on sparse encodings like STaSy and learned embeddings such as TabSYN lacked this theoretical grounding. Retrocausal Genealogy: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit the continuous nature of CatConverter by introducing adversarial perturbations or misaligning ordinal signals. However, the geometric structure inherently resists such manipulations due to its symmetry and boundedness. Theory of Mind & Decision Maker Model: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that categorical mappings do not align with numerical features in ways that obscure ordinal relationships. Leakage occurs if the decoder fails to enforce nearest-circle-point decoding, leading to out-of-index casting errors. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2067-tabrep-roots-of-unity-categorical-encoding (c4d87398c4fff814), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

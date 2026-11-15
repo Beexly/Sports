@@ -183,3 +183,29 @@ def test_synthesizer_runs_readonly_and_forbids_direct_mind_jsonl(tmp_path: Path)
     lines = [json.loads(line) for line in out_feed.read_text(encoding="utf-8").splitlines() if line.strip()]
     assert len(lines) == 2
     assert {r["record_type"] for r in lines} == {"sovereign_primitive", "sovereign_reasoning_trace"}
+    assert payload["counts"]["trainer_feed_shards_emitted"] == 1
+
+    # Byte-capped sharding keeps each file under the limit while deleting the monolith
+    sharded_payload = synthesize_arxiv_and_sovereign_corpus(
+        wt_primitives_dir=wt_prims,
+        shared_primitives_dir=shared_prims,
+        foundry_db_path=db_path,
+        gatekeeper_py=dummy_gatekeeper,
+        arxiv_docs_dir=arxiv_dir,
+        synthesis_out_path=out_json,
+        trainer_feed_out_path=out_feed,
+        max_feed_shard_bytes=180,
+    )
+    shard_paths = sorted(tmp_path.glob("feed_part*.jsonl"))
+    assert not out_feed.exists()
+    assert len(shard_paths) == 2
+    assert sharded_payload["counts"]["trainer_feed_shards_emitted"] == 2
+    assert sharded_payload["trainer_feed_shard_files"] == [p.name for p in shard_paths]
+    sharded_lines = [
+        json.loads(line)
+        for p in shard_paths
+        for line in p.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert len(sharded_lines) == 2
+    assert {r["record_type"] for r in sharded_lines} == {"sovereign_primitive", "sovereign_reasoning_trace"}

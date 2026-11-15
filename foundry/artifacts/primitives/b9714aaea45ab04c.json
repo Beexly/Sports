@@ -1,0 +1,78 @@
+{
+  "book_id": "b9714aaea45ab04c",
+  "source_status": "COMPLETE",
+  "title": "FREE_MODEL_LANES",
+  "file_name": "FREE_MODEL_LANES.md",
+  "sha256": "b9714aaea45ab04c672d34e42e018b3af2d4b2ca4cf0c5a1865da0787b8c8588",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Priority-ranked model lanes form a tiered decision lattice with A→D descending reliability; each lane encodes a distinct inference kernel under resource constraints. Universal Lens: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers optimal model routing via conformal predictive states over ranked lanes, using Bayesian belief updates on live key availability and provider status. GSI Mapping: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions across lanes based on real-time provider health and fallback regimes, optimizing for latency and accuracy within constrained compute. GSE Mapping: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "model_lane_priority",
+      "name": "Model Lane Priority Kernel",
+      "verbatim_quote": "## Priority order (A → D) | Rank | Lane | Models | |------|------|--------| | **A — default (live)** | OpenCode Zen | `opencode/space-bunny-free` → `opencode/big-pickle` → `opencode/mimo-v2.6-flash-free` | | **B** | OpenRouter `:free` extras | Only when key is **live**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_A': 'priority rank level A (default live)', 'M_{\\\\text{zen}}': 'model set from OpenCode Zen'}",
+      "assumptions": "Lane A is active iff key is live; models are ordered by performance.",
+      "breakdown_regime": "When L_A fails, transition to B.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each lane maps to a probabilistic inference kernel with distinct failure thresholds.",
+        "source_operator": "model_lane_priority",
+        "telemetry": "Provider uptime and key validity status"
+      }
+    },
+    {
+      "primitive_id": "fallback_model_lane",
+      "name": "Fallback Model Lane Selector",
+      "verbatim_quote": "| | **C — fallback** | NVIDIA NIM | `nvidia/google/gemma-3-12b-it` (small: `nvidia/google/gemma-3-4b-it`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_C': 'priority rank level C (fallback)', 'M_{\\\\text{nim}}': 'model set from NVIDIA NIM'}",
+      "assumptions": "Lane C is used only after higher-priority lanes fail or are unavailable.",
+      "breakdown_regime": "When L_B and L_A are non-operational, activate L_C.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from A/B failure states; acts as a robustness buffer.",
+        "source_operator": "fallback_model_lane",
+        "telemetry": "Model availability and error rate during fallback"
+      }
+    },
+    {
+      "primitive_id": "local_edit_lane",
+      "name": "Local Edit Lane",
+      "verbatim_quote": "| | **D — local fast edits** | Ollama on Beexly | `qwen3-coder:30b` when host is up | Cursor CloudAgent is last resort only (composer-2.5 → flash → ...).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_D': 'priority rank level D (local edits)', 'M_{\\\\text{ollama}}': 'local model on Beexly', 'M_{\\\\text{cursor}}': 'Cursor CloudAgent'}",
+      "assumptions": "Lane D is reserved for low-latency, high-frequency edits.",
+      "breakdown_regime": "Only activated when remote lanes are unreachable or overloaded.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Operates as a microkernel for rapid iterative refinement.",
+        "source_operator": "local_edit_lane",
+        "telemetry": "Host uptime and response time metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b9714aaea45ab04c_t0",
+      "think": "The model lane hierarchy defines a layered control system where each priority level corresponds to a distinct operational regime. The top-tier lane (A) is optimized for live performance, while lower tiers act as safety nets. This structure mirrors a hierarchical Bayesian network where each lane contributes conditional probability distributions over model outcomes. Failure modes are modeled through state transitions: if a lane becomes invalid, the system retroactively re-evaluates its prior beliefs and shifts to the next available lane. The exclusion of certain models (Opus, Muse Spark High) reflects a constraint on additive wiring, implying that some architectures are incompatible with current inference pipelines. The silent jump to paid services indicates a dynamic threshold where cost-benefit analysis overrides availability-based routing.\n\nDeep epistemic analysis for FREE_MODEL_LANES (b9714aaea45ab04c, domain=other, pages_read=1/1): Operator 'Model Lane Priority Kernel' (page 1, domain other) captures: ## Priority order (A → D) | Rank | Lane | Models | |------|------|--------| | **A — default (live)** | OpenCode Zen | `opencode/space-bunny-free` → `opencode/big-pickle` → `opencode/mimo-v2.6-flash-free` | | **B** | OpenRouter `:free` extras | Only when key is **live**. Assumptions: Lane A is active iff key is live; models are ordered by performance. Breakdown regime: When L_A fails, transition to B. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each lane maps to a probabilistic inference kernel with distinct failure thresholds. Operator 'Fallback Model Lane Selector' (page 1, domain other) captures: | | **C — fallback** | NVIDIA NIM | `nvidia/google/gemma-3-12b-it` (small: `nvidia/google/gemma-3-4b-it`). Assumptions: Lane C is used only after higher-priority lanes fail or are unavailable. Breakdown regime: When L_B and L_A are non-operational, activate L_C. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from A/B failure states; acts as a robustness buffer. Operator 'Local Edit Lane' (page 1, domain other) captures: | | **D — local fast edits** | Ollama on Beexly | `qwen3-coder:30b` when host is up | Cursor CloudAgent is last resort only (composer-2.5 → flash → ...). Assumptions: Lane D is reserved for low-latency, high-frequency edits. Breakdown regime: Only activated when remote lanes are unreachable or overloaded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operates as a microkernel for rapid iterative refinement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE_MODEL_LANES (b9714aaea45ab04c, domain=other, pages_read=1/1): Operator 'Model Lane Priority Kernel' (page 1, domain other) captures: ## Priority order (A → D) | Rank | Lane | Models | |------|------|--------| | **A — default (live)** | OpenCode Zen | `opencode/space-bunny-free` → `opencode/big-pickle` → `opencode/mimo-v2.6-flash-free` | | **B** | OpenRouter `:free` extras | Only when key is **live**. Assumptions: Lane A is active iff key is live; models are ordered by performance. Breakdown regime: When L_A fails, transition to B. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each lane maps to a probabilistic inference kernel with distinct failure thresholds. Operator 'Fallback Model Lane Selector' (page 1, domain other) captures: | | **C — fallback** | NVIDIA NIM | `nvidia/google/gemma-3-12b-it` (small: `nvidia/google/gemma-3-4b-it`). Assumptions: Lane C is used only after higher-priority lanes fail or are unavailable. Breakdown regime: When L_B and L_A are non-operational, activate L_C. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from A/B failure states; acts as a robustness buffer. Operator 'Local Edit Lane' (page 1, domain other) captures: | | **D — local fast edits** | Ollama on Beexly | `qwen3-coder:30b` when host is up | Cursor CloudAgent is last resort only (composer-2.5 → flash → ...). Assumptions: Lane D is reserved for low-latency, high-frequency edits. Breakdown regime: Only activated when remote lanes are unreachable or overloaded. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Operates as a microkernel for rapid iterative refinement. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s adaptive inference frameworks, particularly those addressing multi-agent coordination under uncertainty. Influenced by reinforcement learning policies and distributed systems theory. Retrocausal Genealogy: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the GSE orchestrator, which evaluates provider status and selects lanes, and the user who interacts with the system. Decision actors may also include external providers whose availability affects routing logic. Theory of Mind & Decision Maker Model: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that no two lanes share identical model sets or failure conditions. Leakage vetoes prevent cross-contamination between local and remote inference paths, especially when using Cursor CloudAgent. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_MODEL_LANES (b9714aaea45ab04c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

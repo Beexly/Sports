@@ -1,0 +1,78 @@
+{
+  "book_id": "b7d41d72dc3e134f",
+  "source_status": "COMPLETE",
+  "title": "a77c4c73a9d8",
+  "file_name": "a77c4c73a9d8.txt",
+  "sha256": "b7d41d72dc3e134fe438b117e91f2cbbb831b595beb8fa4c4c88657f1f7e4968",
+  "primary_domain": "other",
+  "pages_total": 26,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The pick ingestion pipeline is a deterministic state-transition operator mapping raw market quotes and schedule densities into a canonical, side-aware dispersion manifold. It unifies temporal context enrichment with immutable snapshotting, ensuring the resulting signal space remains invariant across scheduled or triggered execution paths.",
+  "gsi_mapping": "GSI treats the `GameContextInput` as a high-dimensional feature vector for conformal inference. The `bookDisagreementAtLock` acts as a rigorous calibration prior, while bootstrap flags enforce strict epistemic boundaries, preventing data leakage from derived historical forms into the base predictive distribution.",
+  "gse_mapping": "GSE models the pipeline as a guarded automaton. State transitions are gated by `paidCallJustified` and cooldown mechanisms. The system enforces exact conservation of liquidity regressors by strictly separating home/away moneyline dispersions during the write-once lock phase.",
+  "primitives": [
+    {
+      "primitive_id": "process_sport_canonical_pipeline",
+      "name": "Canonical Pick Ingestion Operator",
+      "verbatim_quote": "/** * processSport — Single source of truth for per-sport pick generation.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P: Pick set (dimensionless), G: Game context (dimensionless), S: Signal vector (dimensionless).",
+      "assumptions": "Identical behavior across all ingestion paths; deterministic upsert logic.",
+      "breakdown_regime": "Upstream API failures or malformed odds payloads causing context enrichment to halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a continuous-time filtering operation where raw market noise is projected onto a structured game-context manifold.",
+        "source_operator": "process_sport_canonical_pipeline",
+        "telemetry": "games processed count, picks upserted count, error rates."
+      }
+    },
+    {
+      "primitive_id": "side_aware_dispersion_lock",
+      "name": "Side-Aware Dispersion Lock",
+      "verbatim_quote": "if (need === \"scores\") return false; // odds: no free odds source is cleared today → paid is always justified.",
+      "page": 2,
+      "latex": "D_{ML} = \\begin{cases} \\Delta_{home} & \\text{if } selectionIsHomeSide \\\\ \\Delta_{away} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "D_{ML}: Moneyline dispersion (dimensionless ratio), \\Delta: Book disagreement variance.",
+      "assumptions": "Home and away American prices are not complementary due to vig; requires explicit team resolution.",
+      "breakdown_regime": "Missing team identifiers or ambiguous selection prefixes corrupting the liquidity regressor.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives a pure, side-specific disagreement kernel essential for unbiased CLV decomposition in the GSI engine.",
+        "source_operator": "side_aware_dispersion_lock",
+        "telemetry": "Percentage of picks with non-null bookDisagreementAtLock."
+      }
+    },
+    {
+      "primitive_id": "paid_source_gate",
+      "name": "Paid Source Escalation Gate",
+      "verbatim_quote": "*/ function paidCallJustified( need: \"odds\" | \"scores\", _sportKey: SupportedSportKey, ): boolean { // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.",
+      "page": 2,
+      "latex": "J(n) = \\mathbb{I}(\\forall s \\in Sources_{free}, Cleared(s, n) = False)",
+      "symbol_and_unit_ledger": "J: Justification flag (Boolean), n: Data need (categorical).",
+      "assumptions": "Free sources are always preferred if cleared; paid sources are reserved for exclusive needs like odds.",
+      "breakdown_regime": "Simultaneous failure of all free sources triggering an unintended paid escalation for scores.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a resource-constrained optimization gate in GSE, minimizing cost functionals while maintaining data freshness constraints.",
+        "source_operator": "paid_source_gate",
+        "telemetry": "paidRequestCount, oddsApiRemainingRequests."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b7d41d72dc3e134f_t0",
+      "think": "The mathematical core of the Galaxy Sports Engine is the `processSport` operator, which functions as a rigorous state-transition map $\\Phi: \\mathcal{M}_{raw} \\times \\mathcal{C}_{sched} \\rightarrow \\mathcal{P}_{canonical}$. Here, raw market quotes ($\\mathcal{M}_{raw}$) and schedule densities ($\\mathcal{C}_{sched}$) are fused to generate immutable pick states. A critical duality exists in the treatment of dispersion: while spread and total variances are side-agnostic scalars, moneyline dispersion requires a boundary-aware projection. Because American pricing embeds asymmetric vigorish, treating home and away lines as complementary creates a permanent corruption in the liquidity regressor. Thus, the `selectionIsHomeSide` predicate acts as a topological selector, isolating the precise micro-market disagreement at the moment of lock. Furthermore, the pipeline introduces a hierarchical gating mechanism via `paidCallJustified`. This acts as a step-function on the available information manifold, enforcing a strict preference for free public APIs (like ESPN) over paid vendors unless the target variable (e.g., live odds) lies entirely outside the free support. The entire sequence is bounded by cooldown manifolds (`RUNDOWN_RATE_LIMIT_COOLDOWN_MS`) to prevent upstream singularity under high-frequency triggers. Ultimately, the `PickSignalSnapshot` serves as a frozen Lagrangian coordinate, preserving the exact configuration of features and market conditions that birthed the prediction, enabling robust ex-post conformal calibration.\n\nDeep epistemic analysis for a77c4c73a9d8 (b7d41d72dc3e134f, domain=other, pages_read=18/26): Operator 'Canonical Pick Ingestion Operator' (page 1, domain other) captures: /** * processSport — Single source of truth for per-sport pick generation. Assumptions: Identical behavior across all ingestion paths; deterministic upsert logic. Breakdown regime: Upstream API failures or malformed odds payloads causing context enrichment to halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a continuous-time filtering operation where raw market noise is projected onto a structured game-context manifold. Operator 'Side-Aware Dispersion Lock' (page 2, domain other) captures: if (need === \"scores\") return false; // odds: no free odds source is cleared today → paid is always justified. Assumptions: Home and away American prices are not complementary due to vig; requires explicit team resolution. Breakdown regime: Missing team identifiers or ambiguous selection prefixes corrupting the liquidity regressor. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a pure, side-specific disagreement kernel essential for unbiased CLV decomposition in the GSI engine. Operator 'Paid Source Escalation Gate' (page 2, domain other) captures: */ function paidCallJustified( need: \"odds\" | \"scores\", _sportKey: SupportedSportKey, ): boolean { // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified. Assumptions: Free sources are always preferred if cleared; paid sources are reserved for exclusive needs like odds. Breakdown regime: Simultaneous failure of all free sources triggering an unintended paid escalation for scores. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a resource-constrained optimization gate in GSE, minimizing cost functionals while maintaining data freshness constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for a77c4c73a9d8 (b7d41d72dc3e134f, domain=other, pages_read=18/26): Operator 'Canonical Pick Ingestion Operator' (page 1, domain other) captures: /** * processSport — Single source of truth for per-sport pick generation. Assumptions: Identical behavior across all ingestion paths; deterministic upsert logic. Breakdown regime: Upstream API failures or malformed odds payloads causing context enrichment to halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a continuous-time filtering operation where raw market noise is projected onto a structured game-context manifold. Operator 'Side-Aware Dispersion Lock' (page 2, domain other) captures: if (need === \"scores\") return false; // odds: no free odds source is cleared today → paid is always justified. Assumptions: Home and away American prices are not complementary due to vig; requires explicit team resolution. Breakdown regime: Missing team identifiers or ambiguous selection prefixes corrupting the liquidity regressor. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives a pure, side-specific disagreement kernel essential for unbiased CLV decomposition in the GSI engine. Operator 'Paid Source Escalation Gate' (page 2, domain other) captures: */ function paidCallJustified( need: \"odds\" | \"scores\", _sportKey: SupportedSportKey, ): boolean { // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified. Assumptions: Free sources are always preferred if cleared; paid sources are reserved for exclusive needs like odds. Breakdown regime: Simultaneous failure of all free sources triggering an unintended paid escalation for scores. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a resource-constrained optimization gate in GSE, minimizing cost functionals while maintaining data freshness constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture inherits deeply from the Kelly Criterion's requirement for precise edge estimation, but modernizes it through the lens of database transactional integrity. Historically, sports analytics suffered from 'look-ahead bias' where post-game realities contaminated pre-game signals. The introduction of `isBootstrap` and write-once `bookDisagreementAtLock` primitives directly addresses this by enforcing a strict causal arrow. It mirrors the evolution of financial tick-data archiving, where the exact bid-ask spread at the millisecond of order submission must be preserved to accurately calculate slippage and realized alpha later.",
+      "theory_of_mind": "The system implicitly models two opposing decision actors: the Market Maker and the GSE Predictor. The Market Maker sets opening lines based on global capital flows and hidden information, creating a baseline probability distribution. The GSE Predictor observes these lines alongside schedule density and rest days to identify local inefficiencies. By explicitly tracking `oddsApiUsedRequests` and `provider` tags, the engine maintains a theory of mind regarding the Market Maker's data latency and potential vendor-specific biases. The `paidCallJustified` gate reflects an economic model of the Market Maker, acknowledging that certain high-fidelity signals (live odds) are deliberately obscured behind paywalls, requiring strategic resource allocation to penetrate.",
+      "cross_layer_veto": "To prevent catastrophic leakage, strict anti-collinearity vetoes are enforced between layers. Specifically, the `canUseDerivedHistory` gate ensures that retrospective ATS/H2H forms do not retroactively alter the `isBootstrap` status of a pick, which would invalidate the conformal coverage guarantees for new games. Additionally, the separation of `moneylineHome` and `moneylineAway` prevents cross-contamination of vig adjustments; if a home-side pick inadvertently absorbed away-side dispersion, the resulting CLV decomposition would exhibit artificial inflation. Finally, the `inPlaySkipLine` guard acts as a temporal veto, instantly nullifying any snapshot attempts once `hasKickedOff` evaluates to true, preserving the purity of the pre-game predictive manifold."
+    }
+  ]
+}

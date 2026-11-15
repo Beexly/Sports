@@ -1,0 +1,78 @@
+{
+  "book_id": "abeed75ab0569ae0",
+  "source_status": "COMPLETE",
+  "title": "HERMES_HANDOFF_V3_20260818",
+  "file_name": "HERMES_HANDOFF_V3_20260818.md",
+  "sha256": "abeed75ab0569ae06456718ef5f56332f160449b8cb44dade31f180957bd4ad9",
+  "primary_domain": "other",
+  "pages_total": 7,
+  "pages_read": 7,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "CLV data census and probabilistic grading infrastructure leverages immutable pick locks and existing model scaffolding for conformal prediction. Universal Lens: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on pick universe uses CLV lock lines and verdicts as prior observables, enabling calibrated confidence bounds via isotonic regression. GSI Mapping: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE transitions states based on CLV capture flags and market-type distributions, with PAV fixing monotonicity in probability assessments. GSE Mapping: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "clv_lock_line_census",
+      "name": "CLV Lock Line Census",
+      "verbatim_quote": "Verified in the schema and by grep: | Piece | Status | |---|---| | `Pick.clvLockLine` / `clvLockPrice` | **Exists.** Captured once at pick creation, immutable.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'clvLockLine': 'dimensionless', 'clvLockPrice': 'currency'}",
+      "assumptions": "Pick creation captures immutable lock data; lock line and price are mutually exclusive per market type.",
+      "breakdown_regime": "Zero or one of {lockLine, lockPrice} populated per pick.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Implements historical CLV grading capability from existing data structure.",
+        "source_operator": "clv_lock_line_census",
+        "telemetry": "Count of picks with populated clvLockLine or clvLockPrice."
+      }
+    },
+    {
+      "primitive_id": "clv_verdict_population",
+      "name": "CLV Verdict Population",
+      "verbatim_quote": "| | `Pick.clvCloseLine` / `clvClosePrice` / `clvValue` / `clvVerdict` / `clvCapturedAt` / `clvGradedAt` | Exist.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'clvValue': 'dimensionless', 'clvVerdict': 'boolean', 'clvCapturedAt': 'timestamp', 'clvGradedAt': 'timestamp'}",
+      "assumptions": "CLV verdicts exist in schema but are not yet wired into settlement logic.",
+      "breakdown_regime": "Partial population of CLV fields across picks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables backward inference of CLV outcomes from historical data.",
+        "source_operator": "clv_verdict_population",
+        "telemetry": "Count and percentage of picks with clvValue and clvVerdict populated."
+      }
+    },
+    {
+      "primitive_id": "isotonic_pav_fix",
+      "name": "Isotonic PAV Fix",
+      "verbatim_quote": "There are switches that are off and one wire that was never connected.",
+      "page": 1,
+      "latex": "\\text{PAV}(\\mathbf{p}) = \\arg\\min_{\\mathbf{q}: q_i \\geq q_{i+1}} \\sum_i (p_i - q_i)^2",
+      "symbol_and_unit_ledger": "{'p_i': 'probability', 'q_i': 'monotonic probability'}",
+      "assumptions": "PAV algorithm must produce non-decreasing outputs for valid probability sequences.",
+      "breakdown_regime": "Non-monotonic input leads to incorrect PAV output unless corrected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's probabilistic inference engine where PAV ensures monotonicity in score calibration.",
+        "source_operator": "isotonic_pav_fix",
+        "telemetry": "Correctness of PAV output against expected non-decreasing sequence."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "abeed75ab0569ae0_t0",
+      "think": "The Hermes handoff v3 outlines a structured approach to activate dormant CLV infrastructure. The core insight is that CLV data already exists in schema but is not yet operational due to missing wiring. This allows for a read-only census of pick universe data, which informs both GSI's Bayesian inference and GSE's state transitions. The fix for isotonic PAV is a mechanical correction ensuring monotonicity in probability assignments, aligning with the broader goal of probabilistic calibration. The failure mode of PAV not respecting monotonicity is a critical bug that blocks downstream tasks like CORP. The mathematical structure of PAV is defined by isotonic regression, which enforces a non-decreasing constraint on output probabilities. This is essential for maintaining consistency in predictive models.\n\nDeep epistemic analysis for HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0, domain=other, pages_read=7/7): Operator 'CLV Lock Line Census' (page 1, domain other) captures: Verified in the schema and by grep: | Piece | Status | |---|---| | `Pick.clvLockLine` / `clvLockPrice` | **Exists.** Captured once at pick creation, immutable. Assumptions: Pick creation captures immutable lock data; lock line and price are mutually exclusive per market type. Breakdown regime: Zero or one of {lockLine, lockPrice} populated per pick. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Implements historical CLV grading capability from existing data structure. Operator 'CLV Verdict Population' (page 1, domain other) captures: | | `Pick.clvCloseLine` / `clvClosePrice` / `clvValue` / `clvVerdict` / `clvCapturedAt` / `clvGradedAt` | Exist. Assumptions: CLV verdicts exist in schema but are not yet wired into settlement logic. Breakdown regime: Partial population of CLV fields across picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables backward inference of CLV outcomes from historical data. Operator 'Isotonic PAV Fix' (page 1, domain other) captures: There are switches that are off and one wire that was never connected. Assumptions: PAV algorithm must produce non-decreasing outputs for valid probability sequences. Breakdown regime: Non-monotonic input leads to incorrect PAV output unless corrected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's probabilistic inference engine where PAV ensures monotonicity in score calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0, domain=other, pages_read=7/7): Operator 'CLV Lock Line Census' (page 1, domain other) captures: Verified in the schema and by grep: | Piece | Status | |---|---| | `Pick.clvLockLine` / `clvLockPrice` | **Exists.** Captured once at pick creation, immutable. Assumptions: Pick creation captures immutable lock data; lock line and price are mutually exclusive per market type. Breakdown regime: Zero or one of {lockLine, lockPrice} populated per pick. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Implements historical CLV grading capability from existing data structure. Operator 'CLV Verdict Population' (page 1, domain other) captures: | | `Pick.clvCloseLine` / `clvClosePrice` / `clvValue` / `clvVerdict` / `clvCapturedAt` / `clvGradedAt` | Exist. Assumptions: CLV verdicts exist in schema but are not yet wired into settlement logic. Breakdown regime: Partial population of CLV fields across picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables backward inference of CLV outcomes from historical data. Operator 'Isotonic PAV Fix' (page 1, domain other) captures: There are switches that are off and one wire that was never connected. Assumptions: PAV algorithm must produce non-decreasing outputs for valid probability sequences. Breakdown regime: Non-monotonic input leads to incorrect PAV output unless corrected. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's probabilistic inference engine where PAV ensures monotonicity in score calibration. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This work builds upon earlier developments in isotonic regression and conformal prediction, particularly in how probability estimates are constrained to maintain logical coherence in sequential decision-making frameworks. Retrocausal Genealogy: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to bypass the CLV infrastructure or misinterpret its dormant status. The system must enforce strict adherence to the schema and prevent unauthorized modifications to ensure data integrity and model correctness. Theory of Mind & Decision Maker Model: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity checks ensure that CLV lock lines and verdicts do not introduce redundant signals. Leakage vetoes prevent the use of future information in past predictions, preserving causal structure in probabilistic reasoning. Cross-Layer Veto & Anti-Leakage Check: Rooted in HERMES_HANDOFF_V3_20260818 (abeed75ab0569ae0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

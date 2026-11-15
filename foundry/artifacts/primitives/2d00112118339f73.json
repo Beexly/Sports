@@ -1,0 +1,78 @@
+{
+  "book_id": "2d00112118339f73",
+  "source_status": "COMPLETE",
+  "title": "deepseek-ground-truth-scrape-prompt",
+  "file_name": "deepseek-ground-truth-scrape-prompt.md",
+  "sha256": "2d00112118339f73fa12c0f26670f03764fc4ead4460f9b89029687f3c36f6f4",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Ground-truth intelligence extraction via structured web scraping with mandatory schema compliance and integrity checks. Universal Lens: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updating on scraped site dossiers with conformal prediction intervals for veracity confidence. GSI Mapping: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in competitive intelligence synthesis through iterative refinement loops. GSE Mapping: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "scrape_integrity_check",
+      "name": "Scrape Integrity Check",
+      "verbatim_quote": "- **Integrity over coverage.** If a page is JS-blocked, paywalled, or dead: mark the field UNVERIFIED, note what you tried, and (for dead sites) substitute the closest live equivalent and log the swap.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U': 'Unverified status (boolean)', 'S': 'Substitution flag (boolean)'}",
+      "assumptions": "All scraped pages must be accessible or replaced by equivalent live pages.",
+      "breakdown_regime": "When accessibility fails, substitution occurs with logging.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI integrity model mirrors GSE access control logic with fallback mechanisms.",
+        "source_operator": "scrape_integrity_check",
+        "telemetry": "Page accessibility flags and substitution logs"
+      }
+    },
+    {
+      "primitive_id": "schema_compliance_verification",
+      "name": "Schema Compliance Verification",
+      "verbatim_quote": "Every site gets the full schema or it doesn't count toward the 30.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Compliance indicator (boolean)'}",
+      "assumptions": "Each site must satisfy full schema requirements to qualify.",
+      "breakdown_regime": "Failure to meet schema results in exclusion from count.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE validation kernel ensures GSI data fidelity through schema enforcement.",
+        "source_operator": "schema_compliance_verification",
+        "telemetry": "Schema completeness score per site"
+      }
+    },
+    {
+      "primitive_id": "minimum_page_depth_requirement",
+      "name": "Minimum Page Depth Requirement",
+      "verbatim_quote": "Minimum 3 pages per site: homepage, pricing page, and one deep page (docs, features, showcase, or changelog).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Pages scraped per site (integer ≥ 3)'}",
+      "assumptions": "Three distinct informational layers are required for valid dossier.",
+      "breakdown_regime": "Insufficient depth leads to dossier rejection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI multi-layered data structure aligns with GSE hierarchical information processing.",
+        "source_operator": "minimum_page_depth_requirement",
+        "telemetry": "Number of pages scraped per site"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2d00112118339f73_t0",
+      "think": "The core operator 'scrape_integrity_check' enforces a binary verification protocol where each site must pass accessibility or substitution criteria. This is modeled as a Boolean function U(S) indicating unverified status. The 'schema_compliance_verification' acts as a kernel filter ensuring that only fully compliant dossiers contribute to the 30-site minimum. It operates as a constraint function C(S) ∈ {0,1} where 1 implies full schema adherence. The 'minimum_page_depth_requirement' introduces a cardinality constraint P(S) ≥ 3, enforcing structural consistency. These primitives form a triadic system where integrity, compliance, and depth interact to define valid intelligence extraction. Failure modes include: unverifiable pages leading to U=1, schema incompleteness causing C=0, and insufficient pages yielding P < 3. Dualities emerge between coverage and depth, with the system favoring depth over breadth. The epistemic failure mode arises when skimming occurs—this manifests as repeated gaps, violating the principle of unique insight per site.\n\nDeep epistemic analysis for deepseek-ground-truth-scrape-prompt (2d00112118339f73, domain=other, pages_read=4/4): Operator 'Scrape Integrity Check' (page 1, domain other) captures: - **Integrity over coverage.** If a page is JS-blocked, paywalled, or dead: mark the field UNVERIFIED, note what you tried, and (for dead sites) substitute the closest live equivalent and log the swap. Assumptions: All scraped pages must be accessible or replaced by equivalent live pages. Breakdown regime: When accessibility fails, substitution occurs with logging. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI integrity model mirrors GSE access control logic with fallback mechanisms. Operator 'Schema Compliance Verification' (page 1, domain other) captures: Every site gets the full schema or it doesn't count toward the 30. Assumptions: Each site must satisfy full schema requirements to qualify. Breakdown regime: Failure to meet schema results in exclusion from count. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE validation kernel ensures GSI data fidelity through schema enforcement. Operator 'Minimum Page Depth Requirement' (page 1, domain other) captures: Minimum 3 pages per site: homepage, pricing page, and one deep page (docs, features, showcase, or changelog). Assumptions: Three distinct informational layers are required for valid dossier. Breakdown regime: Insufficient depth leads to dossier rejection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI multi-layered data structure aligns with GSE hierarchical information processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for deepseek-ground-truth-scrape-prompt (2d00112118339f73, domain=other, pages_read=4/4): Operator 'Scrape Integrity Check' (page 1, domain other) captures: - **Integrity over coverage.** If a page is JS-blocked, paywalled, or dead: mark the field UNVERIFIED, note what you tried, and (for dead sites) substitute the closest live equivalent and log the swap. Assumptions: All scraped pages must be accessible or replaced by equivalent live pages. Breakdown regime: When accessibility fails, substitution occurs with logging. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI integrity model mirrors GSE access control logic with fallback mechanisms. Operator 'Schema Compliance Verification' (page 1, domain other) captures: Every site gets the full schema or it doesn't count toward the 30. Assumptions: Each site must satisfy full schema requirements to qualify. Breakdown regime: Failure to meet schema results in exclusion from count. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE validation kernel ensures GSI data fidelity through schema enforcement. Operator 'Minimum Page Depth Requirement' (page 1, domain other) captures: Minimum 3 pages per site: homepage, pricing page, and one deep page (docs, features, showcase, or changelog). Assumptions: Three distinct informational layers are required for valid dossier. Breakdown regime: Insufficient depth leads to dossier rejection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI multi-layered data structure aligns with GSE hierarchical information processing. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory's demand for verifiable data streams and formalized in computational linguistics' need for structured metadata. Influenced by Bayesian inference frameworks requiring prior knowledge constraints. Retrocausal Genealogy: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include a skimmer who seeks summary-based insights and a scraper who insists on granular detail. The system assumes adversarial behavior from both sides, optimizing for robustness against both overgeneralization and undercoverage. Theory of Mind & Decision Maker Model: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring unique insights per site, preventing redundancy. Leakage vetoes occur when duplicate or overlapping data points are detected across sites, triggering re-evaluation of the dossier structure. Cross-Layer Veto & Anti-Leakage Check: Rooted in deepseek-ground-truth-scrape-prompt (2d00112118339f73), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

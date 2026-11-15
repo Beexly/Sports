@@ -1,0 +1,95 @@
+{
+  "book_id": "86b2eed618c347fb",
+  "source_status": "COMPLETE",
+  "title": "T15_ROUTE_INVENTORY_16_AND_THE_LEAK",
+  "file_name": "T15_ROUTE_INVENTORY_16_AND_THE_LEAK.md",
+  "sha256": "86b2eed618c347fbf576784cae53c1b15aa9dc6c8943657c8b569deecec9162b",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "route_inventory",
+      "name": "Route Inventory Count",
+      "verbatim_quote": "The count is 16, and my own earlier count of 12 was wrong I previously hand-counted 12 NGS-serving routes and called the spec's 13 \"off by one\".",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Exact source code parsing, correct identification of NGS data sources.",
+      "breakdown_regime": "Standard operational regime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Route inventory as a formal set-theoretic predicate over GraphQL endpoints.",
+        "source_operator": "route_inventory",
+        "telemetry": "Count of GraphQL resolver functions accessing `db.nextGenStat`."
+      }
+    },
+    {
+      "primitive_id": "predicate_over_route_tree",
+      "name": "Predicate Over Route Tree",
+      "verbatim_quote": "**The derivation is a predicate over the route tree, not a hand-written list.** The gate computes the set of routes that serve NGS-derived or nflverse-derived data, and then asserts the derived set equals a pinned registry.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Registry is a fixed set of authorized routes, equality test is exact.",
+      "breakdown_regime": "Syntax-tree analysis.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Static analysis as a homomorphic embedding into a finite-state machine.",
+        "source_operator": "predicate_over_route_tree",
+        "telemetry": "Boolean pass/fail outcome of the equality assertion."
+      }
+    },
+    {
+      "primitive_id": "op_public_surface_truth_leak",
+      "name": "Ops/Public-Surface-Truth Leak",
+      "verbatim_quote": "**`ops/public-surface-truth` serves NO NGS data.** It is on the spec's list but serves zero NGS rows and zero NGS metric identifiers.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Correct classification of endpoint data sources.",
+      "breakdown_regime": "Zero-NGS-data regime.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Endpoint categorization as a binary classifier over HTTP request payloads.",
+        "source_operator": "op_public_surface_truth_leak",
+        "telemetry": "Number of NGS metrics emitted per HTTP response."
+      }
+    },
+    {
+      "primitive_id": "one_real_leak",
+      "name": "One Real Leak",
+      "verbatim_quote": "i/picks/route.ts` reaches `db.nextGenStat` and renders NGS metric names and values into `intelligence.why[]`.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Complete enumeration of NGS-serving routes.",
+      "breakdown_regime": "Registry synchronization failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Build-failure as a consequence of set-theoretic discrepancy.",
+        "source_operator": "one_real_leak",
+        "telemetry": "Build status (pass/fail) and number of mismatches between inventory and registry."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "86b2eed618c347fb_t0",
+      "think": "The gate enforces a formal duality between the static route specification and the dynamic runtime behavior. Four routes bypass the spec's list because they read `db.nextGenStat` directly, violating the pinned registry invariant. This creates a separable failure mode: a developer can add a new NGS query to a fresh route, commit it, and pass all tests while evading the manual count. The single real leak identified in `api/picks/route.ts` demonstrates that even with perfect static analysis, product decisions about public exposure remain open. The gate thus acts as a constitutional checkpoint, separating the mechanical task of inventory maintenance from the political task of access control.\n\nDeep epistemic analysis for T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb, domain=other, pages_read=4/4): Operator 'Route Inventory Count' (page 1, domain other) captures: The count is 16, and my own earlier count of 12 was wrong I previously hand-counted 12 NGS-serving routes and called the spec's 13 \"off by one\". Assumptions: Exact source code parsing, correct identification of NGS data sources. Breakdown regime: Standard operational regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route inventory as a formal set-theoretic predicate over GraphQL endpoints. Operator 'Predicate Over Route Tree' (page 1, domain other) captures: **The derivation is a predicate over the route tree, not a hand-written list.** The gate computes the set of routes that serve NGS-derived or nflverse-derived data, and then asserts the derived set equals a pinned registry. Assumptions: Registry is a fixed set of authorized routes, equality test is exact. Breakdown regime: Syntax-tree analysis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Static analysis as a homomorphic embedding into a finite-state machine. Operator 'Ops/Public-Surface-Truth Leak' (page 1, domain other) captures: **`ops/public-surface-truth` serves NO NGS data.** It is on the spec's list but serves zero NGS rows and zero NGS metric identifiers. Assumptions: Correct classification of endpoint data sources. Breakdown regime: Zero-NGS-data regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Endpoint categorization as a binary classifier over HTTP request payloads. Operator 'One Real Leak' (page 2, domain other) captures: i/picks/route.ts` reaches `db.nextGenStat` and renders NGS metric names and values into `intelligence.why[]`. Assumptions: Complete enumeration of NGS-serving routes. Breakdown regime: Registry synchronization failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Build-failure as a consequence of set-theoretic discrepancy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb, domain=other, pages_read=4/4): Operator 'Route Inventory Count' (page 1, domain other) captures: The count is 16, and my own earlier count of 12 was wrong I previously hand-counted 12 NGS-serving routes and called the spec's 13 \"off by one\". Assumptions: Exact source code parsing, correct identification of NGS data sources. Breakdown regime: Standard operational regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Route inventory as a formal set-theoretic predicate over GraphQL endpoints. Operator 'Predicate Over Route Tree' (page 1, domain other) captures: **The derivation is a predicate over the route tree, not a hand-written list.** The gate computes the set of routes that serve NGS-derived or nflverse-derived data, and then asserts the derived set equals a pinned registry. Assumptions: Registry is a fixed set of authorized routes, equality test is exact. Breakdown regime: Syntax-tree analysis. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Static analysis as a homomorphic embedding into a finite-state machine. Operator 'Ops/Public-Surface-Truth Leak' (page 1, domain other) captures: **`ops/public-surface-truth` serves NO NGS data.** It is on the spec's list but serves zero NGS rows and zero NGS metric identifiers. Assumptions: Correct classification of endpoint data sources. Breakdown regime: Zero-NGS-data regime. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Endpoint categorization as a binary classifier over HTTP request payloads. Operator 'One Real Leak' (page 2, domain other) captures: i/picks/route.ts` reaches `db.nextGenStat` and renders NGS metric names and values into `intelligence.why[]`. Assumptions: Complete enumeration of NGS-serving routes. Breakdown regime: Registry synchronization failure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Build-failure as a consequence of set-theoretic discrepancy. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal methods for software configuration management, evolving from simple version-control hooks to full symbolic execution. Retrocausal Genealogy: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "The author models the system as a博弈 between automated checks (the gate) and human developers (who may introduce new routes). The spec's list is seen as a fragile artifact, maintained by hand-counting, while the predicate over the route tree is a robust mechanism that cannot be easily circumvented through routine coding. Theory of Mind & Decision Maker Model: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents cross-layer interference by ensuring that changes to the database schema (`db.nextGenStat`) do not automatically propagate to the routing layer without explicit registry update. This avoids cascading failures where a backend change leaks through to the frontend. Cross-Layer Veto & Anti-Leakage Check: Rooted in T15_ROUTE_INVENTORY_16_AND_THE_LEAK (86b2eed618c347fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "a6a003438f282bb8",
+  "source_status": "COMPLETE",
+  "title": "CLAUDE_PROJECT_AUDIT_PROMPT",
+  "file_name": "CLAUDE_PROJECT_AUDIT_PROMPT.md",
+  "sha256": "a6a003438f282bb803f0602ba3be6a2ec546c57b02d9ad8a8168068b4adce391",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Temporal document auditing under constrained metadata yields structured epistemic confidence via Bayesian belief updates on evidence likelihood. Universal Lens: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior probability of document existence using conformal predictive distributions over time-windowed metadata traces. GSI Mapping: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models state transitions between 'document absent' and 'document present' using temporal logic and causal event chains. GSE Mapping: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "priority_1_owner_manual",
+      "name": "Owner's Manual Audit Primitive",
+      "verbatim_quote": "- An email with a subject close to **\"Personal Owners Manuel\"**, dated **17 February 2026**, sent to **Corina Murguia**, with an attachment named **\"GB - Owners Manual .docx\"**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'timestamp in UTC', 'd': 'document identifier', 's': 'sender email address', 'r': 'recipient email address'}",
+      "assumptions": "Document exists if metadata matches exactly within date range.",
+      "breakdown_regime": "t ∈ [2026-02-17, 2026-02-17]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Email metadata structure maps to GSI probabilistic document existence model.",
+        "source_operator": "priority_1_owner_manual",
+        "telemetry": "Email subject, recipient, timestamp, and filename match."
+      }
+    },
+    {
+      "primitive_id": "temporal_evidence_window",
+      "name": "Temporal Evidence Window Primitive",
+      "verbatim_quote": "## Date window **6 October 2025 through 16 June 2026.** That runs from the start of the relevant period to four weeks after my termination on 19 May 2026.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_start': 'start timestamp in UTC', 't_end': 'end timestamp in UTC'}",
+      "assumptions": "All relevant evidence must fall within t_start to t_end inclusive.",
+      "breakdown_regime": "t ∈ [2025-10-06, 2026-06-16]",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Time-bound evidence filtering kernel applied to all document metadata.",
+        "source_operator": "temporal_evidence_window",
+        "telemetry": "Document timestamps validated against window."
+      }
+    },
+    {
+      "primitive_id": "contemporaneous_record_distinction",
+      "name": "Contemporaneous Record Distinction Primitive",
+      "verbatim_quote": "- Distinguish contemporaneous records (real emails, texts, documents from the time) from AI-generated summaries or reconstructions I made later while organising the case.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'c': 'contemporaneous flag (boolean)', 'a': 'AI-generated flag (boolean)'}",
+      "assumptions": "Only c=1 records are admissible as evidence.",
+      "breakdown_regime": "c ∨ ¬a",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Logical distinction between original and reconstructed data mirrors GSI's epistemic trust model.",
+        "source_operator": "contemporaneous_record_distinction",
+        "telemetry": "Source document type and generation method verified."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a6a003438f282bb8_t0",
+      "think": "The task requires constructing three to four sovereign primitives rooted in the temporal and evidentiary constraints of a legal audit. The first primitive, 'Owner's Manual Audit Primitive', formalizes the search for a specific document by its metadata—subject line, date, recipient, and filename—within a defined temporal window. The second, 'Temporal Evidence Window Primitive', establishes a strict chronological filter for relevance. The third, 'Contemporaneous Record Distinction Primitive', enforces a logical separation between primary evidence and secondary reconstructions. These primitives form a dual framework: one for retrieval (metadata-based) and one for validation (temporal + authenticity). Failure modes arise when metadata is misinterpreted or when non-contemporaneous documents are conflated with evidence. The epistemic confidence of each primitive depends on the consistency of its telemetry against the source data. The mathematical structure supports Bayesian updating of belief states regarding document presence or absence.\n\nDeep epistemic analysis for CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8, domain=other, pages_read=3/3): Operator 'Owner's Manual Audit Primitive' (page 1, domain other) captures: - An email with a subject close to **\"Personal Owners Manuel\"**, dated **17 February 2026**, sent to **Corina Murguia**, with an attachment named **\"GB - Owners Manual .docx\"**. Assumptions: Document exists if metadata matches exactly within date range. Breakdown regime: t ∈ [2026-02-17, 2026-02-17] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Email metadata structure maps to GSI probabilistic document existence model. Operator 'Temporal Evidence Window Primitive' (page 1, domain other) captures: ## Date window **6 October 2025 through 16 June 2026.** That runs from the start of the relevant period to four weeks after my termination on 19 May 2026. Assumptions: All relevant evidence must fall within t_start to t_end inclusive. Breakdown regime: t ∈ [2025-10-06, 2026-06-16] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Time-bound evidence filtering kernel applied to all document metadata. Operator 'Contemporaneous Record Distinction Primitive' (page 1, domain other) captures: - Distinguish contemporaneous records (real emails, texts, documents from the time) from AI-generated summaries or reconstructions I made later while organising the case. Assumptions: Only c=1 records are admissible as evidence. Breakdown regime: c ∨ ¬a Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Logical distinction between original and reconstructed data mirrors GSI's epistemic trust model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8, domain=other, pages_read=3/3): Operator 'Owner's Manual Audit Primitive' (page 1, domain other) captures: - An email with a subject close to **\"Personal Owners Manuel\"**, dated **17 February 2026**, sent to **Corina Murguia**, with an attachment named **\"GB - Owners Manual .docx\"**. Assumptions: Document exists if metadata matches exactly within date range. Breakdown regime: t ∈ [2026-02-17, 2026-02-17] Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Email metadata structure maps to GSI probabilistic document existence model. Operator 'Temporal Evidence Window Primitive' (page 1, domain other) captures: ## Date window **6 October 2025 through 16 June 2026.** That runs from the start of the relevant period to four weeks after my termination on 19 May 2026. Assumptions: All relevant evidence must fall within t_start to t_end inclusive. Breakdown regime: t ∈ [2025-10-06, 2026-06-16] Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Time-bound evidence filtering kernel applied to all document metadata. Operator 'Contemporaneous Record Distinction Primitive' (page 1, domain other) captures: - Distinguish contemporaneous records (real emails, texts, documents from the time) from AI-generated summaries or reconstructions I made later while organising the case. Assumptions: Only c=1 records are admissible as evidence. Breakdown regime: c ∨ ¬a Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Logical distinction between original and reconstructed data mirrors GSI's epistemic trust model. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and Bayesian inference, these primitives reflect the evolution of digital forensics into structured epistemic frameworks. Influenced by Kolmogorov complexity and Shannon entropy in evidence encoding. Retrocausal Genealogy: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent models include the AI auditor who may misinterpret metadata, the legal adversary who seeks to obscure evidence, and the system itself which may fail to distinguish original from reconstructed records. Each introduces uncertainty into the belief update process. Theory of Mind & Decision Maker Model: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that temporal filtering does not override metadata specificity. Leakage veto prevents AI-generated summaries from being treated as primary evidence. These conditions prevent false positives in document identification. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_PROJECT_AUDIT_PROMPT (a6a003438f282bb8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

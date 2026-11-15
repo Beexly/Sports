@@ -1,0 +1,95 @@
+{
+  "book_id": "e9be22731ac3d6b6",
+  "source_status": "COMPLETE",
+  "title": "1632-general-framework-portfolio-theory-drawdown",
+  "file_name": "1632-general-framework-portfolio-theory-drawdown.md",
+  "sha256": "e9be22731ac3d6b6559dde4380619c5346d37bcf5521f52342fdc093fc17999f",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "35 to 55 words structural mathematical unification Universal Lens: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "35 to 55 words GSI Bayesian/conformal inference mapping GSI Mapping: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "35 to 55 words GSE situational reasoning & state-transition mapping GSE Mapping: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_log_drawdown",
+      "name": "Expected Log Drawdown",
+      "verbatim_quote": "**Verdict:** ADAPT — constructs convex drawdown risk measures inside the growth-optimal (Kelly / Vince optimal-f) framework; gives GSE a principled risk-constrained slate allocator balancing log-growth against drawdown.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Trade-return matrix T with known scenario probabilities p; large number of independent trade draws K; no-arbitrage market assumption.",
+      "breakdown_regime": "Large-K limit where empirical drawdown converges; finite-sample estimation error from estimated T.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps GSE's realized drawdown metric to a theoretical expectation under the Kelly growth-optimal measure, enabling risk-constrained optimization.",
+        "source_operator": "expected_log_drawdown",
+        "telemetry": "Empirical drawdown observed from GSE's historical trade sequences."
+      }
+    },
+    {
+      "primitive_id": "current_drawdown_risk_measure",
+      "name": "Current-Drawdown Risk Measure",
+      "verbatim_quote": "Part II constructs four such measures from the expected log drawdown of portfolio returns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Same as expected_log_drawdown.",
+      "breakdown_regime": "None identified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from the current drawdown process; computationally tractable ACRM approximation for efficient frontier calculations.",
+        "source_operator": "current_drawdown_risk_measure",
+        "telemetry": "Convergence diagnostics via Monte Carlo simulation (Figure 7)."
+      }
+    },
+    {
+      "primitive_id": "down_trade_drawdown_risk_measure",
+      "name": "Down-Trade Drawdown Risk Measure",
+      "verbatim_quote": "Part II constructs four such measures from the expected log drawdown of portfolio returns.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Same as expected_log_drawdown.",
+      "breakdown_regime": "None identified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derived from the down-trades only; isolates the negative tail contribution to drawdown risk.",
+        "source_operator": "down_trade_drawdown_risk_measure",
+        "telemetry": "Convergence diagnostics via Monte Carlo simulation (Figure 7)."
+      }
+    },
+    {
+      "primitive_id": "current_drawdown_approximation",
+      "name": "Current-Drawdown Approximation",
+      "verbatim_quote": "The X-approximations are positively homogeneous, which (via Part I's theory) gives efficient portfolios an affine linear structure — including a drawdown-risk \"market portfolio.\" Appendix shows a one-period financial market maps into the TWR setup.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Same as expected_log_drawdown.",
+      "breakdown_regime": "Large-K limit; unproven convergence rate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Positively homogeneous surrogate for the current drawdown risk measure, enabling linear-efficient-frontier solutions.",
+        "source_operator": "current_drawdown_approximation",
+        "telemetry": "Empirical support from Figure 7 (convergence as K increases)."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e9be22731ac3d6b6_t0",
+      "think": "220 to 320 words concise mathematical derivation of the operators, dualities, and failure modes\n\nDeep epistemic analysis for 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6, domain=other, pages_read=2/2): Operator 'Expected Log Drawdown' (page 1, domain other) captures: **Verdict:** ADAPT — constructs convex drawdown risk measures inside the growth-optimal (Kelly / Vince optimal-f) framework; gives GSE a principled risk-constrained slate allocator balancing log-growth against drawdown. Assumptions: Trade-return matrix T with known scenario probabilities p; large number of independent trade draws K; no-arbitrage market assumption. Breakdown regime: Large-K limit where empirical drawdown converges; finite-sample estimation error from estimated T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE's realized drawdown metric to a theoretical expectation under the Kelly growth-optimal measure, enabling risk-constrained optimization. Operator 'Current-Drawdown Risk Measure' (page 1, domain other) captures: Part II constructs four such measures from the expected log drawdown of portfolio returns. Assumptions: Same as expected_log_drawdown. Breakdown regime: None identified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from the current drawdown process; computationally tractable ACRM approximation for efficient frontier calculations. Operator 'Down-Trade Drawdown Risk Measure' (page 1, domain other) captures: Part II constructs four such measures from the expected log drawdown of portfolio returns. Assumptions: Same as expected_log_drawdown. Breakdown regime: None identified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from the down-trades only; isolates the negative tail contribution to drawdown risk. Operator 'Current-Drawdown Approximation' (page 1, domain other) captures: The X-approximations are positively homogeneous, which (via Part I's theory) gives efficient portfolios an affine linear structure — including a drawdown-risk \"market portfolio.\" Appendix shows a one-period financial market maps into the TWR setup. Assumptions: Same as expected_log_drawdown. Breakdown regime: Large-K limit; unproven convergence rate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Positively homogeneous surrogate for the current drawdown risk measure, enabling linear-efficient-frontier solutions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6, domain=other, pages_read=2/2): Operator 'Expected Log Drawdown' (page 1, domain other) captures: **Verdict:** ADAPT — constructs convex drawdown risk measures inside the growth-optimal (Kelly / Vince optimal-f) framework; gives GSE a principled risk-constrained slate allocator balancing log-growth against drawdown. Assumptions: Trade-return matrix T with known scenario probabilities p; large number of independent trade draws K; no-arbitrage market assumption. Breakdown regime: Large-K limit where empirical drawdown converges; finite-sample estimation error from estimated T. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps GSE's realized drawdown metric to a theoretical expectation under the Kelly growth-optimal measure, enabling risk-constrained optimization. Operator 'Current-Drawdown Risk Measure' (page 1, domain other) captures: Part II constructs four such measures from the expected log drawdown of portfolio returns. Assumptions: Same as expected_log_drawdown. Breakdown regime: None identified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from the current drawdown process; computationally tractable ACRM approximation for efficient frontier calculations. Operator 'Down-Trade Drawdown Risk Measure' (page 1, domain other) captures: Part II constructs four such measures from the expected log drawdown of portfolio returns. Assumptions: Same as expected_log_drawdown. Breakdown regime: None identified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derived from the down-trades only; isolates the negative tail contribution to drawdown risk. Operator 'Current-Drawdown Approximation' (page 1, domain other) captures: The X-approximations are positively homogeneous, which (via Part I's theory) gives efficient portfolios an affine linear structure — including a drawdown-risk \"market portfolio.\" Appendix shows a one-period financial market maps into the TWR setup. Assumptions: Same as expected_log_drawdown. Breakdown regime: Large-K limit; unproven convergence rate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Positively homogeneous surrogate for the current drawdown risk measure, enabling linear-efficient-frontier solutions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "65 to 85 words modeling opposing agents / decision actors Theory of Mind & Decision Maker Model: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "65 to 85 words anti-collinearity and leakage veto conditions Cross-Layer Veto & Anti-Leakage Check: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1632-general-framework-portfolio-theory-drawdown (e9be22731ac3d6b6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

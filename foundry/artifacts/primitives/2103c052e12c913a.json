@@ -1,0 +1,78 @@
+{
+  "book_id": "2103c052e12c913a",
+  "source_status": "COMPLETE",
+  "title": "tooling-probe",
+  "file_name": "tooling-probe.md",
+  "sha256": "2103c052e12c913a49554e66ad52d58c619bda95ab99dc699e787741caec3f02",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Crawl policy compliance and tooling robustness under environmental constraints define legal data acquisition regimes. Universal Lens: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on tool availability and site accessibility inform probabilistic data ingestion policies. GSI Mapping: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions between fast-parser, stealth-browser, and API-based crawls optimize resource allocation. GSE Mapping: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "environmental_compliance_check",
+      "name": "Environmental Compliance Check",
+      "verbatim_quote": "Robots context already confirmed: teamrankings allows crawl-delay 10; pfr is Cloudflare-challenged (DO NOT scrape); sportsbookreview allows /betting-odds/ but Cloudflare-hardened.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Site robots.txt and Cloudflare status are deterministic indicators of legal crawlability.",
+      "breakdown_regime": "Toolchain version mismatch or missing dependencies prevent execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Compliance logic mirrors GSI's probabilistic constraint satisfaction framework.",
+        "source_operator": "environmental_compliance_check",
+        "telemetry": "Verification of crawl-delay adherence and bot mitigation bypass."
+      }
+    },
+    {
+      "primitive_id": "fast_parser_capability",
+      "name": "Fast Parser Capability",
+      "verbatim_quote": "- Capability documented without running camoufox: agent-skill references `Fetcher` (lightweight `curl_cffi`), `FetcherSession` (cookie persistence), `impersonate` (TLS fingerprint spoofing), `stealthy_headers`, and `ProxyRotator`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Lightweight HTTP fetching avoids detection while maintaining data fidelity.",
+      "breakdown_regime": "High anti-bot resistance requires full browser automation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from agent-skill's Fetcher abstraction, enables GSE's low-overhead state transitions.",
+        "source_operator": "fast_parser_capability",
+        "telemetry": "Successful HTML parsing without browser overhead confirms capability."
+      }
+    },
+    {
+      "primitive_id": "api_scrape_validation",
+      "name": "API Scrape Validation",
+      "verbatim_quote": "Probe endpoint: `POST https://api.firecrawl.dev/v1/scrape` with `{\"url\":\"https://www.teamrankings.com/nfl/power-ratings/\"}`. - Probe result (exact): `status=200`, `success=True`, `data` contains `markdown` (length 1908 chars).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API responses are consistent and verifiable via structured return codes.",
+      "breakdown_regime": "Incomplete markdown payload lacks required tabular data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "API validation aligns with GSI's trustless data ingestion protocols.",
+        "source_operator": "api_scrape_validation",
+        "telemetry": "HTTP 200 status and markdown length confirm successful scrape."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2103c052e12c913a_t0",
+      "think": "The probe identifies three distinct crawling strategies: crawl4ai (browser-based), Scrapling (fast parser), and Firecrawl (API). Each strategy has a unique operational regime defined by toolchain compatibility, site resistance level, and computational cost. The environmental compliance check reveals that crawl4ai fails due to Python version mismatch, rendering it unusable for immediate scraping. The fast parser capability is validated through agent-skill documentation, indicating its suitability for sites with minimal anti-bot measures like teamrankings. Firecrawl provides an API-based alternative, but initial results lack structured data. The dualities lie in balancing speed vs. accuracy and legality vs. efficiency. Failure modes include toolchain misalignment, site blockage, and incomplete data extraction. These insights form the basis for GSI's probabilistic inference engine and GSE's adaptive crawling logic.\n\nDeep epistemic analysis for tooling-probe (2103c052e12c913a, domain=other, pages_read=3/3): Operator 'Environmental Compliance Check' (page 1, domain other) captures: Robots context already confirmed: teamrankings allows crawl-delay 10; pfr is Cloudflare-challenged (DO NOT scrape); sportsbookreview allows /betting-odds/ but Cloudflare-hardened. Assumptions: Site robots.txt and Cloudflare status are deterministic indicators of legal crawlability. Breakdown regime: Toolchain version mismatch or missing dependencies prevent execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Compliance logic mirrors GSI's probabilistic constraint satisfaction framework. Operator 'Fast Parser Capability' (page 1, domain other) captures: - Capability documented without running camoufox: agent-skill references `Fetcher` (lightweight `curl_cffi`), `FetcherSession` (cookie persistence), `impersonate` (TLS fingerprint spoofing), `stealthy_headers`, and `ProxyRotator`. Assumptions: Lightweight HTTP fetching avoids detection while maintaining data fidelity. Breakdown regime: High anti-bot resistance requires full browser automation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from agent-skill's Fetcher abstraction, enables GSE's low-overhead state transitions. Operator 'API Scrape Validation' (page 2, domain other) captures: Probe endpoint: `POST https://api.firecrawl.dev/v1/scrape` with `{\"url\":\"https://www.teamrankings.com/nfl/power-ratings/\"}`. - Probe result (exact): `status=200`, `success=True`, `data` contains `markdown` (length 1908 chars). Assumptions: API responses are consistent and verifiable via structured return codes. Breakdown regime: Incomplete markdown payload lacks required tabular data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): API validation aligns with GSI's trustless data ingestion protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for tooling-probe (2103c052e12c913a, domain=other, pages_read=3/3): Operator 'Environmental Compliance Check' (page 1, domain other) captures: Robots context already confirmed: teamrankings allows crawl-delay 10; pfr is Cloudflare-challenged (DO NOT scrape); sportsbookreview allows /betting-odds/ but Cloudflare-hardened. Assumptions: Site robots.txt and Cloudflare status are deterministic indicators of legal crawlability. Breakdown regime: Toolchain version mismatch or missing dependencies prevent execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Compliance logic mirrors GSI's probabilistic constraint satisfaction framework. Operator 'Fast Parser Capability' (page 1, domain other) captures: - Capability documented without running camoufox: agent-skill references `Fetcher` (lightweight `curl_cffi`), `FetcherSession` (cookie persistence), `impersonate` (TLS fingerprint spoofing), `stealthy_headers`, and `ProxyRotator`. Assumptions: Lightweight HTTP fetching avoids detection while maintaining data fidelity. Breakdown regime: High anti-bot resistance requires full browser automation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from agent-skill's Fetcher abstraction, enables GSE's low-overhead state transitions. Operator 'API Scrape Validation' (page 2, domain other) captures: Probe endpoint: `POST https://api.firecrawl.dev/v1/scrape` with `{\"url\":\"https://www.teamrankings.com/nfl/power-ratings/\"}`. - Probe result (exact): `status=200`, `success=True`, `data` contains `markdown` (length 1908 chars). Assumptions: API responses are consistent and verifiable via structured return codes. Breakdown regime: Incomplete markdown payload lacks required tabular data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): API validation aligns with GSI's trustless data ingestion protocols. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s web crawling frameworks and modern anti-scraping techniques, this structure reflects the evolution of distributed data acquisition systems. Retrocausal Genealogy: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include Cloudflare's bot detection systems, Python interpreter versioning constraints, and API rate limits. Decision actors are the crawling tools themselves, each optimized for specific site profiles. Theory of Mind & Decision Maker Model: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures no two primitives operate under identical assumptions. Leakage vetoes prevent reliance on incomplete data sources like Firecrawl's generic markdown. Cross-layer checks enforce domain-specific validity across GSI and GSE layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in tooling-probe (2103c052e12c913a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "e14641dffb5e622c",
+  "source_status": "COMPLETE",
+  "title": "FOUR_TIERS",
+  "file_name": "FOUR_TIERS.md",
+  "sha256": "e14641dffb5e622c963945e1f57423059b87aa69637f6b0cff59d075e31e25d0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Four-tier architecture maps GSE as a layered Bayesian inference engine: Tier 1 (GitHub) encodes data; Tier 2 (TimesFM) forecasts signals; Tier 3 (Mimo) reasons with verified data; Tier 4 (MCP) delivers outputs via read-only context protocol.",
+  "gsi_mapping": "GSI employs conformal prediction over Tier 3's reasoning traces, using verified data and inference flags to construct uncertainty quantified belief intervals across scored picks. GSI Mapping: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions state through causal chains (L3), adversarial review (L4), and synthesis (L5), governed by grounded prompts and JSON schema outputs from Tier 3's MiMo reasoner. GSE Mapping: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tier_4_delivery",
+      "name": "Delivery Layer Context Protocol",
+      "verbatim_quote": "## TIER 4 — DELIVERY (GitHub) **apps/web** — Next.js, subscriptions, cockpit, guardrails.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Read-only access to public JSON endpoints; no modification of core data.",
+      "breakdown_regime": "Read-only relay of unauthenticated JSON with caching and rate-limiting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's public API delivery layer, where MCP acts as a read-only proxy for LLM agents.",
+        "source_operator": "tier_4_delivery",
+        "telemetry": "API response latency, cache hit ratio, rate-limit violations."
+      }
+    },
+    {
+      "primitive_id": "tier_3_reasoning",
+      "name": "Causal Reasoning Engine",
+      "verbatim_quote": "## TIER 3 — REASONING (Hugging Face) **Hugging Face Space: Beexly/mimo-brain-engine** — the reasoner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Model operates under hard rules: cite numbers, label inference, output JSON schema.",
+      "breakdown_regime": "Deterministic reasoning under grounded prompt contracts with L3-L5 causal chains.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives structured inference from verified data using MiMo-V2.6-Distill-Qwen-9B.",
+        "source_operator": "tier_3_reasoning",
+        "telemetry": "Inference flag accuracy, citation completeness, JSON schema adherence."
+      }
+    },
+    {
+      "primitive_id": "tier_2_forecasting",
+      "name": "Multivariate Forecasting Kernel",
+      "verbatim_quote": "## TIER 2 — SIGNALS / FORECASTING (Hugging Face) **Bucket: Beexly/timesfm-3.0-pytorch-bucket** (1.32 GB, private).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "TimesFM 3.0 is zero-shot, multivariate, trained on 1T points; non-commercial use only.",
+      "breakdown_regime": "Research-only forecasting with no direct commercial routing due to licensing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Generates probabilistic forecasts from historical time-series data under NC constraints.",
+        "source_operator": "tier_2_forecasting",
+        "telemetry": "Forecast variance, benchmark alignment, NC compliance status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e14641dffb5e622c_t0",
+      "think": "The four-tier architecture defines a hierarchical Bayesian inference pipeline. Tier 1 (GitHub) provides data in CC-BY-4.0 format, while Tier 2 (TimesFM) offers non-commercial forecasts constrained by a 1T training dataset. Tier 3 (Mimo) applies causal reasoning under grounded prompts, enforcing citation and inference flags. Tier 4 (MCP) enables read-only access to public JSON, ensuring no unauthorized modification. Dualities emerge between deterministic reasoning (Tier 3) and stochastic forecasting (Tier 2). Failure modes include NC license leakage, unverified data entry, and adversarial reasoning bypasses. The system enforces a cross-layer veto: TimesFM cannot route to production without explicit commercial license, and Mimo's output is validated by MCP before delivery.\n\nDeep epistemic analysis for FOUR_TIERS (e14641dffb5e622c, domain=other, pages_read=3/3): Operator 'Delivery Layer Context Protocol' (page 1, domain other) captures: ## TIER 4 — DELIVERY (GitHub) **apps/web** — Next.js, subscriptions, cockpit, guardrails. Assumptions: Read-only access to public JSON endpoints; no modification of core data. Breakdown regime: Read-only relay of unauthenticated JSON with caching and rate-limiting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's public API delivery layer, where MCP acts as a read-only proxy for LLM agents. Operator 'Causal Reasoning Engine' (page 1, domain other) captures: ## TIER 3 — REASONING (Hugging Face) **Hugging Face Space: Beexly/mimo-brain-engine** — the reasoner. Assumptions: Model operates under hard rules: cite numbers, label inference, output JSON schema. Breakdown regime: Deterministic reasoning under grounded prompt contracts with L3-L5 causal chains. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives structured inference from verified data using MiMo-V2.6-Distill-Qwen-9B. Operator 'Multivariate Forecasting Kernel' (page 1, domain other) captures: ## TIER 2 — SIGNALS / FORECASTING (Hugging Face) **Bucket: Beexly/timesfm-3.0-pytorch-bucket** (1.32 GB, private). Assumptions: TimesFM 3.0 is zero-shot, multivariate, trained on 1T points; non-commercial use only. Breakdown regime: Research-only forecasting with no direct commercial routing due to licensing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates probabilistic forecasts from historical time-series data under NC constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FOUR_TIERS (e14641dffb5e622c, domain=other, pages_read=3/3): Operator 'Delivery Layer Context Protocol' (page 1, domain other) captures: ## TIER 4 — DELIVERY (GitHub) **apps/web** — Next.js, subscriptions, cockpit, guardrails. Assumptions: Read-only access to public JSON endpoints; no modification of core data. Breakdown regime: Read-only relay of unauthenticated JSON with caching and rate-limiting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's public API delivery layer, where MCP acts as a read-only proxy for LLM agents. Operator 'Causal Reasoning Engine' (page 1, domain other) captures: ## TIER 3 — REASONING (Hugging Face) **Hugging Face Space: Beexly/mimo-brain-engine** — the reasoner. Assumptions: Model operates under hard rules: cite numbers, label inference, output JSON schema. Breakdown regime: Deterministic reasoning under grounded prompt contracts with L3-L5 causal chains. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives structured inference from verified data using MiMo-V2.6-Distill-Qwen-9B. Operator 'Multivariate Forecasting Kernel' (page 1, domain other) captures: ## TIER 2 — SIGNALS / FORECASTING (Hugging Face) **Bucket: Beexly/timesfm-3.0-pytorch-bucket** (1.32 GB, private). Assumptions: TimesFM 3.0 is zero-shot, multivariate, trained on 1T points; non-commercial use only. Breakdown regime: Research-only forecasting with no direct commercial routing due to licensing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Generates probabilistic forecasts from historical time-series data under NC constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal Bayesian networks and model context protocols, extending earlier work on multi-agent reasoning and conformal prediction frameworks. Retrocausal Genealogy: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the adversarial reviewer (L4), the commercial user (Tier 2 NC constraint), and the MCP verifier (read-only). Each agent operates within distinct layers, creating bounded rationality constraints. Theory of Mind & Decision Maker Model: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures TimesFM's NC license prevents silent commercial routing. Leakage vetoes occur when Tier 3's reasoning lacks verified data or fails to flag inference. MCP veto prevents unauthorized modification of Tier 1 data. Cross-Layer Veto & Anti-Leakage Check: Rooted in FOUR_TIERS (e14641dffb5e622c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

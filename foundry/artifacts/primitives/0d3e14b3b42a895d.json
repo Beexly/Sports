@@ -1,0 +1,78 @@
+{
+  "book_id": "0d3e14b3b42a895d",
+  "source_status": "COMPLETE",
+  "title": "UQ_MODULE_INDEX",
+  "file_name": "UQ_MODULE_INDEX.md",
+  "sha256": "0d3e14b3b42a895dfa9a6bfc8a7be1a267cb70c6afb882383492364d586b8605",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The UQ Honesty Stack formalizes finite-sample exchangeability into a strict algebraic lattice of conformal coverage. By enforcing pure functional transforms over isotonic calibration (PAV/IVAP), it guarantees that displayed probabilities are exact recomputations from an immutable Glass Ledger, mathematically isolating epistemic uncertainty from algorithmic hallucination.",
+  "gsi_mapping": "GSI maps these primitives to Bayesian-conformal inference by treating thin strata as silent priors. The abstention floor (`MIN_STRATUM_CALIBRATION`) acts as a rigorous regularization term, ensuring group-conditional coverage remains valid even when historical sportsbook data is sparse or structurally absent.",
+  "gse_mapping": "In GSE, the selective prediction veto operates as a hard state-transition constraint. When the conformal interval width exceeds a dynamic threshold, the engine triggers a 'No-Bet' transition, overriding any apparent edge and preserving capital against high-variance situational breakdowns.",
+  "primitives": [
+    {
+      "primitive_id": "selective_prediction_veto",
+      "name": "Selective Prediction / No-Bet Veto",
+      "verbatim_quote": "Selective prediction / No-Bet is first-class — never overridden by apparent edge.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Dimensionless logical flag; binary state (Bet/Abstain).",
+      "assumptions": "Epistemic uncertainty can exceed acceptable risk bounds despite positive expected value estimates.",
+      "breakdown_regime": "Breaks down if forced to output a probability under extreme distributional shift or insufficient training samples.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a hard stop-loss in portfolio management or a rejection option in statistical hypothesis testing.",
+        "source_operator": "selective_prediction_veto",
+        "telemetry": "Frequency of abstentions vs. realized loss on accepted bets."
+      }
+    },
+    {
+      "primitive_id": "glass_ledger_recomputability",
+      "name": "Glass Ledger Recomputability Invariant",
+      "verbatim_quote": "Everything affecting a displayed probability must be recomputable from the Glass Ledger (when a writer exists).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Probability $P \\in [0,1]$; Ledger state $L$ (immutable sequence of events).",
+      "assumptions": "All stochastic inputs and deterministic transforms are fully logged and accessible.",
+      "breakdown_regime": "Fails if external, unlogged ML libraries introduce hidden mutable state or non-deterministic rounding.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to a deterministic kernel function $P = f(L)$, ensuring auditability across all GSI/GSE layers.",
+        "source_operator": "glass_ledger_recomputability",
+        "telemetry": "Hash collision rate between original emission and ledger re-computation."
+      }
+    },
+    {
+      "primitive_id": "thin_stratum_silence",
+      "name": "Thin Stratum Silence Principle",
+      "verbatim_quote": "Absence of evidence ≠ evidence of failure (thin strata stay silent; undefined placebo is untested).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Stratum size $N_s$; Minimum calibration floor $N_{min}$ (dimensionless count).",
+      "assumptions": "Small sample sizes do not provide sufficient power to reject the null hypothesis of randomness.",
+      "breakdown_regime": "Violated if the system forces a calibration update on a stratum where $N_s < N_{min}$.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a Bayesian prior dominating the likelihood when data is sparse, preventing overfitting in GSI.",
+        "source_operator": "thin_stratum_silence",
+        "telemetry": "Count of suppressed updates due to stratum size constraints."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "0d3e14b3b42a895d_t0",
+      "think": "The UQ Honesty Stack derives its operators from the fundamental requirement of finite-sample honesty. Starting with exchangeable sequences, we apply Pool Adjacent Violators (PAV) to enforce monotonicity, yielding isotonic regression. This forms the base layer for Inductive Venn-Abers Predictors (IVAP), which partition data into conformal regions. The dualities emerge between the continuous probability space and the discrete, immutable Glass Ledger. A critical failure mode identified in PR #220 involves degenerate paths: specifically, non-positive bin counts driving indices negative, or unanimous isotonic regions emitting boundary endpoints (0 or 1) that break standard validators. The `proper-scoring.ts` crash exemplifies how naive implementations violate the strict positivity assumptions of logarithmic scoring rules. Furthermore, the silent fork of the gate's authority—re-declaring the abstention floor instead of importing `MIN_STRATUM_CALIBRATION`—demonstrates how subtle state mutations destroy the recomputability invariant. The mathematical derivation thus hinges on maintaining pure functional boundaries: the transform from raw features to conformal intervals must be a bijective mapping over the logged state, ensuring that any emitted certificate can be cryptographically verified against the ledger without relying on ephemeral runtime memory.\n\nDeep epistemic analysis for UQ_MODULE_INDEX (0d3e14b3b42a895d, domain=other, pages_read=3/3): Operator 'Selective Prediction / No-Bet Veto' (page 2, domain other) captures: Selective prediction / No-Bet is first-class — never overridden by apparent edge. Assumptions: Epistemic uncertainty can exceed acceptable risk bounds despite positive expected value estimates. Breakdown regime: Breaks down if forced to output a probability under extreme distributional shift or insufficient training samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard stop-loss in portfolio management or a rejection option in statistical hypothesis testing. Operator 'Glass Ledger Recomputability Invariant' (page 2, domain other) captures: Everything affecting a displayed probability must be recomputable from the Glass Ledger (when a writer exists). Assumptions: All stochastic inputs and deterministic transforms are fully logged and accessible. Breakdown regime: Fails if external, unlogged ML libraries introduce hidden mutable state or non-deterministic rounding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a deterministic kernel function $P = f(L)$, ensuring auditability across all GSI/GSE layers. Operator 'Thin Stratum Silence Principle' (page 2, domain other) captures: Absence of evidence ≠ evidence of failure (thin strata stay silent; undefined placebo is untested). Assumptions: Small sample sizes do not provide sufficient power to reject the null hypothesis of randomness. Breakdown regime: Violated if the system forces a calibration update on a stratum where $N_s < N_{min}$. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian prior dominating the likelihood when data is sparse, preventing overfitting in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for UQ_MODULE_INDEX (0d3e14b3b42a895d, domain=other, pages_read=3/3): Operator 'Selective Prediction / No-Bet Veto' (page 2, domain other) captures: Selective prediction / No-Bet is first-class — never overridden by apparent edge. Assumptions: Epistemic uncertainty can exceed acceptable risk bounds despite positive expected value estimates. Breakdown regime: Breaks down if forced to output a probability under extreme distributional shift or insufficient training samples. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a hard stop-loss in portfolio management or a rejection option in statistical hypothesis testing. Operator 'Glass Ledger Recomputability Invariant' (page 2, domain other) captures: Everything affecting a displayed probability must be recomputable from the Glass Ledger (when a writer exists). Assumptions: All stochastic inputs and deterministic transforms are fully logged and accessible. Breakdown regime: Fails if external, unlogged ML libraries introduce hidden mutable state or non-deterministic rounding. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to a deterministic kernel function $P = f(L)$, ensuring auditability across all GSI/GSE layers. Operator 'Thin Stratum Silence Principle' (page 2, domain other) captures: Absence of evidence ≠ evidence of failure (thin strata stay silent; undefined placebo is untested). Assumptions: Small sample sizes do not provide sufficient power to reject the null hypothesis of randomness. Breakdown regime: Violated if the system forces a calibration update on a stratum where $N_s < N_{min}$. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a Bayesian prior dominating the likelihood when data is sparse, preventing overfitting in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This stack inherits directly from V.V. Vovk's work on Algorithmic Probability Theory and Conformal Prediction, bridging early 20th-century frequentist coverage guarantees with modern functional programming paradigms. The insistence on pure TypeScript and explicit data structures echoes the Lisp tradition of homoiconicity, where code and state are transparently inspectable. Historically, this counters the black-box opacity of deep learning, reverting to the rigorous, auditable foundations laid by isotonic regression pioneers like Barlow and Brunk, while adapting them for real-time, high-frequency decision environments.",
+      "theory_of_mind": "The system models opposing agents—specifically, future auditing agents or adversarial market makers—who will attempt to reverse-engineer the decision logic. By enforcing the Glass Ledger invariant, the UQ stack assumes the auditor possesses infinite computational patience but zero trust in the runtime environment. The 'No-Bet' veto anticipates an agent that might exploit apparent edges born from statistical noise. It treats the market not as a passive receiver of probabilities, but as an active participant that will punish overconfidence in thin strata, thereby necessitating a defensive, silence-preserving posture.",
+      "cross_layer_veto": "Anti-collinearity is enforced by strictly separating the calibration layer (PAV/IVAP) from the execution layer (Gate/Council). Leakage occurs if the execution layer overrides a 'No-Bet' signal based on external heuristics, violating the selective prediction primitive. The veto condition triggers whenever a downstream module attempts to mutate a probability derived from a thin stratum without re-evaluating the `MIN_STRATUM_CALIBRATION` floor. This ensures that the epistemic uncertainty quantified at the conformal layer cannot be artificially compressed or ignored by higher-level business logic, maintaining structural integrity across the entire inference pipeline."
+    }
+  ]
+}

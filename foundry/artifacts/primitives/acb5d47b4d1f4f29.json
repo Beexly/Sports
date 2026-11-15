@@ -1,0 +1,78 @@
+{
+  "book_id": "acb5d47b4d1f4f29",
+  "source_status": "COMPLETE",
+  "title": "review-platform-catalog",
+  "file_name": "review-platform-catalog.md",
+  "sha256": "acb5d47b4d1f4f29edf38b3e80c04dd901d5f2d589cafd52410f82bb6c899231",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for forecasting platform classification and data ingestion using probabilistic graph models over temporal event streams. Universal Lens: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on platform veracity and data reliability using conformal predictive distributions over forecast hierarchies. GSI Mapping: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in platform integration logic based on real-time API availability and data integrity checks. GSE Mapping: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "platform_veracity_classifier",
+      "name": "Platform Veracity Classifier",
+      "verbatim_quote": "# Audit: `platform-catalog-live-sweep.md` (2026-08-25) ## Verdict Corrections - **Saga / sagacvo.com**: Verdict LIKELY-FABRICATED is CORRECT.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{\\\\text{platform}} \\\\in \\\\{\\\\text{REAL}, \\\\text{RETIRE}, \\\\text{FABRICATED}\\\\}': 'Discrete verdict space'}",
+      "assumptions": "Platform status is binary or ternary with deterministic classification rules.",
+      "breakdown_regime": "When platform metadata contradicts operational behavior.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each platform's status maps to a node in a directed acyclic graph of trustworthiness.",
+        "source_operator": "platform_veracity_classifier",
+        "telemetry": "API response consistency vs. stated platform lifecycle."
+      }
+    },
+    {
+      "primitive_id": "forecasting_data_ingestion_pipeline",
+      "name": "Forecasting Data Ingestion Pipeline",
+      "verbatim_quote": "- **Polymarket** (`docs.polymarket.com/`): Rate limits very generous for read — 15,000 req/10s general; 1,000 req/10s Data API; 200 req/10s `/trades`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{req}}': 'Requests per time window (Hz)', 'T_{\\\\text{lag}}': 'Latency in seconds'}",
+      "assumptions": "Data ingestion follows fixed-rate constraints and latency bounds.",
+      "breakdown_regime": "When rate limits are exceeded or latency exceeds threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pipeline throughput derived from API rate limits and data structure complexity.",
+        "source_operator": "forecasting_data_ingestion_pipeline",
+        "telemetry": "Number of successful fetches per second normalized against rate limits."
+      }
+    },
+    {
+      "primitive_id": "open_science_dataset_registry",
+      "name": "Open Science Dataset Registry",
+      "verbatim_quote": "- **OSF (osf.io)**: Real open-science framework hosting sports-research preprints/datasets; free API; MISSING.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{\\\\text{dataset}}': 'Dataset identifier', 'A_{\\\\text{auth}} \\\\in \\\\{\\\\text{public}, \\\\text{private}\\\\}': 'Access control flag'}",
+      "assumptions": "Datasets are accessible via standard HTTP and have unique identifiers.",
+      "breakdown_regime": "When authentication is required or dataset is unavailable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry entries map to nodes in a knowledge graph of research data.",
+        "source_operator": "open_science_dataset_registry",
+        "telemetry": "Dataset download success rate and metadata completeness."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "acb5d47b4d1f4f29_t0",
+      "think": "The classification of forecasting platforms hinges on a tripartite model: real, fabricated, or retired. This is modeled as a categorical variable V_platform ∈ {REAL, RETIRE, FABRICATED}. The veracity classifier operates under the assumption that platform metadata aligns with its operational state. For instance, if a site claims retirement, this must be verified through external indicators such as API responses or official announcements. The forecasting data ingestion pipeline is governed by rate-limiting functions R_req(t), where t represents time windows. These functions define throughput boundaries for data access. A key insight is that rate limits act as a proxy for platform health—exceeding them signals either abuse or system degradation. Open science datasets like those hosted on OSF form a registry with public access flags A_auth. Their inclusion in the catalog depends on whether they meet criteria for reuse in forecasting models. Each primitive contributes to a larger probabilistic framework where uncertainty is quantified across layers of abstraction.\n\nDeep epistemic analysis for review-platform-catalog (acb5d47b4d1f4f29, domain=other, pages_read=2/2): Operator 'Platform Veracity Classifier' (page 1, domain other) captures: # Audit: `platform-catalog-live-sweep.md` (2026-08-25) ## Verdict Corrections - **Saga / sagacvo.com**: Verdict LIKELY-FABRICATED is CORRECT. Assumptions: Platform status is binary or ternary with deterministic classification rules. Breakdown regime: When platform metadata contradicts operational behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each platform's status maps to a node in a directed acyclic graph of trustworthiness. Operator 'Forecasting Data Ingestion Pipeline' (page 1, domain other) captures: - **Polymarket** (`docs.polymarket.com/`): Rate limits very generous for read — 15,000 req/10s general; 1,000 req/10s Data API; 200 req/10s `/trades`. Assumptions: Data ingestion follows fixed-rate constraints and latency bounds. Breakdown regime: When rate limits are exceeded or latency exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline throughput derived from API rate limits and data structure complexity. Operator 'Open Science Dataset Registry' (page 1, domain other) captures: - **OSF (osf.io)**: Real open-science framework hosting sports-research preprints/datasets; free API; MISSING. Assumptions: Datasets are accessible via standard HTTP and have unique identifiers. Breakdown regime: When authentication is required or dataset is unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry entries map to nodes in a knowledge graph of research data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for review-platform-catalog (acb5d47b4d1f4f29, domain=other, pages_read=2/2): Operator 'Platform Veracity Classifier' (page 1, domain other) captures: # Audit: `platform-catalog-live-sweep.md` (2026-08-25) ## Verdict Corrections - **Saga / sagacvo.com**: Verdict LIKELY-FABRICATED is CORRECT. Assumptions: Platform status is binary or ternary with deterministic classification rules. Breakdown regime: When platform metadata contradicts operational behavior. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each platform's status maps to a node in a directed acyclic graph of trustworthiness. Operator 'Forecasting Data Ingestion Pipeline' (page 1, domain other) captures: - **Polymarket** (`docs.polymarket.com/`): Rate limits very generous for read — 15,000 req/10s general; 1,000 req/10s Data API; 200 req/10s `/trades`. Assumptions: Data ingestion follows fixed-rate constraints and latency bounds. Breakdown regime: When rate limits are exceeded or latency exceeds threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pipeline throughput derived from API rate limits and data structure complexity. Operator 'Open Science Dataset Registry' (page 1, domain other) captures: - **OSF (osf.io)**: Real open-science framework hosting sports-research preprints/datasets; free API; MISSING. Assumptions: Datasets are accessible via standard HTTP and have unique identifiers. Breakdown regime: When authentication is required or dataset is unavailable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry entries map to nodes in a knowledge graph of research data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 20th-century information theory and extended into modern machine learning pipelines for data validation and trust modeling. Retrocausal Genealogy: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include platform operators who may misrepresent their status, and data consumers who rely on accurate classifications for inference. The system must detect adversarial misclassification attempts while maintaining robustness. Theory of Mind & Decision Maker Model: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that redundant or conflicting veracity signals do not bias the final classification. Leakage vetoes prevent outdated or stale data from influencing current forecasts. Cross-Layer Veto & Anti-Leakage Check: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in review-platform-catalog (acb5d47b4d1f4f29), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

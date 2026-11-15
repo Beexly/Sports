@@ -1,78 +1,16 @@
 {
   "book_id": "408b39da1ad68c59",
-  "source_status": "COMPLETE",
-  "title": "WAVE_3_accommodation_record",
-  "file_name": "WAVE_3_accommodation_record.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_408b39da1ad68c59",
+  "file_name": "408b39da1ad68c59.quarantined",
   "sha256": "408b39da1ad68c595d678ac77e6e95bd43ff0c29cc552cada028717ba5b9e403",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Accommodation and escalation events form a partially ordered set under temporal precedence and hierarchical escalation path. Universal Lens: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief updates on accommodation requests using flagged escalation lists as evidence for organizational compliance risk. GSI Mapping: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "State transitions in employee-agent interaction space triggered by accommodation queries, mapped through escalation tiers to decision node states. GSE Mapping: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "accommodation_request",
-      "name": "Accommodation Request",
-      "verbatim_quote": "Asked for support, help, assistance, alignment, adjustment, or accommodation of any kind — whether or not the word \"accommodation\" appears.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'R': 'request event indicator (dimensionless)', 't': 'timestamp (seconds since epoch)'}",
-      "assumptions": "Requests are binary events; temporal ordering is preserved.",
-      "breakdown_regime": "R = 1 when request occurs, 0 otherwise.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Each accommodation request maps to a Bayesian update in GSI's compliance model, triggering a state transition in GSE's agent interaction graph.",
-        "source_operator": "accommodation_request",
-        "telemetry": "Number of flagged accommodation events per time window"
-      }
-    },
-    {
-      "primitive_id": "escalation_path",
-      "name": "Escalation Path",
-      "verbatim_quote": "The flagged list is the one that shows how far up the chain a given thing traveled and when.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'E': 'escalation level (integer)', 'T': 'time of escalation (seconds since epoch)'}",
-      "assumptions": "Escalation levels are discrete and ordered; path is deterministic.",
-      "breakdown_regime": "E increases monotonically with upward communication.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Escalation path defines a directed acyclic graph in GSE's state-space, with nodes representing organizational roles and edges representing communication flow.",
-        "source_operator": "escalation_path",
-        "telemetry": "Maximum escalation level reached per incident"
-      }
-    },
-    {
-      "primitive_id": "flagged_event",
-      "name": "Flagged Event",
-      "verbatim_quote": "-----------------------------------------------------------WHY THE FLAGGED LIST MATTERS: Notice to the company is a different question from notice to one manager.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'F': 'flag status (boolean)', 'C': 'recipient role category (HR, manager, director)'}",
-      "assumptions": "Flagging implies notification to specific recipient categories.",
-      "breakdown_regime": "F = 1 if event is sent to HR, manager, or executive; 0 otherwise.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Flagged events in GSI correspond to high-dimensional decision points in GSE's agent behavior tree, influencing policy compliance outcomes.",
-        "source_operator": "flagged_event",
-        "telemetry": "Proportion of flagged vs non-flagged accommodation events"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "408b39da1ad68c59_t0",
-      "think": "The primitives define a structured framework for tracking employee accommodation and escalation behaviors within an organization. The accommodation request primitive models a binary event indicating a need for support or adjustment, which can be formalized as a stochastic process over time. The escalation path primitive captures the hierarchical progression of such requests, forming a directed graph that reflects organizational communication structures. The flagged event primitive introduces a categorical dimension based on recipient type, distinguishing between internal management notices and broader corporate awareness. These three operators interact to form a triadic system where each request generates a unique trajectory through the organizational hierarchy, with implications for both individual agent behavior and collective institutional response patterns. The failure mode arises when escalation paths are truncated or flagged events fail to propagate correctly, leading to incomplete data for downstream analysis in GSI and incorrect state transitions in GSE.\n\nDeep epistemic analysis for WAVE_3_accommodation_record (408b39da1ad68c59, domain=other, pages_read=1/1): Operator 'Accommodation Request' (page 1, domain other) captures: Asked for support, help, assistance, alignment, adjustment, or accommodation of any kind — whether or not the word \"accommodation\" appears. Assumptions: Requests are binary events; temporal ordering is preserved. Breakdown regime: R = 1 when request occurs, 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each accommodation request maps to a Bayesian update in GSI's compliance model, triggering a state transition in GSE's agent interaction graph. Operator 'Escalation Path' (page 1, domain other) captures: The flagged list is the one that shows how far up the chain a given thing traveled and when. Assumptions: Escalation levels are discrete and ordered; path is deterministic. Breakdown regime: E increases monotonically with upward communication. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Escalation path defines a directed acyclic graph in GSE's state-space, with nodes representing organizational roles and edges representing communication flow. Operator 'Flagged Event' (page 1, domain other) captures: -----------------------------------------------------------WHY THE FLAGGED LIST MATTERS: Notice to the company is a different question from notice to one manager. Assumptions: Flagging implies notification to specific recipient categories. Breakdown regime: F = 1 if event is sent to HR, manager, or executive; 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Flagged events in GSI correspond to high-dimensional decision points in GSE's agent behavior tree, influencing policy compliance outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for WAVE_3_accommodation_record (408b39da1ad68c59, domain=other, pages_read=1/1): Operator 'Accommodation Request' (page 1, domain other) captures: Asked for support, help, assistance, alignment, adjustment, or accommodation of any kind — whether or not the word \"accommodation\" appears. Assumptions: Requests are binary events; temporal ordering is preserved. Breakdown regime: R = 1 when request occurs, 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each accommodation request maps to a Bayesian update in GSI's compliance model, triggering a state transition in GSE's agent interaction graph. Operator 'Escalation Path' (page 1, domain other) captures: The flagged list is the one that shows how far up the chain a given thing traveled and when. Assumptions: Escalation levels are discrete and ordered; path is deterministic. Breakdown regime: E increases monotonically with upward communication. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Escalation path defines a directed acyclic graph in GSE's state-space, with nodes representing organizational roles and edges representing communication flow. Operator 'Flagged Event' (page 1, domain other) captures: -----------------------------------------------------------WHY THE FLAGGED LIST MATTERS: Notice to the company is a different question from notice to one manager. Assumptions: Flagging implies notification to specific recipient categories. Breakdown regime: F = 1 if event is sent to HR, manager, or executive; 0 otherwise. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Flagged events in GSI correspond to high-dimensional decision points in GSE's agent behavior tree, influencing policy compliance outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in organizational behavior theory and information flow models from systems engineering, extending to Bayesian decision networks and agent-based modeling frameworks. Retrocausal Genealogy: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Models opposing agents as either compliant (responding to accommodation) or resistant (avoiding escalation), with decision boundaries determined by organizational incentives and risk tolerance thresholds. Theory of Mind & Decision Maker Model: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity ensures that flagged events do not redundantly encode the same escalation path information; leakage veto prevents false positives in flagged event classification. Cross-Layer Veto & Anti-Leakage Check: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in WAVE_3_accommodation_record (408b39da1ad68c59), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

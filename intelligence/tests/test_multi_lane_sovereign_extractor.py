@@ -543,3 +543,59 @@ def test_load_plain_text_virtual_pages_pretty_prints_minified_json(tmp_path: Pat
         assert len(candidates) >= 3
         assert all(len(c["verbatim_quote"].split()) >= 10 for c in candidates[:3])
 
+
+def test_load_explicit_books_ro_wires_ocr_rescue_path(tmp_path: Path, monkeypatch) -> None:
+    import sys
+
+    extractor_mod = sys.modules[select_eligible_books_ro.__module__]
+    ocr_dir = tmp_path / "ocr_rescue"
+    ocr_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(extractor_mod, "OCR_RESCUE_DIR", ocr_dir)
+
+    pdf_file = tmp_path / "scanned_classic.pdf"
+    pdf_file.write_bytes(b"%PDF-1.4\n% minimal synthetic payload for sha256 stability\n")
+    bid = extractor_mod.compute_gatekeeper_sha256(pdf_file)[:16]
+    ocr_txt = ocr_dir / f"{bid}_vision_ocr_core.txt"
+    ocr_txt.write_text("========== PAGE 1 ==========\nSample OCR text.\n", encoding="utf-8")
+
+    rows = extractor_mod.build_book_rows_from_explicit_pdfs([str(pdf_file)], completed_dirs=())
+    assert len(rows) == 1
+    assert rows[0]["book_id"] == bid
+    assert rows[0]["is_ocr_classic"] is True
+    assert rows[0]["ocr_rescue_path"] == str(ocr_txt)
+
+
+def test_pii_quarantine_guard_blocks_personal_legal_hr_and_preserves_research_docs() -> None:
+    import sys
+
+    extractor_mod = sys.modules[select_eligible_books_ro.__module__]
+    is_pii = extractor_mod.is_pii_or_correspondence_row
+
+    blocked_rows = [
+        {"file_name": "intake.txt", "file_path": r"G:\My Drive\Turner Construction Archive\Turner_Case_AI\02_corpus_text\intake.txt", "title": "intake"},
+        {"file_name": "intake.txt", "file_path": "G:/My Drive/Turner Construction Archive/Turner_Case_AI/02_corpus_text/intake.txt", "title": "intake"},
+        {"file_name": "Severance.pdf", "file_path": r"G:\My Drive\Saved from Chrome\Severance.pdf", "title": "Severance"},
+        {"file_name": "G Baxley 2018 Dismissal.pdf", "file_path": r"G:\My Drive\G Baxley 2018 Dismissal.pdf", "title": "G Baxley 2018 Dismissal"},
+        {"file_name": "Garrett Baxley Final Divorce Decree.PDF", "file_path": r"G:\My Drive\Garrett Baxley Final Divorce Decree.PDF", "title": "Garrett Baxley Final Divorce Decree"},
+        {"file_name": "85d0eb49ef_CP_575_E.pdf.md", "file_path": "gdrive", "title": "CP_575_E.pdf"},
+        {"file_name": "order_01KYXV9D886T9P984M4YSQKC14-01KYXV9EXQAN6JAEZGXPVNF18P.pdf", "file_path": r"G:\My Drive\order_01KYXV9D886T9P984M4YSQKC14-01KYXV9EXQAN6JAEZGXPVNF18P.pdf", "title": "order_01KYXV9D886T9P984M4YSQKC14"},
+        {"file_name": "Baxley_Project_File_Audit_2026-08-13.md", "file_path": r"C:\Users\Garrett\Sports\docs\predictions\research\2026-10-13\Baxley_Project_File_Audit_2026-08-13.md", "title": "Baxley Project File Audit"},
+        {"file_name": "Billing___Payments_-_Vytalus_Medical_Group.pdf", "file_path": r"C:\Users\Garrett\Sports\docs\predictions\research\2026-10-13\Billing___Payments_-_Vytalus_Medical_Group.pdf", "title": "Vytalus"},
+        {"file_name": "Charcuterie-Chick-Proposal (1).pdf", "file_path": r"C:\Users\Garrett\Sports\docs\predictions\research\2026-10-13\Charcuterie-Chick-Proposal (1).pdf", "title": "Charcuterie-Chick"},
+        {"file_name": "Garrett_Baxley_HR_ATS_Resume_Revised.pdf", "file_path": r"C:\Users\Garrett\Sports\docs\predictions\research\2026-10-13\Garrett_Baxley_HR_ATS_Resume_Revised.pdf", "title": "Garrett Baxley Resume"},
+        {"file_name": "openai-api-key.txt", "file_path": r"C:\Users\Garrett\Sports\brain\local_vault\2026-10-13\openai-api-key.txt", "title": "openai-api-key"},
+        {"file_name": "form_w-2_2025.pdf", "file_path": r"C:\Users\Garrett\Downloads\form_w-2_2025.pdf", "title": "Form W-2"},
+    ]
+    for row in blocked_rows:
+        assert is_pii(row) is True, f"Expected PII quarantine match for {row}"
+
+    allowed_rows = [
+        {"file_name": "gdoc_1W-2Z_2026-10-30-MIDDAY-IG50.md.md", "file_path": "/CorpusRoot", "title": "2026-10-30-MIDDAY-IG50.md"},
+        {"file_name": "COMPLIANCE_AND_RESPONSIBLE_GAMING.md", "file_path": r"C:\Users\Garrett\Sports\docs\COMPLIANCE_AND_RESPONSIBLE_GAMING.md", "title": "COMPLIANCE_AND_RESPONSIBLE_GAMING"},
+        {"file_name": "Thorp-2006-KellyCriterionBlackjackSportsBettingStockMarket.pdf", "file_path": r"G:\My Drive\gpu-ocr-input\Thorp-2006-KellyCriterionBlackjackSportsBettingStockMarket.pdf", "title": "Thorp-2006-KellyCriterionBlackjackSportsBettingStockMarket"},
+        {"file_name": "monmonier001.pdf", "file_path": r"C:\Users\Garrett\Downloads\monmonier001.pdf", "title": "monmonier001"},
+    ]
+    for row in allowed_rows:
+        assert is_pii(row) is False, f"Unexpected false-positive PII quarantine on {row}"
+
+

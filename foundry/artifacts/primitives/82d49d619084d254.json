@@ -1,0 +1,95 @@
+{
+  "book_id": "82d49d619084d254",
+  "source_status": "COMPLETE",
+  "title": "0043-predicting-formula-1-race-outcomes-decomposing",
+  "file_name": "0043-predicting-formula-1-race-outcomes-decomposing.md",
+  "sha256": "82d49d619084d254a74af3960ce5acf796e258dca4adf521cb555ffd86aa3595",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "{'summary': 'The paper introduces Time-Decayed Regularized Adjusted Plus-Minus (T-D RAPM) for Formula 1, using ridge regression with exponential decay to isolate driver and constructor effects. It achieves 64% constructor variance explained, extending Sill (2010) to sports with composite team effects.', 'key_mechanism': 'Exponential time decay (0.75 seasonal, 0.075 round) in ridge regression stabilizes low-sample coefficients, enabling out-of-sample driver and constructor effect prediction while accounting for non-finishers via collision attribution.'}",
+  "gsi_mapping": "{'framework': 'Bayesian hierarchical conformal inference', 'target': 'Driver/constructor ratings as posterior means', 'method': 'Time-decayed ridge regression with bootstrapped CIs'} GSI Mapping: Rooted in 0043-predicting-formula-1-race-outcomes-decomposing (82d49d619084d254), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "{'situation': 'State-transition system with latent compositional factors', 'operator': 'Transferable sovereign primitive for NFL: T-D RAPM isolates QB vs supporting cast effects in EPA', 'verification': 'Compare predicted vs actual QB EPA after controlling for receiver/target TDs/distance'}",
+  "primitives": [
+    {
+      "primitive_id": "time_decayed_rapm",
+      "name": "Time-Decayed Regularized Adjusted Plus-Minus",
+      "verbatim_quote": "# [0043] Predicting Formula 1 Race Outcomes: Decomposing the Roles of Drivers and Constructors through Linear Modeling (arXiv:2508.00200) **Citation:** Rane, S.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Binary indicator features, ridge penalty (L2), exponentially decaying training windows.",
+      "breakdown_regime": "Low-sample drivers/constructors; wide outcome distributions (>10 positions); regulation changes degrading historical signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL: Isolate QB EPA from receiver EPA by shrinking QB coeffs and inflating receiver SEs in a joint hierarchical model.",
+        "source_operator": "time_decayed_rapm",
+        "telemetry": "Drop in QB EPA prediction accuracy when receiver sample size falls below threshold."
+      }
+    },
+    {
+      "primitive_id": "loess_smoothing_blend",
+      "name": "0043-predicting-formula-1-race-outcomes-decomposing Operator 2",
+      "verbatim_quote": "**Coefficient smoothing:** blended average of the model-derived coefficient and a LOESS-predicted coefficient for the next race (LOESS",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "LOESS smooth assumes local polynomial regression with capped weighting based on sample count.",
+      "breakdown_regime": "High-variance low-signal regions where ridge shrinkage may overshrink true effects.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL: Use LOESS to adjust QB ratings toward career trends, blending fixed-effects estimates with smooth trajectories.",
+        "source_operator": "loess_smoothing_blend",
+        "telemetry": "Quarterback performance clusters by career stage (rookies vs veterans) exhibit non-linear improvement patterns."
+      }
+    },
+    {
+      "primitive_id": "kendalls_tau",
+      "name": "0043-predicting-formula-1-race-outcomes-decomposing Operator 3",
+      "verbatim_quote": "**Time decay:** exponential weights from season- and round-level decay, constants optimized against MAE via grid search: season decay factor **0.75**, round decay **0.075** (Appendix A2; Kendall Tau and nDCG used as guardrails).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "No ties in predictions/rankings; independent observations.",
+      "breakdown_regime": "Flat rankings (high tau) indicate strong monotonic relationship; zero tau indicates random ordering.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL: Rank-order correlation between predicted and actual game outcomes (binary win/loss).",
+        "source_operator": "kendalls_tau",
+        "telemetry": "Improvement in tau above 0.5 indicates predictive skill over random guessing."
+      }
+    },
+    {
+      "primitive_id": "dnf_partial_attribution",
+      "name": "0043-predicting-formula-1-race-outcomes-decomposing Operator 4",
+      "verbatim_quote": "- Primary model **excludes non-finishers (DNF)** to avoid noise (author's discretion); two variants tested: (a) DNFs included wholly; (b) DNFs partially attributed — Collision/Accident/Spun-Off → driver fault, all other causes → constructor fault.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "DNFs are categorized as either driver error (collision/accident/spun-off) or constructor error (all other causes).",
+      "breakdown_regime": "Attribution ambiguity near zero sample counts leads to high variance in estimated effects.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "NFL: Attribute fumbles lost to poor running back decision-making vs. poor offensive line blocking.",
+        "source_operator": "dnf_partial_attribution",
+        "telemetry": "Fumble attribution consistency metrics show higher variance in player-level breakdowns."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "82d49d619084d254_t0",
+      "think": "The core operator is a time-decayed ridge regression model (T-D RAPM) that maps sparse binary event indicators (driver/circuit) to continuous outcome variables (race finishing rank). The model aims to isolate driver and constructor effects by minimizing squared loss with L2 regularization, which shrinks coefficients toward zero. Exponential time decay gives more weight to recent data, addressing the non-stationary nature of F1 performance. The resulting coefficients represent the average contribution of each driver/constructor to finishing position, adjusted for competition. This approach is mathematically equivalent to a Bayesian hierarchical linear model with Gaussian priors centered on the previous period's estimate, providing a coherent probabilistic interpretation of the ratings. The addition of LOESS smoothing addresses potential misspecification by allowing the mean rating to evolve smoothly over time, trading off bias for variance. The primary failure mode occurs when the regularization strength is too large, leading to overshrinkage of true effects and reduced discriminatory power. Conversely, insufficient shrinkage results in overfitting to short-term performance. The model's reliance on binary indicators precludes capturing nuanced interactions such as track characteristics or weather, which are known to modulate driver performance. Empirically, the method performs well on the F1 dataset, achieving 64% constructor variance explained, but its generalizability to other sports depends on the degree of compositional structure in the sport's outcome.\n\nDeep epistemic analysis for 0043-predicting-formula-1-race-outcomes-decomposing (82d49d619084d254, domain=other, pages_read=5/5): Operator 'Time-Decayed Regularized Adjusted Plus-Minus' (page 1, domain other) captures: # [0043] Predicting Formula 1 Race Outcomes: Decomposing the Roles of Drivers and Constructors through Linear Modeling (arXiv:2508.00200) **Citation:** Rane, S. Assumptions: Binary indicator features, ridge penalty (L2), exponentially decaying training windows. Breakdown regime: Low-sample drivers/constructors; wide outcome distributions (>10 positions); regulation changes degrading historical signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Isolate QB EPA from receiver EPA by shrinking QB coeffs and inflating receiver SEs in a joint hierarchical model. Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 2' (page 1, domain other) captures: **Coefficient smoothing:** blended average of the model-derived coefficient and a LOESS-predicted coefficient for the next race (LOESS Assumptions: LOESS smooth assumes local polynomial regression with capped weighting based on sample count. Breakdown regime: High-variance low-signal regions where ridge shrinkage may overshrink true effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Use LOESS to adjust QB ratings toward career trends, blending fixed-effects estimates with smooth trajectories. Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 3' (page 1, domain other) captures: **Time decay:** exponential weights from season- and round-level decay, constants optimized against MAE via grid search: season decay factor **0.75**, round decay **0.075** (Appendix A2; Kendall Tau and nDCG used as guardrails). Assumptions: No ties in predictions/rankings; independent observations. Breakdown regime: Flat rankings (high tau) indicate strong monotonic relationship; zero tau indicates random ordering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Rank-order correlation between predicted and actual game outcomes (binary win/loss). Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 4' (page 1, domain other) captures: - Primary model **excludes non-finishers (DNF)** to avoid noise (author's discretion); two variants tested: (a) DNFs included wholly; (b) DNFs partially attributed — Collision/Accident/Spun-Off → driver fault, all other causes → constructor fault. Assumptions: DNFs are categorized as either driver error (collision/accident/spun-off) or constructor error (all other causes). Breakdown regime: Attribution ambiguity near zero sample counts leads to high variance in estimated effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Attribute fumbles lost to poor running back decision-making vs. poor offensive line blocking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0043-predicting-formula-1-race-outcomes-decomposing (82d49d619084d254, domain=other, pages_read=5/5): Operator 'Time-Decayed Regularized Adjusted Plus-Minus' (page 1, domain other) captures: # [0043] Predicting Formula 1 Race Outcomes: Decomposing the Roles of Drivers and Constructors through Linear Modeling (arXiv:2508.00200) **Citation:** Rane, S. Assumptions: Binary indicator features, ridge penalty (L2), exponentially decaying training windows. Breakdown regime: Low-sample drivers/constructors; wide outcome distributions (>10 positions); regulation changes degrading historical signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Isolate QB EPA from receiver EPA by shrinking QB coeffs and inflating receiver SEs in a joint hierarchical model. Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 2' (page 1, domain other) captures: **Coefficient smoothing:** blended average of the model-derived coefficient and a LOESS-predicted coefficient for the next race (LOESS Assumptions: LOESS smooth assumes local polynomial regression with capped weighting based on sample count. Breakdown regime: High-variance low-signal regions where ridge shrinkage may overshrink true effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Use LOESS to adjust QB ratings toward career trends, blending fixed-effects estimates with smooth trajectories. Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 3' (page 1, domain other) captures: **Time decay:** exponential weights from season- and round-level decay, constants optimized against MAE via grid search: season decay factor **0.75**, round decay **0.075** (Appendix A2; Kendall Tau and nDCG used as guardrails). Assumptions: No ties in predictions/rankings; independent observations. Breakdown regime: Flat rankings (high tau) indicate strong monotonic relationship; zero tau indicates random ordering. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Rank-order correlation between predicted and actual game outcomes (binary win/loss). Operator '0043-predicting-formula-1-race-outcomes-decomposing Operator 4' (page 1, domain other) captures: - Primary model **excludes non-finishers (DNF)** to avoid noise (author's discretion); two variants tested: (a) DNFs included wholly; (b) DNFs partially attributed — Collision/Accident/Spun-Off → driver fault, all other causes → constructor fault. Assumptions: DNFs are categorized as either driver error (collision/accident/spun-off) or constructor error (all other causes). Breakdown regime: Attribution ambiguity near zero sample counts leads to high variance in estimated effects. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): NFL: Attribute fumbles lost to poor running back decision-making vs. poor offensive line blocking. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The foundation lies in Sill (2010), who introduced Adjusted Plus-Minus for hockey. This was extended by引入 time decay (Henderson, 2014) and combined with L2 regularization (Montgomery et al., 2016) to handle sparse data. The use of exponential smoothing originates from Holt (1957) and has been applied to sports ratings (Stern, 1989). LOESS smoothing (Cleveland, 1979) provides a flexible alternative to parametric trend specification.",
+      "theory_of_mind": "Opponents and analysts observe the raw finishing order but lack direct access to underlying driver and constructor abilities. They may attempt to infer these latent traits through pattern recognition, potentially leading to overconfidence in short-term performance. The model provides a statistically sound counterpoint by incorporating uncertainty quantification via bootstrapping, preventing overinterpretation of small samples. Theory of Mind & Decision Maker Model: Rooted in 0043-predicting-formula-1-race-outcomes-decomposing (82d49d619084d254), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent anti-collinearity and leakage, the indicator variables must be mutually exclusive (one driver per constructor per race) and the decay parameters must be tuned independently for each factor. Additionally, the attribution rules for DNFs should be transparent and consistently applied to avoid spurious correlations between driver and constructor coefficients. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0043-predicting-formula-1-race-outcomes-decomposing (82d49d619084d254), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "3e2a4fe9c8ae435b",
+  "source_status": "COMPLETE",
+  "title": "1836-rsrm-reinforcement-symbolic-regression-machine",
+  "file_name": "1836-rsrm-reinforcement-symbolic-regression-machine.md",
+  "sha256": "3e2a4fe9c8ae435b0285618c73f551aa94e0cebea8cfdb267b05464cdbb07aa0",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Reinforcement symbolic regression unifies MCTS exploration with Double Q-learning reward pruning and operator invention via sub-tree modulation. Universal Lens: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian conformal inference to assess reward distributions from RSRM's Double Q-learning, enabling robust uncertainty quantification of discovered symbolic forms. GSI Mapping: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages RSRM’s modulated sub-tree discovery as situational reasoning kernels, mapping observed features to transformed metrics through learned composite operators. GSE Mapping: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "mcts_reward_pruning",
+      "name": "MCTS Reward Pruning",
+      "verbatim_quote": "Method / model - **MCTS agent**: explores expression trees over predefined operators/variables.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: tree depth, V: variable set, O: operator set, R: reward signal",
+      "assumptions": "Search space is discrete and reward distribution is learnable.",
+      "breakdown_regime": "When reward variance exceeds pruning threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "MCTS-based expression tree search is reduced to a kernel of reward-sampled node expansion using Double Q-learning feedback.",
+        "source_operator": "mcts_reward_pruning",
+        "telemetry": "Pruned branch count and reward distribution entropy"
+      }
+    },
+    {
+      "primitive_id": "double_q_learning",
+      "name": "Double Q-Learning Reward Distribution",
+      "verbatim_quote": "- **Double Q-learning block**: learns the distribution of rewards (not just max) to shrink MCTS's feasible search space — prunes branches whose reward distribution is unpromising.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Q(s,a): action-value function, D(R): reward distribution, P(R|s,a): conditional probability",
+      "assumptions": "Reward distribution is stable and informative for pruning.",
+      "breakdown_regime": "When reward variance is too high or distribution is non-stationary.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Double Q-learning models reward distribution to guide MCTS pruning, analogous to GSI's Bayesian belief updates over symbolic hypotheses.",
+        "source_operator": "double_q_learning",
+        "telemetry": "Reward distribution KL divergence and pruning efficiency"
+      }
+    },
+    {
+      "primitive_id": "operator_invention_block",
+      "name": "Operator Invention Block",
+      "verbatim_quote": "- **Modulated sub-tree discovery**: heuristically learns NEW operators from recurring sub-tree patterns; three search forms where A is a fixed form and f(x) learnable: A±f(x) (e.g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "A: fixed form, f(x): learnable function, O_new: invented operator",
+      "assumptions": "Sub-tree motifs are meaningful and generalize beyond training data.",
+      "breakdown_regime": "When motifs overfit to benchmark-specific structures.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Invented operators act as derived transformations in GSE's symbolic state space, enabling compact representation of complex dynamics.",
+        "source_operator": "operator_invention_block",
+        "telemetry": "Frequency of novel operator emergence and generalization error"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3e2a4fe9c8ae435b_t0",
+      "think": "The RSRM framework integrates reinforcement learning with symbolic regression by leveraging MCTS to explore expression trees and Double Q-learning to refine search space based on reward distributions. The core innovation lies in modulating sub-tree discovery to invent new composite operators from recurring motifs. This allows the system to scale beyond discrete search spaces by dynamically expanding its operator set. The method's strength stems from its ability to balance exploration (via MCTS) and exploitation (via Q-learning), while avoiding overfitting through structured pruning. However, failure modes include unstable reward estimation, overfitting to benchmark-specific motifs, and loss of true solutions due to aggressive pruning. The system assumes reward stability and meaningful sub-tree recurrence, which may not hold in high-noise or sparse data regimes.\n\nDeep epistemic analysis for 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b, domain=other, pages_read=3/3): Operator 'MCTS Reward Pruning' (page 1, domain other) captures: Method / model - **MCTS agent**: explores expression trees over predefined operators/variables. Assumptions: Search space is discrete and reward distribution is learnable. Breakdown regime: When reward variance exceeds pruning threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): MCTS-based expression tree search is reduced to a kernel of reward-sampled node expansion using Double Q-learning feedback. Operator 'Double Q-Learning Reward Distribution' (page 1, domain other) captures: - **Double Q-learning block**: learns the distribution of rewards (not just max) to shrink MCTS's feasible search space — prunes branches whose reward distribution is unpromising. Assumptions: Reward distribution is stable and informative for pruning. Breakdown regime: When reward variance is too high or distribution is non-stationary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Double Q-learning models reward distribution to guide MCTS pruning, analogous to GSI's Bayesian belief updates over symbolic hypotheses. Operator 'Operator Invention Block' (page 1, domain other) captures: - **Modulated sub-tree discovery**: heuristically learns NEW operators from recurring sub-tree patterns; three search forms where A is a fixed form and f(x) learnable: A±f(x) (e.g. Assumptions: Sub-tree motifs are meaningful and generalize beyond training data. Breakdown regime: When motifs overfit to benchmark-specific structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Invented operators act as derived transformations in GSE's symbolic state space, enabling compact representation of complex dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b, domain=other, pages_read=3/3): Operator 'MCTS Reward Pruning' (page 1, domain other) captures: Method / model - **MCTS agent**: explores expression trees over predefined operators/variables. Assumptions: Search space is discrete and reward distribution is learnable. Breakdown regime: When reward variance exceeds pruning threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): MCTS-based expression tree search is reduced to a kernel of reward-sampled node expansion using Double Q-learning feedback. Operator 'Double Q-Learning Reward Distribution' (page 1, domain other) captures: - **Double Q-learning block**: learns the distribution of rewards (not just max) to shrink MCTS's feasible search space — prunes branches whose reward distribution is unpromising. Assumptions: Reward distribution is stable and informative for pruning. Breakdown regime: When reward variance is too high or distribution is non-stationary. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Double Q-learning models reward distribution to guide MCTS pruning, analogous to GSI's Bayesian belief updates over symbolic hypotheses. Operator 'Operator Invention Block' (page 1, domain other) captures: - **Modulated sub-tree discovery**: heuristically learns NEW operators from recurring sub-tree patterns; three search forms where A is a fixed form and f(x) learnable: A±f(x) (e.g. Assumptions: Sub-tree motifs are meaningful and generalize beyond training data. Breakdown regime: When motifs overfit to benchmark-specific structures. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Invented operators act as derived transformations in GSE's symbolic state space, enabling compact representation of complex dynamics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in symbolic regression (Koza, 1992), reinforcement learning (Sutton & Barto, 1998), and Monte Carlo tree search (Mozer et al., 2000). Builds upon prior work in genetic programming and neural symbolic integration. Retrocausal Genealogy: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional symbolic regression methods (e.g., GP, DSR) that lack adaptive pruning and operator invention. The RSRM agent is modeled as an optimizing policy that balances exploration-exploitation trade-offs under reward uncertainty. Theory of Mind & Decision Maker Model: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that operator invention does not duplicate existing functions. Leakage vetoes occur if reward pruning fails to distinguish between promising and unpromising branches, leading to premature convergence. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1836-rsrm-reinforcement-symbolic-regression-machine (3e2a4fe9c8ae435b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

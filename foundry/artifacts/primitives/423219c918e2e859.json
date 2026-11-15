@@ -1,78 +1,16 @@
 {
   "book_id": "423219c918e2e859",
-  "source_status": "COMPLETE",
-  "title": "FOUNDING_CLIENT_SALES_PACKET",
-  "file_name": "FOUNDING_CLIENT_SALES_PACKET.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_423219c918e2e859",
+  "file_name": "423219c918e2e859.quarantined",
   "sha256": "423219c918e2e859db508b4e1ed7df80d2cac41e80189b8df3cc5a2dadbedab3",
   "primary_domain": "other",
-  "pages_total": 2,
-  "pages_read": 2,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "A foundational content launch protocol integrating client sovereignty, AI-assisted human review, and structured delivery within a bounded operational regime. Universal Lens: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief update over content strategy space conditioned on client intake and rights verification; conformal prediction bounds on deliverable quality and ownership clarity. GSI Mapping: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine transitions through intake → brief → production → QA → delivery states; state transitions gated by owner-review and rights confirmation. GSE Mapping: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "content_launch_sprint",
-      "name": "Content Launch Sprint",
-      "verbatim_quote": "## Offer and price **30-Day Content Launch Sprint** - Founding-client price: **$299 USD** - Standard price: **$599 USD** - Subscription: none - Turnaround assumption: Five business days after a complete intake and usable source material are received.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'T': 'time in business days', 'C': 'cost in USD', 'R': 'revision count'}",
-      "assumptions": "Fixed turnaround time T = 5, cost C varies by client tier, R ≤ 1.",
-      "breakdown_regime": "T ≥ 5, C ∈ {299, 599}, R = 1",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's probabilistic content strategy inference and GSE's state transition model for content delivery.",
-        "source_operator": "content_launch_sprint",
-        "telemetry": "Delivery time T, cost C, revision count R"
-      }
-    },
-    {
-      "primitive_id": "rights_verification_protocol",
-      "name": "Rights Verification Protocol",
-      "verbatim_quote": "- Confirm rights to supplied logos, media, music, claims, likenesses, and voices.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'V': 'verification status (boolean)', 'D': 'data set size in MB', 'A': 'authorized use flag'}",
-      "assumptions": "All assets must be verified before production begins; V = true implies A = true.",
-      "breakdown_regime": "V = true ⇒ A = true, D < ∞",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derives from GSI's data integrity kernel and GSE's asset validation layer.",
-        "source_operator": "rights_verification_protocol",
-        "telemetry": "Verification status V, data size D, authorization flag A"
-      }
-    },
-    {
-      "primitive_id": "privacy_compliance_workflow",
-      "name": "Privacy Compliance Workflow",
-      "verbatim_quote": "The workflow uses the minimum necessary client data, keeps credentials out of deliverables, and requires an owner-reviewed retention or deletion choice.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'M': 'minimum data usage (dimensionless)', 'C': 'credentials excluded (boolean)', 'O': 'owner choice (retention or deletion)'}",
-      "assumptions": "M = 1, C = true, O ∈ {retention, deletion}",
-      "breakdown_regime": "M = 1, C = true, O ∈ {retention, deletion}",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derived from GSI's privacy-aware inference framework and GSE's secure data handling.",
-        "source_operator": "privacy_compliance_workflow",
-        "telemetry": "Data usage M, credential exclusion C, owner choice O"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "423219c918e2e859_t0",
-      "think": "The Content Launch Sprint primitive defines a deterministic, bounded-content delivery system where time, cost, and revisions are constrained. It maps to GSI’s Bayesian inference over content strategy space, where prior beliefs about client needs are updated via intake data. The process is governed by a fixed-state machine in GSE, transitioning from intake to delivery through defined checkpoints. Rights verification ensures data integrity and legal compliance, forming a derived kernel in both systems. Privacy compliance enforces minimal data usage and secure handling, aligning with GSI’s privacy-preserving inference and GSE’s secure state transitions. Failure modes include misaligned expectations, unauthorized data use, or non-compliance with retention policies.\n\nDeep epistemic analysis for FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859, domain=other, pages_read=2/2): Operator 'Content Launch Sprint' (page 1, domain other) captures: ## Offer and price **30-Day Content Launch Sprint** - Founding-client price: **$299 USD** - Standard price: **$599 USD** - Subscription: none - Turnaround assumption: Five business days after a complete intake and usable source material are received. Assumptions: Fixed turnaround time T = 5, cost C varies by client tier, R ≤ 1. Breakdown regime: T ≥ 5, C ∈ {299, 599}, R = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic content strategy inference and GSE's state transition model for content delivery. Operator 'Rights Verification Protocol' (page 1, domain other) captures: - Confirm rights to supplied logos, media, music, claims, likenesses, and voices. Assumptions: All assets must be verified before production begins; V = true implies A = true. Breakdown regime: V = true ⇒ A = true, D < ∞ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's data integrity kernel and GSE's asset validation layer. Operator 'Privacy Compliance Workflow' (page 1, domain other) captures: The workflow uses the minimum necessary client data, keeps credentials out of deliverables, and requires an owner-reviewed retention or deletion choice. Assumptions: M = 1, C = true, O ∈ {retention, deletion} Breakdown regime: M = 1, C = true, O ∈ {retention, deletion} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's privacy-aware inference framework and GSE's secure data handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859, domain=other, pages_read=2/2): Operator 'Content Launch Sprint' (page 1, domain other) captures: ## Offer and price **30-Day Content Launch Sprint** - Founding-client price: **$299 USD** - Standard price: **$599 USD** - Subscription: none - Turnaround assumption: Five business days after a complete intake and usable source material are received. Assumptions: Fixed turnaround time T = 5, cost C varies by client tier, R ≤ 1. Breakdown regime: T ≥ 5, C ∈ {299, 599}, R = 1 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic content strategy inference and GSE's state transition model for content delivery. Operator 'Rights Verification Protocol' (page 1, domain other) captures: - Confirm rights to supplied logos, media, music, claims, likenesses, and voices. Assumptions: All assets must be verified before production begins; V = true implies A = true. Breakdown regime: V = true ⇒ A = true, D < ∞ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSI's data integrity kernel and GSE's asset validation layer. Operator 'Privacy Compliance Workflow' (page 1, domain other) captures: The workflow uses the minimum necessary client data, keeps credentials out of deliverables, and requires an owner-reviewed retention or deletion choice. Assumptions: M = 1, C = true, O ∈ {retention, deletion} Breakdown regime: M = 1, C = true, O ∈ {retention, deletion} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's privacy-aware inference framework and GSE's secure data handling. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Roots in classical information theory and control systems, evolving into modern privacy-preserving protocols and probabilistic content workflows. Retrocausal Genealogy: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agent models include automated content generators (which are explicitly excluded), unauthorized data handlers, and clients seeking performance guarantees (which are also excluded). Theory of Mind & Decision Maker Model: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity enforced by ensuring GSI's inference and GSE's execution layers do not overlap in data handling or decision-making. Leakage vetoes prevent unauthorized data exposure across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in FOUNDING_CLIENT_SALES_PACKET (423219c918e2e859), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

@@ -1,0 +1,95 @@
+{
+  "book_id": "c65578769ecaab87",
+  "source_status": "COMPLETE",
+  "title": "CRC_ONE_PAGER",
+  "file_name": "CRC_ONE_PAGER.md",
+  "sha256": "c65578769ecaab87464290c8cce0312b16f5f2ee45fcc41d06f006a978706650",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A multi-source consistency engine operating on structured data streams to detect systemic disagreement with a trusted source via named repair classes: consistent, statistical, structural, and self_consistent_wrong_vs_ledger. Universal Lens: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian conformity checking across data sources using posterior belief updates conditioned on structural invariants; employs conformal prediction to flag outliers without silent averaging. GSI Mapping: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning framework that transitions system states based on consistency class evaluations, enabling dynamic repair protocols through state-machine logic grounded in logical duality and error propagation. GSE Mapping: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "consistent",
+      "name": "Consistency Operator",
+      "verbatim_quote": "**Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Data sources are independent and share a common truth space.",
+      "breakdown_regime": "When all sources align but deviate from the ground truth.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's Bayesian update mechanism where evidence from multiple sources is combined under a shared likelihood function to infer consistency with a reference model.",
+        "source_operator": "consistent",
+        "telemetry": "Cross-source agreement rate and deviation magnitude from truth."
+      }
+    },
+    {
+      "primitive_id": "statistical",
+      "name": "Statistical Discrepancy Detector",
+      "verbatim_quote": "**Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Sources follow probabilistic distributions with known variance.",
+      "breakdown_regime": "When statistical variance exceeds tolerance thresholds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from GSE's probabilistic state transition kernel, identifying inconsistencies via divergence metrics such as KL-divergence between observed and expected distributions.",
+        "source_operator": "statistical",
+        "telemetry": "Z-score of deviation from mean distribution and p-value of outlier detection."
+      }
+    },
+    {
+      "primitive_id": "structural",
+      "name": "Structural Invariance Checker",
+      "verbatim_quote": "**Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Underlying structure must remain invariant under transformations.",
+      "breakdown_regime": "When structural constraints are violated by one or more sources.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI’s constraint satisfaction framework, enforcing topological or algebraic invariants across data representations to detect structural misalignment.",
+        "source_operator": "structural",
+        "telemetry": "Topological entropy change and constraint violation count per source."
+      }
+    },
+    {
+      "primitive_id": "self_consistent_wrong_vs_ledger",
+      "name": "Self-Consistent vs Ledger Discrepancy",
+      "verbatim_quote": "**Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Each source maintains internal consistency but may be wrong relative to ledger.",
+      "breakdown_regime": "When internal consistency is preserved but contradicts external truth.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's self-referential reasoning loop, comparing internal consistency graphs against an authoritative ledger to isolate erroneous subsystems.",
+        "source_operator": "self_consistent_wrong_vs_ledger",
+        "telemetry": "Internal coherence score versus ledger alignment index."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c65578769ecaab87_t0",
+      "think": "The CRC engine operates by evaluating data streams through four distinct consistency classes—consistent, statistical, structural, and self_consistent_wrong_vs_ledger—each representing a mode of disagreement with a source of truth. The core insight is that systems can internally agree while simultaneously diverging from reality. This is modeled mathematically as a set of mappings from input data spaces to a truth manifold, where each class corresponds to a projection error type. For instance, 'consistent' maps to a scenario where all projections align but differ from the ground truth; 'statistical' captures variance-based deviations; 'structural' identifies topological mismatches; and 'self_consistent_wrong_vs_ledger' isolates cases where internal consistency fails against external validation. These modes form a dual lattice of error types, enabling precise diagnostics without silent averaging. Each class defines a failure regime governed by specific assumptions about data independence, distributional behavior, and structural invariance. The engine thus functions as a compositional consistency checker, leveraging both empirical and theoretical constraints to detect and classify discrepancies.\n\nDeep epistemic analysis for CRC_ONE_PAGER (c65578769ecaab87, domain=other, pages_read=1/1): Operator 'Consistency Operator' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Data sources are independent and share a common truth space. Breakdown regime: When all sources align but deviate from the ground truth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian update mechanism where evidence from multiple sources is combined under a shared likelihood function to infer consistency with a reference model. Operator 'Statistical Discrepancy Detector' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Sources follow probabilistic distributions with known variance. Breakdown regime: When statistical variance exceeds tolerance thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's probabilistic state transition kernel, identifying inconsistencies via divergence metrics such as KL-divergence between observed and expected distributions. Operator 'Structural Invariance Checker' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Underlying structure must remain invariant under transformations. Breakdown regime: When structural constraints are violated by one or more sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s constraint satisfaction framework, enforcing topological or algebraic invariants across data representations to detect structural misalignment. Operator 'Self-Consistent vs Ledger Discrepancy' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Each source maintains internal consistency but may be wrong relative to ledger. Breakdown regime: When internal consistency is preserved but contradicts external truth. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's self-referential reasoning loop, comparing internal consistency graphs against an authoritative ledger to isolate erroneous subsystems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CRC_ONE_PAGER (c65578769ecaab87, domain=other, pages_read=1/1): Operator 'Consistency Operator' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Data sources are independent and share a common truth space. Breakdown regime: When all sources align but deviate from the ground truth. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's Bayesian update mechanism where evidence from multiple sources is combined under a shared likelihood function to infer consistency with a reference model. Operator 'Statistical Discrepancy Detector' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Sources follow probabilistic distributions with known variance. Breakdown regime: When statistical variance exceeds tolerance thresholds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's probabilistic state transition kernel, identifying inconsistencies via divergence metrics such as KL-divergence between observed and expected distributions. Operator 'Structural Invariance Checker' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Underlying structure must remain invariant under transformations. Breakdown regime: When structural constraints are violated by one or more sources. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI’s constraint satisfaction framework, enforcing topological or algebraic invariants across data representations to detect structural misalignment. Operator 'Self-Consistent vs Ledger Discrepancy' (page 1, domain other) captures: **Classes:** consistent | statistical | structural | self_consistent_wrong_vs_ledger **Core claim:** Detect when systems agree with each other and still disagree with a source of truth — without silent averaging. Assumptions: Each source maintains internal consistency but may be wrong relative to ledger. Breakdown regime: When internal consistency is preserved but contradicts external truth. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's self-referential reasoning loop, comparing internal consistency graphs against an authoritative ledger to isolate erroneous subsystems. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification theory and constraint satisfaction logic, evolving from early work on multi-agent consensus protocols and extending into modern probabilistic graphical models used in risk engineering and knowledge graph integrity checks. Retrocausal Genealogy: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents within this framework are modeled as probabilistic systems with bounded rationality, each maintaining its own belief state. The engine evaluates how these beliefs interact under shared constraints, simulating adversarial reasoning where one agent might be correct yet inconsistent with others, or all might be wrong but internally coherent. Theory of Mind & Decision Maker Model: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each consistency class operates independently, preventing redundancy in diagnostic signals. Leakage occurs when one class masks another’s signal; vetoes occur when a discrepancy violates mutual exclusivity of failure modes, e.g., a case cannot simultaneously be structurally inconsistent and statistically consistent. Cross-Layer Veto & Anti-Leakage Check: Rooted in CRC_ONE_PAGER (c65578769ecaab87), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

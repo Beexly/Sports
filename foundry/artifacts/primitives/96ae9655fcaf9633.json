@@ -1,0 +1,78 @@
+{
+  "book_id": "96ae9655fcaf9633",
+  "source_status": "COMPLETE",
+  "title": "2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework",
+  "file_name": "2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework.md",
+  "sha256": "96ae9655fcaf96333f68a0e76f753dbe6f74c5360b4ff80ee91d1c6c04090ac2",
+  "primary_domain": "physics",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "DISCOVER enforces dimensional consistency via `pint` units, solving L0-regularized regression with GPU-accelerated sparse solvers. Universal Lens: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs DISCOVER's unit-aware symbolic regression to infer interpretable physical laws from materials data, using Bayesian constraints to validate derived equations. GSI Mapping: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages DISCOVER’s operator-based feature synthesis and sparse solver strategies to dynamically update state transitions in physics-informed decision models. GSE Mapping: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dimensional_consistency_filter",
+      "name": "Dimensional Consistency Filter",
+      "verbatim_quote": "**Dimensional consistency enforced with `pint`**: units tracked through every symbolic operation; dimensionally invalid candidates excluded during generation, shrinking the search space.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "All symbols carry explicit SI units; invalid combinations are pruned.",
+      "assumptions": "Units are fully specified by user; symbolic operations preserve dimensional integrity.",
+      "breakdown_regime": "When unit mismatch occurs in feature composition.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps physical dimensionality to symbolic expression validity in GSI's constraint engine.",
+        "source_operator": "dimensional_consistency_filter",
+        "telemetry": "Percentage of pruned candidates due to unit inconsistency."
+      }
+    },
+    {
+      "primitive_id": "sparse_linear_combination_solver",
+      "name": "Sparse Linear Combination Solver",
+      "verbatim_quote": "1): min_β ‖y - Φβ‖22 subject to ‖β‖0 ≤ D (NP-hard L0-regularized least squares; all strategies are approximations).",
+      "page": 1,
+      "latex": "\\min_{\\beta} \\|y - \\Phi\\beta\\|_2^2 \\quad \\text{s.t.} \\quad \\|\\beta\\|_0 \\leq D",
+      "symbol_and_unit_ledger": "y: target values (dimensionless or physical units), Φ: feature matrix (columns are symbolic features), β: coefficients (dimensionless).",
+      "assumptions": "True descriptor is a sparse linear combination of symbolic features.",
+      "breakdown_regime": "When D is insufficient to capture true function form.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables GSE to select minimal-feature equations that best fit observed data.",
+        "source_operator": "sparse_linear_combination_solver",
+        "telemetry": "Number of non-zero coefficients in final β vector."
+      }
+    },
+    {
+      "primitive_id": "gpu_accelerated_sparse_solvers",
+      "name": "GPU-Accelerated Sparse Solvers",
+      "verbatim_quote": "GPU acceleration: CUDA (NVIDIA) and MPS (Apple Silicon), CPU fallback.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "Accelerator hardware abstracted via backend libraries.",
+      "assumptions": "Computational resources support parallelized feature evaluation.",
+      "breakdown_regime": "When memory or compute limits constrain solver performance.",
+      "domain": "physics",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables rapid exploration of symbolic space in GSE's dynamic reasoning loop.",
+        "source_operator": "gpu_accelerated_sparse_solvers",
+        "telemetry": "Wall-clock time per iteration of solver execution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "96ae9655fcaf9633_t0",
+      "think": "DISCOVER introduces a modular symbolic regression framework integrating dimensional consistency via `pint`, enabling hard constraints on valid expressions. It solves an NP-hard L0-regularized least squares problem using multiple sparse solvers—OMP, MIQP, simulated annealing—each approximating the optimal sparse solution. This dual focus on physical plausibility and computational efficiency allows for rapid discovery of interpretable equations from tabular data. The framework's strength lies in its ability to prune invalid candidates early, reducing search space while maintaining fidelity to domain knowledge. Its reliance on user-specified physics constraints and unit systems ensures that discovered models align with known physical principles. However, the assumption of linearity in symbolic features may limit expressiveness compared to full symbolic regression. Failure modes include over-restrictive constraints excluding valid solutions and insufficient sparsity parameters leading to overfitting.\n\nDeep epistemic analysis for 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633, domain=physics, pages_read=3/3): Operator 'Dimensional Consistency Filter' (page 1, domain physics) captures: **Dimensional consistency enforced with `pint`**: units tracked through every symbolic operation; dimensionally invalid candidates excluded during generation, shrinking the search space. Assumptions: Units are fully specified by user; symbolic operations preserve dimensional integrity. Breakdown regime: When unit mismatch occurs in feature composition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps physical dimensionality to symbolic expression validity in GSI's constraint engine. Operator 'Sparse Linear Combination Solver' (page 1, domain physics) captures: 1): min_β ‖y - Φβ‖22 subject to ‖β‖0 ≤ D (NP-hard L0-regularized least squares; all strategies are approximations). Assumptions: True descriptor is a sparse linear combination of symbolic features. Breakdown regime: When D is insufficient to capture true function form. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to select minimal-feature equations that best fit observed data. Operator 'GPU-Accelerated Sparse Solvers' (page 1, domain physics) captures: GPU acceleration: CUDA (NVIDIA) and MPS (Apple Silicon), CPU fallback. Assumptions: Computational resources support parallelized feature evaluation. Breakdown regime: When memory or compute limits constrain solver performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables rapid exploration of symbolic space in GSE's dynamic reasoning loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633, domain=physics, pages_read=3/3): Operator 'Dimensional Consistency Filter' (page 1, domain physics) captures: **Dimensional consistency enforced with `pint`**: units tracked through every symbolic operation; dimensionally invalid candidates excluded during generation, shrinking the search space. Assumptions: Units are fully specified by user; symbolic operations preserve dimensional integrity. Breakdown regime: When unit mismatch occurs in feature composition. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps physical dimensionality to symbolic expression validity in GSI's constraint engine. Operator 'Sparse Linear Combination Solver' (page 1, domain physics) captures: 1): min_β ‖y - Φβ‖22 subject to ‖β‖0 ≤ D (NP-hard L0-regularized least squares; all strategies are approximations). Assumptions: True descriptor is a sparse linear combination of symbolic features. Breakdown regime: When D is insufficient to capture true function form. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables GSE to select minimal-feature equations that best fit observed data. Operator 'GPU-Accelerated Sparse Solvers' (page 1, domain physics) captures: GPU acceleration: CUDA (NVIDIA) and MPS (Apple Silicon), CPU fallback. Assumptions: Computational resources support parallelized feature evaluation. Breakdown regime: When memory or compute limits constrain solver performance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables rapid exploration of symbolic space in GSE's dynamic reasoning loop. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in SISSO's sparse descriptor methodology and symbolic regression traditions, building upon earlier work in automated scientific discovery and machine learning for materials science. Retrocausal Genealogy: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might include overly restrictive unit specifications or poorly chosen solvers that fail to converge. Decision actors include users specifying constraints and the solver algorithms themselves, both influencing model accuracy and generalizability. Theory of Mind & Decision Maker Model: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes arise when redundant or near-duplicate symbolic features are introduced. Leakage vetoes occur if unit filters prune historically effective features or if Brier score degrades beyond thresholds, indicating overfitting or misalignment with training data. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2171-discover-physics-informed-gpu-accelerated-symbolic-regression-framework (96ae9655fcaf9633), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

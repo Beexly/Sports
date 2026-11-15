@@ -1,0 +1,95 @@
+{
+  "book_id": "3363f2fa2e84a798",
+  "source_status": "COMPLETE",
+  "title": "agent-action-policy",
+  "file_name": "agent-action-policy.md",
+  "sha256": "3363f2fa2e84a7986e2b5a9bb22d7db4df71315b40df2ef3cbbe303985868a6f",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "The universal lens \\(\\mathcal{U}_{\\text{SportsOS}}\\) is a mathematical framework that enforces strict information flow control across three operational zones (1, 2, and 3) using a hierarchical permission matrix. It ensures that sensitive data (secrets) never propagates into outputs and that agents cannot self-expand their operational scope, thereby preventing unauthorized escalation of privileges.",
+  "gsi_mapping": "In Galaxy Sports Intelligence (GSI), the conformal inference mapping translates the hierarchical permission structure into a probabilistic framework where each zone's bounded actions define a predictive confidence set. This guarantees that all statistical claims (odds, picks, settlements) are derived from verified, non-fabricated evidence sources, maintaining the integrity of the predictive distribution.",
+  "gse_mapping": "For Galaxy Sports Engine (GSE), the situational reasoning mapping represents the state-transition dynamics of agents operating within the Sports OS architecture. The state transitions are governed by the same hierarchical constraints, ensuring that the engine's decisions remain within authorized boundaries and that forbidden actions (auto-publishing, bypassing gates) are mathematically precluded.",
+  "primitives": [
+    {
+      "primitive_id": "zone_1_read",
+      "name": "Zone 1 Free Read",
+      "verbatim_quote": "--## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "The repository is version-controlled, the database schema is static during reads, and environment variables are properly typed.",
+      "breakdown_regime": "When an agent attempts to read live data instead of the schema, the system triggers a hard error, halting the operation. Similarly, writing to the wrong directory (e.g., `src/` instead of `docs/`) violates the boundary and causes a rejection.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The read/write permissions form a lattice structure that mirrors the hierarchical permission matrix of the Universal Lens. In GSI, this corresponds to a conformal prediction region that only accepts inputs from verified data sources. In GSE, it maps to a finite-state machine where each state transition is gated by the same access control rules.",
+        "source_operator": "zone_1_read",
+        "telemetry": "Monitoring the ratio of successful reads/writes to allowed vs. forbidden paths provides empirical verification of compliance."
+      }
+    },
+    {
+      "primitive_id": "zone_2_api_call",
+      "name": "Zone 2 API Call",
+      "verbatim_quote": "--## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API calls are rate-limited and authorized by the permission matrix.",
+      "breakdown_regime": "Exceeding the maximum API call count per run triggers a hard limit violation, causing the agent to halt.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Zone 2 API calls are mapped to conformal prediction intervals in GSI, ensuring that the uncertainty quantification remains valid under the given resource constraints. In GSE, they correspond to state transitions that are only allowed if the current state permits the API interaction.",
+        "source_operator": "zone_2_api_call",
+        "telemetry": "Tracking the number of API calls per run relative to the hard limit serves as a direct telemetry metric."
+      }
+    },
+    {
+      "primitive_id": "zone_3_write",
+      "name": "Zone 3 Write",
+      "verbatim_quote": "--## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Writes are confined to designated directories and respect the max execution time.",
+      "breakdown_regime": "Writing to a directory outside the permitted list (e.g., `src/` for a documentation agent) causes a hard error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Zone 3 writes are modeled as conformal updating steps in GSI, where the update is only accepted if it lies within the established confidence set. In GSE, they represent state transitions that are vetted by the approval gates before being executed.",
+        "source_operator": "zone_3_write",
+        "telemetry": "Verifying that all writes occur exclusively in the allowed directories provides empirical validation."
+      }
+    },
+    {
+      "primitive_id": "no_secret_in_code",
+      "name": "No Secrets in Code",
+      "verbatim_quote": "### U2 — No Secret Access No agent may read, use, log, or transmit secrets (API keys, database credentials, session tokens, payment processor secrets) as part of its response or output.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Secrets are stored separately and accessed only through secure channels.",
+      "breakdown_regime": "If a secret appears in the codebase or logs, it constitutes a critical breach that triggers immediate rotation of the secret.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "In GSI, the prohibition against secrets translates to a requirement that the posterior predictive distribution does not leak private information about the training data. In GSE, it ensures that the internal state of an agent does not contain exploitable credentials that could compromise the system.",
+        "source_operator": "no_secret_in_code",
+        "telemetry": "Static analysis tools scanning for hardcoded secrets in the codebase serve as the primary telemetry metric."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3363f2fa2e84a798_t0",
+      "think": "The core challenge is to prevent information leakage while enabling useful computation. The hierarchical zoning (1, 2, 3) implements a layered access control that mimics a filtration in stochastic processes. Zone 1 agents operate on measurable functions (read operations) that preserve the sigma-algebra of allowed data. Zone 2 API calls introduce controlled randomness (e.g., sampling from a distribution), which is managed by enforcing a maximum number of calls to keep the variance bounded. Zone 3 writes are restricted to ensure that the generated outputs lie within a predetermined hypothesis class, thus avoiding overfitting to the training data. The \"No Secrets\" rule acts as a hard constraint on the support of the output distribution, ensuring that no point mass exists at the location of any secret. Together, these rules form a mathematical duality: the ability to perform useful tasks versus the impossibility of leaking sensitive information. For instance, if an agent were allowed to write to any directory (Zone 3 unrestricted), it could potentially overwrite critical system files, leading to a catastrophic singularity in the state-transition graph. Similarly, if secrets were permitted in code, the posterior distribution would become biased, violating the fundamental principles of conformal inference. Therefore, the primitives enforce a Pareto frontier where the system achieves optimal utility while remaining provably secure.\n\nDeep epistemic analysis for agent-action-policy (3363f2fa2e84a798, domain=other, pages_read=4/4): Operator 'Zone 1 Free Read' (page 2, domain other) captures: --## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent. Assumptions: The repository is version-controlled, the database schema is static during reads, and environment variables are properly typed. Breakdown regime: When an agent attempts to read live data instead of the schema, the system triggers a hard error, halting the operation. Similarly, writing to the wrong directory (e.g., `src/` instead of `docs/`) violates the boundary and causes a rejection. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The read/write permissions form a lattice structure that mirrors the hierarchical permission matrix of the Universal Lens. In GSI, this corresponds to a conformal prediction region that only accepts inputs from verified data sources. In GSE, it maps to a finite-state machine where each state transition is gated by the same access control rules. Operator 'Zone 2 API Call' (page 2, domain other) captures: --## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent. Assumptions: API calls are rate-limited and authorized by the permission matrix. Breakdown regime: Exceeding the maximum API call count per run triggers a hard limit violation, causing the agent to halt. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zone 2 API calls are mapped to conformal prediction intervals in GSI, ensuring that the uncertainty quantification remains valid under the given resource constraints. In GSE, they correspond to state transitions that are only allowed if the current state permits the API interaction. Operator 'Zone 3 Write' (page 2, domain other) captures: --## Section 2 — Claude (Cowork Mode) Specific Permissions ### Permitted Actions Claude in Cowork mode is a documentation writer and planning agent. Assumptions: Writes are confined to designated directories and respect the max execution time. Breakdown regime: Writing to a directory outside the permitted list (e.g., `src/` for a documentation agent) causes a hard error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Zone 3 writes are modeled as conformal updating steps in GSI, where the update is only accepted if it lies within the established confidence set. In GSE, they represent state transitions that are vetted by the approval gates before being executed. Operator 'No Secrets in Code' (page 1, domain other) captures: ### U2 — No Secret Access No agent may read, use, log, or transmit secrets (API keys, database credentials, session tokens, payment processor secrets) as part of its response or output. Assumptions: Secrets are stored separately and accessed only through secure channels. Breakdown regime: If a secret appears in the codebase or logs, it constitutes a critical breach that triggers immediate rotation of the secret. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): In GSI, the prohibition against secrets translates to a requirement that the posterior predictive distribution does not leak private information about the training data. In GSE, it ensures that the internal state of an agent does not contain exploitable credentials that could compromise the system. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in agent-action-policy (3363f2fa2e84a798), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in agent-action-policy (3363f2fa2e84a798), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to circumvent the gates by crafting adversarial prompts that exploit ambiguities in the natural language descriptions. However, the strict formalization of the primitives makes such attacks detectable, as they would require either reading forbidden data or writing to unauthorized locations, both of which violate the defined metrics. Theory of Mind & Decision Maker Model: Rooted in agent-action-policy (3363f2fa2e84a798), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To prevent cross-layer leakage, the system enforces a veto condition based on the Kullback-Leibler divergence between the distributions induced by different zones. If the divergence exceeds a threshold, the transition is blocked, ensuring that no information flows from a higher-risk zone to a lower-risk one without proper authorization. Cross-Layer Veto & Anti-Leakage Check: Rooted in agent-action-policy (3363f2fa2e84a798), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

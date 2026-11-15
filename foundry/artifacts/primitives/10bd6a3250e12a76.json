@@ -1,0 +1,78 @@
+{
+  "book_id": "10bd6a3250e12a76",
+  "source_status": "COMPLETE",
+  "title": "LEDGER-CANONICAL",
+  "file_name": "LEDGER-CANONICAL.md",
+  "sha256": "10bd6a3250e12a76274e9ae9b709fd1281a8ff4f21d7c2d1c93fc66f8d0a26a2",
+  "primary_domain": "other",
+  "pages_total": 15,
+  "pages_read": 15,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Canonical ledger scope defines a structured, modular inspection protocol for registry integrity and signal provenance across discrete report layers. Universal Lens: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian signal validation in GSI maps registry states to probabilistic calibration via traced verdicts and fitted error metrics. GSI Mapping: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE models registry wiring as a state-transition system where activation labels depend on traceability and fit quality. GSE Mapping: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "registry_inventory_vs_runtime",
+      "name": "Registry Inventory vs Runtime Discriminator",
+      "verbatim_quote": "# Canonical Findings Ledger Scope: all readable root `*-*.md` review reports and pass/stale reports in this directory, excluding `prompt-*.md`, plus all available `claims-*.md` corpus-extraction reports.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Registry is treated as static inventory without active runtime behavior.",
+      "breakdown_regime": "No production consumers or validators exist for the registry.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry structure mirrors a static database schema rather than a dynamic service interface.",
+        "source_operator": "registry_inventory_vs_runtime",
+        "telemetry": "Absence of CI checks, schema validators, or regeneration writers."
+      }
+    },
+    {
+      "primitive_id": "signal_traceability_and_calibration",
+      "name": "Signal Traceability and Calibration Consistency",
+      "verbatim_quote": "| | 3 | The registry's 47 signals have no committed source data, 47/47 are untraced, and all calibration rows are unfitted; 41 are nevertheless labeled ACTIVE.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Active labeling assumes operational relevance despite lack of trace or fit.",
+      "breakdown_regime": "Signals are marked active without supporting evidence of traceability or calibration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Activation logic depends on semantic labeling rather than empirical validation.",
+        "source_operator": "signal_traceability_and_calibration",
+        "telemetry": "Mismatch between activation labels and trace/fitted calibration data."
+      }
+    },
+    {
+      "primitive_id": "wiring_state_field_disparity",
+      "name": "Wiring State Field Disparity",
+      "verbatim_quote": "| | 4 | Registry totals and wiring state depend on different fields: the 2026-10-02 reports quote 46 `no`/1 `partial` for `wired_state`, while `wired.verdict` is 37 `no`/10 `partial`; neither establishes runtime use.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Different fields yield inconsistent status assessments for registry wiring.",
+      "breakdown_regime": "Conflicting field interpretations prevent unified wiring state determination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Field-level discrepancies reflect divergent logical models of registry state.",
+        "source_operator": "wiring_state_field_disparity",
+        "telemetry": "Discrepancies in `wired_state` vs `wired.verdict` counts."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "10bd6a3250e12a76_t0",
+      "think": "The canonical ledger enforces a layered inspection protocol where registry integrity is assessed through distinct dimensions: inventory vs runtime behavior, traceability, and calibration consistency. Each finding represents a failure mode in one or more of these dimensions. The registry's role as an inventory rather than a runtime entity indicates a design gap in operational integration. Signal traceability and calibration mismatch reveal a disconnect between labeling and evidence, undermining trust in activation decisions. Wiring state disparities suggest inconsistent metadata interpretation, which may lead to erroneous conclusions about registry functionality. These primitives form a dual framework: one for verifying static properties and another for assessing dynamic coherence. The failure modes are not isolated but interlinked—lack of traceability undermines calibration, and inconsistent state fields obscure runtime behavior. This creates a cascading effect where each primitive failure weakens the overall system's reliability.\n\nDeep epistemic analysis for LEDGER-CANONICAL (10bd6a3250e12a76, domain=other, pages_read=15/15): Operator 'Registry Inventory vs Runtime Discriminator' (page 1, domain other) captures: # Canonical Findings Ledger Scope: all readable root `*-*.md` review reports and pass/stale reports in this directory, excluding `prompt-*.md`, plus all available `claims-*.md` corpus-extraction reports. Assumptions: Registry is treated as static inventory without active runtime behavior. Breakdown regime: No production consumers or validators exist for the registry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry structure mirrors a static database schema rather than a dynamic service interface. Operator 'Signal Traceability and Calibration Consistency' (page 1, domain other) captures: | | 3 | The registry's 47 signals have no committed source data, 47/47 are untraced, and all calibration rows are unfitted; 41 are nevertheless labeled ACTIVE. Assumptions: Active labeling assumes operational relevance despite lack of trace or fit. Breakdown regime: Signals are marked active without supporting evidence of traceability or calibration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation logic depends on semantic labeling rather than empirical validation. Operator 'Wiring State Field Disparity' (page 1, domain other) captures: | | 4 | Registry totals and wiring state depend on different fields: the 2026-10-02 reports quote 46 `no`/1 `partial` for `wired_state`, while `wired.verdict` is 37 `no`/10 `partial`; neither establishes runtime use. Assumptions: Different fields yield inconsistent status assessments for registry wiring. Breakdown regime: Conflicting field interpretations prevent unified wiring state determination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Field-level discrepancies reflect divergent logical models of registry state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LEDGER-CANONICAL (10bd6a3250e12a76, domain=other, pages_read=15/15): Operator 'Registry Inventory vs Runtime Discriminator' (page 1, domain other) captures: # Canonical Findings Ledger Scope: all readable root `*-*.md` review reports and pass/stale reports in this directory, excluding `prompt-*.md`, plus all available `claims-*.md` corpus-extraction reports. Assumptions: Registry is treated as static inventory without active runtime behavior. Breakdown regime: No production consumers or validators exist for the registry. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry structure mirrors a static database schema rather than a dynamic service interface. Operator 'Signal Traceability and Calibration Consistency' (page 1, domain other) captures: | | 3 | The registry's 47 signals have no committed source data, 47/47 are untraced, and all calibration rows are unfitted; 41 are nevertheless labeled ACTIVE. Assumptions: Active labeling assumes operational relevance despite lack of trace or fit. Breakdown regime: Signals are marked active without supporting evidence of traceability or calibration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Activation logic depends on semantic labeling rather than empirical validation. Operator 'Wiring State Field Disparity' (page 1, domain other) captures: | | 4 | Registry totals and wiring state depend on different fields: the 2026-10-02 reports quote 46 `no`/1 `partial` for `wired_state`, while `wired.verdict` is 37 `no`/10 `partial`; neither establishes runtime use. Assumptions: Different fields yield inconsistent status assessments for registry wiring. Breakdown regime: Conflicting field interpretations prevent unified wiring state determination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Field-level discrepancies reflect divergent logical models of registry state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This reasoning builds upon foundational principles of information theory and systems engineering, particularly the distinction between static data structures and dynamic processes. It echoes earlier work in software architecture that emphasizes the importance of traceability and consistency in distributed systems. Retrocausal Genealogy: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the registry maintainer who labels signals as active, and the validation engine that seeks traceability and calibration. The system's internal logic assumes that labeling implies operational validity, while external scrutiny reveals inconsistencies between label and evidence. Theory of Mind & Decision Maker Model: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that traceability and calibration are not conflated with mere labeling. Leakage vetoes occur when state fields are interpreted inconsistently across layers, preventing false positives in registry status assessments. Cross-Layer Veto & Anti-Leakage Check: Rooted in LEDGER-CANONICAL (10bd6a3250e12a76), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

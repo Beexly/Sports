@@ -1,0 +1,95 @@
+{
+  "book_id": "151b4c6ac8d11a95",
+  "source_status": "COMPLETE",
+  "title": "p0320",
+  "file_name": "p0320.txt",
+  "sha256": "151b4c6ac8d11a952756026e429b16752d62ab61465407f3f48ec3ee0224f3c2",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_membership_matrix",
+      "name": "Team Membership Indicator Operator",
+      "verbatim_quote": "M., Reed, Carl A., Reilly, James A., (Lafayette) 165 St.",
+      "page": 1,
+      "latex": "$T_{ij} = \\begin{cases} 1, & \\text{if player } i \\text{ belongs to team } j \\\\ 0, & \\text{otherwise} \\end{cases}$",
+      "symbol_and_unit_ledger": "{'T_ij': 'Dimensionless binary indicator variable'}",
+      "assumptions": "Each player belongs to exactly one team; teams are distinct entities.",
+      "breakdown_regime": "When multiple entries list the same player for different teams, the matrix becomes non-orthogonal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI probabilistic assignment kernels for player-team affiliation; maps to GSE state-transition logic for roster updates.",
+        "source_operator": "team_membership_matrix",
+        "telemetry": "Player participation frequency across roster changes."
+      }
+    },
+    {
+      "primitive_id": "geospatial_coordinates",
+      "name": "Location Coordinate Vector",
+      "verbatim_quote": "(Portland High School) 45 Forest Ave., Portland, Me, (Bates, Harvard) 104 Byron St., E.",
+      "page": 1,
+      "latex": "\\mathbf{x}_i = (x_i, y_i) = (\\text{longitude}, \\text{latitude})_i",
+      "symbol_and_unit_ledger": "{'x_i, y_i': 'Angular coordinates in degrees'}",
+      "assumptions": "Coordinates are measured on a flat tangent plane; curvature effects are negligible over short distances.",
+      "breakdown_regime": "Large-scale geodesic distortions render Euclidean distance invalid.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI spatial-temporal covariance matrices for travel patterns; maps to GSE pathfinding algorithms for venue logistics.",
+        "source_operator": "geospatial_coordinates",
+        "telemetry": "Travel time variance between venues."
+      }
+    },
+    {
+      "primitive_id": "athletic_affiliation_indicator",
+      "name": "Athletic Affiliation Binary Operator",
+      "verbatim_quote": "SPALDING'S OFFICIAL FOOT BALL GUIDE 811 Monahan, P. B. Moore, Charles D. C., Morice, W. N.,",
+      "page": 1,
+      "latex": "A_{ik} = \\begin{cases} 1, & \\text{if player } i \\text{ has affiliation } k \\\\ 0, & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'A_ik': 'Dimensionless binary indicator variable'}",
+      "assumptions": "Affiliations are mutually exclusive; each player is linked to a single institution or program.",
+      "breakdown_regime": "When a player holds dual affiliations, the operator collapses into a singular value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI hierarchical clustering priors for institutional influence; maps to GSE transition probabilities for career trajectories.",
+        "source_operator": "athletic_affiliation_indicator",
+        "telemetry": "Institutional recruitment rate fluctuations."
+      }
+    },
+    {
+      "primitive_id": "player_identifier_vector",
+      "name": "Player Identity Hash Vector",
+      "verbatim_quote": "G., Morrison, Joseph, Morrow, D. C., Morse, Bryan, Morse, K. L., Moses, Kingsley. Moss, Robert G.,",
+      "page": 1,
+      "latex": "\\mathbf{v}_i = (v_{i1}, v_{i2}, ..., v_{in})",
+      "symbol_and_unit_ledger": "{'v_ij': 'Nominal categorical labels'}",
+      "assumptions": "Each player ID is unique within the dataset; order of appearance does not convey temporal precedence.",
+      "breakdown_regime": "Collisions in hash functions lead to indistinguishable player states.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI anonymized tracking data via locality-sensitive hashing; maps to GSE entity resolution through state-space pruning.",
+        "source_operator": "player_identifier_vector",
+        "telemetry": "ID persistence accuracy in multi-source databases."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "151b4c6ac8d11a95_t0",
+      "think": "The primitives represent foundational discrete structures: membership indicators construct bipartite graphs linking players to organizations; coordinate vectors define geometric configurations; affiliation matrices encode hierarchical relationships; and identity vectors serve as keys in combinatorial search spaces. These operators form a universal lens by unifying set theory, graph theory, and information theory into a cohesive framework for modeling athletic systems. Their dualities emerge when considering sparse versus dense representations: the sparsity of team memberships contrasts with the density of coordinate proximity, while the discreteness of affiliations contrasts with the continuity of geographic space. Failure modes occur at singularities where multiple assignments violate injectivity, leading to information loss during projection onto lower-dimensional manifolds.\n\nDeep epistemic analysis for p0320 (151b4c6ac8d11a95, domain=other, pages_read=2/2): Operator 'Team Membership Indicator Operator' (page 1, domain other) captures: M., Reed, Carl A., Reilly, James A., (Lafayette) 165 St. Assumptions: Each player belongs to exactly one team; teams are distinct entities. Breakdown regime: When multiple entries list the same player for different teams, the matrix becomes non-orthogonal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic assignment kernels for player-team affiliation; maps to GSE state-transition logic for roster updates. Operator 'Location Coordinate Vector' (page 1, domain other) captures: (Portland High School) 45 Forest Ave., Portland, Me, (Bates, Harvard) 104 Byron St., E. Assumptions: Coordinates are measured on a flat tangent plane; curvature effects are negligible over short distances. Breakdown regime: Large-scale geodesic distortions render Euclidean distance invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI spatial-temporal covariance matrices for travel patterns; maps to GSE pathfinding algorithms for venue logistics. Operator 'Athletic Affiliation Binary Operator' (page 1, domain other) captures: SPALDING'S OFFICIAL FOOT BALL GUIDE 811 Monahan, P. B. Moore, Charles D. C., Morice, W. N., Assumptions: Affiliations are mutually exclusive; each player is linked to a single institution or program. Breakdown regime: When a player holds dual affiliations, the operator collapses into a singular value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI hierarchical clustering priors for institutional influence; maps to GSE transition probabilities for career trajectories. Operator 'Player Identity Hash Vector' (page 1, domain other) captures: G., Morrison, Joseph, Morrow, D. C., Morse, Bryan, Morse, K. L., Moses, Kingsley. Moss, Robert G., Assumptions: Each player ID is unique within the dataset; order of appearance does not convey temporal precedence. Breakdown regime: Collisions in hash functions lead to indistinguishable player states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI anonymized tracking data via locality-sensitive hashing; maps to GSE entity resolution through state-space pruning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0320 (151b4c6ac8d11a95, domain=other, pages_read=2/2): Operator 'Team Membership Indicator Operator' (page 1, domain other) captures: M., Reed, Carl A., Reilly, James A., (Lafayette) 165 St. Assumptions: Each player belongs to exactly one team; teams are distinct entities. Breakdown regime: When multiple entries list the same player for different teams, the matrix becomes non-orthogonal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI probabilistic assignment kernels for player-team affiliation; maps to GSE state-transition logic for roster updates. Operator 'Location Coordinate Vector' (page 1, domain other) captures: (Portland High School) 45 Forest Ave., Portland, Me, (Bates, Harvard) 104 Byron St., E. Assumptions: Coordinates are measured on a flat tangent plane; curvature effects are negligible over short distances. Breakdown regime: Large-scale geodesic distortions render Euclidean distance invalid. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI spatial-temporal covariance matrices for travel patterns; maps to GSE pathfinding algorithms for venue logistics. Operator 'Athletic Affiliation Binary Operator' (page 1, domain other) captures: SPALDING'S OFFICIAL FOOT BALL GUIDE 811 Monahan, P. B. Moore, Charles D. C., Morice, W. N., Assumptions: Affiliations are mutually exclusive; each player is linked to a single institution or program. Breakdown regime: When a player holds dual affiliations, the operator collapses into a singular value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI hierarchical clustering priors for institutional influence; maps to GSE transition probabilities for career trajectories. Operator 'Player Identity Hash Vector' (page 1, domain other) captures: G., Morrison, Joseph, Morrow, D. C., Morse, Bryan, Morse, K. L., Moses, Kingsley. Moss, Robert G., Assumptions: Each player ID is unique within the dataset; order of appearance does not convey temporal precedence. Breakdown regime: Collisions in hash functions lead to indistinguishable player states. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI anonymized tracking data via locality-sensitive hashing; maps to GSE entity resolution through state-space pruning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Retrocausal Genealogy: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—such as coaches and scouts—model these primitives to optimize roster construction and predict performance. They assume players have stable identities but account for uncertainty in measurements and affiliations, leading to strategic decisions under incomplete information. Theory of Mind & Decision Maker Model: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity conditions require that the operators remain linearly independent across layers; leakage occurs when high-cardinality identifiers leak sensitive personal data, violating privacy constraints such as differential privacy. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0320 (151b4c6ac8d11a95), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

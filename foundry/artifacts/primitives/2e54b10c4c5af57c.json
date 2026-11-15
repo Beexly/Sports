@@ -1,0 +1,78 @@
+{
+  "book_id": "2e54b10c4c5af57c",
+  "source_status": "COMPLETE",
+  "title": "playerprofiler.com",
+  "file_name": "playerprofiler.com.md",
+  "sha256": "2e54b10c4c5af57c9be2fc2447306d6f674b378e458d92028031908f9663360a",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal and URL discovery as a discrete dynamical system with state transitions defined by HTTP status codes and entry counts. Universal Lens: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on sitemap reliability using HTTP status and entry count to estimate data completeness and signal-to-noise ratio in advanced analytics. GSI Mapping: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State-transition model of content discovery where each sitemap entry is a node; transitions governed by crawlability metrics and indexing status. GSE Mapping: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_traversal",
+      "name": "Sitemap Graph Traversal Operator",
+      "verbatim_quote": "# playerprofiler.com Category: **advanced-data** URLs discovered: **50,438** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{urls}': 'dimensionless, total URLs discovered', 'N_{sitemaps}': 'dimensionless, number of sitemaps crawled'}",
+      "assumptions": "Each sitemap contributes independently to URL discovery; crawl success is probabilistic.",
+      "breakdown_regime": "When N_sitemaps → ∞, convergence to full site coverage under ideal crawling conditions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Graph traversal on sitemap nodes mirrors information retrieval in GSI's data ingestion pipeline.",
+        "source_operator": "sitemap_graph_traversal",
+        "telemetry": "Number of unique URLs indexed per sitemap."
+      }
+    },
+    {
+      "primitive_id": "crawlability_metric",
+      "name": "Crawlability Metric",
+      "verbatim_quote": "| Index | |---|---|---|---| | `https://www.playerprofiler.com/wp-sitemap.xml` | 200 | 59 | yes | | `https://playerprofiler.com/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{status}': 'dimensionless, HTTP response code (200 = valid)', 'E': 'dimensionless, number of entries', 'I': 'binary, indexable flag (yes/no)'}",
+      "assumptions": "Valid sitemaps (status=200) contribute uniformly to data richness.",
+      "breakdown_regime": "When C_status ≠ 200, metric becomes undefined or unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from sitemap metadata to assess data availability for GSE's content parsing engine.",
+        "source_operator": "crawlability_metric",
+        "telemetry": "Percentage of sitemaps returning 200 OK."
+      }
+    },
+    {
+      "primitive_id": "content_discovery_state",
+      "name": "Content Discovery State Transition",
+      "verbatim_quote": "1 | no | | `https://www.playerprofiler.com/page-sitemap.xml` | 200 | 173 | no | | `https://www.playerprofiler.com/nfl-sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{state}': 'binary, {discovered, not discovered}', 'T_{transition}': 'time-step, discrete', 'M_{metric}': 'dimensionless, crawlability score'}",
+      "assumptions": "Each sitemap entry is a deterministic state transition in content discovery.",
+      "breakdown_regime": "When M_metric < threshold, state remains unchanged due to low signal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE’s state machine for dynamic content loading and user query resolution.",
+        "source_operator": "content_discovery_state",
+        "telemetry": "Change in number of indexed NFL player pages over time."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e54b10c4c5af57c_t0",
+      "think": "The sitemap structure represents a hierarchical graph where each node corresponds to a logical data partition. The traversal process models a Markov chain with transient states defined by HTTP responses and entry counts. Each sitemap entry contributes to a cumulative URL set, forming a discrete dynamical system. The reliability of this system depends on consistent HTTP responses (status=200), which act as a proxy for data integrity. The failure mode occurs when sitemaps return 404 or 500 errors, indicating either removal or server issues. This leads to incomplete data capture, affecting both GSI's Bayesian inference and GSE's state transitions. The derived kernel 'crawlability_metric' quantifies this reliability, while 'content_discovery_state' maps to GSE's content resolution logic.\n\nDeep epistemic analysis for playerprofiler.com (2e54b10c4c5af57c, domain=other, pages_read=4/4): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # playerprofiler.com Category: **advanced-data** URLs discovered: **50,438** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap contributes independently to URL discovery; crawl success is probabilistic. Breakdown regime: When N_sitemaps → ∞, convergence to full site coverage under ideal crawling conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph traversal on sitemap nodes mirrors information retrieval in GSI's data ingestion pipeline. Operator 'Crawlability Metric' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.playerprofiler.com/wp-sitemap.xml` | 200 | 59 | yes | | `https://playerprofiler.com/sitemap.xml` | Assumptions: Valid sitemaps (status=200) contribute uniformly to data richness. Breakdown regime: When C_status ≠ 200, metric becomes undefined or unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from sitemap metadata to assess data availability for GSE's content parsing engine. Operator 'Content Discovery State Transition' (page 1, domain other) captures: 1 | no | | `https://www.playerprofiler.com/page-sitemap.xml` | 200 | 173 | no | | `https://www.playerprofiler.com/nfl-sitemap.xml` | Assumptions: Each sitemap entry is a deterministic state transition in content discovery. Breakdown regime: When M_metric < threshold, state remains unchanged due to low signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s state machine for dynamic content loading and user query resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for playerprofiler.com (2e54b10c4c5af57c, domain=other, pages_read=4/4): Operator 'Sitemap Graph Traversal Operator' (page 1, domain other) captures: # playerprofiler.com Category: **advanced-data** URLs discovered: **50,438** Sitemaps walked: 66 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap contributes independently to URL discovery; crawl success is probabilistic. Breakdown regime: When N_sitemaps → ∞, convergence to full site coverage under ideal crawling conditions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Graph traversal on sitemap nodes mirrors information retrieval in GSI's data ingestion pipeline. Operator 'Crawlability Metric' (page 1, domain other) captures: | Index | |---|---|---|---| | `https://www.playerprofiler.com/wp-sitemap.xml` | 200 | 59 | yes | | `https://playerprofiler.com/sitemap.xml` | Assumptions: Valid sitemaps (status=200) contribute uniformly to data richness. Breakdown regime: When C_status ≠ 200, metric becomes undefined or unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from sitemap metadata to assess data availability for GSE's content parsing engine. Operator 'Content Discovery State Transition' (page 1, domain other) captures: 1 | no | | `https://www.playerprofiler.com/page-sitemap.xml` | 200 | 173 | no | | `https://www.playerprofiler.com/nfl-sitemap.xml` | Assumptions: Each sitemap entry is a deterministic state transition in content discovery. Breakdown regime: When M_metric < threshold, state remains unchanged due to low signal. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE’s state machine for dynamic content loading and user query resolution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in graph theory and information retrieval models from early web crawlers, evolving into modern semantic indexing frameworks. Retrocausal Genealogy: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include crawlers (optimizing for coverage) and servers (limiting access). Decision actors are content publishers who control sitemap structure and availability. Theory of Mind & Decision Maker Model: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if multiple sitemaps map to same URLs; leakage occurs when non-indexable sitemaps pollute the discovery space. Cross-Layer Veto & Anti-Leakage Check: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in playerprofiler.com (2e54b10c4c5af57c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

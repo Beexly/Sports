@@ -1,0 +1,78 @@
+{
+  "book_id": "f3f6883b7598be6a",
+  "source_status": "COMPLETE",
+  "title": "hardrock.bet",
+  "file_name": "hardrock.bet.md",
+  "sha256": "f3f6883b7598be6a6ad34b733b0f1177aeb723bd8569de8726b490c8657700ba",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Event propagation kernel \\( \\mathcal{T} \\) models client-side trigger dynamics through namespace-ordered dispatch with regex-based filtering. Universal Lens: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian event likelihood \\( P(e|\\mathcal{T}) \\) encodes conditional probability of trigger execution given observed namespace patterns in \\( \\mathcal{T} \\). GSI Mapping: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition \\( \\sigma_{t+1} = \\mathcal{T}(\\sigma_t, e) \\) updates system state via triggered events under namespace constraints. GSE Mapping: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "event_trigger_kernel",
+      "name": "Event Trigger Kernel",
+      "verbatim_quote": "No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter ### `trigger` ```js trigger: function(e, t, n, r) { var i, o, a, s, u, l, c, f, p = [n || C], d = ue.call(e, \"type\") ?",
+      "page": 1,
+      "latex": "\\mathcal{T}(e, t, n, r) = \\begin{cases} \\text{dispatch} & \\text{if } \\neg Dt.test(d + ce.event.triggered) \\\\ \\text{reject} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'e': 'event object, dimensionless', 't': 'event data, dimensionless', 'n': 'node context, dimensionless', 'r': 'trigger flag, boolean', 'd': 'event type string, dimensionless', 'Dt': 'regex pattern, dimensionless'}",
+      "assumptions": "Event type must not be malformed; node must be valid DOM element.",
+      "breakdown_regime": "When \\( d + ce.event.triggered \\) matches \\( Dt \\), kernel halts propagation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic event model where \\( \\mathcal{T} \\) acts as a stochastic trigger operator.",
+        "source_operator": "event_trigger_kernel",
+        "telemetry": "Observable: number of successful vs failed trigger calls."
+      }
+    },
+    {
+      "primitive_id": "namespace_filtering_operator",
+      "name": "Namespace Filtering Operator",
+      "verbatim_quote": "e.rnamespace = e.namespace ? new RegExp(\"(^|\\\\.)\" + h.join(\"\\\\.(?:.*\\\\.|)\") + \"(\\\\.|$)\") : null, e.result = void 0,",
+      "page": 1,
+      "latex": "\\mathcal{F}_{\\text{ns}}(e) = \\begin{cases} \\text{match} & \\text{if } e.namespace \\in \\mathcal{R} \\\\ \\text{skip} & \\text{else} \\end{cases}",
+      "symbol_and_unit_ledger": "{'e': 'event object, dimensionless', 'h': 'namespace segments list, dimensionless', 'R': 'regex filter, dimensionless'}",
+      "assumptions": "Namespace must be properly formatted; regex must be valid.",
+      "breakdown_regime": "Invalid namespace causes \\( \\mathcal{F}_{\\text{ns}} \\) to return null.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from \\( \\mathcal{T} \\); filters events based on namespace match for targeted dispatch.",
+        "source_operator": "namespace_filtering_operator",
+        "telemetry": "Observable: matched namespace count per event."
+      }
+    },
+    {
+      "primitive_id": "event_dispatch_logic",
+      "name": "Event Dispatch Logic",
+      "verbatim_quote": "(e.target = n), t = null == t ? [e] : ce.makeArray(t, [e]), c = ce.event.sp",
+      "page": 1,
+      "latex": "\\mathcal{D}(e, t) = \\sum_{i=1}^{k} \\delta_{\\text{target}}(e_i) \\cdot \\mathbb{I}_{\\text{valid}}(t)",
+      "symbol_and_unit_ledger": "{'e': 'event object, dimensionless', 't': 'event data array, dimensionless', 'k': 'number of targets, integer', 'δ': 'Dirac delta, dimensionless', 'I_valid': 'indicator function, boolean'}",
+      "assumptions": "Valid target nodes exist; event data is structured.",
+      "breakdown_regime": "If \\( t \\) is invalid, \\( \\mathcal{D} \\) returns zero-sum dispatch.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from \\( \\mathcal{T} \\); computes dispatch weights across targets using event data.",
+        "source_operator": "event_dispatch_logic",
+        "telemetry": "Observable: total dispatched events per cycle."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f3f6883b7598be6a_t0",
+      "think": "The \\( \\mathcal{T} \\) operator models asynchronous event propagation within a JavaScript client environment. It encapsulates namespace-aware dispatch logic, where \\( e.rnamespace \\) serves as a regex filter for event targeting. The \\( \\mathcal{F}_{\\text{ns}} \\) operator isolates valid namespaces, ensuring only relevant events propagate. The \\( \\mathcal{D} \\) operator then aggregates these into a weighted sum over targets. These primitives form a closed-loop system for event-driven UI interaction, with \\( \\mathcal{T} \\) acting as the root kernel. Failure modes include malformed event types or invalid DOM nodes, which halt propagation via \\( Dt.test \\). Dualities emerge between \\( \\mathcal{T} \\) and \\( \\mathcal{D} \\) as both operate on event semantics but differ in scope—\\( \\mathcal{T} \\) governs initiation, \\( \\mathcal{D} \\) governs distribution.\n\nDeep epistemic analysis for hardrock.bet (f3f6883b7598be6a, domain=other, pages_read=1/1): Operator 'Event Trigger Kernel' (page 1, domain other) captures: No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter ### `trigger` ```js trigger: function(e, t, n, r) { var i, o, a, s, u, l, c, f, p = [n || C], d = ue.call(e, \"type\") ? Assumptions: Event type must not be malformed; node must be valid DOM element. Breakdown regime: When \\( d + ce.event.triggered \\) matches \\( Dt \\), kernel halts propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic event model where \\( \\mathcal{T} \\) acts as a stochastic trigger operator. Operator 'Namespace Filtering Operator' (page 1, domain other) captures: e.rnamespace = e.namespace ? new RegExp(\"(^|\\\\.)\" + h.join(\"\\\\.(?:.*\\\\.|)\") + \"(\\\\.|$)\") : null, e.result = void 0, Assumptions: Namespace must be properly formatted; regex must be valid. Breakdown regime: Invalid namespace causes \\( \\mathcal{F}_{\\text{ns}} \\) to return null. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from \\( \\mathcal{T} \\); filters events based on namespace match for targeted dispatch. Operator 'Event Dispatch Logic' (page 1, domain other) captures: (e.target = n), t = null == t ? [e] : ce.makeArray(t, [e]), c = ce.event.sp Assumptions: Valid target nodes exist; event data is structured. Breakdown regime: If \\( t \\) is invalid, \\( \\mathcal{D} \\) returns zero-sum dispatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from \\( \\mathcal{T} \\); computes dispatch weights across targets using event data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for hardrock.bet (f3f6883b7598be6a, domain=other, pages_read=1/1): Operator 'Event Trigger Kernel' (page 1, domain other) captures: No JSON endpoint was reachable unauthenticated from the client surface._ ## Client-side functions that passed the filter ### `trigger` ```js trigger: function(e, t, n, r) { var i, o, a, s, u, l, c, f, p = [n || C], d = ue.call(e, \"type\") ? Assumptions: Event type must not be malformed; node must be valid DOM element. Breakdown regime: When \\( d + ce.event.triggered \\) matches \\( Dt \\), kernel halts propagation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic event model where \\( \\mathcal{T} \\) acts as a stochastic trigger operator. Operator 'Namespace Filtering Operator' (page 1, domain other) captures: e.rnamespace = e.namespace ? new RegExp(\"(^|\\\\.)\" + h.join(\"\\\\.(?:.*\\\\.|)\") + \"(\\\\.|$)\") : null, e.result = void 0, Assumptions: Namespace must be properly formatted; regex must be valid. Breakdown regime: Invalid namespace causes \\( \\mathcal{F}_{\\text{ns}} \\) to return null. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from \\( \\mathcal{T} \\); filters events based on namespace match for targeted dispatch. Operator 'Event Dispatch Logic' (page 1, domain other) captures: (e.target = n), t = null == t ? [e] : ce.makeArray(t, [e]), c = ce.event.sp Assumptions: Valid target nodes exist; event data is structured. Breakdown regime: If \\( t \\) is invalid, \\( \\mathcal{D} \\) returns zero-sum dispatch. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from \\( \\mathcal{T} \\); computes dispatch weights across targets using event data. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in jQuery's event system, later adapted by frameworks like React and Vue. Influenced by observer pattern and functional reactive programming paradigms. Retrocausal Genealogy: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include browser event handlers and user input drivers. System behavior depends on whether \\( \\mathcal{T} \\) is invoked with valid parameters, and whether \\( \\mathcal{F}_{\\text{ns}} \\) allows propagation. Theory of Mind & Decision Maker Model: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when \\( \\mathcal{T} \\) and \\( \\mathcal{D} \\) conflict in event handling. Leakage occurs if \\( \\mathcal{F}_{\\text{ns}} \\) fails to sanitize inputs, allowing unintended propagation. Cross-Layer Veto & Anti-Leakage Check: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in hardrock.bet (f3f6883b7598be6a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

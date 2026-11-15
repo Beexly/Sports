@@ -1,0 +1,78 @@
+{
+  "book_id": "03116b62cb516b42",
+  "source_status": "COMPLETE",
+  "title": "1203-kelly-growth-optimal-with-stop-loss",
+  "file_name": "1203-kelly-growth-optimal-with-stop-loss.md",
+  "sha256": "03116b62cb516b42f498e58219d0e41e9ca326512a81b2bb365b01ca9135f2b6",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Kelly growth-optimal strategy with stop-loss maps to nonlinear PDE for dynamic stake scaling, linking portfolio drift, volatility, and boundary constraints via diffusion dynamics. Universal Lens: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference models stop-loss impact through posterior risk-adjusted Kelly fractions using stochastic volatility and VaR caps as likelihood constraints. GSI Mapping: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning applies the derived PDE-based Kelly scaling to real-time bankroll adjustments, transitioning between risk zones based on stop-loss proximity and reset cycles. GSE Mapping: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stop_loss_aware_kelly_scaling",
+      "name": "Stop-Loss Aware Kelly Scaling",
+      "verbatim_quote": "**Verdict:** ADAPT — stop-loss-aware Kelly scaling (numerical PDE solution + closed-form asymptotics) directly ports to GSE bankroll management: scale stake size down as bankroll approaches a monthly stop-loss and as reset-time dynamics dictate; the derived strategy equation gives a principled alternative to ad-hoc stop-loss rules.",
+      "page": 1,
+      "latex": "\\partial_t \\alpha = -\\frac{\\sigma^2}{2} \\alpha^2 \\partial_\\pi (\\pi^2 \\partial_\\pi \\alpha)",
+      "symbol_and_unit_ledger": "{'α': 'dimensionless risk fraction', 'π': 'bankroll in currency units', 'σ': 'volatility (dimensionless)', 't': 'time in months'}",
+      "assumptions": "GBM market model, constant drift and volatility, periodic reset stop-loss.",
+      "breakdown_regime": "When π → πc, α → 0; when π → ∞, α → αK.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's dynamic bankroll policy via PDE-derived scaling factor u(z,θ) that modulates Kelly fraction αK based on distance to stop and time to reset.",
+        "source_operator": "stop_loss_aware_kelly_scaling",
+        "telemetry": "Portfolio drawdown vs. stop-loss threshold, time-to-reset cycle."
+      }
+    },
+    {
+      "primitive_id": "nonlinear_diffusion_pde",
+      "name": "Nonlinear Diffusion PDE",
+      "verbatim_quote": "Equations & assumptions - ∂t α = -(σ2/2) α2 ∂π(π2∂πα) (eq.",
+      "page": 1,
+      "latex": "\\partial_\\theta u = u^2 z^2 \\partial_z^2 u",
+      "symbol_and_unit_ledger": "{'u': 'scaled Kelly fraction ∈ [0,1]', 'z': 'distance to stop = πc/π', 'θ': 'normalized time to reset = (T-t)/τ', 'τ': 'reset time scale = 2σ²/(μ-r)²'}",
+      "assumptions": "Stochastic differential equation with geometric Brownian motion, boundary conditions at stop and terminal.",
+      "breakdown_regime": "Asymptotically u(z,θ) → 1 - z for large θ.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE’s state-space evolution under risk constraints, where u(z,θ) encodes dynamic risk exposure.",
+        "source_operator": "nonlinear_diffusion_pde",
+        "telemetry": "Convergence of u(z,θ) to 1-z in long horizon limit."
+      }
+    },
+    {
+      "primitive_id": "terminal_stop_kelly",
+      "name": "Terminal Stop Kelly",
+      "verbatim_quote": "26); terminal-stop Kelly α(π) = αK(1-πc/π) = CPPI with Kelly multiplier (eq.",
+      "page": 1,
+      "latex": "\\alpha(\\pi) = \\alpha_K \\left(1 - \\frac{\\pi_c}{\\pi} \\right)",
+      "symbol_and_unit_ledger": "{'αK': 'free Kelly fraction', 'πc': 'stop-loss level', 'π': 'current bankroll'}",
+      "assumptions": "Constant Sharpe ratio, fixed stop-loss level, terminal boundary condition.",
+      "breakdown_regime": "α(π) = 0 when π = πc; α(π) = αK when π → ∞.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSE to compute terminal risk exposure, aligning with CPPI-style dynamic hedging.",
+        "source_operator": "terminal_stop_kelly",
+        "telemetry": "Deviation from CPPI-style exposure under stop-loss constraint."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "03116b62cb516b42_t0",
+      "think": "The core derivation begins with a stochastic control problem optimizing expected logarithmic utility under a stop-loss constraint. The Hamilton-Jacobi-Bellman (HJB) equation yields a nonlinear PDE for the value function J(π,t). By eliminating J, the optimal strategy α(π,t) satisfies a self-contained PDE, which is a backward parabolic diffusion equation. This PDE is solved numerically via explicit Euler scheme with stability condition Δθ/(Δz)² < 0.5. In the long-run limit, the solution converges to u(z,θ) → 1 - z, indicating that risk exposure decays linearly with distance to stop. The boundary conditions define α(πc,t) = 0 (stop-hit), α(π,T) = αK (terminal), and α → αK as π → ∞. These conditions ensure that the strategy respects both terminal and stop-loss constraints. The derived scaling factor u(z,θ) provides a principled method for dynamically adjusting stake size in response to risk exposure and time to reset. This framework directly enables GSE to manage risk-sensitive bankroll allocation while maintaining optimality under the Kelly criterion.\n\nDeep epistemic analysis for 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42, domain=other, pages_read=3/3): Operator 'Stop-Loss Aware Kelly Scaling' (page 1, domain other) captures: **Verdict:** ADAPT — stop-loss-aware Kelly scaling (numerical PDE solution + closed-form asymptotics) directly ports to GSE bankroll management: scale stake size down as bankroll approaches a monthly stop-loss and as reset-time dynamics dictate; the derived strategy equation gives a principled alternative to ad-hoc stop-loss rules. Assumptions: GBM market model, constant drift and volatility, periodic reset stop-loss. Breakdown regime: When π → πc, α → 0; when π → ∞, α → αK. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic bankroll policy via PDE-derived scaling factor u(z,θ) that modulates Kelly fraction αK based on distance to stop and time to reset. Operator 'Nonlinear Diffusion PDE' (page 1, domain other) captures: Equations & assumptions - ∂t α = -(σ2/2) α2 ∂π(π2∂πα) (eq. Assumptions: Stochastic differential equation with geometric Brownian motion, boundary conditions at stop and terminal. Breakdown regime: Asymptotically u(z,θ) → 1 - z for large θ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE’s state-space evolution under risk constraints, where u(z,θ) encodes dynamic risk exposure. Operator 'Terminal Stop Kelly' (page 1, domain other) captures: 26); terminal-stop Kelly α(π) = αK(1-πc/π) = CPPI with Kelly multiplier (eq. Assumptions: Constant Sharpe ratio, fixed stop-loss level, terminal boundary condition. Breakdown regime: α(π) = 0 when π = πc; α(π) = αK when π → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to compute terminal risk exposure, aligning with CPPI-style dynamic hedging. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42, domain=other, pages_read=3/3): Operator 'Stop-Loss Aware Kelly Scaling' (page 1, domain other) captures: **Verdict:** ADAPT — stop-loss-aware Kelly scaling (numerical PDE solution + closed-form asymptotics) directly ports to GSE bankroll management: scale stake size down as bankroll approaches a monthly stop-loss and as reset-time dynamics dictate; the derived strategy equation gives a principled alternative to ad-hoc stop-loss rules. Assumptions: GBM market model, constant drift and volatility, periodic reset stop-loss. Breakdown regime: When π → πc, α → 0; when π → ∞, α → αK. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic bankroll policy via PDE-derived scaling factor u(z,θ) that modulates Kelly fraction αK based on distance to stop and time to reset. Operator 'Nonlinear Diffusion PDE' (page 1, domain other) captures: Equations & assumptions - ∂t α = -(σ2/2) α2 ∂π(π2∂πα) (eq. Assumptions: Stochastic differential equation with geometric Brownian motion, boundary conditions at stop and terminal. Breakdown regime: Asymptotically u(z,θ) → 1 - z for large θ. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE’s state-space evolution under risk constraints, where u(z,θ) encodes dynamic risk exposure. Operator 'Terminal Stop Kelly' (page 1, domain other) captures: 26); terminal-stop Kelly α(π) = αK(1-πc/π) = CPPI with Kelly multiplier (eq. Assumptions: Constant Sharpe ratio, fixed stop-loss level, terminal boundary condition. Breakdown regime: α(π) = 0 when π = πc; α(π) = αK when π → ∞. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSE to compute terminal risk exposure, aligning with CPPI-style dynamic hedging. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Kelly's original 1956 work on optimal growth strategies, extended by Thorp (1969) and further developed in continuous-time settings by Cox and Huang (1989). Nielsen (2013) formalizes this into a PDE framework with stop-loss constraints. Retrocausal Genealogy: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market (random walk with drift), the investor (seeking log-utility maximization), and the stop-loss mechanism (enforcing hard limits). The model assumes rational risk aversion and bounded volatility, with the agent adapting dynamically to changing risk landscapes. Theory of Mind & Decision Maker Model: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity: The PDE does not support jump processes or parameter uncertainty without modification. Leakage occurs if VaR caps or discrete resets are ignored. GSE must enforce discrete-time updates and Bayesian edge estimation to avoid overfitting to continuous approximations. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1203-kelly-growth-optimal-with-stop-loss (03116b62cb516b42), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

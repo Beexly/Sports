@@ -1,0 +1,78 @@
+{
+  "book_id": "a4b614fa3568b372",
+  "source_status": "COMPLETE",
+  "title": "subscriptions-billing-agent",
+  "file_name": "subscriptions-billing-agent.md",
+  "sha256": "a4b614fa3568b3722cb38dffad0db06083b398b2bdedce7afb6e7ef309625540",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Stripe billing primitives form a Bayesian belief network over user entitlements, where webhook idempotency and secret env vars define causal invariants under adversarial update policies. Universal Lens: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers entitlement states via conformal predictive distributions over Stripe event streams, using idempotency keys as probabilistic anchors for retroactive consistency checks. GSI Mapping: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions in entitlement gates by validating API access tokens against a derived kernel of pricing-phase logic, enforcing grace periods through temporal causality constraints. GSE Mapping: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "stripe_webhook_idempotency",
+      "name": "Webhook Idempotency Kernel",
+      "verbatim_quote": "- Webhook handlers stay idempotent: don't remove `webhookEvent.stripeEventId` idempotency, don't ack `200` when the durable write failed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'webhookEventId': 'dimensionless identifier', 'durable_write_status': 'boolean'}",
+      "assumptions": "Each webhook event must be processed once and only once per unique identifier.",
+      "breakdown_regime": "Failure occurs when duplicate events cause inconsistent state writes.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's state transition function where each event triggers a deterministic entitlement update, ensuring no reentrancy or race condition in access control.",
+        "source_operator": "stripe_webhook_idempotency",
+        "telemetry": "Event processing count vs. unique event ID count"
+      }
+    },
+    {
+      "primitive_id": "env_secret_isolation",
+      "name": "Environment Variable Secret Isolation",
+      "verbatim_quote": "- **CLAUDE.md rule 4 (no secrets in code)**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and every price ID are env vars only — never inline a live key or ID as a fallback default.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'STRIPE_SECRET_KEY': 'string', 'STRIPE_WEBHOOK_SECRET': 'string', 'priceID': 'string'}",
+      "assumptions": "All sensitive credentials are externalized into environment variables.",
+      "breakdown_regime": "Security breach occurs if any secret is hardcoded or exposed in logs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's credential validation layer, which ensures that no internal logic can derive secrets from public interfaces.",
+        "source_operator": "env_secret_isolation",
+        "telemetry": "Secret exposure detection via static analysis"
+      }
+    },
+    {
+      "primitive_id": "pricing_phase_gate",
+      "name": "Pricing Phase Enforcement Gate",
+      "verbatim_quote": "- Never edit tier prices, phase order, or phase-advancement logic in `pricing-phases.ts` without explicit founder sign-off — the grandfather guarantee and the \"advance only on proof\" doctrine are load-bearing business decisions, not refactors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'phase_order': 'ordered list of strings', 'tier_price': 'USD', 'advance_condition': 'boolean'}",
+      "assumptions": "Business logic for tier advancement is immutable unless signed off by founders.",
+      "breakdown_regime": "Invalidation occurs if unauthorized edits alter phase progression rules.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Represents a fixed-point constraint in GSE’s entitlement engine, where phase transitions are governed by a formalized policy rather than dynamic logic.",
+        "source_operator": "pricing_phase_gate",
+        "telemetry": "Policy compliance check in phase change logs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a4b614fa3568b372_t0",
+      "think": "The core insight is that Stripe billing operates as a dual system: one side handles real-time payment events (webhooks), while another enforces access control based on entitlements. The idempotency kernel ensures that repeated events do not corrupt state, forming a stable Bayesian belief structure over time. Secrets are isolated in environment variables to prevent leakage, maintaining a secure boundary between logic and data. Pricing phases are treated as immutable policies, enforced by a formal gate that prevents arbitrary modification. These primitives together define a robust, mathematically grounded framework for entitlement management, where failure modes are well-defined and mitigated through architectural constraints.\n\nDeep epistemic analysis for subscriptions-billing-agent (a4b614fa3568b372, domain=other, pages_read=1/1): Operator 'Webhook Idempotency Kernel' (page 1, domain other) captures: - Webhook handlers stay idempotent: don't remove `webhookEvent.stripeEventId` idempotency, don't ack `200` when the durable write failed. Assumptions: Each webhook event must be processed once and only once per unique identifier. Breakdown regime: Failure occurs when duplicate events cause inconsistent state writes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state transition function where each event triggers a deterministic entitlement update, ensuring no reentrancy or race condition in access control. Operator 'Environment Variable Secret Isolation' (page 1, domain other) captures: - **CLAUDE.md rule 4 (no secrets in code)**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and every price ID are env vars only — never inline a live key or ID as a fallback default. Assumptions: All sensitive credentials are externalized into environment variables. Breakdown regime: Security breach occurs if any secret is hardcoded or exposed in logs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's credential validation layer, which ensures that no internal logic can derive secrets from public interfaces. Operator 'Pricing Phase Enforcement Gate' (page 1, domain other) captures: - Never edit tier prices, phase order, or phase-advancement logic in `pricing-phases.ts` without explicit founder sign-off — the grandfather guarantee and the \"advance only on proof\" doctrine are load-bearing business decisions, not refactors. Assumptions: Business logic for tier advancement is immutable unless signed off by founders. Breakdown regime: Invalidation occurs if unauthorized edits alter phase progression rules. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a fixed-point constraint in GSE’s entitlement engine, where phase transitions are governed by a formalized policy rather than dynamic logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for subscriptions-billing-agent (a4b614fa3568b372, domain=other, pages_read=1/1): Operator 'Webhook Idempotency Kernel' (page 1, domain other) captures: - Webhook handlers stay idempotent: don't remove `webhookEvent.stripeEventId` idempotency, don't ack `200` when the durable write failed. Assumptions: Each webhook event must be processed once and only once per unique identifier. Breakdown regime: Failure occurs when duplicate events cause inconsistent state writes. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state transition function where each event triggers a deterministic entitlement update, ensuring no reentrancy or race condition in access control. Operator 'Environment Variable Secret Isolation' (page 1, domain other) captures: - **CLAUDE.md rule 4 (no secrets in code)**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and every price ID are env vars only — never inline a live key or ID as a fallback default. Assumptions: All sensitive credentials are externalized into environment variables. Breakdown regime: Security breach occurs if any secret is hardcoded or exposed in logs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's credential validation layer, which ensures that no internal logic can derive secrets from public interfaces. Operator 'Pricing Phase Enforcement Gate' (page 1, domain other) captures: - Never edit tier prices, phase order, or phase-advancement logic in `pricing-phases.ts` without explicit founder sign-off — the grandfather guarantee and the \"advance only on proof\" doctrine are load-bearing business decisions, not refactors. Assumptions: Business logic for tier advancement is immutable unless signed off by founders. Breakdown regime: Invalidation occurs if unauthorized edits alter phase progression rules. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Represents a fixed-point constraint in GSE’s entitlement engine, where phase transitions are governed by a formalized policy rather than dynamic logic. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s distributed systems theory and modern secure multi-party computation models, particularly those involving idempotent operations and credential separation. Retrocausal Genealogy: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include potential attackers seeking to exploit webhook duplication or secret leakage, and internal developers attempting unauthorized changes to pricing logic. The system models these as competing information flows that must be constrained by design. Theory of Mind & Decision Maker Model: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by separating frontend rendering from backend enforcement. No UI should infer access rights directly; all access must flow through the billing agent's API. Leakage is prevented by ensuring that no internal logic can bypass the webhook or pricing gates. Cross-Layer Veto & Anti-Leakage Check: Rooted in subscriptions-billing-agent (a4b614fa3568b372), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

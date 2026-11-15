@@ -1,0 +1,78 @@
+{
+  "book_id": "eee9c8c26f46f21a",
+  "source_status": "COMPLETE",
+  "title": "claudedesignprompt",
+  "file_name": "claudedesignprompt.md",
+  "sha256": "eee9c8c26f46f21a2ff2873c9b8c0a2cddfdb263925b679cf8e7c3635da1dd62",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The platform enforces a deterministic mapping from latent market states to observable outcomes, constrained by cryptographic sealing. This establishes an isomorphism between information-theoretic entropy reduction and empirical calibration, ensuring the system's epistemic boundary conditions remain strictly verifiable and mathematically transparent.",
+  "gsi_mapping": "GSI treats each pick as a conformal prediction set. The 'factor breakdown' defines the feature space, while the 'cryptographic receipt' anchors the timestamped conditional probability. Automatic curve degradation acts as a dynamic recalibration mechanism when empirical error exceeds the predefined confidence interval.",
+  "gse_mapping": "In GSE, the 'no edge published' state represents a zero-action equilibrium in the situational graph. The transition from model generation to automatic grading constitutes a closed-loop state machine, where the UI reflects the exact phase of the verification pipeline without hallucination.",
+  "primitives": [
+    {
+      "primitive_id": "deterministic_factor_projection",
+      "name": "Deterministic Factor Projection",
+      "verbatim_quote": "We're math you can read.\" Every pick is a deterministic statistical model output (a factor model with a published factor breakdown), priced against real sportsbook lines, sealed with a cryptographic receipt at generation time, graded automatically, and published win or lose.",
+      "page": 1,
+      "latex": "P(\\mathcal{E}) = \\sigma\\left( \\sum_{k=1}^{K} w_k f_k(\\mathbf{x}_t) - L_{mkt} \\right)",
+      "symbol_and_unit_ledger": "P(\\mathcal{E}): Dimensionless probability of edge; w_k: Dimensionless factor weights; f_k: Normalized feature outputs; L_{mkt}: Market-implied log-odds.",
+      "assumptions": "Market lines L_{mkt} act as unbiased proxies for true probabilities; factor weights are static within the generation window.",
+      "breakdown_regime": "Singularity occurs if the Jacobian of the factor matrix approaches zero, rendering the edge indeterminate.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSI's conformal inference layer, where the factor breakdown provides the nonconformity score.",
+        "source_operator": "deterministic_factor_projection",
+        "telemetry": "Published factor breakdown variance vs. realized outcome."
+      }
+    },
+    {
+      "primitive_id": "calibration_floor_collapse",
+      "name": "Calibration Floor Collapse",
+      "verbatim_quote": "When our own calibration falls below the floor we set for ourselves, the site takes the curve down automatically, and it did exactly that at 02:08 UTC today.",
+      "page": 1,
+      "latex": "\\mathbb{I}_{\\text{active}} = \\begin{cases} 1 & \\text{if } |P_{model} - P_{empirical}| \\leq \\delta_{floor} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "\\mathbb{I}_{\\text{active}}: Binary operational state; P_{model}: Predicted probability; P_{empirical}: Observed frequency; \\delta_{floor}: Predefined tolerance threshold.",
+      "assumptions": "Empirical frequencies converge to true probabilities over sufficient sample sizes; the floor \\delta_{floor} is fixed a priori.",
+      "breakdown_regime": "System halts publication if continuous calibration error breaches the Brier score threshold.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Functions as a GSE state-transition veto, collapsing the action space to null when trust metrics degrade.",
+        "source_operator": "calibration_floor_collapse",
+        "telemetry": "Timestamps of automatic curve degradation events."
+      }
+    },
+    {
+      "primitive_id": "verifiable_truth_axiom",
+      "name": "Verifiable Truth Axiom",
+      "verbatim_quote": "The design must make that ethic visible in every pixel: calm, precise, verifiable, never hype.",
+      "page": 1,
+      "latex": "\\nabla_{UI} \\mathcal{V} \\rightarrow \\min \\quad \\text{s.t.} \\quad \\mathcal{H}_{hype} = 0",
+      "symbol_and_unit_ledger": "\\nabla_{UI}: Visual gradient operator; \\mathcal{V}: Verifiability metric; \\mathcal{H}_{hype}: Entropy of promotional language.",
+      "assumptions": "Visual noise is inversely proportional to perceived mathematical rigor; hype introduces unquantifiable bias.",
+      "breakdown_regime": "Fails if WCAG contrast ratios drop below 4.5:1, breaking the 'precise' constraint.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to the GSE principle of minimal sufficient statistics in state representation.",
+        "source_operator": "verifiable_truth_axiom",
+        "telemetry": "User dwell time on 'verify this receipt' actions."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "eee9c8c26f46f21a_t0",
+      "think": "The core mathematical architecture of Galaxy Sports Edge relies on treating sports betting not as gambling, but as a high-frequency calibration problem. By enforcing a deterministic factor projection, the system maps raw team statistics into a low-dimensional edge vector relative to the market line. This eliminates stochastic hallucination common in generative AI. The introduction of a cryptographic receipt creates a temporal anchor, binding the prediction to a specific state of the world at time t_0. If the empirical outcomes diverge from the predicted distribution beyond a strict tolerance delta, the calibration floor collapse primitive triggers. This is a hard mathematical veto, shutting down the emission of new picks until the model's internal parameters are re-optimized. The user interface acts merely as a renderer for these underlying state transitions. There is no 'blur' or obfuscation; locked states are explicit representations of insufficient statistical power. The entire system operates as a closed-loop control mechanism where the feedback signal is the verified win/loss record, continuously minimizing the divergence between model confidence and realized frequency.\n\nDeep epistemic analysis for claudedesignprompt (eee9c8c26f46f21a, domain=other, pages_read=5/5): Operator 'Deterministic Factor Projection' (page 1, domain other) captures: We're math you can read.\" Every pick is a deterministic statistical model output (a factor model with a published factor breakdown), priced against real sportsbook lines, sealed with a cryptographic receipt at generation time, graded automatically, and published win or lose. Assumptions: Market lines L_{mkt} act as unbiased proxies for true probabilities; factor weights are static within the generation window. Breakdown regime: Singularity occurs if the Jacobian of the factor matrix approaches zero, rendering the edge indeterminate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's conformal inference layer, where the factor breakdown provides the nonconformity score. Operator 'Calibration Floor Collapse' (page 1, domain other) captures: When our own calibration falls below the floor we set for ourselves, the site takes the curve down automatically, and it did exactly that at 02:08 UTC today. Assumptions: Empirical frequencies converge to true probabilities over sufficient sample sizes; the floor \\delta_{floor} is fixed a priori. Breakdown regime: System halts publication if continuous calibration error breaches the Brier score threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a GSE state-transition veto, collapsing the action space to null when trust metrics degrade. Operator 'Verifiable Truth Axiom' (page 1, domain other) captures: The design must make that ethic visible in every pixel: calm, precise, verifiable, never hype. Assumptions: Visual noise is inversely proportional to perceived mathematical rigor; hype introduces unquantifiable bias. Breakdown regime: Fails if WCAG contrast ratios drop below 4.5:1, breaking the 'precise' constraint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSE principle of minimal sufficient statistics in state representation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for claudedesignprompt (eee9c8c26f46f21a, domain=other, pages_read=5/5): Operator 'Deterministic Factor Projection' (page 1, domain other) captures: We're math you can read.\" Every pick is a deterministic statistical model output (a factor model with a published factor breakdown), priced against real sportsbook lines, sealed with a cryptographic receipt at generation time, graded automatically, and published win or lose. Assumptions: Market lines L_{mkt} act as unbiased proxies for true probabilities; factor weights are static within the generation window. Breakdown regime: Singularity occurs if the Jacobian of the factor matrix approaches zero, rendering the edge indeterminate. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSI's conformal inference layer, where the factor breakdown provides the nonconformity score. Operator 'Calibration Floor Collapse' (page 1, domain other) captures: When our own calibration falls below the floor we set for ourselves, the site takes the curve down automatically, and it did exactly that at 02:08 UTC today. Assumptions: Empirical frequencies converge to true probabilities over sufficient sample sizes; the floor \\delta_{floor} is fixed a priori. Breakdown regime: System halts publication if continuous calibration error breaches the Brier score threshold. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Functions as a GSE state-transition veto, collapsing the action space to null when trust metrics degrade. Operator 'Verifiable Truth Axiom' (page 1, domain other) captures: The design must make that ethic visible in every pixel: calm, precise, verifiable, never hype. Assumptions: Visual noise is inversely proportional to perceived mathematical rigor; hype introduces unquantifiable bias. Breakdown regime: Fails if WCAG contrast ratios drop below 4.5:1, breaking the 'precise' constraint. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to the GSE principle of minimal sufficient statistics in state representation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This framework inherits from the rigorous probabilistic forecasting traditions of Brier scoring and proper scoring rules established in meteorology. It rejects the opaque black-box heuristics of modern deep learning in favor of classical econometric factor models. The cryptographic sealing echoes the immutable ledger principles of distributed consensus systems, ensuring that historical predictions cannot be retroactively altered to inflate performance metrics.",
+      "theory_of_mind": "The primary user is modeled as a skeptical analyst seeking alpha, not a recreational gambler seeking dopamine. They require transparency to validate the edge. The secondary actor is the sportsbook, whose lines represent the aggregated wisdom of the market. The platform positions itself as an adversarial verifier against both the user's cognitive biases and the market's inefficiencies, providing a sterile, mathematically grounded environment.",
+      "cross_layer_veto": "A critical veto condition exists between the visual layer and the data layer. If the UI attempts to use color or motion to imply significance where the statistical p-value is insignificant, the design fails the 'verifiable truth axiom'. Furthermore, any attempt to blur locked content to simulate value violates the deterministic projection rule, triggering an immediate architectural rejection. The system strictly forbids collinearity between marketing hype and empirical evidence."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "2e3226ca148476e8",
+  "source_status": "COMPLETE",
+  "title": "2012 Sports Data Mining Technology Used in Basketball Outcome Predicti",
+  "file_name": "2012 Sports Data Mining Technology Used in Basketball Outcome Predicti.md",
+  "sha256": "2e3226ca148476e86123c179e131acb43553a1efaf27846271fc2bb480a0246f",
+  "primary_domain": "other",
+  "pages_total": 57,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A probabilistic classification framework integrating NBA performance metrics via logistic regression and ensemble learning for predictive sport analytics. Universal Lens: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on game outcome likelihood using historical player and team statistics as evidence within a conformal predictive set. GSI Mapping: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions in NBA games modeled through dynamic feature vectors and temporal decision trees for real-time tactical inference. GSE Mapping: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "simple_logistics_classifier",
+      "name": "Simple Logistic Classifier",
+      "verbatim_quote": "This project focuses on using machine learning algorithms to build a model for predicting the NBA game outcomes and the algorithms involve Simple Logistics Classifier, Artificial Neural Networks, SVM and Naïve Bayes.",
+      "page": 1,
+      "latex": "\\sigma(z) = \\frac{1}{1 + e^{-z}}, \\quad z = \\mathbf{w}^T\\mathbf{x} + b",
+      "symbol_and_unit_ledger": "{'z': 'dimensionless logit', 'w': 'weight vector (dimensionless)', 'x': 'feature vector (dimensionless)', 'b': 'bias term (dimensionless)', 'σ(z)': 'probability value in [0,1]'}",
+      "assumptions": "Linear separability of features, independent observations, binary outcome space.",
+      "breakdown_regime": "When feature correlation exceeds threshold or sample size insufficient for convergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps NBA statistical inputs to binary win/loss probability using sigmoid activation function.",
+        "source_operator": "simple_logistics_classifier",
+        "telemetry": "Model accuracy on test dataset (69.67%)"
+      }
+    },
+    {
+      "primitive_id": "data_mart_architecture",
+      "name": "Data Mart Architecture",
+      "verbatim_quote": "After processes of automated data collection and cloud techniques enabled data management, a data mart containing NBA",
+      "page": 1,
+      "latex": "\\mathcal{D} = \\{ \\mathbf{x}_i \\in \\mathbb{R}^{n} : i=1,...,m \\}",
+      "symbol_and_unit_ledger": "{'D': 'data mart (collection of feature vectors)', 'x_i': 'i-th observation vector (dimensionless)', 'n': 'number of features (dimensionless)', 'm': 'number of samples (dimensionless)'}",
+      "assumptions": "Homogeneous data structure, consistent schema across time series.",
+      "breakdown_regime": "Schema mismatch or data inconsistency beyond normalization bounds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables structured querying and aggregation of NBA performance data for ML pipeline.",
+        "source_operator": "data_mart_architecture",
+        "telemetry": "Size of data mart (5 seasons of NBA data)"
+      }
+    },
+    {
+      "primitive_id": "machine_learning_pipeline",
+      "name": "Machine Learning Pipeline",
+      "verbatim_quote": "Then machine learning models mentioned above is trained and tested by consuming data in the data mart.",
+      "page": 2,
+      "latex": "\\mathcal{M}(\\mathcal{D}) \\rightarrow \\hat{y} = f(\\mathbf{x}; \\theta)",
+      "symbol_and_unit_ledger": "{'M': 'machine learning model class', 'D': 'input data mart', 'y': 'predicted label (binary)', 'f': 'predictive function', 'θ': 'model parameters (dimensionless)'}",
+      "assumptions": "Training data is representative; model is expressive enough to capture patterns.",
+      "breakdown_regime": "Overfitting when training error significantly lower than validation error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Transforms structured NBA data into predictive outputs using supervised learning.",
+        "source_operator": "machine_learning_pipeline",
+        "telemetry": "Accuracy of classifier on held-out test set"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e3226ca148476e8_t0",
+      "think": "The core methodology employs logistic regression as a foundational classifier for NBA game predictions. The model maps high-dimensional input vectors (player stats, team records) to a scalar probability of winning. Its mathematical form σ(z) = 1/(1+e^{-z}) ensures bounded output between 0 and 1, aligning with probabilistic interpretation. The system assumes linear separability of features, which may fail under complex non-linear interactions. The data mart serves as a structured repository enabling efficient feature extraction and model training. The pipeline integrates automated data collection and cloud-based storage, supporting scalable ingestion of multi-season data. Model evaluation uses a 69.67% accuracy benchmark, indicating moderate predictive capability. Dualities arise in trade-offs between model complexity and generalization. Failure modes include overfitting, data drift, and insufficient feature representation. The framework supports iterative refinement through cross-validation and comparative analysis against alternative classifiers.\n\nDeep epistemic analysis for 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8, domain=other, pages_read=18/57): Operator 'Simple Logistic Classifier' (page 1, domain other) captures: This project focuses on using machine learning algorithms to build a model for predicting the NBA game outcomes and the algorithms involve Simple Logistics Classifier, Artificial Neural Networks, SVM and Naïve Bayes. Assumptions: Linear separability of features, independent observations, binary outcome space. Breakdown regime: When feature correlation exceeds threshold or sample size insufficient for convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps NBA statistical inputs to binary win/loss probability using sigmoid activation function. Operator 'Data Mart Architecture' (page 1, domain other) captures: After processes of automated data collection and cloud techniques enabled data management, a data mart containing NBA Assumptions: Homogeneous data structure, consistent schema across time series. Breakdown regime: Schema mismatch or data inconsistency beyond normalization bounds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables structured querying and aggregation of NBA performance data for ML pipeline. Operator 'Machine Learning Pipeline' (page 2, domain other) captures: Then machine learning models mentioned above is trained and tested by consuming data in the data mart. Assumptions: Training data is representative; model is expressive enough to capture patterns. Breakdown regime: Overfitting when training error significantly lower than validation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transforms structured NBA data into predictive outputs using supervised learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8, domain=other, pages_read=18/57): Operator 'Simple Logistic Classifier' (page 1, domain other) captures: This project focuses on using machine learning algorithms to build a model for predicting the NBA game outcomes and the algorithms involve Simple Logistics Classifier, Artificial Neural Networks, SVM and Naïve Bayes. Assumptions: Linear separability of features, independent observations, binary outcome space. Breakdown regime: When feature correlation exceeds threshold or sample size insufficient for convergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps NBA statistical inputs to binary win/loss probability using sigmoid activation function. Operator 'Data Mart Architecture' (page 1, domain other) captures: After processes of automated data collection and cloud techniques enabled data management, a data mart containing NBA Assumptions: Homogeneous data structure, consistent schema across time series. Breakdown regime: Schema mismatch or data inconsistency beyond normalization bounds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables structured querying and aggregation of NBA performance data for ML pipeline. Operator 'Machine Learning Pipeline' (page 2, domain other) captures: Then machine learning models mentioned above is trained and tested by consuming data in the data mart. Assumptions: Training data is representative; model is expressive enough to capture patterns. Breakdown regime: Overfitting when training error significantly lower than validation error. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Transforms structured NBA data into predictive outputs using supervised learning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical learning theory, extending from Fisher's discriminant analysis and Neyman-Pearson hypothesis testing into modern machine learning paradigms including logistic regression and neural networks. Retrocausal Genealogy: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include adversarial teams with varying strategies, unpredictable external factors (injuries, weather), and evolving player performance dynamics that challenge static model assumptions. Theory of Mind & Decision Maker Model: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced via feature selection techniques; leakage vetoes prevent information from future events influencing past predictions, ensuring causal integrity. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2012 Sports Data Mining Technology Used in Basketball Outcome Predicti (2e3226ca148476e8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

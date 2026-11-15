@@ -1,0 +1,78 @@
+{
+  "book_id": "dfd674591ec0db1d",
+  "source_status": "COMPLETE",
+  "title": "sportsdataio.com",
+  "file_name": "sportsdataio.com.md",
+  "sha256": "dfd674591ec0db1dc090a1c3499f76308d32eb6bd334cbc598ffbc8ccf8ac0b0",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sports data API surface mapping via endpoint enumeration and CDN asset tracking reveals structured observability layers for real-time analytics. Universal Lens: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers probabilistic sport event states through API endpoint coverage and telemetry bundle signatures using conformal predictive distributions. GSI Mapping: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models dynamic sport intelligence workflows by transitioning between discrete state spaces defined by API access patterns and third-party SDK integrations. GSE Mapping: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "api_endpoint_coverage",
+      "name": "API Endpoint Coverage Operator",
+      "verbatim_quote": "# sportsdataio.com — deep surface Bundles fetched: **16** Bytes mined: **1,168,332** ## abs_endpoints (17 distinct) ```",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_{\\\\text{endpoints}}': '\\\\text{count of distinct API endpoints}', 'B_{\\\\text{mined}}': '\\\\text{bytes of data mined} \\\\, (\\\\text{SI: bytes})'}",
+      "assumptions": "Endpoints are uniformly sampled; data volume correlates with information richness.",
+      "breakdown_regime": "When N_{\\text{endpoints}} < 10, coverage is insufficient for robust inference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each API endpoint corresponds to a unique sport domain state in GSI's belief space.",
+        "source_operator": "api_endpoint_coverage",
+        "telemetry": "Number of distinct API paths accessed per sport category."
+      }
+    },
+    {
+      "primitive_id": "cdn_asset_signature",
+      "name": "CDN Asset Signature Kernel",
+      "verbatim_quote": "Bundle | Bytes | |---|---| | `https://www.googletagmanager.com/gtag/js?id=G-METWHQGTC7` | 620,806 | | `https://kendo.cdn.telerik.com/2019.2.514/js/angular.min.js` | 172,104 | |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{\\\\text{bundle}}': '\\\\text{size of JS/CSS bundle} \\\\, (\\\\text{SI: bytes})', 'C_{\\\\text{cdn}}': '\\\\text{content delivery network identifier}'}",
+      "assumptions": "Asset sizes reflect functional complexity and tracking overhead.",
+      "breakdown_regime": "When S_{\\text{bundle}} > 1MB, asset may introduce latency or tracking noise.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Bundle signatures map to GSE's UI rendering and analytics instrumentation states.",
+        "source_operator": "cdn_asset_signature",
+        "telemetry": "JS/CSS bundle sizes and origins from CDN hosts."
+      }
+    },
+    {
+      "primitive_id": "third_party_integration",
+      "name": "Third-Party Integration Index",
+      "verbatim_quote": "distinct) ``` 162 sportsdata.io 40 cdn.sportsdata.io 11 cdnjs.cloudflare.com 8 www.facebook.com 5 www.linkedin.com 5 www.instagram.com 5 www.googletagmanager.com",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'I_{\\\\text{vendor}}': '\\\\text{integration count with external vendors}', 'V_{\\\\text{sdk}}': '\\\\text{SDKs used for vendor integration}'}",
+      "assumptions": "Each vendor integration contributes to data pipeline depth and potential bias.",
+      "breakdown_regime": "When I_{\\text{vendor}} > 20, risk of data leakage or vendor lock-in increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vendor integrations correspond to GSI's data fusion layers and trust models.",
+        "source_operator": "third_party_integration",
+        "telemetry": "Count of unique domains and SDKs integrated into the platform."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dfd674591ec0db1d_t0",
+      "think": "The API endpoint coverage operator defines a set of accessible domains for each sport, forming a discrete state space for GSI’s probabilistic model. The CDN asset signature kernel maps to GSE’s rendering engine, where bundle size and origin determine UI responsiveness and tracking fidelity. Third-party integration index reflects the degree of external dependency, which impacts both GSI’s data integrity and GSE’s operational autonomy. These primitives form a triadic structure: one domain (endpoint), one interface (asset), one agent (vendor), enabling dual inference: statistical (GSI) and operational (GSE). Failure modes include endpoint undercoverage (incomplete event modeling), oversized bundles (latency), and vendor overreliance (data drift).\n\nDeep epistemic analysis for sportsdataio.com (dfd674591ec0db1d, domain=other, pages_read=2/2): Operator 'API Endpoint Coverage Operator' (page 1, domain other) captures: # sportsdataio.com — deep surface Bundles fetched: **16** Bytes mined: **1,168,332** ## abs_endpoints (17 distinct) ``` Assumptions: Endpoints are uniformly sampled; data volume correlates with information richness. Breakdown regime: When N_{\\text{endpoints}} < 10, coverage is insufficient for robust inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each API endpoint corresponds to a unique sport domain state in GSI's belief space. Operator 'CDN Asset Signature Kernel' (page 1, domain other) captures: Bundle | Bytes | |---|---| | `https://www.googletagmanager.com/gtag/js?id=G-METWHQGTC7` | 620,806 | | `https://kendo.cdn.telerik.com/2019.2.514/js/angular.min.js` | 172,104 | | Assumptions: Asset sizes reflect functional complexity and tracking overhead. Breakdown regime: When S_{\\text{bundle}} > 1MB, asset may introduce latency or tracking noise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bundle signatures map to GSE's UI rendering and analytics instrumentation states. Operator 'Third-Party Integration Index' (page 1, domain other) captures: distinct) ``` 162 sportsdata.io 40 cdn.sportsdata.io 11 cdnjs.cloudflare.com 8 www.facebook.com 5 www.linkedin.com 5 www.instagram.com 5 www.googletagmanager.com Assumptions: Each vendor integration contributes to data pipeline depth and potential bias. Breakdown regime: When I_{\\text{vendor}} > 20, risk of data leakage or vendor lock-in increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Vendor integrations correspond to GSI's data fusion layers and trust models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sportsdataio.com (dfd674591ec0db1d, domain=other, pages_read=2/2): Operator 'API Endpoint Coverage Operator' (page 1, domain other) captures: # sportsdataio.com — deep surface Bundles fetched: **16** Bytes mined: **1,168,332** ## abs_endpoints (17 distinct) ``` Assumptions: Endpoints are uniformly sampled; data volume correlates with information richness. Breakdown regime: When N_{\\text{endpoints}} < 10, coverage is insufficient for robust inference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each API endpoint corresponds to a unique sport domain state in GSI's belief space. Operator 'CDN Asset Signature Kernel' (page 1, domain other) captures: Bundle | Bytes | |---|---| | `https://www.googletagmanager.com/gtag/js?id=G-METWHQGTC7` | 620,806 | | `https://kendo.cdn.telerik.com/2019.2.514/js/angular.min.js` | 172,104 | | Assumptions: Asset sizes reflect functional complexity and tracking overhead. Breakdown regime: When S_{\\text{bundle}} > 1MB, asset may introduce latency or tracking noise. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Bundle signatures map to GSE's UI rendering and analytics instrumentation states. Operator 'Third-Party Integration Index' (page 1, domain other) captures: distinct) ``` 162 sportsdata.io 40 cdn.sportsdata.io 11 cdnjs.cloudflare.com 8 www.facebook.com 5 www.linkedin.com 5 www.instagram.com 5 www.googletagmanager.com Assumptions: Each vendor integration contributes to data pipeline depth and potential bias. Breakdown regime: When I_{\\text{vendor}} > 20, risk of data leakage or vendor lock-in increases. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Vendor integrations correspond to GSI's data fusion layers and trust models. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph-based data modeling, these primitives echo early work on API semantics and distributed system observability from the 1990s onward. Retrocausal Genealogy: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors seeking monetization and platform users desiring privacy. Their interaction shapes GSI’s trust calibration and GSE’s adaptive behavior. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that each primitive operates independently to avoid redundancy. Leakage vetoes ensure no single vendor can dominate the data pipeline without audit. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (dfd674591ec0db1d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

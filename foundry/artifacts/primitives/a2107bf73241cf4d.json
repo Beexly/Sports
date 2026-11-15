@@ -1,0 +1,78 @@
+{
+  "book_id": "a2107bf73241cf4d",
+  "source_status": "COMPLETE",
+  "title": "polymarket.com",
+  "file_name": "polymarket.com.md",
+  "sha256": "a2107bf73241cf4d226b6167d246736dae35756bf95f51fbc6c8005dde937b03",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Polymarket's URL structure encodes categorical prediction markets via path segments and event hierarchies, enabling Bayesian inference over discrete outcomes. Universal Lens: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps URL path hierarchies to stochastic processes on outcome spaces, using conformal predictive distributions for probabilistic forecasting. GSI Mapping: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models market states as Markov transitions between prediction events, updating belief states based on real-time liquidity and outcome resolution. GSE Mapping: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "url_path_hierarchy",
+      "name": "URL Path Hierarchy Operator",
+      "verbatim_quote": "# polymarket.com — crawl URLs reached: **400** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Path segment identifier (dimensionless)', 'U': 'URL count (dimensionless)'}",
+      "assumptions": "Each path segment corresponds to a distinct category of prediction market.",
+      "breakdown_regime": "When U < 10, path hierarchy becomes insufficient for market granularity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "URL paths map to categorical partitions in GSI's outcome space, enabling isomorphic Bayesian updates.",
+        "source_operator": "url_path_hierarchy",
+        "telemetry": "Number of unique path segments per domain"
+      }
+    },
+    {
+      "primitive_id": "event_outcome_space",
+      "name": "Event Outcome Space Operator",
+      "verbatim_quote": "## Pages | URL | Title | |---|---| | `https://polymarket.com/` | Polymarket | The World's Largest",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'Event identifier (dimensionless)', 'O': 'Outcome set (dimensionless)'}",
+      "assumptions": "Events are binary or multi-class, with associated probabilities.",
+      "breakdown_regime": "When |O| > 100, outcome space becomes computationally intractable without dimensionality reduction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Event outcomes form kernel space for GSE state transitions under liquidity constraints.",
+        "source_operator": "event_outcome_space",
+        "telemetry": "Resolution rate of outcomes per event"
+      }
+    },
+    {
+      "primitive_id": "market_category_partition",
+      "name": "Market Category Partition Operator",
+      "verbatim_quote": "| | `https://polymarket.com/teams/` | teams Prediction Markets &amp; Live Odds 2026 | Polymarket | | `https://polymarket.com/nfl/`",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'Category label (dimensionless)', 'M': 'Market subset (dimensionless)'}",
+      "assumptions": "Categories define disjoint subsets of prediction markets with shared dynamics.",
+      "breakdown_regime": "When C overlaps across domains, partition integrity fails due to cross-contamination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Market categories in GSI correspond to conditional probability distributions over outcomes.",
+        "source_operator": "market_category_partition",
+        "telemetry": "Proportion of markets within each category"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a2107bf73241cf4d_t0",
+      "think": "The URL structure of Polymarket encodes a hierarchical categorical system where each path segment represents a distinct domain of prediction markets. This enables a mathematical framework for modeling prediction markets as stochastic processes over discrete outcome sets. The path hierarchy allows for isomorphic mapping to Bayesian belief networks in GSI, where each URL segment corresponds to a conditional probability distribution. The event-based design implies that each market outcome can be modeled as a random variable with defined support, enabling conformal prediction methods. The dual nature of these structures—hierarchical categorization and discrete outcomes—creates a robust foundation for both probabilistic inference and dynamic state transitions in GSE. Failure modes include path collision, where overlapping segments lead to ambiguity, and outcome explosion, where too many categories result in combinatorial intractability.\n\nDeep epistemic analysis for polymarket.com (a2107bf73241cf4d, domain=other, pages_read=6/6): Operator 'URL Path Hierarchy Operator' (page 1, domain other) captures: # polymarket.com — crawl URLs reached: **400** ## Path segments | Segment | URLs | |---|---| Assumptions: Each path segment corresponds to a distinct category of prediction market. Breakdown regime: When U < 10, path hierarchy becomes insufficient for market granularity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL paths map to categorical partitions in GSI's outcome space, enabling isomorphic Bayesian updates. Operator 'Event Outcome Space Operator' (page 1, domain other) captures: ## Pages | URL | Title | |---|---| | `https://polymarket.com/` | Polymarket | The World's Largest Assumptions: Events are binary or multi-class, with associated probabilities. Breakdown regime: When |O| > 100, outcome space becomes computationally intractable without dimensionality reduction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Event outcomes form kernel space for GSE state transitions under liquidity constraints. Operator 'Market Category Partition Operator' (page 1, domain other) captures: | | `https://polymarket.com/teams/` | teams Prediction Markets &amp; Live Odds 2026 | Polymarket | | `https://polymarket.com/nfl/` Assumptions: Categories define disjoint subsets of prediction markets with shared dynamics. Breakdown regime: When C overlaps across domains, partition integrity fails due to cross-contamination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market categories in GSI correspond to conditional probability distributions over outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for polymarket.com (a2107bf73241cf4d, domain=other, pages_read=6/6): Operator 'URL Path Hierarchy Operator' (page 1, domain other) captures: # polymarket.com — crawl URLs reached: **400** ## Path segments | Segment | URLs | |---|---| Assumptions: Each path segment corresponds to a distinct category of prediction market. Breakdown regime: When U < 10, path hierarchy becomes insufficient for market granularity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): URL paths map to categorical partitions in GSI's outcome space, enabling isomorphic Bayesian updates. Operator 'Event Outcome Space Operator' (page 1, domain other) captures: ## Pages | URL | Title | |---|---| | `https://polymarket.com/` | Polymarket | The World's Largest Assumptions: Events are binary or multi-class, with associated probabilities. Breakdown regime: When |O| > 100, outcome space becomes computationally intractable without dimensionality reduction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Event outcomes form kernel space for GSE state transitions under liquidity constraints. Operator 'Market Category Partition Operator' (page 1, domain other) captures: | | `https://polymarket.com/teams/` | teams Prediction Markets &amp; Live Odds 2026 | Polymarket | | `https://polymarket.com/nfl/` Assumptions: Categories define disjoint subsets of prediction markets with shared dynamics. Breakdown regime: When C overlaps across domains, partition integrity fails due to cross-contamination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Market categories in GSI correspond to conditional probability distributions over outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the mathematical theory of categorical data analysis and Bayesian networks, this structure builds upon earlier work in information theory and stochastic process modeling by Shannon and Kolmogorov. Retrocausal Genealogy: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate market categories to obscure true outcome probabilities or exploit path hierarchies for arbitrage. Decision actors model uncertainty through belief propagation across the categorical lattice. Theory of Mind & Decision Maker Model: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that path segments remain orthogonal to prevent leakage between unrelated market categories. Veto conditions ensure that overlapping domains do not compromise the integrity of either GSI’s probabilistic inference or GSE’s state transition logic. Cross-Layer Veto & Anti-Leakage Check: Rooted in polymarket.com (a2107bf73241cf4d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

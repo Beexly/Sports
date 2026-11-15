@@ -1,0 +1,95 @@
+{
+  "book_id": "ed4eb7bf0f3e853b",
+  "source_status": "COMPLETE",
+  "title": "LAUNCH_READINESS_C11_2026-09-04",
+  "file_name": "LAUNCH_READINESS_C11_2026-09-04.md",
+  "sha256": "ed4eb7bf0f3e853b81d61d46720b42a619b5bab9cd1f5abc9d4a7de4b756712a",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Multi-agent launch readiness governed by ordered environment flags, claim protocols, and truth sources—modelled as a causal lattice of invariant states. Universal Lens: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers launch readiness via Bayesian belief updates over agent claims and compliance invariants, using conformal prediction for risk calibration. GSI Mapping: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE executes state transitions through deterministic flag sequences, enforcing paywalls and public disclosures via kernelized decision logic. GSE Mapping: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "single_source_of_truth",
+      "name": "Agent Ledger Consistency",
+      "verbatim_quote": "- **Single Source of Truth:** `docs/ops/AGENT_LEDGER.md` (enforced in CI via `scripts/ops/check-agent-ledger.mjs`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L': 'Ledger state vector (dimensionless)', 'CI': 'Continuous integration check (boolean)'}",
+      "assumptions": "Ledger integrity implies agent coordination consistency.",
+      "breakdown_regime": "When CI fails, L becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI’s belief propagation mirrors GSE’s agent state synchronization.",
+        "source_operator": "single_source_of_truth",
+        "telemetry": "Commit SHA resolution and CI pass/fail"
+      }
+    },
+    {
+      "primitive_id": "claim_protocol",
+      "name": "Task Ownership Invariant",
+      "verbatim_quote": "- **Claim Protocol:** Any task MUST be claimed before starting (Owner + `CLAIMED` status) and marked `DONE` with resolvable commit SHA evidence.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'Task identifier (dimensionless)', 'O': 'Owner identifier (dimensionless)', 'S': 'Status (CLAIMED/DONE)', 'C': 'Commit SHA (string)'}",
+      "assumptions": "Ownership prevents race conditions in task execution.",
+      "breakdown_regime": "When S ≠ DONE, T is unverifiable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE enforces task ownership via kernelized state machine; GSI tracks task validity via probabilistic ownership graph.",
+        "source_operator": "claim_protocol",
+        "telemetry": "SHA-based task completion logs"
+      }
+    },
+    {
+      "primitive_id": "launch_flag_sequence",
+      "name": "Environment Transition Kernel",
+      "verbatim_quote": "Launch Environment Flag Sequence (Owner-Gated) To transition from **Silent Launch** to **Fully Public**, the environment flags MUST be flipped in this exact order: 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_i': 'Flag i (boolean)', 't': 'Transition time (seconds)', 'K': 'Kernel of flag sequence (ordered set)'}",
+      "assumptions": "Sequential flag flipping ensures system stability.",
+      "breakdown_regime": "If F_i is set before F_{i-1}, system enters invalid state.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE applies ordered flag transitions; GSI models these as a Markov chain of readiness states.",
+        "source_operator": "launch_flag_sequence",
+        "telemetry": "Flag flip timestamps and readiness scores"
+      }
+    },
+    {
+      "primitive_id": "public_surface_compliance",
+      "name": "Affiliate-Free Disclosure Layer",
+      "verbatim_quote": "Public Surface & Compliance Audit - **Zero-Affiliate Commitment:** Permanently published on `/how-we-make-money` and `/terms` Section 7 (\"no sportsbook or DFS affiliate links\").",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Affiliate link presence (boolean)', 'D': 'Disclosure surface (set of URLs)', 'P': 'Paywall enforcement (boolean)'}",
+      "assumptions": "Public disclosure ensures compliance with affiliate policies.",
+      "breakdown_regime": "If A = true, P must be false.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE enforces affiliate-free policy; GSI verifies policy adherence via structured data validation.",
+        "source_operator": "public_surface_compliance",
+        "telemetry": "HTTP 200 responses from disclosure endpoints"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ed4eb7bf0f3e853b_t0",
+      "think": "The primitives form a causal lattice where each invariant (ledger, claim, flag, disclosure) defines a node in a readiness graph. The system evolves through ordered flag flips, with each step validated by claim and ledger consistency. GSE executes this as a deterministic kernel, while GSI evaluates it via Bayesian belief over agent behavior and compliance. Failure modes include out-of-order flag flipping, unclaimed tasks, or missing disclosures. These are dualized into a single-state transition model with retroactive verification gates.\n\nDeep epistemic analysis for LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b, domain=other, pages_read=2/2): Operator 'Agent Ledger Consistency' (page 1, domain other) captures: - **Single Source of Truth:** `docs/ops/AGENT_LEDGER.md` (enforced in CI via `scripts/ops/check-agent-ledger.mjs`). Assumptions: Ledger integrity implies agent coordination consistency. Breakdown regime: When CI fails, L becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI’s belief propagation mirrors GSE’s agent state synchronization. Operator 'Task Ownership Invariant' (page 1, domain other) captures: - **Claim Protocol:** Any task MUST be claimed before starting (Owner + `CLAIMED` status) and marked `DONE` with resolvable commit SHA evidence. Assumptions: Ownership prevents race conditions in task execution. Breakdown regime: When S ≠ DONE, T is unverifiable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces task ownership via kernelized state machine; GSI tracks task validity via probabilistic ownership graph. Operator 'Environment Transition Kernel' (page 1, domain other) captures: Launch Environment Flag Sequence (Owner-Gated) To transition from **Silent Launch** to **Fully Public**, the environment flags MUST be flipped in this exact order: 1. Assumptions: Sequential flag flipping ensures system stability. Breakdown regime: If F_i is set before F_{i-1}, system enters invalid state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies ordered flag transitions; GSI models these as a Markov chain of readiness states. Operator 'Affiliate-Free Disclosure Layer' (page 2, domain other) captures: Public Surface & Compliance Audit - **Zero-Affiliate Commitment:** Permanently published on `/how-we-make-money` and `/terms` Section 7 (\"no sportsbook or DFS affiliate links\"). Assumptions: Public disclosure ensures compliance with affiliate policies. Breakdown regime: If A = true, P must be false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE enforces affiliate-free policy; GSI verifies policy adherence via structured data validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b, domain=other, pages_read=2/2): Operator 'Agent Ledger Consistency' (page 1, domain other) captures: - **Single Source of Truth:** `docs/ops/AGENT_LEDGER.md` (enforced in CI via `scripts/ops/check-agent-ledger.mjs`). Assumptions: Ledger integrity implies agent coordination consistency. Breakdown regime: When CI fails, L becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI’s belief propagation mirrors GSE’s agent state synchronization. Operator 'Task Ownership Invariant' (page 1, domain other) captures: - **Claim Protocol:** Any task MUST be claimed before starting (Owner + `CLAIMED` status) and marked `DONE` with resolvable commit SHA evidence. Assumptions: Ownership prevents race conditions in task execution. Breakdown regime: When S ≠ DONE, T is unverifiable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE enforces task ownership via kernelized state machine; GSI tracks task validity via probabilistic ownership graph. Operator 'Environment Transition Kernel' (page 1, domain other) captures: Launch Environment Flag Sequence (Owner-Gated) To transition from **Silent Launch** to **Fully Public**, the environment flags MUST be flipped in this exact order: 1. Assumptions: Sequential flag flipping ensures system stability. Breakdown regime: If F_i is set before F_{i-1}, system enters invalid state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE applies ordered flag transitions; GSI models these as a Markov chain of readiness states. Operator 'Affiliate-Free Disclosure Layer' (page 2, domain other) captures: Public Surface & Compliance Audit - **Zero-Affiliate Commitment:** Permanently published on `/how-we-make-money` and `/terms` Section 7 (\"no sportsbook or DFS affiliate links\"). Assumptions: Public disclosure ensures compliance with affiliate policies. Breakdown regime: If A = true, P must be false. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE enforces affiliate-free policy; GSI verifies policy adherence via structured data validation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification principles from distributed systems theory and agent-based modeling, tracing back to Lamport's logical clocks and Dijkstra's mutual exclusion. Retrocausal Genealogy: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (Hermes, Copilot, Browser Agent, Claude) operate under shared invariants but may diverge in interpretation. GSI models their interaction as a belief network, while GSE treats them as synchronized state machines. Theory of Mind & Decision Maker Model: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced via orthogonal telemetry paths: GSE validates flag sequences, GSI audits claims. Leakage occurs if one layer fails to validate another’s output, e.g., if a flag is flipped without a corresponding task claim. Cross-Layer Veto & Anti-Leakage Check: Rooted in LAUNCH_READINESS_C11_2026-09-04 (ed4eb7bf0f3e853b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

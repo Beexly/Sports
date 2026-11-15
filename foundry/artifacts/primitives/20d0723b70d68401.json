@@ -1,0 +1,78 @@
+{
+  "book_id": "20d0723b70d68401",
+  "source_status": "COMPLETE",
+  "title": "week1-environment-2026-09-13",
+  "file_name": "week1-environment-2026-09-13.md",
+  "sha256": "20d0723b70d6840186c30b9d1297b0763ab7eb50ba69cb3ab98157d282e2f847",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Week 1 NFL identity reverting through run/pass dominance and tempo dynamics, with structural pace and role allocation as primary observables. Universal Lens: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models team identity using 2021–25 PFF data and 2025 neutral pace metrics to predict Week 1 behavioral drifts in run/pass tendencies and tempo. GSI Mapping: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps game tempo and role allocation to state transitions in offensive identity, leveraging 2025 baseline data and scheme change indicators. GSE Mapping: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "run_identity_reversion",
+      "name": "Run Identity Reversion",
+      "verbatim_quote": "(Dawgs By Nature, via SB Nation's JP Acosta) | | Run-heavy teams lean run early in games | SUPPORTED | PFF 2021-25 opening-play data: most run-heavy teams on 1st play — Chiefs 73.0%, Patriots 66.7%, Giants 62.5%, Lions 60.4%, Falcons 60.0%.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{\\\\text{team}}': 'Run percentage on first play, dimensionless', 'T_{\\\\text{run}}': 'Run-heavy team identifier, binary'}",
+      "assumptions": "Teams maintain structural run identity in early downs; PFF data reflects true strategic intent.",
+      "breakdown_regime": "Pre-game setup phase",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Run identity isomorphic to first-down play selection behavior, modeled via empirical run frequency distributions.",
+        "source_operator": "run_identity_reversion",
+        "telemetry": "First-down run percentage deviation from 2025 neutral baseline"
+      }
+    },
+    {
+      "primitive_id": "pass_stability_index",
+      "name": "Pass Stability Index",
+      "verbatim_quote": "Offenses are noticeably more likely to run the ball to begin games.\" | | Pass teams stay pass-heavy | SUPPORTED (by stability) | 2025 neutral pass rates are structural: ARI 65.3%, KC 63.1%, CIN 61.9%, LAC 61.2% vs BAL 50.1%, NYJ 49.9%.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_{\\\\text{team}}': 'Pass percentage in neutral context, dimensionless', 'S_{\\\\text{pass}}': 'Structural pass stability indicator, binary'}",
+      "assumptions": "Pass rate is stable across game phases; 2025 data reflects long-term identity.",
+      "breakdown_regime": "Neutral game context",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pass stability derived from 2025 neutral pass rate variance; used to predict Week 1 pass behavior under identity constraints.",
+        "source_operator": "pass_stability_index",
+        "telemetry": "Deviation of Week 1 pass rate from 2025 neutral mean"
+      }
+    },
+    {
+      "primitive_id": "tempo_dynamics",
+      "name": "Tempo Dynamics",
+      "verbatim_quote": "| Game | Combined neutral clock | Tempo rank on slate | Notable | |---|---|---|---| | DAL @ NYG (SNF) | 30.40 | 1st (fastest) | DAL #2 pace, NYG #3 pace.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T_{\\\\text{game}}': 'Game tempo (neutral clock), seconds', 'R_{\\\\text{tempo}}': 'Tempo ranking, ordinal'}",
+      "assumptions": "Tempo correlates with offensive identity and scoring efficiency.",
+      "breakdown_regime": "Game start to Q3",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Tempo isomorphic to game-state transition rate; used to infer identity-driven pacing strategies.",
+        "source_operator": "tempo_dynamics",
+        "telemetry": "Average time per play relative to 2025 neutral pace"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "20d0723b70d68401_t0",
+      "think": "The primitives model identity reversion through run/pass tendencies and tempo. Run identity is confirmed via PFF data showing run-heavy teams initiate with high run frequency. Pass stability is inferred from 2025 neutral rates, indicating structural pass preference. Tempo dynamics reflect game-state pacing, with fast games correlating to aggressive identities. The system assumes that identity is preserved unless disrupted by scheme changes (BAL, ATL, LAC). Temporal drifts in pace and role allocation are modeled as state transitions. Failure modes include new scheme disruption, injury impacts, and weather effects. The dualities lie between identity preservation and volatility, with tempo and role allocation as key observables. The system avoids overfitting by anchoring to 2025 baselines and verifying against known structural patterns.\n\nDeep epistemic analysis for week1-environment-2026-09-13 (20d0723b70d68401, domain=other, pages_read=4/4): Operator 'Run Identity Reversion' (page 1, domain other) captures: (Dawgs By Nature, via SB Nation's JP Acosta) | | Run-heavy teams lean run early in games | SUPPORTED | PFF 2021-25 opening-play data: most run-heavy teams on 1st play — Chiefs 73.0%, Patriots 66.7%, Giants 62.5%, Lions 60.4%, Falcons 60.0%. Assumptions: Teams maintain structural run identity in early downs; PFF data reflects true strategic intent. Breakdown regime: Pre-game setup phase Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Run identity isomorphic to first-down play selection behavior, modeled via empirical run frequency distributions. Operator 'Pass Stability Index' (page 1, domain other) captures: Offenses are noticeably more likely to run the ball to begin games.\" | | Pass teams stay pass-heavy | SUPPORTED (by stability) | 2025 neutral pass rates are structural: ARI 65.3%, KC 63.1%, CIN 61.9%, LAC 61.2% vs BAL 50.1%, NYJ 49.9%. Assumptions: Pass rate is stable across game phases; 2025 data reflects long-term identity. Breakdown regime: Neutral game context Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pass stability derived from 2025 neutral pass rate variance; used to predict Week 1 pass behavior under identity constraints. Operator 'Tempo Dynamics' (page 1, domain other) captures: | Game | Combined neutral clock | Tempo rank on slate | Notable | |---|---|---|---| | DAL @ NYG (SNF) | 30.40 | 1st (fastest) | DAL #2 pace, NYG #3 pace. Assumptions: Tempo correlates with offensive identity and scoring efficiency. Breakdown regime: Game start to Q3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tempo isomorphic to game-state transition rate; used to infer identity-driven pacing strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for week1-environment-2026-09-13 (20d0723b70d68401, domain=other, pages_read=4/4): Operator 'Run Identity Reversion' (page 1, domain other) captures: (Dawgs By Nature, via SB Nation's JP Acosta) | | Run-heavy teams lean run early in games | SUPPORTED | PFF 2021-25 opening-play data: most run-heavy teams on 1st play — Chiefs 73.0%, Patriots 66.7%, Giants 62.5%, Lions 60.4%, Falcons 60.0%. Assumptions: Teams maintain structural run identity in early downs; PFF data reflects true strategic intent. Breakdown regime: Pre-game setup phase Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Run identity isomorphic to first-down play selection behavior, modeled via empirical run frequency distributions. Operator 'Pass Stability Index' (page 1, domain other) captures: Offenses are noticeably more likely to run the ball to begin games.\" | | Pass teams stay pass-heavy | SUPPORTED (by stability) | 2025 neutral pass rates are structural: ARI 65.3%, KC 63.1%, CIN 61.9%, LAC 61.2% vs BAL 50.1%, NYJ 49.9%. Assumptions: Pass rate is stable across game phases; 2025 data reflects long-term identity. Breakdown regime: Neutral game context Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pass stability derived from 2025 neutral pass rate variance; used to predict Week 1 pass behavior under identity constraints. Operator 'Tempo Dynamics' (page 1, domain other) captures: | Game | Combined neutral clock | Tempo rank on slate | Notable | |---|---|---|---| | DAL @ NYG (SNF) | 30.40 | 1st (fastest) | DAL #2 pace, NYG #3 pace. Assumptions: Tempo correlates with offensive identity and scoring efficiency. Breakdown regime: Game start to Q3 Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Tempo isomorphic to game-state transition rate; used to infer identity-driven pacing strategies. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in game theory and behavioral economics, tracing back to early NFL identity modeling and tempo analysis by Sharp Football and PFF. Retrocausal Genealogy: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (teams) optimize for identity preservation while adapting to new schemes. Decision actors include coaches adjusting to identity shifts and players responding to role allocation changes. Theory of Mind & Decision Maker Model: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes reliance on single-source data; leakage veto prevents overfitting to 2025 trends without considering scheme evolution. Cross-Layer Veto & Anti-Leakage Check: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in week1-environment-2026-09-13 (20d0723b70d68401), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

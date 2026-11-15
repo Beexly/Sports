@@ -1,0 +1,95 @@
+{
+  "book_id": "dd8a509772db748b",
+  "source_status": "COMPLETE",
+  "title": "gse-founder-notes-2026-10-24-0932",
+  "file_name": "gse-founder-notes-2026-10-24-0932.md",
+  "sha256": "dd8a509772db748b87f5ae05f5f1a90139433d1c921f7f64436db9a2568b84a5",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "location_locked_prior",
+      "name": "Location-Locked Prior",
+      "verbatim_quote": "**Provenance:** `engine_math.py` (RATING_ATLAS 60 methods), `RATING_ATLAS.md` (equations for Massey #8, Colley #7, SRS #9), `gse_location_locked_harness.py` (HFA 1.56, SIGMA 13.45).",
+      "page": 2,
+      "latex": "\\sigma = 13.45",
+      "symbol_and_unit_ledger": "{'\\\\sigma': 'Points (dimensionless scaling)'}",
+      "assumptions": "Homoscedastic Gaussian noise assumption, constant variance across all game contexts.",
+      "breakdown_regime": "Applicable for standard game states; breaks down in extreme volatility regimes (e.g., blowouts, high-scoring environments).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI Conformal Inference via location-scale transforms. \\sigma serves as the conformal residual scale parameter.",
+        "source_operator": "location_locked_prior",
+        "telemetry": "Residual calibration error on held-out test sets"
+      }
+    },
+    {
+      "primitive_id": "hfa_model",
+      "name": "Home Field Advantage Model",
+      "verbatim_quote": "The HFA is **1.56 points**, replacing the hardcoded +3.0 / 46.5 stub in `markov-simulator.ts`.",
+      "page": 2,
+      "latex": "HFA = 1.56 \\text{ points}",
+      "symbol_and_unit_ledger": "{'HFA': 'Points (additive home-field bias)'}",
+      "assumptions": "Constant additive effect, independent of opponent quality, time of season, or stadium capacity.",
+      "breakdown_regime": "May overstate HFA in modern NFL trends toward reduced home advantage; fails in outdoor stadiums with extreme weather.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE State-Transition Drift via an exogenous shift term in transition matrices.",
+        "source_operator": "hfa_model",
+        "telemetry": "Difference in win probabilities between home and away teams"
+      }
+    },
+    {
+      "primitive_id": "coach_view_pipeline",
+      "name": "Coach View Pipeline",
+      "verbatim_quote": "# GSE Founder Notes — 2026-10-24 09:32 AM > Persisted in-tree so nothing is lost.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Price contamination leads to biased actor models; market prices are noisy proxies for true value.",
+      "breakdown_regime": "Pipeline collapse occurs when coach-reads incorporate explicit book prices, creating feedback loops.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Derives from GSI Bayesian Updating by filtering out market signals before model input.",
+        "source_operator": "coach_view_pipeline",
+        "telemetry": "Correlation between coach-read features and subsequent line movements"
+      }
+    },
+    {
+      "primitive_id": "gap_audit_framework",
+      "name": "Gap Audit Framework",
+      "verbatim_quote": "The 49-Row Gap Audit (recovered artifact) `GSE-DESIGN-VS-CODE-GAP-AUDIT-2026-10-23.md` — recovered from the archive; it was missing from the repository tree.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Codebase completeness is verified against design documents; gaps indicate implementation drift.",
+      "breakdown_regime": "Framework fails when design documents themselves contain contradictions or omissions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE Cadence Lock via systematic verification checkpoints between design and code.",
+        "source_operator": "gap_audit_framework",
+        "telemetry": "Number of discrepancies per functional module"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "dd8a509772db748b_t0",
+      "think": "The core challenge is aligning the three-view pipeline with the underlying probabilistic state-transition dynamics. The location-locked prior \\sigma = 13.45 acts as a conformal residual scale, ensuring that uncertainty estimates remain calibrated across different game scripts. This differs from traditional Massey or Colley methods because it explicitly accounts for spatial heterogeneity and temporal evolution. The HFA term introduces a persistent bias that must be separated from the dynamic state variables to avoid double-counting information. The gap audit reveals that even when individual components are built, their compositional correctness—the ability to wire them together without introducing drift—is often violated. This motivates the need for a rigorous integration framework that treats each primitive as a conformal kernel.\n\nDeep epistemic analysis for gse-founder-notes-2026-10-24-0932 (dd8a509772db748b, domain=other, pages_read=4/4): Operator 'Location-Locked Prior' (page 2, domain other) captures: **Provenance:** `engine_math.py` (RATING_ATLAS 60 methods), `RATING_ATLAS.md` (equations for Massey #8, Colley #7, SRS #9), `gse_location_locked_harness.py` (HFA 1.56, SIGMA 13.45). Assumptions: Homoscedastic Gaussian noise assumption, constant variance across all game contexts. Breakdown regime: Applicable for standard game states; breaks down in extreme volatility regimes (e.g., blowouts, high-scoring environments). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Conformal Inference via location-scale transforms. \\sigma serves as the conformal residual scale parameter. Operator 'Home Field Advantage Model' (page 2, domain other) captures: The HFA is **1.56 points**, replacing the hardcoded +3.0 / 46.5 stub in `markov-simulator.ts`. Assumptions: Constant additive effect, independent of opponent quality, time of season, or stadium capacity. Breakdown regime: May overstate HFA in modern NFL trends toward reduced home advantage; fails in outdoor stadiums with extreme weather. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE State-Transition Drift via an exogenous shift term in transition matrices. Operator 'Coach View Pipeline' (page 1, domain other) captures: # GSE Founder Notes — 2026-10-24 09:32 AM > Persisted in-tree so nothing is lost. Assumptions: Price contamination leads to biased actor models; market prices are noisy proxies for true value. Breakdown regime: Pipeline collapse occurs when coach-reads incorporate explicit book prices, creating feedback loops. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSI Bayesian Updating by filtering out market signals before model input. Operator 'Gap Audit Framework' (page 3, domain other) captures: The 49-Row Gap Audit (recovered artifact) `GSE-DESIGN-VS-CODE-GAP-AUDIT-2026-10-23.md` — recovered from the archive; it was missing from the repository tree. Assumptions: Codebase completeness is verified against design documents; gaps indicate implementation drift. Breakdown regime: Framework fails when design documents themselves contain contradictions or omissions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE Cadence Lock via systematic verification checkpoints between design and code. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for gse-founder-notes-2026-10-24-0932 (dd8a509772db748b, domain=other, pages_read=4/4): Operator 'Location-Locked Prior' (page 2, domain other) captures: **Provenance:** `engine_math.py` (RATING_ATLAS 60 methods), `RATING_ATLAS.md` (equations for Massey #8, Colley #7, SRS #9), `gse_location_locked_harness.py` (HFA 1.56, SIGMA 13.45). Assumptions: Homoscedastic Gaussian noise assumption, constant variance across all game contexts. Breakdown regime: Applicable for standard game states; breaks down in extreme volatility regimes (e.g., blowouts, high-scoring environments). Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI Conformal Inference via location-scale transforms. \\sigma serves as the conformal residual scale parameter. Operator 'Home Field Advantage Model' (page 2, domain other) captures: The HFA is **1.56 points**, replacing the hardcoded +3.0 / 46.5 stub in `markov-simulator.ts`. Assumptions: Constant additive effect, independent of opponent quality, time of season, or stadium capacity. Breakdown regime: May overstate HFA in modern NFL trends toward reduced home advantage; fails in outdoor stadiums with extreme weather. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE State-Transition Drift via an exogenous shift term in transition matrices. Operator 'Coach View Pipeline' (page 1, domain other) captures: # GSE Founder Notes — 2026-10-24 09:32 AM > Persisted in-tree so nothing is lost. Assumptions: Price contamination leads to biased actor models; market prices are noisy proxies for true value. Breakdown regime: Pipeline collapse occurs when coach-reads incorporate explicit book prices, creating feedback loops. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Derives from GSI Bayesian Updating by filtering out market signals before model input. Operator 'Gap Audit Framework' (page 3, domain other) captures: The 49-Row Gap Audit (recovered artifact) `GSE-DESIGN-VS-CODE-GAP-AUDIT-2026-10-23.md` — recovered from the archive; it was missing from the repository tree. Assumptions: Codebase completeness is verified against design documents; gaps indicate implementation drift. Breakdown regime: Framework fails when design documents themselves contain contradictions or omissions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE Cadence Lock via systematic verification checkpoints between design and code. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The lineage traces back to Wald's sequential probability ratio test, extended through modern conformal prediction and state-space models. The concept of a 'location-locked' prior echoes early work in spatial econometrics, while the gap audit methodology borrows from software engineering's configuration management. Retrocausal Genealogy: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents (e.g., bettors) may exploit pipeline inefficiencies by deliberately contaminating coach-reads with spoof trades. A robust system must anticipate such manipulation and maintain separation of views. Theory of Mind & Decision Maker Model: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that the HFA term be orthogonal to the Belichick metrics. If correlation exists, it creates a veto condition where one operator leaks into another, undermining both. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in gse-founder-notes-2026-10-24-0932 (dd8a509772db748b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

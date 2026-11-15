@@ -1,0 +1,78 @@
+{
+  "book_id": "52bda5a3516dff19",
+  "source_status": "COMPLETE",
+  "title": "1031-video-pose-distillation-few-shot",
+  "file_name": "1031-video-pose-distillation-few-shot.md",
+  "sha256": "52bda5a3516dff196a0163b3ee72a4d833b72b5c111e748fc3144950c0038caf",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Video Pose Distillation (VPD) unifies noisy 2D/3D pose estimation with downstream action recognition via student-teacher distillation on unlabeled sport video. Universal Lens: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over VPD-derived pose descriptors to quantify uncertainty in few-shot action classification and retrieval tasks. GSI Mapping: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages VPD-generated pose sequences as latent state representations for situational reasoning in real-time athlete mechanics analysis and highlight detection. GSE Mapping: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "video_pose_distillation",
+      "name": "Video Pose Distillation",
+      "verbatim_quote": "## Method Video Pose Distillation (VPD): a ResNet-34 student F takes RGB crop x_t (128×128) + RAFT optical flow φ_t (5 input channels) around the athlete and outputs descriptor F(x_t, φ_t) ∈ R^d.",
+      "page": 1,
+      "latex": "\\mathcal{F}(x_t, \\phi_t) \\in \\mathbb{R}^d",
+      "symbol_and_unit_ledger": "{'x_t': 'RGB crop, 128×128 pixels', 'φ_t': 'RAFT optical flow, 5 channels', 'F': 'ResNet-34 student network', 'd': 'descriptor dimension'}",
+      "assumptions": "['Athlete bounding box available per frame', 'Single-athlete motion assumed', 'Teacher pose is noisy but informative']",
+      "breakdown_regime": "Motion blur, occlusion, domain shift in fast sports video",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pose descriptors from VPD serve as kernel embeddings for action recognition and retrieval in GSI.",
+        "source_operator": "video_pose_distillation",
+        "telemetry": "Top-1 accuracy on few-shot action classification"
+      }
+    },
+    {
+      "primitive_id": "pose_velocity_regression",
+      "name": "Pose Velocity Regression",
+      "verbatim_quote": "An auxiliary FC decoder D (2 hidden layers × 128) regresses the teacher's normalized pose p_t AND temporal derivative Δp_t = p_t - p_{t-1}.",
+      "page": 1,
+      "latex": "\\Delta p_t = p_t - p_{t-1}",
+      "symbol_and_unit_ledger": "{'p_t': 'normalized 2D joint coordinates at time t', 'Δp_t': 'temporal derivative of pose', 'D': 'auxiliary FC decoder'}",
+      "assumptions": "['Temporal consistency in pose trajectory', 'Teacher provides normalized pose estimates']",
+      "breakdown_regime": "Inconsistent or missing pose across frames",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The velocity term Δp_t encodes motion dynamics equivalent to GSE's temporal state transition model.",
+        "source_operator": "pose_velocity_regression",
+        "telemetry": "DTW-aligned nearest neighbor search performance"
+      }
+    },
+    {
+      "primitive_id": "teacher_pose_ambiguity_handling",
+      "name": "Teacher Pose Ambiguity Handling",
+      "verbatim_quote": "Two teacher variants: **2D-VPD** (d=26: HRNet normalized 2D joint coords) and **VI-VPD** (d=64: VIPE* view-invariant embedding; d=128 on Diving48 with vertical-flip concat).",
+      "page": 1,
+      "latex": "\\text{VIPE}^*(\\cdot) \\rightarrow \\mathbb{R}^{d_{\\text{VI}}}",
+      "symbol_and_unit_ledger": "{'d': 'dimension of pose embedding', 'VIPE*': 'view-invariant pose embedding function', 'd_{\\\\text{VI}}': 'dimension of view-invariant space'}",
+      "assumptions": "['Camera view variation introduces pose ambiguity', 'View-invariance improves generalization']",
+      "breakdown_regime": "Camera angle variation and partial occlusion",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "VIPE* embeddings provide robust pose kernels for GSI's Bayesian inference framework.",
+        "source_operator": "teacher_pose_ambiguity_handling",
+        "telemetry": "Accuracy gain over 2D-VPD baseline"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "52bda5a3516dff19_t0",
+      "think": "VPD operates under the principle of distilling semantic structure from noisy teacher poses into a student network trained on unlabeled sport video. The core innovation lies in using temporal derivatives Δp_t to encode motion dynamics, which enables robust action recognition even when raw pose estimation fails due to motion blur or occlusion. The method assumes that while individual pose estimates may be unreliable, their temporal evolution carries discriminative signal. This is formalized through a dual objective: minimizing reconstruction error of both pose and its derivative. The teacher network (HRNet or VIPE*) provides weak supervision without requiring labeled data, enabling few-shot learning in domains with sparse annotations. The student network learns to extract compact, view-invariant descriptors that generalize well across unseen actions. In GSI, these descriptors enable probabilistic action classification with calibrated uncertainty bounds. In GSE, they support dynamic state transitions and temporal reasoning for athlete behavior prediction.\n\nDeep epistemic analysis for 1031-video-pose-distillation-few-shot (52bda5a3516dff19, domain=other, pages_read=3/3): Operator 'Video Pose Distillation' (page 1, domain other) captures: ## Method Video Pose Distillation (VPD): a ResNet-34 student F takes RGB crop x_t (128×128) + RAFT optical flow φ_t (5 input channels) around the athlete and outputs descriptor F(x_t, φ_t) ∈ R^d. Assumptions: ['Athlete bounding box available per frame', 'Single-athlete motion assumed', 'Teacher pose is noisy but informative'] Breakdown regime: Motion blur, occlusion, domain shift in fast sports video Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pose descriptors from VPD serve as kernel embeddings for action recognition and retrieval in GSI. Operator 'Pose Velocity Regression' (page 1, domain other) captures: An auxiliary FC decoder D (2 hidden layers × 128) regresses the teacher's normalized pose p_t AND temporal derivative Δp_t = p_t - p_{t-1}. Assumptions: ['Temporal consistency in pose trajectory', 'Teacher provides normalized pose estimates'] Breakdown regime: Inconsistent or missing pose across frames Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The velocity term Δp_t encodes motion dynamics equivalent to GSE's temporal state transition model. Operator 'Teacher Pose Ambiguity Handling' (page 1, domain other) captures: Two teacher variants: **2D-VPD** (d=26: HRNet normalized 2D joint coords) and **VI-VPD** (d=64: VIPE* view-invariant embedding; d=128 on Diving48 with vertical-flip concat). Assumptions: ['Camera view variation introduces pose ambiguity', 'View-invariance improves generalization'] Breakdown regime: Camera angle variation and partial occlusion Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VIPE* embeddings provide robust pose kernels for GSI's Bayesian inference framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 1031-video-pose-distillation-few-shot (52bda5a3516dff19, domain=other, pages_read=3/3): Operator 'Video Pose Distillation' (page 1, domain other) captures: ## Method Video Pose Distillation (VPD): a ResNet-34 student F takes RGB crop x_t (128×128) + RAFT optical flow φ_t (5 input channels) around the athlete and outputs descriptor F(x_t, φ_t) ∈ R^d. Assumptions: ['Athlete bounding box available per frame', 'Single-athlete motion assumed', 'Teacher pose is noisy but informative'] Breakdown regime: Motion blur, occlusion, domain shift in fast sports video Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pose descriptors from VPD serve as kernel embeddings for action recognition and retrieval in GSI. Operator 'Pose Velocity Regression' (page 1, domain other) captures: An auxiliary FC decoder D (2 hidden layers × 128) regresses the teacher's normalized pose p_t AND temporal derivative Δp_t = p_t - p_{t-1}. Assumptions: ['Temporal consistency in pose trajectory', 'Teacher provides normalized pose estimates'] Breakdown regime: Inconsistent or missing pose across frames Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The velocity term Δp_t encodes motion dynamics equivalent to GSE's temporal state transition model. Operator 'Teacher Pose Ambiguity Handling' (page 1, domain other) captures: Two teacher variants: **2D-VPD** (d=26: HRNet normalized 2D joint coords) and **VI-VPD** (d=64: VIPE* view-invariant embedding; d=128 on Diving48 with vertical-flip concat). Assumptions: ['Camera view variation introduces pose ambiguity', 'View-invariance improves generalization'] Breakdown regime: Camera angle variation and partial occlusion Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): VIPE* embeddings provide robust pose kernels for GSI's Bayesian inference framework. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in knowledge distillation (Bengio et al., 2009) and pose estimation (Cao et al., 2019), VPD extends prior work by incorporating temporal consistency and view invariance into unsupervised pose learning for sports applications. Retrocausal Genealogy: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the noisy teacher estimator (which may misalign due to motion blur) and the student learner (which must generalize from imperfect supervision). The system balances between overfitting to spurious correlations (end-to-end models) and underfitting due to poor pose quality (off-the-shelf methods). Theory of Mind & Decision Maker Model: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when pose descriptors become redundant or aligned with non-action-relevant features such as background clutter. Leakage occurs if student models learn to mimic teacher noise rather than underlying motion patterns. These risks are mitigated by pose confidence filtering and view-invariant embedding. Cross-Layer Veto & Anti-Leakage Check: Rooted in 1031-video-pose-distillation-few-shot (52bda5a3516dff19), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,78 +1,16 @@
 {
   "book_id": "18c16a6513705092",
-  "source_status": "COMPLETE",
-  "title": "REVENUE_SPRINT_API",
-  "file_name": "REVENUE_SPRINT_API.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_18c16a6513705092",
+  "file_name": "18c16a6513705092.quarantined",
   "sha256": "18c16a6513705092f346af8c85270876654d12603d48bc1f7dfec095b5ba6ff3",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Revenue sprint state-space partitioned by external-action lock, payment inertia, and messaging protocol; modeled as a directed acyclic graph over discrete event streams. Universal Lens: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief updates on project status and handoff readiness conditioned on verified deliverable manifests and sanitized agent contracts. GSI Mapping: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situationally aware state transitions governed by deterministic pipeline graphs with enforced actor roles and constraint-based export validation. GSE Mapping: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "external_action_lock",
-      "name": "External Action Lock State",
-      "verbatim_quote": "## Status `GET /revenue-sprint/status` Returns the offer, locked external-action state, inactive payment state, owner-manual messaging state, pipeline counts, projects, intakes, deliverables, events, and next manual actions.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'L_{ext}': 'dimensionless binary lock state (0 = unlocked, 1 = locked)'}",
-      "assumptions": "The lock state is invariant under local operations and only modifiable via explicit transition endpoints.",
-      "breakdown_regime": "L_{ext} = 1 implies all external system interactions are suspended.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to a mutex semaphore in concurrent systems, where L_{ext} = 1 blocks all inter-process communication with external services.",
-        "source_operator": "external_action_lock",
-        "telemetry": "Observable via GET /revenue-sprint/status"
-      }
-    },
-    {
-      "primitive_id": "project_pipeline_transition",
-      "name": "Project Pipeline Transition",
-      "verbatim_quote": "## Transition Pipeline `POST /revenue-sprint/projects/:id/transition` ```json { \"to\": \"PROPOSAL_DRAFTED\", \"actor\": \"AGENT\", \"ownerConfirmed\": false, \"note\": \"Proposal prepared locally; not sent.\" } ``` Transitions must follow the allowed state graph.",
-      "page": 1,
-      "latex": "\\tau: S_i \\rightarrow S_j \\quad \\text{where } S_i, S_j \\in \\mathcal{S}_{\\text{pipeline}}",
-      "symbol_and_unit_ledger": "{'\\\\tau': 'state transition function', 'S_i, S_j': 'project states in pipeline space'}",
-      "assumptions": "Transitions are strictly ordered and defined by a finite automaton.",
-      "breakdown_regime": "Transition fails if current state does not allow target state.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Kernel of project lifecycle management derived from state machine semantics.",
-        "source_operator": "project_pipeline_transition",
-        "telemetry": "HTTP 200 on valid transition, HTTP 400 on invalid"
-      }
-    },
-    {
-      "primitive_id": "local_deliverable_export",
-      "name": "Local Deliverable Export",
-      "verbatim_quote": "## Generate Local Package `POST /revenue-sprint/projects/:id/export` Success: HTTP 201 with local file paths and SHA-256 hashes for: - `CLIENT_PACKAGE.md` - `CLIENT_PACKAGE.html` - `content-calendar.csv` - `kpi-tracker.csv` - `delivery-manifest.json` The export path is sanitized and constrained to the local revenue-export root.",
-      "page": 1,
-      "latex": "\\mathcal{E}: \\mathcal{P} \\mapsto \\{f_i\\}_{i=1}^{n} \\times \\{H_i\\}_{i=1}^{n}",
-      "symbol_and_unit_ledger": "{'\\\\mathcal{E}': 'export operation', '\\\\mathcal{P}': 'project object', 'f_i': 'file path', 'H_i': 'SHA-256 hash'}",
-      "assumptions": "All outputs are deterministic and cryptographically verifiable.",
-      "breakdown_regime": "Export fails if project ID is unknown or export directory is inaccessible.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derived kernel of data integrity and reproducibility in local project delivery.",
-        "source_operator": "local_deliverable_export",
-        "telemetry": "SHA-256 hashes and file paths returned on success"
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "18c16a6513705092_t0",
-      "think": "The revenue sprint API operates within a closed-loop system where all external actions are deferred or blocked, ensuring that no real-world financial or communicative commitments are made during local development. The state-space is defined by discrete project stages, each governed by a deterministic transition function τ that maps valid state pairs. The external action lock L_{ext} acts as a global switch preventing unintended side effects. The export mechanism E ensures that deliverables are generated with cryptographic integrity, enabling auditability without risk of exposure. This architecture enforces a strict separation between simulation and execution, aligning with principles of secure multi-agent interaction and formal verification.\n\nDeep epistemic analysis for REVENUE_SPRINT_API (18c16a6513705092, domain=other, pages_read=1/1): Operator 'External Action Lock State' (page 1, domain other) captures: ## Status `GET /revenue-sprint/status` Returns the offer, locked external-action state, inactive payment state, owner-manual messaging state, pipeline counts, projects, intakes, deliverables, events, and next manual actions. Assumptions: The lock state is invariant under local operations and only modifiable via explicit transition endpoints. Breakdown regime: L_{ext} = 1 implies all external system interactions are suspended. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a mutex semaphore in concurrent systems, where L_{ext} = 1 blocks all inter-process communication with external services. Operator 'Project Pipeline Transition' (page 1, domain other) captures: ## Transition Pipeline `POST /revenue-sprint/projects/:id/transition` ```json { \"to\": \"PROPOSAL_DRAFTED\", \"actor\": \"AGENT\", \"ownerConfirmed\": false, \"note\": \"Proposal prepared locally; not sent.\" } ``` Transitions must follow the allowed state graph. Assumptions: Transitions are strictly ordered and defined by a finite automaton. Breakdown regime: Transition fails if current state does not allow target state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of project lifecycle management derived from state machine semantics. Operator 'Local Deliverable Export' (page 1, domain other) captures: ## Generate Local Package `POST /revenue-sprint/projects/:id/export` Success: HTTP 201 with local file paths and SHA-256 hashes for: - `CLIENT_PACKAGE.md` - `CLIENT_PACKAGE.html` - `content-calendar.csv` - `kpi-tracker.csv` - `delivery-manifest.json` The export path is sanitized and constrained to the local revenue-export root. Assumptions: All outputs are deterministic and cryptographically verifiable. Breakdown regime: Export fails if project ID is unknown or export directory is inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of data integrity and reproducibility in local project delivery. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for REVENUE_SPRINT_API (18c16a6513705092, domain=other, pages_read=1/1): Operator 'External Action Lock State' (page 1, domain other) captures: ## Status `GET /revenue-sprint/status` Returns the offer, locked external-action state, inactive payment state, owner-manual messaging state, pipeline counts, projects, intakes, deliverables, events, and next manual actions. Assumptions: The lock state is invariant under local operations and only modifiable via explicit transition endpoints. Breakdown regime: L_{ext} = 1 implies all external system interactions are suspended. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a mutex semaphore in concurrent systems, where L_{ext} = 1 blocks all inter-process communication with external services. Operator 'Project Pipeline Transition' (page 1, domain other) captures: ## Transition Pipeline `POST /revenue-sprint/projects/:id/transition` ```json { \"to\": \"PROPOSAL_DRAFTED\", \"actor\": \"AGENT\", \"ownerConfirmed\": false, \"note\": \"Proposal prepared locally; not sent.\" } ``` Transitions must follow the allowed state graph. Assumptions: Transitions are strictly ordered and defined by a finite automaton. Breakdown regime: Transition fails if current state does not allow target state. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of project lifecycle management derived from state machine semantics. Operator 'Local Deliverable Export' (page 1, domain other) captures: ## Generate Local Package `POST /revenue-sprint/projects/:id/export` Success: HTTP 201 with local file paths and SHA-256 hashes for: - `CLIENT_PACKAGE.md` - `CLIENT_PACKAGE.html` - `content-calendar.csv` - `kpi-tracker.csv` - `delivery-manifest.json` The export path is sanitized and constrained to the local revenue-export root. Assumptions: All outputs are deterministic and cryptographically verifiable. Breakdown regime: Export fails if project ID is unknown or export directory is inaccessible. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived kernel of data integrity and reproducibility in local project delivery. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in the formalism of process calculi and state machines, particularly influenced by CSP and Petri nets, which model concurrent behavior and state transitions rigorously. Retrocausal Genealogy: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Agents interact through well-defined interfaces, with the system maintaining a consistent internal model of project progress while rejecting any input that could lead to unauthorized claims or actions. Theory of Mind & Decision Maker Model: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity is maintained by enforcing distinct layers: local generation, state validation, and external interaction. Leakage is prevented by constraining all exports to a fixed sandboxed directory. Cross-Layer Veto & Anti-Leakage Check: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in REVENUE_SPRINT_API (18c16a6513705092), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

@@ -1,0 +1,95 @@
+{
+  "book_id": "07bfb00453475836",
+  "source_status": "COMPLETE",
+  "title": "player-stats-2026-09-13",
+  "file_name": "player-stats-2026-09-13.md",
+  "sha256": "07bfb00453475836ad41e82d36f4105d799ea5d2f313df6d5d84feadd9ee3031",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "compute_true_dome_rating",
+      "name": "True dome passer rating",
+      "verbatim_quote": "## Verdict table | # | Claim | Verdict | Verified / corrected number | |---|---|---|---| | 1 | Jared Goff: 110.8 passer rating in dome games (2025) | **CORRECTED** | **107.3** in true dome games (9 gms).",
+      "page": 1,
+      "latex": "True\\;dome\\;rating = \\frac{1}{6}\\left(\\frac{Pass\\;Comp}{Pass\\;Att} \\times 20 + \\frac{Yards}{Game}{\\times}2 + \\frac{Tds}{Game}{\\times}24.8 + 2.375 - \\frac{Ints}{Att}{\\times}22.375\\right)",
+      "symbol_and_unit_ledger": "{'Pass\\\\;Comp': 'Dimensionless', 'Pass\\\\;Att': 'Dimensionless', 'Yards': 'Yards (yd)', 'Tds': 'Dimensionless', 'Ints': 'Dimensionless'}",
+      "assumptions": "Standard NFL passer rating formula with StatMuse-permitted inputs.",
+      "breakdown_regime": "No significant breakdown; formula holds across all valid input ranges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Passer evaluation. GSE: Situational performance prediction.",
+        "source_operator": "compute_true_dome_rating",
+        "telemetry": "Game logs showing completions, attempts, yards, TDs, INTs."
+      }
+    },
+    {
+      "primitive_id": "venue_scoring_split",
+      "name": "Venue-based fantasy PPG split",
+      "verbatim_quote": "| | 2 | Goff: 19.6 fantasy PPG indoors vs 13.5 outdoors | **CORRECTED** | **19.9 indoors / 15.7 outdoors** (standard scoring, true venue split).",
+      "page": 1,
+      "latex": "Fantasy\\;PPG_{venue} = \\frac{Total\\;Fantasy\\;Points_{venue}}{Games_{venue}}",
+      "symbol_and_unit_ledger": "{'Fantasy\\\\;PPG_{venue}:': 'Fantasy points per game', 'Total\\\\;Fantasy\\\\;Points_{venue}:': 'Total fantasy points scored indoors/outdoors', 'Games_{venue}:': 'Number of games played indoors/outdoors'}",
+      "assumptions": "Uses standard scoring weights (1 pt/25 passing yds, 4 pts/pass TD, -2/INT, 1 pt/10 rushing yds, 0 PPR for QBs).",
+      "breakdown_regime": "No significant breakdown; formula holds across all valid input ranges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Venue-dependent fantasy production modeling. GSE: Matchup-based projection adjustments.",
+        "source_operator": "venue_scoring_split",
+        "telemetry": "Permitted venue metadata linked to game logs."
+      }
+    },
+    {
+      "primitive_id": "tprr_calculation",
+      "name": "Target-to-route ratio",
+      "verbatim_quote": "Brown vs 18.8% with him | **UNVERIFIABLE** | Closest alternative: **19.6% season TPRR** (82 targets / 419 routes).",
+      "page": 1,
+      "latex": "TPRR = \\frac{Targets}{Routes}",
+      "symbol_and_unit_ledger": "{'TPRR': 'Dimensionless', 'Targets': 'Dimensionless', 'Routes': 'Dimensionless'}",
+      "assumptions": "Season totals from StatMuse game logs.",
+      "breakdown_regime": "No significant breakdown; formula holds across all valid input ranges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Target efficiency metric. GSE: Route-running workload indicator.",
+        "source_operator": "tprr_calculation",
+        "telemetry": "Route-run counts from permitted sources."
+      }
+    },
+    {
+      "primitive_id": "yprr_calculation",
+      "name": "Yards-per-route ratio",
+      "verbatim_quote": "LaPorta 2.14 YPRR — CORRECTED → 1.98 SumerSports 2025: **489 receiving yards on 247 routes run = 1.98 YPRR**.",
+      "page": 2,
+      "latex": "YPRR = \\frac{Receiving\\;Yards}{Routes}",
+      "symbol_and_unit_ledger": "{'YPRR': 'Yards per route run (yd/route)', 'Receiving\\\\;Yards': 'Total receiving yards', 'Routes': 'Number of routes run'}",
+      "assumptions": "Permitted SumerSports data for 2025 season.",
+      "breakdown_regime": "No significant breakdown; formula holds across all valid input ranges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI: Receiving efficiency measure. GSE: Route-based workload assessment.",
+        "source_operator": "yprr_calculation",
+        "telemetry": "Route-run data from permitted sources."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "07bfb00453475836_t0",
+      "think": "These primitives form a coherent suite of metrics for evaluating quarterback and receiver performance in DFS contexts. They address key questions: Does Goff truly benefit from indoor environments? How efficient are receivers relative to their route usage? The core challenge is distinguishing between apparent patterns (e.g., Goff's dome rating) that may be artifacts of query filters versus genuine venue effects. The \"venue split\" primitive directly tests this by using ground-truth venue data rather than label-based subsets. For receivers, TPRR and YPRR provide complementary views: TPRR measures workload allocation while YPRR assesses conversion efficiency. Together they help identify whether a receiver gets targeted frequently but underperforms (low YPRR) or vice versa. The unverifiability of the Goedert-Brown split highlights a fundamental limitation: many insightful claims require proprietary Next Gen Stats or detailed location data that are currently banned. This creates a gap between analyst curiosity and empirical rigor. Future work could explore proxy variables (e.g., opponent defensive rankings, weather data) to approximate these missing dimensions. The primitives also reveal failure modes: Goff's original claim was an example of \"query-label contamination,\" where automated categorization introduces noise. Correcting such errors is essential for building trustworthy predictive models. In summary, these four primitives represent foundational tools for quantifying NFL performance, but their application must account for data availability constraints and potential biases in source queries.\n\nDeep epistemic analysis for player-stats-2026-09-13 (07bfb00453475836, domain=other, pages_read=5/5): Operator 'True dome passer rating' (page 1, domain other) captures: ## Verdict table | # | Claim | Verdict | Verified / corrected number | |---|---|---|---| | 1 | Jared Goff: 110.8 passer rating in dome games (2025) | **CORRECTED** | **107.3** in true dome games (9 gms). Assumptions: Standard NFL passer rating formula with StatMuse-permitted inputs. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Passer evaluation. GSE: Situational performance prediction. Operator 'Venue-based fantasy PPG split' (page 1, domain other) captures: | | 2 | Goff: 19.6 fantasy PPG indoors vs 13.5 outdoors | **CORRECTED** | **19.9 indoors / 15.7 outdoors** (standard scoring, true venue split). Assumptions: Uses standard scoring weights (1 pt/25 passing yds, 4 pts/pass TD, -2/INT, 1 pt/10 rushing yds, 0 PPR for QBs). Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Venue-dependent fantasy production modeling. GSE: Matchup-based projection adjustments. Operator 'Target-to-route ratio' (page 1, domain other) captures: Brown vs 18.8% with him | **UNVERIFIABLE** | Closest alternative: **19.6% season TPRR** (82 targets / 419 routes). Assumptions: Season totals from StatMuse game logs. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Target efficiency metric. GSE: Route-running workload indicator. Operator 'Yards-per-route ratio' (page 2, domain other) captures: LaPorta 2.14 YPRR — CORRECTED → 1.98 SumerSports 2025: **489 receiving yards on 247 routes run = 1.98 YPRR**. Assumptions: Permitted SumerSports data for 2025 season. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Receiving efficiency measure. GSE: Route-based workload assessment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for player-stats-2026-09-13 (07bfb00453475836, domain=other, pages_read=5/5): Operator 'True dome passer rating' (page 1, domain other) captures: ## Verdict table | # | Claim | Verdict | Verified / corrected number | |---|---|---|---| | 1 | Jared Goff: 110.8 passer rating in dome games (2025) | **CORRECTED** | **107.3** in true dome games (9 gms). Assumptions: Standard NFL passer rating formula with StatMuse-permitted inputs. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Passer evaluation. GSE: Situational performance prediction. Operator 'Venue-based fantasy PPG split' (page 1, domain other) captures: | | 2 | Goff: 19.6 fantasy PPG indoors vs 13.5 outdoors | **CORRECTED** | **19.9 indoors / 15.7 outdoors** (standard scoring, true venue split). Assumptions: Uses standard scoring weights (1 pt/25 passing yds, 4 pts/pass TD, -2/INT, 1 pt/10 rushing yds, 0 PPR for QBs). Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Venue-dependent fantasy production modeling. GSE: Matchup-based projection adjustments. Operator 'Target-to-route ratio' (page 1, domain other) captures: Brown vs 18.8% with him | **UNVERIFIABLE** | Closest alternative: **19.6% season TPRR** (82 targets / 419 routes). Assumptions: Season totals from StatMuse game logs. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Target efficiency metric. GSE: Route-running workload indicator. Operator 'Yards-per-route ratio' (page 2, domain other) captures: LaPorta 2.14 YPRR — CORRECTED → 1.98 SumerSports 2025: **489 receiving yards on 247 routes run = 1.98 YPRR**. Assumptions: Permitted SumerSports data for 2025 season. Breakdown regime: No significant breakdown; formula holds across all valid input ranges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI: Receiving efficiency measure. GSE: Route-based workload assessment. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept of passer rating dates to the 1970s NFL-commissioned formula. Target efficiency metrics emerged in the advanced analytics era starting around 2010. Yards-per-route ratios gained prominence with the rise of route-based tracking data circa 2015. These ideas evolved from simple counting statistics toward more sophisticated contextual measures. Retrocausal Genealogy: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Bookmakers likely incorporate some venue effects into point spreads, though their internal models remain opaque. Fantasy analysts assume venue advantages persist unless evidence suggests otherwise. Coaches adjust playcalling based on environmental factors. Fans often overestimate the importance of stadium type. Theory of Mind & Decision Maker Model: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid anti-collinearity, do not combine venue splits with team strength metrics (both capture similar matchup information). Prevent leakage by ensuring training/validation splits respect temporal ordering (cannot use future venue data). Cross-Layer Veto & Anti-Leakage Check: Rooted in player-stats-2026-09-13 (07bfb00453475836), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

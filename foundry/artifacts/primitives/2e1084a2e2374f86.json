@@ -1,0 +1,78 @@
+{
+  "book_id": "2e1084a2e2374f86",
+  "source_status": "COMPLETE",
+  "title": "p0016",
+  "file_name": "p0016.txt",
+  "sha256": "2e1084a2e2374f863c7d714b882239f4697725ccd54a425d5ec318bf7dcfdc00",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Commonality index unifies customer overlap and item popularity through normalized cross-intersection ratios. Universal Lens: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on item similarity using conformal predictive intervals derived from customer co-occurrence counts. GSI Mapping: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine employs state transitions based on ranked commonality indices for dynamic recommendation scoring. GSE Mapping: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "commonality_index",
+      "name": "Customer Overlap Normalized Similarity",
+      "verbatim_quote": "4 produces the following results: CI(item\\_P, item\\_X)=20/sqrt(300×300))=0.0667 CI(item\\_P, item\\_Y)=25/sqrt(300×30,000))=0.0083 Thus, even though items P and Y have more customers in common than items P and X, items P and X are treated as being more similar than items P and Y.",
+      "page": 1,
+      "latex": "\\text{CI}(A,B) = \\frac{|A \\cap B|}{\\sqrt{|A| \\cdot |B|}}",
+      "symbol_and_unit_ledger": "{'CI(A,B)': 'dimensionless similarity score', 'A \\\\cap B': 'number of shared customers', '|A|': 'total customers of item A', '|B|': 'total customers of item B'}",
+      "assumptions": "Items are represented solely by customer purchase data; symmetric relationship assumed.",
+      "breakdown_regime": "When either |A| or |B| approaches zero, CI becomes undefined.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic item similarity inference via Bayesian updating of co-occurrence likelihoods.",
+        "source_operator": "commonality_index",
+        "telemetry": "Observed customer intersection frequency relative to marginal item popularity."
+      }
+    },
+    {
+      "primitive_id": "asymmetrical_commonality",
+      "name": "Directed Customer Affinity Ratio",
+      "verbatim_quote": "For example, the CI value for a (popular\\_item, other\\_ item) pair could be generated as (customers of popular item and other item)/ (customers of other\\_item).",
+      "page": 1,
+      "latex": "\\text{CI}_{\\text{asym}}(A,B) = \\frac{|A \\cap B|}{|B|}",
+      "symbol_and_unit_ledger": "{'CI_{\\\\text{asym}}(A,B)': 'dimensionless directional affinity', 'A \\\\cap B': 'shared customers between A and B', '|B|': 'total customers of item B'}",
+      "assumptions": "Directional influence of item B on item A is prioritized over mutual overlap.",
+      "breakdown_regime": "Undefined when |B| = 0.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Supports GSE's asymmetric preference propagation in personalized ranking models.",
+        "source_operator": "asymmetrical_commonality",
+        "telemetry": "Percentage of B's customer base also purchasing A."
+      }
+    },
+    {
+      "primitive_id": "sorted_similarity_list",
+      "name": "Ranked Item Similarity Vector",
+      "verbatim_quote": "In step 112, each other items list is sorted from highest-to-lowest commonality index.",
+      "page": 1,
+      "latex": "\\mathcal{S} = \\text{sort}\\left(\\{\\text{CI}(P, O_i)\\}_{O_i \\in \\mathcal{O}}\\right)",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{S}': 'ordered list of similarity scores', 'P': 'popular item', '\\\\mathcal{O}': 'set of other items'}",
+      "assumptions": "Similarity ordering enables efficient retrieval and filtering of related items.",
+      "breakdown_regime": "Sorting fails if CI values are non-comparable or tied.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enables GSE's fast nearest neighbor search in item similarity space.",
+        "source_operator": "sorted_similarity_list",
+        "telemetry": "Top-k item candidates retrieved via ranked similarity vector."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e1084a2e2374f86_t0",
+      "think": "The commonality index (CI) operates as a normalized measure of shared customer engagement between two items. It is defined by the ratio of intersecting customer sets to the geometric mean of individual item customer bases. This formulation ensures that items with high overlap but low absolute popularity do not dominate comparisons with more popular items having fewer overlaps. The asymmetrical variant adjusts this by weighting only the denominator, reflecting how much of one item’s customer base also engages with another. Sorting these indices allows rapid access to most similar items, enabling scalable recommendation systems. Failure modes include division by zero when item populations are empty, or misinterpretation of sparse data leading to spurious similarities. The symmetry property simplifies computation but may overlook nuanced directional preferences.\n\nDeep epistemic analysis for p0016 (2e1084a2e2374f86, domain=other, pages_read=3/3): Operator 'Customer Overlap Normalized Similarity' (page 1, domain other) captures: 4 produces the following results: CI(item\\_P, item\\_X)=20/sqrt(300×300))=0.0667 CI(item\\_P, item\\_Y)=25/sqrt(300×30,000))=0.0083 Thus, even though items P and Y have more customers in common than items P and X, items P and X are treated as being more similar than items P and Y. Assumptions: Items are represented solely by customer purchase data; symmetric relationship assumed. Breakdown regime: When either |A| or |B| approaches zero, CI becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic item similarity inference via Bayesian updating of co-occurrence likelihoods. Operator 'Directed Customer Affinity Ratio' (page 1, domain other) captures: For example, the CI value for a (popular\\_item, other\\_ item) pair could be generated as (customers of popular item and other item)/ (customers of other\\_item). Assumptions: Directional influence of item B on item A is prioritized over mutual overlap. Breakdown regime: Undefined when |B| = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Supports GSE's asymmetric preference propagation in personalized ranking models. Operator 'Ranked Item Similarity Vector' (page 1, domain other) captures: In step 112, each other items list is sorted from highest-to-lowest commonality index. Assumptions: Similarity ordering enables efficient retrieval and filtering of related items. Breakdown regime: Sorting fails if CI values are non-comparable or tied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE's fast nearest neighbor search in item similarity space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for p0016 (2e1084a2e2374f86, domain=other, pages_read=3/3): Operator 'Customer Overlap Normalized Similarity' (page 1, domain other) captures: 4 produces the following results: CI(item\\_P, item\\_X)=20/sqrt(300×300))=0.0667 CI(item\\_P, item\\_Y)=25/sqrt(300×30,000))=0.0083 Thus, even though items P and Y have more customers in common than items P and X, items P and X are treated as being more similar than items P and Y. Assumptions: Items are represented solely by customer purchase data; symmetric relationship assumed. Breakdown regime: When either |A| or |B| approaches zero, CI becomes undefined. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic item similarity inference via Bayesian updating of co-occurrence likelihoods. Operator 'Directed Customer Affinity Ratio' (page 1, domain other) captures: For example, the CI value for a (popular\\_item, other\\_ item) pair could be generated as (customers of popular item and other item)/ (customers of other\\_item). Assumptions: Directional influence of item B on item A is prioritized over mutual overlap. Breakdown regime: Undefined when |B| = 0. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Supports GSE's asymmetric preference propagation in personalized ranking models. Operator 'Ranked Item Similarity Vector' (page 1, domain other) captures: In step 112, each other items list is sorted from highest-to-lowest commonality index. Assumptions: Similarity ordering enables efficient retrieval and filtering of related items. Breakdown regime: Sorting fails if CI values are non-comparable or tied. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enables GSE's fast nearest neighbor search in item similarity space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early collaborative filtering methods from matrix factorization literature, particularly adapted from cosine similarity in information retrieval and extended to customer-based item relationships in e-commerce contexts. Retrocausal Genealogy: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model item similarity through shared behavioral patterns rather than explicit features. Decision-making involves balancing exploration of novel items against exploitation of known similar ones, guided by CI thresholds. Theory of Mind & Decision Maker Model: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when multiple similarity metrics are applied without normalization, causing redundancy. Leakage occurs if item metadata or temporal trends are ignored during CI calculation, distorting relevance signals. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in p0016 (2e1084a2e2374f86), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

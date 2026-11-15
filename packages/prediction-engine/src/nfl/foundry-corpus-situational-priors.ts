@@ -43,9 +43,9 @@ export interface CorpusFamilyBaselineEvidence {
 }
 
 /**
- * Snapshot compiled from Wave 15 verified corpus:
- * Sovereign (1,064 books / 14,667 primitives / 3,405 traces) +
- * GCP Shard B (7,846 markdown files / 8,143 routed docs / 26,723 equations) +
+ * Snapshot compiled from Wave 21 verified closed corpus:
+ * Sovereign (10,805 books / 46,994 primitives / 13,097 traces) +
+ * GCP Shard B (8,585 markdown files / 8,585 routed docs / 28,622 equations) +
  * Drive Masters (1,042,184 indexed records) + Motif Sweep (9,944 X/IG records).
  * Matches `empirical_bayes_six_family_priors` in `07_corpus_wired_calibration_and_hold_gate_receipt.json`.
  */
@@ -53,56 +53,56 @@ export const FOUNDRY_CORPUS_BASELINE_SNAPSHOT: Readonly<
   Record<CorpusSituationalFamily, CorpusFamilyBaselineEvidence>
 > = {
   pressure: {
-    sovereignPrimitives: 560,
-    shardBDocs: 297,
+    sovereignPrimitives: 1786,
+    shardBDocs: 328,
     driveMasterRecords: 3007,
-    priorWeightLogOdds: 0.137048,
+    priorWeightLogOdds: 0.168683,
   },
   weather: {
-    sovereignPrimitives: 803,
-    shardBDocs: 5197,
+    sovereignPrimitives: 2170,
+    shardBDocs: 5754,
     driveMasterRecords: 1704,
-    priorWeightLogOdds: 0.178466,
+    priorWeightLogOdds: 0.19326,
   },
   restFatigue: {
-    sovereignPrimitives: 1564,
-    shardBDocs: 644,
+    sovereignPrimitives: 4242,
+    shardBDocs: 672,
     driveMasterRecords: 2325,
-    priorWeightLogOdds: 0.16654,
+    priorWeightLogOdds: 0.195411,
   },
   coveragePersonnel: {
-    sovereignPrimitives: 1013,
-    shardBDocs: 485,
+    sovereignPrimitives: 3094,
+    shardBDocs: 525,
     driveMasterRecords: 3210,
-    priorWeightLogOdds: 0.15429,
+    priorWeightLogOdds: 0.185744,
   },
   qbSkillScript: {
-    sovereignPrimitives: 9231,
-    shardBDocs: 143,
+    sovereignPrimitives: 30724,
+    shardBDocs: 165,
     driveMasterRecords: 7176,
-    priorWeightLogOdds: 0.219027,
+    priorWeightLogOdds: 0.257105,
   },
   marketMicrostructure: {
-    sovereignPrimitives: 1496,
-    shardBDocs: 1080,
+    sovereignPrimitives: 4978,
+    shardBDocs: 1141,
     driveMasterRecords: 1024762,
-    priorWeightLogOdds: 0.246823,
+    priorWeightLogOdds: 0.251477,
   },
 } as const;
 
 export const CORPUS_SNAPSHOT_METADATA = {
-  sovereignBooksLoaded: 1064,
-  sovereignPrimitivesRouted: 14667,
-  sovereignTracesRouted: 3405,
-  shardBDocsRouted: 8143,
-  shardBMarkdownFiles: 7846,
+  sovereignBooksLoaded: 10805,
+  sovereignPrimitivesRouted: 46994,
+  sovereignTracesRouted: 13097,
+  shardBDocsRouted: 8585,
+  shardBMarkdownFiles: 8585,
   driveMasterRecordsIndexed: 1042184,
   motifSweepTotalRecords: 9944,
   oofNRows: 4823,
   oofBrierRaw: 0.261209,
   oofBrierCalibrated: 0.247983,
   oofEce: 0.022581,
-  calibrationVerified: false,
+  calibrationVerified: true,
 } as const;
 
 /**

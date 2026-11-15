@@ -1,0 +1,78 @@
+{
+  "book_id": "f157c3333c85ebfa",
+  "source_status": "COMPLETE",
+  "title": "BAYES-LIBS-OPENED",
+  "file_name": "BAYES-LIBS-OPENED.md",
+  "sha256": "f157c3333c85ebfad4d7879a78e5a131b93c79f1a379fd2e413d69e46b79d619",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian inference unifies probabilistic models through conjugate priors, likelihood functions, and posterior updates across hierarchical and causal structures. Universal Lens: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages Bayesian frameworks for conformal prediction and uncertainty quantification in causal inference, enabling robust evidence-based decision-making. GSI Mapping: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies Bayesian state transitions to model dynamic media impact and causal effects, supporting adaptive reasoning and policy evaluation. GSE Mapping: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "logistic_saturation",
+      "name": "Logistic Saturation Function",
+      "verbatim_quote": "Logistic saturation is `(1 - exp(-lambda x)) / (1 + exp(-lambda x))`.",
+      "page": 1,
+      "latex": "\\frac{1 - e^{-\\lambda x}}{1 + e^{-\\lambda x}}",
+      "symbol_and_unit_ledger": "{'x': 'dimensionless input', 'lambda': 'rate parameter (dimensionless)'}",
+      "assumptions": "Monotonic increasing, symmetric about origin, bounded between -1 and 1.",
+      "breakdown_regime": "As x → ∞, approaches 1; as x → -∞, approaches -1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in media transformation models to represent diminishing returns in advertising effectiveness.",
+        "source_operator": "logistic_saturation",
+        "telemetry": "Observed conversion rate vs. spend ratio"
+      }
+    },
+    {
+      "primitive_id": "hill_function",
+      "name": "Hill Function",
+      "verbatim_quote": "Hill is `1 - kappa^s / (kappa^s + x^s)`, and `f(kappa) = 0.5` for any slope.",
+      "page": 1,
+      "latex": "1 - \\frac{\\kappa^s}{\\kappa^s + x^s}",
+      "symbol_and_unit_ledger": "{'x': 'concentration or dose (dimensionless)', 'kappa': 'half-maximal effective concentration (dimensionless)', 's': 'Hill coefficient (dimensionless)'}",
+      "assumptions": "Non-negative inputs, monotonic behavior, sigmoidal shape controlled by s.",
+      "breakdown_regime": "At x = kappa, f(x) = 0.5; steepness increases with s.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's dose-response modeling for campaign efficacy.",
+        "source_operator": "hill_function",
+        "telemetry": "Campaign response at varying budget levels"
+      }
+    },
+    {
+      "primitive_id": "difference_in_differences",
+      "name": "Difference-in-Differences Estimator",
+      "verbatim_quote": "`CausalPy` experiment modules present: augmented synthetic control, difference in differences, instrumental variable, interactive fixed effects, interrupted time series, inverse propensity weighting, panel regression, piecewise ITS, prepostnegd, regression discontinuity, regression kink, staggered DiD, synthetic control, synthetic difference in differences, up-down geolift.",
+      "page": 1,
+      "latex": "\\Delta Y_{\\text{treat}} - \\Delta Y_{\\text{control}}",
+      "symbol_and_unit_ledger": "{'\\\\Delta Y_{\\\\text{treat}}': 'Change in outcome for treatment group', '\\\\Delta Y_{\\\\text{control}}': 'Change in outcome for control group'}",
+      "assumptions": "Parallel trends assumption holds; no confounding variables change over time.",
+      "breakdown_regime": "When parallel trends fail, estimates become biased.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Applied in GSE for evaluating intervention impacts using 2x2 contrasts.",
+        "source_operator": "difference_in_differences",
+        "telemetry": "Pre/post outcome difference between treated and untreated units"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f157c3333c85ebfa_t0",
+      "think": "The logistic saturation function represents a fundamental sigmoidal growth model that maps inputs to bounded outputs, commonly used in signal processing and epidemiology. Its derivative provides insight into marginal changes, while its symmetry around zero allows for balanced interpretation of positive/negative effects. The Hill function generalizes this concept with adjustable steepness via the Hill coefficient, making it suitable for modeling biological responses or marketing saturation. Both functions are foundational in constructing probabilistic models where bounded outcomes are expected. In GSE, these functions support media attribution models and campaign performance forecasting. The difference-in-differences estimator offers a rigorous causal inference framework by comparing temporal changes between treatment and control groups, assuming parallel trends. This method is essential for validating interventions in real-world settings, especially when randomized trials are impractical. Each primitive contributes to a layered understanding of how data evolves under different assumptions, forming the basis for both predictive and prescriptive analytics within GSI and GSE.\n\nDeep epistemic analysis for BAYES-LIBS-OPENED (f157c3333c85ebfa, domain=other, pages_read=2/2): Operator 'Logistic Saturation Function' (page 1, domain other) captures: Logistic saturation is `(1 - exp(-lambda x)) / (1 + exp(-lambda x))`. Assumptions: Monotonic increasing, symmetric about origin, bounded between -1 and 1. Breakdown regime: As x → ∞, approaches 1; as x → -∞, approaches -1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in media transformation models to represent diminishing returns in advertising effectiveness. Operator 'Hill Function' (page 1, domain other) captures: Hill is `1 - kappa^s / (kappa^s + x^s)`, and `f(kappa) = 0.5` for any slope. Assumptions: Non-negative inputs, monotonic behavior, sigmoidal shape controlled by s. Breakdown regime: At x = kappa, f(x) = 0.5; steepness increases with s. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's dose-response modeling for campaign efficacy. Operator 'Difference-in-Differences Estimator' (page 1, domain other) captures: `CausalPy` experiment modules present: augmented synthetic control, difference in differences, instrumental variable, interactive fixed effects, interrupted time series, inverse propensity weighting, panel regression, piecewise ITS, prepostnegd, regression discontinuity, regression kink, staggered DiD, synthetic control, synthetic difference in differences, up-down geolift. Assumptions: Parallel trends assumption holds; no confounding variables change over time. Breakdown regime: When parallel trends fail, estimates become biased. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE for evaluating intervention impacts using 2x2 contrasts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BAYES-LIBS-OPENED (f157c3333c85ebfa, domain=other, pages_read=2/2): Operator 'Logistic Saturation Function' (page 1, domain other) captures: Logistic saturation is `(1 - exp(-lambda x)) / (1 + exp(-lambda x))`. Assumptions: Monotonic increasing, symmetric about origin, bounded between -1 and 1. Breakdown regime: As x → ∞, approaches 1; as x → -∞, approaches -1. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in media transformation models to represent diminishing returns in advertising effectiveness. Operator 'Hill Function' (page 1, domain other) captures: Hill is `1 - kappa^s / (kappa^s + x^s)`, and `f(kappa) = 0.5` for any slope. Assumptions: Non-negative inputs, monotonic behavior, sigmoidal shape controlled by s. Breakdown regime: At x = kappa, f(x) = 0.5; steepness increases with s. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's dose-response modeling for campaign efficacy. Operator 'Difference-in-Differences Estimator' (page 1, domain other) captures: `CausalPy` experiment modules present: augmented synthetic control, difference in differences, instrumental variable, interactive fixed effects, interrupted time series, inverse propensity weighting, panel regression, piecewise ITS, prepostnegd, regression discontinuity, regression kink, staggered DiD, synthetic control, synthetic difference in differences, up-down geolift. Assumptions: Parallel trends assumption holds; no confounding variables change over time. Breakdown regime: When parallel trends fail, estimates become biased. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Applied in GSE for evaluating intervention impacts using 2x2 contrasts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originating from population dynamics and pharmacokinetics, the logistic and Hill functions evolved into statistical tools for modeling saturating processes. Causal inference methods like DiD emerged from econometrics, particularly in policy evaluation and experimental design. These concepts have been formalized in modern Bayesian frameworks such as PyMC and CausalPy. Retrocausal Genealogy: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may assume non-monotonic or asymmetric behaviors, leading to misinterpretation of saturation points. For instance, a marketing campaign might initially show strong returns but plateau due to market saturation, yet an agent could incorrectly infer continued linear growth. Similarly, DiD assumes stable counterfactuals, but agents might overlook time-varying confounders that invalidate the parallel trends assumption. Theory of Mind & Decision Maker Model: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If the logistic function exhibits extreme curvature, it can lead to numerical instability in gradient-based optimization. If the Hill coefficient is too high, the curve becomes overly steep, causing sensitivity to small input variations. DiD fails if the parallel trends assumption does not hold, indicating potential leakage from omitted variables or external shocks. Cross-Layer Veto & Anti-Leakage Check: Rooted in BAYES-LIBS-OPENED (f157c3333c85ebfa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

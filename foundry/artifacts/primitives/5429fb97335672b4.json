@@ -1,0 +1,78 @@
+{
+  "book_id": "5429fb97335672b4",
+  "source_status": "COMPLETE",
+  "title": "BUILD-QUEUE-2026-09-18-tenancy",
+  "file_name": "BUILD-QUEUE-2026-09-18-tenancy.md",
+  "sha256": "5429fb97335672b46702499803aa077163d5d75f3221911602156e57748303fb",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "Tenancy establishes a strict fiber bundle structure over the base manifold of application requests. The tenant ID acts as a topological invariant, enforcing disjoint sections across all state transitions. This prevents cross-sectional leakage by strictly localizing context to transactional lifetimes, ensuring structural isolation.",
+  "gsi_mapping": "In GSI Bayesian inference, tenancy functions as a hard hierarchical prior. It partitions the posterior space into mutually exclusive regimes per organization. Conformal prediction sets are computed strictly within these isolated manifolds, preventing data contamination and guaranteeing marginal coverage guarantees remain valid across distinct client domains.",
+  "gse_mapping": "For GSE situational reasoning, the tenant ID is an immutable constraint on the state-transition graph. Every action node must carry a provenance tag. Transaction-local scoping ensures that environmental variables do not bleed across parallel simulation runs, preserving causal integrity during multi-agent tactical evaluations.",
+  "primitives": [
+    {
+      "primitive_id": "tenant_isomorphism",
+      "name": "Multi-Tenancy Structural Isomorphism",
+      "verbatim_quote": "This one is different from those two: it lays the foundation for multi-tenancy, which is the largest structural change in any queue so far.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "T: Tenant set (dimensionless), S: State space, f: Bijective mapping function.",
+      "assumptions": "The system initially operates under a trivial single-tenant topology where T contains exactly one element.",
+      "breakdown_regime": "Breaks down if the mapping f fails to be injective, resulting in cross-tenant data leakage or identity collisions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps the architectural shift to expanding the base space of the application's fiber bundle, requiring every existing state vector to acquire a new topological coordinate.",
+        "source_operator": "tenant_isomorphism",
+        "telemetry": "Count of models lacking tenant foreign keys; currently 102."
+      }
+    },
+    {
+      "primitive_id": "temporal_cost_asymmetry",
+      "name": "Retrofitting Cost Asymmetry",
+      "verbatim_quote": "Retrofitting a tenant key is a function of how much data and how many customers exist when you do it.",
+      "page": 1,
+      "latex": "C(t) = \\alpha \\cdot D(t) + \\beta \\cdot K(t)",
+      "symbol_and_unit_ledger": "C(t): Migration cost (computational units), D(t): Data volume (bytes), K(t): Active customer count (dimensionless), \\alpha, \\beta: Positive scaling constants.",
+      "assumptions": "Data volume and customer count are monotonically non-decreasing functions of time t.",
+      "breakdown_regime": "Singularity occurs as t approaches production scale, where C(t) exceeds operational downtime tolerances.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Models the economic and computational penalty of delayed schema evolution, establishing t=0 as the global minimum for integration effort.",
+        "source_operator": "temporal_cost_asymmetry",
+        "telemetry": "Current row counts in `schema.prisma` vs projected white-label revenue timelines."
+      }
+    },
+    {
+      "primitive_id": "transactional_context_locality",
+      "name": "Transactional Context Locality",
+      "verbatim_quote": "Where this file and a law disagree, the law wins and you mark the task BLOCKED.",
+      "page": 1,
+      "latex": "\\forall r \\in Request, \\tau(r) \\subseteq \\text{TransactionBoundary}(r)",
+      "symbol_and_unit_ledger": "r: Request event, \\tau(r): Tenant context lifetime, TransactionBoundary: Strict temporal scope.",
+      "assumptions": "Database connection pooling reuses physical sockets across logically distinct request streams.",
+      "breakdown_regime": "Violated if session-level configuration (e.g., SET LOCAL) persists beyond the transaction boundary, causing state leakage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Enforces strict causal isolation between concurrent request streams, mathematically equivalent to decoupling parallel Markov chains sharing a physical transition matrix.",
+        "source_operator": "transactional_context_locality",
+        "telemetry": "Number of `$transaction` call sites (currently 33) successfully binding tenant parameters."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5429fb97335672b4_t0",
+      "think": "The derivation begins with the observation that the current state space S_0 lacks a fundamental topological dimension: the tenant identifier T. Introducing T requires a structural isomorphism \\phi: S_0 \\rightarrow S_0 \\times T. Because the system is currently single-tenant, the backfill operation is a constant-time injection of a universal constant SYSTEM_TENANT_ID into all 102 existing Prisma models. However, the cost function C(t) for performing this injection scales linearly with data volume D(t) and active users K(t). Therefore, delaying the isomorphism introduces a convex penalty curve, making immediate execution the unique global optimum for minimizing engineering debt. Furthermore, the enforcement mechanism relies on PostgreSQL's transaction-local configuration via set_config('app.current_tenant', $1, true). This choice is dictated by the algebraic properties of the connection pool. A pooled connection P is a shared resource reused across sequential requests r_i, r_{i+1}. If tenant context were bound to the session (false parameter), the state would leak from r_i to r_{i+1}, violating the disjointness requirement of multi-tenancy. By restricting the context to the transaction boundary (true parameter), we ensure that \\tau(r_i) \\cap \\tau(r_{i+1}) = \\emptyset. The prohibition against SET LOCAL arises from syntactic constraints: it cannot accept bind parameters, forcing string interpolation which reintroduces injection vulnerabilities. Thus, set_config is the unique operator satisfying both parameterization safety and strict temporal locality.\n\nDeep epistemic analysis for BUILD-QUEUE-2026-09-18-tenancy (5429fb97335672b4, domain=other, pages_read=6/6): Operator 'Multi-Tenancy Structural Isomorphism' (page 1, domain other) captures: This one is different from those two: it lays the foundation for multi-tenancy, which is the largest structural change in any queue so far. Assumptions: The system initially operates under a trivial single-tenant topology where T contains exactly one element. Breakdown regime: Breaks down if the mapping f fails to be injective, resulting in cross-tenant data leakage or identity collisions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the architectural shift to expanding the base space of the application's fiber bundle, requiring every existing state vector to acquire a new topological coordinate. Operator 'Retrofitting Cost Asymmetry' (page 1, domain other) captures: Retrofitting a tenant key is a function of how much data and how many customers exist when you do it. Assumptions: Data volume and customer count are monotonically non-decreasing functions of time t. Breakdown regime: Singularity occurs as t approaches production scale, where C(t) exceeds operational downtime tolerances. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the economic and computational penalty of delayed schema evolution, establishing t=0 as the global minimum for integration effort. Operator 'Transactional Context Locality' (page 1, domain other) captures: Where this file and a law disagree, the law wins and you mark the task BLOCKED. Assumptions: Database connection pooling reuses physical sockets across logically distinct request streams. Breakdown regime: Violated if session-level configuration (e.g., SET LOCAL) persists beyond the transaction boundary, causing state leakage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces strict causal isolation between concurrent request streams, mathematically equivalent to decoupling parallel Markov chains sharing a physical transition matrix. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUILD-QUEUE-2026-09-18-tenancy (5429fb97335672b4, domain=other, pages_read=6/6): Operator 'Multi-Tenancy Structural Isomorphism' (page 1, domain other) captures: This one is different from those two: it lays the foundation for multi-tenancy, which is the largest structural change in any queue so far. Assumptions: The system initially operates under a trivial single-tenant topology where T contains exactly one element. Breakdown regime: Breaks down if the mapping f fails to be injective, resulting in cross-tenant data leakage or identity collisions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps the architectural shift to expanding the base space of the application's fiber bundle, requiring every existing state vector to acquire a new topological coordinate. Operator 'Retrofitting Cost Asymmetry' (page 1, domain other) captures: Retrofitting a tenant key is a function of how much data and how many customers exist when you do it. Assumptions: Data volume and customer count are monotonically non-decreasing functions of time t. Breakdown regime: Singularity occurs as t approaches production scale, where C(t) exceeds operational downtime tolerances. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Models the economic and computational penalty of delayed schema evolution, establishing t=0 as the global minimum for integration effort. Operator 'Transactional Context Locality' (page 1, domain other) captures: Where this file and a law disagree, the law wins and you mark the task BLOCKED. Assumptions: Database connection pooling reuses physical sockets across logically distinct request streams. Breakdown regime: Violated if session-level configuration (e.g., SET LOCAL) persists beyond the transaction boundary, causing state leakage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Enforces strict causal isolation between concurrent request streams, mathematically equivalent to decoupling parallel Markov chains sharing a physical transition matrix. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture inherits directly from the rigorous isolation principles of early distributed database theory, specifically the separation of control and data planes. It mirrors the evolution from monolithic mainframes to strict multi-tenant SaaS foundations, where the 'tenant' concept emerged as a necessary abstraction to virtualize hardware resources. The specific rejection of session-level state echoes the stateless design philosophy of HTTP, adapted here for persistent relational connections to prevent cross-client contamination.",
+      "theory_of_mind": "The architect anticipates an agent's tendency to optimize for immediate code simplicity, potentially suggesting a global session variable or manual RequestContext checks akin to the ever-gauzy reference implementation. By explicitly forbidding session-level sets and mandating transaction-local bindings, the architect pre-empts this lazy optimization. The decision actor understands that agents might overlook the subtle but catastrophic implications of connection pooling on state leakage, hence the explicit 'BLOCKED' veto condition.",
+      "cross_layer_veto": "A critical anti-collinearity condition exists between the type system and the database layer. The introduction of a branded TenantId type in @sports/types must perfectly align with the runtime enforcement in PostgreSQL. If the type system allows a bare string to bypass requireTenant(ctx), the mathematical guarantee of disjoint sections collapses. Similarly, any attempt to use SET LOCAL instead of set_config triggers an immediate veto, as it violates the parameterization invariant required to prevent SQL injection while maintaining transactional boundaries."
+    }
+  ]
+}

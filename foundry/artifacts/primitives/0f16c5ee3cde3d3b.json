@@ -1,78 +1,16 @@
 {
   "book_id": "0f16c5ee3cde3d3b",
-  "source_status": "COMPLETE",
-  "title": "Charcuterie-Chick-Proposal (3)",
-  "file_name": "Charcuterie-Chick-Proposal (3).pdf",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_0f16c5ee3cde3d3b",
+  "file_name": "0f16c5ee3cde3d3b.quarantined",
   "sha256": "0f16c5ee3cde3d3bc5d25364ee1ec8a8fe37ae327104b97dee83668a59c45684",
   "primary_domain": "other",
-  "pages_total": 7,
-  "pages_read": 7,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Three-site selection engine with 90-day post-launch care, integrating real-time pricing, reviews, and booking workflows via unified digital sovereignty. Universal Lens: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian belief update over reputation signals (Knot/WeddingWire) and conversion likelihood from visitor-to-booked transition using conformal predictive distributions. GSI Mapping: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "State-space model of user journey through site selection → booking → post-event follow-up, with discrete transitions governed by workflow automation and feedback loops. GSE Mapping: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "site_selection_engine",
-      "name": "Site Selection Engine",
-      "verbatim_quote": "Three to choose from, and The Table as its own package.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'N_{sites}': 'dimensionless, number of selectable websites', 'C_{site}': '$, cost per site'}",
-      "assumptions": "Each site is functionally equivalent except for design aesthetic; user preference determines final selection.",
-      "breakdown_regime": "When N_{sites} < 1 or all sites fail to render correctly.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to a multi-armed bandit problem where each site represents an arm with stochastic reward (booking rate).",
-        "source_operator": "site_selection_engine",
-        "telemetry": "User click-through rate on site previews and subsequent booking conversion."
-      }
-    },
-    {
-      "primitive_id": "booking_workflow_system",
-      "name": "Booking Workflow System",
-      "verbatim_quote": "3 Booked Every quote request on your phone in seconds, logged so none goes unanswered.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'T_{response}': 's, average time to respond to quote request', 'Q_{logged}': 'dimensionless, total logged quote requests', 'U_{agent}': 'dimensionless, user agent identifier'}",
-      "assumptions": "All quote requests are processed within T_{response}; logging ensures no request is lost.",
-      "breakdown_regime": "When T_{response} > threshold or Q_{logged} drops below minimum viable volume.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derived from a kernel of event-driven messaging logic that triggers upon quote receipt.",
-        "source_operator": "booking_workflow_system",
-        "telemetry": "Percentage of quote requests responded to within 10 seconds and logged status."
-      }
-    },
-    {
-      "primitive_id": "reputation_integration_layer",
-      "name": "Reputation Integration Layer",
-      "verbatim_quote": "Every page uses your real prices, your own photos and your reviews from The Knot and WeddingWire.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "{'R_{review}': 'rating, average score from external platforms', 'P_{price}': '$, displayed price point', 'I_{image}': 'dimensionless, image quality index'}",
-      "assumptions": "Reviews and pricing are consistent across platforms; images reflect actual service quality.",
-      "breakdown_regime": "When R_{review} < 4.0 or P_{price} mismatches market expectation.",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Isomorphic to a reputational signal fusion framework combining third-party ratings and internal metrics.",
-        "source_operator": "reputation_integration_layer",
-        "telemetry": "Average review rating from Knot/WeddingWire and percentage of price consistency checks passed."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "0f16c5ee3cde3d3b_t0",
-      "think": "The core operational structure operates as a triadic decision-making loop: site selection, booking workflow, and reputation integration. These components form a closed-loop system where each primitive feeds into the next. Site selection provides the interface layer, booking workflow governs interaction dynamics, and reputation integration ensures trustworthiness. Failure modes include loss of data integrity in logs, misalignment between displayed prices and actual offerings, and degradation of user experience due to poor site aesthetics. The system's robustness depends on maintaining alignment between these layers through continuous feedback mechanisms.\n\nDeep epistemic analysis for Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b, domain=other, pages_read=7/7): Operator 'Site Selection Engine' (page 1, domain other) captures: Three to choose from, and The Table as its own package. Assumptions: Each site is functionally equivalent except for design aesthetic; user preference determines final selection. Breakdown regime: When N_{sites} < 1 or all sites fail to render correctly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-armed bandit problem where each site represents an arm with stochastic reward (booking rate). Operator 'Booking Workflow System' (page 1, domain other) captures: 3 Booked Every quote request on your phone in seconds, logged so none goes unanswered. Assumptions: All quote requests are processed within T_{response}; logging ensures no request is lost. Breakdown regime: When T_{response} > threshold or Q_{logged} drops below minimum viable volume. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from a kernel of event-driven messaging logic that triggers upon quote receipt. Operator 'Reputation Integration Layer' (page 1, domain other) captures: Every page uses your real prices, your own photos and your reviews from The Knot and WeddingWire. Assumptions: Reviews and pricing are consistent across platforms; images reflect actual service quality. Breakdown regime: When R_{review} < 4.0 or P_{price} mismatches market expectation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a reputational signal fusion framework combining third-party ratings and internal metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b, domain=other, pages_read=7/7): Operator 'Site Selection Engine' (page 1, domain other) captures: Three to choose from, and The Table as its own package. Assumptions: Each site is functionally equivalent except for design aesthetic; user preference determines final selection. Breakdown regime: When N_{sites} < 1 or all sites fail to render correctly. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a multi-armed bandit problem where each site represents an arm with stochastic reward (booking rate). Operator 'Booking Workflow System' (page 1, domain other) captures: 3 Booked Every quote request on your phone in seconds, logged so none goes unanswered. Assumptions: All quote requests are processed within T_{response}; logging ensures no request is lost. Breakdown regime: When T_{response} > threshold or Q_{logged} drops below minimum viable volume. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from a kernel of event-driven messaging logic that triggers upon quote receipt. Operator 'Reputation Integration Layer' (page 1, domain other) captures: Every page uses your real prices, your own photos and your reviews from The Knot and WeddingWire. Assumptions: Reviews and pricing are consistent across platforms; images reflect actual service quality. Breakdown regime: When R_{review} < 4.0 or P_{price} mismatches market expectation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a reputational signal fusion framework combining third-party ratings and internal metrics. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in prior work on digital storefront optimization and customer journey modeling, particularly in hospitality and event planning domains. Retrocausal Genealogy: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include potential clients who may perceive inconsistencies in pricing or reviews, and competitors who might attempt to undermine perceived value through undercutting or misinformation. Theory of Mind & Decision Maker Model: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity requires that no single layer dominates the others—reputation cannot override workflow efficiency, nor can site design override booking accuracy. Leakage vetoes ensure that sensitive data like pricing remains isolated from public-facing UI elements without explicit consent. Cross-Layer Veto & Anti-Leakage Check: Rooted in Charcuterie-Chick-Proposal (3) (0f16c5ee3cde3d3b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

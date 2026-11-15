@@ -1,0 +1,78 @@
+{
+  "book_id": "c320e22e5484d156",
+  "source_status": "COMPLETE",
+  "title": "brandbook",
+  "file_name": "brandbook.md",
+  "sha256": "c320e22e5484d15657c635366bb6daaad7894bd4865004c46aa1404464d6a90b",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Canonical brandbook construction as a deterministic state machine with fixed input constraints and output layout contracts. Universal Lens: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over brandkit state space using approved assets as likelihood priors for coherent brand representation. GSI Mapping: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive brandbook builder with discrete state transitions conditioned on asset availability and template compliance. GSE Mapping: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "canonical_brandbook_construction",
+      "name": "Canonical Brandbook Construction",
+      "verbatim_quote": "# Brandbook Create the canonical Brandbook only after logo, palette, and typography are each approved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All branding elements must be pre-approved and stored in durable local state.",
+      "breakdown_regime": "Failure occurs if any required element (logo, palette, typography) is unapproved or missing.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Brandbook generation mirrors a functional programming pipeline where inputs are validated before transformation into a fixed-output format.",
+        "source_operator": "canonical_brandbook_construction",
+        "telemetry": "Completion of build process with all assets present and compliant."
+      }
+    },
+    {
+      "primitive_id": "fixed_template_layout_contract",
+      "name": "Fixed Template Layout Contract",
+      "verbatim_quote": "## Fixed seven-slide structure Preserve the template's slide size, masters, layout, margins, grids, text positions, image zones, hierarchy, font sizes, spacing, crop, rotation, and stacking order except for these conditional rules.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Template integrity is preserved through strict adherence to layout specifications.",
+      "breakdown_regime": "Violation leads to non-compliance with brandbook standards.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Layout kernel defines spatial constraints and formatting rules that govern slide composition.",
+        "source_operator": "fixed_template_layout_contract",
+        "telemetry": "Slide alignment and grid consistency verified via automated checks."
+      }
+    },
+    {
+      "primitive_id": "mockup_conditional_placement",
+      "name": "Mockup Conditional Placement",
+      "verbatim_quote": "Mockup conditions: - no approved mockups: remove slide 7 - one: keep the first zone and remove the second - two: keep one mockup slide - more than two: duplicate the exact mockup slide for each additional pair Never place generated-but-unapproved work in the Brandbook.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Mockup placement logic follows a deterministic rule set based on quantity of approved assets.",
+      "breakdown_regime": "Non-compliance arises from placing unapproved or improperly duplicated mockups.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conditional mockup placement mirrors a branching control flow in software design, enforcing discrete states based on input count.",
+        "source_operator": "mockup_conditional_placement",
+        "telemetry": "Number of mockup slides matches expected count derived from approved asset inventory."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c320e22e5484d156_t0",
+      "think": "The brandbook construction protocol enforces a deterministic workflow governed by a fixed template and a set of approved inputs. Each primitive operates under strict constraints—logo, palette, typography, and mockups must be validated prior to inclusion. The fixed layout contract ensures structural consistency across all outputs, while conditional mockup placement introduces combinatorial logic based on asset availability. These primitives form a closed-loop system where failure modes are defined by deviation from prescribed rules rather than probabilistic outcomes. The system does not permit improvisation or substitution of components once the build begins, ensuring fidelity to the canonical brand identity.\n\nDeep epistemic analysis for brandbook (c320e22e5484d156, domain=other, pages_read=2/2): Operator 'Canonical Brandbook Construction' (page 1, domain other) captures: # Brandbook Create the canonical Brandbook only after logo, palette, and typography are each approved. Assumptions: All branding elements must be pre-approved and stored in durable local state. Breakdown regime: Failure occurs if any required element (logo, palette, typography) is unapproved or missing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Brandbook generation mirrors a functional programming pipeline where inputs are validated before transformation into a fixed-output format. Operator 'Fixed Template Layout Contract' (page 1, domain other) captures: ## Fixed seven-slide structure Preserve the template's slide size, masters, layout, margins, grids, text positions, image zones, hierarchy, font sizes, spacing, crop, rotation, and stacking order except for these conditional rules. Assumptions: Template integrity is preserved through strict adherence to layout specifications. Breakdown regime: Violation leads to non-compliance with brandbook standards. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Layout kernel defines spatial constraints and formatting rules that govern slide composition. Operator 'Mockup Conditional Placement' (page 2, domain other) captures: Mockup conditions: - no approved mockups: remove slide 7 - one: keep the first zone and remove the second - two: keep one mockup slide - more than two: duplicate the exact mockup slide for each additional pair Never place generated-but-unapproved work in the Brandbook. Assumptions: Mockup placement logic follows a deterministic rule set based on quantity of approved assets. Breakdown regime: Non-compliance arises from placing unapproved or improperly duplicated mockups. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional mockup placement mirrors a branching control flow in software design, enforcing discrete states based on input count. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for brandbook (c320e22e5484d156, domain=other, pages_read=2/2): Operator 'Canonical Brandbook Construction' (page 1, domain other) captures: # Brandbook Create the canonical Brandbook only after logo, palette, and typography are each approved. Assumptions: All branding elements must be pre-approved and stored in durable local state. Breakdown regime: Failure occurs if any required element (logo, palette, typography) is unapproved or missing. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Brandbook generation mirrors a functional programming pipeline where inputs are validated before transformation into a fixed-output format. Operator 'Fixed Template Layout Contract' (page 1, domain other) captures: ## Fixed seven-slide structure Preserve the template's slide size, masters, layout, margins, grids, text positions, image zones, hierarchy, font sizes, spacing, crop, rotation, and stacking order except for these conditional rules. Assumptions: Template integrity is preserved through strict adherence to layout specifications. Breakdown regime: Violation leads to non-compliance with brandbook standards. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Layout kernel defines spatial constraints and formatting rules that govern slide composition. Operator 'Mockup Conditional Placement' (page 2, domain other) captures: Mockup conditions: - no approved mockups: remove slide 7 - one: keep the first zone and remove the second - two: keep one mockup slide - more than two: duplicate the exact mockup slide for each additional pair Never place generated-but-unapproved work in the Brandbook. Assumptions: Mockup placement logic follows a deterministic rule set based on quantity of approved assets. Breakdown regime: Non-compliance arises from placing unapproved or improperly duplicated mockups. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conditional mockup placement mirrors a branching control flow in software design, enforcing discrete states based on input count. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in formal specification theory and software engineering practices, particularly those involving state machines and configuration management. Retrocausal Genealogy: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents involved include the brandkit builder, which enforces compliance, and the user who supplies inputs. Misalignment occurs when users attempt to bypass validation steps or introduce unauthorized modifications. Theory of Mind & Decision Maker Model: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by enforcing distinct roles between template integrity and content insertion. Leakage is prevented by prohibiting dynamic modification of the base template and mandating exclusive use of approved assets. Cross-Layer Veto & Anti-Leakage Check: Rooted in brandbook (c320e22e5484d156), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

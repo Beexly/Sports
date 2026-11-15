@@ -1,0 +1,78 @@
+{
+  "book_id": "293e90dc01fd5770",
+  "source_status": "COMPLETE",
+  "title": "Plan",
+  "file_name": "Plan.md",
+  "sha256": "293e90dc01fd5770b52947442aa8b6bc928c03de90eb01d8fee53f75feae60e6",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Evidence preservation and production scope control via broad capture, narrow release, and temporal partitioning. Universal Lens: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian evidence likelihood constrained by temporal and categorical scopes; conformal prediction bounds on discovery completeness. GSI Mapping: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by backup integrity, data segregation, and scope delineation; failure modes include encryption bypass and cross-contamination. GSE Mapping: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "preserve_broadly_produce_narrowly",
+      "name": "Scope Control Principle",
+      "verbatim_quote": "Produce narrowly.** Pull a complete copy of the relevant date range so nothing is lost or later alleged to have been destroyed — then hand your attorney only what is responsive.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time interval [days]', 'E_{full}': 'complete evidence set', 'E_{responsive}': 'responsive evidence subset'}",
+      "assumptions": "All relevant data must be captured before selective disclosure; scope is defined by temporal and categorical constraints.",
+      "breakdown_regime": "When E_{full} ⊄ E_{responsive}, legal liability increases due to incomplete disclosure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The principle mirrors Bayesian marginalization where full posterior is preserved but only relevant marginal is produced.",
+        "source_operator": "preserve_broadly_produce_narrowly",
+        "telemetry": "Verification of complete data capture vs. responsive subset delivery."
+      }
+    },
+    {
+      "primitive_id": "backup_integrity_verification",
+      "name": "Backup Integrity Verification",
+      "verbatim_quote": "**Verify it landed.** The backup is a GUID-named folder in one of: ``` %USERPROFILE%\\Apple\\MobileSync\\Backup\\ (Apple Devices / Store build) %APPDATA%\\Apple Computer\\MobileSync\\Backup\\ (classic iTunes) ``` Tell me when it's there and I'll confirm the path and contents.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'B': 'backup object', 'P_{path}': 'backup storage path', 'V': 'verification signal'}",
+      "assumptions": "Backup location is deterministic and accessible; verification requires path existence and content validation.",
+      "breakdown_regime": "If V = false, system failure occurs due to missing or corrupted backup.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of backup validation logic derived from file system consistency checks and cryptographic hash comparison.",
+        "source_operator": "backup_integrity_verification",
+        "telemetry": "Path existence and checksum match of backup directory contents."
+      }
+    },
+    {
+      "primitive_id": "data_segregation_by_category",
+      "name": "Data Segregation by Category",
+      "verbatim_quote": "These are two different sets and they belong in two different folders.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D_{primary}': 'primary data set', 'D_{secondary}': 'secondary data set', 'F_{folder}': 'folder identifier'}",
+      "assumptions": "Each data set corresponds to distinct legal or operational categories requiring independent handling.",
+      "breakdown_regime": "Cross-contamination occurs if D_{primary} ∩ D_{secondary} ≠ ∅ without explicit separation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analogous to category theory partitions where each set maps uniquely into its own category.",
+        "source_operator": "data_segregation_by_category",
+        "telemetry": "Folder structure compliance and absence of cross-set file inclusion."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "293e90dc01fd5770_t0",
+      "think": "The extraction plan embodies a dual optimization strategy: broad capture ensures no data loss, while narrow production limits exposure. The temporal constraint (Feb–Jun 2026) defines a bounded event space. Backup integrity is foundational—without verified backups, downstream analysis fails. Data segregation prevents scope creep and adversarial exploitation. Each primitive enforces a mathematical duality: preserve vs. produce, verify vs. assume, isolate vs. interleave. Failure modes arise from violating these dualities—e.g., producing incomplete sets leads to legal liability, skipping verification risks data corruption, mixing categories undermines evidentiary purity.\n\nDeep epistemic analysis for Plan (293e90dc01fd5770, domain=other, pages_read=3/3): Operator 'Scope Control Principle' (page 1, domain other) captures: Produce narrowly.** Pull a complete copy of the relevant date range so nothing is lost or later alleged to have been destroyed — then hand your attorney only what is responsive. Assumptions: All relevant data must be captured before selective disclosure; scope is defined by temporal and categorical constraints. Breakdown regime: When E_{full} ⊄ E_{responsive}, legal liability increases due to incomplete disclosure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The principle mirrors Bayesian marginalization where full posterior is preserved but only relevant marginal is produced. Operator 'Backup Integrity Verification' (page 1, domain other) captures: **Verify it landed.** The backup is a GUID-named folder in one of: ``` %USERPROFILE%\\Apple\\MobileSync\\Backup\\ (Apple Devices / Store build) %APPDATA%\\Apple Computer\\MobileSync\\Backup\\ (classic iTunes) ``` Tell me when it's there and I'll confirm the path and contents. Assumptions: Backup location is deterministic and accessible; verification requires path existence and content validation. Breakdown regime: If V = false, system failure occurs due to missing or corrupted backup. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of backup validation logic derived from file system consistency checks and cryptographic hash comparison. Operator 'Data Segregation by Category' (page 1, domain other) captures: These are two different sets and they belong in two different folders. Assumptions: Each data set corresponds to distinct legal or operational categories requiring independent handling. Breakdown regime: Cross-contamination occurs if D_{primary} ∩ D_{secondary} ≠ ∅ without explicit separation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to category theory partitions where each set maps uniquely into its own category. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for Plan (293e90dc01fd5770, domain=other, pages_read=3/3): Operator 'Scope Control Principle' (page 1, domain other) captures: Produce narrowly.** Pull a complete copy of the relevant date range so nothing is lost or later alleged to have been destroyed — then hand your attorney only what is responsive. Assumptions: All relevant data must be captured before selective disclosure; scope is defined by temporal and categorical constraints. Breakdown regime: When E_{full} ⊄ E_{responsive}, legal liability increases due to incomplete disclosure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The principle mirrors Bayesian marginalization where full posterior is preserved but only relevant marginal is produced. Operator 'Backup Integrity Verification' (page 1, domain other) captures: **Verify it landed.** The backup is a GUID-named folder in one of: ``` %USERPROFILE%\\Apple\\MobileSync\\Backup\\ (Apple Devices / Store build) %APPDATA%\\Apple Computer\\MobileSync\\Backup\\ (classic iTunes) ``` Tell me when it's there and I'll confirm the path and contents. Assumptions: Backup location is deterministic and accessible; verification requires path existence and content validation. Breakdown regime: If V = false, system failure occurs due to missing or corrupted backup. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of backup validation logic derived from file system consistency checks and cryptographic hash comparison. Operator 'Data Segregation by Category' (page 1, domain other) captures: These are two different sets and they belong in two different folders. Assumptions: Each data set corresponds to distinct legal or operational categories requiring independent handling. Breakdown regime: Cross-contamination occurs if D_{primary} ∩ D_{secondary} ≠ ∅ without explicit separation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Analogous to category theory partitions where each set maps uniquely into its own category. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory’s data compression and retrieval principles, extended to legal discovery frameworks. Influenced by Bayesian inference models for evidence likelihood and temporal scope modeling. Retrocausal Genealogy: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing counsel seeks to exploit scope ambiguity and data gaps. The plan counters by enforcing deterministic boundaries and verifiable states. Decision actors include the legal team, IT infrastructure, and adversarial investigators. Theory of Mind & Decision Maker Model: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through explicit folder separation and backup validation. Leakage vetoes prevent cross-category contamination. No shared variables between primary and secondary datasets ensure independence. Cross-Layer Veto & Anti-Leakage Check: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in Plan (293e90dc01fd5770), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

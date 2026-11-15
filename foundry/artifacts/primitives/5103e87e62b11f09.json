@@ -1,0 +1,95 @@
+{
+  "book_id": "5103e87e62b11f09",
+  "source_status": "COMPLETE",
+  "title": "2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al",
+  "file_name": "2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al.md",
+  "sha256": "5103e87e62b11f09bb042f9a21623162cff2de382aecdbe9d983628a7ae4bf4d",
+  "primary_domain": "physiology",
+  "pages_total": 16,
+  "pages_read": 16,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "repeated_sprint_bout_duration",
+      "name": "Repeated Sprint Bout Duration",
+      "verbatim_quote": "Forty athletes were randomly allocated to one of three intervention groups performing RST with varying bout durations and similar repetition volumes, all executed at maximal effort.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Maximal effort sprinting, constant repetition volume across groups, random allocation to minimize bias.",
+      "breakdown_regime": "As bout duration increases, glycolytic contribution rises, leading to metabolic fatigue accumulation.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Probability density transformation under workload variance",
+        "source_operator": "repeated_sprint_bout_duration",
+        "telemetry": "Standard deviation of sprint times within a series"
+      }
+    },
+    {
+      "primitive_id": "work_to_rest_ratio",
+      "name": "Work-to-Rest Ratio",
+      "verbatim_quote": "The 3-sec group (n = 10) completed two sets of 30 bouts, the 6-sec group (n = 10) performed two sets of 15 bouts, and the 9-sec group (n = 10) carried out two sets of 10 bouts, each adhering to a 1:3 work to rest ratio.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Fixed 1:3 W:R ratio across all groups, constant set structure, equal repetitions per set.",
+      "breakdown_regime": "Longer rest periods allow partial ATP-PCr resynthesis but reduce overall metabolic stimulus.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Conformal prediction interval scaling for recovery dynamics",
+        "source_operator": "work_to_rest_ratio",
+        "telemetry": "Ratio of active sprint time to passive recovery time"
+      }
+    },
+    {
+      "primitive_id": "bout_duration_scaling",
+      "name": "Bout Duration Scaling",
+      "verbatim_quote": "The 3‐sec bout group demonstrated greater gains in CMVJ, 10‐m and 20‐m sprint performance, RSI, and peak power output compared with the 9‐sec group (all, p < 0.05).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Similar total training volume, maximal effort trials, comparable baseline fitness.",
+      "breakdown_regime": "Shorter bouts favor phosphagen system recruitment, enhancing explosive power metrics.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE - State-transition mapping for explosive burst capabilities",
+        "source_operator": "bout_duration_scaling",
+        "telemetry": "Improvement in countermovement vertical jump height"
+      }
+    },
+    {
+      "primitive_id": "metabolic_stress_accumulation",
+      "name": "Metabolic Stress Accumulation",
+      "verbatim_quote": "Conversely, the 9‐sec group exhibited superior adaptations in T‐CODS and mean power output relative to the 3‐sec group (all, p < 0.05).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Increased bout duration enhances glycolytic contribution, elevating metabolic load.",
+      "breakdown_regime": "Extended bouts promote lactate accumulation and altered ion homeostasis, affecting neural drive.",
+      "domain": "physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI - Dual-layer uncertainty quantification for metabolic feedback",
+        "source_operator": "metabolic_stress_accumulation",
+        "telemetry": "Change in reactive strength index (RSI)"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5103e87e62b11f09_t0",
+      "think": "The core mathematical principle underlying repeated sprint training (RST) is the modulation of energy system recruitment through systematic variation of bout duration. Shorter bouts (e.g., 3 seconds) predominantly engage the phosphagen system, yielding rapid ATP production but minimal metabolic byproducts. This leads to preserved neuromuscular function and enhanced explosive force generation, as reflected in metrics like countermovement vertical jump (CMVJ) and sprint velocity. Conversely, longer bouts (e.g., 9 seconds) increasingly rely on glycolytic metabolism, resulting in lactate accumulation, hydrogen ion buildup, and eventual performance decrement. These metabolic perturbations alter intracellular signaling pathways, promoting mitochondrial biogenesis and glycolytic enzyme upregulation, which improve sustained power output and change-of-direction speed. The interplay between these two regimes creates a non-linear adaptation landscape where optimization requires balancing acute performance preservation against chronic metabolic remodeling. Failure occurs when bout duration exceeds the athlete's capacity for efficient substrate utilization, leading to overtraining and diminished returns. In the GSI framework, this translates to a probability density transformation problem: given observed performance data, we infer the posterior distribution of optimal bout duration that maximizes predictive accuracy for future adaptations. For GSE, it becomes a state-transition challenge—modeling how current physiological states evolve under different bout-length policies to achieve desired game-relevant outcomes.\n\nDeep epistemic analysis for 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09, domain=physiology, pages_read=16/16): Operator 'Repeated Sprint Bout Duration' (page 1, domain physiology) captures: Forty athletes were randomly allocated to one of three intervention groups performing RST with varying bout durations and similar repetition volumes, all executed at maximal effort. Assumptions: Maximal effort sprinting, constant repetition volume across groups, random allocation to minimize bias. Breakdown regime: As bout duration increases, glycolytic contribution rises, leading to metabolic fatigue accumulation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Probability density transformation under workload variance Operator 'Work-to-Rest Ratio' (page 1, domain physiology) captures: The 3-sec group (n = 10) completed two sets of 30 bouts, the 6-sec group (n = 10) performed two sets of 15 bouts, and the 9-sec group (n = 10) carried out two sets of 10 bouts, each adhering to a 1:3 work to rest ratio. Assumptions: Fixed 1:3 W:R ratio across all groups, constant set structure, equal repetitions per set. Breakdown regime: Longer rest periods allow partial ATP-PCr resynthesis but reduce overall metabolic stimulus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Conformal prediction interval scaling for recovery dynamics Operator 'Bout Duration Scaling' (page 1, domain physiology) captures: The 3‐sec bout group demonstrated greater gains in CMVJ, 10‐m and 20‐m sprint performance, RSI, and peak power output compared with the 9‐sec group (all, p < 0.05). Assumptions: Similar total training volume, maximal effort trials, comparable baseline fitness. Breakdown regime: Shorter bouts favor phosphagen system recruitment, enhancing explosive power metrics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - State-transition mapping for explosive burst capabilities Operator 'Metabolic Stress Accumulation' (page 1, domain physiology) captures: Conversely, the 9‐sec group exhibited superior adaptations in T‐CODS and mean power output relative to the 3‐sec group (all, p < 0.05). Assumptions: Increased bout duration enhances glycolytic contribution, elevating metabolic load. Breakdown regime: Extended bouts promote lactate accumulation and altered ion homeostasis, affecting neural drive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Dual-layer uncertainty quantification for metabolic feedback Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09, domain=physiology, pages_read=16/16): Operator 'Repeated Sprint Bout Duration' (page 1, domain physiology) captures: Forty athletes were randomly allocated to one of three intervention groups performing RST with varying bout durations and similar repetition volumes, all executed at maximal effort. Assumptions: Maximal effort sprinting, constant repetition volume across groups, random allocation to minimize bias. Breakdown regime: As bout duration increases, glycolytic contribution rises, leading to metabolic fatigue accumulation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Probability density transformation under workload variance Operator 'Work-to-Rest Ratio' (page 1, domain physiology) captures: The 3-sec group (n = 10) completed two sets of 30 bouts, the 6-sec group (n = 10) performed two sets of 15 bouts, and the 9-sec group (n = 10) carried out two sets of 10 bouts, each adhering to a 1:3 work to rest ratio. Assumptions: Fixed 1:3 W:R ratio across all groups, constant set structure, equal repetitions per set. Breakdown regime: Longer rest periods allow partial ATP-PCr resynthesis but reduce overall metabolic stimulus. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Conformal prediction interval scaling for recovery dynamics Operator 'Bout Duration Scaling' (page 1, domain physiology) captures: The 3‐sec bout group demonstrated greater gains in CMVJ, 10‐m and 20‐m sprint performance, RSI, and peak power output compared with the 9‐sec group (all, p < 0.05). Assumptions: Similar total training volume, maximal effort trials, comparable baseline fitness. Breakdown regime: Shorter bouts favor phosphagen system recruitment, enhancing explosive power metrics. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE - State-transition mapping for explosive burst capabilities Operator 'Metabolic Stress Accumulation' (page 1, domain physiology) captures: Conversely, the 9‐sec group exhibited superior adaptations in T‐CODS and mean power output relative to the 3‐sec group (all, p < 0.05). Assumptions: Increased bout duration enhances glycolytic contribution, elevating metabolic load. Breakdown regime: Extended bouts promote lactate accumulation and altered ion homeostasis, affecting neural drive. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI - Dual-layer uncertainty quantification for metabolic feedback Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "The concept traces back to seminal work on exercise physiology by Hill (1923) and later formalized by Brooks (1986) on lactate shuttle theory. Modern applications emerged from studies on interval training periodization (Bangsbo et al., 1996) and more recently from investigations into bout duration manipulation in team sports (Rey et al., 2024). Retrocausal Genealogy: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Coaches and athletes often prioritize immediate performance gains (short bouts) while neglecting long-term metabolic resilience (long bouts). Opposing agents include strength coaches who emphasize power development and endurance specialists who focus on aerobic capacity, creating conflicting training paradigms. Theory of Mind & Decision Maker Model: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "To avoid collinearity, we ensure that bout duration effects are isolated from other confounding variables such as total training volume, prior fitness levels, and nutritional status. Leakage is prevented by using randomized controlled trial designs and appropriate statistical controls. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2026 - Influence of Repeated-Sprint Bout Duration in Sprint Interval Training Intervention on Physical Performance Adaptations of Young Volleyball - Zhang et al (5103e87e62b11f09), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

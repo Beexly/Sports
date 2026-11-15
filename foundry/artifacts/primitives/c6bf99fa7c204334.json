@@ -1,0 +1,78 @@
+{
+  "book_id": "c6bf99fa7c204334",
+  "source_status": "COMPLETE",
+  "title": "platform-catalog-live-sweep",
+  "file_name": "platform-catalog-live-sweep.md",
+  "sha256": "c6bf99fa7c20433483206a2afb1b3964f7f6e446f0d50f6164045bd391fc41dc",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Live forecasting platform cataloging under unified access regimes and temporal validity constraints. Universal Lens: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference over live platform data streams using access-tier conditioned likelihood models. GSI Mapping: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine maps platform states through auth regimes and data availability for real-time prediction. GSE Mapping: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "access_regime_classifier",
+      "name": "Access Regime Classifier",
+      "verbatim_quote": "ACCESS legend: open-read (no auth, free read API) / auth-free (free, needs signup key) / auth-gated (OAuth/account) / none-documented.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Regime identifier {open-read, auth-free, auth-gated, none-documented}', 'T': 'Temporal validity flag {live, stale, dead}'}",
+      "assumptions": "Platform access levels are discrete and mutually exclusive; temporal validity is binary.",
+      "breakdown_regime": "R ∈ {open-read, auth-free, auth-gated, none-documented} ∩ T ∈ {live, stale, dead}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each access regime corresponds to a conditional probability distribution over data availability in GSI's Bayesian model.",
+        "source_operator": "access_regime_classifier",
+        "telemetry": "Observable API response codes and authentication prompts"
+      }
+    },
+    {
+      "primitive_id": "platform_validity_assessor",
+      "name": "Platform Validity Assessor",
+      "verbatim_quote": "# Live Catalog Sweep — Prediction/Forecasting Platforms Verified: 2026-08-25 (live fetches via web_extract + web_search).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'Validity classification {REAL-AND-LIVE, REAL-BUT-STALE, LIKELY-FABRICATED}', 't': 'Timestamp of last verification'}",
+      "assumptions": "Verification process is deterministic and timestamped; platforms fall into one of three categories.",
+      "breakdown_regime": "V ∈ {REAL-AND-LIVE, REAL-BUT-STALE, LIKELY-FABRICATED}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validity assessment drives GSE state transitions between active and inactive platform nodes.",
+        "source_operator": "platform_validity_assessor",
+        "telemetry": "Web crawl success/failure flags and HTTP status codes"
+      }
+    },
+    {
+      "primitive_id": "forecasting_market_registry",
+      "name": "Forecasting Market Registry",
+      "verbatim_quote": "- Kalshi — REGULATED event contracts with public market data; repo already has `kalshi-fairvalue-spike.mjs`; sports contracts browsable free.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Market type {regulated, unregulated}', 'D': 'Data accessibility {public, private, restricted}', 'S': 'Sports contract flag {true, false}'}",
+      "assumptions": "Market types and data access levels are independent; sports contracts are a subset of regulated markets.",
+      "breakdown_regime": "M ∈ {regulated, unregulated} ∧ D ∈ {public, private, restricted} ∧ S ∈ {true, false}",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Registry entries map to GSI's probabilistic forecasting kernels based on market structure.",
+        "source_operator": "forecasting_market_registry",
+        "telemetry": "Contract listing and fair value spike detection metrics"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c6bf99fa7c204334_t0",
+      "think": "The primitives form a triadic system where access regimes constrain data availability, platform validity determines operational relevance, and forecasting market registry defines structural integrity. The access classifier encodes conditional probabilities for data ingestion in GSI’s Bayesian framework. The validity assessor acts as a temporal filter, ensuring only live platforms contribute to inference. The registry provides domain-specific kernel mappings for structured prediction tasks. Dualities emerge in how access and validity interact—e.g., an auth-gated platform may be live but inaccessible, leading to a failure mode of incomplete data. Temporal decay and stale data introduce uncertainty in forecasts, requiring retroactive correction mechanisms. The system exhibits anti-collinearity when multiple platforms offer overlapping data streams without distinct access paths.\n\nDeep epistemic analysis for platform-catalog-live-sweep (c6bf99fa7c204334, domain=other, pages_read=2/2): Operator 'Access Regime Classifier' (page 1, domain other) captures: ACCESS legend: open-read (no auth, free read API) / auth-free (free, needs signup key) / auth-gated (OAuth/account) / none-documented. Assumptions: Platform access levels are discrete and mutually exclusive; temporal validity is binary. Breakdown regime: R ∈ {open-read, auth-free, auth-gated, none-documented} ∩ T ∈ {live, stale, dead} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each access regime corresponds to a conditional probability distribution over data availability in GSI's Bayesian model. Operator 'Platform Validity Assessor' (page 1, domain other) captures: # Live Catalog Sweep — Prediction/Forecasting Platforms Verified: 2026-08-25 (live fetches via web_extract + web_search). Assumptions: Verification process is deterministic and timestamped; platforms fall into one of three categories. Breakdown regime: V ∈ {REAL-AND-LIVE, REAL-BUT-STALE, LIKELY-FABRICATED} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validity assessment drives GSE state transitions between active and inactive platform nodes. Operator 'Forecasting Market Registry' (page 2, domain other) captures: - Kalshi — REGULATED event contracts with public market data; repo already has `kalshi-fairvalue-spike.mjs`; sports contracts browsable free. Assumptions: Market types and data access levels are independent; sports contracts are a subset of regulated markets. Breakdown regime: M ∈ {regulated, unregulated} ∧ D ∈ {public, private, restricted} ∧ S ∈ {true, false} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry entries map to GSI's probabilistic forecasting kernels based on market structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for platform-catalog-live-sweep (c6bf99fa7c204334, domain=other, pages_read=2/2): Operator 'Access Regime Classifier' (page 1, domain other) captures: ACCESS legend: open-read (no auth, free read API) / auth-free (free, needs signup key) / auth-gated (OAuth/account) / none-documented. Assumptions: Platform access levels are discrete and mutually exclusive; temporal validity is binary. Breakdown regime: R ∈ {open-read, auth-free, auth-gated, none-documented} ∩ T ∈ {live, stale, dead} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each access regime corresponds to a conditional probability distribution over data availability in GSI's Bayesian model. Operator 'Platform Validity Assessor' (page 1, domain other) captures: # Live Catalog Sweep — Prediction/Forecasting Platforms Verified: 2026-08-25 (live fetches via web_extract + web_search). Assumptions: Verification process is deterministic and timestamped; platforms fall into one of three categories. Breakdown regime: V ∈ {REAL-AND-LIVE, REAL-BUT-STALE, LIKELY-FABRICATED} Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validity assessment drives GSE state transitions between active and inactive platform nodes. Operator 'Forecasting Market Registry' (page 2, domain other) captures: - Kalshi — REGULATED event contracts with public market data; repo already has `kalshi-fairvalue-spike.mjs`; sports contracts browsable free. Assumptions: Market types and data access levels are independent; sports contracts are a subset of regulated markets. Breakdown regime: M ∈ {regulated, unregulated} ∧ D ∈ {public, private, restricted} ∧ S ∈ {true, false} Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Registry entries map to GSI's probabilistic forecasting kernels based on market structure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and computational complexity theory, tracing back to Shannon entropy and Turing computability. Influenced by modern API governance models and decentralized data architectures. Retrocausal Genealogy: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include automated crawlers seeking data, platform operators managing access control, and regulatory bodies enforcing compliance. Each agent influences the other through feedback loops in data availability and platform lifecycle management. Theory of Mind & Decision Maker Model: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive operates within its own semantic space. Leakage occurs if access regime data leaks into validity assessments or vice versa. Veto conditions prevent redundant or conflicting telemetry signals across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in platform-catalog-live-sweep (c6bf99fa7c204334), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

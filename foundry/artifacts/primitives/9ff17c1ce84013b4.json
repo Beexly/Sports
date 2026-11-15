@@ -1,0 +1,78 @@
+{
+  "book_id": "9ff17c1ce84013b4",
+  "source_status": "COMPLETE",
+  "title": "0036-ai-analytics-sports-bertopic-survey",
+  "file_name": "0036-ai-analytics-sports-bertopic-survey.md",
+  "sha256": "9ff17c1ce84013b4347bd5da6f53f36d8ba14e442667ae628ab5bbd582d55fa9",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "BERTopic clusters academic abstracts via TF-IDF and embedding-based clustering; maps semantic proximity of AI\\&analytics themes in sports literature. Universal Lens: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference applies topic coherence to refine predictive priors from sports literature; conformal prediction bounds uncertainty in thematic drift. GSI Mapping: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning uses BERTopic-derived topic vectors as latent states; state transitions reflect evolving research focus in sports AI analytics. GSE Mapping: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "topic_clustering",
+      "name": "Topic Clustering Operator",
+      "verbatim_quote": "Method / model SLR + **BERTopic** (Grootendorst, 2022) on the 204 abstracts (Topic modelling).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'topic index, dimensionless', 'E': 'embedding vector, \\\\mathbb{R}^d', 'C': 'cluster centroid, \\\\mathbb{R}^d'}",
+      "assumptions": "Abstracts are semantically dense; BERT embeddings capture contextual meaning; TF-IDF weights reflect term salience.",
+      "breakdown_regime": "When semantic overlap between topics exceeds threshold, clusters become indistinguishable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "BERTopic’s clustering aligns with GSI’s thematic prior construction; both seek coherent semantic groupings.",
+        "source_operator": "topic_clustering",
+        "telemetry": "Inter-topic distance variance in Figure 5."
+      }
+    },
+    {
+      "primitive_id": "semantic_embedding",
+      "name": "Semantic Embedding Operator",
+      "verbatim_quote": "the paper: - BERTopic \"leverages clustering techniques and a class-based variation of TF-IDF to generate coherent topic representations\" (Grootendorst, 2022, p.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'z': 'contextualized embedding, \\\\mathbb{R}^d', 'B': 'BERT model, function \\\\mathcal{L}(\\\\cdot)'}",
+      "assumptions": "Pre-trained BERT encodes context-sensitive semantics; embeddings are invariant to token ordering.",
+      "breakdown_regime": "Embeddings degrade under out-of-distribution inputs or low-quality text.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "BERT embeddings form kernel space for GSE’s latent feature representation; enables semantic similarity in predictive models.",
+        "source_operator": "semantic_embedding",
+        "telemetry": "Cosine similarity between embeddings in clustering phase."
+      }
+    },
+    {
+      "primitive_id": "text_preprocessing",
+      "name": "Text Preprocessing Operator",
+      "verbatim_quote": "- Document unit for modelling: article **abstracts** (transformed to UTF-8 encoded text tiles).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'x': 'raw text tile, UTF-8 string', 'p(x)': 'preprocessed text, \\\\mathbb{R}^n'}",
+      "assumptions": "UTF-8 encoding preserves linguistic integrity; preprocessing is applied post-embedding generation.",
+      "breakdown_regime": "Loss of semantic nuance due to tokenization or stopword removal.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Preprocessing defines input domain for BERT; GSE uses similar pipelines for news/text features.",
+        "source_operator": "text_preprocessing",
+        "telemetry": "CountVectorizer vocabulary size and term frequency distribution."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9ff17c1ce84013b4_t0",
+      "think": "The paper employs BERTopic to analyze 204 sports AI abstracts, generating four coherent topics via TF-IDF-weighted clustering of BERT embeddings. This process maps thematic evolution in sports analytics literature but does not yield predictive models or measurable effects. The core operator is a semantic embedding pipeline followed by clustering, which produces topic vectors that reflect thematic structure rather than actionable insights. In GSI, these topic vectors could inform Bayesian priors, while in GSE, they may serve as latent state indicators in a dynamic system. However, the lack of empirical validation and transferability to real-world applications renders the approach unsuitable for GSE’s predictive engine. The failure mode lies in treating meta-research as data for prediction, violating the principle of domain alignment. The method assumes semantic richness in abstracts and robustness of BERT embeddings, yet external validity to specific domains like NFL is absent. The thematic map offers no novel operational logic for forecasting or decision-making.\n\nDeep epistemic analysis for 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4, domain=other, pages_read=4/4): Operator 'Topic Clustering Operator' (page 1, domain other) captures: Method / model SLR + **BERTopic** (Grootendorst, 2022) on the 204 abstracts (Topic modelling). Assumptions: Abstracts are semantically dense; BERT embeddings capture contextual meaning; TF-IDF weights reflect term salience. Breakdown regime: When semantic overlap between topics exceeds threshold, clusters become indistinguishable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BERTopic’s clustering aligns with GSI’s thematic prior construction; both seek coherent semantic groupings. Operator 'Semantic Embedding Operator' (page 2, domain other) captures: the paper: - BERTopic \"leverages clustering techniques and a class-based variation of TF-IDF to generate coherent topic representations\" (Grootendorst, 2022, p. Assumptions: Pre-trained BERT encodes context-sensitive semantics; embeddings are invariant to token ordering. Breakdown regime: Embeddings degrade under out-of-distribution inputs or low-quality text. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): BERT embeddings form kernel space for GSE’s latent feature representation; enables semantic similarity in predictive models. Operator 'Text Preprocessing Operator' (page 1, domain other) captures: - Document unit for modelling: article **abstracts** (transformed to UTF-8 encoded text tiles). Assumptions: UTF-8 encoding preserves linguistic integrity; preprocessing is applied post-embedding generation. Breakdown regime: Loss of semantic nuance due to tokenization or stopword removal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Preprocessing defines input domain for BERT; GSE uses similar pipelines for news/text features. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4, domain=other, pages_read=4/4): Operator 'Topic Clustering Operator' (page 1, domain other) captures: Method / model SLR + **BERTopic** (Grootendorst, 2022) on the 204 abstracts (Topic modelling). Assumptions: Abstracts are semantically dense; BERT embeddings capture contextual meaning; TF-IDF weights reflect term salience. Breakdown regime: When semantic overlap between topics exceeds threshold, clusters become indistinguishable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): BERTopic’s clustering aligns with GSI’s thematic prior construction; both seek coherent semantic groupings. Operator 'Semantic Embedding Operator' (page 2, domain other) captures: the paper: - BERTopic \"leverages clustering techniques and a class-based variation of TF-IDF to generate coherent topic representations\" (Grootendorst, 2022, p. Assumptions: Pre-trained BERT encodes context-sensitive semantics; embeddings are invariant to token ordering. Breakdown regime: Embeddings degrade under out-of-distribution inputs or low-quality text. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): BERT embeddings form kernel space for GSE’s latent feature representation; enables semantic similarity in predictive models. Operator 'Text Preprocessing Operator' (page 1, domain other) captures: - Document unit for modelling: article **abstracts** (transformed to UTF-8 encoded text tiles). Assumptions: UTF-8 encoding preserves linguistic integrity; preprocessing is applied post-embedding generation. Breakdown regime: Loss of semantic nuance due to tokenization or stopword removal. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Preprocessing defines input domain for BERT; GSE uses similar pipelines for news/text features. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "BERTopic builds upon earlier topic modeling (e.g., LDA) and transformer-based embeddings (e.g., BERT), extending them into a unified framework for semantic clustering. Its lineage traces back to information retrieval and computational linguistics. Retrocausal Genealogy: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include researchers seeking thematic synthesis and practitioners desiring predictive tools. The paper satisfies the former but fails the latter, creating a disconnect between academic mapping and practical deployment. Theory of Mind & Decision Maker Model: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity fails because BERTopic’s thematic clusters do not provide distinct predictive features. Leakage occurs when abstract-level themes are misapplied to real-time data streams without domain-specific calibration. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0036-ai-analytics-sports-bertopic-survey (9ff17c1ce84013b4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

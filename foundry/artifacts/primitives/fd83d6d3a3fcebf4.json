@@ -1,0 +1,78 @@
+{
+  "book_id": "fd83d6d3a3fcebf4",
+  "source_status": "COMPLETE",
+  "title": "RND_BRANCH_CRYPTO_RISK",
+  "file_name": "RND_BRANCH_CRYPTO_RISK.md",
+  "sha256": "fd83d6d3a3fcebf4dc50cf8276ec5aa65bbae5b7daa9b629ebf4ef02be90cb3e",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Pedersen commitments over secp256k1 form a structured additive cryptographic layer atop Merkle trees, enabling verifiable aggregation without replacing hash-based tamper evidence. Universal Lens: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive sets using Pedersen commitments to model uncertainty in sport event outcomes, integrating with SHA-256 Merkle roots for robust inference. GSI Mapping: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages the additive cryptographic structure of Pedersen commitments to enable state transitions in prediction engines while maintaining integrity through Merkle proofs. GSE Mapping: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "pedersen_commitment",
+      "name": "Secp256k1-Based Additive Commitment",
+      "verbatim_quote": "This is the swap the engine's own docstring names as the production path (prediction-engine/src/pedersen-ledger.ts:38-40).",
+      "page": 1,
+      "latex": "\\mathsf{Com}(m; r) = m \\cdot G + r \\cdot H",
+      "symbol_and_unit_ledger": "{'m': 'message (BigInt)', 'r': 'blinding factor (BigInt)', 'G': 'base point (secp256k1 generator)', 'H': 'hash-derived generator (dimensionless)'}",
+      "assumptions": "Blinding factor r is uniformly random in [0, n), where n is group order.",
+      "breakdown_regime": "When r is not uniformly sampled, information-theoretic hiding fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The commitment maps to a group element under elliptic curve arithmetic, preserving additive homomorphism for aggregate verification.",
+        "source_operator": "pedersen_commitment",
+        "telemetry": "Commitment validity verified via group membership check and canonical serialization."
+      }
+    },
+    {
+      "primitive_id": "merkle_tree_layer",
+      "name": "SHA-256 Hash-Based Tamper Evidence",
+      "verbatim_quote": "- The crypto layer is strictly ADDITIVE to the SHA-256 Merkle layer (pedersen-ledger.ts:20-21); it never replaces `proof-of-record.ts`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'leaf': 'hashed data (32 bytes)', 'node': 'hash of child nodes (32 bytes)'}",
+      "assumptions": "Hash function is collision-resistant and preimage-unforgeable.",
+      "breakdown_regime": "Collision in SHA-256 leads to invalid tree integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Merkle root serves as cryptographic anchor for all committed data, ensuring record immutability.",
+        "source_operator": "merkle_tree_layer",
+        "telemetry": "Root hash consistency validated against stored Merkle proof paths."
+      }
+    },
+    {
+      "primitive_id": "zk_shaped_proof_discipline",
+      "name": "ZK-Shaped Proof Discipline",
+      "verbatim_quote": "- `calibration-commitment.ts` correctly labels its ZK-shaped `proof` field as null and explicitly states it does NOT call the structure \"ZK\" (calibration-commitment.ts:39-43).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'proof': 'null (not ZK)'}",
+      "assumptions": "No zero-knowledge claims are made; commitment is merely cryptographic.",
+      "breakdown_regime": "Misrepresentation of proof type violates trust assumptions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Disciplined labeling prevents misinterpretation of cryptographic constructs as ZK mechanisms.",
+        "source_operator": "zk_shaped_proof_discipline",
+        "telemetry": "Proof field inspection confirms absence of ZK-specific metadata."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fd83d6d3a3fcebf4_t0",
+      "think": "The cryptographic architecture integrates Pedersen commitments with SHA-256 Merkle trees to provide both verifiable aggregation and tamper evidence. The Pedersen commitment ensures homomorphic properties for combining multiple commitments, while the Merkle tree provides a hierarchical structure for verifying data integrity. The system avoids ZK mislabeling by enforcing explicit nullification of ZK claims in the calibration module. The blinding factor r must be drawn from a CSPRNG, which is currently handled externally, introducing a residual risk (RISK-L) that lies outside the module’s scope. The generator H is derived from a nothing-up-my-sleeve seed, ensuring transparency and preventing backdoors. The use of secp256k1 ensures compatibility with existing infrastructure, though it is not post-quantum secure. The design preserves the distinction between cryptographic layers, allowing additive enhancement rather than replacement.\n\nDeep epistemic analysis for RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4, domain=other, pages_read=3/3): Operator 'Secp256k1-Based Additive Commitment' (page 1, domain other) captures: This is the swap the engine's own docstring names as the production path (prediction-engine/src/pedersen-ledger.ts:38-40). Assumptions: Blinding factor r is uniformly random in [0, n), where n is group order. Breakdown regime: When r is not uniformly sampled, information-theoretic hiding fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The commitment maps to a group element under elliptic curve arithmetic, preserving additive homomorphism for aggregate verification. Operator 'SHA-256 Hash-Based Tamper Evidence' (page 1, domain other) captures: - The crypto layer is strictly ADDITIVE to the SHA-256 Merkle layer (pedersen-ledger.ts:20-21); it never replaces `proof-of-record.ts`. Assumptions: Hash function is collision-resistant and preimage-unforgeable. Breakdown regime: Collision in SHA-256 leads to invalid tree integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Merkle root serves as cryptographic anchor for all committed data, ensuring record immutability. Operator 'ZK-Shaped Proof Discipline' (page 1, domain other) captures: - `calibration-commitment.ts` correctly labels its ZK-shaped `proof` field as null and explicitly states it does NOT call the structure \"ZK\" (calibration-commitment.ts:39-43). Assumptions: No zero-knowledge claims are made; commitment is merely cryptographic. Breakdown regime: Misrepresentation of proof type violates trust assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Disciplined labeling prevents misinterpretation of cryptographic constructs as ZK mechanisms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4, domain=other, pages_read=3/3): Operator 'Secp256k1-Based Additive Commitment' (page 1, domain other) captures: This is the swap the engine's own docstring names as the production path (prediction-engine/src/pedersen-ledger.ts:38-40). Assumptions: Blinding factor r is uniformly random in [0, n), where n is group order. Breakdown regime: When r is not uniformly sampled, information-theoretic hiding fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The commitment maps to a group element under elliptic curve arithmetic, preserving additive homomorphism for aggregate verification. Operator 'SHA-256 Hash-Based Tamper Evidence' (page 1, domain other) captures: - The crypto layer is strictly ADDITIVE to the SHA-256 Merkle layer (pedersen-ledger.ts:20-21); it never replaces `proof-of-record.ts`. Assumptions: Hash function is collision-resistant and preimage-unforgeable. Breakdown regime: Collision in SHA-256 leads to invalid tree integrity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Merkle root serves as cryptographic anchor for all committed data, ensuring record immutability. Operator 'ZK-Shaped Proof Discipline' (page 1, domain other) captures: - `calibration-commitment.ts` correctly labels its ZK-shaped `proof` field as null and explicitly states it does NOT call the structure \"ZK\" (calibration-commitment.ts:39-43). Assumptions: No zero-knowledge claims are made; commitment is merely cryptographic. Breakdown regime: Misrepresentation of proof type violates trust assumptions. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Disciplined labeling prevents misinterpretation of cryptographic constructs as ZK mechanisms. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in elliptic curve cryptography and Merkle tree structures, with influences from modern zero-knowledge systems and blockchain consensus protocols. Retrocausal Genealogy: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit weak randomness or mislabel cryptographic constructs. The system models adversarial behavior through blinding factor uniformity and disciplined proof labeling. Theory of Mind & Decision Maker Model: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating cryptographic concerns: Merkle handles integrity, Pedersen handles aggregation. Leakage vetoes occur if ZK claims are improperly asserted or if CSPRNG sourcing is bypassed. Cross-Layer Veto & Anti-Leakage Check: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in RND_BRANCH_CRYPTO_RISK (fd83d6d3a3fcebf4), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

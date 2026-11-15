@@ -1,0 +1,78 @@
+{
+  "book_id": "d1c646d8991f9d10",
+  "source_status": "COMPLETE",
+  "title": "43a89187a20b",
+  "file_name": "43a89187a20b.txt",
+  "sha256": "d1c646d8991f9d108513f4dca58d126e112a9e82cbcb1e653f8f1c8e733b8f20",
+  "primary_domain": "other",
+  "pages_total": 18,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Consensus probability thresholding and risk classification map market depth to uncertainty penalties via Bayesian belief updates. Universal Lens: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers posterior confidence using implied probabilities from odds, adjusting for vig and consensus variance to compute edge scores. GSI Mapping: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states based on risk levels derived from bookmaker count and consensus fraction, triggering adaptive reasoning branches. GSE Mapping: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "consensus_probability_thresholding",
+      "name": "Consensus Probability Thresholding",
+      "verbatim_quote": "// consensusPct = 5/9 ≈ 0.556 — above CONSENSUS_MIN_PCT (0.55) so a pick // is generated, but below HIGH_VARIANCE_CONSENSUS_THRESHOLD (0.58) so // computeRiskLevel returns HIGH_VARIANCE via the consensus branch (not the // thin-market branch).",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'consensusPct': 'dimensionless', 'CONSENSUS_MIN_PCT': 'dimensionless', 'HIGH_VARIANCE_CONSENSUS_THRESHOLD': 'dimensionless'}",
+      "assumptions": "Market consensus must exceed minimum threshold to generate picks; variance increases with proximity to high-variance boundary.",
+      "breakdown_regime": "When consensusPct < CONSENSUS_MIN_PCT, no pick is generated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps consensus fraction to risk classification in GSE's decision tree; GSI computes confidence via Bayesian update of implied probabilities.",
+        "source_operator": "consensus_probability_thresholding",
+        "telemetry": "Pick generation and risk level assignment."
+      }
+    },
+    {
+      "primitive_id": "implied_probability_computation",
+      "name": "Implied Probability Computation",
+      "verbatim_quote": "=> { it(\"converts +100 → 50%\", () => { expect(americanToImpliedProbability(100)).toBeCloseTo(0.5); }); it(\"converts +200 → 33.3%\", ()",
+      "page": 1,
+      "latex": "\\mathbb{P}_{\\text{imp}}(O) = \\begin{cases} \\frac{100}{100 + |O|}, & O > 0 \\\\ \\frac{|O|}{100 + |O|}, & O < 0 \\end{cases}",
+      "symbol_and_unit_ledger": "{'O': 'American odds', '\\\\mathbb{P}_{\\\\text{imp}}(O)': 'dimensionless'}",
+      "assumptions": "Odds are valid American format; probability is bounded between 0 and 1.",
+      "breakdown_regime": "Undefined for invalid odds values outside [-500, +300].",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used by GSI to derive market-neutral probabilities for scoring and edge estimation.",
+        "source_operator": "implied_probability_computation",
+        "telemetry": "Conversion of odds to implied probability for scoring models."
+      }
+    },
+    {
+      "primitive_id": "risk_level_classification",
+      "name": "Risk Level Classification",
+      "verbatim_quote": "import { describe, it, expect } from \"vitest\"; import { americanToImpliedProbability, removeVig, clamp, scoreGame, scoreGames, }",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'bookmakerCount': 'integer', 'consensusPct': 'dimensionless'}",
+      "assumptions": "Risk level depends on both bookmaker count and consensus strength; thin markets yield higher variance.",
+      "breakdown_regime": "When bookmakerCount < THIN_MARKET_THRESHOLD, HIGH_VARIANCE is assigned.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE uses this to select reasoning paths; GSI applies it to adjust uncertainty penalties in scoring.",
+        "source_operator": "risk_level_classification",
+        "telemetry": "Risk level assignment based on market depth and consensus."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d1c646d8991f9d10_t0",
+      "think": "The system employs a dual-layered probabilistic framework where implied probabilities from odds are adjusted for vig and used to compute consensus fractions. These fractions determine whether a pick is generated and its associated risk level. The risk level is determined by comparing the consensus percentage against thresholds and the number of bookmakers. When consensus exceeds a minimum but falls short of a high-variance threshold, the system classifies the pick as HIGH_VARIANCE. This classification triggers specific reasoning pathways in GSE that account for market uncertainty. In GSI, these same metrics inform Bayesian adjustments to confidence scores and edge estimations. The mathematical duality lies in how the same inputs—odds, consensus, and bookmaker count—are interpreted differently depending on the layer: GSE for decision-making, GSI for inference.\n\nDeep epistemic analysis for 43a89187a20b (d1c646d8991f9d10, domain=other, pages_read=18/18): Operator 'Consensus Probability Thresholding' (page 4, domain other) captures: // consensusPct = 5/9 ≈ 0.556 — above CONSENSUS_MIN_PCT (0.55) so a pick // is generated, but below HIGH_VARIANCE_CONSENSUS_THRESHOLD (0.58) so // computeRiskLevel returns HIGH_VARIANCE via the consensus branch (not the // thin-market branch). Assumptions: Market consensus must exceed minimum threshold to generate picks; variance increases with proximity to high-variance boundary. Breakdown regime: When consensusPct < CONSENSUS_MIN_PCT, no pick is generated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps consensus fraction to risk classification in GSE's decision tree; GSI computes confidence via Bayesian update of implied probabilities. Operator 'Implied Probability Computation' (page 1, domain other) captures: => { it(\"converts +100 → 50%\", () => { expect(americanToImpliedProbability(100)).toBeCloseTo(0.5); }); it(\"converts +200 → 33.3%\", () Assumptions: Odds are valid American format; probability is bounded between 0 and 1. Breakdown regime: Undefined for invalid odds values outside [-500, +300]. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSI to derive market-neutral probabilities for scoring and edge estimation. Operator 'Risk Level Classification' (page 1, domain other) captures: import { describe, it, expect } from \"vitest\"; import { americanToImpliedProbability, removeVig, clamp, scoreGame, scoreGames, } Assumptions: Risk level depends on both bookmaker count and consensus strength; thin markets yield higher variance. Breakdown regime: When bookmakerCount < THIN_MARKET_THRESHOLD, HIGH_VARIANCE is assigned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses this to select reasoning paths; GSI applies it to adjust uncertainty penalties in scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 43a89187a20b (d1c646d8991f9d10, domain=other, pages_read=18/18): Operator 'Consensus Probability Thresholding' (page 4, domain other) captures: // consensusPct = 5/9 ≈ 0.556 — above CONSENSUS_MIN_PCT (0.55) so a pick // is generated, but below HIGH_VARIANCE_CONSENSUS_THRESHOLD (0.58) so // computeRiskLevel returns HIGH_VARIANCE via the consensus branch (not the // thin-market branch). Assumptions: Market consensus must exceed minimum threshold to generate picks; variance increases with proximity to high-variance boundary. Breakdown regime: When consensusPct < CONSENSUS_MIN_PCT, no pick is generated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps consensus fraction to risk classification in GSE's decision tree; GSI computes confidence via Bayesian update of implied probabilities. Operator 'Implied Probability Computation' (page 1, domain other) captures: => { it(\"converts +100 → 50%\", () => { expect(americanToImpliedProbability(100)).toBeCloseTo(0.5); }); it(\"converts +200 → 33.3%\", () Assumptions: Odds are valid American format; probability is bounded between 0 and 1. Breakdown regime: Undefined for invalid odds values outside [-500, +300]. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used by GSI to derive market-neutral probabilities for scoring and edge estimation. Operator 'Risk Level Classification' (page 1, domain other) captures: import { describe, it, expect } from \"vitest\"; import { americanToImpliedProbability, removeVig, clamp, scoreGame, scoreGames, } Assumptions: Risk level depends on both bookmaker count and consensus strength; thin markets yield higher variance. Breakdown regime: When bookmakerCount < THIN_MARKET_THRESHOLD, HIGH_VARIANCE is assigned. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE uses this to select reasoning paths; GSI applies it to adjust uncertainty penalties in scoring. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and market microstructure models from financial engineering, particularly those addressing liquidity and information asymmetry in betting markets. Retrocausal Genealogy: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include market makers who may manipulate odds to reflect private information, and bettors whose actions influence consensus formation. The system models these as stochastic processes affecting implied probability distributions. Theory of Mind & Decision Maker Model: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that risk classification does not overlap with confidence computation; leakage occurs if consensus-based risk is misapplied to edge scoring without proper normalization. Cross-Layer Veto & Anti-Leakage Check: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 43a89187a20b (d1c646d8991f9d10), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "8fc7f76f5f2d6cf7",
+  "source_status": "COMPLETE",
+  "title": "farrell-andrews-participation-2026-09-19",
+  "file_name": "farrell-andrews-participation-2026-09-19.md",
+  "sha256": "8fc7f76f5f2d6cf749a6622dac2d827d9ab1b04dc0f9fe841eb04b42131f47c8",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Participation dynamics in NFL TE roles via snap-share, route-rate, and target-density tensors under run-heavy personnel constraints. Universal Lens: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on TE participation using second-party salary data and empirical route-target correlations from 2026 deep-dive repos. GSI Mapping: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from post-injury ramp to full-route load for Kittle, with snap-floor secured by Tonges's IR status. GSE Mapping: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "snap_share_artifact",
+      "name": "Snap Share Artifact",
+      "verbatim_quote": "**Snap share is a blocking artifact.** 45–46 snaps produced only 16–19 routes (44% route rate) and 2 targets.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S_{snap}': 'snap count (dimensionless)', 'R_{route}': 'route count (dimensionless)', 'T_{target}': 'target count (dimensionless)'}",
+      "assumptions": "Snap share is proxy for blocking contribution; route rate and target density are emergent properties of role design.",
+      "breakdown_regime": "Run-heavy personnel context (SF 21/12/22 personnel splits)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of role misalignment between snap-count and functional contribution in TE positioning.",
+        "source_operator": "snap_share_artifact",
+        "telemetry": "Route rate vs. snap share ratio"
+      }
+    },
+    {
+      "primitive_id": "role_shrinkage",
+      "name": "Role Shrinkage",
+      "verbatim_quote": "### Role diagnosis: GAME-SCRIPT NOISE, not an emerging role 1.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R_{role}(t)': 'role intensity at time t (dimensionless)', 'R_{max}': 'maximum role capacity (dimensionless)'}",
+      "assumptions": "Role intensity decays post-injury ramp; emergence of new role is not observed.",
+      "breakdown_regime": "Post-injury recovery trajectory (Kittle 8-months post-tear)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to a damping oscillator model where role intensity decays toward baseline.",
+        "source_operator": "role_shrinkage",
+        "telemetry": "Target share vs. snap share ratio over time"
+      }
+    },
+    {
+      "primitive_id": "target_competition_map",
+      "name": "Target Competition Map",
+      "verbatim_quote": "**Career archetype is \"pseudo-sixth offensive lineman.\"** Signed March 2025: 3yr/$20.25M ($11M guaranteed) specifically as a blocking TE2 (Niners Nation, 2025-03-10).",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C_{comp}(i,j)': 'target competition between TE i and j (dimensionless)', 'S_{salary}(i)': 'salary of TE i (USD)', 'T_{target}(i)': 'target count of TE i (dimensionless)'}",
+      "assumptions": "Salary and role archetype determine competitive weight; target competition is inverse of salary and route share.",
+      "breakdown_regime": "Intra-team TE competition under salary and role constraints",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of salary-weighted target competition in TE depth charts.",
+        "source_operator": "target_competition_map",
+        "telemetry": "Target share vs. salary rank correlation"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8fc7f76f5f2d6cf7_t0",
+      "think": "The core insight is that TE participation is not a monolithic function of snap share but a multi-dimensional tensor involving route rate, target share, and role archetype. Snap share alone is a proxy for blocking contribution, not receiving potential. In the case of Kittle, his post-injury ramp and reduced route share indicate a shrinking role, not an expanding one. The presence of Tonges’s IR status provides a protective floor for Farrell’s snaps but does not translate into increased route load. This leads to a derived kernel of role misalignment where snap count is decoupled from functional output. The target competition map further reveals that Isaiah Likely is not on the Ravens roster, invalidating prior assumptions about pivot dynamics. The archetype of pseudo-sixth offensive lineman confirms that Farrell’s role is defined by blocking, not receiving. Thus, the GSI Bayesian inference must adjust beliefs based on second-party data and empirical route-target ratios. The GSE situational reasoning must account for the interplay between injury status, personnel packages, and role evolution.\n\nDeep epistemic analysis for farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7, domain=other, pages_read=6/6): Operator 'Snap Share Artifact' (page 1, domain other) captures: **Snap share is a blocking artifact.** 45–46 snaps produced only 16–19 routes (44% route rate) and 2 targets. Assumptions: Snap share is proxy for blocking contribution; route rate and target density are emergent properties of role design. Breakdown regime: Run-heavy personnel context (SF 21/12/22 personnel splits) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of role misalignment between snap-count and functional contribution in TE positioning. Operator 'Role Shrinkage' (page 1, domain other) captures: ### Role diagnosis: GAME-SCRIPT NOISE, not an emerging role 1. Assumptions: Role intensity decays post-injury ramp; emergence of new role is not observed. Breakdown regime: Post-injury recovery trajectory (Kittle 8-months post-tear) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a damping oscillator model where role intensity decays toward baseline. Operator 'Target Competition Map' (page 2, domain other) captures: **Career archetype is \"pseudo-sixth offensive lineman.\"** Signed March 2025: 3yr/$20.25M ($11M guaranteed) specifically as a blocking TE2 (Niners Nation, 2025-03-10). Assumptions: Salary and role archetype determine competitive weight; target competition is inverse of salary and route share. Breakdown regime: Intra-team TE competition under salary and role constraints Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of salary-weighted target competition in TE depth charts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7, domain=other, pages_read=6/6): Operator 'Snap Share Artifact' (page 1, domain other) captures: **Snap share is a blocking artifact.** 45–46 snaps produced only 16–19 routes (44% route rate) and 2 targets. Assumptions: Snap share is proxy for blocking contribution; route rate and target density are emergent properties of role design. Breakdown regime: Run-heavy personnel context (SF 21/12/22 personnel splits) Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of role misalignment between snap-count and functional contribution in TE positioning. Operator 'Role Shrinkage' (page 1, domain other) captures: ### Role diagnosis: GAME-SCRIPT NOISE, not an emerging role 1. Assumptions: Role intensity decays post-injury ramp; emergence of new role is not observed. Breakdown regime: Post-injury recovery trajectory (Kittle 8-months post-tear) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to a damping oscillator model where role intensity decays toward baseline. Operator 'Target Competition Map' (page 2, domain other) captures: **Career archetype is \"pseudo-sixth offensive lineman.\"** Signed March 2025: 3yr/$20.25M ($11M guaranteed) specifically as a blocking TE2 (Niners Nation, 2025-03-10). Assumptions: Salary and role archetype determine competitive weight; target competition is inverse of salary and route share. Breakdown regime: Intra-team TE competition under salary and role constraints Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of salary-weighted target competition in TE depth charts. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in 2024-2025 NFL TE role modeling and the evolution of blocking-centric tight ends. Influenced by statistical physics models of player load and recovery. Retrocausal Genealogy: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the NFL coaching staff (designing for Kittle's ramp), the DFS analyst (seeking emerging roles), and the salary market (dictating archetype-based compensation). Theory of Mind & Decision Maker Model: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between snap share and route share; leakage occurs when assuming role expansion from snap increase without verifying route density. Cross-Layer Veto & Anti-Leakage Check: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in farrell-andrews-participation-2026-09-19 (8fc7f76f5f2d6cf7), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

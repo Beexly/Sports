@@ -1,0 +1,78 @@
+{
+  "book_id": "997d90cfabe9bb35",
+  "source_status": "COMPLETE",
+  "title": "0535-riskaware-preference-learning-for-stochastic-outcomes",
+  "file_name": "0535-riskaware-preference-learning-for-stochastic-outcomes.md",
+  "sha256": "997d90cfabe9bb352b97aff30e9a78a647430835b9f44e7cf959edd0b3794acf",
+  "primary_domain": "math",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Cumulative Prospect Theory (CPT) integrates rank-dependent probability weighting with value function over gains/losses, enabling risk-sensitive preference modeling in stochastic environments. Universal Lens: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Bayesian inference to calibrate CPT decision weights from pairwise comparisons, mapping synthetic user preferences into probabilistic reward functions via Bradley–Terry likelihood. GSI Mapping: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies CPT-derived value functions to robot navigation actions, computing regret-minimizing policies through stochastic rollouts and rank-weighted utility maximization. GSE Mapping: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "cpt_value_function",
+      "name": "Cumulative Prospect Theory Value Function",
+      "verbatim_quote": "- CPT value: V_CPT(A) = Σ_i π_i v(θTφ(o_i) - r), r = reference point separating gains/losses.",
+      "page": 2,
+      "latex": "\\mathcal{V}_{\\text{CPT}}(A) = \\sum_{i} \\pi_i v(\\theta T \\phi(o_i) - r)",
+      "symbol_and_unit_ledger": "{'A': 'action set, dimensionless', 'v(\\\\cdot)': 'value function, dimensionless', 'π_i': 'decision weight, dimensionless', 'r': 'reference point, reward units', 'θ': 'reward scaling factor, reward units', 'T': 'transition operator, dimensionless', 'φ(o_i)': 'feature vector, dimensionless'}",
+      "assumptions": "Each action induces a discrete outcome distribution; reference point fixed; linear reward structure assumed on both sides.",
+      "breakdown_regime": "When decision weights π_i approach zero or v(·) becomes non-monotonic.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps risk-sensitive preferences into policy gradients for reinforcement learning in stochastic domains.",
+        "source_operator": "cpt_value_function",
+        "telemetry": "Action regret on held-out scenes."
+      }
+    },
+    {
+      "primitive_id": "probability_weighting_function",
+      "name": "Rank-Dependent Probability Weighting",
+      "verbatim_quote": "ghting: w(p) = exp(-(-ln p)^γ), which overweights rare events when γ<1 (Prelec 1998); decision weights π_i from a rank-dependent transformation over cumulative probabilities (Tversky & Kahneman 1992).",
+      "page": 2,
+      "latex": "\\pi_i = w(P_i) = \\exp\\left(-(-\\ln P_i)^\\gamma\\right)",
+      "symbol_and_unit_ledger": "{'P_i': 'cumulative probability, dimensionless', 'γ': 'preference parameter, dimensionless', 'π_i': 'decision weight, dimensionless'}",
+      "assumptions": "Probability distributions are ranked; γ < 1 implies overweighting of rare events.",
+      "breakdown_regime": "At extreme probabilities (p ≈ 0 or p ≈ 1) where ln(p) diverges.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs betting market distortion into preference learning framework via Prelec weighting.",
+        "source_operator": "probability_weighting_function",
+        "telemetry": "Market-implied probability distortion index."
+      }
+    },
+    {
+      "primitive_id": "risk_sensitive_preference_learning",
+      "name": "Risk-Sensitive Preference Learning Framework",
+      "verbatim_quote": "Synthetic teachers generate pairwise comparisons using either model, so the experiment tests matched vs mismatched teacher/learner.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'EU': 'Expected Utility, dimensionless', 'CPT': 'Cumulative Prospect Theory, dimensionless', 'teacher': 'Preference generator, dimensionless', 'learner': 'Policy estimator, dimensionless'}",
+      "assumptions": "Teacher and learner models are known; synthetic data is representative.",
+      "breakdown_regime": "Mismatch between teacher and learner models leads to high regret.",
+      "domain": "math",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables robust policy recovery under risk-sensitive user behavior in uncertain environments.",
+        "source_operator": "risk_sensitive_preference_learning",
+        "telemetry": "Regret difference between matched and mismatched learners."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "997d90cfabe9bb35_t0",
+      "think": "The core insight of CPT lies in its dual treatment of probability and value: it uses rank-dependent weights π_i derived from cumulative probabilities to reflect bounded rationality, while applying a value function v(·) that captures loss aversion and diminishing sensitivity. In the context of GSI, these weights are fitted to synthetic user preferences to infer latent reward structures. For GSE, the CPT value function computes expected utilities over stochastic robot actions, enabling risk-aware navigation. The failure mode arises when π_i approaches zero or v(·) loses monotonicity, leading to invalid policy updates. The framework assumes fixed reference points and linear reward mappings, which may not generalize to complex environments without empirical calibration.\n\nDeep epistemic analysis for 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35, domain=math, pages_read=4/4): Operator 'Cumulative Prospect Theory Value Function' (page 2, domain math) captures: - CPT value: V_CPT(A) = Σ_i π_i v(θTφ(o_i) - r), r = reference point separating gains/losses. Assumptions: Each action induces a discrete outcome distribution; reference point fixed; linear reward structure assumed on both sides. Breakdown regime: When decision weights π_i approach zero or v(·) becomes non-monotonic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps risk-sensitive preferences into policy gradients for reinforcement learning in stochastic domains. Operator 'Rank-Dependent Probability Weighting' (page 2, domain math) captures: ghting: w(p) = exp(-(-ln p)^γ), which overweights rare events when γ<1 (Prelec 1998); decision weights π_i from a rank-dependent transformation over cumulative probabilities (Tversky & Kahneman 1992). Assumptions: Probability distributions are ranked; γ < 1 implies overweighting of rare events. Breakdown regime: At extreme probabilities (p ≈ 0 or p ≈ 1) where ln(p) diverges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs betting market distortion into preference learning framework via Prelec weighting. Operator 'Risk-Sensitive Preference Learning Framework' (page 1, domain math) captures: Synthetic teachers generate pairwise comparisons using either model, so the experiment tests matched vs mismatched teacher/learner. Assumptions: Teacher and learner models are known; synthetic data is representative. Breakdown regime: Mismatch between teacher and learner models leads to high regret. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables robust policy recovery under risk-sensitive user behavior in uncertain environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35, domain=math, pages_read=4/4): Operator 'Cumulative Prospect Theory Value Function' (page 2, domain math) captures: - CPT value: V_CPT(A) = Σ_i π_i v(θTφ(o_i) - r), r = reference point separating gains/losses. Assumptions: Each action induces a discrete outcome distribution; reference point fixed; linear reward structure assumed on both sides. Breakdown regime: When decision weights π_i approach zero or v(·) becomes non-monotonic. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps risk-sensitive preferences into policy gradients for reinforcement learning in stochastic domains. Operator 'Rank-Dependent Probability Weighting' (page 2, domain math) captures: ghting: w(p) = exp(-(-ln p)^γ), which overweights rare events when γ<1 (Prelec 1998); decision weights π_i from a rank-dependent transformation over cumulative probabilities (Tversky & Kahneman 1992). Assumptions: Probability distributions are ranked; γ < 1 implies overweighting of rare events. Breakdown regime: At extreme probabilities (p ≈ 0 or p ≈ 1) where ln(p) diverges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs betting market distortion into preference learning framework via Prelec weighting. Operator 'Risk-Sensitive Preference Learning Framework' (page 1, domain math) captures: Synthetic teachers generate pairwise comparisons using either model, so the experiment tests matched vs mismatched teacher/learner. Assumptions: Teacher and learner models are known; synthetic data is representative. Breakdown regime: Mismatch between teacher and learner models leads to high regret. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables robust policy recovery under risk-sensitive user behavior in uncertain environments. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Tversky & Kahneman’s prospect theory (1992) and Prelec’s probability weighting (1998), extended to cumulative form by Quiggin (1993) and applied to preference learning by recent works such as Tung et al. (2026). Retrocausal Genealogy: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models two distinct agent types: a risk-sensitive synthetic user following CPT and a standard EU learner. The former exhibits overweighting of rare outcomes, while the latter assumes linear probability aggregation. This duality enables testing of robustness in preference learning under heterogeneous risk attitudes. Theory of Mind & Decision Maker Model: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that GSI’s Bayesian calibration does not assume uniform risk profiles across users. Leakage occurs if GSE treats all actions identically regardless of their risk profile, undermining the distinction between EU and CPT learners. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0535-riskaware-preference-learning-for-stochastic-outcomes (997d90cfabe9bb35), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

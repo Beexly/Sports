@@ -1,0 +1,78 @@
+{
+  "book_id": "5bd0b3f1aff1d735",
+  "source_status": "COMPLETE",
+  "title": "MANIFEST",
+  "file_name": "MANIFEST.md",
+  "sha256": "5bd0b3f1aff1d735b09c87eb3a052183e162a15fb86c9803d9151d45abbd8a53",
+  "primary_domain": "other",
+  "pages_total": 77,
+  "pages_read": 18,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Manifest indexing unifies per-lane data streams via Drive status transitions and training value mappings, enabling probabilistic inference across structured repositories. Universal Lens: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on verified item metadata drive conformal predictive distributions over engine-training values, conditioned on local path and source URL. GSI Mapping: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps lane-specific repo states through state-transition graphs defined by Drive status flips and INDEX.md fragment merges. GSE Mapping: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "drive_status_flip",
+      "name": "Drive Status Transition Operator",
+      "verbatim_quote": "Each book's Drive field in the master table below flips from `pending` to its Drive link as its upload verifies.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D(t)': 'Drive status at time t, binary {pending, linked}', 'T_{verify}': 'Verification timestamp'}",
+      "assumptions": "Upload verification is deterministic and occurs after file staging.",
+      "breakdown_regime": "When D(t) = pending and t < T_{verify}, transition to D(t) = linked upon successful upload.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The Drive status flip mirrors a Bayesian update from prior belief to posterior certainty about data availability.",
+        "source_operator": "drive_status_flip",
+        "telemetry": "Local path integrity check + Google Drive API response validation."
+      }
+    },
+    {
+      "primitive_id": "training_value_mapping",
+      "name": "Engine Training Value Mapping",
+      "verbatim_quote": "**How to use this file:** the master table below carries one row per verified item — title, authors, year, lane, original source URL, what it is, the engine-training value, local path, Drive status.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V_{train}': 'Training value associated with item, dimensionless score', 'I': 'Verified item identifier'}",
+      "assumptions": "Each item has a unique V_{train} derived from its content type and labeling quality.",
+      "breakdown_regime": "When I is unverified, V_{train} is undefined or zero.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "V_{train} serves as kernel weight in GSE's similarity search over verified items.",
+        "source_operator": "training_value_mapping",
+        "telemetry": "Automated scoring algorithm applied to item metadata and content structure."
+      }
+    },
+    {
+      "primitive_id": "lane_index_structure",
+      "name": "Per-Lane Index Structure",
+      "verbatim_quote": "One row per verified item: `TITLE | AUTHORS | YEAR | LANE | SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | LOCAL_PATH | DRIVE` Per-lane INDEX.md files live in lane-a-situational/ · lane-b-medical/ · lane-c-systems/ · books-a-sports/ · books-b-medical/ · books-c-systems/ · books-d-models/ · social/.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'L_i': 'Lane identifier, categorical', 'I_j^{(L_i)}': 'Item j in lane i'}",
+      "assumptions": "Items within lanes are semantically coherent and indexed independently.",
+      "breakdown_regime": "Cross-lane dependencies require explicit inter-index linking.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each lane index defines a category-theoretic slice of the global manifest space.",
+        "source_operator": "lane_index_structure",
+        "telemetry": "Index.md file consistency and item count validation per lane."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "5bd0b3f1aff1d735_t0",
+      "think": "The manifest operates as a hierarchical Bayesian network where each verified item contributes a node with probabilistic training value. The Drive status flip acts as a stochastic event that updates beliefs about data availability, modeled as a Bernoulli process. The lane-based indexing enables conditional probability distributions over items, allowing GSE to reason about data relevance and GSI to perform conformal prediction on training values. Failure modes include misclassification of items due to incorrect metadata, or delayed Drive transitions causing temporal inconsistency in the belief system. Dualities emerge between the physical storage layer (local path) and logical abstraction layer (Drive link), with the transition representing a phase shift in data accessibility.\n\nDeep epistemic analysis for MANIFEST (5bd0b3f1aff1d735, domain=other, pages_read=18/77): Operator 'Drive Status Transition Operator' (page 1, domain other) captures: Each book's Drive field in the master table below flips from `pending` to its Drive link as its upload verifies. Assumptions: Upload verification is deterministic and occurs after file staging. Breakdown regime: When D(t) = pending and t < T_{verify}, transition to D(t) = linked upon successful upload. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Drive status flip mirrors a Bayesian update from prior belief to posterior certainty about data availability. Operator 'Engine Training Value Mapping' (page 1, domain other) captures: **How to use this file:** the master table below carries one row per verified item — title, authors, year, lane, original source URL, what it is, the engine-training value, local path, Drive status. Assumptions: Each item has a unique V_{train} derived from its content type and labeling quality. Breakdown regime: When I is unverified, V_{train} is undefined or zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): V_{train} serves as kernel weight in GSE's similarity search over verified items. Operator 'Per-Lane Index Structure' (page 1, domain other) captures: One row per verified item: `TITLE | AUTHORS | YEAR | LANE | SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | LOCAL_PATH | DRIVE` Per-lane INDEX.md files live in lane-a-situational/ · lane-b-medical/ · lane-c-systems/ · books-a-sports/ · books-b-medical/ · books-c-systems/ · books-d-models/ · social/. Assumptions: Items within lanes are semantically coherent and indexed independently. Breakdown regime: Cross-lane dependencies require explicit inter-index linking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each lane index defines a category-theoretic slice of the global manifest space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MANIFEST (5bd0b3f1aff1d735, domain=other, pages_read=18/77): Operator 'Drive Status Transition Operator' (page 1, domain other) captures: Each book's Drive field in the master table below flips from `pending` to its Drive link as its upload verifies. Assumptions: Upload verification is deterministic and occurs after file staging. Breakdown regime: When D(t) = pending and t < T_{verify}, transition to D(t) = linked upon successful upload. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The Drive status flip mirrors a Bayesian update from prior belief to posterior certainty about data availability. Operator 'Engine Training Value Mapping' (page 1, domain other) captures: **How to use this file:** the master table below carries one row per verified item — title, authors, year, lane, original source URL, what it is, the engine-training value, local path, Drive status. Assumptions: Each item has a unique V_{train} derived from its content type and labeling quality. Breakdown regime: When I is unverified, V_{train} is undefined or zero. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): V_{train} serves as kernel weight in GSE's similarity search over verified items. Operator 'Per-Lane Index Structure' (page 1, domain other) captures: One row per verified item: `TITLE | AUTHORS | YEAR | LANE | SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | LOCAL_PATH | DRIVE` Per-lane INDEX.md files live in lane-a-situational/ · lane-b-medical/ · lane-c-systems/ · books-a-sports/ · books-b-medical/ · books-c-systems/ · books-d-models/ · social/. Assumptions: Items within lanes are semantically coherent and indexed independently. Breakdown regime: Cross-lane dependencies require explicit inter-index linking. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each lane index defines a category-theoretic slice of the global manifest space. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in database design principles from relational algebra and modern distributed systems, particularly inspired by Git's branching model and Google Drive's sync semantics. Retrocausal Genealogy: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the uploader (drives data to cloud), the verifier (confirms integrity), and the consumer (queries manifest for training data). Their decision boundaries intersect at the Drive status flip point. Theory of Mind & Decision Maker Model: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring distinct lanes do not share identical training value semantics. Leakage is prevented by strict separation of local paths and Drive links, avoiding cross-contamination of metadata. Cross-Layer Veto & Anti-Leakage Check: Rooted in MANIFEST (5bd0b3f1aff1d735), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

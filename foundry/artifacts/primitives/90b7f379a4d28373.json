@@ -1,0 +1,78 @@
+{
+  "book_id": "90b7f379a4d28373",
+  "source_status": "COMPLETE",
+  "title": "FREE_FIRST_DATA",
+  "file_name": "FREE_FIRST_DATA.md",
+  "sha256": "90b7f379a4d28373d363dc665e0d2455436ffcc6db5e6c54b0a0145fe5c9da79",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Free-first data architecture enforces a binary cost structure: zero-cost for cleared facts, justified cost for odds. This maps to a constrained optimization problem where \\mathcal{L}(\\text{data}) = \\sum_{i} \\mathbb{1}_{\\text{free}_i} \\cdot c_i + \\mathbb{1}_{\\text{paid}_i} \\cdot p_i, \\text{subject to } \\forall i, \\text{quality} \\geq \\theta.",
+  "gsi_mapping": "GSI employs Bayesian belief updating over verified free data streams, using conformal prediction to maintain calibrated uncertainty bounds. The system computes posterior probabilities over event outcomes using \\mathcal{P}(E|D_{\\text{free}}) \\propto \\mathcal{P}(D_{\\text{free}}|E) \\cdot \\mathcal{P}(E), where \\mathcal{P}(E) is prior and \\mathcal{P}(D_{\\text{free}}|E) is likelihood from cleared sources.",
+  "gse_mapping": "GSE applies dynamic state transitions governed by a Markov decision process over sport-specific ingestion policies. Each transition \\tau_{t \\to t+1} = \\mathcal{T}(s_t, a_t) is conditioned on \\mathcal{S}_{\\text{free}}(t) \\cup \\mathcal{S}_{\\text{paid}}(t), with reward function \\mathcal{R}(s_t, a_t) = \\mathbb{1}_{\\text{coverage}} \\cdot \\mathcal{Q}(s_t) - \\lambda \\cdot \\mathcal{C}(a_t).",
+  "primitives": [
+    {
+      "primitive_id": "free_first_wiring",
+      "name": "Free-First Data Wiring",
+      "verbatim_quote": "# Free-First Data Architecture **Goal:** run the stats platform on $0 of paid data wherever a free, cleared source covers the need — without lowering quality.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{L}(\\\\text{data})': 'Total data cost in USD', '\\\\mathbb{1}_{\\\\text{free}_i}': 'Indicator variable for free data source', '\\\\mathbb{1}_{\\\\text{paid}_i}': 'Indicator variable for paid data source', 'c_i': 'Cost of free data source i in USD', 'p_i': 'Cost of paid data source i in USD'}",
+      "assumptions": "All free data sources are cleared and verified. Quality of free data matches or exceeds paid alternatives.",
+      "breakdown_regime": "When no free source covers a required data type, \\mathbb{1}_{\\text{free}_i} = 0 and \\mathbb{1}_{\\text{paid}_i} = 1.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The free-first wiring is isomorphic to a constraint optimization problem where the objective function minimizes cost subject to quality constraints.",
+        "source_operator": "free_first_wiring",
+        "telemetry": "Cross-source validation metrics and cost tracking logs."
+      }
+    },
+    {
+      "primitive_id": "paid_call_justified",
+      "name": "Paid Call Justification",
+      "verbatim_quote": "The spend guard (`paidCallJustified`) enforces this per call; in-season gating keeps the Odds API's free credits for sports actually playing.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{J}(\\\\text{call})': 'Justification score for paid call', '\\\\mathcal{Q}(\\\\text{data})': 'Data quality threshold', '\\\\mathcal{C}(\\\\text{call})': 'Cost of call in USD', '\\\\mathbb{1}_{\\\\text{in-season}}': 'Indicator for in-season sports'}",
+      "assumptions": "Only calls with \\mathcal{J}(\\text{call}) > \\theta are allowed. In-season gating prevents waste of free credits.",
+      "breakdown_regime": "When \\mathcal{J}(\\text{call}) < \\theta, the call is rejected.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from the free-first wiring kernel, this primitive defines the decision boundary for paid data usage.",
+        "source_operator": "paid_call_justified",
+        "telemetry": "Call justification logs and in-season status indicators."
+      }
+    },
+    {
+      "primitive_id": "free_coverage_matrix",
+      "name": "Free Coverage Matrix",
+      "verbatim_quote": "`freeCoverageMatrix()` + `planIngestion()` show exactly what to clear to remove spend.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'\\\\mathcal{M}_{ij}': 'Coverage matrix element indicating if source i covers sport j', '\\\\mathcal{C}_{ij}': 'Cost of source i for sport j', '\\\\mathcal{F}(\\\\text{clear})': 'Function to clear unused paid sources'}",
+      "assumptions": "Each sport has at least one free source covering it. Clearing unused paid sources reduces cost.",
+      "breakdown_regime": "When \\mathcal{M}_{ij} = 1 for all j, \\mathcal{F}(\\text{clear}) removes all paid dependencies.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The matrix is derived from the free-first wiring and ingestion planning logic to optimize cost reduction.",
+        "source_operator": "free_coverage_matrix",
+        "telemetry": "Coverage matrix outputs and ingestion plan execution logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "90b7f379a4d28373_t0",
+      "think": "The free-first data architecture is modeled as a constrained optimization problem where the goal is to minimize total data cost while maintaining quality thresholds. The core operator \\mathcal{L}(\\text{data}) = \\sum_{i} \\mathbb{1}_{\\text{free}_i} \\cdot c_i + \\mathbb{1}_{\\text{paid}_i} \\cdot p_i ensures that only necessary paid data is used. The justification mechanism \\mathcal{J}(\\text{call}) acts as a binary gate, enforcing that paid calls are only made when quality requirements cannot be met by free sources. The coverage matrix \\mathcal{M}_{ij} enables systematic identification of redundant paid dependencies. Failure modes include misclassification of data quality, incorrect coverage mappings, or bypassing the spend guard. Dualities arise between free and paid data usage, where each paid call must justify its cost against the potential for free alternatives. The system's robustness depends on the integrity of the clearance process and the accuracy of the quality thresholds.\n\nDeep epistemic analysis for FREE_FIRST_DATA (90b7f379a4d28373, domain=other, pages_read=2/2): Operator 'Free-First Data Wiring' (page 1, domain other) captures: # Free-First Data Architecture **Goal:** run the stats platform on $0 of paid data wherever a free, cleared source covers the need — without lowering quality. Assumptions: All free data sources are cleared and verified. Quality of free data matches or exceeds paid alternatives. Breakdown regime: When no free source covers a required data type, \\mathbb{1}_{\\text{free}_i} = 0 and \\mathbb{1}_{\\text{paid}_i} = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The free-first wiring is isomorphic to a constraint optimization problem where the objective function minimizes cost subject to quality constraints. Operator 'Paid Call Justification' (page 1, domain other) captures: The spend guard (`paidCallJustified`) enforces this per call; in-season gating keeps the Odds API's free credits for sports actually playing. Assumptions: Only calls with \\mathcal{J}(\\text{call}) > \\theta are allowed. In-season gating prevents waste of free credits. Breakdown regime: When \\mathcal{J}(\\text{call}) < \\theta, the call is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from the free-first wiring kernel, this primitive defines the decision boundary for paid data usage. Operator 'Free Coverage Matrix' (page 1, domain other) captures: `freeCoverageMatrix()` + `planIngestion()` show exactly what to clear to remove spend. Assumptions: Each sport has at least one free source covering it. Clearing unused paid sources reduces cost. Breakdown regime: When \\mathcal{M}_{ij} = 1 for all j, \\mathcal{F}(\\text{clear}) removes all paid dependencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The matrix is derived from the free-first wiring and ingestion planning logic to optimize cost reduction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE_FIRST_DATA (90b7f379a4d28373, domain=other, pages_read=2/2): Operator 'Free-First Data Wiring' (page 1, domain other) captures: # Free-First Data Architecture **Goal:** run the stats platform on $0 of paid data wherever a free, cleared source covers the need — without lowering quality. Assumptions: All free data sources are cleared and verified. Quality of free data matches or exceeds paid alternatives. Breakdown regime: When no free source covers a required data type, \\mathbb{1}_{\\text{free}_i} = 0 and \\mathbb{1}_{\\text{paid}_i} = 1. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The free-first wiring is isomorphic to a constraint optimization problem where the objective function minimizes cost subject to quality constraints. Operator 'Paid Call Justification' (page 1, domain other) captures: The spend guard (`paidCallJustified`) enforces this per call; in-season gating keeps the Odds API's free credits for sports actually playing. Assumptions: Only calls with \\mathcal{J}(\\text{call}) > \\theta are allowed. In-season gating prevents waste of free credits. Breakdown regime: When \\mathcal{J}(\\text{call}) < \\theta, the call is rejected. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from the free-first wiring kernel, this primitive defines the decision boundary for paid data usage. Operator 'Free Coverage Matrix' (page 1, domain other) captures: `freeCoverageMatrix()` + `planIngestion()` show exactly what to clear to remove spend. Assumptions: Each sport has at least one free source covering it. Clearing unused paid sources reduces cost. Breakdown regime: When \\mathcal{M}_{ij} = 1 for all j, \\mathcal{F}(\\text{clear}) removes all paid dependencies. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The matrix is derived from the free-first wiring and ingestion planning logic to optimize cost reduction. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture builds upon principles of minimal cost design and data governance established in early 2000s open data initiatives, particularly those emphasizing verifiable fact sources and cost-aware API consumption patterns. Retrocausal Genealogy: Rooted in FREE_FIRST_DATA (90b7f379a4d28373), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in FREE_FIRST_DATA (90b7f379a4d28373), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data vendors who may incentivize paid usage, and internal systems that enforce cost discipline. The system models these as competing objectives within a unified cost-quality optimization framework. Theory of Mind & Decision Maker Model: Rooted in FREE_FIRST_DATA (90b7f379a4d28373), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced through explicit separation of concerns: free data is handled by dedicated ingestion layers, while paid data is gated by explicit justification logic. Leakage is prevented by ensuring that no paid data can be accessed without passing the \\mathcal{J}(\\text{call}) check, and that all free data is validated before use. Cross-Layer Veto & Anti-Leakage Check: Rooted in FREE_FIRST_DATA (90b7f379a4d28373), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

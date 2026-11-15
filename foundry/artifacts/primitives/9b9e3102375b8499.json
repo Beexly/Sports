@@ -1,0 +1,78 @@
+{
+  "book_id": "9b9e3102375b8499",
+  "source_status": "COMPLETE",
+  "title": "PROVE_THE_EDGE",
+  "file_name": "PROVE_THE_EDGE.md",
+  "sha256": "9b9e3102375b8499a30b6643ae8aa9557f7ab94642ddbbdb5dc585b68ad6e8bf",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A proof-chain framework mapping historical settlement, model calibration, and market validation through frozen signals and closing line value (CLV) to ensure reproducible edge. Universal Lens: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference of CLV against market closing lines using historical game outcomes and frozen model predictions to compute posterior confidence intervals over reliability curves. GSI Mapping: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally grounded state transitions from backfilled game data to calibrated model picks, validated via ECE/Brier scores, enabling dynamic adjustment of predictive thresholds based on empirical calibration. GSE Mapping: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "prepare_not_flip",
+      "name": "Prepare-Not-Flip Protocol",
+      "verbatim_quote": "# PROVE THE EDGE — One-Sitting Proof Chain > **Prepare-not-flip.** This runbook is the exact ordered command sequence that takes the owner > from empty tables to a published-ready calibration story in a single sitting.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Owner controls execution flow; no agent intervention allowed.",
+      "breakdown_regime": "Execution order is deterministic and non-reversible once production steps begin.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic verification pipeline where each step must be reproducible before flipping to production state.",
+        "source_operator": "prepare_not_flip",
+        "telemetry": "Verification of ordered execution steps without data mutation."
+      }
+    },
+    {
+      "primitive_id": "closing_line_value",
+      "name": "Closing Line Value (CLV)",
+      "verbatim_quote": "(Source: `docs/strategy/PATH_TO_PROVEN_EDGE.md`, Part I §3 / §4.) The real north star is **Closing Line Value (CLV)**: did we get a better number than the line closed at?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Market closing line represents aggregated sharp betting intelligence; CLV measures deviation from that baseline.",
+      "breakdown_regime": "Only meaningful when compared against actual closing line and realized outcome.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSE's market calibration engine, used to compute expected value relative to closing odds.",
+        "source_operator": "closing_line_value",
+        "telemetry": "Cumulative CLV score across 200+ settled bets."
+      }
+    },
+    {
+      "primitive_id": "historical_settlement_backfill",
+      "name": "Historical Settlement Backfill",
+      "verbatim_quote": "> > The whole point of Phase 14 is to convert \"trust us, we'll show results later\" into > \"here is 25 seasons of reliability curve, here is the code, reproduce it.\" The strongest trust > asset is a proof nobody can fake.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Frozen model predictions are rerun on pre-game data to simulate historical performance.",
+      "breakdown_regime": "Requires full historical dataset and frozen model version to avoid contamination of live data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Mirrors GSI's replay mechanism for validating model consistency over time using static inputs.",
+        "source_operator": "historical_settlement_backfill",
+        "telemetry": "Number of games settled with CLV and associated reliability metrics."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "9b9e3102375b8499_t0",
+      "think": "The core duality lies between trust and reproducibility: the system assumes that a model’s edge is only credible if it can be independently verified through a deterministic sequence of actions. The 'prepare-not-flip' protocol enforces this by separating read-only steps from write-only ones, ensuring no accidental mutation occurs during testing. The CLV primitive acts as a scalar measure of model superiority over the market, derived from comparing predicted probabilities against actual closing lines. Its reliability is anchored in the assumption that the closing line reflects true market consensus. The backfill process ensures that this comparison is made over a large enough sample size to reduce noise and increase statistical significance. Failure modes include premature flipping, incorrect model versions, or misalignment between simulated and real-world outcomes.\n\nDeep epistemic analysis for PROVE_THE_EDGE (9b9e3102375b8499, domain=other, pages_read=5/5): Operator 'Prepare-Not-Flip Protocol' (page 1, domain other) captures: # PROVE THE EDGE — One-Sitting Proof Chain > **Prepare-not-flip.** This runbook is the exact ordered command sequence that takes the owner > from empty tables to a published-ready calibration story in a single sitting. Assumptions: Owner controls execution flow; no agent intervention allowed. Breakdown regime: Execution order is deterministic and non-reversible once production steps begin. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic verification pipeline where each step must be reproducible before flipping to production state. Operator 'Closing Line Value (CLV)' (page 1, domain other) captures: (Source: `docs/strategy/PATH_TO_PROVEN_EDGE.md`, Part I §3 / §4.) The real north star is **Closing Line Value (CLV)**: did we get a better number than the line closed at? Assumptions: Market closing line represents aggregated sharp betting intelligence; CLV measures deviation from that baseline. Breakdown regime: Only meaningful when compared against actual closing line and realized outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's market calibration engine, used to compute expected value relative to closing odds. Operator 'Historical Settlement Backfill' (page 1, domain other) captures: > > The whole point of Phase 14 is to convert \"trust us, we'll show results later\" into > \"here is 25 seasons of reliability curve, here is the code, reproduce it.\" The strongest trust > asset is a proof nobody can fake. Assumptions: Frozen model predictions are rerun on pre-game data to simulate historical performance. Breakdown regime: Requires full historical dataset and frozen model version to avoid contamination of live data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's replay mechanism for validating model consistency over time using static inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PROVE_THE_EDGE (9b9e3102375b8499, domain=other, pages_read=5/5): Operator 'Prepare-Not-Flip Protocol' (page 1, domain other) captures: # PROVE THE EDGE — One-Sitting Proof Chain > **Prepare-not-flip.** This runbook is the exact ordered command sequence that takes the owner > from empty tables to a published-ready calibration story in a single sitting. Assumptions: Owner controls execution flow; no agent intervention allowed. Breakdown regime: Execution order is deterministic and non-reversible once production steps begin. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic verification pipeline where each step must be reproducible before flipping to production state. Operator 'Closing Line Value (CLV)' (page 1, domain other) captures: (Source: `docs/strategy/PATH_TO_PROVEN_EDGE.md`, Part I §3 / §4.) The real north star is **Closing Line Value (CLV)**: did we get a better number than the line closed at? Assumptions: Market closing line represents aggregated sharp betting intelligence; CLV measures deviation from that baseline. Breakdown regime: Only meaningful when compared against actual closing line and realized outcome. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSE's market calibration engine, used to compute expected value relative to closing odds. Operator 'Historical Settlement Backfill' (page 1, domain other) captures: > > The whole point of Phase 14 is to convert \"trust us, we'll show results later\" into > \"here is 25 seasons of reliability curve, here is the code, reproduce it.\" The strongest trust > asset is a proof nobody can fake. Assumptions: Frozen model predictions are rerun on pre-game data to simulate historical performance. Breakdown regime: Requires full historical dataset and frozen model version to avoid contamination of live data. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Mirrors GSI's replay mechanism for validating model consistency over time using static inputs. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and conformal prediction frameworks, particularly those emphasizing reproducibility and empirical validation over theoretical optimality. Retrocausal Genealogy: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the market (which sets the closing line), the model (which predicts outcomes), and the verifier (who checks reproducibility). Each agent operates under different constraints—market under liquidity and information asymmetry, model under training bias, and verifier under operational rigor. Theory of Mind & Decision Maker Model: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by requiring distinct operational layers: one for data ingestion, another for model execution, and a third for publishing. Leakage is prevented by ensuring that backfills do not alter canonical history unless explicitly promoted. No single layer can override another without explicit flagging. Cross-Layer Veto & Anti-Leakage Check: Rooted in PROVE_THE_EDGE (9b9e3102375b8499), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

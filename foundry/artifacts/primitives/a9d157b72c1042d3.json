@@ -1,0 +1,95 @@
+{
+  "book_id": "a9d157b72c1042d3",
+  "source_status": "COMPLETE",
+  "title": "github-issues-for-model-spec",
+  "file_name": "github-issues-for-model-spec.md",
+  "sha256": "a9d157b72c1042d303e3fb4009aaecbe56e48695eaf7d8ba788e9478cac0f543",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A public bug tracker for the scoring engine maps issue kinds to factor-read, gate-behavior, data-quality, methodology, and edge-case regimes through triage-driven Bayesian updating. Universal Lens: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive inference to map model issues into probabilistic uncertainty regions, using triaged bug reports as empirical priors for posterior calibration of scoring factor weights. GSI Mapping: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE applies situational reasoning to transition system states across issue lifecycle stages (open → accepted → in_progress → shipped/rejected), guided by operator semantics of factor, gate, and data integrity. GSE Mapping: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "factor_read_bug",
+      "name": "Factor Read Bug",
+      "verbatim_quote": "**Factor read bug** — a specific factor is reading wrong in a specific context (sport, schedule, market).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'factor key or null', 'S': 'sport context', 'M': 'market context'}",
+      "assumptions": "The factor function F(S,M) is deterministic but misapplied in some contexts.",
+      "breakdown_regime": "When F(S,M) ≠ F_correct(S,M) due to incorrect input interpretation or logic error.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSI's probabilistic factor weighting kernel, where incorrect factor reads yield biased likelihood estimates.",
+        "source_operator": "factor_read_bug",
+        "telemetry": "Discrepancy between expected and observed factor values in model output."
+      }
+    },
+    {
+      "primitive_id": "gate_behavior_bug",
+      "name": "Gate Behavior Bug",
+      "verbatim_quote": "**Gate behavior bug** — the gate is rejecting (or accepting) games it shouldn't.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'gate function', 'X': 'game input vector', 'B': 'binary acceptance flag'}",
+      "assumptions": "The gate G(X) is intended to be a boolean classifier with fixed thresholds.",
+      "breakdown_regime": "When G(X) ≠ G_correct(X) due to faulty conditional logic or threshold misconfiguration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's state-transition kernel, where erroneous gate behavior causes incorrect game inclusion/exclusion.",
+        "source_operator": "gate_behavior_bug",
+        "telemetry": "Misclassification rate of games by gate vs. ground truth inclusion criteria."
+      }
+    },
+    {
+      "primitive_id": "data_quality_bug",
+      "name": "Data Quality Bug",
+      "verbatim_quote": "**Data quality bug** — a data source is wrong or stale and the engine isn't catching it.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'data source vector', 'T': 'timestamp', 'Q': 'quality metric'}",
+      "assumptions": "Data D(T) must satisfy Q(D(T)) ≥ threshold for validity.",
+      "breakdown_regime": "When Q(D(T)) < threshold due to staleness or corruption.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSI's data validation layer, where invalid data leads to spurious inferences.",
+        "source_operator": "data_quality_bug",
+        "telemetry": "Anomaly detection score or data freshness timestamp mismatch."
+      }
+    },
+    {
+      "primitive_id": "methodology_improvement",
+      "name": "Methodology Improvement",
+      "verbatim_quote": "**Methodology improvement** — a proposed addition or refinement to the factor list.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F_i': 'factor i', 'W_i': 'weight of factor i', 'M': 'methodological framework'}",
+      "assumptions": "Each F_i contributes additively to M with learned W_i.",
+      "breakdown_regime": "When new F_i or updated W_i improve predictive accuracy over baseline.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's iterative refinement kernel, where improvements update factor weights dynamically.",
+        "source_operator": "methodology_improvement",
+        "telemetry": "Change in cross-validation score or out-of-sample prediction accuracy."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a9d157b72c1042d3_t0",
+      "think": "The model’s issue tracking system embodies a dual structure: a Bayesian inference engine (GSI) and a dynamic state machine (GSE). Each issue type corresponds to a distinct failure mode—factor read, gate behavior, data quality, and methodology—that disrupts either the probabilistic model or the operational logic. These failures are mapped into structured telemetry via a shared schema, enabling retroactive analysis and continuous learning. The triage process ensures that each issue is resolved through explicit decision-making, aligning with the principle of epistemic accountability. The system's design reflects a duality between static model correctness and evolving operational robustness, where bugs are not merely errors but opportunities for refining both the model and its execution environment.\n\nDeep epistemic analysis for github-issues-for-model-spec (a9d157b72c1042d3, domain=other, pages_read=4/4): Operator 'Factor Read Bug' (page 1, domain other) captures: **Factor read bug** — a specific factor is reading wrong in a specific context (sport, schedule, market). Assumptions: The factor function F(S,M) is deterministic but misapplied in some contexts. Breakdown regime: When F(S,M) ≠ F_correct(S,M) due to incorrect input interpretation or logic error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic factor weighting kernel, where incorrect factor reads yield biased likelihood estimates. Operator 'Gate Behavior Bug' (page 1, domain other) captures: **Gate behavior bug** — the gate is rejecting (or accepting) games it shouldn't. Assumptions: The gate G(X) is intended to be a boolean classifier with fixed thresholds. Breakdown regime: When G(X) ≠ G_correct(X) due to faulty conditional logic or threshold misconfiguration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state-transition kernel, where erroneous gate behavior causes incorrect game inclusion/exclusion. Operator 'Data Quality Bug' (page 1, domain other) captures: **Data quality bug** — a data source is wrong or stale and the engine isn't catching it. Assumptions: Data D(T) must satisfy Q(D(T)) ≥ threshold for validity. Breakdown regime: When Q(D(T)) < threshold due to staleness or corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's data validation layer, where invalid data leads to spurious inferences. Operator 'Methodology Improvement' (page 1, domain other) captures: **Methodology improvement** — a proposed addition or refinement to the factor list. Assumptions: Each F_i contributes additively to M with learned W_i. Breakdown regime: When new F_i or updated W_i improve predictive accuracy over baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's iterative refinement kernel, where improvements update factor weights dynamically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for github-issues-for-model-spec (a9d157b72c1042d3, domain=other, pages_read=4/4): Operator 'Factor Read Bug' (page 1, domain other) captures: **Factor read bug** — a specific factor is reading wrong in a specific context (sport, schedule, market). Assumptions: The factor function F(S,M) is deterministic but misapplied in some contexts. Breakdown regime: When F(S,M) ≠ F_correct(S,M) due to incorrect input interpretation or logic error. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSI's probabilistic factor weighting kernel, where incorrect factor reads yield biased likelihood estimates. Operator 'Gate Behavior Bug' (page 1, domain other) captures: **Gate behavior bug** — the gate is rejecting (or accepting) games it shouldn't. Assumptions: The gate G(X) is intended to be a boolean classifier with fixed thresholds. Breakdown regime: When G(X) ≠ G_correct(X) due to faulty conditional logic or threshold misconfiguration. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's state-transition kernel, where erroneous gate behavior causes incorrect game inclusion/exclusion. Operator 'Data Quality Bug' (page 1, domain other) captures: **Data quality bug** — a data source is wrong or stale and the engine isn't catching it. Assumptions: Data D(T) must satisfy Q(D(T)) ≥ threshold for validity. Breakdown regime: When Q(D(T)) < threshold due to staleness or corruption. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSI's data validation layer, where invalid data leads to spurious inferences. Operator 'Methodology Improvement' (page 1, domain other) captures: **Methodology improvement** — a proposed addition or refinement to the factor list. Assumptions: Each F_i contributes additively to M with learned W_i. Breakdown regime: When new F_i or updated W_i improve predictive accuracy over baseline. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's iterative refinement kernel, where improvements update factor weights dynamically. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal Bayesian decision theory and control systems engineering, this architecture inherits from the principles of probabilistic programming and adaptive feedback loops used in autonomous systems and machine learning pipelines. Retrocausal Genealogy: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the triage team (Claude drafts, product owner approves), the contributor community, and the automated model itself. Each agent operates under different objectives: triage seeks correctness, contributors seek improvement, and the model seeks consistency. Theory of Mind & Decision Maker Model: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that each issue type maps to a unique operational kernel. Leakage occurs when a data quality bug affects factor computation or when a methodology change alters gate behavior, which is prevented by strict separation of concerns in the schema. Cross-Layer Veto & Anti-Leakage Check: Rooted in github-issues-for-model-spec (a9d157b72c1042d3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

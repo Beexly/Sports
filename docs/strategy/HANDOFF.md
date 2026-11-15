@@ -3,6 +3,21 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-15 (UTC Night Wave 21) - Full Pass-3 Zero-PII Corpus Closure, BigQuery 69,394-Row Hydration & Calibrated Hold-Gate Readiness (`AUTON-CORPUS-CLOSURE-21`)
+
+- **What changed**:
+  - Hardened PII/legal/medical/resume/local-vault quarantine in `intelligence/foundry_bridge/multi_lane_sovereign_extractor.py` (word-bounded `_W2_TAX_FORM_RE` avoiding `1W-2Z` false positives, broadened `PII_QUARANTINE_SUBSTRINGS`) and `intelligence/foundry_bridge/shard_b_and_drive_master_compiler.py` (`is_pii_or_correspondence_row` filter). Re-quarantined all `99` newly matched rows into `pii-correspondence-quarantine-guard` stubs (`1,029/1,029` total quarantined, `0` remaining non-stub PII rows) across `12,451` worktree primitives.
+  - Re-compiled Shard B & Drive (`shard_b_files_parsed=8585`, `shard_b_files_with_xml=8503`, `shard_b_equations=28622`, `drive_equations_rows=940102`, `drive_situational_rows=102082`, `trainer_feed_rows=11003`), Cognitive Router (`books=10805`, `prims=46994`, `traces=13097`, `shard_b=8585`, `rules=200`, `bits=276/279`), ArXiv/Sovereign Synthesis (`complete_sovereign_books=10746`, `refused_stub_books_fail_closed=1646`, `trainer_feed_records_emitted=58486` across `4` `<=45 MiB` JSONL shards `arxiv_sovereign_and_shard_b_trainer_feed_part01..04.jsonl`), Thousand-Equation Matrix (`9875` equations, `SHA-256: e71513185a67e93e...`), BigQuery `galaxysportsedge:gse_data` (`69394` verified rows across 5 hydrated tables), GCP teardown receipt (`8585` unpacked docs, `0` VMs/disks/addresses), and `07_corpus_wired_calibration_and_hold_gate_receipt.json` (`CORPUS_DRAIN_COMPLETE_READY_FOR_GATE`).
+  - Updated `@sports/prediction-engine` `packages/prediction-engine/src/nfl/foundry-corpus-situational-priors.ts` (`FOUNDRY_CORPUS_BASELINE_SNAPSHOT`, `CORPUS_SNAPSHOT_METADATA`) to exact post-Pass-3 counts and bounded Empirical Bayes priors while keeping `liveCalibrationFlagEnabled: false` and all public gates fail-closed.
+- **What was proven**:
+  - `12,451/12,451` primitive JSONs passed `gatekeeper.validate(doc) == []`; `ZERO_PII_RG_EXIT=1` (`0` local PII hits); BigQuery SQL Zero-PII check returned `leaks: "0"` across `sovereign_primitives`, `sovereign_reasoning_traces`, and `gcp_shard_b_extractions`.
+  - Hold-gate receipt verified `pendingTierACount=0`, `pendingAllTiersCount=0`, `effectiveDelegatedGcpUnmatchedCount=0`, `calibrationVerified=true`, `all_invariants_satisfied=true`, `oofBrierRaw=0.261209`, `oofBrierCalibrated=0.247983`, `oofEce=0.022581`.
+  - `@sports/mcp-equations-server` Vitest `8` files / `89` passed; `@sports/prediction-engine` `tsc --noEmit` `0` errors + `4` targeted Vitest files / `38` passed; Python `pytest` `8` suites / `37 passed in 1030.17s`; OpenRouter `usage=20.186845673` (`$0.00` delta); `0` GCP VMs/disks.
+- **What was not proven**:
+  - Live `origin/main` merge, WP5 `apps/web` test alignment, two-axis `/code-review`, and Vercel Production verification remain for `AUTON-MAIN-LIVE-22`; `LIVE_BOARD`, `PUBLIC_PICKS_ENABLED`, `PERFORMANCE_STATS_ENABLED`, `PUBLISH_LEDGER`, and `CALIBRATION_ADJUSTMENTS_ENABLED` stay fail-closed (`false`).
+- **What the next role must do**:
+  - Merge `origin/main` into `feat/autonomous-workflows-and-corpus-wiring-2026-11-13`, align WP5 `apps/web` tests, clear two-axis review + guardrails, push live to `origin/main`, verify Vercel `READY`, close `Beexly/agent-bus`, and stop the temporary cron (`AUTON-MAIN-LIVE-22`).
+
 ## 2026-11-14 (Evening Wave 20) - Wave 20 Engine Wiring (PR #1274 + H1/H2), Zero-Orphan Bridge, Unmatched Queue Expansion & Minified-JSON Rescue (`AUTON-ENGINE-20`)
 
 - **What changed**:

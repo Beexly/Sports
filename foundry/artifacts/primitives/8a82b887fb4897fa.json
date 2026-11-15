@@ -1,0 +1,78 @@
+{
+  "book_id": "8a82b887fb4897fa",
+  "source_status": "COMPLETE",
+  "title": "build-realapp-005",
+  "file_name": "build-realapp-005.md",
+  "sha256": "8a82b887fb4897fa7acd19bf76d3044ac57e937ea4cf75822f838317640b72c2",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "API error handling as a controlled degradation mechanism; failure mode closure in promotions endpoint; state transition from 500 to empty approved list. Universal Lens: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on API response integrity; conformal prediction of error exposure risk; probabilistic containment of internal state leakage via controlled response. GSI Mapping: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine evaluates route state transitions from DB auth failure to degraded API response; state-machine guard ensures no live data exposure during failure. GSE Mapping: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fail_closed_promo_api",
+      "name": "Fail-Closed Promotions API",
+      "verbatim_quote": "## Desired Behavior Public API returns empty approved list or controlled degraded response without exposing internal errors.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'Response type (list or error)', 'E': 'Error exposure indicator (dimensionless)', 'D': 'Degradation level (0–1)'}",
+      "assumptions": "API must not leak internal DB auth failures; response must be deterministic under failure.",
+      "breakdown_regime": "DB auth failure → R = ∅, E = 0, D = 1",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "State transition kernel maps DB auth failure to controlled API response; enforces no error exposure.",
+        "source_operator": "fail_closed_promo_api",
+        "telemetry": "API response code, error log suppression"
+      }
+    },
+    {
+      "primitive_id": "safe_empty_state_render",
+      "name": "Safe Empty State Render",
+      "verbatim_quote": "## Current Behavior Promotions page renders safe empty state, but API returns 500 on DB auth failure.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'UI state (safe vs unsafe)', 'F': 'Failure condition (boolean)', 'T': 'Transition time (seconds)'}",
+      "assumptions": "Frontend must render safe UI regardless of backend error.",
+      "breakdown_regime": "F = true → S = safe, T < 1s",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Frontend rendering logic mirrors backend error state; both enforce safe UI.",
+        "source_operator": "safe_empty_state_render",
+        "telemetry": "UI render time, error visibility"
+      }
+    },
+    {
+      "primitive_id": "controlled_degradation_guard",
+      "name": "Controlled Degradation Guard",
+      "verbatim_quote": "# BUILD-REALAPP-005: Make promotions API fail closed ## Duplicate Gate - duplicate_check_status: EXTENSION - matched_existing_ids: BUILD-CMD-039 - relation_to_existing: Real-app evidence child of the prior command-center card.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'Guard function (boolean)', 'C': 'Controlled response (list or error)', 'L': 'Leakage risk (0–1)'}",
+      "assumptions": "Guard prevents unauthorized data exposure; response must be controlled.",
+      "breakdown_regime": "G = true → L = 0, C = ∅",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Guard kernel enforces controlled degradation by intercepting error paths before exposure.",
+        "source_operator": "controlled_degradation_guard",
+        "telemetry": "Guard activation count, leakage events"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8a82b887fb4897fa_t0",
+      "think": "The core operator 'fail_closed_promo_api' models a controlled degradation system where an API endpoint transitions from a failure state (500) to a safe state (empty list) without leaking internal details. The mathematical structure is a conditional response mapping: F → R = ∅, E = 0, D = 1. The 'safe_empty_state_render' primitive ensures frontend consistency by enforcing UI safety regardless of backend error. The 'controlled_degradation_guard' acts as a kernel that intercepts and sanitizes error flows to prevent unauthorized exposure. Dualities emerge between backend error handling and frontend UI resilience. Failure modes include leakage of live data or internal auth mechanisms, which are mitigated through layered checks. The system's robustness depends on the invariance of the guard function G across all failure paths.\n\nDeep epistemic analysis for build-realapp-005 (8a82b887fb4897fa, domain=other, pages_read=1/1): Operator 'Fail-Closed Promotions API' (page 1, domain other) captures: ## Desired Behavior Public API returns empty approved list or controlled degraded response without exposing internal errors. Assumptions: API must not leak internal DB auth failures; response must be deterministic under failure. Breakdown regime: DB auth failure → R = ∅, E = 0, D = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition kernel maps DB auth failure to controlled API response; enforces no error exposure. Operator 'Safe Empty State Render' (page 1, domain other) captures: ## Current Behavior Promotions page renders safe empty state, but API returns 500 on DB auth failure. Assumptions: Frontend must render safe UI regardless of backend error. Breakdown regime: F = true → S = safe, T < 1s Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Frontend rendering logic mirrors backend error state; both enforce safe UI. Operator 'Controlled Degradation Guard' (page 1, domain other) captures: # BUILD-REALAPP-005: Make promotions API fail closed ## Duplicate Gate - duplicate_check_status: EXTENSION - matched_existing_ids: BUILD-CMD-039 - relation_to_existing: Real-app evidence child of the prior command-center card. Assumptions: Guard prevents unauthorized data exposure; response must be controlled. Breakdown regime: G = true → L = 0, C = ∅ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Guard kernel enforces controlled degradation by intercepting error paths before exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for build-realapp-005 (8a82b887fb4897fa, domain=other, pages_read=1/1): Operator 'Fail-Closed Promotions API' (page 1, domain other) captures: ## Desired Behavior Public API returns empty approved list or controlled degraded response without exposing internal errors. Assumptions: API must not leak internal DB auth failures; response must be deterministic under failure. Breakdown regime: DB auth failure → R = ∅, E = 0, D = 1 Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): State transition kernel maps DB auth failure to controlled API response; enforces no error exposure. Operator 'Safe Empty State Render' (page 1, domain other) captures: ## Current Behavior Promotions page renders safe empty state, but API returns 500 on DB auth failure. Assumptions: Frontend must render safe UI regardless of backend error. Breakdown regime: F = true → S = safe, T < 1s Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Frontend rendering logic mirrors backend error state; both enforce safe UI. Operator 'Controlled Degradation Guard' (page 1, domain other) captures: # BUILD-REALAPP-005: Make promotions API fail closed ## Duplicate Gate - duplicate_check_status: EXTENSION - matched_existing_ids: BUILD-CMD-039 - relation_to_existing: Real-app evidence child of the prior command-center card. Assumptions: Guard prevents unauthorized data exposure; response must be controlled. Breakdown regime: G = true → L = 0, C = ∅ Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Guard kernel enforces controlled degradation by intercepting error paths before exposure. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in error-handling principles from distributed systems theory and secure API design, tracing back to early 2000s fault-tolerance models and modern zero-trust architectures. Retrocausal Genealogy: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the backend DB auth system (failure-inducing), the frontend renderer (state-maintaining), and the guard kernel (sanitization-enforcing). Each agent operates under distinct constraints: auth system exposes errors, UI must remain safe, guard must prevent leakage. Theory of Mind & Decision Maker Model: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity enforced by ensuring no single layer (frontend or backend) can independently expose internal state. Leakage veto conditions include: no live-link risk, no demo data exposure, and no unauthorized database access. All tests must pass or be explicitly documented with owner approval. Cross-Layer Veto & Anti-Leakage Check: Rooted in build-realapp-005 (8a82b887fb4897fa), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

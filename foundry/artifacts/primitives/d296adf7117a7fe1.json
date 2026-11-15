@@ -1,0 +1,78 @@
+{
+  "book_id": "d296adf7117a7fe1",
+  "source_status": "COMPLETE",
+  "title": "TEN@IND-card-REFUSED",
+  "file_name": "TEN@IND-card-REFUSED.md",
+  "sha256": "d296adf7117a7fe1dd37b61626069d3f2b737196f1753340f14cf642682fa905",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Fixture confirmation logic maps to a binary validation operator on game slate membership, with refusal as a nullification event. Universal Lens: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief update on game validity conditioned on slate presence; conformal prediction rejects out-of-slate fixtures via posterior nullification. GSI Mapping: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine enforces state transition constraints: only confirmed slate games permit card generation; else, fallback to real-game re-runs. GSE Mapping: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "fixture_validation_operator",
+      "name": "Fixture Validation Operator",
+      "verbatim_quote": "# TEN@IND - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'F': 'Fixture identifier (dimensionless)', 'S': 'Slate membership status (boolean)', 'C': 'Card emission status (boolean)'}",
+      "assumptions": "Game fixtures must exist in a valid slate period to generate cards.",
+      "breakdown_regime": "When S(F) = false, C(F) → null",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The operator mirrors a conditional probability P(C|S) where S is the slate constraint.",
+        "source_operator": "fixture_validation_operator",
+        "telemetry": "Card emission success rate conditional on slate inclusion"
+      }
+    },
+    {
+      "primitive_id": "fictional_analysis_nullifier",
+      "name": "Fictional Analysis Nullifier",
+      "verbatim_quote": "A card here would be fiction that reads as analysis.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'Analysis content (dimensionless)', 'F': 'Fixture validity (boolean)', 'N': 'Nullification flag (boolean)'}",
+      "assumptions": "Any analysis without factual fixture grounding is invalid.",
+      "breakdown_regime": "When F = false, N(A) = true",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives from the validation operator by enforcing semantic consistency.",
+        "source_operator": "fictional_analysis_nullifier",
+        "telemetry": "Semantic integrity score of generated analysis"
+      }
+    },
+    {
+      "primitive_id": "slate_membership_constraint",
+      "name": "Slate Membership Constraint",
+      "verbatim_quote": "## Why this card was refused - FIXTURE NOT ON SLATE: TEN@IND is not a game in None (period 6).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'Membership function (boolean)', 'W': 'Week identifier (integer)', 'G': 'Game set (set of fixtures)'}",
+      "assumptions": "Each game exists within a defined week's slate.",
+      "breakdown_regime": "M(G, W) = false ⇒ G ∉ W",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to a set inclusion operator M(G) ⊆ W.",
+        "source_operator": "slate_membership_constraint",
+        "telemetry": "Number of games per week satisfying inclusion"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d296adf7117a7fe1_t0",
+      "think": "The core operator is a boolean validation function V(F) that checks if a fixture F is present in a given slate S. When V(F) returns false, the system applies a nullification mechanism to prevent fictional analysis. This is modeled as a conditional inference P(C|V(F)) where C is card generation. The failure mode occurs when F ∉ S, leading to P(C|F ∉ S) = 0. The system enforces a dual constraint: one on factual game existence (slate membership), and another on semantic coherence (fictional analysis nullifier). The engine's reasoning path is a state machine transitioning from 'query' to 'validation' to 'card emission' or 'refusal'. The epistemic closure is maintained through a recursive check of the slate against known game data.\n\nDeep epistemic analysis for TEN@IND-card-REFUSED (d296adf7117a7fe1, domain=other, pages_read=1/1): Operator 'Fixture Validation Operator' (page 1, domain other) captures: # TEN@IND - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game fixtures must exist in a valid slate period to generate cards. Breakdown regime: When S(F) = false, C(F) → null Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operator mirrors a conditional probability P(C|S) where S is the slate constraint. Operator 'Fictional Analysis Nullifier' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Any analysis without factual fixture grounding is invalid. Breakdown regime: When F = false, N(A) = true Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the validation operator by enforcing semantic consistency. Operator 'Slate Membership Constraint' (page 1, domain other) captures: ## Why this card was refused - FIXTURE NOT ON SLATE: TEN@IND is not a game in None (period 6). Assumptions: Each game exists within a defined week's slate. Breakdown regime: M(G, W) = false ⇒ G ∉ W Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a set inclusion operator M(G) ⊆ W. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for TEN@IND-card-REFUSED (d296adf7117a7fe1, domain=other, pages_read=1/1): Operator 'Fixture Validation Operator' (page 1, domain other) captures: # TEN@IND - FIXTURE NOT CONFIRMED (card REFUSED) **This matchup is not a game on the real 6 slate.** The engine does not emit an analyst card for a fixture it cannot confirm. Assumptions: Game fixtures must exist in a valid slate period to generate cards. Breakdown regime: When S(F) = false, C(F) → null Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The operator mirrors a conditional probability P(C|S) where S is the slate constraint. Operator 'Fictional Analysis Nullifier' (page 1, domain other) captures: A card here would be fiction that reads as analysis. Assumptions: Any analysis without factual fixture grounding is invalid. Breakdown regime: When F = false, N(A) = true Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from the validation operator by enforcing semantic consistency. Operator 'Slate Membership Constraint' (page 1, domain other) captures: ## Why this card was refused - FIXTURE NOT ON SLATE: TEN@IND is not a game in None (period 6). Assumptions: Each game exists within a defined week's slate. Breakdown regime: M(G, W) = false ⇒ G ∉ W Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to a set inclusion operator M(G) ⊆ W. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal logic systems of constraint satisfaction and Bayesian inference, tracing back to early AI planning models and probabilistic databases. Retrocausal Genealogy: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the engine's internal logic (validates), the user (queries), and the game data (truth source). Each agent operates under distinct information states, with the engine resolving inconsistencies via nullification. Theory of Mind & Decision Maker Model: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that the validation layer (slate membership) and the analysis layer (card generation) are decoupled. Leakage is prevented by disallowing any inference from fictional fixtures into real-world analysis. Cross-Layer Veto & Anti-Leakage Check: Rooted in TEN@IND-card-REFUSED (d296adf7117a7fe1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

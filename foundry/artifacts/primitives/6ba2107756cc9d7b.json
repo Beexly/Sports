@@ -1,0 +1,78 @@
+{
+  "book_id": "6ba2107756cc9d7b",
+  "source_status": "COMPLETE",
+  "title": "salaries-cleaned-2026-09-19",
+  "file_name": "salaries-cleaned-2026-09-19.md",
+  "sha256": "6ba2107756cc9d7be0a92e21dbb5dea4b91912ef0d07c4b4de8818979cd49adc",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Salaries as stochastic variables under multi-source data fusion constraints with verification ambiguity. Universal Lens: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on salary validity using triple-source corroboration (OneWeekSeason, Huddle, DK Network) with Akamai-blocked endpoint uncertainty. GSI Mapping: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in player eligibility based on conflict resolution between competing data streams (e.g., Jeudy's $5,100 vs $3,900) and coverage exclusions. GSE Mapping: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "salary_verification",
+      "name": "Salary Verification Kernel",
+      "verbatim_quote": "**Salary status:** every salary below is SECOND-PARTY (OneWeekSeason + Huddle 9/19 + DK Network 9/15/9/17 triple-match where noted).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'salary in USD', 'T': 'triple-source corroboration flag'}",
+      "assumptions": "Each salary is verified through at least three independent sources; discrepancies indicate data integrity issues.",
+      "breakdown_regime": "When T < 3, S is flagged as unverified.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic verification aligns with GSE's binary eligibility logic for player inclusion.",
+        "source_operator": "salary_verification",
+        "telemetry": "Number of corroborating sources per salary entry."
+      }
+    },
+    {
+      "primitive_id": "player_eligibility",
+      "name": "Player Eligibility Filter",
+      "verbatim_quote": "Absent entirely: Drake Maye, JSN, Bowers, all SNF/MNF players, DEN/SEA/GB/CHI/BAL DSTs, and most sub-$4K punts.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'eligibility flag (0 or 1)', 'P': 'player identifier', 'C': 'contest type (e.g., MNF, SNF)'}",
+      "assumptions": "Players excluded due to slate constraints or DST coverage limitations.",
+      "breakdown_regime": "E = 0 when P ∈ {SNF/MNF players, excluded DSTs, sub-$4K punts}.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's exclusion rules map to GSI's conditional probability of player inclusion.",
+        "source_operator": "player_eligibility",
+        "telemetry": "Exclusion count per player category."
+      }
+    },
+    {
+      "primitive_id": "data_conflict_resolution",
+      "name": "Conflict Resolution Operator",
+      "verbatim_quote": "| | 7 | Jerry Jeudy, DEN vs JAX, WR, $5,100 | EXCLUDED — UNRESOLVED | Direct conflict: OneWeekSeason says DEN/$5,100; Huddle X-sweep (9/19) says Jerry Jeudy $3,900 @ TB (i.e., on CLE).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'conflict indicator (0 or 1)', 'S_1, S_2': 'salary values from conflicting sources', 'R': 'resolution flag (0 or 1)'}",
+      "assumptions": "Conflicting salaries imply data inconsistency requiring resolution via external validation.",
+      "breakdown_regime": "C = 1 when S_1 ≠ S_2; R = 1 if resolved via cross-reference.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE's conflict resolution mirrors GSI's Bayesian merging of heterogeneous data streams.",
+        "source_operator": "data_conflict_resolution",
+        "telemetry": "Resolution success rate across conflicting entries."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ba2107756cc9d7b_t0",
+      "think": "The core operators define a layered data integrity pipeline: first, verifying salary consistency across multiple sources (salary_verification); second, filtering out ineligible players based on slate scope (player_eligibility); third, resolving conflicts between contradictory data points (data_conflict_resolution). These operations form a dual system where GSI applies Bayesian inference to validate data, while GSE uses deterministic rules to enforce slate compliance. Failure modes include endpoint blocking (Akamai-blocked 9/19), name corruption (Doubs), and garbled entries (Cousins, Herbert). The operators exhibit anti-collinearity: verification does not directly compute eligibility, and conflict resolution does not imply eligibility. Each operator operates within its own regime—verification under probabilistic constraints, eligibility under discrete exclusion rules, and conflict resolution under comparative logic.\n\nDeep epistemic analysis for salaries-cleaned-2026-09-19 (6ba2107756cc9d7b, domain=other, pages_read=5/5): Operator 'Salary Verification Kernel' (page 1, domain other) captures: **Salary status:** every salary below is SECOND-PARTY (OneWeekSeason + Huddle 9/19 + DK Network 9/15/9/17 triple-match where noted). Assumptions: Each salary is verified through at least three independent sources; discrepancies indicate data integrity issues. Breakdown regime: When T < 3, S is flagged as unverified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic verification aligns with GSE's binary eligibility logic for player inclusion. Operator 'Player Eligibility Filter' (page 1, domain other) captures: Absent entirely: Drake Maye, JSN, Bowers, all SNF/MNF players, DEN/SEA/GB/CHI/BAL DSTs, and most sub-$4K punts. Assumptions: Players excluded due to slate constraints or DST coverage limitations. Breakdown regime: E = 0 when P ∈ {SNF/MNF players, excluded DSTs, sub-$4K punts}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's exclusion rules map to GSI's conditional probability of player inclusion. Operator 'Conflict Resolution Operator' (page 1, domain other) captures: | | 7 | Jerry Jeudy, DEN vs JAX, WR, $5,100 | EXCLUDED — UNRESOLVED | Direct conflict: OneWeekSeason says DEN/$5,100; Huddle X-sweep (9/19) says Jerry Jeudy $3,900 @ TB (i.e., on CLE). Assumptions: Conflicting salaries imply data inconsistency requiring resolution via external validation. Breakdown regime: C = 1 when S_1 ≠ S_2; R = 1 if resolved via cross-reference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's conflict resolution mirrors GSI's Bayesian merging of heterogeneous data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for salaries-cleaned-2026-09-19 (6ba2107756cc9d7b, domain=other, pages_read=5/5): Operator 'Salary Verification Kernel' (page 1, domain other) captures: **Salary status:** every salary below is SECOND-PARTY (OneWeekSeason + Huddle 9/19 + DK Network 9/15/9/17 triple-match where noted). Assumptions: Each salary is verified through at least three independent sources; discrepancies indicate data integrity issues. Breakdown regime: When T < 3, S is flagged as unverified. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic verification aligns with GSE's binary eligibility logic for player inclusion. Operator 'Player Eligibility Filter' (page 1, domain other) captures: Absent entirely: Drake Maye, JSN, Bowers, all SNF/MNF players, DEN/SEA/GB/CHI/BAL DSTs, and most sub-$4K punts. Assumptions: Players excluded due to slate constraints or DST coverage limitations. Breakdown regime: E = 0 when P ∈ {SNF/MNF players, excluded DSTs, sub-$4K punts}. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's exclusion rules map to GSI's conditional probability of player inclusion. Operator 'Conflict Resolution Operator' (page 1, domain other) captures: | | 7 | Jerry Jeudy, DEN vs JAX, WR, $5,100 | EXCLUDED — UNRESOLVED | Direct conflict: OneWeekSeason says DEN/$5,100; Huddle X-sweep (9/19) says Jerry Jeudy $3,900 @ TB (i.e., on CLE). Assumptions: Conflicting salaries imply data inconsistency requiring resolution via external validation. Breakdown regime: C = 1 when S_1 ≠ S_2; R = 1 if resolved via cross-reference. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE's conflict resolution mirrors GSI's Bayesian merging of heterogeneous data streams. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2020s data fusion models for sports analytics, particularly those addressing multi-source discrepancy in fantasy platforms like DraftKings. Retrocausal Genealogy: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include data providers (OneWeekSeason, Huddle, DK Network) and platform validators (GSI). Decision actors are the automated cleaning routines and human curators who resolve ambiguities. Theory of Mind & Decision Maker Model: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity ensures that verification does not override eligibility filters, and conflict resolution does not bypass exclusion criteria. Leakage vetoes occur when unresolved conflicts propagate into final slates without flagging. Cross-Layer Veto & Anti-Leakage Check: Rooted in salaries-cleaned-2026-09-19 (6ba2107756cc9d7b), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

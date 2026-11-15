@@ -1,0 +1,78 @@
+{
+  "book_id": "6ed29931051df692",
+  "source_status": "COMPLETE",
+  "title": "2167-t-shred-symbolic-regression-regularization-model-discovery-transformer",
+  "file_name": "2167-t-shred-symbolic-regression-regularization-model-discovery-transformer.md",
+  "sha256": "6ed29931051df69298f32ee0e3e26e93de90f32cfbd0b74b0821d0b1415e6dc4",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "T-SHRED embeds symbolic regression within transformer attention to learn interpretable ODEs for latent dynamics, enabling scalable model discovery via SINDy-Attention. Universal Lens: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI leverages T-SHRED's SINDy-Attention to infer probabilistic game-state transitions from sparse sports sensor data using conformal predictive distributions. GSI Mapping: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE utilizes T-SHRED's shallow recurrent decoder framework to enable real-time situational reasoning through symbolic ODEs governing momentum and state evolution. GSE Mapping: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sindy_attention",
+      "name": "SINDy-Attention",
+      "verbatim_quote": "**SINDy-Attention** (the core novelty): standard MHSA computed per head (Eqs.",
+      "page": 1,
+      "latex": "\\mathbf{T}^{(h)} = \\text{softmax}\\left(\\frac{\\mathbf{Q}^{(h)} \\mathbf{K}^{(h)^T}}{\\sqrt{d_k}}\\right) \\mathbf{V}^{(h)}",
+      "symbol_and_unit_ledger": "T^(h): attention output tensor per head; Q^(h), K^(h), V^(h): query, key, value matrices; d_k: dimension of keys",
+      "assumptions": "Each attention head learns a sparse symbolic representation of latent dynamics via SINDy regression.",
+      "breakdown_regime": "When pruning fails or attention collapses to dense coefficients, interpretability degrades.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps attention outputs to symbolic ODEs via SINDy library, enabling interpretable forecasting in GSE.",
+        "source_operator": "sindy_attention",
+        "telemetry": "Cosine similarity between learned ODEs across seeds."
+      }
+    },
+    {
+      "primitive_id": "tsred_model",
+      "name": "T-SHRED Model",
+      "verbatim_quote": "Method / model **T-SHRED** = SHRED with transformer encoder (replacing LSTM) + MLP or CNN decoder.",
+      "page": 1,
+      "latex": "y = \\sigma(\\text{Conv1}(\\sigma(\\text{Conv2}(z))))",
+      "symbol_and_unit_ledger": "y: predicted full state; z: latent representation; σ: activation function; Conv1, Conv2: convolutional layers",
+      "assumptions": "Transformer encoder captures long-range dependencies; decoder reconstructs full spatio-temporal fields.",
+      "breakdown_regime": "Performance degrades when sensor placement is suboptimal or data is insufficiently informative.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Combines transformer-based encoding with symbolic regularization to produce kernel for forecasting.",
+        "source_operator": "tsred_model",
+        "telemetry": "Forecast MAE relative to baseline GRU models."
+      }
+    },
+    {
+      "primitive_id": "ode_discovery",
+      "name": "ODE Discovery",
+      "verbatim_quote": "Grounded in the result that attention can be written as a system of ODEs (Eq.",
+      "page": 1,
+      "latex": "\\frac{d\\mathbf{z}}{dt} = f(\\mathbf{z}, t)",
+      "symbol_and_unit_ledger": "z: latent state vector; t: time; f: unknown dynamics function",
+      "assumptions": "Latent dynamics follow continuous-time ODEs derivable from attention mechanisms.",
+      "breakdown_regime": "Interpretability fails if ODEs are unstable or non-unique across training runs.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes physical law discovery into neural architecture for interpretable forecasting.",
+        "source_operator": "ode_discovery",
+        "telemetry": "Stability of discovered ODEs under perturbations."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "6ed29931051df692_t0",
+      "think": "T-SHRED integrates symbolic regression into transformer attention heads to extract interpretable ODEs from latent dynamics. Each attention head computes its own ODE via SINDy regression on attention outputs, enabling model discovery during training rather than post-hoc analysis. The method replaces traditional RNN encoders with transformers, leveraging self-attention to capture long-range temporal dependencies. Training employs L2 loss augmented with pruning on SINDy coefficients to enforce sparsity and interpretability. The core innovation lies in embedding SINDy directly into attention computation, allowing each head to learn structured dynamics. This approach enables scalable forecasting across complex dynamical systems such as SST, plasma physics, and shallow water equations. In GSE context, this translates to interpretable momentum modeling where symbolic ODEs govern game state transitions. The framework supports both fixed and learned sensor configurations, offering flexibility for diverse domains including sports intelligence.\n\nDeep epistemic analysis for 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692, domain=other, pages_read=4/4): Operator 'SINDy-Attention' (page 1, domain other) captures: **SINDy-Attention** (the core novelty): standard MHSA computed per head (Eqs. Assumptions: Each attention head learns a sparse symbolic representation of latent dynamics via SINDy regression. Breakdown regime: When pruning fails or attention collapses to dense coefficients, interpretability degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps attention outputs to symbolic ODEs via SINDy library, enabling interpretable forecasting in GSE. Operator 'T-SHRED Model' (page 1, domain other) captures: Method / model **T-SHRED** = SHRED with transformer encoder (replacing LSTM) + MLP or CNN decoder. Assumptions: Transformer encoder captures long-range dependencies; decoder reconstructs full spatio-temporal fields. Breakdown regime: Performance degrades when sensor placement is suboptimal or data is insufficiently informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines transformer-based encoding with symbolic regularization to produce kernel for forecasting. Operator 'ODE Discovery' (page 1, domain other) captures: Grounded in the result that attention can be written as a system of ODEs (Eq. Assumptions: Latent dynamics follow continuous-time ODEs derivable from attention mechanisms. Breakdown regime: Interpretability fails if ODEs are unstable or non-unique across training runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes physical law discovery into neural architecture for interpretable forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692, domain=other, pages_read=4/4): Operator 'SINDy-Attention' (page 1, domain other) captures: **SINDy-Attention** (the core novelty): standard MHSA computed per head (Eqs. Assumptions: Each attention head learns a sparse symbolic representation of latent dynamics via SINDy regression. Breakdown regime: When pruning fails or attention collapses to dense coefficients, interpretability degrades. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps attention outputs to symbolic ODEs via SINDy library, enabling interpretable forecasting in GSE. Operator 'T-SHRED Model' (page 1, domain other) captures: Method / model **T-SHRED** = SHRED with transformer encoder (replacing LSTM) + MLP or CNN decoder. Assumptions: Transformer encoder captures long-range dependencies; decoder reconstructs full spatio-temporal fields. Breakdown regime: Performance degrades when sensor placement is suboptimal or data is insufficiently informative. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Combines transformer-based encoding with symbolic regularization to produce kernel for forecasting. Operator 'ODE Discovery' (page 1, domain other) captures: Grounded in the result that attention can be written as a system of ODEs (Eq. Assumptions: Latent dynamics follow continuous-time ODEs derivable from attention mechanisms. Breakdown regime: Interpretability fails if ODEs are unstable or non-unique across training runs. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes physical law discovery into neural architecture for interpretable forecasting. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Koopman operator theory and SINDy (Sparse Identification of Nonlinear Dynamics), extended to attention mechanisms via transformer architectures. Builds upon SHRED and neural ODE literature. Retrocausal Genealogy: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include traditional black-box models that lack interpretability and symbolic regression methods that are post-hoc. T-SHRED balances expressivity with structure by integrating symbolic learning into the forward pass. Theory of Mind & Decision Maker Model: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires distinct ODEs per attention head; leakage veto ensures no redundant information sharing among heads. Interpretability fails if pruning does not maintain sparsity or if learned ODEs vary significantly across seeds. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2167-t-shred-symbolic-regression-regularization-model-discovery-transformer (6ed29931051df692), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

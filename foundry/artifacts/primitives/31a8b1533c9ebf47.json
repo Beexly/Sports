@@ -1,78 +1,16 @@
 {
   "book_id": "31a8b1533c9ebf47",
-  "source_status": "COMPLETE",
-  "title": "MOBILE_OWNER_SESSION_AUDIT",
-  "file_name": "MOBILE_OWNER_SESSION_AUDIT.md",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_31a8b1533c9ebf47",
+  "file_name": "31a8b1533c9ebf47.quarantined",
   "sha256": "31a8b1533c9ebf47621e5ee3beda57a5dfefdc4eaea5a9f703b0cce8570946c5",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
-  "universal_lens": "Mobile session optimization via vertical stacking and single-column layouts; residual risk in dense table navigation. Universal Lens: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gsi_mapping": "Bayesian inference models mobile engagement paths using probabilistic state transitions from ultra-launch to activation-runbook, with ActionDrawer as high-value terminal node. GSI Mapping: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "gse_mapping": "Situational reasoning engine maps UI behavior changes across screen sizes through state-transition graphs, prioritizing vertical stacking and button repositioning for small screens. GSE Mapping: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-  "primitives": [
-    {
-      "primitive_id": "v11_grid_collapse",
-      "name": "V11 Grid Collapse Operator",
-      "verbatim_quote": "# Mobile Owner Session Audit Date: 2026-06-19 ## Fixes - V11 grids collapse to one column on mobile.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Screen width < threshold triggers single-column layout.",
-      "breakdown_regime": "Width < 768px",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's probabilistic engagement path model where UI restructuring alters user decision entropy.",
-        "source_operator": "v11_grid_collapse",
-        "telemetry": "Screen width measurement and layout reconfiguration event."
-      }
-    },
-    {
-      "primitive_id": "activation_step_button_positioning",
-      "name": "Activation Step Button Positioning",
-      "verbatim_quote": "- Activation steps keep action buttons below the step text on small screens.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Button accessibility improves with vertical alignment on small screens.",
-      "breakdown_regime": "Viewport height < 600px",
-      "domain": "other",
-      "layer2": {
-        "tag": "[DERIVED KERNEL]",
-        "mapping": "Derives from GSE's spatial cognition kernel, optimizing touch interaction by aligning actions with cognitive flow.",
-        "source_operator": "activation_step_button_positioning",
-        "telemetry": "Touch target positioning relative to text element during mobile session."
-      }
-    },
-    {
-      "primitive_id": "live_graph_vertical_stacking",
-      "name": "Live Graph Vertical Stacking",
-      "verbatim_quote": "- Live graph rows stack vertically with connector treatment adjusted for mobile.",
-      "page": 1,
-      "latex": null,
-      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
-      "assumptions": "Vertical stacking reduces visual complexity and enhances readability on small displays.",
-      "breakdown_regime": "Display resolution < 1024px",
-      "domain": "other",
-      "layer2": {
-        "tag": "[ISOMORPHISM]",
-        "mapping": "Maps to GSI's temporal data visualization framework, where graph structure adapts to user attention span under mobile constraints.",
-        "source_operator": "live_graph_vertical_stacking",
-        "telemetry": "Graph row stacking status and connector adjustment metrics."
-      }
-    }
-  ],
-  "reasoning_traces": [
-    {
-      "trace_id": "31a8b1533c9ebf47_t0",
-      "think": "The primitives represent a set of mobile-first UI adaptations that optimize user experience under spatial constraints. The V11 grid collapse operator enforces a single-column layout when viewport width drops below a threshold, reducing horizontal space pressure. This is modeled as a regime-switching function over screen dimensions. The activation step button positioning ensures tactile usability by placing controls beneath textual instructions, aligning with ergonomic principles of mobile interaction design. The live graph vertical stacking adjusts information hierarchy to accommodate limited horizontal real estate, preserving semantic relationships through modified connectors. These operators collectively define a mobile session's behavioral regime, where UI elements adapt dynamically to screen size. Failure modes include misalignment of interactive elements or excessive horizontal scrolling in dense tables, which are mitigated by design choices rather than algorithmic correction. The highest-value mobile path (/ultra-launch → /activation-runbook → ActionDrawer) indicates a strategic focus on core engagement flows, suggesting these primitives support a directed acyclic graph of user intent within the mobile domain.\n\nDeep epistemic analysis for MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47, domain=other, pages_read=1/1): Operator 'V11 Grid Collapse Operator' (page 1, domain other) captures: # Mobile Owner Session Audit Date: 2026-06-19 ## Fixes - V11 grids collapse to one column on mobile. Assumptions: Screen width < threshold triggers single-column layout. Breakdown regime: Width < 768px Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic engagement path model where UI restructuring alters user decision entropy. Operator 'Activation Step Button Positioning' (page 1, domain other) captures: - Activation steps keep action buttons below the step text on small screens. Assumptions: Button accessibility improves with vertical alignment on small screens. Breakdown regime: Viewport height < 600px Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's spatial cognition kernel, optimizing touch interaction by aligning actions with cognitive flow. Operator 'Live Graph Vertical Stacking' (page 1, domain other) captures: - Live graph rows stack vertically with connector treatment adjusted for mobile. Assumptions: Vertical stacking reduces visual complexity and enhances readability on small displays. Breakdown regime: Display resolution < 1024px Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal data visualization framework, where graph structure adapts to user attention span under mobile constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47, domain=other, pages_read=1/1): Operator 'V11 Grid Collapse Operator' (page 1, domain other) captures: # Mobile Owner Session Audit Date: 2026-06-19 ## Fixes - V11 grids collapse to one column on mobile. Assumptions: Screen width < threshold triggers single-column layout. Breakdown regime: Width < 768px Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic engagement path model where UI restructuring alters user decision entropy. Operator 'Activation Step Button Positioning' (page 1, domain other) captures: - Activation steps keep action buttons below the step text on small screens. Assumptions: Button accessibility improves with vertical alignment on small screens. Breakdown regime: Viewport height < 600px Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives from GSE's spatial cognition kernel, optimizing touch interaction by aligning actions with cognitive flow. Operator 'Live Graph Vertical Stacking' (page 1, domain other) captures: - Live graph rows stack vertically with connector treatment adjusted for mobile. Assumptions: Vertical stacking reduces visual complexity and enhances readability on small displays. Breakdown regime: Display resolution < 1024px Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's temporal data visualization framework, where graph structure adapts to user attention span under mobile constraints. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
-      "retrocausal_genealogy": "Rooted in responsive web design principles from early 2000s, evolved into adaptive UI frameworks post-mobile proliferation. Influenced by Gestalt psychology and human-computer interaction studies emphasizing affordance and cognitive load reduction. Retrocausal Genealogy: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "theory_of_mind": "Opposing agents include users with varying device capabilities and attention spans, and system components enforcing layout rules. Decision actors are defined by screen size thresholds and interaction patterns, with the system adapting to maximize utility while minimizing friction. Theory of Mind & Decision Maker Model: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
-      "cross_layer_veto": "Anti-collinearity checks ensure that vertical stacking does not introduce redundant visual cues or impair semantic clarity. Leakage vetoes prevent horizontal scrolling from becoming a persistent UX burden, maintaining consistency across layers of abstraction. Cross-Layer Veto & Anti-Leakage Check: Rooted in MOBILE_OWNER_SESSION_AUDIT (31a8b1533c9ebf47), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
-    }
-  ]
+  "source_status": "INSUFFICIENT_SOURCE_ACCESS",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
+  "primitives": [],
+  "reasoning_traces": []
 }

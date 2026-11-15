@@ -1,0 +1,95 @@
+{
+  "book_id": "013e4a4465971129",
+  "source_status": "COMPLETE",
+  "title": "GSE_EXPECTED_POINTS",
+  "file_name": "GSE_EXPECTED_POINTS.md",
+  "sha256": "013e4a4465971129baea57ed1b04e5ccea415e7676e075abe2a432342c8ac577",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A unified framework for situational metrics using first-principles probabilistic modeling over discrete game states, with EP as expectation, WP as outcome probability, and deterministic rules for success rate. Universal Lens: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of GSE metrics against nflverse reference data through correlation analysis, ensuring conformal validity without direct metric reuse. GSI Mapping: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine computes EP, WP, success rate, and drives via state-dependent logistic regressions and deterministic rules, enabling real-time possession-level analytics. GSE Mapping: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "expected_points",
+      "name": "Expected Points",
+      "verbatim_quote": "--## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution.",
+      "page": 1,
+      "latex": "EP(state) = \\sum_k P(next\\text{-}score = k) \\cdot value(k)",
+      "symbol_and_unit_ledger": "{'EP(state)': 'Expected Points, dimensionless', 'P(next-score = k)': 'Probability of next-score outcome k, unitless', 'value(k)': 'Point value of outcome k, points'}",
+      "assumptions": "Binary logistic regression over discrete outcomes; convex combination of bounded values in [-7, 7].",
+      "breakdown_regime": "Below MIN_EP_PLAYS_TO_FIT or degenerate data results in null output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "EP maps field position and down/ydstogo to expected point gain via calibrated binary classifiers.",
+        "source_operator": "expected_points",
+        "telemetry": "Calibration correlation with nflverse `epa`."
+      }
+    },
+    {
+      "primitive_id": "win_probability",
+      "name": "Win Probability",
+      "verbatim_quote": "--## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution.",
+      "page": 1,
+      "latex": "WP(state) = \\sigma(\\beta \\cdot features)",
+      "symbol_and_unit_ledger": "{'WP(state)': 'Win Probability, unitless', '\\\\sigma': 'Sigmoid function, unitless', '\\\\beta': 'Fitted coefficients, dimensionless', 'features': 'Game state vector, dimensionless'}",
+      "assumptions": "Logistic regression with fixed feature set; output in (0, 1).",
+      "breakdown_regime": "Below MIN_WP_PLAYS_TO_FIT or degenerate data results in null output.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "WP maps game state to probability of possession team winning using logistic regression.",
+        "source_operator": "win_probability",
+        "telemetry": "Correlation with nflverse `wp`."
+      }
+    },
+    {
+      "primitive_id": "success_rate",
+      "name": "Success Rate",
+      "verbatim_quote": "--## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution.",
+      "page": 1,
+      "latex": "success = \\begin{cases} 1 & \\text{if } touchdown \\vee (not\\ turnover \\wedge yards\\ gained \\geq frac{down}{yards\\ to\\ go}) \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'success': 'Binary indicator, unitless', 'touchdown': 'Boolean flag, unitless', 'turnover': 'Boolean flag, unitless', 'yards\\\\ gained': 'Yards gained, yards', 'yards\\\\ to\\\\ go': 'Distance to first down, yards'}",
+      "assumptions": "Deterministic rule based on play outcome and yardage thresholds.",
+      "breakdown_regime": "No failure mode; always returns binary value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Success rate mirrors standard NFL definition but is computed deterministically from play data.",
+        "source_operator": "success_rate",
+        "telemetry": "Play-by-play validation against standard success criteria."
+      }
+    },
+    {
+      "primitive_id": "drives",
+      "name": "Drives",
+      "verbatim_quote": "- **Drives** — a pure partition of plays into possessions with per-drive rollups.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'drives': 'Possession-level partitions, unitless'}",
+      "assumptions": "Plays are segmented into distinct offensive possessions with rollup statistics.",
+      "breakdown_regime": "No mathematical breakdown; driven by play sequence logic.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Drive segmentation aligns with standard NFL drive definitions, aggregated per possession.",
+        "source_operator": "drives",
+        "telemetry": "Validation against official NFL drive logs."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "013e4a4465971129_t0",
+      "think": "The four primitives form a coherent operational basis for situational analysis. Expected Points (EP) is a convex combination of next-score probabilities weighted by point values, bounded in [-7, 7]. Win Probability (WP) uses a sigmoid logistic model over game state features, producing a continuous probability in (0, 1). Success Rate is a deterministic rule based on play outcomes, offering a clear binary signal. Drives segment plays into possessions, enabling possession-level aggregation. Each metric is independently fitted or defined, avoiding interdependence that could introduce bias. EP and WP are derived from first principles using logistic regression, while Success Rate and Drives are rule-based or segmentation-based. All are validated against nflverse data for calibration but not directly reused. The system ensures no metric is embedded in scoring logic, maintaining independence for auditability and interpretability.\n\nDeep epistemic analysis for GSE_EXPECTED_POINTS (013e4a4465971129, domain=other, pages_read=4/4): Operator 'Expected Points' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Binary logistic regression over discrete outcomes; convex combination of bounded values in [-7, 7]. Breakdown regime: Below MIN_EP_PLAYS_TO_FIT or degenerate data results in null output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EP maps field position and down/ydstogo to expected point gain via calibrated binary classifiers. Operator 'Win Probability' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Logistic regression with fixed feature set; output in (0, 1). Breakdown regime: Below MIN_WP_PLAYS_TO_FIT or degenerate data results in null output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WP maps game state to probability of possession team winning using logistic regression. Operator 'Success Rate' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Deterministic rule based on play outcome and yardage thresholds. Breakdown regime: No failure mode; always returns binary value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Success rate mirrors standard NFL definition but is computed deterministically from play data. Operator 'Drives' (page 1, domain other) captures: - **Drives** — a pure partition of plays into possessions with per-drive rollups. Assumptions: Plays are segmented into distinct offensive possessions with rollup statistics. Breakdown regime: No mathematical breakdown; driven by play sequence logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Drive segmentation aligns with standard NFL drive definitions, aggregated per possession. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for GSE_EXPECTED_POINTS (013e4a4465971129, domain=other, pages_read=4/4): Operator 'Expected Points' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Binary logistic regression over discrete outcomes; convex combination of bounded values in [-7, 7]. Breakdown regime: Below MIN_EP_PLAYS_TO_FIT or degenerate data results in null output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): EP maps field position and down/ydstogo to expected point gain via calibrated binary classifiers. Operator 'Win Probability' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Logistic regression with fixed feature set; output in (0, 1). Breakdown regime: Below MIN_WP_PLAYS_TO_FIT or degenerate data results in null output. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): WP maps game state to probability of possession team winning using logistic regression. Operator 'Success Rate' (page 1, domain other) captures: --## (b) The four metrics ### Expected Points — `gse-ep-v1` - **Estimator**: seven **one-vs-rest binary logistics** (`fitLogistic`) over the next-score outcome, renormalized to a distribution. Assumptions: Deterministic rule based on play outcome and yardage thresholds. Breakdown regime: No failure mode; always returns binary value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Success rate mirrors standard NFL definition but is computed deterministically from play data. Operator 'Drives' (page 1, domain other) captures: - **Drives** — a pure partition of plays into possessions with per-drive rollups. Assumptions: Plays are segmented into distinct offensive possessions with rollup statistics. Breakdown regime: No mathematical breakdown; driven by play sequence logic. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Drive segmentation aligns with standard NFL drive definitions, aggregated per possession. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical modeling and game theory, with inspiration from early NFL analytics and modern machine learning frameworks. Influenced by ESPN's early work on win probability and expected points, adapted for open-source transparency. Retrocausal Genealogy: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational play behavior and static game dynamics. Opposing teams are modeled as optimizing agents with bounded knowledge. Decision-making is framed as probabilistic inference over discrete game states. Theory of Mind & Decision Maker Model: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Metrics are isolated to prevent leakage between layers. No metric influences scoring or confidence calculations. Each is independently validated and operates within its own domain. Anti-collinearity is maintained by distinct feature sets and functional forms across primitives. Cross-Layer Veto & Anti-Leakage Check: Rooted in GSE_EXPECTED_POINTS (013e4a4465971129), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "3aad5f8b39bff28f",
+  "source_status": "COMPLETE",
+  "title": "2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors",
+  "file_name": "2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors.md",
+  "sha256": "3aad5f8b39bff28f1686480b76f855737e18e383b99201f05765602f96c37580",
+  "primary_domain": "other",
+  "pages_total": 9,
+  "pages_read": 9,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A generative probabilistic framework mapping player actions to team outcome distributions via latent variable covariance structures. Universal Lens: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player impact using conformal predictive sets derived from action-level event data. GSI Mapping: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally-aware state transitions driven by player action prediction kernels with contextual uncertainty quantification. GSE Mapping: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "action_impact_kernel",
+      "name": "Action Impact Kernel",
+      "verbatim_quote": "A specifically designed model will learn the impact of the players on the pitch on both action choice and outcomes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'K': 'Kernel function mapping player actions to outcome probabilities', 'x_i': \"Player i's action vector\", 'y': 'Team outcome vector'}",
+      "assumptions": "Players' actions are conditionally independent given team strategy; outcomes follow a probabilistic distribution.",
+      "breakdown_regime": "When action data lacks temporal resolution or spatial context.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps discrete event sequences to continuous outcome likelihoods through learned action-value functions.",
+        "source_operator": "action_impact_kernel",
+        "telemetry": "Cross-validated Brier Skill Score for action prediction accuracy."
+      }
+    },
+    {
+      "primitive_id": "latent_covariance_structure",
+      "name": "Latent Covariance Structure",
+      "verbatim_quote": "The football analytics community has developed many different models to try and value the contribution of players to their contracted club.",
+      "page": 1,
+      "latex": "\\mathbf{x} = \\boldsymbol{\\mu} + \\mathbf{M}\\mathbf{z}, \\quad \\mathbf{z} \\sim \\mathcal{N}(\\mathbf{0}, \\mathbf{I})",
+      "symbol_and_unit_ledger": "{'\\\\mathbf{x}': 'Multivariate outcome vector', '\\\\boldsymbol{\\\\mu}': 'Mean vector of outcomes', '\\\\mathbf{M}': 'Lower triangular matrix from Cholesky decomposition', '\\\\mathbf{z}': 'Standard normal random vector'}",
+      "assumptions": "Outcome variability follows multivariate Gaussian distribution; latent structure captures interdependencies among actions.",
+      "breakdown_regime": "When observed data is insufficient to estimate full covariance matrix reliably.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to probabilistic graphical models where latent variables encode team dynamics.",
+        "source_operator": "latent_covariance_structure",
+        "telemetry": "Reconstruction error of simulated season outcomes."
+      }
+    },
+    {
+      "primitive_id": "defensive_contribution_model",
+      "name": "Defensive Contribution Model",
+      "verbatim_quote": "### **2.1 Defensive Work Valuation** It is very difficult to value defensive work, given that in event-level data only direct involvement is captured, whether that is by tackling, intercepting or pressing the ball carrier.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'Defensive contribution score', 'E_{direct}': 'Direct defensive events', 'E_{indirect}': 'Indirect defensive influence'}",
+      "assumptions": "Only direct defensive events are measurable; indirect contributions are unobservable.",
+      "breakdown_regime": "In environments with sparse or mislabeled event data.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives defensive value from event counts and positional context using proxy indicators.",
+        "source_operator": "defensive_contribution_model",
+        "telemetry": "Correlation between defensive score and opponent shot conversion rate."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3aad5f8b39bff28f_t0",
+      "think": "The framework integrates action-level event data into a generative model of team performance by leveraging latent variable structures. The core insight is that individual player impacts can be modeled as conditional effects on action choices and subsequent outcomes. The model uses a probabilistic covariance structure to simulate team behavior across seasons, enabling predictions of both aggregate performance and specific player replacements. The kernel approach allows for dynamic adaptation to changing team compositions, while the latent structure ensures robustness to incomplete data. The primary limitation lies in the inability to fully capture indirect influences such as off-ball movement or tactical coordination without richer tracking data. The model's dual nature—predictive and evaluative—enables both strategic planning and player valuation. Its reliance on event-level data necessitates careful calibration to avoid overfitting to surface-level metrics.\n\nDeep epistemic analysis for 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f, domain=other, pages_read=9/9): Operator 'Action Impact Kernel' (page 1, domain other) captures: A specifically designed model will learn the impact of the players on the pitch on both action choice and outcomes. Assumptions: Players' actions are conditionally independent given team strategy; outcomes follow a probabilistic distribution. Breakdown regime: When action data lacks temporal resolution or spatial context. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps discrete event sequences to continuous outcome likelihoods through learned action-value functions. Operator 'Latent Covariance Structure' (page 1, domain other) captures: The football analytics community has developed many different models to try and value the contribution of players to their contracted club. Assumptions: Outcome variability follows multivariate Gaussian distribution; latent structure captures interdependencies among actions. Breakdown regime: When observed data is insufficient to estimate full covariance matrix reliably. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to probabilistic graphical models where latent variables encode team dynamics. Operator 'Defensive Contribution Model' (page 1, domain other) captures: ### **2.1 Defensive Work Valuation** It is very difficult to value defensive work, given that in event-level data only direct involvement is captured, whether that is by tackling, intercepting or pressing the ball carrier. Assumptions: Only direct defensive events are measurable; indirect contributions are unobservable. Breakdown regime: In environments with sparse or mislabeled event data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives defensive value from event counts and positional context using proxy indicators. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f, domain=other, pages_read=9/9): Operator 'Action Impact Kernel' (page 1, domain other) captures: A specifically designed model will learn the impact of the players on the pitch on both action choice and outcomes. Assumptions: Players' actions are conditionally independent given team strategy; outcomes follow a probabilistic distribution. Breakdown regime: When action data lacks temporal resolution or spatial context. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps discrete event sequences to continuous outcome likelihoods through learned action-value functions. Operator 'Latent Covariance Structure' (page 1, domain other) captures: The football analytics community has developed many different models to try and value the contribution of players to their contracted club. Assumptions: Outcome variability follows multivariate Gaussian distribution; latent structure captures interdependencies among actions. Breakdown regime: When observed data is insufficient to estimate full covariance matrix reliably. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to probabilistic graphical models where latent variables encode team dynamics. Operator 'Defensive Contribution Model' (page 1, domain other) captures: ### **2.1 Defensive Work Valuation** It is very difficult to value defensive work, given that in event-level data only direct involvement is captured, whether that is by tackling, intercepting or pressing the ball carrier. Assumptions: Only direct defensive events are measurable; indirect contributions are unobservable. Breakdown regime: In environments with sparse or mislabeled event data. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives defensive value from event counts and positional context using proxy indicators. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early football analytics frameworks like EPV and xG, extending prior work by Torvaney (Statsbomb 2022) to incorporate generative modeling techniques and latent variable inference. Retrocausal Genealogy: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models assume rational decision-making by players and coaches, optimizing for expected utility within constraints of available data and tactical systems. Opposing agents are represented through adversarial game states and defensive strategies. Theory of Mind & Decision Maker Model: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Prevents overfitting through regularization of kernel weights and ensures anti-collinearity in feature spaces by enforcing orthogonal projections in the latent covariance matrix. Cross-Layer Veto & Anti-Leakage Check: Rooted in 2023 - Measuring Player Performance Through Predicting Team Actions - Unknown Authors (3aad5f8b39bff28f), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

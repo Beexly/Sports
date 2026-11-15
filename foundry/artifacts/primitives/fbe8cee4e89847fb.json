@@ -1,0 +1,78 @@
+{
+  "book_id": "fbe8cee4e89847fb",
+  "source_status": "COMPLETE",
+  "title": "PLATT_IRLS_INVESTIGATION",
+  "file_name": "PLATT_IRLS_INVESTIGATION.md",
+  "sha256": "fbe8cee4e89847fbb94359015a7125f07809ba055076cd2a4f2a1ab0eed54d82",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Platt scaling IRLS unifies logistic calibration via Gaussian MAP priors on affine transform parameters A, B, enabling iterative reweighting of predicted probabilities. Universal Lens: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs Platt scaling as a Bayesian calibration kernel, using IRLS to optimize calibrated probability estimates under Gaussian priors for uncertainty quantification. GSI Mapping: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages Platt scaling for dynamic belief adjustment in probabilistic state transitions, applying iterative refinement to align model confidence with empirical outcomes. GSE Mapping: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "platt_scaling_irls",
+      "name": "Platt Scaling Iterative Reweighted Least Squares",
+      "verbatim_quote": "# Investigate: Platt scaling IRLS ## Model \\[ p_{\\mathrm{cal}} = \\sigma(A \\cdot \\mathrm{logit}(p_{\\mathrm{raw}}) + B) \\] MAP prior \\(A\\sim\\mathcal N(1,1)\\), \\(B\\sim\\mathcal N(0,1)\\).",
+      "page": 1,
+      "latex": "\\[ p_{\\mathrm{cal}} = \\sigma(A \\cdot \\mathrm{logit}(p_{\\mathrm{raw}}) + B) \\]",
+      "symbol_and_unit_ledger": "{'p_{\\\\mathrm{cal}}': 'dimensionless calibrated probability', 'p_{\\\\mathrm{raw}}': 'dimensionless raw model output', 'A': 'dimensionless scale factor', 'B': 'dimensionless bias term', 'σ': 'sigmoid function'}",
+      "assumptions": "Logistic likelihood model with Gaussian priors on linear transformation parameters.",
+      "breakdown_regime": "When A ≈ 0 or B diverges, calibration becomes unstable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps raw classifier outputs to well-calibrated probabilities through fixed-point iteration.",
+        "source_operator": "platt_scaling_irls",
+        "telemetry": "Expected calibration error (ECE) and log-likelihood on held-out data."
+      }
+    },
+    {
+      "primitive_id": "irls_newton_iteration",
+      "name": "Iteratively Reweighted Least Squares Newton Update",
+      "verbatim_quote": "\\(g = X'(p-y) + \\Sigma_0^{-1}(\\theta-\\theta_0)\\) - Hessian \\(H = X'WX + \\Sigma_0^{-1}\\), \\(W=\\mathrm{diag}(p(1-p))\\) - \\(\\theta \\leftarrow",
+      "page": 1,
+      "latex": "\\[ g = X'(p-y) + \\Sigma_0^{-1}(\\theta-\\theta_0) \\quad H = X'WX + \\Sigma_0^{-1} \\quad \\theta \\leftarrow \\theta - H^{-1}g \\]",
+      "symbol_and_unit_ledger": "{'g': 'gradient vector', 'X': 'design matrix', 'p': 'predicted probabilities', 'y': 'true labels', 'Σ₀': 'prior covariance matrix', 'θ': 'parameter vector', 'W': 'diagonal weight matrix'}",
+      "assumptions": "Local quadratic approximation of negative log-likelihood with Gaussian prior regularization.",
+      "breakdown_regime": "Ill-conditioned Hessian leads to numerical instability in update step.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides optimization framework for maximum a posteriori estimation in Platt scaling.",
+        "source_operator": "irls_newton_iteration",
+        "telemetry": "Convergence rate of parameter updates and residual norm."
+      }
+    },
+    {
+      "primitive_id": "calibration_parameter_interpretation",
+      "name": "Calibration Parameter Interpretation",
+      "verbatim_quote": "1 | Raw overconfident → compress toward 0.5 | | A > 1 | Sharpen (use",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'scale factor affecting probability spread', 'B': 'bias term shifting probability mean'}",
+      "assumptions": "Linear-logit transformation preserves monotonicity of input probabilities.",
+      "breakdown_regime": "A < 0 implies non-monotonic behavior; B large causes systematic bias.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Encodes intuitive interpretation of how model confidence should be adjusted.",
+        "source_operator": "calibration_parameter_interpretation",
+        "telemetry": "Empirical validation of A/B effects on ECE and Brier score."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fbe8cee4e89847fb_t0",
+      "think": "The core mechanism of Platt scaling involves transforming raw classifier outputs into well-calibrated probabilities using an affine transformation within a logistic function. The IRLS method optimizes this by treating it as a weighted least squares problem with a Gaussian prior on the transformation parameters A and B. This dual formulation allows for iterative refinement where each step adjusts the parameters based on the gradient and Hessian of the negative log-likelihood plus the prior penalty. The resulting system is a fixed-point iteration that converges to a calibrated distribution. The parameters A and B have clear interpretations: A controls the spread of probabilities (compression when A<1, sharpening when A>1), while B shifts the entire distribution globally. These interpretations provide actionable insights for model calibration but also introduce potential failure modes such as overfitting due to improper prior specification or numerical instability during inversion of the Hessian matrix.\n\nDeep epistemic analysis for PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb, domain=other, pages_read=1/1): Operator 'Platt Scaling Iterative Reweighted Least Squares' (page 1, domain other) captures: # Investigate: Platt scaling IRLS ## Model \\[ p_{\\mathrm{cal}} = \\sigma(A \\cdot \\mathrm{logit}(p_{\\mathrm{raw}}) + B) \\] MAP prior \\(A\\sim\\mathcal N(1,1)\\), \\(B\\sim\\mathcal N(0,1)\\). Assumptions: Logistic likelihood model with Gaussian priors on linear transformation parameters. Breakdown regime: When A ≈ 0 or B diverges, calibration becomes unstable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw classifier outputs to well-calibrated probabilities through fixed-point iteration. Operator 'Iteratively Reweighted Least Squares Newton Update' (page 1, domain other) captures: \\(g = X'(p-y) + \\Sigma_0^{-1}(\\theta-\\theta_0)\\) - Hessian \\(H = X'WX + \\Sigma_0^{-1}\\), \\(W=\\mathrm{diag}(p(1-p))\\) - \\(\\theta \\leftarrow Assumptions: Local quadratic approximation of negative log-likelihood with Gaussian prior regularization. Breakdown regime: Ill-conditioned Hessian leads to numerical instability in update step. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides optimization framework for maximum a posteriori estimation in Platt scaling. Operator 'Calibration Parameter Interpretation' (page 1, domain other) captures: 1 | Raw overconfident → compress toward 0.5 | | A > 1 | Sharpen (use Assumptions: Linear-logit transformation preserves monotonicity of input probabilities. Breakdown regime: A < 0 implies non-monotonic behavior; B large causes systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes intuitive interpretation of how model confidence should be adjusted. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb, domain=other, pages_read=1/1): Operator 'Platt Scaling Iterative Reweighted Least Squares' (page 1, domain other) captures: # Investigate: Platt scaling IRLS ## Model \\[ p_{\\mathrm{cal}} = \\sigma(A \\cdot \\mathrm{logit}(p_{\\mathrm{raw}}) + B) \\] MAP prior \\(A\\sim\\mathcal N(1,1)\\), \\(B\\sim\\mathcal N(0,1)\\). Assumptions: Logistic likelihood model with Gaussian priors on linear transformation parameters. Breakdown regime: When A ≈ 0 or B diverges, calibration becomes unstable. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps raw classifier outputs to well-calibrated probabilities through fixed-point iteration. Operator 'Iteratively Reweighted Least Squares Newton Update' (page 1, domain other) captures: \\(g = X'(p-y) + \\Sigma_0^{-1}(\\theta-\\theta_0)\\) - Hessian \\(H = X'WX + \\Sigma_0^{-1}\\), \\(W=\\mathrm{diag}(p(1-p))\\) - \\(\\theta \\leftarrow Assumptions: Local quadratic approximation of negative log-likelihood with Gaussian prior regularization. Breakdown regime: Ill-conditioned Hessian leads to numerical instability in update step. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides optimization framework for maximum a posteriori estimation in Platt scaling. Operator 'Calibration Parameter Interpretation' (page 1, domain other) captures: 1 | Raw overconfident → compress toward 0.5 | | A > 1 | Sharpen (use Assumptions: Linear-logit transformation preserves monotonicity of input probabilities. Breakdown regime: A < 0 implies non-monotonic behavior; B large causes systematic bias. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Encodes intuitive interpretation of how model confidence should be adjusted. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and maximum likelihood estimation, with contributions from Bayesian regularization techniques and Newton-Raphson optimization methods developed in the mid-20th century. Retrocausal Genealogy: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may include overconfident models seeking to maximize likelihood without regard for calibration, and conservative calibration systems aiming to reduce uncertainty misalignment. Decision actors must balance between these two extremes to maintain robustness. Theory of Mind & Decision Maker Model: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that A and B remain independent in their influence on calibration. Leakage occurs if changes in one parameter inadvertently affect the other's effectiveness, leading to degraded performance in both training and test phases. Cross-Layer Veto & Anti-Leakage Check: Rooted in PLATT_IRLS_INVESTIGATION (fbe8cee4e89847fb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

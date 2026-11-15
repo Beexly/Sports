@@ -1,0 +1,95 @@
+{
+  "book_id": "c50b1976be02d0a5",
+  "source_status": "COMPLETE",
+  "title": "FUNDING_PARTNERSHIP_ALIGNMENT_MASTER",
+  "file_name": "FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md",
+  "sha256": "c50b1976be02d0a53a58b81fbd2dd858f82c369bc10d0f495664ce10edabd3c9",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "credit_stack_free_lane",
+      "name": "Free Lane Configuration",
+      "verbatim_quote": "Click-queue — (value × probability) ÷ minutes ### Zero-application free capacity (do today) 1.",
+      "page": 1,
+      "latex": "C_{\\text{free}} = C_{\\text{total}} \\cdot \\mathbb{I}_{\\text{gate}=\\text{OFF}}",
+      "symbol_and_unit_ledger": "{'C_{\\\\text{free}}': 'Dimensionless allocation fraction', 'C_{\\\\text{total}}': 'Total funding capacity (USD)', '\\\\mathbb{I}_{\\\\text{gate}=\\\\text{OFF}}': 'Indicator function (0 or 1)'}",
+      "assumptions": "['No founder application required', 'Operational gates are disabled', 'Immediate deployment readiness']",
+      "breakdown_regime": "Discrete activation threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's activation state machine via `creditStack.freeLaneConfigured` flag",
+        "source_operator": "credit_stack_free_lane",
+        "telemetry": "Ops-side configuration toggle success rate"
+      }
+    },
+    {
+      "primitive_id": "funding_program_application",
+      "name": "Program Application Protocol",
+      "verbatim_quote": "**Anthropic Claude for Startups** — honest application (gates OFF; free-first spine) 8.",
+      "page": 2,
+      "latex": "A_{\\text{apply}} = f(\\theta_{\\text{honest}}, \\mathbb{I}_{\\text{gates}=\\text{OFF}})",
+      "symbol_and_unit_ledger": "{'A_{\\\\text{apply}}': 'Application success indicator (binary)', '\\\\theta_{\\\\text{honest}}': 'Honesty parameter (0 to 1)', '\\\\mathbb{I}_{\\\\text{gates}=\\\\text{OFF}}': 'Gate disable flag (0 or 1)'}",
+      "assumptions": "['Founder-only access', 'Self-service application flow', 'Zero dilution guarantee']",
+      "breakdown_regime": "Binary eligibility threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's agent-wire workflow through env variable injection",
+        "source_operator": "funding_program_application",
+        "telemetry": "Key delivery completion time"
+      }
+    },
+    {
+      "primitive_id": "partner_target_list_row",
+      "name": "Partnership Target Row",
+      "verbatim_quote": "Fill **one** row in partner target list (`docs/revenue/PARTNER_TARGET_LIST_TEMPLATE.md`) Categories that fit: sports_data, creator_tool, ai_tool, cloud_tool, local_sponsor **Never** sportsbook CPA 11.",
+      "page": 2,
+      "latex": "T_{\\text{row}} = \\sum_{c \\in C} w_c \\cdot O_c",
+      "symbol_and_unit_ledger": "{'T_{\\\\text{row}}': 'Partnership target score (USD)', 'C': 'Category set {sports_data, creator_tool, ...}', 'w_c': 'Category weight coefficient (dimensionless)', 'O_c': 'Opportunity count in category c'}",
+      "assumptions": "['Single-row commitment discipline', 'Non-sportsbook CPA exclusion', 'Asset honesty verification']",
+      "breakdown_regime": "Categorical selection boundary",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's revenue pipeline via template-driven outreach playbook",
+        "source_operator": "partner_target_list_row",
+        "telemetry": "Outreach response rate by category"
+      }
+    },
+    {
+      "primitive_id": "accelerator_affiliation_evaluation",
+      "name": "Affiliation Multiplier",
+      "verbatim_quote": "One affiliation evaluation (multiplies AWS/Google/CF/GitHub tiers) — 1 hour --## 3.",
+      "page": 2,
+      "latex": "M_{\\text{affil}} = \\prod_{p \\in P} (1 + r_p)",
+      "symbol_and_unit_ledger": "{'M_{\\\\text{affil}}': 'Affiliation multiplier (dimensionless)', 'P': 'Set of platform partnerships', 'r_p': 'Tier increase rate for platform p'}",
+      "assumptions": "['Independent partnership contribution', 'Fixed evaluation timeframe', 'Multi-platform synergy capture']",
+      "breakdown_regime": "Product-based scaling law",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSE's accelerator network via multi-tiered meta-play framework",
+        "source_operator": "accelerator_affiliation_evaluation",
+        "telemetry": "Tier increase realization ratio"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "c50b1976be02d0a5_t0",
+      "think": "The core challenge is converting zero-sum cash expenditure into positive-sum system incentives. The four primitives form a cascading activation hierarchy: Free Lane unlocks immediate capacity without friction, Program Application automates credit allocation at scale, Partner Target Rows establish non-dilutive revenue pipelines, and Affiliation Evaluations create leverage multipliers. Mathematically, each primitive operates on distinct information sets—discrete binary flags, continuous honesty parameters, categorical weighted sums, and multiplicative platform synergies—yet they all converge to minimize operational capital burn while maximizing product ecosystem density.\n\nDeep epistemic analysis for FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5, domain=other, pages_read=2/2): Operator 'Free Lane Configuration' (page 1, domain other) captures: Click-queue — (value × probability) ÷ minutes ### Zero-application free capacity (do today) 1. Assumptions: ['No founder application required', 'Operational gates are disabled', 'Immediate deployment readiness'] Breakdown regime: Discrete activation threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's activation state machine via `creditStack.freeLaneConfigured` flag Operator 'Program Application Protocol' (page 2, domain other) captures: **Anthropic Claude for Startups** — honest application (gates OFF; free-first spine) 8. Assumptions: ['Founder-only access', 'Self-service application flow', 'Zero dilution guarantee'] Breakdown regime: Binary eligibility threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's agent-wire workflow through env variable injection Operator 'Partnership Target Row' (page 2, domain other) captures: Fill **one** row in partner target list (`docs/revenue/PARTNER_TARGET_LIST_TEMPLATE.md`) Categories that fit: sports_data, creator_tool, ai_tool, cloud_tool, local_sponsor **Never** sportsbook CPA 11. Assumptions: ['Single-row commitment discipline', 'Non-sportsbook CPA exclusion', 'Asset honesty verification'] Breakdown regime: Categorical selection boundary Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's revenue pipeline via template-driven outreach playbook Operator 'Affiliation Multiplier' (page 2, domain other) captures: One affiliation evaluation (multiplies AWS/Google/CF/GitHub tiers) — 1 hour --## 3. Assumptions: ['Independent partnership contribution', 'Fixed evaluation timeframe', 'Multi-platform synergy capture'] Breakdown regime: Product-based scaling law Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's accelerator network via multi-tiered meta-play framework Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5, domain=other, pages_read=2/2): Operator 'Free Lane Configuration' (page 1, domain other) captures: Click-queue — (value × probability) ÷ minutes ### Zero-application free capacity (do today) 1. Assumptions: ['No founder application required', 'Operational gates are disabled', 'Immediate deployment readiness'] Breakdown regime: Discrete activation threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's activation state machine via `creditStack.freeLaneConfigured` flag Operator 'Program Application Protocol' (page 2, domain other) captures: **Anthropic Claude for Startups** — honest application (gates OFF; free-first spine) 8. Assumptions: ['Founder-only access', 'Self-service application flow', 'Zero dilution guarantee'] Breakdown regime: Binary eligibility threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's agent-wire workflow through env variable injection Operator 'Partnership Target Row' (page 2, domain other) captures: Fill **one** row in partner target list (`docs/revenue/PARTNER_TARGET_LIST_TEMPLATE.md`) Categories that fit: sports_data, creator_tool, ai_tool, cloud_tool, local_sponsor **Never** sportsbook CPA 11. Assumptions: ['Single-row commitment discipline', 'Non-sportsbook CPA exclusion', 'Asset honesty verification'] Breakdown regime: Categorical selection boundary Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's revenue pipeline via template-driven outreach playbook Operator 'Affiliation Multiplier' (page 2, domain other) captures: One affiliation evaluation (multiplies AWS/Google/CF/GitHub tiers) — 1 hour --## 3. Assumptions: ['Independent partnership contribution', 'Fixed evaluation timeframe', 'Multi-platform synergy capture'] Breakdown regime: Product-based scaling law Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSE's accelerator network via multi-tiered meta-play framework Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach generalizes the 'freemium' model from subscription economics into a multi-stakeholder incentive architecture. It draws on optimal stopping theory for sequential application decisions, lattice theory for discrete configuration spaces, and network effect monetization frameworks from platform economics. Retrocausal Genealogy: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Competing agents include venture capitalists seeking equity stakes, cloud providers looking for long-term commitments, and startups chasing growth metrics. Our strategy models these actors as rational optimizers with bounded computational power, aiming to align their incentives through transparent, non-extractive mechanisms. Theory of Mind & Decision Maker Model: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires ensuring that each primitive operates on independent data sources. For instance, program applications cannot rely on the same credentials as partner targets, and free lanes must be operationally isolated from funded programs to prevent leakage of sensitive financial data across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in FUNDING_PARTNERSHIP_ALIGNMENT_MASTER (c50b1976be02d0a5), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

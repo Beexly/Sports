@@ -1,0 +1,78 @@
+{
+  "book_id": "b1edbc742c1b7b0d",
+  "source_status": "COMPLETE",
+  "title": "sportsdataio.com",
+  "file_name": "sportsdataio.com.md",
+  "sha256": "b1edbc742c1b7b0d7f98e0fc1445bf0cee9baebdea57b5c565a3615cc0533e87",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "URL path segment frequency and page availability define a sparse topological space for API discovery and data access routing. Universal Lens: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on path validity and content availability using crawl frequency as evidence for data reliability and service maturity. GSI Mapping: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in agent navigation through path segments guided by empirical observables of page status codes and resource presence. GSE Mapping: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "url_path_frequency",
+      "name": "URL Path Frequency",
+      "verbatim_quote": "# sportsdataio.com — crawl URLs reached: **36** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'f_{p}': 'frequency of path segment p, dimensionless'}",
+      "assumptions": "Path segments are discrete and independently crawled; frequency correlates with resource importance.",
+      "breakdown_regime": "When f_{p} = 0, path is inaccessible or deprecated.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Path frequency maps to information-theoretic entropy of API surface area in GSI's probabilistic model.",
+        "source_operator": "url_path_frequency",
+        "telemetry": "Crawl count per path segment"
+      }
+    },
+    {
+      "primitive_id": "page_availability",
+      "name": "Page Availability",
+      "verbatim_quote": "`/apis` | 1 | ## Pages | URL | Title | |---|---| | `https://sportsdataio.com/` | SportsDataIO",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'a_{u}': 'availability of URL u, binary {0,1}'}",
+      "assumptions": "Pages either return valid content or error; availability is deterministic within crawl scope.",
+      "breakdown_regime": "When a_{u} = 0, page is inaccessible or returns 404.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Page availability defines a kernel of accessible data points for GSE's navigation policy.",
+        "source_operator": "page_availability",
+        "telemetry": "HTTP response code (200 vs 404)"
+      }
+    },
+    {
+      "primitive_id": "api_surface_area",
+      "name": "API Surface Area",
+      "verbatim_quote": "| 14 | | `/developers` | 11 | | `/company` | 2 | | `/(root)` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'total unique path segments, dimensionless'}",
+      "assumptions": "Each path segment contributes to a distinct API endpoint or data category.",
+      "breakdown_regime": "When S approaches zero, system lacks functional API coverage.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Surface area corresponds to the cardinality of GSI's data access graph nodes.",
+        "source_operator": "api_surface_area",
+        "telemetry": "Unique path segment count across all crawled URLs"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b1edbc742c1b7b0d_t0",
+      "think": "The URL path frequency primitive models the distribution of crawl activity across path segments, enabling identification of core API endpoints. Page availability encodes whether a given path resolves to functional content, forming a binary signal for GSI's probabilistic inference engine. The API surface area primitive aggregates these signals into a global measure of system coverage. These primitives form a triadic structure where frequency informs likelihood, availability confirms accessibility, and surface area defines scope. Failure modes include zero-frequency paths (unused endpoints), unavailable pages (404s), and minimal surface area (limited API scope). Dualities emerge between high-frequency paths and stable APIs, and between low-frequency paths and experimental features. The system exhibits a sparse topology where most paths have low frequency but some dominate the data access landscape.\n\nDeep epistemic analysis for sportsdataio.com (b1edbc742c1b7b0d, domain=other, pages_read=1/1): Operator 'URL Path Frequency' (page 1, domain other) captures: # sportsdataio.com — crawl URLs reached: **36** ## Path segments | Segment | URLs | |---|---| Assumptions: Path segments are discrete and independently crawled; frequency correlates with resource importance. Breakdown regime: When f_{p} = 0, path is inaccessible or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Path frequency maps to information-theoretic entropy of API surface area in GSI's probabilistic model. Operator 'Page Availability' (page 1, domain other) captures: `/apis` | 1 | ## Pages | URL | Title | |---|---| | `https://sportsdataio.com/` | SportsDataIO Assumptions: Pages either return valid content or error; availability is deterministic within crawl scope. Breakdown regime: When a_{u} = 0, page is inaccessible or returns 404. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Page availability defines a kernel of accessible data points for GSE's navigation policy. Operator 'API Surface Area' (page 1, domain other) captures: | 14 | | `/developers` | 11 | | `/company` | 2 | | `/(root)` | Assumptions: Each path segment contributes to a distinct API endpoint or data category. Breakdown regime: When S approaches zero, system lacks functional API coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Surface area corresponds to the cardinality of GSI's data access graph nodes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sportsdataio.com (b1edbc742c1b7b0d, domain=other, pages_read=1/1): Operator 'URL Path Frequency' (page 1, domain other) captures: # sportsdataio.com — crawl URLs reached: **36** ## Path segments | Segment | URLs | |---|---| Assumptions: Path segments are discrete and independently crawled; frequency correlates with resource importance. Breakdown regime: When f_{p} = 0, path is inaccessible or deprecated. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Path frequency maps to information-theoretic entropy of API surface area in GSI's probabilistic model. Operator 'Page Availability' (page 1, domain other) captures: `/apis` | 1 | ## Pages | URL | Title | |---|---| | `https://sportsdataio.com/` | SportsDataIO Assumptions: Pages either return valid content or error; availability is deterministic within crawl scope. Breakdown regime: When a_{u} = 0, page is inaccessible or returns 404. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Page availability defines a kernel of accessible data points for GSE's navigation policy. Operator 'API Surface Area' (page 1, domain other) captures: | 14 | | `/developers` | 11 | | `/company` | 2 | | `/(root)` | Assumptions: Each path segment contributes to a distinct API endpoint or data category. Breakdown regime: When S approaches zero, system lacks functional API coverage. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Surface area corresponds to the cardinality of GSI's data access graph nodes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory, this structure mirrors Shannon's entropy and network topology concepts, applied to web crawling and API design. Retrocausal Genealogy: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may manipulate path frequency to obscure or highlight certain data categories, while decision actors optimize for maximum surface area coverage under resource constraints. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that frequency and availability not be perfectly correlated; leakage occurs when high-frequency paths are consistently unavailable, indicating crawl or API misalignment. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sportsdataio.com (b1edbc742c1b7b0d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

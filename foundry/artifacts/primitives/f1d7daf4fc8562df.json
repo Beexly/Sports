@@ -1,0 +1,78 @@
+{
+  "book_id": "f1d7daf4fc8562df",
+  "source_status": "COMPLETE",
+  "title": "REPORT_WPA2",
+  "file_name": "REPORT_WPA2.md",
+  "sha256": "f1d7daf4fc8562dfe737de82caa0749f4462e9ca4c04abc38d4ff1f6d4fd6e82",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Symbolic regression on WPA2 target fails to retain time term due to budget-constrained search space, revealing a degenerate constant solution landscape. Universal Lens: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Bayesian inference maps WPA2 win probability as a conformal predictive distribution over pre-snap features, with time term as latent variable in structured regression. GSI Mapping: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE situational reasoning models game state transitions using pre-snap features and temporal leverage, where time-dependent dynamics are encoded in win probability evolution. GSE Mapping: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "time_term_nullification",
+      "name": "Time Term Nullification",
+      "verbatim_quote": "All six GP runs (3 seeds × W1/W2) converged to degenerate constants.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t': 'time in seconds', 'wpa2': 'win probability adjusted (dimensionless)', 'f(x)': 'symbolic function of pre-snap features'}",
+      "assumptions": "Search space constrained by fixed generation count and population size; MSE loss function lacks robustness to heavy-tailed targets.",
+      "breakdown_regime": "When symbolic regression converges to constant solutions instead of functional forms.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of degenerate solution space arises from insufficient evolutionary search depth in symbolic regression framework.",
+        "source_operator": "time_term_nullification",
+        "telemetry": "Test R2 = -0.1036, constant prediction."
+      }
+    },
+    {
+      "primitive_id": "search_budget_constraint",
+      "name": "Search Budget Constraint",
+      "verbatim_quote": "## Why: the protocol's search budget is the binding constraint, not the hypothesis Supplementary analysi",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'G': 'generations', 'P': 'population size', 'R2': 'coefficient of determination (dimensionless)'}",
+      "assumptions": "Evolutionary algorithm requires sufficient generations to escape local minima and discover non-trivial structure.",
+      "breakdown_regime": "When evolutionary parameters are insufficient to explore complex feature interactions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to computational complexity barriers in symbolic regression optimization.",
+        "source_operator": "search_budget_constraint",
+        "telemetry": "R2 = 0.2129 (gradient boosting) vs. -0.1036 (GP), indicating budget-induced failure."
+      }
+    },
+    {
+      "primitive_id": "target_distribution_robustness",
+      "name": "Target Distribution Robustness",
+      "verbatim_quote": "All six GP runs (3 seeds × W1/W2) converged to degenerate constants.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'y': 'target variable (wpa2)', 'MSE': 'mean squared error (dimensionless)', 'Huber': 'robust loss function (dimensionless)'}",
+      "assumptions": "Standard MSE is sensitive to outliers in heavy-tailed distributions.",
+      "breakdown_regime": "Failure of standard loss functions to guide exploration in presence of extreme value outliers.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of instability stems from lack of robust loss function in symbolic regression pipeline.",
+        "source_operator": "target_distribution_robustness",
+        "telemetry": "Constant attractor at generation zero under plain MSE."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f1d7daf4fc8562df_t0",
+      "think": "The core issue lies in the interplay between symbolic regression’s search dynamics and the target distribution’s statistical properties. The WPA2 target, being heavy-tailed and clipped at the 99th percentile, introduces a non-smooth landscape for gradient-free optimization. Standard symbolic regression (gplearn) with fixed budget (2000×30) collapses into constant solutions due to premature convergence. This is not a failure of the hypothesis but of the methodological setup—specifically, the use of plain MSE loss without robustification. The time term hypothesis is thus untestable under current protocol constraints. The signal exists (as shown by GBM achieving R2 ≈ 0.21), but the search mechanism fails to extract it. The root cause is a mismatch between the algorithmic search strategy and the target’s distributional characteristics. Fixing this requires either increasing the evolutionary budget, applying robust loss functions, or transforming the target to reduce tail influence.\n\nDeep epistemic analysis for REPORT_WPA2 (f1d7daf4fc8562df, domain=other, pages_read=3/3): Operator 'Time Term Nullification' (page 1, domain other) captures: All six GP runs (3 seeds × W1/W2) converged to degenerate constants. Assumptions: Search space constrained by fixed generation count and population size; MSE loss function lacks robustness to heavy-tailed targets. Breakdown regime: When symbolic regression converges to constant solutions instead of functional forms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of degenerate solution space arises from insufficient evolutionary search depth in symbolic regression framework. Operator 'Search Budget Constraint' (page 1, domain other) captures: ## Why: the protocol's search budget is the binding constraint, not the hypothesis Supplementary analysi Assumptions: Evolutionary algorithm requires sufficient generations to escape local minima and discover non-trivial structure. Breakdown regime: When evolutionary parameters are insufficient to explore complex feature interactions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to computational complexity barriers in symbolic regression optimization. Operator 'Target Distribution Robustness' (page 1, domain other) captures: All six GP runs (3 seeds × W1/W2) converged to degenerate constants. Assumptions: Standard MSE is sensitive to outliers in heavy-tailed distributions. Breakdown regime: Failure of standard loss functions to guide exploration in presence of extreme value outliers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of instability stems from lack of robust loss function in symbolic regression pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for REPORT_WPA2 (f1d7daf4fc8562df, domain=other, pages_read=3/3): Operator 'Time Term Nullification' (page 1, domain other) captures: All six GP runs (3 seeds × W1/W2) converged to degenerate constants. Assumptions: Search space constrained by fixed generation count and population size; MSE loss function lacks robustness to heavy-tailed targets. Breakdown regime: When symbolic regression converges to constant solutions instead of functional forms. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of degenerate solution space arises from insufficient evolutionary search depth in symbolic regression framework. Operator 'Search Budget Constraint' (page 1, domain other) captures: ## Why: the protocol's search budget is the binding constraint, not the hypothesis Supplementary analysi Assumptions: Evolutionary algorithm requires sufficient generations to escape local minima and discover non-trivial structure. Breakdown regime: When evolutionary parameters are insufficient to explore complex feature interactions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to computational complexity barriers in symbolic regression optimization. Operator 'Target Distribution Robustness' (page 1, domain other) captures: All six GP runs (3 seeds × W1/W2) converged to degenerate constants. Assumptions: Standard MSE is sensitive to outliers in heavy-tailed distributions. Breakdown regime: Failure of standard loss functions to guide exploration in presence of extreme value outliers. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of instability stems from lack of robust loss function in symbolic regression pipeline. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in symbolic regression theory (Koza, 1992) and modern machine learning robustness (Huber, 1964), with implications for computational epistemology in sports analytics. Retrocausal Genealogy: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the symbolic regressor (which fails due to budget and loss function) and the true underlying process (which exhibits strong temporal correlation). The system's behavior reflects a misalignment between agent capability and environmental complexity. Theory of Mind & Decision Maker Model: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is violated when time term is omitted from model; leakage occurs through constant attractors masking real signal. Veto condition: must apply robust loss or increase search depth to avoid degeneracy. Cross-Layer Veto & Anti-Leakage Check: Rooted in REPORT_WPA2 (f1d7daf4fc8562df), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

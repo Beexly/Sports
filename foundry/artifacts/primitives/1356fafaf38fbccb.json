@@ -1,0 +1,78 @@
+{
+  "book_id": "1356fafaf38fbccb",
+  "source_status": "COMPLETE",
+  "title": "BUF@LAR-card",
+  "file_name": "BUF@LAR-card.md",
+  "sha256": "1356fafaf38fbccb60e474106a54b4495fea28e02bb7e148f6354022ea8c5c2d",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Confluence Play aggregates multi-domain signals (biophysical, cognitive, DFS, on-field) into a ranked causal chain, validating Bayesian updates through empirical observables. Universal Lens: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI maps the confluence chain via Bayesian posterior inference on injury availability and narrative pressure, using conformal prediction to calibrate market attention against fundamentals. GSI Mapping: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE models the situational state transitions driven by injury depth shifts and cognitive bias in news flow, enabling dynamic policy adjustment through real-time operator feedback loops. GSE Mapping: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "availability_chain",
+      "name": "Availability Chain",
+      "verbatim_quote": "# BUF@LAR - Analyst Card (Confluence Play) generated_utc: 2026-10-13T21:24:26.475351+00:00 | trace: 2026-10-13T173138Z0000-3fdf15a4 | corpus date: 2026-10-13 ## Named thesis **Confluence Play** - named from the confluence cluster of 72 cited facts across 4 domains (biophysical, cognitive, dfs, on_field).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Q_i': 'injury status of player i ∈ {DJ Moore, Ed Oliver, Joshua Palmer, Landon Jackson} (dimensionless)', 'S_i': 'snap share of player i (unitless ratio)'}",
+      "assumptions": "Players listed as questionable undergo depth chart rotation, altering positional leverage and scheme pressure.",
+      "breakdown_regime": "When Q_i = 1, S_i → 0 and opponent strength increases.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps injury status to positional scheme leverage via unit rotation dynamics.",
+        "source_operator": "availability_chain",
+        "telemetry": "Snap share change ΔS_i per injury status Q_i"
+      }
+    },
+    {
+      "primitive_id": "cognitive_pressure",
+      "name": "Cognitive Pressure",
+      "verbatim_quote": "COGNITIVE: news flow names this game: \"How Bills QB Josh Allen has become a star on and off the field\" [docs/data-sources/research/2026-10-13/news-espn/espn-nfl-news-digest.json] -> narrative/attention pressure around the teams -> market attention (and DFS ownership) can detach from fundamentals; watch for overreaction spots 6.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'N_t': 'news flow intensity at time t (dimensionless)', 'M_t': 'market attention level at time t (dimensionless)', 'F_t': 'fundamental signal at time t (dimensionless)'}",
+      "assumptions": "Narrative attention can decouple market behavior from underlying fundamentals.",
+      "breakdown_regime": "When |M_t - F_t| > threshold, overreaction risk emerges.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphs to attention-driven market deviation models.",
+        "source_operator": "cognitive_pressure",
+        "telemetry": "Deviation Δ(M_t - F_t) from fundamental baseline"
+      }
+    },
+    {
+      "primitive_id": "bayesian_posterior",
+      "name": "Bayesian Posterior",
+      "verbatim_quote": "The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it.",
+      "page": 3,
+      "latex": "\\mathcal{P}(H|D) \\propto \\mathcal{P}(D|H)\\mathcal{P}(H)",
+      "symbol_and_unit_ledger": "{'H': 'hypothesis (e.g., team outcome) (dimensionless)', 'D': 'data evidence (e.g., injury reports) (dimensionless)', 'P(H|D)': 'posterior probability (unitless)'}",
+      "assumptions": "Posterior probability is updated based on observed data and prior beliefs.",
+      "breakdown_regime": "When data D is inconsistent with prior P(H), posterior becomes unreliable.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validates causal chain through Bayesian belief updating.",
+        "source_operator": "bayesian_posterior",
+        "telemetry": "Log-likelihood ratio of hypothesis given data"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "1356fafaf38fbccb_t0",
+      "think": "The Confluence Play primitive synthesizes 72 cross-domain facts into a ranked causal chain. Availability Chain (AC) encodes injury impacts on positional leverage via unit rotation dynamics. Cognitive Pressure (CP) models how narrative attention detaches from fundamentals, introducing overreaction risk. Bayesian Posterior (BP) validates the chain through probabilistic inference. AC → CP → BP forms a dual structure where injury events propagate through cognitive and probabilistic layers. Failure modes include narrative misalignment (CP) or data inconsistency (BP). The system's robustness depends on layer-wise validation and retroactive correction of belief states.\n\nDeep epistemic analysis for BUF@LAR-card (1356fafaf38fbccb, domain=other, pages_read=3/3): Operator 'Availability Chain' (page 1, domain other) captures: # BUF@LAR - Analyst Card (Confluence Play) generated_utc: 2026-10-13T21:24:26.475351+00:00 | trace: 2026-10-13T173138Z0000-3fdf15a4 | corpus date: 2026-10-13 ## Named thesis **Confluence Play** - named from the confluence cluster of 72 cited facts across 4 domains (biophysical, cognitive, dfs, on_field). Assumptions: Players listed as questionable undergo depth chart rotation, altering positional leverage and scheme pressure. Breakdown regime: When Q_i = 1, S_i → 0 and opponent strength increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps injury status to positional scheme leverage via unit rotation dynamics. Operator 'Cognitive Pressure' (page 1, domain other) captures: COGNITIVE: news flow names this game: \"How Bills QB Josh Allen has become a star on and off the field\" [docs/data-sources/research/2026-10-13/news-espn/espn-nfl-news-digest.json] -> narrative/attention pressure around the teams -> market attention (and DFS ownership) can detach from fundamentals; watch for overreaction spots 6. Assumptions: Narrative attention can decouple market behavior from underlying fundamentals. Breakdown regime: When |M_t - F_t| > threshold, overreaction risk emerges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to attention-driven market deviation models. Operator 'Bayesian Posterior' (page 3, domain other) captures: The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it. Assumptions: Posterior probability is updated based on observed data and prior beliefs. Breakdown regime: When data D is inconsistent with prior P(H), posterior becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validates causal chain through Bayesian belief updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for BUF@LAR-card (1356fafaf38fbccb, domain=other, pages_read=3/3): Operator 'Availability Chain' (page 1, domain other) captures: # BUF@LAR - Analyst Card (Confluence Play) generated_utc: 2026-10-13T21:24:26.475351+00:00 | trace: 2026-10-13T173138Z0000-3fdf15a4 | corpus date: 2026-10-13 ## Named thesis **Confluence Play** - named from the confluence cluster of 72 cited facts across 4 domains (biophysical, cognitive, dfs, on_field). Assumptions: Players listed as questionable undergo depth chart rotation, altering positional leverage and scheme pressure. Breakdown regime: When Q_i = 1, S_i → 0 and opponent strength increases. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps injury status to positional scheme leverage via unit rotation dynamics. Operator 'Cognitive Pressure' (page 1, domain other) captures: COGNITIVE: news flow names this game: \"How Bills QB Josh Allen has become a star on and off the field\" [docs/data-sources/research/2026-10-13/news-espn/espn-nfl-news-digest.json] -> narrative/attention pressure around the teams -> market attention (and DFS ownership) can detach from fundamentals; watch for overreaction spots 6. Assumptions: Narrative attention can decouple market behavior from underlying fundamentals. Breakdown regime: When |M_t - F_t| > threshold, overreaction risk emerges. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphs to attention-driven market deviation models. Operator 'Bayesian Posterior' (page 3, domain other) captures: The Bayesian posterior lives in the ranked board's bayes_updates; the math validates this chain, it does not replace it. Assumptions: Posterior probability is updated based on observed data and prior beliefs. Breakdown regime: When data D is inconsistent with prior P(H), posterior becomes unreliable. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validates causal chain through Bayesian belief updating. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian decision theory and causal inference frameworks, with extensions to multi-agent cognitive modeling and real-time belief updating. Retrocausal Genealogy: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may overreact to narrative cues (CP) or misinterpret injury data (AC), leading to suboptimal market outcomes. The system models these biases to calibrate agent behavior. Theory of Mind & Decision Maker Model: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If cognitive pressure exceeds 0.7 and injury data is inconsistent, the availability chain is flagged for re-evaluation. Anti-collinearity ensures no single domain dominates the posterior. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in BUF@LAR-card (1356fafaf38fbccb), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

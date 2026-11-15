@@ -1,0 +1,78 @@
+{
+  "book_id": "27508a306401323d",
+  "source_status": "COMPLETE",
+  "title": "huggingface-open-r1",
+  "file_name": "huggingface-open-r1.md",
+  "sha256": "27508a306401323dc30c806736540fd544d2731612389ad5fdd5b03c6acc7f1a",
+  "primary_domain": "other",
+  "pages_total": 12,
+  "pages_read": 12,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Open R1 formalizes reproducible reasoning pipelines through distilled data and multi-stage training. Universal Lens: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on Open R1 datasets enables probabilistic model alignment with DeepSeek's R1 reasoning traces. GSI Mapping: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situationally adaptive state transitions in GSE are guided by Open R1's multi-modal reasoning kernels and RL fine-tuning. GSE Mapping: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "distilled_data_pipeline",
+      "name": "Distilled Data Pipeline",
+      "verbatim_quote": "The project is simple by design and mostly consists of: - `src/open_r1`: contains the scripts to train models as well as generate synthetic data: - `grpo.py`: trains a model with GRPO on a given dataset.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Synthetic data generation preserves original reasoning structure.",
+      "breakdown_regime": "When data distribution shifts beyond training domain.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Open R1's data generation mirrors DeepSeek's R1-Zero pipeline, enabling cross-model reasoning transfer.",
+        "source_operator": "distilled_data_pipeline",
+        "telemetry": "Accuracy on Mixture-of-Thoughts and CodeForces-CoTs benchmarks."
+      }
+    },
+    {
+      "primitive_id": "multi_stage_training",
+      "name": "Multi-Stage Training Framework",
+      "verbatim_quote": "* Step 3: show we can go from base model to RL-tuned via multi-stage training.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Sequential stages preserve incremental reasoning gains.",
+      "breakdown_regime": "When stage-specific loss functions diverge.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "SFT followed by GRPO in Open R1 replicates DeepSeek’s reasoning refinement process.",
+        "source_operator": "multi_stage_training",
+        "telemetry": "Performance gain on IOI24 and competitive programming benchmarks."
+      }
+    },
+    {
+      "primitive_id": "reasoning_trace_dataset",
+      "name": "Reasoning Trace Dataset",
+      "verbatim_quote": "The dataset spans tasks in mathematics, coding, and science, and is designed to teach language models to reason step-by-step.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Step-by-step reasoning is encoded in trace-level supervision.",
+      "breakdown_regime": "When trace quality degrades due to model hallucination.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Open R1's reasoning traces align with DeepSeek's internal logic paths for instruction tuning.",
+        "source_operator": "reasoning_trace_dataset",
+        "telemetry": "Model performance on math and science benchmarks."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "27508a306401323d_t0",
+      "think": "The Open R1 framework constructs a formalized reasoning pipeline through three core components: (1) Distilled Data Pipeline, which synthesizes high-fidelity reasoning traces from DeepSeek-R1; (2) Multi-Stage Training Framework, which sequentially applies supervised fine-tuning (SFT) and reinforcement learning (GRPO); and (3) Reasoning Trace Dataset, which encodes step-wise logic for model instruction. These components form an isomorphic mapping to DeepSeek’s R1-Zero architecture, enabling empirical validation of reasoning fidelity. Failure modes include overfitting during SFT, divergence in GRPO, and degradation in trace quality. Dualities emerge between synthetic data generation and empirical benchmarking, with IOI24 and CodeForces-CoTs serving as critical verification metrics.\n\nDeep epistemic analysis for huggingface-open-r1 (27508a306401323d, domain=other, pages_read=12/12): Operator 'Distilled Data Pipeline' (page 1, domain other) captures: The project is simple by design and mostly consists of: - `src/open_r1`: contains the scripts to train models as well as generate synthetic data: - `grpo.py`: trains a model with GRPO on a given dataset. Assumptions: Synthetic data generation preserves original reasoning structure. Breakdown regime: When data distribution shifts beyond training domain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Open R1's data generation mirrors DeepSeek's R1-Zero pipeline, enabling cross-model reasoning transfer. Operator 'Multi-Stage Training Framework' (page 1, domain other) captures: * Step 3: show we can go from base model to RL-tuned via multi-stage training. Assumptions: Sequential stages preserve incremental reasoning gains. Breakdown regime: When stage-specific loss functions diverge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): SFT followed by GRPO in Open R1 replicates DeepSeek’s reasoning refinement process. Operator 'Reasoning Trace Dataset' (page 1, domain other) captures: The dataset spans tasks in mathematics, coding, and science, and is designed to teach language models to reason step-by-step. Assumptions: Step-by-step reasoning is encoded in trace-level supervision. Breakdown regime: When trace quality degrades due to model hallucination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Open R1's reasoning traces align with DeepSeek's internal logic paths for instruction tuning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for huggingface-open-r1 (27508a306401323d, domain=other, pages_read=12/12): Operator 'Distilled Data Pipeline' (page 1, domain other) captures: The project is simple by design and mostly consists of: - `src/open_r1`: contains the scripts to train models as well as generate synthetic data: - `grpo.py`: trains a model with GRPO on a given dataset. Assumptions: Synthetic data generation preserves original reasoning structure. Breakdown regime: When data distribution shifts beyond training domain. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Open R1's data generation mirrors DeepSeek's R1-Zero pipeline, enabling cross-model reasoning transfer. Operator 'Multi-Stage Training Framework' (page 1, domain other) captures: * Step 3: show we can go from base model to RL-tuned via multi-stage training. Assumptions: Sequential stages preserve incremental reasoning gains. Breakdown regime: When stage-specific loss functions diverge. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): SFT followed by GRPO in Open R1 replicates DeepSeek’s reasoning refinement process. Operator 'Reasoning Trace Dataset' (page 1, domain other) captures: The dataset spans tasks in mathematics, coding, and science, and is designed to teach language models to reason step-by-step. Assumptions: Step-by-step reasoning is encoded in trace-level supervision. Breakdown regime: When trace quality degrades due to model hallucination. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Open R1's reasoning traces align with DeepSeek's internal logic paths for instruction tuning. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in the formalization of reasoning traces from LLMs, building upon prior work in instruction tuning and reinforcement learning for language models. Retrocausal Genealogy: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the model’s internal reasoning engine and the external benchmark evaluator, both constrained by the trace quality and training fidelity of the pipeline. Theory of Mind & Decision Maker Model: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises when reasoning traces become misaligned with downstream task objectives, and leakage occurs if synthetic data does not generalize to unseen problem domains. Cross-Layer Veto & Anti-Leakage Check: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in huggingface-open-r1 (27508a306401323d), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

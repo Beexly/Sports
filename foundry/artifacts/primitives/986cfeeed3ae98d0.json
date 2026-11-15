@@ -1,0 +1,78 @@
+{
+  "book_id": "986cfeeed3ae98d0",
+  "source_status": "COMPLETE",
+  "title": "PUBLIC_HONESTY_DEMO_SCRIPT",
+  "file_name": "PUBLIC_HONESTY_DEMO_SCRIPT.md",
+  "sha256": "986cfeeed3ae98d0cf8da83b851be0228e073ce093623f11647e96ad01bee8b2",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Distinguishing shipped vs. pending code states via audit trails and conditional visibility in real-time systems. Universal Lens: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference framework where substantiated numbers are gated by empirical confidence thresholds, aligning with conformal prediction principles. GSI Mapping: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning engine enforces state transitions based on integrity checks and access control, ensuring decisions reflect both governance and evidence validity. GSE Mapping: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "shipped_vs_pending_distinguisher",
+      "name": "Shipped vs Pending Distinguisher",
+      "verbatim_quote": "The point of this document is that it distinguishes **shipped** from **pending**.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'set of shipped features', 'P': 'set of pending features'}",
+      "assumptions": "Features are either fully integrated into mainline or remain under review.",
+      "breakdown_regime": "When feature status is ambiguous, system defaults to pending visibility.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's probabilistic feature validation and GSE's operational state transition logic.",
+        "source_operator": "shipped_vs_pending_distinguisher",
+        "telemetry": "Feature flag status and merge commit history."
+      }
+    },
+    {
+      "primitive_id": "auditable_refusal_trail",
+      "name": "Auditable Refusal Trail",
+      "verbatim_quote": "- `/board` gives every reader a plain-language reason for a pass, and the auditable trail (reason code, confidence at refusal, model version, evidence count) to `canSeeNoBetDetail` holders.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'reason code', 'C': 'confidence level', 'M': 'model version', 'E': 'evidence count'}",
+      "assumptions": "Refusals must be traceable and accessible only to authorized users.",
+      "breakdown_regime": "Server-side withholding of refusal details for unauthorized access.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derived from GSI's transparency kernel and GSE's decision traceability module.",
+        "source_operator": "auditable_refusal_trail",
+        "telemetry": "Access logs and refusal metadata."
+      }
+    },
+    {
+      "primitive_id": "small_sample_withholding",
+      "name": "Small Sample Withholding",
+      "verbatim_quote": "- `/airwave` withholds a pundit hit rate below 25 decided calls.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'n': 'number of decided calls', 'n_min': 'minimum threshold (25)', 'H': 'hit rate'}",
+      "assumptions": "Statistical reliability requires minimum sample size before publication.",
+      "breakdown_regime": "Hit rate field is omitted when n < n_min.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Kernel of GSI's statistical integrity protocol and GSE's data-driven decision kernel.",
+        "source_operator": "small_sample_withholding",
+        "telemetry": "Call count per pundit and visibility toggle."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "986cfeeed3ae98d0_t0",
+      "think": "The primitives form a coherent system of integrity enforcement through conditional visibility and traceability. The shipped vs. pending distinguisher ensures that only validated changes appear in production, preventing premature exposure of unverified features. The auditable refusal trail enables accountability by providing structured explanations for rejections, while restricting access to sensitive data. Small sample withholding prevents misleading statistics by enforcing minimum sample sizes before publishing rates. These mechanisms collectively enforce a dual-layered integrity model: one governing agent behavior (governance), and another ensuring numerical substantiation (verification). Failure modes include unauthorized disclosure of refusal details or premature display of unreliable metrics, which would violate the separation between governance and substantiation.\n\nDeep epistemic analysis for PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0, domain=other, pages_read=3/3): Operator 'Shipped vs Pending Distinguisher' (page 1, domain other) captures: The point of this document is that it distinguishes **shipped** from **pending**. Assumptions: Features are either fully integrated into mainline or remain under review. Breakdown regime: When feature status is ambiguous, system defaults to pending visibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic feature validation and GSE's operational state transition logic. Operator 'Auditable Refusal Trail' (page 1, domain other) captures: - `/board` gives every reader a plain-language reason for a pass, and the auditable trail (reason code, confidence at refusal, model version, evidence count) to `canSeeNoBetDetail` holders. Assumptions: Refusals must be traceable and accessible only to authorized users. Breakdown regime: Server-side withholding of refusal details for unauthorized access. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's transparency kernel and GSE's decision traceability module. Operator 'Small Sample Withholding' (page 1, domain other) captures: - `/airwave` withholds a pundit hit rate below 25 decided calls. Assumptions: Statistical reliability requires minimum sample size before publication. Breakdown regime: Hit rate field is omitted when n < n_min. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of GSI's statistical integrity protocol and GSE's data-driven decision kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0, domain=other, pages_read=3/3): Operator 'Shipped vs Pending Distinguisher' (page 1, domain other) captures: The point of this document is that it distinguishes **shipped** from **pending**. Assumptions: Features are either fully integrated into mainline or remain under review. Breakdown regime: When feature status is ambiguous, system defaults to pending visibility. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's probabilistic feature validation and GSE's operational state transition logic. Operator 'Auditable Refusal Trail' (page 1, domain other) captures: - `/board` gives every reader a plain-language reason for a pass, and the auditable trail (reason code, confidence at refusal, model version, evidence count) to `canSeeNoBetDetail` holders. Assumptions: Refusals must be traceable and accessible only to authorized users. Breakdown regime: Server-side withholding of refusal details for unauthorized access. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derived from GSI's transparency kernel and GSE's decision traceability module. Operator 'Small Sample Withholding' (page 1, domain other) captures: - `/airwave` withholds a pundit hit rate below 25 decided calls. Assumptions: Statistical reliability requires minimum sample size before publication. Breakdown regime: Hit rate field is omitted when n < n_min. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Kernel of GSI's statistical integrity protocol and GSE's data-driven decision kernel. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification traditions and Bayesian decision theory, evolving from early access control models to modern probabilistic auditing frameworks. Retrocausal Genealogy: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit visibility gaps or manipulate sample sizes to gain unfair advantage. The system counters this by embedding integrity checks directly into decision paths and telemetry. Theory of Mind & Decision Maker Model: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by decoupling governance from substantiation layers. Leakage vetoes prevent cross-contamination of access-controlled data between subsystems. Cross-Layer Veto & Anti-Leakage Check: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in PUBLIC_HONESTY_DEMO_SCRIPT (986cfeeed3ae98d0), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

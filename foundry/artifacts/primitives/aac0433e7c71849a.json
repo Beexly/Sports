@@ -1,0 +1,78 @@
+{
+  "book_id": "aac0433e7c71849a",
+  "source_status": "COMPLETE",
+  "title": "x-sweep2",
+  "file_name": "x-sweep2.md",
+  "sha256": "aac0433e7c71849af471bdbaea1e5d632b7c0f64fc6c7f37471993f80b7baea8",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sweep-2 data assimilation integrates temporal news streams with multi-source fact-checking to refine player ownership and projection models. Universal Lens: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on player-team affiliations using cross-referenced sports databases; conformal prediction intervals for DFS value estimates. GSI Mapping: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions in fantasy lineup construction driven by injury reports and positional backups; dynamic optimization of roster slots based on projected matchups. GSE Mapping: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "team_attribution_correction",
+      "name": "Team Attribution Correction",
+      "verbatim_quote": "Verified multi-source facts (NBC Sports player-news, 2026-09-13; RotoWire; TheHuddle; FantasyPros; sportradar ARI roster): - **Kyler Murray is the MINNESOTA VIKINGS' QB in 2026** (acquired from Arizona this offseason; won the camp battle over incumbent J.J.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Murray': 'player identifier', 'MIN': 'team abbreviation', '2026': 'season identifier'}",
+      "assumptions": "Player transfer is final and verified by official roster sources.",
+      "breakdown_regime": "Post-transfer validation",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's belief update on player-team assignment aligns with GSE's state transition for lineup eligibility.",
+        "source_operator": "team_attribution_correction",
+        "telemetry": "Cross-source confirmation of team roster changes."
+      }
+    },
+    {
+      "primitive_id": "backup_qb_assignment",
+      "name": "Backup QB Assignment",
+      "verbatim_quote": "- **Carson Wentz is Murray's backup in Minnesota and STARTS Week 2 at Chicago.** J.J.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Wentz': 'player identifier', 'MIN': 'team abbreviation', 'Week_2': 'time period', 'Chicago': 'opponent team'}",
+      "assumptions": "Injury status of starter confirms backup activation.",
+      "breakdown_regime": "Injury-induced substitution",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's DFS strategy adjusts for QB value based on projected start status and matchup strength.",
+        "source_operator": "backup_qb_assignment",
+        "telemetry": "Ownership percentage and salary data from DraftKings/FantasyPros."
+      }
+    },
+    {
+      "primitive_id": "salary_vs_projection_alignment",
+      "name": "Salary vs Projection Alignment",
+      "verbatim_quote": "- DFS relevance: MIN@CHI gets Wentz (cheap $4.6K DK, \"QB1 value score at DraftKings\" per FantasyPros); Jefferson/Addison/Hockenson/Loveland all play with a veteran backup.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'Wentz': 'player identifier', '$4.6K': 'salary in USD', 'FantasyPros': 'projection source', 'DK': 'platform identifier'}",
+      "assumptions": "Projected performance correlates with salary efficiency.",
+      "breakdown_regime": "Value scoring threshold",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's valuation model mirrors GSE's DFS selection logic for high-value low-cost players.",
+        "source_operator": "salary_vs_projection_alignment",
+        "telemetry": "Projected points per dollar from DFS analytics platforms."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "aac0433e7c71849a_t0",
+      "think": "Sweep-2 operates as a temporal refinement engine, updating prior beliefs about player roles through deduplicated news feeds. It applies a dual-check mechanism: first, verifying team assignments against official rosters (e.g., Kyler Murray’s move to Minnesota), then validating secondary impacts such as backup QB deployment (Carson Wentz). This process introduces a Bayesian correction layer where prior probabilities of player involvement shift based on new evidence. The failure mode arises when outdated data persists—such as stale ownership percentages from previous weeks—which can mislead DFS strategies. The system must maintain a feedback loop between data ingestion and belief revision to avoid retroactive inconsistencies. Temporal filtering ensures only post-Sweep-1 content is considered, preserving logical consistency across iterations.\n\nDeep epistemic analysis for x-sweep2 (aac0433e7c71849a, domain=other, pages_read=5/5): Operator 'Team Attribution Correction' (page 1, domain other) captures: Verified multi-source facts (NBC Sports player-news, 2026-09-13; RotoWire; TheHuddle; FantasyPros; sportradar ARI roster): - **Kyler Murray is the MINNESOTA VIKINGS' QB in 2026** (acquired from Arizona this offseason; won the camp battle over incumbent J.J. Assumptions: Player transfer is final and verified by official roster sources. Breakdown regime: Post-transfer validation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update on player-team assignment aligns with GSE's state transition for lineup eligibility. Operator 'Backup QB Assignment' (page 1, domain other) captures: - **Carson Wentz is Murray's backup in Minnesota and STARTS Week 2 at Chicago.** J.J. Assumptions: Injury status of starter confirms backup activation. Breakdown regime: Injury-induced substitution Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's DFS strategy adjusts for QB value based on projected start status and matchup strength. Operator 'Salary vs Projection Alignment' (page 1, domain other) captures: - DFS relevance: MIN@CHI gets Wentz (cheap $4.6K DK, \"QB1 value score at DraftKings\" per FantasyPros); Jefferson/Addison/Hockenson/Loveland all play with a veteran backup. Assumptions: Projected performance correlates with salary efficiency. Breakdown regime: Value scoring threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's valuation model mirrors GSE's DFS selection logic for high-value low-cost players. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for x-sweep2 (aac0433e7c71849a, domain=other, pages_read=5/5): Operator 'Team Attribution Correction' (page 1, domain other) captures: Verified multi-source facts (NBC Sports player-news, 2026-09-13; RotoWire; TheHuddle; FantasyPros; sportradar ARI roster): - **Kyler Murray is the MINNESOTA VIKINGS' QB in 2026** (acquired from Arizona this offseason; won the camp battle over incumbent J.J. Assumptions: Player transfer is final and verified by official roster sources. Breakdown regime: Post-transfer validation Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's belief update on player-team assignment aligns with GSE's state transition for lineup eligibility. Operator 'Backup QB Assignment' (page 1, domain other) captures: - **Carson Wentz is Murray's backup in Minnesota and STARTS Week 2 at Chicago.** J.J. Assumptions: Injury status of starter confirms backup activation. Breakdown regime: Injury-induced substitution Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's DFS strategy adjusts for QB value based on projected start status and matchup strength. Operator 'Salary vs Projection Alignment' (page 1, domain other) captures: - DFS relevance: MIN@CHI gets Wentz (cheap $4.6K DK, \"QB1 value score at DraftKings\" per FantasyPros); Jefferson/Addison/Hockenson/Loveland all play with a veteran backup. Assumptions: Projected performance correlates with salary efficiency. Breakdown regime: Value scoring threshold Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's valuation model mirrors GSE's DFS selection logic for high-value low-cost players. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian temporal logic and information theory, tracing back to early 20th-century probabilistic reasoning and modern machine learning inference frameworks. Retrocausal Genealogy: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include legacy systems that propagate stale data, and user-driven biases in DFS interpretation. The system models these as noise sources in belief propagation, requiring robust filtering mechanisms. Theory of Mind & Decision Maker Model: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring each primitive maps distinct logical domains: team assignment, backup role, and valuation. Leakage occurs if ownership data is conflated with projection accuracy, which is prevented by strict separation of variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in x-sweep2 (aac0433e7c71849a), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

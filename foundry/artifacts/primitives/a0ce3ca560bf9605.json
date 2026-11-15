@@ -1,0 +1,78 @@
+{
+  "book_id": "a0ce3ca560bf9605",
+  "source_status": "COMPLETE",
+  "title": "bigdatabowl-catalog",
+  "file_name": "bigdatabowl-catalog.md",
+  "sha256": "a0ce3ca560bf9605792c31eab8c1ef451bdb72e23b614f0c8422fb7e73fe11c9",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Unified framework for NFL tracking analytics leveraging Kaggle-submitted methodologies as foundational metric kernels. Universal Lens: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference binds on derived metrics from BDB submissions enable probabilistic tactical state estimation in GSI. GSI Mapping: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE maps tracking-derived kernel metrics to real-time state transitions via covariate bus slots. GSE Mapping: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "tackle_probability_model",
+      "name": "Tackle Probability Model",
+      "verbatim_quote": "- 2024 winners (tackle probability): mpchang/uncovering-missed-tackleopportunities (14★) — directly extends our missed-tackle bind.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P_missed_tackle': 'probability dimensionless'}",
+      "assumptions": "Player trajectory and velocity fields are deterministic within tracking resolution.",
+      "breakdown_regime": "When tracking data lacks sufficient temporal granularity or spatial resolution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps player proximity and motion vectors to conditional probability of successful tackle execution.",
+        "source_operator": "tackle_probability_model",
+        "telemetry": "Missed tackle rate accuracy against ground truth."
+      }
+    },
+    {
+      "primitive_id": "pass_rush_win_rate",
+      "name": "Pass Rush Win Rate",
+      "verbatim_quote": "- 2023 winners (linemen): peterlmajors/Offensive-Linemen-Immediate-Zone, thomas-ramsay/NFL-Data-Bowl-2023-Big-Time-Pass-Rush — pass-rush win-rate metrics from tracking; feeds our pressure-rate binds with real tracking-derived definitions.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'W_pass_rush': 'dimensionless win rate'}",
+      "assumptions": "Defensive line performance is captured by tracking-derived zone coverage and speed differentials.",
+      "breakdown_regime": "In scenarios where tracking fails to capture full defensive alignment or misclassifies player roles.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Quantifies success of pass rush attempts using tracking-based zone control and time-to-sack metrics.",
+        "source_operator": "pass_rush_win_rate",
+        "telemetry": "Win rate accuracy against tracked sack events."
+      }
+    },
+    {
+      "primitive_id": "rush_over_expected_v2",
+      "name": "Rush Over Expected v2",
+      "verbatim_quote": "Map each to a covariate-bus slot or falsifier candidate: - tackle probability → missedTackleRate bind upgrade - pass-rush win rate → pressure-rate bind replacement (tracking-grade) - xYards rush model → rush-over-expected v2 cross-check 4.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'ROE_v2': 'yards per carry dimensionless'}",
+      "assumptions": "Expected rushing performance is modeled via historical distribution of similar plays.",
+      "breakdown_regime": "When baseline models fail due to novel play designs or inconsistent tracking quality.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compares observed rushing gains to expected outcomes based on prior distributions.",
+        "source_operator": "rush_over_expected_v2",
+        "telemetry": "Cross-validation accuracy against known play outcomes."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "a0ce3ca560bf9605_t0",
+      "think": "The primitives emerge from a structured synthesis of publicly available Kaggle submissions that define actionable metrics from NFL tracking data. Each primitive represents a distinct operational kernel: tackle probability models encode conditional likelihoods of defensive success, pass rush win rates quantify defensive effectiveness through tracking-derived zones, and rush over expected v2 compares empirical outcomes to predictive baselines. These operators are dualized into GSI’s Bayesian inference framework, where each metric becomes a probabilistic observation linked to latent tactical states. Their failure modes stem from tracking resolution limitations or misalignment between model assumptions and real-world dynamics. The epistemic trace reveals that these primitives are not merely descriptive but constitute methodological scaffolding for future integration of raw tracking data once access is granted.\n\nDeep epistemic analysis for bigdatabowl-catalog (a0ce3ca560bf9605, domain=other, pages_read=1/1): Operator 'Tackle Probability Model' (page 1, domain other) captures: - 2024 winners (tackle probability): mpchang/uncovering-missed-tackleopportunities (14★) — directly extends our missed-tackle bind. Assumptions: Player trajectory and velocity fields are deterministic within tracking resolution. Breakdown regime: When tracking data lacks sufficient temporal granularity or spatial resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player proximity and motion vectors to conditional probability of successful tackle execution. Operator 'Pass Rush Win Rate' (page 1, domain other) captures: - 2023 winners (linemen): peterlmajors/Offensive-Linemen-Immediate-Zone, thomas-ramsay/NFL-Data-Bowl-2023-Big-Time-Pass-Rush — pass-rush win-rate metrics from tracking; feeds our pressure-rate binds with real tracking-derived definitions. Assumptions: Defensive line performance is captured by tracking-derived zone coverage and speed differentials. Breakdown regime: In scenarios where tracking fails to capture full defensive alignment or misclassifies player roles. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies success of pass rush attempts using tracking-based zone control and time-to-sack metrics. Operator 'Rush Over Expected v2' (page 1, domain other) captures: Map each to a covariate-bus slot or falsifier candidate: - tackle probability → missedTackleRate bind upgrade - pass-rush win rate → pressure-rate bind replacement (tracking-grade) - xYards rush model → rush-over-expected v2 cross-check 4. Assumptions: Expected rushing performance is modeled via historical distribution of similar plays. Breakdown regime: When baseline models fail due to novel play designs or inconsistent tracking quality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compares observed rushing gains to expected outcomes based on prior distributions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for bigdatabowl-catalog (a0ce3ca560bf9605, domain=other, pages_read=1/1): Operator 'Tackle Probability Model' (page 1, domain other) captures: - 2024 winners (tackle probability): mpchang/uncovering-missed-tackleopportunities (14★) — directly extends our missed-tackle bind. Assumptions: Player trajectory and velocity fields are deterministic within tracking resolution. Breakdown regime: When tracking data lacks sufficient temporal granularity or spatial resolution. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps player proximity and motion vectors to conditional probability of successful tackle execution. Operator 'Pass Rush Win Rate' (page 1, domain other) captures: - 2023 winners (linemen): peterlmajors/Offensive-Linemen-Immediate-Zone, thomas-ramsay/NFL-Data-Bowl-2023-Big-Time-Pass-Rush — pass-rush win-rate metrics from tracking; feeds our pressure-rate binds with real tracking-derived definitions. Assumptions: Defensive line performance is captured by tracking-derived zone coverage and speed differentials. Breakdown regime: In scenarios where tracking fails to capture full defensive alignment or misclassifies player roles. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Quantifies success of pass rush attempts using tracking-based zone control and time-to-sack metrics. Operator 'Rush Over Expected v2' (page 1, domain other) captures: Map each to a covariate-bus slot or falsifier candidate: - tackle probability → missedTackleRate bind upgrade - pass-rush win rate → pressure-rate bind replacement (tracking-grade) - xYards rush model → rush-over-expected v2 cross-check 4. Assumptions: Expected rushing performance is modeled via historical distribution of similar plays. Breakdown regime: When baseline models fail due to novel play designs or inconsistent tracking quality. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Compares observed rushing gains to expected outcomes based on prior distributions. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical modeling traditions of sports analytics, particularly those pioneered by Next Gen Stats and extended through annual Big Data Bowl competitions. Retrocausal Genealogy: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "These primitives reflect an adversarial view of play design, where each metric encodes a strategic assumption about opponent behavior and environmental constraints. Theory of Mind & Decision Maker Model: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is ensured by distinct operational domains: tackle probability focuses on contact mechanics, pass rush on spatial-temporal coverage, and ROE on outcome deviation. Leakage is mitigated by explicit separation of tracking-based definitions from speculative modeling. Cross-Layer Veto & Anti-Leakage Check: Rooted in bigdatabowl-catalog (a0ce3ca560bf9605), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

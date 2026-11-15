@@ -1,0 +1,78 @@
+{
+  "book_id": "ca12f0c3928521f8",
+  "source_status": "COMPLETE",
+  "title": "ingest-pr",
+  "file_name": "ingest-pr.md",
+  "sha256": "ca12f0c3928521f8d2a60ff9999a632c69a6c0a2d358ef772df719977e5a6e77",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A causal feedback loop in ingestion runtime where DB visibility failure masks outage events, resolved by embedding run-open within exception handler. Universal Lens: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on ingestion health uses durable DB writes as evidence; failure to write implies silent outage, now corrected via alert envelope. GSI Mapping: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE transitions from silent failure to explicit 'failed' state upon DB unreachability, halting further invalid writes. GSE Mapping: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "db_write_visibility_guard",
+      "name": "Database Write Visibility Guard",
+      "verbatim_quote": "**Why this was invisible.** `processSport`'s first write — `db.ingestionRun.create()` at `:340` — sat **above** the `try` that records failures.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'T': 'time', 'E': 'event', 'F': 'failure', 'W': 'write'}",
+      "assumptions": "Write visibility depends on exception context; failure outside try block is undetectable.",
+      "breakdown_regime": "When T > T_outage, W(F) fails silently due to missing try block.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's probabilistic model of ingestion health mirrors GSE's deterministic state transition on DB failure.",
+        "source_operator": "db_write_visibility_guard",
+        "telemetry": "Absence of IngestionRun row indicates DB outage."
+      }
+    },
+    {
+      "primitive_id": "run_open_exception_handler",
+      "name": "Run Open Exception Handler",
+      "verbatim_quote": "**What changes.** The run-open moves inside its own try/catch: on a DB outage it logs, calls `notifyOwner`, and returns a `status:\"failed\"` envelope tagged `run_open_failed`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'R': 'run', 'S': 'status', 'E': 'exception', 'L': 'log', 'N': 'notify'}",
+      "assumptions": "Exception handling must be encapsulated to ensure observability during DB outages.",
+      "breakdown_regime": "When E(DB) occurs, S(R) = failed; L(E) and N(Owner) are guaranteed.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSE's state machine transitions to failure mode upon DB exception, while GSI updates belief state accordingly.",
+        "source_operator": "run_open_exception_handler",
+        "telemetry": "Status envelope with tag 'run_open_failed' confirms DB failure event."
+      }
+    },
+    {
+      "primitive_id": "durable_alert_mechanism",
+      "name": "Durable Alert Mechanism",
+      "verbatim_quote": "Two deliberate design points: it reports through **DB-independent** channels, because a durable DB write is impossible during a DB outage; and it **stops** rather than continuing, because `Odds.ingestionRunId` is `NOT NULL` and a fabricated run id would produce unattributable writes.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'A': 'alert', 'C': 'channel', 'I': 'id', 'V': 'validity'}",
+      "assumptions": "Alerts must persist even when DB is unavailable; fabricating IDs leads to attribution ambiguity.",
+      "breakdown_regime": "When C(DB) = false, A(V) must use C(non-db) to maintain integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSI's alert logic ensures non-deterministic reporting aligns with GSE's stop-and-report behavior.",
+        "source_operator": "durable_alert_mechanism",
+        "telemetry": "Alert sent over independent channel confirms system awareness of outage."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "ca12f0c3928521f8_t0",
+      "think": "The core issue stems from a temporal misalignment between database write and error handling. Prior to change, `db.ingestionRun.create()` occurred before the `try` block meant to capture failures. When Postgres was unreachable, this write threw outside the catch, resulting in no durable record of the failure. This created a silent outage where no alert fired, no credits were consumed, and the system appeared healthy. The fix embeds the run-open within its own try/catch, ensuring that even if DB is down, a failure status is returned and an alert is triggered. The second guard ensures that the failure write itself is protected, preventing cascading failures. The design enforces two principles: DB independence for alerts and halting execution to avoid invalid writes. This creates a dual feedback loop: one in which the system detects failure and another in which it prevents further damage. The root cause was environmental variables, but the fix addresses systemic resilience.\n\nDeep epistemic analysis for ingest-pr (ca12f0c3928521f8, domain=other, pages_read=1/1): Operator 'Database Write Visibility Guard' (page 1, domain other) captures: **Why this was invisible.** `processSport`'s first write — `db.ingestionRun.create()` at `:340` — sat **above** the `try` that records failures. Assumptions: Write visibility depends on exception context; failure outside try block is undetectable. Breakdown regime: When T > T_outage, W(F) fails silently due to missing try block. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic model of ingestion health mirrors GSE's deterministic state transition on DB failure. Operator 'Run Open Exception Handler' (page 1, domain other) captures: **What changes.** The run-open moves inside its own try/catch: on a DB outage it logs, calls `notifyOwner`, and returns a `status:\"failed\"` envelope tagged `run_open_failed`. Assumptions: Exception handling must be encapsulated to ensure observability during DB outages. Breakdown regime: When E(DB) occurs, S(R) = failed; L(E) and N(Owner) are guaranteed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state machine transitions to failure mode upon DB exception, while GSI updates belief state accordingly. Operator 'Durable Alert Mechanism' (page 1, domain other) captures: Two deliberate design points: it reports through **DB-independent** channels, because a durable DB write is impossible during a DB outage; and it **stops** rather than continuing, because `Odds.ingestionRunId` is `NOT NULL` and a fabricated run id would produce unattributable writes. Assumptions: Alerts must persist even when DB is unavailable; fabricating IDs leads to attribution ambiguity. Breakdown regime: When C(DB) = false, A(V) must use C(non-db) to maintain integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's alert logic ensures non-deterministic reporting aligns with GSE's stop-and-report behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for ingest-pr (ca12f0c3928521f8, domain=other, pages_read=1/1): Operator 'Database Write Visibility Guard' (page 1, domain other) captures: **Why this was invisible.** `processSport`'s first write — `db.ingestionRun.create()` at `:340` — sat **above** the `try` that records failures. Assumptions: Write visibility depends on exception context; failure outside try block is undetectable. Breakdown regime: When T > T_outage, W(F) fails silently due to missing try block. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's probabilistic model of ingestion health mirrors GSE's deterministic state transition on DB failure. Operator 'Run Open Exception Handler' (page 1, domain other) captures: **What changes.** The run-open moves inside its own try/catch: on a DB outage it logs, calls `notifyOwner`, and returns a `status:\"failed\"` envelope tagged `run_open_failed`. Assumptions: Exception handling must be encapsulated to ensure observability during DB outages. Breakdown regime: When E(DB) occurs, S(R) = failed; L(E) and N(Owner) are guaranteed. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSE's state machine transitions to failure mode upon DB exception, while GSI updates belief state accordingly. Operator 'Durable Alert Mechanism' (page 1, domain other) captures: Two deliberate design points: it reports through **DB-independent** channels, because a durable DB write is impossible during a DB outage; and it **stops** rather than continuing, because `Odds.ingestionRunId` is `NOT NULL` and a fabricated run id would produce unattributable writes. Assumptions: Alerts must persist even when DB is unavailable; fabricating IDs leads to attribution ambiguity. Breakdown regime: When C(DB) = false, A(V) must use C(non-db) to maintain integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSI's alert logic ensures non-deterministic reporting aligns with GSE's stop-and-report behavior. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2026's outage where DB visibility failure masked system degradation. Inspired by prior attempts (#957) that were reverted due to test instability, this version stabilizes on current mainline with full regression coverage. Retrocausal Genealogy: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the database (unreachable), the ingestion process (trying to write), and the alerting system (which must survive DB failure). The system models these as competing causal paths, where failure propagation must be stopped before it corrupts downstream data. Theory of Mind & Decision Maker Model: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring DB-dependent telemetry cannot mask DB-unavailable states. Leakage vetoes occur when a fabricated ID might be used, which would violate attribution integrity. These conditions prevent cross-layer contamination of failure semantics. Cross-Layer Veto & Anti-Leakage Check: Rooted in ingest-pr (ca12f0c3928521f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

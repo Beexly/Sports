@@ -1,0 +1,78 @@
+{
+  "book_id": "f91e524c94a851f8",
+  "source_status": "COMPLETE",
+  "title": "vsin.com",
+  "file_name": "vsin.com.md",
+  "sha256": "f91e524c94a851f8f7208d5762ab28d6f1af8b24cf6c5f860704230573157793",
+  "primary_domain": "other",
+  "pages_total": 13,
+  "pages_read": 13,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Client-side event handling and DOM interaction primitives form a structured causal lattice underpinned by data-driven state transitions. Universal Lens: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference maps client-side event triggers to probabilistic belief states over user intent and system response likelihood. GSI Mapping: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models user interaction sequences as Markovian state transitions through UI affordance spaces governed by action-event feedback loops. GSE Mapping: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "prepare_events",
+      "name": "Event Listener Preparation",
+      "verbatim_quote": "# vsin.com — engineering App bundles beautified: **7** JSON endpoints captured: **0** Client functions passing filter: **53** ## Captured JSON endpoints _None.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "DOM elements with data-* attributes are present and correctly formatted.",
+      "breakdown_regime": "When no elements match selector criteria or attribute parsing fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The function prepares a listener registry for dynamic DOM events, mirroring GSI's probabilistic event graph construction.",
+        "source_operator": "prepare_events",
+        "telemetry": "Number of registered event listeners per element type."
+      }
+    },
+    {
+      "primitive_id": "search_results_mouseup",
+      "name": "Search Result Selection Handler",
+      "verbatim_quote": "t(e.target) : t(e.target).parents(\".active-result\").firs ``` ### `search_results_mouseup` ```js search_results_mouseup = function(e) { var s; if ((s = t(e.target).hasClass(\"active-result\") ?",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Active result elements exist and are selectable via jQuery traversal.",
+      "breakdown_regime": "When no active result is found or selection logic fails.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Encapsulates selection logic for search results, enabling GSE to model interactive query resolution paths.",
+        "source_operator": "search_results_mouseup",
+        "telemetry": "Frequency and latency of search result selections."
+      }
+    },
+    {
+      "primitive_id": "set_label_behavior",
+      "name": "Label Association Behavior",
+      "verbatim_quote": "[e] : ce.makeArray(t, [e]), c = ce.event.sp ``` ### `show_search_field_default` ```js show_search_field_default = function() { return this.is_multiple && this.choices_count() < 1 && !this.active_field ?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Form field has associated label or ID for correct association.",
+      "breakdown_regime": "When label cannot be resolved due to missing ID or parent structure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps form labels to interactive handlers, aligning with GSI's semantic labeling of user interface components.",
+        "source_operator": "set_label_behavior",
+        "telemetry": "Success rate of label-to-form-field linkage during initialization."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f91e524c94a851f8_t0",
+      "think": "The primitives reflect a modular architecture where event preparation and UI interaction handlers operate within a constrained domain of client-side JavaScript. The 'prepareEvents' primitive establishes a registry of event listeners based on DOM attributes, forming a foundational layer for reactive behavior. The 'search_results_mouseup' primitive encodes a selection protocol that navigates hierarchical DOM structures to identify and act upon user-selected items, embodying a state transition mechanism. The 'set_label_behavior' primitive ensures semantic consistency between form fields and their labels, supporting cognitive alignment in UI design. These operators collectively define a dualistic framework: one where state changes are triggered by discrete events (event-driven), and another where these events are interpreted through structured data relationships (data-driven). Failure modes arise when DOM integrity is compromised or when attribute expectations are violated, leading to non-recoverable execution paths. This architecture supports both top-down declarative modeling and bottom-up reactive simulation, enabling robust reasoning about user-agent interactions.\n\nDeep epistemic analysis for vsin.com (f91e524c94a851f8, domain=other, pages_read=13/13): Operator 'Event Listener Preparation' (page 1, domain other) captures: # vsin.com — engineering App bundles beautified: **7** JSON endpoints captured: **0** Client functions passing filter: **53** ## Captured JSON endpoints _None. Assumptions: DOM elements with data-* attributes are present and correctly formatted. Breakdown regime: When no elements match selector criteria or attribute parsing fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The function prepares a listener registry for dynamic DOM events, mirroring GSI's probabilistic event graph construction. Operator 'Search Result Selection Handler' (page 2, domain other) captures: t(e.target) : t(e.target).parents(\".active-result\").firs ``` ### `search_results_mouseup` ```js search_results_mouseup = function(e) { var s; if ((s = t(e.target).hasClass(\"active-result\") ? Assumptions: Active result elements exist and are selectable via jQuery traversal. Breakdown regime: When no active result is found or selection logic fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encapsulates selection logic for search results, enabling GSE to model interactive query resolution paths. Operator 'Label Association Behavior' (page 1, domain other) captures: [e] : ce.makeArray(t, [e]), c = ce.event.sp ``` ### `show_search_field_default` ```js show_search_field_default = function() { return this.is_multiple && this.choices_count() < 1 && !this.active_field ? Assumptions: Form field has associated label or ID for correct association. Breakdown regime: When label cannot be resolved due to missing ID or parent structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps form labels to interactive handlers, aligning with GSI's semantic labeling of user interface components. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for vsin.com (f91e524c94a851f8, domain=other, pages_read=13/13): Operator 'Event Listener Preparation' (page 1, domain other) captures: # vsin.com — engineering App bundles beautified: **7** JSON endpoints captured: **0** Client functions passing filter: **53** ## Captured JSON endpoints _None. Assumptions: DOM elements with data-* attributes are present and correctly formatted. Breakdown regime: When no elements match selector criteria or attribute parsing fails. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The function prepares a listener registry for dynamic DOM events, mirroring GSI's probabilistic event graph construction. Operator 'Search Result Selection Handler' (page 2, domain other) captures: t(e.target) : t(e.target).parents(\".active-result\").firs ``` ### `search_results_mouseup` ```js search_results_mouseup = function(e) { var s; if ((s = t(e.target).hasClass(\"active-result\") ? Assumptions: Active result elements exist and are selectable via jQuery traversal. Breakdown regime: When no active result is found or selection logic fails. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Encapsulates selection logic for search results, enabling GSE to model interactive query resolution paths. Operator 'Label Association Behavior' (page 1, domain other) captures: [e] : ce.makeArray(t, [e]), c = ce.event.sp ``` ### `show_search_field_default` ```js show_search_field_default = function() { return this.is_multiple && this.choices_count() < 1 && !this.active_field ? Assumptions: Form field has associated label or ID for correct association. Breakdown regime: When label cannot be resolved due to missing ID or parent structure. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps form labels to interactive handlers, aligning with GSI's semantic labeling of user interface components. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early 2000s DOM manipulation paradigms and jQuery's event delegation patterns, evolving into modern component-based frameworks like React and Vue.js, which abstract similar concerns into virtual DOM layers. Retrocausal Genealogy: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents modeled include the user navigating UI elements, the browser interpreting DOM events, and the application state machine reacting to those inputs. Each agent operates under bounded rationality constraints, with the system's observability dependent on consistent event propagation and DOM fidelity. Theory of Mind & Decision Maker Model: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity arises if multiple handlers attempt to modify the same DOM node simultaneously without coordination. Leakage occurs when event handlers bypass intended state boundaries, such as propagating unintended click events across components. Veto conditions enforce atomicity of UI updates and prevent race conditions in asynchronous event processing. Cross-Layer Veto & Anti-Leakage Check: Rooted in vsin.com (f91e524c94a851f8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

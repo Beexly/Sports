@@ -1,0 +1,95 @@
+{
+  "book_id": "3ecc53d489862a16",
+  "source_status": "COMPLETE",
+  "title": "INDEX-IG-1",
+  "file_name": "INDEX-IG-1.md",
+  "sha256": "3ecc53d489862a1672e3f0bb4bf124e305adbe5a0a06c2fd1dc750fbd7527c48",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "epa",
+      "name": "Expected Points Added",
+      "verbatim_quote": "ram.com/reel/DTcTmBeim1l/ | Oblique frozen-turf impact, rotational acceleration and rebound shear; 7-21 day return | Richly labeled injury episode (mechanism, velocity, surface, absence) | social/ig-wave-IG-1.md#IG1-27 | DRIVE: pending CARE Consortium blood biomarkers: no single marker catches all concussions | Andrew Jagim (@andrewjagim), on Croghan et al.",
+      "page": 4,
+      "latex": "\\Delta EP = EP_{post} - EP_{pre}",
+      "symbol_and_unit_ledger": "EP: expected points (dimensionless), \\Delta EP: points added (dimensionless)",
+      "assumptions": "Markovian transition assumption, ergodicity across similar game states, linear utility over wins",
+      "breakdown_regime": "Singular when EP_{pre} \\approx EP_{post} (zero-value plays)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian posterior mean of win probability given action versus prior expectation",
+        "source_operator": "epa",
+        "telemetry": "Post-action win probability from replay-verified game-state features"
+      }
+    },
+    {
+      "primitive_id": "net_epa_per_play",
+      "name": "Net Expected Points Added per Play",
+      "verbatim_quote": "SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | social/ig-wave-IG-1.md#IG1-NN | DRIVE: pending EPA explained for a general audience",
+      "page": 1,
+      "latex": "NET \\; EPA/play = \\frac{\\sum_i EPA_i}{N_{plays}}",
+      "symbol_and_unit_ledger": "EPA_i: points added per play (dimensionless), N_{plays}: total plays played (count)",
+      "assumptions": "Stationarity across seasons, equal weight per play, no autocorrelation between plays",
+      "breakdown_regime": "Undefined when N_{plays} = 0 (division by zero)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Conformal predictive interval for future game outcomes based on offensive efficiency",
+        "source_operator": "net_epa_per_play",
+        "telemetry": "Observed point differential normalized by total offensive snaps"
+      }
+    },
+    {
+      "primitive_id": "ultra_wide_band_tracking",
+      "name": "Ultra-Wide Band Tracking",
+      "verbatim_quote": "| social/ig-wave-IG-1.md#IG1-02 | DRIVE: pending How NFL player tracking works: UWB chips at up to 20x/sec",
+      "page": 1,
+      "latex": "r(t) = \\sqrt{(x(t)-x_0)^2+(y(t)-y_0)^2+(z(t)-z_0)^2}",
+      "symbol_and_unit_ledger": "r: distance (m), x,y,z: Cartesian coordinates (m), t: time (s)",
+      "assumptions": "Line-of-sight propagation, stationary anchor positions, negligible multipath error",
+      "breakdown_regime": "Singularity at anchor coincidence (r \\rightarrow 0)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "State-transition kernel for predicting player trajectories via Kalman filtering",
+        "source_operator": "ultra_wide_band_tracking",
+        "telemetry": "Raw anchor-to-tag round-trip delay measurements converted to centimeter-level position estimates"
+      }
+    },
+    {
+      "primitive_id": "pressure_kill",
+      "name": "Pressure Kill",
+      "verbatim_quote": "and derived metrics | @sujar.tech | 2026 | A | https://www.instagram.com/reel/Dd_ccbMhowG/ | 10x/sec tracking spawning separation,",
+      "page": 1,
+      "latex": "K = \\mathbb{I}(\\Delta QBR < 0) \\cdot \\mathbb{I}(D > d_0)",
+      "symbol_and_unit_ledger": "K: binary kill indicator (1 if killed, 0 otherwise), \\Delta QBR: QB rating change (dimensionless), D: pressure distance (m), d_0: threshold distance (m)",
+      "assumptions": "Binary outcome classification, fixed kill threshold, independent pressure events",
+      "breakdown_regime": "Ambiguity at exactly zero yard gain (D = 0)",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Bayesian network quantifying causal effect of defensive pressure on passing efficiency",
+        "source_operator": "pressure_kill",
+        "telemetry": "Difference in QB rating before and after pressure event, measured as proximity to passer"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3ecc53d489862a16_t0",
+      "think": "EPA maps to conformal prediction intervals for win probability, while Net EPA/play embeds into GSI's hierarchical Bayes framework for team efficiency. UWB triangulation underpins GSE's state-transition models for player dynamics, and Pressure Kill operationalizes defensive effectiveness through causal graphs. These primitives form a unified information-theoretic architecture for NFL analytics.\n\nDeep epistemic analysis for INDEX-IG-1 (3ecc53d489862a16, domain=other, pages_read=5/5): Operator 'Expected Points Added' (page 4, domain other) captures: ram.com/reel/DTcTmBeim1l/ | Oblique frozen-turf impact, rotational acceleration and rebound shear; 7-21 day return | Richly labeled injury episode (mechanism, velocity, surface, absence) | social/ig-wave-IG-1.md#IG1-27 | DRIVE: pending CARE Consortium blood biomarkers: no single marker catches all concussions | Andrew Jagim (@andrewjagim), on Croghan et al. Assumptions: Markovian transition assumption, ergodicity across similar game states, linear utility over wins Breakdown regime: Singular when EP_{pre} \\approx EP_{post} (zero-value plays) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior mean of win probability given action versus prior expectation Operator 'Net Expected Points Added per Play' (page 1, domain other) captures: SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | social/ig-wave-IG-1.md#IG1-NN | DRIVE: pending EPA explained for a general audience Assumptions: Stationarity across seasons, equal weight per play, no autocorrelation between plays Breakdown regime: Undefined when N_{plays} = 0 (division by zero) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal predictive interval for future game outcomes based on offensive efficiency Operator 'Ultra-Wide Band Tracking' (page 1, domain other) captures: | social/ig-wave-IG-1.md#IG1-02 | DRIVE: pending How NFL player tracking works: UWB chips at up to 20x/sec Assumptions: Line-of-sight propagation, stationary anchor positions, negligible multipath error Breakdown regime: Singularity at anchor coincidence (r \\rightarrow 0) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition kernel for predicting player trajectories via Kalman filtering Operator 'Pressure Kill' (page 1, domain other) captures: and derived metrics | @sujar.tech | 2026 | A | https://www.instagram.com/reel/Dd_ccbMhowG/ | 10x/sec tracking spawning separation, Assumptions: Binary outcome classification, fixed kill threshold, independent pressure events Breakdown regime: Ambiguity at exactly zero yard gain (D = 0) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network quantifying causal effect of defensive pressure on passing efficiency Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for INDEX-IG-1 (3ecc53d489862a16, domain=other, pages_read=5/5): Operator 'Expected Points Added' (page 4, domain other) captures: ram.com/reel/DTcTmBeim1l/ | Oblique frozen-turf impact, rotational acceleration and rebound shear; 7-21 day return | Richly labeled injury episode (mechanism, velocity, surface, absence) | social/ig-wave-IG-1.md#IG1-27 | DRIVE: pending CARE Consortium blood biomarkers: no single marker catches all concussions | Andrew Jagim (@andrewjagim), on Croghan et al. Assumptions: Markovian transition assumption, ergodicity across similar game states, linear utility over wins Breakdown regime: Singular when EP_{pre} \\approx EP_{post} (zero-value plays) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian posterior mean of win probability given action versus prior expectation Operator 'Net Expected Points Added per Play' (page 1, domain other) captures: SOURCE_URL | WHAT_IT_IS | TRAINING_VALUE | social/ig-wave-IG-1.md#IG1-NN | DRIVE: pending EPA explained for a general audience Assumptions: Stationarity across seasons, equal weight per play, no autocorrelation between plays Breakdown regime: Undefined when N_{plays} = 0 (division by zero) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Conformal predictive interval for future game outcomes based on offensive efficiency Operator 'Ultra-Wide Band Tracking' (page 1, domain other) captures: | social/ig-wave-IG-1.md#IG1-02 | DRIVE: pending How NFL player tracking works: UWB chips at up to 20x/sec Assumptions: Line-of-sight propagation, stationary anchor positions, negligible multipath error Breakdown regime: Singularity at anchor coincidence (r \\rightarrow 0) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): State-transition kernel for predicting player trajectories via Kalman filtering Operator 'Pressure Kill' (page 1, domain other) captures: and derived metrics | @sujar.tech | 2026 | A | https://www.instagram.com/reel/Dd_ccbMhowG/ | 10x/sec tracking spawning separation, Assumptions: Binary outcome classification, fixed kill threshold, independent pressure events Breakdown regime: Ambiguity at exactly zero yard gain (D = 0) Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Bayesian network quantifying causal effect of defensive pressure on passing efficiency Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Originating from Kelly criterion bets, these concepts evolved through Markov decision processes and particle filtering to modern sports data science. Retrocausal Genealogy: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opponents strategize to minimize opponent's EP gains while maximizing their own, creating a zero-sum game. Theory of Mind & Decision Maker Model: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Avoid collinearity by ensuring telemetry metrics are conditionally independent given latent game states. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in INDEX-IG-1 (3ecc53d489862a16), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

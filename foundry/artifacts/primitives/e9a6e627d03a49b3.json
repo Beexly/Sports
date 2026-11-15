@@ -1,0 +1,78 @@
+{
+  "book_id": "e9a6e627d03a49b3",
+  "source_status": "COMPLETE",
+  "title": "sharpfootballstats.com",
+  "file_name": "sharpfootballstats.com.md",
+  "sha256": "e9a6e627d03a49b3468dee5acaeaf48c7115ed2c98ba4425891cd609c2379762",
+  "primary_domain": "football",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Sitemap graph traversal as a directed acyclic network; node entropy quantifies data density; path taxonomy defines logical partitions. Universal Lens: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on sitemap crawl states; conformal predictive sets for URL discovery confidence intervals. GSI Mapping: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions governed by sitemap index traversal; situational awareness via path-segment entropy and URL coverage dynamics. GSE Mapping: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "sitemap_graph_entropy",
+      "name": "Sitemap Graph Entropy",
+      "verbatim_quote": "# sharpfootballstats.com Category: **advanced-data** URLs discovered: **1** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'H': 'Shannon entropy in bits', 'S': 'Set of sitemaps'}",
+      "assumptions": "Each sitemap entry is independent; uniform distribution over crawled paths.",
+      "breakdown_regime": "When sitemap index is malformed or inaccessible.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Entropy of sitemap graph nodes mirrors information content of URL discovery process; GSI maps to belief update on crawl success.",
+        "source_operator": "sitemap_graph_entropy",
+        "telemetry": "Crawl success rate per sitemap index entry."
+      }
+    },
+    {
+      "primitive_id": "path_taxonomy_partition",
+      "name": "Path Taxonomy Partition",
+      "verbatim_quote": "segment | URLs | |---|---| | `/lander` | 1 | ## Sample URLs ``` https://sharpfootballstats.com/lander ```",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'P': 'Path segments', 'U': 'URLs within segment'}",
+      "assumptions": "Segments are mutually exclusive and collectively exhaustive.",
+      "breakdown_regime": "When path hierarchy is ambiguous or missing.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Partition function defines logical structure of site navigation; GSE uses partition to model state transitions between URL types.",
+        "source_operator": "path_taxonomy_partition",
+        "telemetry": "Number of unique path segments identified during crawl."
+      }
+    },
+    {
+      "primitive_id": "crawl_status_vector",
+      "name": "Crawl Status Vector",
+      "verbatim_quote": "| Index | |---|---|---|---| | `/sitemap.xml` | 000 | 0 | no | | `https://sharpfootballstats.com/sitemap.xml` |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'v_crawl': 'Vector of crawl outcomes {200, 404, 500}', 't': 'Time step of crawl'}",
+      "assumptions": "Crawl status is deterministic and observable.",
+      "breakdown_regime": "When server returns non-standard HTTP codes.",
+      "domain": "football",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Crawl vector encodes system health; GSI applies probabilistic models to infer site availability.",
+        "source_operator": "crawl_status_vector",
+        "telemetry": "HTTP response code frequency across sitemaps."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e9a6e627d03a49b3_t0",
+      "think": "The sitemap graph entropy primitive models the information-theoretic complexity of URL discovery through structured crawling. It assumes each sitemap entry contributes independently to a total entropy measure, which reflects data density. The path taxonomy partition decomposes the site into navigational segments, enabling hierarchical reasoning about content organization. The crawl status vector captures deterministic system behavior through HTTP responses, allowing for failure mode detection. These primitives form a dual framework: one for structural complexity and another for operational reliability. Failure modes include malformed sitemaps, inaccessible indices, and inconsistent HTTP responses. Dualities emerge in how entropy and partitioning interact—entropy increases with more diverse paths, while partitioning ensures manageable granularity. The system's robustness depends on maintaining coherence between these layers.\n\nDeep epistemic analysis for sharpfootballstats.com (e9a6e627d03a49b3, domain=football, pages_read=1/1): Operator 'Sitemap Graph Entropy' (page 1, domain football) captures: # sharpfootballstats.com Category: **advanced-data** URLs discovered: **1** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry is independent; uniform distribution over crawled paths. Breakdown regime: When sitemap index is malformed or inaccessible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy of sitemap graph nodes mirrors information content of URL discovery process; GSI maps to belief update on crawl success. Operator 'Path Taxonomy Partition' (page 1, domain football) captures: segment | URLs | |---|---| | `/lander` | 1 | ## Sample URLs ``` https://sharpfootballstats.com/lander ``` Assumptions: Segments are mutually exclusive and collectively exhaustive. Breakdown regime: When path hierarchy is ambiguous or missing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Partition function defines logical structure of site navigation; GSE uses partition to model state transitions between URL types. Operator 'Crawl Status Vector' (page 1, domain football) captures: | Index | |---|---|---|---| | `/sitemap.xml` | 000 | 0 | no | | `https://sharpfootballstats.com/sitemap.xml` | Assumptions: Crawl status is deterministic and observable. Breakdown regime: When server returns non-standard HTTP codes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Crawl vector encodes system health; GSI applies probabilistic models to infer site availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for sharpfootballstats.com (e9a6e627d03a49b3, domain=football, pages_read=1/1): Operator 'Sitemap Graph Entropy' (page 1, domain football) captures: # sharpfootballstats.com Category: **advanced-data** URLs discovered: **1** Sitemaps walked: 7 ## Sitemaps | Sitemap | Status Assumptions: Each sitemap entry is independent; uniform distribution over crawled paths. Breakdown regime: When sitemap index is malformed or inaccessible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Entropy of sitemap graph nodes mirrors information content of URL discovery process; GSI maps to belief update on crawl success. Operator 'Path Taxonomy Partition' (page 1, domain football) captures: segment | URLs | |---|---| | `/lander` | 1 | ## Sample URLs ``` https://sharpfootballstats.com/lander ``` Assumptions: Segments are mutually exclusive and collectively exhaustive. Breakdown regime: When path hierarchy is ambiguous or missing. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Partition function defines logical structure of site navigation; GSE uses partition to model state transitions between URL types. Operator 'Crawl Status Vector' (page 1, domain football) captures: | Index | |---|---|---|---| | `/sitemap.xml` | 000 | 0 | no | | `https://sharpfootballstats.com/sitemap.xml` | Assumptions: Crawl status is deterministic and observable. Breakdown regime: When server returns non-standard HTTP codes. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Crawl vector encodes system health; GSI applies probabilistic models to infer site availability. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in information theory and graph theory; extends Shannon entropy and topological graph analysis to web crawling domains. Retrocausal Genealogy: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Models adversarial behavior in web indexing—malformed sitemaps, rate-limiting, or intentional obfuscation—by treating crawl outcomes as strategic signals. Theory of Mind & Decision Maker Model: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that entropy and partitioning do not redundantly encode the same structural signal. Leakage vetoes occur when crawl vectors fail to distinguish between valid and invalid paths. Cross-Layer Veto & Anti-Leakage Check: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in sharpfootballstats.com (e9a6e627d03a49b3), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

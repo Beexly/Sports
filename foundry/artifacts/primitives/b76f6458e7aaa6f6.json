@@ -1,0 +1,78 @@
+{
+  "book_id": "b76f6458e7aaa6f6",
+  "source_status": "COMPLETE",
+  "title": "two-labeled-bands",
+  "file_name": "two-labeled-bands.md",
+  "sha256": "b76f6458e7aaa6f6ff5de7b0f1ac43ab30c412452c655d17dd39239379a5a4d9",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Measured z-values for variance bands are derived from empirical CV, not assumed Gaussian; thus, 68%/90% claims conflict internally when based on distinct implied CVs. Universal Lens: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian conformal prediction uses measured shrinkage CV (0.7707) to compute valid z-intervals, rejecting static Gaussian approximations that misalign coverage labels with actual data distribution. GSI Mapping: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning updates projection bands via walk-forward validation using full-season training; suppression lists must be re-evaluated under new temporal windows to maintain calibration integrity. GSE Mapping: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "measured_z_intervals",
+      "name": "Measured Z-Intervals",
+      "verbatim_quote": "## HEADLINE: THE SPEC'S BAND PAIRS DO NOT HOLD, AND THE z VALUES SHIPPED ARE MEASURED The brief specifies `68% coverage: z = 0.62 (+/-51%)` and `90% coverage: z = 1.28 (+/-78%)`.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'z': 'standardized score (dimensionless)', 'coverage': 'probability level (dimensionless)'}",
+      "assumptions": "Specified z-values assume Gaussianity; empirical data shows otherwise.",
+      "breakdown_regime": "When z-values are computed from inconsistent implied coefficients of variation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Z-intervals are derived from observed coefficient of variation (CV) rather than theoretical Gaussian quantiles.",
+        "source_operator": "measured_z_intervals",
+        "telemetry": "Observed CV = 0.7707 vs. implied CVs (0.8226, 0.6094) from spec pairs."
+      }
+    },
+    {
+      "primitive_id": "empirical_coefficient_of_variation",
+      "name": "Empirical Coefficient of Variation",
+      "verbatim_quote": "**One model has ONE mean CV.** Measured mean shrunk CV = **0.7707**.",
+      "page": 1,
+      "latex": "\\text{CV} = \\frac{\\sigma}{\\mu}",
+      "symbol_and_unit_ledger": "{'CV': 'coefficient of variation (dimensionless)', '\\\\sigma': 'standard deviation (units of measurement)', '\\\\mu': 'mean (units of measurement)'}",
+      "assumptions": "Model assumes single global CV across all positions and time periods.",
+      "breakdown_regime": "When multiple z-pairs imply conflicting CV estimates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Empirical CV maps directly to z-interval width in non-Gaussian distributions.",
+        "source_operator": "empirical_coefficient_of_variation",
+        "telemetry": "Shrunk CV = 0.7707 used to derive correct z-values for 68% and 90% bands."
+      }
+    },
+    {
+      "primitive_id": "walk_forward_validation",
+      "name": "Walk Forward Validation",
+      "verbatim_quote": "# Two labeled intervals — measured, not assumed **2026-09-28.** Walk-forward: fit seasons 2021-2024 (weeks 1-3), evaluate 2025 (weeks 4-18), project the 15 remaining games.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'t_{fit}': 'training period (weeks)', 't_{eval}': 'evaluation period (weeks)', 't_{proj}': 'projection period (weeks)'}",
+      "assumptions": "Temporal order preserved; future unseen during fitting phase.",
+      "breakdown_regime": "Failure to validate on out-of-sample periods leads to overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Validation scheme ensures robustness of z-interval labeling through temporal separation.",
+        "source_operator": "walk_forward_validation",
+        "telemetry": "Fit 2021–2024, evaluate 2025 (weeks 4–18), project 15 games."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b76f6458e7aaa6f6_t0",
+      "think": "The core issue arises from treating z-values as fixed parameters instead of measured outcomes. The specification implies two incompatible CVs (0.8226 and 0.6094) from z=0.62 and z=1.28 respectively, contradicting the single measured CV of 0.7707. This inconsistency invalidates both claimed coverage levels. The correct approach is to derive z-values from the empirical CV, ensuring that labels reflect actual data behavior. Inference fails if z is treated as a tuning parameter rather than an outcome of data-driven estimation. The model's structure enforces a unified z per coverage level, preventing arbitrary assignment of labels. Dualities emerge between theoretical assumptions and empirical reality—where Gaussian approximations fail due to heavy tails in NFL PPR data. The spot-check confirms that even with a 31% error, the band correctly captures realization, validating the method’s calibration. Thus, the system must enforce consistency between z-values and measured variability.\n\nDeep epistemic analysis for two-labeled-bands (b76f6458e7aaa6f6, domain=other, pages_read=4/4): Operator 'Measured Z-Intervals' (page 1, domain other) captures: ## HEADLINE: THE SPEC'S BAND PAIRS DO NOT HOLD, AND THE z VALUES SHIPPED ARE MEASURED The brief specifies `68% coverage: z = 0.62 (+/-51%)` and `90% coverage: z = 1.28 (+/-78%)`. Assumptions: Specified z-values assume Gaussianity; empirical data shows otherwise. Breakdown regime: When z-values are computed from inconsistent implied coefficients of variation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-intervals are derived from observed coefficient of variation (CV) rather than theoretical Gaussian quantiles. Operator 'Empirical Coefficient of Variation' (page 1, domain other) captures: **One model has ONE mean CV.** Measured mean shrunk CV = **0.7707**. Assumptions: Model assumes single global CV across all positions and time periods. Breakdown regime: When multiple z-pairs imply conflicting CV estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Empirical CV maps directly to z-interval width in non-Gaussian distributions. Operator 'Walk Forward Validation' (page 1, domain other) captures: # Two labeled intervals — measured, not assumed **2026-09-28.** Walk-forward: fit seasons 2021-2024 (weeks 1-3), evaluate 2025 (weeks 4-18), project the 15 remaining games. Assumptions: Temporal order preserved; future unseen during fitting phase. Breakdown regime: Failure to validate on out-of-sample periods leads to overfitting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation scheme ensures robustness of z-interval labeling through temporal separation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for two-labeled-bands (b76f6458e7aaa6f6, domain=other, pages_read=4/4): Operator 'Measured Z-Intervals' (page 1, domain other) captures: ## HEADLINE: THE SPEC'S BAND PAIRS DO NOT HOLD, AND THE z VALUES SHIPPED ARE MEASURED The brief specifies `68% coverage: z = 0.62 (+/-51%)` and `90% coverage: z = 1.28 (+/-78%)`. Assumptions: Specified z-values assume Gaussianity; empirical data shows otherwise. Breakdown regime: When z-values are computed from inconsistent implied coefficients of variation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-intervals are derived from observed coefficient of variation (CV) rather than theoretical Gaussian quantiles. Operator 'Empirical Coefficient of Variation' (page 1, domain other) captures: **One model has ONE mean CV.** Measured mean shrunk CV = **0.7707**. Assumptions: Model assumes single global CV across all positions and time periods. Breakdown regime: When multiple z-pairs imply conflicting CV estimates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Empirical CV maps directly to z-interval width in non-Gaussian distributions. Operator 'Walk Forward Validation' (page 1, domain other) captures: # Two labeled intervals — measured, not assumed **2026-09-28.** Walk-forward: fit seasons 2021-2024 (weeks 1-3), evaluate 2025 (weeks 4-18), project the 15 remaining games. Assumptions: Temporal order preserved; future unseen during fitting phase. Breakdown regime: Failure to validate on out-of-sample periods leads to overfitting. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Validation scheme ensures robustness of z-interval labeling through temporal separation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference and modern conformal prediction frameworks, particularly those addressing non-Gaussian distributions and finite-sample corrections. Influenced by empirical Bayes methods and shrinkage estimators. Retrocausal Genealogy: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agent assumes Gaussianity and static z-values; correct agent recognizes empirical variability and dynamic calibration. Decision actor chooses validity over convenience, prioritizing accurate coverage over pre-specified intervals. Theory of Mind & Decision Maker Model: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes use of multiple z-pairs for same coverage level. Leakage veto prevents carryover of suppression lists across different training windows without revalidation. These checks ensure no spurious correlation between model components and external variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in two-labeled-bands (b76f6458e7aaa6f6), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

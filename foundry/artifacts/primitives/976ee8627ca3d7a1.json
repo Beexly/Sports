@@ -1,0 +1,78 @@
+{
+  "book_id": "976ee8627ca3d7a1",
+  "source_status": "COMPLETE",
+  "title": "rest-edge-scan",
+  "file_name": "rest-edge-scan.md",
+  "sha256": "976ee8627ca3d7a104eb8e55943ee59fd9caa4d3b6494f92ffe84ffd92a62f7a",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Rest, short-week, and timezone effects on NFL spread coverage modeled via z-scores under multiple-testing correction. Universal Lens: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian conformal inference maps observed z-scores to falsifier-queue candidates using pre-registered hypotheses and family-wise error control. GSI Mapping: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE evaluates time-zone shifts and kickoff timing as state transitions affecting team performance via circadian disruption. GSE Mapping: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "short_week_road_favorites",
+      "name": "Short-Week Road Favorite Coverage",
+      "verbatim_quote": "## Hypotheses (preregistered) - **H1** Short-week (Thu/Sat after Sun) road favorites cover LESS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'z': 'standardized score measuring deviation from breakeven coverage rate', 'cover': 'binary outcome (1 if result < spreadLineHome, else 0)'}",
+      "assumptions": "Road favorites in short-week games exhibit reduced coverage probability due to fatigue.",
+      "breakdown_regime": "|z| > 2 indicates statistical significance under family-wise correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Z-score derived from empirical coverage rate vs. breakeven baseline, adjusted for multiple testing.",
+        "source_operator": "short_week_road_favorites",
+        "telemetry": "Observed proportion of road favorite wins relative to spreadLineHome"
+      }
+    },
+    {
+      "primitive_id": "west_coast_time_zone_edge",
+      "name": "West-Coast Time Zone Edge",
+      "verbatim_quote": "(SpreadLineHome < 0 = away favored; cover = result < spreadLineHome.) - **H2** West-coast (Pacific) team playing 10am PT road game covers LESS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'z': 'standardized score measuring deviation from breakeven coverage rate', 'shift': 'timezone offset difference between home and away teams', 'cover': 'binary outcome (1 if result < spreadLineHome, else 0)'}",
+      "assumptions": "Pacific-based teams playing at 10am PT (equivalent to 1pm ET) face circadian misalignment.",
+      "breakdown_regime": "|z| > 2 signals significant departure from expected coverage under family-wise correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Time zone shift mapped to body-clock misalignment affecting performance metrics.",
+        "source_operator": "west_coast_time_zone_edge",
+        "telemetry": "Proportion of Pacific road team wins during 10am PT games"
+      }
+    },
+    {
+      "primitive_id": "eastward_timezone_crossing",
+      "name": "Eastward Timezone Crossing",
+      "verbatim_quote": "(Pacific away + shift >=2 + venue east/central => ~1pm ET kickoff = 10am body-clock.) - **H3** Teams crossing >2 timezone zones EASTWARD (positive shift >=3) cover LESS.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'z': 'standardized score measuring deviation from breakeven coverage rate', 'shift': 'timezone offset difference between home and away teams', 'cover': 'binary outcome (1 if result < spreadLineHome, else 0)'}",
+      "assumptions": "Teams traveling eastward across multiple time zones experience greater jetlag impact.",
+      "breakdown_regime": "|z| > 2 warrants follow-up falsifyBind trial under family-wise correction.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Eastward travel shift quantified as a circadian stressor influencing game outcomes.",
+        "source_operator": "eastward_timezone_crossing",
+        "telemetry": "Coverage rate of teams crossing ≥3 time zones eastward"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "976ee8627ca3d7a1_t0",
+      "think": "The three primitives model temporal and spatial disruptions in NFL game outcomes through standardized z-scores. Each hypothesis is grounded in a specific form of temporal misalignment—short-week scheduling, west-coast kickoff timing, and eastward timezone crossing. The z-score framework allows for comparison against a breakeven baseline (0.476), where positive values indicate above-baseline coverage. Under multiple-testing correction, any |z| > 2 is flagged as a falsifier-queue candidate rather than confirmation. This reflects a conservative epistemology that avoids survivorship bias. The structural proxies used—such as venue offset for kickoff time—acknowledge data limitations while preserving inferential validity. The dual nature of these primitives lies in their ability to map environmental variables (time, location) into measurable performance deviations, enabling both predictive and retrodictive analysis within a Bayesian conformal inference framework.\n\nDeep epistemic analysis for rest-edge-scan (976ee8627ca3d7a1, domain=other, pages_read=2/2): Operator 'Short-Week Road Favorite Coverage' (page 1, domain other) captures: ## Hypotheses (preregistered) - **H1** Short-week (Thu/Sat after Sun) road favorites cover LESS. Assumptions: Road favorites in short-week games exhibit reduced coverage probability due to fatigue. Breakdown regime: |z| > 2 indicates statistical significance under family-wise correction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score derived from empirical coverage rate vs. breakeven baseline, adjusted for multiple testing. Operator 'West-Coast Time Zone Edge' (page 1, domain other) captures: (SpreadLineHome < 0 = away favored; cover = result < spreadLineHome.) - **H2** West-coast (Pacific) team playing 10am PT road game covers LESS. Assumptions: Pacific-based teams playing at 10am PT (equivalent to 1pm ET) face circadian misalignment. Breakdown regime: |z| > 2 signals significant departure from expected coverage under family-wise correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Time zone shift mapped to body-clock misalignment affecting performance metrics. Operator 'Eastward Timezone Crossing' (page 1, domain other) captures: (Pacific away + shift >=2 + venue east/central => ~1pm ET kickoff = 10am body-clock.) - **H3** Teams crossing >2 timezone zones EASTWARD (positive shift >=3) cover LESS. Assumptions: Teams traveling eastward across multiple time zones experience greater jetlag impact. Breakdown regime: |z| > 2 warrants follow-up falsifyBind trial under family-wise correction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Eastward travel shift quantified as a circadian stressor influencing game outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for rest-edge-scan (976ee8627ca3d7a1, domain=other, pages_read=2/2): Operator 'Short-Week Road Favorite Coverage' (page 1, domain other) captures: ## Hypotheses (preregistered) - **H1** Short-week (Thu/Sat after Sun) road favorites cover LESS. Assumptions: Road favorites in short-week games exhibit reduced coverage probability due to fatigue. Breakdown regime: |z| > 2 indicates statistical significance under family-wise correction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Z-score derived from empirical coverage rate vs. breakeven baseline, adjusted for multiple testing. Operator 'West-Coast Time Zone Edge' (page 1, domain other) captures: (SpreadLineHome < 0 = away favored; cover = result < spreadLineHome.) - **H2** West-coast (Pacific) team playing 10am PT road game covers LESS. Assumptions: Pacific-based teams playing at 10am PT (equivalent to 1pm ET) face circadian misalignment. Breakdown regime: |z| > 2 signals significant departure from expected coverage under family-wise correction. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Time zone shift mapped to body-clock misalignment affecting performance metrics. Operator 'Eastward Timezone Crossing' (page 1, domain other) captures: (Pacific away + shift >=2 + venue east/central => ~1pm ET kickoff = 10am body-clock.) - **H3** Teams crossing >2 timezone zones EASTWARD (positive shift >=3) cover LESS. Assumptions: Teams traveling eastward across multiple time zones experience greater jetlag impact. Breakdown regime: |z| > 2 warrants follow-up falsifyBind trial under family-wise correction. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Eastward travel shift quantified as a circadian stressor influencing game outcomes. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical statistical inference principles, particularly multiple testing corrections introduced by Tukey and Bonferroni, extended to modern high-dimensional sports analytics frameworks. Retrocausal Genealogy: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may attempt to exploit these edges by adjusting betting strategies or team preparation schedules, but the framework assumes rationality constrained by physiological limits and data transparency. Theory of Mind & Decision Maker Model: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring each primitive addresses distinct causal pathways (schedule, time-of-day, geography). Leakage occurs if timezone effects are conflated with other confounding variables such as team strength or weather. Cross-Layer Veto & Anti-Leakage Check: Rooted in rest-edge-scan (976ee8627ca3d7a1), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

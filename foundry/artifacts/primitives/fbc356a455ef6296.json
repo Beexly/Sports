@@ -1,0 +1,78 @@
+{
+  "book_id": "fbc356a455ef6296",
+  "source_status": "COMPLETE",
+  "title": "trumedia.com",
+  "file_name": "trumedia.com.md",
+  "sha256": "fbc356a455ef6296e6bc213626a9d386129584fd30da11c59b8bd4f40325ab61",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The domain's URL path segments form a discrete topological space. The mapping from historical multimedia endpoints to current HTTP 404/403 responses defines a structural decay operator, quantifying the loss of navigable state over time through a non-surjective projection.",
+  "gsi_mapping": "Treating the 122 crawled URLs as a prior distribution over latent content clusters (e.g., `/stats`, `/nfl`), the observed 404s act as censored data. We apply conformal inference to bound the probability that unvisited paths contain valid sports telemetry versus dead infrastructure.",
+  "gse_mapping": "Modeling the site as a finite state machine, each path segment is a node. The transition matrix is heavily sparse; traversing nodes like `/odds` or `/rankings` yields immediate terminal failure states, indicating a collapsed situational graph with zero dynamic recovery.",
+  "primitives": [
+    {
+      "primitive_id": "path_entropy_decay",
+      "name": "Path Entropy Decay Operator",
+      "verbatim_quote": "# trumedia.com — crawl URLs reached: **122** ## Path segments | Segment | URLs | |---|---|",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N = total reachable URLs (dimensionless count); S_i = specific path segment string; n_i = frequency of segment i (dimensionless).",
+      "assumptions": "The web crawler exhaustively explores all accessible hyperlinks within the defined boundary without hitting rate limits.",
+      "breakdown_regime": "Breaks down if the underlying server dynamically generates infinite URLs or employs strict bot-blocking mechanisms preventing full enumeration.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to calculating Shannon entropy over a discrete probability space where probabilities are derived from URL frequency counts.",
+        "source_operator": "path_entropy_decay",
+        "telemetry": "Shannon entropy value calculated from the frequency distribution of the 122 reached URLs."
+      }
+    },
+    {
+      "primitive_id": "semantic_cluster_persistence",
+      "name": "Semantic Cluster Persistence Kernel",
+      "verbatim_quote": "| | `/teams` | 1 | | `/players` | 1 | | `/nfl` | 1 |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "C = set of semantic keywords (e.g., 'nfl', 'players'); I(C) = indicator function for existence in path segments (dimensionless boolean).",
+      "assumptions": "URL path strings directly reflect the semantic intent and categorical grouping of the hosted content.",
+      "breakdown_regime": "Fails when URL slugs are obfuscated, auto-generated hashes, or completely decoupled from the actual page content.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps directly to GSI entity extraction, identifying latent sportsbook entities even within a decommissioned or repurposed digital environment.",
+        "source_operator": "semantic_cluster_persistence",
+        "telemetry": "Count of distinct sports-related semantic tokens found in the directory structure."
+      }
+    },
+    {
+      "primitive_id": "terminal_state_collapse",
+      "name": "Terminal State Collapse Metric",
+      "verbatim_quote": "| Page not found &#8211; TruMedia | | `https://trumedia.com/teams/` | Page not found &#8211; TruMedia |",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "P = requested URL path; R(P) = HTTP response status code (integer); T = threshold for failure (e.g., 404).",
+      "assumptions": "A uniform 'Page not found' response accurately reflects the permanent absence of the resource at that specific URI.",
+      "breakdown_regime": "Invalidated by soft 404s (returning 200 OK but displaying error text) or aggressive CDN caching of stale error pages.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE state-transition failures where an attempted action leads to an unrecoverable absorbing state rather than a valid game state.",
+        "source_operator": "terminal_state_collapse",
+        "telemetry": "Ratio of HTTP 404 responses to total unique path requests during the crawl."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fbc356a455ef6296_t0",
+      "think": "The provided excerpts detail a comprehensive crawl of trumedia.com, yielding exactly 122 reachable URLs. Mathematically, we define a discrete topological space X composed of these URL path segments. The primary operator acting on this space is the temporal decay function D(t), which maps historically active endpoints—such as `/stats`, `/nfl`, and `/players`—to their current HTTP response codes. The high frequency of 'Page not found' (HTTP 404) and 'Forbidden' (HTTP 403) responses indicates a severe collapse in the navigability of X. By analyzing the path segments, we identify a latent semantic subgraph related to sports intelligence (e.g., `/teams`, `/rankings`). Despite the physical absence of the content, the structural skeleton persists in the link topology. This allows us to derive a persistence kernel that isolates these sports-related nodes from the noise of legacy multimedia files (e.g., `.rm`, `.swf`). The duality here lies between the explicit content (missing) and the implicit structural intent (present in the URLs). The failure mode of this system is absolute: the transition matrix from any sports-related node to a valid payload is entirely zero, representing a terminal absorbing state in our situational reasoning model.\n\nDeep epistemic analysis for trumedia.com (fbc356a455ef6296, domain=other, pages_read=4/4): Operator 'Path Entropy Decay Operator' (page 1, domain other) captures: # trumedia.com — crawl URLs reached: **122** ## Path segments | Segment | URLs | |---|---| Assumptions: The web crawler exhaustively explores all accessible hyperlinks within the defined boundary without hitting rate limits. Breakdown regime: Breaks down if the underlying server dynamically generates infinite URLs or employs strict bot-blocking mechanisms preventing full enumeration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to calculating Shannon entropy over a discrete probability space where probabilities are derived from URL frequency counts. Operator 'Semantic Cluster Persistence Kernel' (page 1, domain other) captures: | | `/teams` | 1 | | `/players` | 1 | | `/nfl` | 1 | Assumptions: URL path strings directly reflect the semantic intent and categorical grouping of the hosted content. Breakdown regime: Fails when URL slugs are obfuscated, auto-generated hashes, or completely decoupled from the actual page content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI entity extraction, identifying latent sportsbook entities even within a decommissioned or repurposed digital environment. Operator 'Terminal State Collapse Metric' (page 1, domain other) captures: | Page not found &#8211; TruMedia | | `https://trumedia.com/teams/` | Page not found &#8211; TruMedia | Assumptions: A uniform 'Page not found' response accurately reflects the permanent absence of the resource at that specific URI. Breakdown regime: Invalidated by soft 404s (returning 200 OK but displaying error text) or aggressive CDN caching of stale error pages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE state-transition failures where an attempted action leads to an unrecoverable absorbing state rather than a valid game state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for trumedia.com (fbc356a455ef6296, domain=other, pages_read=4/4): Operator 'Path Entropy Decay Operator' (page 1, domain other) captures: # trumedia.com — crawl URLs reached: **122** ## Path segments | Segment | URLs | |---|---| Assumptions: The web crawler exhaustively explores all accessible hyperlinks within the defined boundary without hitting rate limits. Breakdown regime: Breaks down if the underlying server dynamically generates infinite URLs or employs strict bot-blocking mechanisms preventing full enumeration. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to calculating Shannon entropy over a discrete probability space where probabilities are derived from URL frequency counts. Operator 'Semantic Cluster Persistence Kernel' (page 1, domain other) captures: | | `/teams` | 1 | | `/players` | 1 | | `/nfl` | 1 | Assumptions: URL path strings directly reflect the semantic intent and categorical grouping of the hosted content. Breakdown regime: Fails when URL slugs are obfuscated, auto-generated hashes, or completely decoupled from the actual page content. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps directly to GSI entity extraction, identifying latent sportsbook entities even within a decommissioned or repurposed digital environment. Operator 'Terminal State Collapse Metric' (page 1, domain other) captures: | Page not found &#8211; TruMedia | | `https://trumedia.com/teams/` | Page not found &#8211; TruMedia | Assumptions: A uniform 'Page not found' response accurately reflects the permanent absence of the resource at that specific URI. Breakdown regime: Invalidated by soft 404s (returning 200 OK but displaying error text) or aggressive CDN caching of stale error pages. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE state-transition failures where an attempted action leads to an unrecoverable absorbing state rather than a valid game state. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This analytical approach traces its lineage to early web archaeology and network topology studies. Historically, researchers utilized URL structures to infer the organizational hierarchy of nascent internet domains before standardized metadata existed. The concept of treating broken links as informative signals rather than mere errors aligns with modern conformal prediction methods used to handle missing data in high-dimensional spaces, bridging classical information retrieval with contemporary probabilistic modeling.",
+      "theory_of_mind": "We model two opposing agents: the original site architect and the current automated crawler. The architect intentionally structured paths like `/nfl` and `/odds` to optimize user navigation and SEO for sports content. Conversely, the current server configuration acts as a restrictive gatekeeper, actively denying access (403) or failing to resolve (404). Our inference engine must deduce the architect's original intent solely from the residual path names, effectively reverse-engineering the decision-making process of a defunct entity while accounting for the passive destruction enacted by the current hosting environment.",
+      "cross_layer_veto": "To prevent analytical leakage, we enforce a strict veto against conflating legacy multimedia artifacts with active sports telemetry. If a path contains sports keywords but resolves to a generic Flash player (`.swf`) or audio stream (`.rm`), it is vetoed from the active GSI primitive layer. Anti-collinearity is maintained by ensuring that the structural entropy of the URL tree does not artificially inflate the perceived relevance of isolated sports nodes. Only paths that structurally imply a database-driven query (like `/stats` or `/rankings`) survive the cross-layer validation, filtering out static, non-informative historical debris."
+    }
+  ]
+}

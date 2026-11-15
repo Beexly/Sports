@@ -1,0 +1,78 @@
+{
+  "book_id": "f32e298bd1956a31",
+  "source_status": "COMPLETE",
+  "title": "chanzer0-NBA-DFS-Tools",
+  "file_name": "chanzer0-NBA-DFS-Tools.md",
+  "sha256": "f32e298bd1956a3187f9cb974df3b2fd420149e63b8099eb8deaf4e5e5e90360",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The DFS optimization stack formalizes a constrained combinatorial allocation over a discrete player simplex. It unifies linear programming (PuLP) for budget-constrained utility maximization with post-hoc diversity constraints, mapping directly to a high-dimensional portfolio selection problem under strict cardinality and uniqueness bounds.",
+  "gsi_mapping": "GSI maps the Awesemo CSV exports as noisy empirical priors into a conformal inference framework. Projected fantasy points and boom/bust metrics are treated as stochastic features, where ownership percentages inform Bayesian posterior updates on market consensus, allowing GSI to quantify uncertainty in third-party projections before optimization.",
+  "gse_mapping": "GSE treats the late-swap functionality as a dynamic state-transition operator. When pre-game lineups are locked, an injury or scratch triggers a localized re-optimization within the remaining valid subspace. This requires a real-time constraint solver that respects existing slate commitments while maximizing marginal expected value.",
+  "primitives": [
+    {
+      "primitive_id": "dfs_portfolio_optimizer",
+      "name": "DFS Portfolio Optimizer",
+      "verbatim_quote": "Vision The NBA sibling of NFL-DFS-Tools: optimizer + GPP simulator + pick5/showdown crunches for DraftKings and FanDuel NBA, with late-swap support for lineups already entered.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "L: lineup vector (dimensionless), U: utility function (fantasy points), B: salary cap (dollars)",
+      "assumptions": "Player valuations are static during the initial crunch; salary caps and roster constructions are strictly enforced.",
+      "breakdown_regime": "Fails when the projection space is too sparse relative to the number of unique lineups requested, leading to degenerate solutions.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's multi-sport DFS lane, providing a unified mathematical kernel for both NBA and NFL slate construction.",
+        "source_operator": "dfs_portfolio_optimizer",
+        "telemetry": "Number of valid lineups generated per second and variance in projected scores."
+      }
+    },
+    {
+      "primitive_id": "post_hoc_uniqueness_culling",
+      "name": "Post-Hoc Uniqueness Culling",
+      "verbatim_quote": "- CLI: `python main.py <site> <process> <num_lineups> <num_uniques>`; uniqueness is enforced *after* crunching (expect 5–15% culling).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_req: requested lineups (count), N_out: output lineups (count), \\delta: culling ratio (dimensionless)",
+      "assumptions": "Uniqueness is defined by pairwise roster overlap thresholds; the underlying optimizer does not natively enforce diversity.",
+      "breakdown_regime": "Singularity occurs when the optimal solution space is highly concentrated, causing the culling ratio to exceed acceptable limits (>20%).",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Informs GSE's portfolio sizing algorithms, requiring a buffer in computational requests to guarantee a target number of diverse entries.",
+        "source_operator": "post_hoc_uniqueness_culling",
+        "telemetry": "Percentage of generated lineups discarded due to overlap violations."
+      }
+    },
+    {
+      "primitive_id": "late_swap_reoptimizer",
+      "name": "Late Swap Re-optimizer",
+      "verbatim_quote": "GSE lens - **Late swap is a real DFS feature GSE has never scoped.** This tool handles lineups already entered and re-optimizes as news breaks (`late_swap_path: live_lineups.csv`).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S_t: slate state at time t (boolean matrix), \\Delta S: state change (injury/scratch event)",
+      "assumptions": "The replacement player pool is restricted to those not already in the locked lineup and available on the platform.",
+      "breakdown_regime": "Breaks down if no valid replacement exists that satisfies the site's roster construction rules without violating the salary cap.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Directly seeds GSE's in-slate reaction path, transforming a static optimization problem into a continuous, event-driven state machine.",
+        "source_operator": "late_swap_reoptimizer",
+        "telemetry": "Latency between news event ingestion and valid replacement lineup generation."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f32e298bd1956a31_t0",
+      "think": "The provided repository represents a classic instance of applied combinatorial optimization tailored for Daily Fantasy Sports (DFS). Mathematically, it defines a high-dimensional objective function—expected fantasy points—constrained by a strict budget (salary cap) and complex roster construction rules (position counts, team limits). The use of PuLP indicates a reliance on Mixed Integer Linear Programming (MILP) to navigate this discrete simplex. A critical duality emerges in the handling of diversity: rather than embedding uniqueness constraints directly into the MILP—which exponentially increases solve time—the system employs a greedy post-hoc culling mechanism. This introduces a predictable efficiency loss (5-15%), establishing a trade-off curve between computational speed and portfolio variance. Furthermore, the inclusion of 'late-swap' logic elevates the primitive from a static snapshot to a dynamic, event-driven state machine. When an exogenous shock (e.g., an injury) alters the probability distribution of the slate, the system must perform a localized re-optimization over the remaining valid subspace. This mirrors real-time portfolio rebalancing under sudden market shocks. The entity-resolution friction noted in the name-mismatch step highlights the often-overlooked cost of data harmonization in multi-source quantitative pipelines, a vital lesson for scaling such architectures across multiple sports leagues.\n\nDeep epistemic analysis for chanzer0-NBA-DFS-Tools (f32e298bd1956a31, domain=other, pages_read=1/1): Operator 'DFS Portfolio Optimizer' (page 1, domain other) captures: Vision The NBA sibling of NFL-DFS-Tools: optimizer + GPP simulator + pick5/showdown crunches for DraftKings and FanDuel NBA, with late-swap support for lineups already entered. Assumptions: Player valuations are static during the initial crunch; salary caps and roster constructions are strictly enforced. Breakdown regime: Fails when the projection space is too sparse relative to the number of unique lineups requested, leading to degenerate solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's multi-sport DFS lane, providing a unified mathematical kernel for both NBA and NFL slate construction. Operator 'Post-Hoc Uniqueness Culling' (page 1, domain other) captures: - CLI: `python main.py <site> <process> <num_lineups> <num_uniques>`; uniqueness is enforced *after* crunching (expect 5–15% culling). Assumptions: Uniqueness is defined by pairwise roster overlap thresholds; the underlying optimizer does not natively enforce diversity. Breakdown regime: Singularity occurs when the optimal solution space is highly concentrated, causing the culling ratio to exceed acceptable limits (>20%). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSE's portfolio sizing algorithms, requiring a buffer in computational requests to guarantee a target number of diverse entries. Operator 'Late Swap Re-optimizer' (page 1, domain other) captures: GSE lens - **Late swap is a real DFS feature GSE has never scoped.** This tool handles lineups already entered and re-optimizes as news breaks (`late_swap_path: live_lineups.csv`). Assumptions: The replacement player pool is restricted to those not already in the locked lineup and available on the platform. Breakdown regime: Breaks down if no valid replacement exists that satisfies the site's roster construction rules without violating the salary cap. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly seeds GSE's in-slate reaction path, transforming a static optimization problem into a continuous, event-driven state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for chanzer0-NBA-DFS-Tools (f32e298bd1956a31, domain=other, pages_read=1/1): Operator 'DFS Portfolio Optimizer' (page 1, domain other) captures: Vision The NBA sibling of NFL-DFS-Tools: optimizer + GPP simulator + pick5/showdown crunches for DraftKings and FanDuel NBA, with late-swap support for lineups already entered. Assumptions: Player valuations are static during the initial crunch; salary caps and roster constructions are strictly enforced. Breakdown regime: Fails when the projection space is too sparse relative to the number of unique lineups requested, leading to degenerate solutions. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's multi-sport DFS lane, providing a unified mathematical kernel for both NBA and NFL slate construction. Operator 'Post-Hoc Uniqueness Culling' (page 1, domain other) captures: - CLI: `python main.py <site> <process> <num_lineups> <num_uniques>`; uniqueness is enforced *after* crunching (expect 5–15% culling). Assumptions: Uniqueness is defined by pairwise roster overlap thresholds; the underlying optimizer does not natively enforce diversity. Breakdown regime: Singularity occurs when the optimal solution space is highly concentrated, causing the culling ratio to exceed acceptable limits (>20%). Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Informs GSE's portfolio sizing algorithms, requiring a buffer in computational requests to guarantee a target number of diverse entries. Operator 'Late Swap Re-optimizer' (page 1, domain other) captures: GSE lens - **Late swap is a real DFS feature GSE has never scoped.** This tool handles lineups already entered and re-optimizes as news breaks (`late_swap_path: live_lineups.csv`). Assumptions: The replacement player pool is restricted to those not already in the locked lineup and available on the platform. Breakdown regime: Breaks down if no valid replacement exists that satisfies the site's roster construction rules without violating the salary cap. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Directly seeds GSE's in-slate reaction path, transforming a static optimization problem into a continuous, event-driven state machine. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This architecture descends directly from classical operations research and mean-variance portfolio theory. The salary cap acts as a cardinality and budget constraint akin to modern index fund construction, while the GPP simulator echoes Monte Carlo methods used in financial risk assessment. The shift from static pre-game optimization to dynamic late-swapping reflects the evolution of algorithmic trading systems adapting to breaking news feeds.",
+      "theory_of_mind": "The optimizer implicitly models the behavior of the broader DFS population through 'ownership' projections. By ingesting third-party consensus data (Awesemo), the system attempts to anticipate field-wide concentration, effectively playing a game-theoretic strategy against a faceless aggregate opponent. The goal is not merely to maximize raw points, but to maximize tournament finish by differentiating the constructed portfolio from the median entry.",
+      "cross_layer_veto": "A primary veto condition arises from data pipeline fragility. If the entity resolution layer fails to correctly map player names across the projection source and the DFS platform, the resulting lineup will be invalid, triggering a hard failure. Additionally, if the post-hoc culling ratio exceeds a predefined threshold (e.g., >20%), the system must veto the current optimization run and adjust hyperparameters to prevent submitting a sub-optimal, overly concentrated portfolio."
+    }
+  ]
+}

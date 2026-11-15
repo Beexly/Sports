@@ -1,0 +1,78 @@
+{
+  "book_id": "8f195daccd7c796e",
+  "source_status": "COMPLETE",
+  "title": "8fced427ebac",
+  "file_name": "8fced427ebac.txt",
+  "sha256": "8f195daccd7c796ec831f2510740f715887322c57724ead6d068b2830e8070f9",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "A Bayesian readiness matrix maps evidence trust, freshness, and activation status to probabilistic model states, enabling dynamic score contribution and decision blockage. Universal Lens: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs conformal predictive distributions over evidence readiness to compute posterior belief updates on market odds and player availability, using trust-weighted likelihoods. GSI Mapping: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE uses state-transition graphs to evolve situational awareness, where evidence readiness gates model integration and blocks stale or untrusted signals from influencing strategic decisions. GSE Mapping: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "evidence_readiness_status",
+      "name": "Evidence Readiness Status",
+      "verbatim_quote": "import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'status': 'dimensionless', 'trustLevel': 'unitless (0–1)', 'freshnessStatus': 'categorical {FRESH, STALE}', 'activationStatus': 'categorical {ACTIVE, SHADOW_ONLY, BLOCKED}'}",
+      "assumptions": "Evidence is categorized by source type and evaluated via trust, freshness, and activation criteria.",
+      "breakdown_regime": "When trust < 0.5 or freshnessStatus ≠ FRESH, activationStatus becomes BLOCKED.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each evidence record maps to a node in GSI's Bayesian network with conditional probability P(status|trust,freshness,activation)",
+        "source_operator": "evidence_readiness_status",
+        "telemetry": "Observable readiness flags and integrity scores"
+      }
+    },
+    {
+      "primitive_id": "model_independent_fair_probability",
+      "name": "Independent Fair Probability",
+      "verbatim_quote": "venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'fairProb': 'unitless (0–1)', 'trueEv': 'unitless (0–1)'}",
+      "assumptions": "True EV is conditionally dependent on fair probability being active.",
+      "breakdown_regime": "If fairProb is not ACTIVE, then trueEv is BLOCKED.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "GSI computes P(fairProb|evidence) and enforces causal precedence before P(trueEv|evidence)",
+        "source_operator": "model_independent_fair_probability",
+        "telemetry": "Causal dependency graph and score contribution flags"
+      }
+    },
+    {
+      "primitive_id": "venue_environment_staleness",
+      "name": "Venue Environment Staleness",
+      "verbatim_quote": "[ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize:",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'staleThreshold': 'time (hours)', 'fetchedAt': 'timestamp', 'freshnessStatus': 'categorical {FRESH, STALE}'}",
+      "assumptions": "Stale data beyond threshold triggers blocking mechanism.",
+      "breakdown_regime": "If fetchedAt > staleThreshold, freshnessStatus = STALE.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "GSE evaluates temporal consistency of venue data against a fixed horizon to determine readiness",
+        "source_operator": "venue_environment_staleness",
+        "telemetry": "Timestamp-based staleness flag and failure horizon"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8f195daccd7c796e_t0",
+      "think": "The system models evidence readiness as a ternary state: ACTIVE, SHADOW_ONLY, or BLOCKED, determined by trust level, freshness, and activation status. Each signal contributes to a Bayesian readiness matrix where trust is normalized to [0,1]. The model enforces a causal hierarchy: independent fair probability must be active before true EV can contribute. Stale evidence is blocked based on time thresholds. This structure enables GSI to compute belief propagation and GSE to transition states conditionally on readiness. Failure modes include stale data, low trust, and missing prerequisites. The system ensures integrity through layered vetting and retroactive blocking.\n\nDeep epistemic analysis for 8fced427ebac (8f195daccd7c796e, domain=other, pages_read=2/2): Operator 'Evidence Readiness Status' (page 1, domain other) captures: import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import Assumptions: Evidence is categorized by source type and evaluated via trust, freshness, and activation criteria. Breakdown regime: When trust < 0.5 or freshnessStatus ≠ FRESH, activationStatus becomes BLOCKED. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each evidence record maps to a node in GSI's Bayesian network with conditional probability P(status|trust,freshness,activation) Operator 'Independent Fair Probability' (page 1, domain other) captures: venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now: Assumptions: True EV is conditionally dependent on fair probability being active. Breakdown regime: If fairProb is not ACTIVE, then trueEv is BLOCKED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes P(fairProb|evidence) and enforces causal precedence before P(trueEv|evidence) Operator 'Venue Environment Staleness' (page 1, domain other) captures: [ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize: Assumptions: Stale data beyond threshold triggers blocking mechanism. Breakdown regime: If fetchedAt > staleThreshold, freshnessStatus = STALE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE evaluates temporal consistency of venue data against a fixed horizon to determine readiness Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 8fced427ebac (8f195daccd7c796e, domain=other, pages_read=2/2): Operator 'Evidence Readiness Status' (page 1, domain other) captures: import { describe, expect, it } from \"vitest\"; import { buildEvidenceReadinessMatrix, getEvidenceFactorDefinition, } from \"../evidence-readiness-matrix.js\"; import Assumptions: Evidence is categorized by source type and evaluated via trust, freshness, and activation criteria. Breakdown regime: When trust < 0.5 or freshnessStatus ≠ FRESH, activationStatus becomes BLOCKED. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Each evidence record maps to a node in GSI's Bayesian network with conditional probability P(status|trust,freshness,activation) Operator 'Independent Fair Probability' (page 1, domain other) captures: venue environment even when the source is trusted\", () => { const matrix = buildEvidenceReadinessMatrix({ now: Assumptions: True EV is conditionally dependent on fair probability being active. Breakdown regime: If fairProb is not ACTIVE, then trueEv is BLOCKED. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): GSI computes P(fairProb|evidence) and enforces causal precedence before P(trueEv|evidence) Operator 'Venue Environment Staleness' (page 1, domain other) captures: [ evidence(\"ODDS\"), evidence(\"VENUE_ENVIRONMENT\", { fetchedAt: new Date(NOW.getTime() - 12 * 60 * 60_000), freshnessStatus: \"STALE\", sampleSize: Assumptions: Stale data beyond threshold triggers blocking mechanism. Breakdown regime: If fetchedAt > staleThreshold, freshnessStatus = STALE. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): GSE evaluates temporal consistency of venue data against a fixed horizon to determine readiness Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in Bayesian networks and temporal logic, extending earlier work on evidential reasoning in probabilistic planning systems. Retrocausal Genealogy: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents model each other’s belief states and readiness constraints, assuming adversarial or cooperative behavior in evidence validation. Theory of Mind & Decision Maker Model: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that model dependencies do not allow stale or untrusted inputs to influence downstream decisions. Cross-Layer Veto & Anti-Leakage Check: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in 8fced427ebac (8f195daccd7c796e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "42b47c5d72550e86",
+  "source_status": "COMPLETE",
+  "title": "README",
+  "file_name": "README.md",
+  "sha256": "42b47c5d72550e8648c94084b6c412f34d5c04d880bf0f7bec44bb7a98949d8c",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The Polymarket US SDK formalizes a discrete event-driven state machine over probabilistic binary outcomes. It unifies idempotent read consistency, non-idempotent write atomicity, and real-time WebSocket stream synchronization into a rigorous algebraic structure of market microstructure primitives.",
+  "gsi_mapping": "GSI maps the SDK's `marketData` and `bbo` endpoints to Bayesian posterior updates over outcome probabilities. The `settlement` primitive acts as a ground-truth Dirac delta, collapsing conformal prediction sets and updating the epistemic variance of the underlying event space.",
+  "gse_mapping": "GSE models the order lifecycle (`create`, `modify`, `cancel`) as guarded state transitions in a Petri net. Non-idempotent mutation vetoing ensures causal consistency, while WebSocket snapshots provide continuous situational awareness for high-frequency agent decision-making loops.",
+  "primitives": [
+    {
+      "primitive_id": "idempotency_guard",
+      "name": "Idempotency & Retry Guard",
+      "verbatim_quote": "Non-idempotent requests such as order placement are **never** retried automatically, so a network blip cannot submit a duplicate order.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Request type T \\in \\{GET, POST\\}; Idempotency flag I(T) \\in \\{0, 1\\} (dimensionless).",
+      "assumptions": "Network failures are transient; state mutations must be strictly monotonic and unique.",
+      "breakdown_regime": "System instability if I(POST)=1 under packet loss, leading to double-spend or duplicate execution.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE causal consistency constraints, preventing phantom state transitions during network partitions.",
+        "source_operator": "idempotency_guard",
+        "telemetry": "Rate of retried non-idempotent requests (must be zero)."
+      }
+    },
+    {
+      "primitive_id": "causal_traceability",
+      "name": "Causal Traceability Operator",
+      "verbatim_quote": "Every request sends a `User-Agent` and a generated `poly-correlation-id` so failures can be traced.",
+      "page": 2,
+      "latex": null,
+      "symbol_and_unit_ledger": "Correlation ID C \\sim U[0,1] (UUID); Time t (ISO 8601).",
+      "assumptions": "Global uniqueness of correlation IDs across distributed nodes.",
+      "breakdown_regime": "Traceability collapse under clock skew or UUID collision.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Provides the foundational hash-chain for GSI audit trails and GSE replay mechanisms.",
+        "source_operator": "causal_traceability",
+        "telemetry": "Percentage of error frames containing valid poly-correlation-id."
+      }
+    },
+    {
+      "primitive_id": "batch_atomicity",
+      "name": "Batch Atomicity Primitive",
+      "verbatim_quote": "Each accepts an `orders` list; cancel and modify entries include `orderId` and `marketSlug`.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "Order batch B = \\{o_1, ..., o_n\\}; Order size n \\le 20 (dimensionless count).",
+      "assumptions": "Atomic all-or-nothing execution semantics for the batch vector.",
+      "breakdown_regime": "Partial fills or split retries violating atomic transaction boundaries.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE multi-leg strategy deployment, ensuring simultaneous state changes across correlated markets.",
+        "source_operator": "batch_atomicity",
+        "telemetry": "Batch rejection rate due to oversized payloads or invalid orderIds."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "42b47c5d72550e86_t0",
+      "think": "The Polymarket US SDK operates as a boundary layer between stochastic market dynamics and deterministic software execution. We derive three core operators: the Idempotency Guard, Causal Traceability, and Batch Atomicity. The Idempotency Guard enforces a strict mathematical partition between safe (GET/DELETE) and unsafe (POST) operations. By explicitly disabling automatic retries for non-idempotent writes, the system prevents the duplication of state transitions—a critical requirement when mapping financial intent to on-chain or off-chain ledgers. This is dual to the Causal Traceability operator, which injects a unique `poly-correlation-id` into every request. This ID acts as a Lagrangian tracer particle, allowing us to reconstruct the exact trajectory of a failed or successful request through the distributed system. Finally, the Batch Atomicity primitive allows for the simultaneous manipulation of multiple orders via a single API call. Mathematically, this represents a vector operation in the order book space, where the transition from state S_t to S_{t+1} depends on the collective validity of the entire batch. If any element fails, the entire vector operation is rejected, preserving the integrity of complex, multi-market strategies. The failure modes of these primitives are deeply interconnected: a network blip triggers the Idempotency Guard, which relies on Causal Traceability to log the abort, thereby protecting the Batch Atomicity invariant.\n\nDeep epistemic analysis for README (42b47c5d72550e86, domain=other, pages_read=6/6): Operator 'Idempotency & Retry Guard' (page 2, domain other) captures: Non-idempotent requests such as order placement are **never** retried automatically, so a network blip cannot submit a duplicate order. Assumptions: Network failures are transient; state mutations must be strictly monotonic and unique. Breakdown regime: System instability if I(POST)=1 under packet loss, leading to double-spend or duplicate execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE causal consistency constraints, preventing phantom state transitions during network partitions. Operator 'Causal Traceability Operator' (page 2, domain other) captures: Every request sends a `User-Agent` and a generated `poly-correlation-id` so failures can be traced. Assumptions: Global uniqueness of correlation IDs across distributed nodes. Breakdown regime: Traceability collapse under clock skew or UUID collision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides the foundational hash-chain for GSI audit trails and GSE replay mechanisms. Operator 'Batch Atomicity Primitive' (page 4, domain other) captures: Each accepts an `orders` list; cancel and modify entries include `orderId` and `marketSlug`. Assumptions: Atomic all-or-nothing execution semantics for the batch vector. Breakdown regime: Partial fills or split retries violating atomic transaction boundaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE multi-leg strategy deployment, ensuring simultaneous state changes across correlated markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for README (42b47c5d72550e86, domain=other, pages_read=6/6): Operator 'Idempotency & Retry Guard' (page 2, domain other) captures: Non-idempotent requests such as order placement are **never** retried automatically, so a network blip cannot submit a duplicate order. Assumptions: Network failures are transient; state mutations must be strictly monotonic and unique. Breakdown regime: System instability if I(POST)=1 under packet loss, leading to double-spend or duplicate execution. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE causal consistency constraints, preventing phantom state transitions during network partitions. Operator 'Causal Traceability Operator' (page 2, domain other) captures: Every request sends a `User-Agent` and a generated `poly-correlation-id` so failures can be traced. Assumptions: Global uniqueness of correlation IDs across distributed nodes. Breakdown regime: Traceability collapse under clock skew or UUID collision. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Provides the foundational hash-chain for GSI audit trails and GSE replay mechanisms. Operator 'Batch Atomicity Primitive' (page 4, domain other) captures: Each accepts an `orders` list; cancel and modify entries include `orderId` and `marketSlug`. Assumptions: Atomic all-or-nothing execution semantics for the batch vector. Breakdown regime: Partial fills or split retries violating atomic transaction boundaries. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE multi-leg strategy deployment, ensuring simultaneous state changes across correlated markets. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to the CAP theorem and Two-Phase Commit protocols in distributed databases. The explicit rejection of non-idempotent retries echoes the strict serializability requirements of early ACID-compliant banking systems. Furthermore, the use of correlation IDs mirrors the span-context propagation found in modern distributed tracing frameworks like OpenTelemetry, adapted here for the high-frequency, low-latency demands of prediction market microstructures.",
+      "theory_of_mind": "From a theory of mind perspective, the SDK models two opposing agents: the Liquidity Provider (LP) and the Adversarial Network. The LP assumes that batch modifications will execute atomically to maintain delta-neutral positions. The Adversarial Network attempts to exploit race conditions via packet loss or delayed acknowledgments. The Idempotency Guard serves as the LP's shield against phantom executions caused by network jitter, while the Causal Traceability operator provides the forensic tools necessary to attribute blame—whether to a local timeout or a remote server-side crash.",
+      "cross_layer_veto": "A cross-layer veto is triggered if the Batch Atomicity primitive attempts to process more than 20 orders, or if the Idempotency Guard is bypassed by a misconfigured client retrying a POST request. Such violations cause immediate leakage of capital or state corruption. To prevent anti-collinearity, the system must ensure that the WebSocket real-time data stream (providing market snapshots) remains causally ordered with respect to the REST API order confirmations. If a trade appears in the WebSocket stream before the corresponding order modification is acknowledged via REST, a temporal paradox occurs, requiring a hard veto and state reconciliation."
+    }
+  ]
+}

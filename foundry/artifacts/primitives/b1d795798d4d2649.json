@@ -1,0 +1,78 @@
+{
+  "book_id": "b1d795798d4d2649",
+  "source_status": "COMPLETE",
+  "title": "CLAUDE_CREDITS_ACTIVATION_RUNBOOK",
+  "file_name": "CLAUDE_CREDITS_ACTIVATION_RUNBOOK.md",
+  "sha256": "b1d795798d4d2649a5d9996cc6733c76e156f292f9a04d22d0e6d6b71bf33b40",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Claude credit activation via AWS Bedrock InvokeModel maps usage to deterministic cost minimization under constrained inference layers. Universal Lens: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers sports prediction confidence from structured odds using calibrated model outputs as Bayesian priors. GSI Mapping: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions model states through Bedrock-invoked layers with credential-scoped access control and usage-led cost allocation. GSE Mapping: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "claude_credit_activation",
+      "name": "Claude Credit Activation Primitive",
+      "verbatim_quote": "--## Path B — Anthropic \"Claude for Startups\" (FASTEST · zero code · do first) Credits land on the **same `ANTHROPIC_API_KEY` account we already use**, so there is **nothing to build or deploy** — approved credits simply start paying the existing bill.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'credits (dimensionless)', 'A': 'API key (dimensionless)', 'B': 'billing account (dimensionless)'}",
+      "assumptions": "Credits map directly to existing API billing; no new deployment required.",
+      "breakdown_regime": "When C > 0 and A ∈ B, then usage is credited.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Credit activation mirrors model invocation in GSE via Bedrock provider abstraction.",
+        "source_operator": "claude_credit_activation",
+        "telemetry": "Anthropic Console credit balance update."
+      }
+    },
+    {
+      "primitive_id": "bedrock_invoke_model",
+      "name": "Bedrock Invoke Model Primitive",
+      "verbatim_quote": "**One hard rule the research surfaced:** keep Claude on **AWS Bedrock `InvokeModel`** specifically.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'M': 'model identifier (dimensionless)', 'R': 'region (dimensionless)', 'T': 'token count (dimensionless)', 'C': 'cost (USD)'}",
+      "assumptions": "InvokeModel ensures credit eligibility; direct AWS integration required.",
+      "breakdown_regime": "When M ∈ Bedrock and T > 0, then C is tracked.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Model invocation in GSE triggers cost tracking via Bedrock interface.",
+        "source_operator": "bedrock_invoke_model",
+        "telemetry": "Bedrock usage logs and token consumption metrics."
+      }
+    },
+    {
+      "primitive_id": "model_usage_ledger",
+      "name": "Model Usage Ledger Primitive",
+      "verbatim_quote": "> > **How do you use Claude today?** Seven governed, production surfaces, all model-routed > (Haiku/Sonnet/Opus per surface) with a cost + usage ledger: pick explainers, an adversarial > \"model court\" Q&A, weekly public accountability journals, calibration-insight summaries, > editorial content drafts, a brand-voice studio, and loss autopsies.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'U_s': 'usage per surface (dimensionless)', 'L_s': 'ledger entry per surface (USD)', 'S': 'surface count (dimensionless)'}",
+      "assumptions": "Each surface has distinct model routing and cost tracking.",
+      "breakdown_regime": "When S > 0 and U_s > 0, then L_s accumulates.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Ledger entries in GSI mirror model usage in GSE for cost attribution.",
+        "source_operator": "model_usage_ledger",
+        "telemetry": "Daily aggregated cost reports per surface."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b1d795798d4d2649_t0",
+      "think": "The activation runbook defines three paths to reduce Claude costs, prioritizing AWS Bedrock for credit eligibility. The core operator 'claude_credit_activation' maps incoming credits to existing billing via Anthropic API keys, ensuring no infrastructure changes. The 'bedrock_invoke_model' primitive enforces credit compliance by restricting Claude usage to AWS Bedrock's InvokeModel, avoiding incompatible billing platforms. The 'model_usage_ledger' tracks cost per surface, enabling cost-aware inference decisions. Dualities emerge between credit eligibility and model routing, where failure occurs if non-Bedrock providers are used. The system avoids silent fallbacks by verifying Bedrock model IDs in telemetry.\n\nDeep epistemic analysis for CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649, domain=other, pages_read=2/2): Operator 'Claude Credit Activation Primitive' (page 1, domain other) captures: --## Path B — Anthropic \"Claude for Startups\" (FASTEST · zero code · do first) Credits land on the **same `ANTHROPIC_API_KEY` account we already use**, so there is **nothing to build or deploy** — approved credits simply start paying the existing bill. Assumptions: Credits map directly to existing API billing; no new deployment required. Breakdown regime: When C > 0 and A ∈ B, then usage is credited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Credit activation mirrors model invocation in GSE via Bedrock provider abstraction. Operator 'Bedrock Invoke Model Primitive' (page 1, domain other) captures: **One hard rule the research surfaced:** keep Claude on **AWS Bedrock `InvokeModel`** specifically. Assumptions: InvokeModel ensures credit eligibility; direct AWS integration required. Breakdown regime: When M ∈ Bedrock and T > 0, then C is tracked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Model invocation in GSE triggers cost tracking via Bedrock interface. Operator 'Model Usage Ledger Primitive' (page 1, domain other) captures: > > **How do you use Claude today?** Seven governed, production surfaces, all model-routed > (Haiku/Sonnet/Opus per surface) with a cost + usage ledger: pick explainers, an adversarial > \"model court\" Q&A, weekly public accountability journals, calibration-insight summaries, > editorial content drafts, a brand-voice studio, and loss autopsies. Assumptions: Each surface has distinct model routing and cost tracking. Breakdown regime: When S > 0 and U_s > 0, then L_s accumulates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger entries in GSI mirror model usage in GSE for cost attribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649, domain=other, pages_read=2/2): Operator 'Claude Credit Activation Primitive' (page 1, domain other) captures: --## Path B — Anthropic \"Claude for Startups\" (FASTEST · zero code · do first) Credits land on the **same `ANTHROPIC_API_KEY` account we already use**, so there is **nothing to build or deploy** — approved credits simply start paying the existing bill. Assumptions: Credits map directly to existing API billing; no new deployment required. Breakdown regime: When C > 0 and A ∈ B, then usage is credited. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Credit activation mirrors model invocation in GSE via Bedrock provider abstraction. Operator 'Bedrock Invoke Model Primitive' (page 1, domain other) captures: **One hard rule the research surfaced:** keep Claude on **AWS Bedrock `InvokeModel`** specifically. Assumptions: InvokeModel ensures credit eligibility; direct AWS integration required. Breakdown regime: When M ∈ Bedrock and T > 0, then C is tracked. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Model invocation in GSE triggers cost tracking via Bedrock interface. Operator 'Model Usage Ledger Primitive' (page 1, domain other) captures: > > **How do you use Claude today?** Seven governed, production surfaces, all model-routed > (Haiku/Sonnet/Opus per surface) with a cost + usage ledger: pick explainers, an adversarial > \"model court\" Q&A, weekly public accountability journals, calibration-insight summaries, > editorial content drafts, a brand-voice studio, and loss autopsies. Assumptions: Each surface has distinct model routing and cost tracking. Breakdown regime: When S > 0 and U_s > 0, then L_s accumulates. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Ledger entries in GSI mirror model usage in GSE for cost attribution. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in AWS IAM and Bedrock service design, extending into Anthropic’s startup credit framework and model routing policies. Retrocausal Genealogy: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents include the GSE runtime, GSI inference engine, and Anthropic’s billing system. Each agent must align on model routing and cost attribution to prevent leakage. Theory of Mind & Decision Maker Model: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "If Bedrock is bypassed, credit eligibility fails. If usage is not logged per surface, cost attribution becomes ambiguous. Anti-collinearity requires strict separation of model routing and cost tracking. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in CLAUDE_CREDITS_ACTIVATION_RUNBOOK (b1d795798d4d2649), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

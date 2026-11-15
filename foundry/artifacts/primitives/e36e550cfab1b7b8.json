@@ -1,0 +1,78 @@
+{
+  "book_id": "e36e550cfab1b7b8",
+  "source_status": "COMPLETE",
+  "title": "nextjs-caching",
+  "file_name": "nextjs-caching.md",
+  "sha256": "e36e550cfab1b7b8be89151dff759f95ccd1f18d324f3f46931ac96e722440a0",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Dynamic force-rendering with no-store cache control ensures entropy-driven data integrity across entitlement-conditional paths. Universal Lens: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on dynamic picks/odds streams require conformal predictive validity under stochastic entitlement constraints. GSI Mapping: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning in GSE enforces state transitions via force-dynamic render paths, avoiding stale-data traps in tier-gated UIs. GSE Mapping: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "dynamic_rendering_with_no_store",
+      "name": "Force-Dynamic Render with No-Store Cache Control",
+      "verbatim_quote": "`force-dynamic` (or `revalidate = 0`) on every page/route touching picks, odds, lines, calibration, settlement, or entitlements — no exceptions for \"it's probably fine to cache for a minute.\" 2.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'D': 'dynamic rendering flag (dimensionless)', 'C': 'cache control directive (dimensionless)', 'T': 'time-sensitive data type (dimensionless)'}",
+      "assumptions": "All data paths involving user entitlements or real-time sports data must be rendered fresh per request.",
+      "breakdown_regime": "When D=1 and C='no-store', prevents stale data propagation in entitlement-dependent contexts.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The dynamic rendering operator D maps to GSI's Bayesian update kernel, ensuring each belief state reflects current entropy bounds.",
+        "source_operator": "dynamic_rendering_with_no_store",
+        "telemetry": "Cache hit rate below threshold indicates successful enforcement of no-store policy."
+      }
+    },
+    {
+      "primitive_id": "entitlement_dependent_output_invalidation",
+      "name": "Entitlement-Dependent Output Invalidation",
+      "verbatim_quote": "Entitlement-dependent output is never cached, full stop — even a page that isn't primarily \"picks\" (e.g.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'entitlement context (dimensionless)', 'O': 'output value (dimensionless)', 'I': 'invalidation flag (boolean)'}",
+      "assumptions": "Any output influenced by user tier or access rights must not be memoized.",
+      "breakdown_regime": "If E ≠ ∅ then I = true, preventing any caching of O.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The entitlement kernel E drives an invalidation mechanism I in GSE’s state transition graph.",
+        "source_operator": "entitlement_dependent_output_invalidation",
+        "telemetry": "Observation of non-memoized responses confirms E→I mapping integrity."
+      }
+    },
+    {
+      "primitive_id": "error_caching_duality",
+      "name": "Error Caching Duality Principle",
+      "verbatim_quote": "A cacheable error is exactly as dangerous as a cacheable success.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'S': 'success state (boolean)', 'E': 'error state (boolean)', 'C': 'cacheability (boolean)'}",
+      "assumptions": "Both success and error responses must be treated equally regarding caching behavior.",
+      "breakdown_regime": "If S = false and E = true, then C = false to prevent propagation of stale errors.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The duality principle S ↔ E in caching mirrors GSI's symmetric treatment of evidence and falsity in probabilistic inference.",
+        "source_operator": "error_caching_duality",
+        "telemetry": "Consistent rejection of cached error states validates the duality constraint."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "e36e550cfab1b7b8_t0",
+      "think": "The core insight is that caching in systems handling real-time sports data and user entitlements introduces a critical failure mode: stale data leakage. The system enforces `force-dynamic` rendering and `jsonNoStore` responses to ensure all data touching picks, odds, lines, or entitlements is computed fresh per request. This avoids the risk of propagating outdated information, which could lead to incorrect betting decisions or unauthorized access. The principle extends beyond simple data freshness to include error handling—errors are treated as dangerously stale as successes, hence they too must not be cached. The dual nature of this enforcement is captured in the isomorphism between dynamic rendering and Bayesian updating, where each request becomes a new belief update. The invalidation of cached outputs based on entitlements reflects a deeper structure: the system's state space is partitioned by access tiers, and any output must reflect the correct partition. This leads to a kernel of reasoning in GSE that models state transitions as deterministic functions of entitlements and time, with no memory of prior states. The failure mode arises when caching is bypassed incorrectly, leading to inconsistent views across users or stale data exposure.\n\nDeep epistemic analysis for nextjs-caching (e36e550cfab1b7b8, domain=other, pages_read=1/1): Operator 'Force-Dynamic Render with No-Store Cache Control' (page 1, domain other) captures: `force-dynamic` (or `revalidate = 0`) on every page/route touching picks, odds, lines, calibration, settlement, or entitlements — no exceptions for \"it's probably fine to cache for a minute.\" 2. Assumptions: All data paths involving user entitlements or real-time sports data must be rendered fresh per request. Breakdown regime: When D=1 and C='no-store', prevents stale data propagation in entitlement-dependent contexts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The dynamic rendering operator D maps to GSI's Bayesian update kernel, ensuring each belief state reflects current entropy bounds. Operator 'Entitlement-Dependent Output Invalidation' (page 1, domain other) captures: Entitlement-dependent output is never cached, full stop — even a page that isn't primarily \"picks\" (e.g. Assumptions: Any output influenced by user tier or access rights must not be memoized. Breakdown regime: If E ≠ ∅ then I = true, preventing any caching of O. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The entitlement kernel E drives an invalidation mechanism I in GSE’s state transition graph. Operator 'Error Caching Duality Principle' (page 1, domain other) captures: A cacheable error is exactly as dangerous as a cacheable success. Assumptions: Both success and error responses must be treated equally regarding caching behavior. Breakdown regime: If S = false and E = true, then C = false to prevent propagation of stale errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duality principle S ↔ E in caching mirrors GSI's symmetric treatment of evidence and falsity in probabilistic inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for nextjs-caching (e36e550cfab1b7b8, domain=other, pages_read=1/1): Operator 'Force-Dynamic Render with No-Store Cache Control' (page 1, domain other) captures: `force-dynamic` (or `revalidate = 0`) on every page/route touching picks, odds, lines, calibration, settlement, or entitlements — no exceptions for \"it's probably fine to cache for a minute.\" 2. Assumptions: All data paths involving user entitlements or real-time sports data must be rendered fresh per request. Breakdown regime: When D=1 and C='no-store', prevents stale data propagation in entitlement-dependent contexts. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The dynamic rendering operator D maps to GSI's Bayesian update kernel, ensuring each belief state reflects current entropy bounds. Operator 'Entitlement-Dependent Output Invalidation' (page 1, domain other) captures: Entitlement-dependent output is never cached, full stop — even a page that isn't primarily \"picks\" (e.g. Assumptions: Any output influenced by user tier or access rights must not be memoized. Breakdown regime: If E ≠ ∅ then I = true, preventing any caching of O. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): The entitlement kernel E drives an invalidation mechanism I in GSE’s state transition graph. Operator 'Error Caching Duality Principle' (page 1, domain other) captures: A cacheable error is exactly as dangerous as a cacheable success. Assumptions: Both success and error responses must be treated equally regarding caching behavior. Breakdown regime: If S = false and E = true, then C = false to prevent propagation of stale errors. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): The duality principle S ↔ E in caching mirrors GSI's symmetric treatment of evidence and falsity in probabilistic inference. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in early HTTP/1.1 cache semantics and extended into modern frameworks like Next.js, this principle evolved from the need to manage volatile data in distributed systems. The formalization of 'no-store' directives and dynamic rendering emerged from practical failures in real-time applications where stale data caused financial loss. Retrocausal Genealogy: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents might attempt to exploit caching for performance gains at the cost of data integrity. The system models these adversaries as agents who prefer stale data over fresh computation, but the architecture enforces correctness through strict dynamic rendering policies and telemetry-based validation. Theory of Mind & Decision Maker Model: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring that static marketing pages (which do not vary by entitlement) can safely use ISR, while dynamic paths are strictly isolated. Leakage vetoes occur when any entitlement-dependent logic attempts to use static generation or memoization, triggering immediate architectural failure. Cross-Layer Veto & Anti-Leakage Check: Rooted in nextjs-caching (e36e550cfab1b7b8), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

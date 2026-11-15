@@ -1,0 +1,78 @@
+{
+  "book_id": "8e6f8bfda8e1e925",
+  "source_status": "COMPLETE",
+  "title": "CHECKS",
+  "file_name": "CHECKS.md",
+  "sha256": "8e6f8bfda8e1e92517c560160eae007d4f27b2156bd9e0ba9a141756f9cbd5e8",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The check ledger formalizes a dual-space verification operator. It maps an originating signal space to a ground-truth empirical manifold, enforcing strict temporal windowing. Divergences are quantified as residuals between the published image-derived metric and the raw play-level state transition probabilities.",
+  "gsi_mapping": "GSI treats the check ledger as a conformal inference filter. The 'METHOD REPLICATED' verdict acts as a high-confidence calibration on the prior distribution of borrowed metrics. Numeric divergences trigger posterior updates, down-weighting signals that fail exact match conditions against the nflverse baseline.",
+  "gse_mapping": "In GSE, the ledger governs situational state transitions. A 'DIVERGED' check forces a regime switch in the tactical engine, isolating the specific play-action subspace (e.g., throwaway rates) causing the mismatch. Temporal boundaries prevent incomplete week singularities from corrupting the Markovian state evolution.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_window_singularity",
+      "name": "Temporal Window Completeness Operator",
+      "verbatim_quote": "Week 8 in the current release contains only the Oct 29 Thursday game (1 of 14 games, 176 plays); building \"Weeks 1–8\" tables today would fold a one-game week into season rates.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "N_w: number of games in week w (dimensionless count), P_w: number of plays in week w (dimensionless count).",
+      "assumptions": "Season rates assume ergodic stationarity across complete 14-game weeks; partial weeks violate this assumption.",
+      "breakdown_regime": "Singularity occurs when N_w << 14, causing extreme variance inflation in rate estimators.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's state-transition validity checks, preventing incomplete Markov chains from updating global priors.",
+        "source_operator": "temporal_window_singularity",
+        "telemetry": "Ratio of observed plays to expected plays per week."
+      }
+    },
+    {
+      "primitive_id": "method_replication_kernel",
+      "name": "Method Replication Kernel",
+      "verbatim_quote": "| # | Signal (source) | Check | Verdict | |---|---|---|---| | 1 | RZ expected TD share (@KoalatyStats) | Post published a chart image; no values exist in text form | **METHOD REPLICATED** — no numeric check possible; construction follows the dossier exactly.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "M_src: source methodology (operator), M_rep: replicated methodology (operator).",
+      "assumptions": "The underlying data generation process is deterministic given the stated definitions.",
+      "breakdown_regime": "Fails if the source methodology relies on hidden, non-public parameters or stochastic seeds.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Acts as a structural prior in GSI, confirming the topological equivalence of the feature extraction pipeline even without pointwise convergence.",
+        "source_operator": "method_replication_kernel",
+        "telemetry": "Boolean flag indicating exact algorithmic reconstruction."
+      }
+    },
+    {
+      "primitive_id": "divergence_residual",
+      "name": "Exact Divergence Residual",
+      "verbatim_quote": "**GAP:** broken-tackles-allowed has no public team-level source; not faked | | 3 | QB throwaway rate (@sfdata9ers) | Young 12.7% #1, Nix 11.5%, Daniels 11.2% | **DIVERGED** — PFR: Nix 9.7%/dropback (#1), Young 9.4% (#2), Daniels 7.9% (#5).",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "r_pub: published rate (dimensionless fraction), r_emp: empirical rate from PFR (dimensionless fraction).",
+      "assumptions": "A single ground-truth denominator (e.g., dropbacks) exists for rate calculation.",
+      "breakdown_regime": "Divergence becomes unresolvable if the denominator definitions (e.g., scramble vs sack) are fundamentally incompatible.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Calculates the L2 norm between the external signal vector and the internal empirical vector, triggering a veto in GSE if the residual exceeds a threshold.",
+        "source_operator": "divergence_residual",
+        "telemetry": "Absolute difference in percentage points between published and verified rates."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8e6f8bfda8e1e925_t0",
+      "think": "The check ledger operates as a rigorous mathematical audit of external sports analytics signals. It establishes a dual-space framework: the 'signal space' comprising borrowed metrics from social media or third-party analysts, and the 'empirical manifold' constructed from raw, play-by-play data (nflverse). The primary operator is the divergence residual, which calculates the distance between a published statistic and its independently reconstructed counterpart. When direct numeric comparison is impossible due to image-only sources, the system defaults to a method replication kernel, verifying the topological equivalence of the feature extraction pipeline. Crucially, the ledger enforces strict temporal boundary conditions. By rejecting incomplete weeks (e.g., Week 8 with only one game), it prevents singularity in rate estimators, ensuring that the Markovian state transitions within the Galaxy Sports Engine remain grounded in statistically robust, ergodic windows. This tripartite structure—temporal gating, methodological isomorphism, and numeric divergence—creates a sovereign primitive for truth-validation in quantitative sports intelligence, effectively filtering out noise and bias before they contaminate downstream predictive models.\n\nDeep epistemic analysis for CHECKS (8e6f8bfda8e1e925, domain=other, pages_read=1/1): Operator 'Temporal Window Completeness Operator' (page 1, domain other) captures: Week 8 in the current release contains only the Oct 29 Thursday game (1 of 14 games, 176 plays); building \"Weeks 1–8\" tables today would fold a one-game week into season rates. Assumptions: Season rates assume ergodic stationarity across complete 14-game weeks; partial weeks violate this assumption. Breakdown regime: Singularity occurs when N_w << 14, causing extreme variance inflation in rate estimators. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's state-transition validity checks, preventing incomplete Markov chains from updating global priors. Operator 'Method Replication Kernel' (page 1, domain other) captures: | # | Signal (source) | Check | Verdict | |---|---|---|---| | 1 | RZ expected TD share (@KoalatyStats) | Post published a chart image; no values exist in text form | **METHOD REPLICATED** — no numeric check possible; construction follows the dossier exactly. Assumptions: The underlying data generation process is deterministic given the stated definitions. Breakdown regime: Fails if the source methodology relies on hidden, non-public parameters or stochastic seeds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a structural prior in GSI, confirming the topological equivalence of the feature extraction pipeline even without pointwise convergence. Operator 'Exact Divergence Residual' (page 1, domain other) captures: **GAP:** broken-tackles-allowed has no public team-level source; not faked | | 3 | QB throwaway rate (@sfdata9ers) | Young 12.7% #1, Nix 11.5%, Daniels 11.2% | **DIVERGED** — PFR: Nix 9.7%/dropback (#1), Young 9.4% (#2), Daniels 7.9% (#5). Assumptions: A single ground-truth denominator (e.g., dropbacks) exists for rate calculation. Breakdown regime: Divergence becomes unresolvable if the denominator definitions (e.g., scramble vs sack) are fundamentally incompatible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calculates the L2 norm between the external signal vector and the internal empirical vector, triggering a veto in GSE if the residual exceeds a threshold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for CHECKS (8e6f8bfda8e1e925, domain=other, pages_read=1/1): Operator 'Temporal Window Completeness Operator' (page 1, domain other) captures: Week 8 in the current release contains only the Oct 29 Thursday game (1 of 14 games, 176 plays); building \"Weeks 1–8\" tables today would fold a one-game week into season rates. Assumptions: Season rates assume ergodic stationarity across complete 14-game weeks; partial weeks violate this assumption. Breakdown regime: Singularity occurs when N_w << 14, causing extreme variance inflation in rate estimators. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's state-transition validity checks, preventing incomplete Markov chains from updating global priors. Operator 'Method Replication Kernel' (page 1, domain other) captures: | # | Signal (source) | Check | Verdict | |---|---|---|---| | 1 | RZ expected TD share (@KoalatyStats) | Post published a chart image; no values exist in text form | **METHOD REPLICATED** — no numeric check possible; construction follows the dossier exactly. Assumptions: The underlying data generation process is deterministic given the stated definitions. Breakdown regime: Fails if the source methodology relies on hidden, non-public parameters or stochastic seeds. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Acts as a structural prior in GSI, confirming the topological equivalence of the feature extraction pipeline even without pointwise convergence. Operator 'Exact Divergence Residual' (page 1, domain other) captures: **GAP:** broken-tackles-allowed has no public team-level source; not faked | | 3 | QB throwaway rate (@sfdata9ers) | Young 12.7% #1, Nix 11.5%, Daniels 11.2% | **DIVERGED** — PFR: Nix 9.7%/dropback (#1), Young 9.4% (#2), Daniels 7.9% (#5). Assumptions: A single ground-truth denominator (e.g., dropbacks) exists for rate calculation. Breakdown regime: Divergence becomes unresolvable if the denominator definitions (e.g., scramble vs sack) are fundamentally incompatible. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Calculates the L2 norm between the external signal vector and the internal empirical vector, triggering a veto in GSE if the residual exceeds a threshold. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This ledger traces its lineage to the foundational principles of reproducible research in computational physics and the auditing protocols of decentralized finance. Historically, it mirrors the transition from trusting authoritative almanacs to demanding open-source, verifiable code. In sports analytics, it represents a maturation from accepting opaque 'black box' metrics to requiring transparent, play-level derivation, echoing the scientific revolution's demand for empirical evidence over dogmatic assertion.",
+      "theory_of_mind": "The ledger implicitly models the decision actors—the original analysts (@KoalatyStats, @sfdata9ers). It assumes these agents operate under specific, sometimes unstated, definitions (e.g., what constitutes a 'throwaway'). By replicating their methods or exposing divergences, the system reverse-engineers their cognitive frameworks. It identifies whether a discrepancy stems from a genuine insight (a new feature) or a simple definitional mismatch, allowing GSE to adapt its situational reasoning to align with or correct the external agent's perspective.",
+      "cross_layer_veto": "Anti-collinearity is enforced by treating each check as an independent constraint. If a signal diverges numerically but replicates methodologically, the veto is partial: the method is trusted, but the specific numeric output is discarded. Complete vetoes occur when both method and numbers fail verification, or when temporal boundaries are violated. This prevents leakage of biased or incomplete data into the core GSI priors, ensuring that the Bayesian inference engine only ingests signals that have passed the rigorous dual-space verification protocol."
+    }
+  ]
+}

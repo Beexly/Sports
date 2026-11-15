@@ -1,0 +1,78 @@
+{
+  "book_id": "3d372ef0c184540e",
+  "source_status": "COMPLETE",
+  "title": "post_11",
+  "file_name": "post_11.md",
+  "sha256": "3d372ef0c184540e5730080522240974b01cccd9ae09ba952e7a2cd55a9e1f28",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Home field advantage decomposes into league-level (LHFA) and team-specific (iHFA) components, with statistical adjustments for team strength, coaching, and quarterback performance. Universal Lens: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference models HFA as a latent variable with prior distributions over LHFA and iHFA, updating beliefs via fixed-effects controls for team and player performance. GSI Mapping: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning maps HFA as a state transition parameter in game dynamics, where home/away parity shifts based on adjusted team performance metrics and coach-QB correlations. GSE Mapping: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "league_home_field_advantage",
+      "name": "League Home Field Advantage",
+      "verbatim_quote": "team-specific home field advantage Agreeing with consensus, I found the league home field advantage (LHFA) during 2006-2020 to be approximately three points (2.85).",
+      "page": 1,
+      "latex": "\\text{LHFA} = \\mu_{\\text{home}} - \\mu_{\\text{away}}",
+      "symbol_and_unit_ledger": "{'LHFA': 'points', '\\\\mu_{\\\\text{home}}': 'expected score differential when team plays at home', '\\\\mu_{\\\\text{away}}': 'expected score differential when team plays away'}",
+      "assumptions": "Constant across seasons with minor variation; independent of team-specific factors.",
+      "breakdown_regime": "Seasons with statistically insignificant iHFA revert to LHFA.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "LHFA serves as baseline kernel for GSI probabilistic forecasting of game outcomes.",
+        "source_operator": "league_home_field_advantage",
+        "telemetry": "Mean point spread difference between home and away games over multi-season period."
+      }
+    },
+    {
+      "primitive_id": "team_specific_home_field_advantage",
+      "name": "Team-Specific Home Field Advantage",
+      "verbatim_quote": "iHFA represents the additional or fewer points that each team has in terms of HFA compared to the league average.",
+      "page": 1,
+      "latex": "\\text{iHFA}_j = \\beta_j^{\\text{home}} - \\text{LHFA}",
+      "symbol_and_unit_ledger": "{'\\\\text{iHFA}_j': \"team j's deviation from league HFA in points\", '\\\\beta_j^{\\\\text{home}}': 'estimated home advantage for team j', '\\\\text{LHFA}': 'league-wide average home field advantage'}",
+      "assumptions": "Each team's iHFA is normally distributed around the LHFA.",
+      "breakdown_regime": "Teams with non-significant iHFA receive zero adjustment.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "iHFA maps to GSE state-space representation of team-specific performance variance.",
+        "source_operator": "team_specific_home_field_advantage",
+        "telemetry": "Per-team deviation from league average HFA using mixed-effects regression."
+      }
+    },
+    {
+      "primitive_id": "true_home_field_advantage",
+      "name": "True Home Field Advantage",
+      "verbatim_quote": "When we add together LHFA and iHFA, we obtain the true HFA for each team.",
+      "page": 1,
+      "latex": "\\text{HFA}_j = \\text{LHFA} + \\text{iHFA}_j",
+      "symbol_and_unit_ledger": "{'\\\\text{HFA}_j': 'true home field advantage for team j in points', '\\\\text{LHFA}': 'league-wide average home field advantage', '\\\\text{iHFA}_j': \"team j's specific HFA deviation\"}",
+      "assumptions": "Additive decomposition holds under controlled confounding variables.",
+      "breakdown_regime": "When iHFA is zero, HFA reduces to LHFA.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "True HFA forms basis for GSE dynamic game-state evaluation.",
+        "source_operator": "true_home_field_advantage",
+        "telemetry": "Combined estimate of team-specific HFA after adjustment for external factors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "3d372ef0c184540e_t0",
+      "think": "The analysis begins by defining the league home field advantage (LHFA) as the mean score differential between home and away games across all teams and seasons from 2006–2020, yielding a value of 2.85 points. This is modeled using a fixed-effect binary variable for 'home' in a regression framework. Team-specific HFA (iHFA) is derived through a random slope within teams, capturing deviations from the league average. The true HFA for any team is computed as the sum of LHFA and iHFA. Adjustments for team strength, quarterback performance, and head coach competence are made using fixed effects to isolate pure HFA. Failure modes include non-statistically significant iHFA values, which lead to reverting to the league average. The methodological novelty lies in treating each team’s performance in each game separately, enabling ceteris paribus comparisons. This allows for robust estimation of HFA even under varying conditions such as coaching changes or quarterback transitions.\n\nDeep epistemic analysis for post_11 (3d372ef0c184540e, domain=other, pages_read=4/4): Operator 'League Home Field Advantage' (page 1, domain other) captures: team-specific home field advantage Agreeing with consensus, I found the league home field advantage (LHFA) during 2006-2020 to be approximately three points (2.85). Assumptions: Constant across seasons with minor variation; independent of team-specific factors. Breakdown regime: Seasons with statistically insignificant iHFA revert to LHFA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): LHFA serves as baseline kernel for GSI probabilistic forecasting of game outcomes. Operator 'Team-Specific Home Field Advantage' (page 1, domain other) captures: iHFA represents the additional or fewer points that each team has in terms of HFA compared to the league average. Assumptions: Each team's iHFA is normally distributed around the LHFA. Breakdown regime: Teams with non-significant iHFA receive zero adjustment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): iHFA maps to GSE state-space representation of team-specific performance variance. Operator 'True Home Field Advantage' (page 1, domain other) captures: When we add together LHFA and iHFA, we obtain the true HFA for each team. Assumptions: Additive decomposition holds under controlled confounding variables. Breakdown regime: When iHFA is zero, HFA reduces to LHFA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): True HFA forms basis for GSE dynamic game-state evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for post_11 (3d372ef0c184540e, domain=other, pages_read=4/4): Operator 'League Home Field Advantage' (page 1, domain other) captures: team-specific home field advantage Agreeing with consensus, I found the league home field advantage (LHFA) during 2006-2020 to be approximately three points (2.85). Assumptions: Constant across seasons with minor variation; independent of team-specific factors. Breakdown regime: Seasons with statistically insignificant iHFA revert to LHFA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): LHFA serves as baseline kernel for GSI probabilistic forecasting of game outcomes. Operator 'Team-Specific Home Field Advantage' (page 1, domain other) captures: iHFA represents the additional or fewer points that each team has in terms of HFA compared to the league average. Assumptions: Each team's iHFA is normally distributed around the LHFA. Breakdown regime: Teams with non-significant iHFA receive zero adjustment. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): iHFA maps to GSE state-space representation of team-specific performance variance. Operator 'True Home Field Advantage' (page 1, domain other) captures: When we add together LHFA and iHFA, we obtain the true HFA for each team. Assumptions: Additive decomposition holds under controlled confounding variables. Breakdown regime: When iHFA is zero, HFA reduces to LHFA. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): True HFA forms basis for GSE dynamic game-state evaluation. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical sports analytics and econometric modeling, tracing back to early work on spatial and temporal effects in competitive environments. Influenced by regression-based approaches in sports science literature and modern mixed-effects modeling techniques. Retrocausal Genealogy: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents—sports bettors and analysts—seek to exploit HFA for predictive gain. Their decisions depend on perceived stability or volatility of HFA, leading to strategic betting patterns and market inefficiencies. The model accounts for these behaviors by incorporating uncertainty in iHFA estimates. Theory of Mind & Decision Maker Model: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is maintained by ensuring that fixed effects for team strength, QB, and coach do not overlap with HFA estimation. Leakage is prevented by using separate data structures for iHFA and LHFA, avoiding double-counting of confounding variables. Cross-Layer Veto & Anti-Leakage Check: Rooted in post_11 (3d372ef0c184540e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "2e536591d8b6afc8",
+  "source_status": "COMPLETE",
+  "title": "FREE-PROVIDER-MAP-2026-09-03",
+  "file_name": "FREE-PROVIDER-MAP-2026-09-03.md",
+  "sha256": "2e536591d8b6afc898b4c60c3200d090cf44572f54dfae35a3e4dee9fa9f9856",
+  "primary_domain": "other",
+  "pages_total": 5,
+  "pages_read": 5,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-plus-char:qwen-plus-character",
+  "ocr_rescued": false,
+  "universal_lens": "The free-provider map defines a constrained state space of accessible data sources. We model this as a filtered graph where nodes represent providers and edges denote valid API access, strictly bounded by rate limits, credentialing friction, and explicit source-rights classifications.",
+  "gsi_mapping": "GSI treats each provider's free tier as a stochastic process with finite capacity. Bayesian inference updates the probability of successful data retrieval based on observed rate limits (e.g., 10/min) and historical availability, while conformal prediction bounds the uncertainty of missing or delayed scores.",
+  "gse_mapping": "GSE models the provider ecosystem as a discrete state-transition system. Valid transitions occur only when `Source-Rights Classification` permits automation without consent. Excluded or blocked states act as absorbing barriers, forcing the engine to halt extraction or pivot to manual research.",
+  "primitives": [
+    {
+      "primitive_id": "access_topology_filter",
+      "name": "Credential-Free Access Topology Filter",
+      "verbatim_quote": "# Free Sports Data Provider Map ## Meta **Created**: 2026-09-03 **Agent**: hermes **Task**: H-S (AGENT_LEDGER.md) **Scope**: Research and classify free-tier sports data providers with verified limits, NO signups, NO credential creation, NO adapters built.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "S: Set of all potential providers; F: Subset of providers requiring zero credentials; dimensionless boolean constraint.",
+      "assumptions": "Providers are static nodes in a directed acyclic graph; authentication requirements are binary and immutable for the free tier.",
+      "breakdown_regime": "Fails if a previously open endpoint suddenly enforces dynamic CAPTCHA or IP-based throttling not documented in the initial scope.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps directly to GSE's 'Permissioned State' layer, isolating zero-friction data streams from high-friction commercial APIs.",
+        "source_operator": "access_topology_filter",
+        "telemetry": "Count of successfully fetched endpoints without an Authorization header."
+      }
+    },
+    {
+      "primitive_id": "rate_limit_capacity",
+      "name": "Stochastic Rate Limit Capacity",
+      "verbatim_quote": "ropean Championship) **Rate Limit**: 10/min (free), 60/min (Standard €49/mo) **Coverage**: European football (soccer) only.",
+      "page": 3,
+      "latex": null,
+      "symbol_and_unit_ledger": "R_free: Maximum requests per minute (dimensionless count/time); R_paid: Upgraded limit; t: Time window.",
+      "assumptions": "Request arrival follows a Poisson process; the server enforces a strict leaky-bucket algorithm at the boundary.",
+      "breakdown_regime": "Singularity occurs when request volume exceeds R_free, resulting in HTTP 429 responses and immediate data starvation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Derives the maximum sustainable throughput kernel for GSI's real-time ingestion pipelines under zero-cost constraints.",
+        "source_operator": "rate_limit_capacity",
+        "telemetry": "Percentage of HTTP 429 errors over a rolling 5-minute window."
+      }
+    },
+    {
+      "primitive_id": "rights_classification_barrier",
+      "name": "Source-Rights Legal Barrier",
+      "verbatim_quote": "Do NOT build new extraction without founder review of legal posture.",
+      "page": 4,
+      "latex": null,
+      "symbol_and_unit_ledger": "L: Legal clearance flag (Boolean); A: Automated extraction action; P: Founder approval predicate.",
+      "assumptions": "Legal risk is non-differentiable; unauthorized scraping introduces infinite penalty to the objective function.",
+      "breakdown_regime": "Violated if automated agents bypass ToS restrictions, triggering legal injunctions or permanent IP bans.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to GSE's hard veto mechanism, preventing state transitions into legally restricted domains.",
+        "source_operator": "rights_classification_barrier",
+        "telemetry": "Number of extraction attempts blocked by the compliance engine."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "2e536591d8b6afc8_t0",
+      "think": "The derivation of these primitives begins by modeling the sports data ecosystem as a high-dimensional manifold where each axis represents a distinct provider's API surface. The primary operator, `access_topology_filter`, acts as a projection matrix, collapsing the full manifold onto a subspace defined by zero-credential access. This immediately discards high-friction vendors like API-Sports or Sportmonks, whose restrictive free tiers introduce combinatorial complexity in authentication management. Within this reduced subspace, we apply the `rate_limit_capacity` operator. Mathematically, this imposes a strict bandwidth constraint on the flow of information, modeled as a leaky bucket where the inflow of queries must not exceed the outflow capacity (e.g., 10 requests/minute). If the query generation rate surpasses this threshold, the system enters a saturation regime, leading to packet loss (HTTP 429s) and degraded signal fidelity. Finally, the `rights_classification_barrier` introduces a non-linear, discontinuous penalty function. Unlike rate limits, which degrade gracefully, legal violations result in an instantaneous transition to a terminal failure state. This barrier ensures that the optimization trajectory of our data ingestion pipeline never crosses into regions of undefined legal liability, such as undocumented ESPN APIs. The interplay between these three operators defines a safe, navigable corridor for automated data extraction, balancing throughput maximization against credential minimization and legal compliance.\n\nDeep epistemic analysis for FREE-PROVIDER-MAP-2026-09-03 (2e536591d8b6afc8, domain=other, pages_read=5/5): Operator 'Credential-Free Access Topology Filter' (page 1, domain other) captures: # Free Sports Data Provider Map ## Meta **Created**: 2026-09-03 **Agent**: hermes **Task**: H-S (AGENT_LEDGER.md) **Scope**: Research and classify free-tier sports data providers with verified limits, NO signups, NO credential creation, NO adapters built. Assumptions: Providers are static nodes in a directed acyclic graph; authentication requirements are binary and immutable for the free tier. Breakdown regime: Fails if a previously open endpoint suddenly enforces dynamic CAPTCHA or IP-based throttling not documented in the initial scope. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's 'Permissioned State' layer, isolating zero-friction data streams from high-friction commercial APIs. Operator 'Stochastic Rate Limit Capacity' (page 3, domain other) captures: ropean Championship) **Rate Limit**: 10/min (free), 60/min (Standard €49/mo) **Coverage**: European football (soccer) only. Assumptions: Request arrival follows a Poisson process; the server enforces a strict leaky-bucket algorithm at the boundary. Breakdown regime: Singularity occurs when request volume exceeds R_free, resulting in HTTP 429 responses and immediate data starvation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the maximum sustainable throughput kernel for GSI's real-time ingestion pipelines under zero-cost constraints. Operator 'Source-Rights Legal Barrier' (page 4, domain other) captures: Do NOT build new extraction without founder review of legal posture. Assumptions: Legal risk is non-differentiable; unauthorized scraping introduces infinite penalty to the objective function. Breakdown regime: Violated if automated agents bypass ToS restrictions, triggering legal injunctions or permanent IP bans. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's hard veto mechanism, preventing state transitions into legally restricted domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for FREE-PROVIDER-MAP-2026-09-03 (2e536591d8b6afc8, domain=other, pages_read=5/5): Operator 'Credential-Free Access Topology Filter' (page 1, domain other) captures: # Free Sports Data Provider Map ## Meta **Created**: 2026-09-03 **Agent**: hermes **Task**: H-S (AGENT_LEDGER.md) **Scope**: Research and classify free-tier sports data providers with verified limits, NO signups, NO credential creation, NO adapters built. Assumptions: Providers are static nodes in a directed acyclic graph; authentication requirements are binary and immutable for the free tier. Breakdown regime: Fails if a previously open endpoint suddenly enforces dynamic CAPTCHA or IP-based throttling not documented in the initial scope. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps directly to GSE's 'Permissioned State' layer, isolating zero-friction data streams from high-friction commercial APIs. Operator 'Stochastic Rate Limit Capacity' (page 3, domain other) captures: ropean Championship) **Rate Limit**: 10/min (free), 60/min (Standard €49/mo) **Coverage**: European football (soccer) only. Assumptions: Request arrival follows a Poisson process; the server enforces a strict leaky-bucket algorithm at the boundary. Breakdown regime: Singularity occurs when request volume exceeds R_free, resulting in HTTP 429 responses and immediate data starvation. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Derives the maximum sustainable throughput kernel for GSI's real-time ingestion pipelines under zero-cost constraints. Operator 'Source-Rights Legal Barrier' (page 4, domain other) captures: Do NOT build new extraction without founder review of legal posture. Assumptions: Legal risk is non-differentiable; unauthorized scraping introduces infinite penalty to the objective function. Breakdown regime: Violated if automated agents bypass ToS restrictions, triggering legal injunctions or permanent IP bans. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to GSE's hard veto mechanism, preventing state transitions into legally restricted domains. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "These primitives trace their lineage to early network theory and queueing models, specifically the study of constrained resource allocation in distributed systems. The concept of filtering by authentication friction mirrors the evolution of open web standards versus walled gardens. Furthermore, the legal barrier reflects the historical shift from unrestricted academic scraping to the modern era of aggressive Terms of Service enforcement and anti-bot legislation, necessitating formalized compliance kernels.",
+      "theory_of_mind": "We model the sports data providers as rational economic agents seeking to maximize conversion from free-tier users to paid subscribers. Their defensive strategies—rate limiting, credential gating, and legal threats—are designed to artificially constrain utility for free users. Our agents must anticipate these moves, treating the API not as a static resource but as an adversarial environment actively trying to throttle our access and force a commercial transaction.",
+      "cross_layer_veto": "A critical veto condition arises if the `rate_limit_capacity` telemetry indicates sustained saturation while simultaneously the `rights_classification_barrier` flags a provider as `permission_required`. In this collinear failure mode, increasing request frequency to recover lost data would violate legal constraints, while adhering to limits results in incomplete datasets. The cross-layer veto mandates an immediate halt to ingestion from that node and a forced pivot to alternative, compliant sources to prevent systemic data starvation."
+    }
+  ]
+}

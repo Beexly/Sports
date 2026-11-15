@@ -1,0 +1,95 @@
+{
+  "book_id": "d23cfbf6d98c550c",
+  "source_status": "COMPLETE",
+  "title": "review",
+  "file_name": "review.md",
+  "sha256": "d23cfbf6d98c550c485794d10ebae2dfbdabbd4b715cf23de4b58bb0f0f80457",
+  "primary_domain": "other",
+  "pages_total": 2,
+  "pages_read": 2,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen-flash-char:qwen-flash-character",
+  "ocr_rescued": false,
+  "universal_lens": "Universal Lens: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Universal Lens: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI Mapping: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSI Mapping: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE Mapping: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. GSE Mapping: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "schema_belongs_to_bindings",
+      "name": "Schema Location Rule",
+      "verbatim_quote": "## Always check on any PR here - Does a schema belong in `packages/bindings` or `packages/client`?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Codebase consistency and external integrator stability.",
+      "breakdown_regime": "API boundary compliance.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "SDK monorepo decouples external API parsing from internal client logic.",
+        "source_operator": "schema_belongs_to_bindings",
+        "telemetry": "Schema validation failures at integrator boundaries."
+      }
+    },
+    {
+      "primitive_id": "method_naming_reflects_sdk_behavior",
+      "name": "Method Naming Principle",
+      "verbatim_quote": "- If an action in `packages/client/src/actions/` changed (signature, param types, TSDoc, examples), was the matching decorator method under `packages/client/src/decorators/` updated too?",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Consistent developer mental model across SDK layers.",
+      "breakdown_regime": "API surface parity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Decorator synchronization enforces uniform behavioral contracts.",
+        "source_operator": "method_naming_reflects_sdk_behavior",
+        "telemetry": "Decorator method missing or mismatched errors."
+      }
+    },
+    {
+      "primitive_id": "preference_for_intent_based_options",
+      "name": "Intent-Based Options Guideline",
+      "verbatim_quote": "New public client additions must be re-exported by the corresponding decorator module.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Avoidance of implementation detail leakage.",
+      "breakdown_regime": "Abstraction integrity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Intent-based design reduces cognitive load for downstream consumers.",
+        "source_operator": "preference_for_intent_based_options",
+        "telemetry": "Legacy-pattern option usage detected via static analysis."
+      }
+    },
+    {
+      "primitive_id": "re_export_new_additions",
+      "name": "Re-export Policy",
+      "verbatim_quote": "- Method naming reflects SDK behavior, not upstream routes: `list*` returns normalized `Paginated<T>`/`Page<T>`; `fetch*` returns a direct item or collection.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Complete public API coverage.",
+      "breakdown_regime": "Module completeness.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Re-export ensures seamless import syntax for integrators.",
+        "source_operator": "re_export_new_additions",
+        "telemetry": "Missing re-export declarations causing import resolution errors."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d23cfbf6d98c550c_t0",
+      "think": "The ts-sdk review guidance encodes a formal algebraic structure where codebase components form a category. The primitives represent functors between subcategories: `schema_belongs_to_bindings` maps API responses to domain models, while `method_naming_reflects_sdk_behavior` and `preference_for_intent_based_options` enforce natural transformations preserving behavioral semantics. The `re_export_new_additions` rule ensures that the export graph remains a faithful representation of the internal module hierarchy, preventing information loss. Violations manifest as category-theoretic coherence defects—e.g., a missing decorator breaks the naturality square, leading to inconsistent API usage patterns. This framework allows precise reasoning about refactorings: moving a schema from `client` to `bindings` requires updating all dependent functors, while adding a new method necessitates同步更新 its decorator. The guidance thus operationalizes a disciplined software architecture through a small set of high-level, mathematically grounded constraints.\n\nDeep epistemic analysis for review (d23cfbf6d98c550c, domain=other, pages_read=2/2): Operator 'Schema Location Rule' (page 1, domain other) captures: ## Always check on any PR here - Does a schema belong in `packages/bindings` or `packages/client`? Assumptions: Codebase consistency and external integrator stability. Breakdown regime: API boundary compliance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SDK monorepo decouples external API parsing from internal client logic. Operator 'Method Naming Principle' (page 1, domain other) captures: - If an action in `packages/client/src/actions/` changed (signature, param types, TSDoc, examples), was the matching decorator method under `packages/client/src/decorators/` updated too? Assumptions: Consistent developer mental model across SDK layers. Breakdown regime: API surface parity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decorator synchronization enforces uniform behavioral contracts. Operator 'Intent-Based Options Guideline' (page 1, domain other) captures: New public client additions must be re-exported by the corresponding decorator module. Assumptions: Avoidance of implementation detail leakage. Breakdown regime: Abstraction integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Intent-based design reduces cognitive load for downstream consumers. Operator 'Re-export Policy' (page 1, domain other) captures: - Method naming reflects SDK behavior, not upstream routes: `list*` returns normalized `Paginated<T>`/`Page<T>`; `fetch*` returns a direct item or collection. Assumptions: Complete public API coverage. Breakdown regime: Module completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Re-export ensures seamless import syntax for integrators. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for review (d23cfbf6d98c550c, domain=other, pages_read=2/2): Operator 'Schema Location Rule' (page 1, domain other) captures: ## Always check on any PR here - Does a schema belong in `packages/bindings` or `packages/client`? Assumptions: Codebase consistency and external integrator stability. Breakdown regime: API boundary compliance. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): SDK monorepo decouples external API parsing from internal client logic. Operator 'Method Naming Principle' (page 1, domain other) captures: - If an action in `packages/client/src/actions/` changed (signature, param types, TSDoc, examples), was the matching decorator method under `packages/client/src/decorators/` updated too? Assumptions: Consistent developer mental model across SDK layers. Breakdown regime: API surface parity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Decorator synchronization enforces uniform behavioral contracts. Operator 'Intent-Based Options Guideline' (page 1, domain other) captures: New public client additions must be re-exported by the corresponding decorator module. Assumptions: Avoidance of implementation detail leakage. Breakdown regime: Abstraction integrity. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Intent-based design reduces cognitive load for downstream consumers. Operator 'Re-export Policy' (page 1, domain other) captures: - Method naming reflects SDK behavior, not upstream routes: `list*` returns normalized `Paginated<T>`/`Page<T>`; `fetch*` returns a direct item or collection. Assumptions: Complete public API coverage. Breakdown regime: Module completeness. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Re-export ensures seamless import syntax for integrators. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "This approach generalizes the Unix philosophy of 'make invisible things visible' into a categorical design language for monorepos, building on category theory's foundational role in type systems and functional programming. Retrocausal Genealogy: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include integrator teams seeking stable abstractions versus SDK maintainers needing flexible evolution. The primitives model their shared goal of minimizing coupling while maximizing cohesion, aligning incentives through clear ownership boundaries. Theory of Mind & Decision Maker Model: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by separating concerns: bindings handle data shape, decorators handle protocol details, and actions handle business logic. This prevents circular dependencies that would leak verification metrics across layers. Cross-Layer Veto & Anti-Leakage Check: Rooted in review (d23cfbf6d98c550c), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

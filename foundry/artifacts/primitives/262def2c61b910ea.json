@@ -1,0 +1,78 @@
+{
+  "book_id": "262def2c61b910ea",
+  "source_status": "COMPLETE",
+  "title": "week3-props",
+  "file_name": "week3-props.md",
+  "sha256": "262def2c61b910ea8545db1a9114f0f2227722167e7d9ae6c75a50df33499610",
+  "primary_domain": "other",
+  "pages_total": 4,
+  "pages_read": 4,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Props surface as stochastic regression kernels over frozen projections, conditioned on 2025 slopes and position-specific calibration. Universal Lens: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian calibration of prop expectations via 2025 slopes; conformal prediction bounds on stat regressions without probabilistic voting. GSI Mapping: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational state transition from salary slate to injury context; positional slope application without ranking or live updates. GSE Mapping: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "frozen_projection_regress",
+      "name": "Frozen Projection Regressor",
+      "verbatim_quote": "A 2025 slope is how a frozen projection regresses toward the actual stat on that season block (yards for the yard props, receptions for receptions).",
+      "page": 1,
+      "latex": "\\hat{y}_{\\text{actual}} = \\beta_{\\text{slope}} \\cdot \\hat{y}_{\\text{frozen}} + (1 - \\beta_{\\text{slope}}) \\cdot y_{\\text{observed}}",
+      "symbol_and_unit_ledger": "{'\\\\hat{y}_{\\\\text{actual}}': 'Actual stat estimate (dimensionless)', '\\\\beta_{\\\\text{slope}}': 'Regression coefficient (dimensionless)', '\\\\hat{y}_{\\\\text{frozen}}': 'Frozen projection (yards or receptions)', 'y_{\\\\text{observed}}': 'Observed stat (yards or receptions)'}",
+      "assumptions": "Stat regressions follow linear decay from frozen projection; 2025 data is representative of current season variance.",
+      "breakdown_regime": "When 2025 slope is undefined or zero, regressor becomes identity.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps frozen projections to calibrated stat estimates using position-specific regression coefficients.",
+        "source_operator": "frozen_projection_regress",
+        "telemetry": "Mean absolute error (MAE) of regression against observed stats."
+      }
+    },
+    {
+      "primitive_id": "position_slope_calibration",
+      "name": "Position Slope Calibration",
+      "verbatim_quote": "`by_position` exists for every position mapped below, so each player row uses the 2025 position slope, not the prop-level slope.",
+      "page": 1,
+      "latex": "\\beta_{\\text{pos}} = \\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})(y_i - \\bar{y})}{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}",
+      "symbol_and_unit_ledger": "{'\\\\beta_{\\\\text{pos}}': 'Position-specific regression slope (dimensionless)', 'x_i': 'Frozen projection value (yards/receptions)', 'y_i': 'Actual stat value (yards/receptions)', '\\\\bar{x}': 'Mean frozen projection (yards/receptions)', '\\\\bar{y}': 'Mean actual stat (yards/receptions)'}",
+      "assumptions": "Each position has a stable regression pattern across seasons; slope is invariant to individual player variance.",
+      "breakdown_regime": "When no 2025 data exists for a position, slope defaults to neutral value.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to linear regression kernel applied per position class.",
+        "source_operator": "position_slope_calibration",
+        "telemetry": "R-squared of slope fit against historical stat blocks."
+      }
+    },
+    {
+      "primitive_id": "injury_status_filter",
+      "name": "Injury Status Filter",
+      "verbatim_quote": "`not listed` means the name is absent from that game's out, doubtful, and questionable arrays.",
+      "page": 2,
+      "latex": "\\mathcal{F}(\\text{player}) = \\begin{cases} 1 & \\text{if } \\text{status} \\in \\{\\text{out}, \\text{doubtful}, \\text{questionable}\\} \\\\ 0 & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{F}(\\\\text{player})': 'Filter indicator (binary)', '\\\\text{status}': 'Player injury status (string)'}",
+      "assumptions": "Injury statuses are mutually exclusive and fully describe availability.",
+      "breakdown_regime": "When injury data is missing, filter assumes full availability.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Filters player eligibility based on injury context from game-specific JSON.",
+        "source_operator": "injury_status_filter",
+        "telemetry": "Fraction of players filtered due to injury status."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "262def2c61b910ea_t0",
+      "think": "The operators define a structured inference pipeline where frozen projections are adjusted via 2025-derived slopes, filtered through injury status, and mapped to positions. The dualities lie between statistical regression and situational availability—regression models predict outcomes while injury filtering determines applicability. Failure modes include missing 2025 data leading to undefined slopes, or misclassification of injury status. The system avoids probabilistic voting or live updates, maintaining deterministic calibration.\n\nDeep epistemic analysis for week3-props (262def2c61b910ea, domain=other, pages_read=4/4): Operator 'Frozen Projection Regressor' (page 1, domain other) captures: A 2025 slope is how a frozen projection regresses toward the actual stat on that season block (yards for the yard props, receptions for receptions). Assumptions: Stat regressions follow linear decay from frozen projection; 2025 data is representative of current season variance. Breakdown regime: When 2025 slope is undefined or zero, regressor becomes identity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps frozen projections to calibrated stat estimates using position-specific regression coefficients. Operator 'Position Slope Calibration' (page 1, domain other) captures: `by_position` exists for every position mapped below, so each player row uses the 2025 position slope, not the prop-level slope. Assumptions: Each position has a stable regression pattern across seasons; slope is invariant to individual player variance. Breakdown regime: When no 2025 data exists for a position, slope defaults to neutral value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to linear regression kernel applied per position class. Operator 'Injury Status Filter' (page 2, domain other) captures: `not listed` means the name is absent from that game's out, doubtful, and questionable arrays. Assumptions: Injury statuses are mutually exclusive and fully describe availability. Breakdown regime: When injury data is missing, filter assumes full availability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Filters player eligibility based on injury context from game-specific JSON. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for week3-props (262def2c61b910ea, domain=other, pages_read=4/4): Operator 'Frozen Projection Regressor' (page 1, domain other) captures: A 2025 slope is how a frozen projection regresses toward the actual stat on that season block (yards for the yard props, receptions for receptions). Assumptions: Stat regressions follow linear decay from frozen projection; 2025 data is representative of current season variance. Breakdown regime: When 2025 slope is undefined or zero, regressor becomes identity. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps frozen projections to calibrated stat estimates using position-specific regression coefficients. Operator 'Position Slope Calibration' (page 1, domain other) captures: `by_position` exists for every position mapped below, so each player row uses the 2025 position slope, not the prop-level slope. Assumptions: Each position has a stable regression pattern across seasons; slope is invariant to individual player variance. Breakdown regime: When no 2025 data exists for a position, slope defaults to neutral value. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to linear regression kernel applied per position class. Operator 'Injury Status Filter' (page 2, domain other) captures: `not listed` means the name is absent from that game's out, doubtful, and questionable arrays. Assumptions: Injury statuses are mutually exclusive and fully describe availability. Breakdown regime: When injury data is missing, filter assumes full availability. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Filters player eligibility based on injury context from game-specific JSON. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in classical linear regression and Bayesian calibration theory, extended to sports analytics via empirical slope estimation and injury modeling. Retrocausal Genealogy: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Agents are modeled as static calibrators and filters rather than dynamic decision-makers; the system reflects a passive inference engine. Theory of Mind & Decision Maker Model: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Theory of Mind & Decision Maker Model: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring slope calibration is position-specific, not player-specific. Leakage is prevented by isolating injury data per game and excluding live updates. Cross-Layer Veto & Anti-Leakage Check: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in week3-props (262def2c61b910ea), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

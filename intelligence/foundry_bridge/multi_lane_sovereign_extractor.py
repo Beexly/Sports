@@ -197,9 +197,10 @@ PII_QUARANTINE_SUBSTRINGS = (
     "missing credential",
     "missing employment",
     "tax return",
-    "w-2",
     "form 1099",
+    "cp_575",
     "bank statement",
+    "statement 10_26_26",
     "passport",
     "social security",
     "driver license",
@@ -208,7 +209,109 @@ PII_QUARANTINE_SUBSTRINGS = (
     "pay stub",
     "03_quarantine",
     "do_not_ingest",
+    "turner construction archive",
+    "landry_casinotech_matter",
+    "saved from chrome/",
+    "g baxley 2018 dismissal",
+    "g baxley birth certificate",
+    "final divorce decree",
+    "hr manager offer letter",
+    "adp background screening",
+    "garrett baxley 3.19.25",
+    "ada_letter-gb",
+    "ada-gb.pdf",
+    "newada13.pdf",
+    "usssaclaimform",
+    "medical release",
+    "eeoc6",
+    "eeoc7",
+    "eeoc8",
+    "eeoc9",
+    "eeoc10",
+    "eeoc11",
+    "craftco_truck_sheet",
+    "order_01kyxv9d886t9p984m4ysqkc14",
+    "55b66e9edd9b4969b98b9f77bf45120b",
+    "severance.pdf",
+    "rejection_letter_notice",
+    "originaldocument_.pdf",
+    "2026 christmas dinner",
+    "2026 thanksgiving dinner",
+    "charcuterie-chick-final",
+    "(6) instagram_files/",
+    "brain/local_vault/",
+    "turner construction",
+    "2025 turner benefits",
+    "turner8.4",
+    "cts lonestar",
+    "baxley_turner",
+    "baxley pos with exhibits",
+    "baxley_exhibit_packet",
+    "baxley_project_file_audit",
+    "garrett_baxley_turner",
+    "garrett_baxley_attorney",
+    "garrett_baxley_ats",
+    "garrett_baxley_hr_ats",
+    "garrett_baxley_resume",
+    "460-2026-09584",
+    "position statement cover letter",
+    "rob-wiley",
+    "case-notes-2026-09-16",
+    "docs/predictions/research/2026-10-13/case_file.md",
+    "docs/arxiv-program/research/2026-10-13/memo_to_counsel.md",
+    "docs/engine/research/2026-10-13/jordyn_final_audit.txt",
+    "docs/engine/research/2026-10-13/hashes.txt",
+    "docs/engine/research/2026-10-13/manifest.md",
+    "docs/engine/research/2026-10-13/robots.txt",
+    "docs/engine/research/2026-10-13/sienna_matter",
+    "docs/engine/research/2026-10-13/clio_message_to_madeline_garza",
+    "docs/engine/research/2026-10-13/copy_paste_email_for_doug",
+    "docs/engine/research/2026-10-13/client_ready_final_audit",
+    "docs/engine/research/2026-10-13/family_runway_command_center",
+    "docs/engine/research/2026-10-13/garrett-resource-dump",
+    "docs/engine/research/2026-10-13/lumera_brand",
+    "docs/engine/research/2026-10-13/codex_lumera_brand",
+    "docs/predictions/research/2026-10-13/gemini-code-1785883288657.txt",
+    "docs/predictions/research/2026-10-13/gb master - 1.0 inputs.pdf",
+    "docs/predictions/research/2026-10-13/gb_5_4_full_text.txt",
+    "docs/predictions/research/2026-10-13/may_4_memorandum_full_text.txt",
+    "docs/predictions/research/2026-10-13/email-to-client.md",
+    "docs/predictions/research/2026-10-13/email_to_ashley_blair.txt",
+    "docs/data-sources/research/2026-10-13/ready_to_send_emails.md",
+    "docs/predictions/research/2026-10-13/11207 mattina lease",
+    "docs/predictions/research/2026-10-13/13235 dairy asford striping",
+    "docs/predictions/research/2026-10-13/acctappmarginandcustagmt",
+    "docs/predictions/research/2026-10-13/alpaca+securities",
+    "docs/predictions/research/2026-10-13/alpaca_master+securities",
+    "docs/predictions/research/2026-10-13/document.pdf",
+    "docs/predictions/research/2026-10-13/document (1).pdf",
+    "docs/predictions/research/2026-10-13/document (2).pdf",
+    "docs/predictions/research/2026-10-13/generate.pdf",
+    "docs/predictions/research/2026-10-13/doug houston lead engine",
+    "docs/predictions/research/2026-10-13/doug_craftco_sales_kit",
+    "doug-as-builders",
+    "as_builders",
+    "heb_pharmacy",
+    "inv147853250",
+    "woodway_collection",
+    "charcuterie-chick",
+    "vytalus",
+    "fsa-reimbursement-sweep",
+    "fsa-money-resolution",
+    "hsa-reimbursement",
+    "wells-fargo-financial-deep-dive",
+    "financial-deep-dive-2026-09-19",
+    "payday-loan-borrower-protections",
+    "snap-reapply-worksheet",
+    "peri-peri-night-recipe",
+    "proactive_messages/research/proactive_notification_phase-",
+    "eeoc_charge",
+    "gse_system_and_repo_review",
+    "gse system and repo review",
+    "gdoc_1pta6_bakeoff-report",
 )
+
+_W2_TAX_FORM_RE = re.compile(r"(?<![a-z0-9])w-2(?![a-z0-9])", re.I)
 
 
 _SECRET_SNIPPET_PATTERNS = (
@@ -230,14 +333,14 @@ def _scrub_stub_snippet(snippet: str) -> str:
 
 def is_pii_or_correspondence_row(book_row: Mapping[str, Any]) -> bool:
     """Return True if metadata indicates personal correspondence (.eml/.msg) or identity/financial PII."""
-    fname = str(book_row.get("file_name") or "").strip().lower()
-    fpath = str(book_row.get("file_path") or "").strip().lower()
-    title = str(book_row.get("title") or "").strip().lower()
+    fname = str(book_row.get("file_name") or "").replace("\\", "/").strip().lower()
+    fpath = str(book_row.get("file_path") or "").replace("\\", "/").strip().lower()
+    title = str(book_row.get("title") or "").replace("\\", "/").strip().lower()
     for candidate in (fname, fpath):
         if any(candidate.endswith(ext) for ext in PII_QUARANTINE_SUFFIXES):
             return True
     combined = f"{fname} {fpath} {title}"
-    return any(tok in combined for tok in PII_QUARANTINE_SUBSTRINGS)
+    return bool(_W2_TAX_FORM_RE.search(combined)) or any(tok in combined for tok in PII_QUARANTINE_SUBSTRINGS)
 
 
 def is_complete_artifact_present(
@@ -349,21 +452,23 @@ def build_book_rows_from_explicit_pdfs(
         seen_ids.add(bid)
         if skip_existing and is_complete_artifact_present(bid, completed_dirs):
             continue
-        rows.append(
-            {
-                "book_id": bid,
-                "file_path": str(p),
-                "sha256": sha,
-                "file_name": p.name,
-                "title": _clean_pdf_title(p, bid),
-                "year": None,
-                "primary_domain": infer_domain_from_filename(p.name),
-                "tier": "A",
-                "status": "PENDING",
-                "pages_total": None,
-                "is_ocr_classic": False,
-            }
-        )
+        ocr_txt = OCR_RESCUE_DIR / f"{bid}_vision_ocr_core.txt"
+        row_obj: Dict[str, Any] = {
+            "book_id": bid,
+            "file_path": str(p),
+            "sha256": sha,
+            "file_name": p.name,
+            "title": _clean_pdf_title(p, bid),
+            "year": None,
+            "primary_domain": infer_domain_from_filename(p.name),
+            "tier": "A",
+            "status": "PENDING",
+            "pages_total": None,
+            "is_ocr_classic": ocr_txt.exists(),
+        }
+        if ocr_txt.exists():
+            row_obj["ocr_rescue_path"] = str(ocr_txt)
+        rows.append(row_obj)
     return rows
 
 

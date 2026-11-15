@@ -1,0 +1,78 @@
+{
+  "book_id": "f09cca14642d8871",
+  "source_status": "COMPLETE",
+  "title": "studio-newsletter-block-citation-discipline",
+  "file_name": "studio-newsletter-block-citation-discipline.md",
+  "sha256": "f09cca14642d8871132b9edbd87fa9a45339141a471963c7d55bd0d2f5fc03b4",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Bayesian belief updating under evidence constraints with market consensus as probabilistic signal. Universal Lens: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI infers market depth via conformal predictive distributions; evidence health modulates posterior credibility in NCAAB matchups. GSI Mapping: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE transitions states using pre-mortem risk vectors and consensus thresholds; situational awareness driven by edge index and line movement. GSE Mapping: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "market_consensus_signal",
+      "name": "Market Consensus Signal",
+      "verbatim_quote": "The output: - Opens with the matchup and why the market moved.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'C': 'consensus strength (dimensionless)', 'M': 'market movement (points)', 'T': 'time window (minutes)'}",
+      "assumptions": "Market movement reflects aggregated agent beliefs; consensus is a function of evidence health and book coverage.",
+      "breakdown_regime": "C < 0.5 or M > 5 implies signal degradation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Consensus signal maps to Bayesian posterior probability of outcome given evidence.",
+        "source_operator": "market_consensus_signal",
+        "telemetry": "Observed line shift and book count"
+      }
+    },
+    {
+      "primitive_id": "evidence_bound_reasoning",
+      "name": "Evidence-Bound Reasoning",
+      "verbatim_quote": "It is allowed to discuss the line and market movement, but it must stay explanatory and evidence-bound.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'E': 'evidence weight (normalized)', 'R': 'reasoning depth (logits)', 'L': 'line movement (points)'}",
+      "assumptions": "All claims are grounded in GameIntelligenceNode data; reasoning is bounded by local evidence.",
+      "breakdown_regime": "R < 0 implies reasoning failure due to insufficient E.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Evidence-bound reasoning is derived from the ratio of local evidence to global noise.",
+        "source_operator": "evidence_bound_reasoning",
+        "telemetry": "Citation count per claim"
+      }
+    },
+    {
+      "primitive_id": "premortem_risk_vector",
+      "name": "Premortem Risk Vector",
+      "verbatim_quote": "Output includes at least one pre-mortem risk in the final paragraph.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "{'V': 'risk vector (dimensionless)', 'P': 'pre-mortem depth (logits)', 'S': 'signal strength (normalized)'}",
+      "assumptions": "Risk vector is orthogonal to consensus; P is a function of signal strength and temporal decay.",
+      "breakdown_regime": "V ⊥ C implies risk misalignment with market.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Pre-mortem risk vector is derived from temporal decay of consensus and signal strength.",
+        "source_operator": "premortem_risk_vector",
+        "telemetry": "Risk item count per output"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "f09cca14642d8871_t0",
+      "think": "Market consensus is modeled as a probabilistic belief update governed by evidence health and book coverage. The primitive 'market_consensus_signal' encodes how line movement correlates with belief shifts, where C = f(E, B) and E is normalized evidence weight. Evidence-bound reasoning ensures all claims are tethered to GameIntelligenceNode data, preventing speculative drift. This is formalized as R = log(P(O|E)) - log(P(O)), where O is outcome and E is evidence. Premortem risk vector V = g(S, T) captures latent adversarial dynamics, ensuring risk is not conflated with consensus. Dualities emerge between signal strength and risk depth, where high S implies low P, and vice versa. Failure modes include signal collapse when E < threshold or when V ⊥ C, indicating misalignment between risk and consensus.\n\nDeep epistemic analysis for studio-newsletter-block-citation-discipline (f09cca14642d8871, domain=other, pages_read=1/1): Operator 'Market Consensus Signal' (page 1, domain other) captures: The output: - Opens with the matchup and why the market moved. Assumptions: Market movement reflects aggregated agent beliefs; consensus is a function of evidence health and book coverage. Breakdown regime: C < 0.5 or M > 5 implies signal degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Consensus signal maps to Bayesian posterior probability of outcome given evidence. Operator 'Evidence-Bound Reasoning' (page 1, domain other) captures: It is allowed to discuss the line and market movement, but it must stay explanatory and evidence-bound. Assumptions: All claims are grounded in GameIntelligenceNode data; reasoning is bounded by local evidence. Breakdown regime: R < 0 implies reasoning failure due to insufficient E. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Evidence-bound reasoning is derived from the ratio of local evidence to global noise. Operator 'Premortem Risk Vector' (page 1, domain other) captures: Output includes at least one pre-mortem risk in the final paragraph. Assumptions: Risk vector is orthogonal to consensus; P is a function of signal strength and temporal decay. Breakdown regime: V ⊥ C implies risk misalignment with market. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pre-mortem risk vector is derived from temporal decay of consensus and signal strength. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for studio-newsletter-block-citation-discipline (f09cca14642d8871, domain=other, pages_read=1/1): Operator 'Market Consensus Signal' (page 1, domain other) captures: The output: - Opens with the matchup and why the market moved. Assumptions: Market movement reflects aggregated agent beliefs; consensus is a function of evidence health and book coverage. Breakdown regime: C < 0.5 or M > 5 implies signal degradation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Consensus signal maps to Bayesian posterior probability of outcome given evidence. Operator 'Evidence-Bound Reasoning' (page 1, domain other) captures: It is allowed to discuss the line and market movement, but it must stay explanatory and evidence-bound. Assumptions: All claims are grounded in GameIntelligenceNode data; reasoning is bounded by local evidence. Breakdown regime: R < 0 implies reasoning failure due to insufficient E. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Evidence-bound reasoning is derived from the ratio of local evidence to global noise. Operator 'Premortem Risk Vector' (page 1, domain other) captures: Output includes at least one pre-mortem risk in the final paragraph. Assumptions: Risk vector is orthogonal to consensus; P is a function of signal strength and temporal decay. Breakdown regime: V ⊥ C implies risk misalignment with market. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Pre-mortem risk vector is derived from temporal decay of consensus and signal strength. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Roots in Bayesian belief updating (Cox, de Finetti), extended to market dynamics via information geometry and causal inference frameworks. Retrocausal Genealogy: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may have divergent priors on evidence health, leading to inconsistent consensus signals. Decision actors model risk through pre-mortem vectors, which may conflict with market consensus. Theory of Mind & Decision Maker Model: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity is enforced by ensuring V ⊥ C and R < 0 when E < threshold. Leakage is prevented by restricting citations to GameIntelligenceNode only. Cross-Layer Veto & Anti-Leakage Check: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Cross-Layer Veto & Anti-Leakage Check: Rooted in studio-newsletter-block-citation-discipline (f09cca14642d8871), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

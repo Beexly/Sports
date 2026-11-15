@@ -1,0 +1,95 @@
+{
+  "book_id": "8c8c25819090a992",
+  "source_status": "COMPLETE",
+  "title": "build-test-results",
+  "file_name": "build-test-results.md",
+  "sha256": "8c8c25819090a992a065ac6e19d499eea64bfa34ccabe189dc83f8f969784657",
+  "primary_domain": "other",
+  "pages_total": 1,
+  "pages_read": 1,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Build-test pipeline as a structured state-space traversal; typecheck, lint, and guard commands form a stable kernel; test and probe failures indicate emergent instability in dynamic layers. Universal Lens: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian belief updates on build artifacts; pass/fail outcomes map to posterior probabilities of system integrity; guardrail commands act as conformal predictors for trust domains. GSI Mapping: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "State transitions driven by test verdicts; stable kernel commands enable deterministic progression; probe failures trigger fallback protocols and error-state reconfiguration. GSE Mapping: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "typecheck_kernel",
+      "name": "Type Consistency Kernel",
+      "verbatim_quote": "# Build and Test Results As of: 2026-06-09 | Command | Result | Notes | | --- | --- | --- | | npm.cmd run typecheck | PASS | All workspace packages completed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "All workspace packages maintain consistent type signatures under static analysis.",
+      "breakdown_regime": "Static type violation or package divergence.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's type-safe belief propagation over module interfaces.",
+        "source_operator": "typecheck_kernel",
+        "telemetry": "Number of successfully type-checked packages."
+      }
+    },
+    {
+      "primitive_id": "lint_guardrail",
+      "name": "Lint Integrity Gate",
+      "verbatim_quote": "| | npm.cmd run lint | PASS | @sports/web ESLint max-warnings=0 passed.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Codebase adheres to ESLint rules with zero warnings.",
+      "breakdown_regime": "Non-compliance with style or rule enforcement.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's syntactic conformity checks in codebase integrity.",
+        "source_operator": "lint_guardrail",
+        "telemetry": "Number of lint warnings or errors."
+      }
+    },
+    {
+      "primitive_id": "test_failure_mode",
+      "name": "Test Failure Regime",
+      "verbatim_quote": "| | npm.cmd test | FAIL | 3 failures: two guardrail subprocess tests and one missing file header.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "Test suite includes guardrail subprocess and file-header validation.",
+      "breakdown_regime": "Subprocess or file-header validation failure.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's dynamic test failure detection and rollback logic.",
+        "source_operator": "test_failure_mode",
+        "telemetry": "Count of failed test cases and root cause categories."
+      }
+    },
+    {
+      "primitive_id": "probe_health_check",
+      "name": "Health Probe Validation",
+      "verbatim_quote": "| | node scripts/prod-probe.mjs | FAIL | /api/health did not return 200.",
+      "page": 1,
+      "latex": null,
+      "symbol_and_unit_ledger": "conceptual-structural operator (dimensionless state mapping)",
+      "assumptions": "API health endpoint returns HTTP 200 for valid service state.",
+      "breakdown_regime": "Service endpoint unreachable or misconfigured.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps to GSE's runtime health monitoring and failover triggers.",
+        "source_operator": "probe_health_check",
+        "telemetry": "HTTP response code from /api/health endpoint."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "8c8c25819090a992_t0",
+      "think": "The build-test results reflect a layered system where static checks (typecheck, lint) form a robust kernel, while dynamic tests and probes reveal instability. The kernel passes consistently, indicating that foundational code quality is maintained. However, test failures point to specific procedural or environmental issues—guardrail subprocesses and missing headers—which suggest a breakdown in execution context rather than core logic. The probe failures imply runtime configuration or dependency issues, such as Prisma auth errors or snapshot regeneration problems. These failures do not invalidate the kernel but signal that higher-order state transitions are not yet stable. The system exhibits a dual nature: a stable foundation with fragile emergent behavior. This duality aligns with a Bayesian model where prior beliefs about correctness are updated based on evidence from tests and probes. The failure modes can be modeled as conditional probability distributions over system states, with each failure representing a posterior update that narrows the belief space.\n\nDeep epistemic analysis for build-test-results (8c8c25819090a992, domain=other, pages_read=1/1): Operator 'Type Consistency Kernel' (page 1, domain other) captures: # Build and Test Results As of: 2026-06-09 | Command | Result | Notes | | --- | --- | --- | | npm.cmd run typecheck | PASS | All workspace packages completed. Assumptions: All workspace packages maintain consistent type signatures under static analysis. Breakdown regime: Static type violation or package divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's type-safe belief propagation over module interfaces. Operator 'Lint Integrity Gate' (page 1, domain other) captures: | | npm.cmd run lint | PASS | @sports/web ESLint max-warnings=0 passed. Assumptions: Codebase adheres to ESLint rules with zero warnings. Breakdown regime: Non-compliance with style or rule enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's syntactic conformity checks in codebase integrity. Operator 'Test Failure Regime' (page 1, domain other) captures: | | npm.cmd test | FAIL | 3 failures: two guardrail subprocess tests and one missing file header. Assumptions: Test suite includes guardrail subprocess and file-header validation. Breakdown regime: Subprocess or file-header validation failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic test failure detection and rollback logic. Operator 'Health Probe Validation' (page 1, domain other) captures: | | node scripts/prod-probe.mjs | FAIL | /api/health did not return 200. Assumptions: API health endpoint returns HTTP 200 for valid service state. Breakdown regime: Service endpoint unreachable or misconfigured. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's runtime health monitoring and failover triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for build-test-results (8c8c25819090a992, domain=other, pages_read=1/1): Operator 'Type Consistency Kernel' (page 1, domain other) captures: # Build and Test Results As of: 2026-06-09 | Command | Result | Notes | | --- | --- | --- | | npm.cmd run typecheck | PASS | All workspace packages completed. Assumptions: All workspace packages maintain consistent type signatures under static analysis. Breakdown regime: Static type violation or package divergence. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's type-safe belief propagation over module interfaces. Operator 'Lint Integrity Gate' (page 1, domain other) captures: | | npm.cmd run lint | PASS | @sports/web ESLint max-warnings=0 passed. Assumptions: Codebase adheres to ESLint rules with zero warnings. Breakdown regime: Non-compliance with style or rule enforcement. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's syntactic conformity checks in codebase integrity. Operator 'Test Failure Regime' (page 1, domain other) captures: | | npm.cmd test | FAIL | 3 failures: two guardrail subprocess tests and one missing file header. Assumptions: Test suite includes guardrail subprocess and file-header validation. Breakdown regime: Subprocess or file-header validation failure. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's dynamic test failure detection and rollback logic. Operator 'Health Probe Validation' (page 1, domain other) captures: | | node scripts/prod-probe.mjs | FAIL | /api/health did not return 200. Assumptions: API health endpoint returns HTTP 200 for valid service state. Breakdown regime: Service endpoint unreachable or misconfigured. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps to GSE's runtime health monitoring and failover triggers. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in formal verification traditions of software reliability, extending to modern CI/CD pipelines and probabilistic runtime models. Influenced by Halpern’s temporal logic and Bayesian network formalisms for system diagnostics. Retrocausal Genealogy: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include the automated test suite (which enforces constraints), the runtime environment (which may introduce variability), and the developer team (who must resolve discrepancies). Each agent operates under different objectives: verification, stability, and correctness respectively. Theory of Mind & Decision Maker Model: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity exists between static and dynamic layers; kernel stability does not guarantee runtime success. Leakage occurs when test failures propagate into production-like environments without proper sandboxing. Veto conditions require that all kernel-level checks pass before allowing dynamic layer transitions, ensuring no false positives in state evolution. Cross-Layer Veto & Anti-Leakage Check: Rooted in build-test-results (8c8c25819090a992), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,16 +1,16 @@
 {
   "book_id": "0b355969a74b5994",
-  "title": "CLIENT_READY_FINAL_AUDIT(1).txt",
-  "file_name": "CLIENT_READY_FINAL_AUDIT(1).txt.txt",
+  "title": "QUARANTINED_NON_CORPUS_ITEM_0b355969a74b5994",
+  "file_name": "0b355969a74b5994.quarantined",
   "sha256": "0b355969a74b5994eba53381f334a14f75279c241efb593edd588010eb1cdbe6",
   "primary_domain": "other",
-  "pages_total": 1,
-  "pages_read": 1,
+  "pages_total": 0,
+  "pages_read": 0,
   "worker_id": "motif-shard-a-4to7",
-  "extractor_model": "fail-closed-stub-guard",
+  "extractor_model": "pii-correspondence-quarantine-guard",
   "ocr_rescued": false,
   "source_status": "INSUFFICIENT_SOURCE_ACCESS",
-  "refusal_reason": "Download-bait/title-only stub PDF (1 pages, 572 extracted chars, 1 candidate quotes < 3 minimum): 'SOURCE_FILE: drive_export\\\\CLIENT_READY_FINAL_AUDIT(1).txt ============================================================ Final v11. QR check r'. Fail-closed under Foundry Gatekeeper zero-fabrication contract.",
+  "refusal_reason": "Non-corpus personal correspondence or identity/credential file quarantined prior to text extraction; redacted fail-closed under zero-PII and Foundry Gatekeeper safety rules.",
   "primitives": [],
   "reasoning_traces": []
 }

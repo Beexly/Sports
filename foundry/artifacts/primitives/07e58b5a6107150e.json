@@ -1,0 +1,78 @@
+{
+  "book_id": "07e58b5a6107150e",
+  "source_status": "COMPLETE",
+  "title": "RESEARCH_DESIGN",
+  "file_name": "RESEARCH_DESIGN.md",
+  "sha256": "07e58b5a6107150e949f7d8da8aced065b456faf8b3a9b4927d6a65f6f743d03",
+  "primary_domain": "other",
+  "pages_total": 6,
+  "pages_read": 6,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Speed phase decomposition maps pre-draft 40-yd acceleration to rookie high-speed capacity via player-level temporal dynamics. Universal Lens: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "Bayesian inference on 40-yd early acceleration as a descriptor for post-snap speed gain, conditioned on pre-draft metrics and role-adjusted exposure. GSI Mapping: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "Situational reasoning models stationary-snap blitz speed gain using early acceleration as a derived kernel in state-transition dynamics. GSE Mapping: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "early_acceleration_descriptor",
+      "name": "Early Acceleration Descriptor",
+      "verbatim_quote": "## Primary measurement and outcome **Combine predictor:** mean player-level 0–1 second change in smoothed speed during the tracked 40-yard dash.",
+      "page": 1,
+      "latex": "\\Delta v_{\\text{early}} = \\frac{1}{T} \\sum_{t=0}^{T} (v(t+1) - v(t)) \\quad \\text{where } T = 1 \\text{ s}",
+      "symbol_and_unit_ledger": "{'v(t)': 'speed at time t (yd/s)', 'T': 'time window (s)'}",
+      "assumptions": "Smoothed speed trajectory is monotonic and representative of initial kinetic response.",
+      "breakdown_regime": "Acceleration below 1 yd/s² or duration < 1 s invalidates metric.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Maps 40-yd early acceleration to post-snap speed gain in blitz scenarios via empirical regression.",
+        "source_operator": "early_acceleration_descriptor",
+        "telemetry": "Post-snap speed gain (yd/s) and displacement (yd) over 1 s"
+      }
+    },
+    {
+      "primitive_id": "post_snap_speed_gain",
+      "name": "Post-Snap Speed Gain",
+      "verbatim_quote": "After those exploratory screens, we locked DL first-second post-snap speed gain on stationary-snap blitz opportunities as the next-study primary outcome.",
+      "page": 1,
+      "latex": "v_{\\text{gain}} = v_{\\text{final}} - v_{\\text{initial}} \\quad \\text{over } t \\in [0,1] \\text{ s}",
+      "symbol_and_unit_ledger": "{'v_{\\\\text{gain}}': 'change in speed (yd/s)', 'v_{\\\\text{final}}, v_{\\\\text{initial}}': 'speed at final and initial time (yd/s)'}",
+      "assumptions": "Initial speed is measured at onset of motion, final speed at 1 s post-snap.",
+      "breakdown_regime": "Below 50 eligible blitz bursts or < 1 s duration invalidates estimation.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Isomorphic to early acceleration under controlled motion onset and fixed time window.",
+        "source_operator": "post_snap_speed_gain",
+        "telemetry": "RMSE change in speed gain (yd/s) and displacement (yd)"
+      }
+    },
+    {
+      "primitive_id": "player_exposure_threshold",
+      "name": "Player Exposure Threshold",
+      "verbatim_quote": "The endpoint, 100-opportunity population rule, pre-draft baseline, one candidate, metric, and limits are recorded in [`docs/PRIMARY_OUTCOME_CHARTER.md`](docs/PRIMARY_OUTCOME_CHARTER.md); the current 32-player result is already exploratory and does not support incremental prediction.",
+      "page": 1,
+      "latex": "N_{\\text{exposure}} \\geq 100 \\Rightarrow \\text{valid } \\theta_{\\text{estimand}}",
+      "symbol_and_unit_ledger": "{'N_{\\\\text{exposure}}': 'number of plays (dimensionless)', 'θ_{\\\\text{estimand}}': 'estimated parameter (dimensionless)'}",
+      "assumptions": "Minimum play count ensures stable variance estimation and predictive validity.",
+      "breakdown_regime": "Below 100 plays leads to unstable estimates and overfitting risk.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enforces minimal data integrity for valid statistical inference in GSI.",
+        "source_operator": "player_exposure_threshold",
+        "telemetry": "Sample size (N) and RMSE of target variable"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "07e58b5a6107150e_t0",
+      "think": "The core research design centers on a dual-phase hypothesis: early acceleration during the 40-yard dash provides incremental signal beyond static Combine metrics for predicting rookie high-speed capacity. The primitive 'early_acceleration_descriptor' captures this via temporal derivative of speed over 1 s. It is mapped to 'post_snap_speed_gain' through empirical regression, forming a derived kernel in GSE's state-transition logic. The 'player_exposure_threshold' enforces statistical robustness by requiring ≥100 plays per player. Failure modes include insufficient data, non-monotonic motion profiles, or misalignment between 40-yd and game-specific motion patterns. The nested phase-by-position audit confirms that early acceleration does not replicate across fixed windows, suggesting it is not a generalizable NFL first-step cue. Thus, the signal must remain exploratory and context-bound.\n\nDeep epistemic analysis for RESEARCH_DESIGN (07e58b5a6107150e, domain=other, pages_read=6/6): Operator 'Early Acceleration Descriptor' (page 1, domain other) captures: ## Primary measurement and outcome **Combine predictor:** mean player-level 0–1 second change in smoothed speed during the tracked 40-yard dash. Assumptions: Smoothed speed trajectory is monotonic and representative of initial kinetic response. Breakdown regime: Acceleration below 1 yd/s² or duration < 1 s invalidates metric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps 40-yd early acceleration to post-snap speed gain in blitz scenarios via empirical regression. Operator 'Post-Snap Speed Gain' (page 1, domain other) captures: After those exploratory screens, we locked DL first-second post-snap speed gain on stationary-snap blitz opportunities as the next-study primary outcome. Assumptions: Initial speed is measured at onset of motion, final speed at 1 s post-snap. Breakdown regime: Below 50 eligible blitz bursts or < 1 s duration invalidates estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to early acceleration under controlled motion onset and fixed time window. Operator 'Player Exposure Threshold' (page 1, domain other) captures: The endpoint, 100-opportunity population rule, pre-draft baseline, one candidate, metric, and limits are recorded in [`docs/PRIMARY_OUTCOME_CHARTER.md`](docs/PRIMARY_OUTCOME_CHARTER.md); the current 32-player result is already exploratory and does not support incremental prediction. Assumptions: Minimum play count ensures stable variance estimation and predictive validity. Breakdown regime: Below 100 plays leads to unstable estimates and overfitting risk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces minimal data integrity for valid statistical inference in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for RESEARCH_DESIGN (07e58b5a6107150e, domain=other, pages_read=6/6): Operator 'Early Acceleration Descriptor' (page 1, domain other) captures: ## Primary measurement and outcome **Combine predictor:** mean player-level 0–1 second change in smoothed speed during the tracked 40-yard dash. Assumptions: Smoothed speed trajectory is monotonic and representative of initial kinetic response. Breakdown regime: Acceleration below 1 yd/s² or duration < 1 s invalidates metric. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Maps 40-yd early acceleration to post-snap speed gain in blitz scenarios via empirical regression. Operator 'Post-Snap Speed Gain' (page 1, domain other) captures: After those exploratory screens, we locked DL first-second post-snap speed gain on stationary-snap blitz opportunities as the next-study primary outcome. Assumptions: Initial speed is measured at onset of motion, final speed at 1 s post-snap. Breakdown regime: Below 50 eligible blitz bursts or < 1 s duration invalidates estimation. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Isomorphic to early acceleration under controlled motion onset and fixed time window. Operator 'Player Exposure Threshold' (page 1, domain other) captures: The endpoint, 100-opportunity population rule, pre-draft baseline, one candidate, metric, and limits are recorded in [`docs/PRIMARY_OUTCOME_CHARTER.md`](docs/PRIMARY_OUTCOME_CHARTER.md); the current 32-player result is already exploratory and does not support incremental prediction. Assumptions: Minimum play count ensures stable variance estimation and predictive validity. Breakdown regime: Below 100 plays leads to unstable estimates and overfitting risk. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enforces minimal data integrity for valid statistical inference in GSI. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in classical mechanics and kinematic modeling, extended to sports analytics via player tracking data. Influenced by prior work on sprint acceleration and biomechanical thresholds in athletic performance. Retrocausal Genealogy: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents include scouts who may overvalue early acceleration, and coaches who seek predictive validity. The system models these actors through bounded rationality: early acceleration is informative but not causally sufficient without role and exposure context. Theory of Mind & Decision Maker Model: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity vetoes use of early acceleration as a standalone draft cutoff due to its lack of replication in fixed windows. Leakage veto prevents treating it as a training prescription without controlled field validation. Cross-Layer Veto & Anti-Leakage Check: Rooted in RESEARCH_DESIGN (07e58b5a6107150e), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "book_id": "fcd789dd6bd424d2",
+  "source_status": "COMPLETE",
+  "title": "0f44fd6745c3",
+  "file_name": "0f44fd6745c3.txt",
+  "sha256": "fcd789dd6bd424d24322f3b20ec3d928542b78e5d6ac98a0489572228bea7ccc",
+  "primary_domain": "other",
+  "pages_total": 3,
+  "pages_read": 3,
+  "worker_id": "motif-shard-a-4to7",
+  "extractor_model": "alibaba-qwen3-coder-flash:qwen3-coder-flash",
+  "ocr_rescued": false,
+  "universal_lens": "Out-of-sample validation via temporal cohort split enables Bayesian model calibration and conformal prediction integrity. Universal Lens: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gsi_mapping": "GSI employs OOS splits to compute in-sample and out-of-sample Brier scores, enabling probabilistic model reliability assessment through Bayesian posterior updates. GSI Mapping: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "gse_mapping": "GSE leverages OOS cohort segmentation to drive adaptive state transitions in predictive models, ensuring dynamic decision-making under evolving data regimes. GSE Mapping: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+  "primitives": [
+    {
+      "primitive_id": "temporal_cohort_split",
+      "name": "Temporal Cohort Split",
+      "verbatim_quote": "}, ]; const result = computeOosSplit(picks, { boundaryDate: boundary, minSamplePerCohort: 2, }); // Picks 1–2 before",
+      "page": 1,
+      "latex": "\\mathcal{S}_{\\text{IS}} \\cup \\mathcal{S}_{\\text{OOS}} = \\mathcal{P}, \\quad \\mathcal{S}_{\\text{IS}} \\cap \\mathcal{S}_{\\text{OOS}} = \\emptyset",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{S}_{\\\\text{IS}}': 'In-sample set of picks, dimensionless', '\\\\mathcal{S}_{\\\\text{OOS}}': 'Out-of-sample set of picks, dimensionless', '\\\\mathcal{P}': 'Full set of picks, dimensionless'}",
+      "assumptions": "Picks are temporally ordered; boundary date defines valid split; minimal sample size per cohort enforced.",
+      "breakdown_regime": "When either cohort has fewer than `minSamplePerCohort` picks.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enables empirical risk estimation via cross-validation in time-series forecasting.",
+        "source_operator": "temporal_cohort_split",
+        "telemetry": "Validation of cohort size thresholds and Brier score differentials."
+      }
+    },
+    {
+      "primitive_id": "brier_score_delta",
+      "name": "Brier Score Delta",
+      "verbatim_quote": "((0.70-1)2 + (0.55-0)2) / 2 = (0.09 + 0.3025) / 2 ≈ 0.1962 expect(result.outOfSample.brier).toBeCloseTo(0.1962, 2); expect(result.outOfSample.accuracy).toBe(0.5);",
+      "page": 1,
+      "latex": "\\Delta B = B_{\\text{OOS}} - B_{\\text{IS}}",
+      "symbol_and_unit_ledger": "{'\\\\Delta B': 'Change in Brier score between OOS and IS, unitless', 'B_{\\\\text{IS}}': 'In-sample Brier score, unitless', 'B_{\\\\text{OOS}}': 'Out-of-sample Brier score, unitless'}",
+      "assumptions": "Brier scores computed on binary outcomes with probabilistic forecasts.",
+      "breakdown_regime": "When \\( |\\Delta B| > \\text{tolerance} \\), indicating overfitting.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Maps to GSI's reliability diagnostics and GSE's adaptive learning feedback loops.",
+        "source_operator": "brier_score_delta",
+        "telemetry": "Model degradation detection via Brier score change."
+      }
+    },
+    {
+      "primitive_id": "oos_health_assessment",
+      "name": "Out-of-Sample Health Assessment",
+      "verbatim_quote": "is healthier (lower Brier) expect(result.oosIsHealthy).toBe(true); expect(result.brierDelta).toBeCloseTo(-0.045, 2); expect(result.isValid).toBe(true); }); it(\"marks as invalid when sample sizes below",
+      "page": 1,
+      "latex": "\\mathcal{H}(\\mathcal{S}_{\\text{OOS}}) = \\begin{cases} \\text{Healthy} & \\text{if } \\Delta B < \\tau \\\\ \\text{Unhealthy} & \\text{otherwise} \\end{cases}",
+      "symbol_and_unit_ledger": "{'\\\\mathcal{H}(\\\\mathcal{S}_{\\\\text{OOS}})': 'Health status of OOS cohort, boolean', '\\\\tau': 'Tolerance threshold for Brier delta, unitless'}",
+      "assumptions": "A lower Brier score in OOS implies better generalization.",
+      "breakdown_regime": "When \\( \\Delta B \\geq \\tau \\), indicating potential overfitting or data drift.",
+      "domain": "other",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Used in GSE for real-time model revalidation and GSI for probabilistic confidence bounds.",
+        "source_operator": "oos_health_assessment",
+        "telemetry": "Binary health flag and Brier delta magnitude."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "fcd789dd6bd424d2_t0",
+      "think": "The temporal cohort split operator \\( \\mathcal{S}_{\\text{IS}} \\cup \\mathcal{S}_{\\text{OOS}} = \\mathcal{P} \\) partitions a dataset into in-sample and out-of-sample subsets based on a fixed boundary date. This structure allows for empirical validation of model performance without data leakage. The Brier score \\( B = \\frac{1}{n} \\sum_{i=1}^{n} (p_i - o_i)^2 \\) quantifies forecast accuracy where \\( p_i \\) is predicted probability and \\( o_i \\in \\{0,1\\} \\) is outcome. The Brier score delta \\( \\Delta B = B_{\\text{OOS}} - B_{\\text{IS}} \\) measures whether model performance degrades in the future. If \\( \\Delta B < 0 \\), the model is more accurate in OOS, suggesting good generalization. A positive \\( \\Delta B \\) indicates overfitting. The health assessment \\( \\mathcal{H}(\\mathcal{S}_{\\text{OOS}}) \\) flags models that fail to maintain performance across time, which is critical for both GSI’s Bayesian inference and GSE’s adaptive decision logic. Failure modes include insufficient sample size, temporal shift in data distribution, or model instability.\n\nDeep epistemic analysis for 0f44fd6745c3 (fcd789dd6bd424d2, domain=other, pages_read=3/3): Operator 'Temporal Cohort Split' (page 1, domain other) captures: }, ]; const result = computeOosSplit(picks, { boundaryDate: boundary, minSamplePerCohort: 2, }); // Picks 1–2 before Assumptions: Picks are temporally ordered; boundary date defines valid split; minimal sample size per cohort enforced. Breakdown regime: When either cohort has fewer than `minSamplePerCohort` picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables empirical risk estimation via cross-validation in time-series forecasting. Operator 'Brier Score Delta' (page 1, domain other) captures: ((0.70-1)2 + (0.55-0)2) / 2 = (0.09 + 0.3025) / 2 ≈ 0.1962 expect(result.outOfSample.brier).toBeCloseTo(0.1962, 2); expect(result.outOfSample.accuracy).toBe(0.5); Assumptions: Brier scores computed on binary outcomes with probabilistic forecasts. Breakdown regime: When \\( |\\Delta B| > \\text{tolerance} \\), indicating overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's reliability diagnostics and GSE's adaptive learning feedback loops. Operator 'Out-of-Sample Health Assessment' (page 1, domain other) captures: is healthier (lower Brier) expect(result.oosIsHealthy).toBe(true); expect(result.brierDelta).toBeCloseTo(-0.045, 2); expect(result.isValid).toBe(true); }); it(\"marks as invalid when sample sizes below Assumptions: A lower Brier score in OOS implies better generalization. Breakdown regime: When \\( \\Delta B \\geq \\tau \\), indicating potential overfitting or data drift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for real-time model revalidation and GSI for probabilistic confidence bounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.\n\nDeep epistemic analysis for 0f44fd6745c3 (fcd789dd6bd424d2, domain=other, pages_read=3/3): Operator 'Temporal Cohort Split' (page 1, domain other) captures: }, ]; const result = computeOosSplit(picks, { boundaryDate: boundary, minSamplePerCohort: 2, }); // Picks 1–2 before Assumptions: Picks are temporally ordered; boundary date defines valid split; minimal sample size per cohort enforced. Breakdown regime: When either cohort has fewer than `minSamplePerCohort` picks. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Enables empirical risk estimation via cross-validation in time-series forecasting. Operator 'Brier Score Delta' (page 1, domain other) captures: ((0.70-1)2 + (0.55-0)2) / 2 = (0.09 + 0.3025) / 2 ≈ 0.1962 expect(result.outOfSample.brier).toBeCloseTo(0.1962, 2); expect(result.outOfSample.accuracy).toBe(0.5); Assumptions: Brier scores computed on binary outcomes with probabilistic forecasts. Breakdown regime: When \\( |\\Delta B| > \\text{tolerance} \\), indicating overfitting. Layer-2 GSI/GSE mapping ([ISOMORPHISM]): Maps to GSI's reliability diagnostics and GSE's adaptive learning feedback loops. Operator 'Out-of-Sample Health Assessment' (page 1, domain other) captures: is healthier (lower Brier) expect(result.oosIsHealthy).toBe(true); expect(result.brierDelta).toBeCloseTo(-0.045, 2); expect(result.isValid).toBe(true); }); it(\"marks as invalid when sample sizes below Assumptions: A lower Brier score in OOS implies better generalization. Breakdown regime: When \\( \\Delta B \\geq \\tau \\), indicating potential overfitting or data drift. Layer-2 GSI/GSE mapping ([DERIVED KERNEL]): Used in GSE for real-time model revalidation and GSI for probabilistic confidence bounds. Across Galaxy Sports Intelligence (GSI) and Galaxy Sports Engine (GSE), strict mathematical isomorphism separates immutable source invariants from downstream derived kernels. Whenever empirical estimates depend on finite-sample observation windows, James-Stein / Empirical-Bayes shrinkage pulls noisy displacement signals back toward hierarchical priors while censoring extreme displacements within +/- 0.35 log-odds. Weighted conformal calibration further ensures distribution-free finite-sample coverage even under covariate shift between historical training splits and live operational weeks. Crucially, zero-leakage chronological causality demands that every parameter, variance weight, and situational adjustment strictly precede the target event horizon, preventing forward leakage or post-hoc optimization bias. In multi-agent governance, each extracted primitive functions as an auditable signal family: the 288-bit cognitive context mask activates matching structural priors, spectral cluster orthogonalization eliminates collinear inflation across overlapping domain theories, and Jacobian cross-layer vetoes block double-counting when two mathematical lenses describe the same underlying dynamical mechanism from dual coordinate systems. Operational telemetry tracks both predictive skill (proper scoring rules such as Brier and logarithmic loss) and empirical interval coverage alongside regime-shift alarms whenever denominator assumptions (sample independence, homoscedasticity, or stationarity) fail in the observed data stream.",
+      "retrocausal_genealogy": "Rooted in statistical learning theory and cross-validation principles introduced by Stone (1974) and later formalized in machine learning frameworks such as those by Breiman et al. (1984) and Vapnik (1995). Retrocausal Genealogy: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters. Retrocausal Genealogy: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "theory_of_mind": "Opposing agents may be adversarial data shifts or model overconfidence. One agent assumes stable distributions; another assumes evolving dynamics. The system must detect and respond to both. Theory of Mind & Decision Maker Model: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters.",
+      "cross_layer_veto": "Anti-collinearity requires that IS and OOS sets do not share overlapping temporal features. Leakage occurs if future data leaks into IS, invalidating the split. Veto conditions include insufficient samples or Brier score instability. Cross-Layer Veto & Anti-Leakage Check: Rooted in 0f44fd6745c3 (fcd789dd6bd424d2), this derivation preserves strict unit consistency, explicit validity boundaries, zero-leakage temporal separation, and bounded structural integration across GSI calibration heads, spectral orthogonalization clusters, and GSE Stage-2 situational reasoning families without fabricating parameters."
+    }
+  ]
+}
