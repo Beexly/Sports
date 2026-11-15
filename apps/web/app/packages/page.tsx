@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import {
   TWO_DOOR_PACK_OFFERS,
-  membershipCheckoutAvailability,
+  membershipCheckoutAvailability, singleSlateCheckoutAvailability,
 } from "@/lib/packages/two-door-offers";
 import { LIVE_PACKAGE_CATALOG, getActiveForSalePackages } from "@/lib/packages/catalog";
 import { scrubOfferingCopy } from "@/lib/packages/copy-fence";
@@ -50,7 +50,7 @@ const FIVE_STAGES: readonly { readonly title: string; readonly body: string }[] 
 
 export default async function PackagesPage(): Promise<JSX.Element> {
   const gate = await getStage5GateStatus();
-  const membershipAvailability = membershipCheckoutAvailability();
+  const membershipAvailability = membershipCheckoutAvailability(); const slateAvailability = singleSlateCheckoutAvailability();
   const stripePacks = LIVE_PACKAGE_CATALOG.filter((pkg) => Boolean(pkg.forSale) && Boolean(pkg.stripePriceId));
 
   return (
@@ -236,13 +236,13 @@ export default async function PackagesPage(): Promise<JSX.Element> {
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              {TWO_DOOR_PACK_OFFERS.map((offer) => (
+              {TWO_DOOR_PACK_OFFERS.map((offer) => { const avail = slateAvailability.find((a) => a.offerSlug === offer.slug); return (
                 <SingleSlateCard
                   key={offer.slug}
                   offer={offer}
-                  gate={gate}
+                  gate={gate} standardConfigured={avail?.standardConfigured ?? false} creditBackConfigured={avail?.creditBackConfigured ?? false}
                 />
-              ))}
+              ); })}
             </div>
           </div>
         </details>
