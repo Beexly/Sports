@@ -1,8 +1,8 @@
 /**
- * nflverse currency guard — fails loudly if any dataset the app depends on can no longer reach the
+ * nflverse currency guard -- fails loudly if any dataset the app depends on can no longer reach the
  * current NFL season. This exists because nflverse periodically RENAMES/RESHAPES release assets
  * (e.g. after 2024 the weekly player-stats and Next Gen Stats assets moved), and a renamed asset
- * 404s SILENTLY — the app then serves last-season data labeled "live". "It says it's current" is not
+ * 404s SILENTLY -- the app then serves last-season data labeled "live". "It says it's current" is not
  * enough; this checks the real HTTP + season coverage, catalog-driven (single source of truth).
  *
  * RUN:  NODE_OPTIONS=--use-system-ca npx tsx scripts/check-nflverse-currency.ts
@@ -18,7 +18,7 @@ function currentNflSeason(now = new Date()): number {
 }
 const SEASON = currentNflSeason();
 
-// Datasets that legitimately do not track the NFL season tightly — warn instead of fail.
+// Datasets that legitimately do not track the NFL season tightly -- warn instead of fail.
 const SOFT: Partial<Record<NflverseDatasetKey, string>> = {
   contracts: "OverTheCap upstream lag (often 1-3 seasons behind)",
   players: "all-time master table (no season column)",
@@ -45,7 +45,7 @@ function fields(line: string): string[] {
 
 async function reach(url: string): Promise<{ ok: boolean; status: number | string; maxSeason?: number }> {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(25_000) });
     if (!res.ok) return { ok: false, status: res.status };
     const buf = Buffer.from(await res.arrayBuffer());
     const isGz = buf.length > 1 && buf[0] === 0x1f && buf[1] === 0x8b;
@@ -61,14 +61,23 @@ async function reach(url: string): Promise<{ ok: boolean; status: number | strin
 }
 
 async function main(): Promise<void> {
-  console.log(`\nnflverse currency guard — required current season >= ${SEASON}\n`);
+  console.log(`\nnflverse currency guard -- required current season >= ${SEASON}\n`);
   const failures: string[] = [];
   const warnings: string[] = [];
-
+  const tasks: { key: NflverseDatasetKey; variant: string }[] = [];
   for (const key of Object.keys(NFLVERSE_CATALOG) as NflverseDatasetKey[]) {
-    const d = NFLVERSE_CATALOG[key];
     const variants = VARIANTS[key] ?? [undefined as unknown as string];
     for (const variant of variants) {
+      tasks.push({ key, variant });
+    }
+  }
+  const CONCURRENCY = 4;
+  let nextIdx = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, tasks.length) }, async () => {
+      while (nextIdx < tasks.length) {
+        const { key, variant } = tasks[nextIdx++]!;
+        const d = NFLVERSE_CATALOG[key];
       const url = nflverseUrl(key, SEASON, variant);
       const label = `${key}${variant ? `(${variant})` : ""}`;
       const soft = SOFT[key];
@@ -95,12 +104,12 @@ async function main(): Promise<void> {
         else if (!reaches) (soft ? warnings : failures).push(`${label}: combined asset max season ${r.maxSeason} < ${SEASON}${soft ? ` (${soft})` : ""}`);
       }
     }
-  }
+  }));
 
   console.log(`\n${"=".repeat(50)}`);
   if (warnings.length) { console.log(`WARNINGS (soft / known upstream lag):`); for (const w of warnings) console.log(`  - ${w}`); }
   if (failures.length) {
-    console.log(`\nFAILURES (${failures.length}) — these datasets cannot reach season ${SEASON}:`);
+    console.log(`\nFAILURES (${failures.length}) -- these datasets cannot reach season ${SEASON}:`);
     for (const f of failures) console.log(`  ✗ ${f}`);
     console.log(`\nLikely cause: nflverse renamed/reshaped the asset. Update the catalog in`);
     console.log(`packages/data-ingestion/src/nflverse-source.ts (see how player_stats_week + ngs handle it).\n`);
@@ -109,4 +118,4 @@ async function main(): Promise<void> {
   console.log(`\nAll required nflverse datasets reach season ${SEASON}. ✅\n`);
 }
 
-main().catch((err) => { console.error(err); process.exit(2); });
+main().catch((err) => { console.error("Unhandled nflverse probe error"); console.error(err); process.exit(2); });

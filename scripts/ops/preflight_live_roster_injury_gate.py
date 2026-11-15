@@ -202,7 +202,7 @@ def discover_latest_stage0_config(season: int = 2026, week: int | str = "auto") 
     return resolved_wk, cfg_path
 
 
-def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG) -> dict:
+def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG, today: date | None = None) -> dict:
     """Hard gate for any simulation/pick entry point: a roster config for `week` must exist and be fresh.
 
     Explicit, logged retrospective path: STAGE0_RETROSPECTIVE=1 (returns {} - never for publishable output).
@@ -221,7 +221,7 @@ def require_week(week: int | str, config_path: str | Path = DEFAULT_CONFIG) -> d
         week_specific = _week_config_path(int(week))
         if week_specific.is_file():
             config_path = week_specific
-    cfg = load_config(config_path)
+    cfg = load_config(config_path, today=today)
     if int(cfg["week"]) != int(week):
         raise PreflightRosterGateError(
             f"no roster/transaction config for week {week} (config is week {cfg['week']}); "
