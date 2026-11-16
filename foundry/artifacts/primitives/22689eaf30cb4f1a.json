@@ -1,0 +1,741 @@
+{
+  "book_id": "22689eaf30cb4f1a",
+  "source_status": "COMPLETE",
+  "source_note": "Jay Kreps, I Heart Logs: Event Data, Stream Processing, and Data Integration, O'Reilly Media, first edition October 2014 (copyright page: Copyright 2015 Jay Kreps; revision history first release 2014-09-22; ISBN 978-1-491-90938-6). Local file is the publisher PDF of the complete book, 4 chapters plus references appendix. Full sha256 scan digest (sha256 over str(size) + file bytes): 22689eaf30cb4f1a24419bfd89020f0b9bc1da453f61d0368af93cb99baa9334; size 4539960 bytes; book_id is the first 16 hex chars of that digest and matches the expected value. Extracted text is clean and complete (18,427 words) with only ordinary line-break hyphenation artifacts. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "log_definition_append_only",
+      "name": "A log is an append-only sequence of records ordered by time",
+      "verbatim_quote": "It is an append-only sequence of records ordered by time, as in Figure 1-2.",
+      "page": "Chapter 1, What Is a Log?; text lines 259-260",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Records are only appended, never modified or inserted in the middle",
+        "The contents and format of individual records are unconstrained"
+      ],
+      "breakdown_regime": "Append-only ordering gives no random access by key and no deletion semantics; workloads needing in-place update or removal must layer other structures on top",
+      "domain": "data structures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine evidence store is an append-only log of observations: every signal is recorded once in arrival order and history is never overwritten, so any later state can be traced back to the exact record sequence that produced it.",
+        "source_operator": "log_definition_append_only",
+        "telemetry": "Ingestion counts and append rates per source feed"
+      }
+    },
+    {
+      "primitive_id": "log_entry_number_unique_key",
+      "name": "Each appended entry receives a unique sequential log entry number that acts as its unique key",
+      "verbatim_quote": "Each entry appended to the log is assigned a unique, sequential log entry number that acts as its unique key.",
+      "page": "Chapter 1, What Is a Log?; text lines 269-271",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Entry numbers are assigned sequentially with no gaps in assignment order",
+        "A single numbering authority or partition-local numbering exists"
+      ],
+      "breakdown_regime": "A single global sequence is a coordination bottleneck at very high write rates, which is why practical systems number entries per partition instead",
+      "domain": "data structures",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every evidence record in the engine carries a sequential offset that serves as its citation handle and as the coordinate by which consumers report how current they are.",
+        "source_operator": "log_entry_number_unique_key",
+        "telemetry": "Offset assignments and head positions per feed"
+      }
+    },
+    {
+      "primitive_id": "ordering_defines_logical_time",
+      "name": "Log ordering defines a logical notion of time decoupled from physical clocks",
+      "verbatim_quote": "The ordering of records defines a notion of “time” since entries to the left are defined to be older then entries to the right.",
+      "page": "Chapter 1, What Is a Log?; text lines 274-275",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All participants accept log position as the ordering reference",
+        "Physical clock timestamps are not needed to compare two entries in the same log"
+      ],
+      "breakdown_regime": "Logical time orders entries within one log only; it cannot by itself order events across independent logs whose entries never meet",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine compares the state of different signal consumers by log position rather than wall clock time, which stays meaningful even when source clocks disagree or feeds arrive with delay.",
+        "source_operator": "ordering_defines_logical_time",
+        "telemetry": "Per-feed log positions at the moment each conclusion was computed"
+      }
+    },
+    {
+      "primitive_id": "database_log_authoritative_projection",
+      "name": "A database writes to a log the information about the records it will modify before applying the changes to its data structures",
+      "verbatim_quote": "To make this atomic and durable, a database uses a log to write out information about the records it will be modifying before applying the changes to all the various data structures that it maintains.",
+      "page": "Chapter 1, Logs in Databases; text lines 301-304",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The log is written before the changes it describes are applied, and is immediately persisted",
+        "Because the log is persisted first, it is the authoritative source for restoring all other persistent structures after a crash, and each table or index is a projection of that history"
+      ],
+      "breakdown_regime": "If the log itself is lost or truncated before projections are durable, the projections cannot be restored; the design moves durability requirements onto the log",
+      "domain": "databases",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The raw evidence log is the engine system of record; every feature table, ranking, and index is a rebuildable projection, so no derived view is ever treated as the truth itself.",
+        "source_operator": "database_log_authoritative_projection",
+        "telemetry": "Projection rebuild runs and their input log ranges"
+      }
+    },
+    {
+      "primitive_id": "log_shipping_replication",
+      "name": "Replica databases stay in sync by applying the changes recorded in the master's log to their own local data structures",
+      "verbatim_quote": "The slaves can then apply the changes recorded in the log to their own local data structures to stay in sync with the master.",
+      "page": "Chapter 1, Logs in Databases; text lines 313-315",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The replica applies changes in the order recorded",
+        "The shipped log portion is complete for the range the replica has not yet seen"
+      ],
+      "breakdown_regime": "Replicas lag behind the master by shipping and apply time, so this mechanism gives eventual rather than instantaneous consistency",
+      "domain": "databases",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "New engine stores and model variants subscribe to the evidence log and apply its changes instead of scraping source systems, which keeps every consumer synchronized to the same history.",
+        "source_operator": "log_shipping_replication",
+        "telemetry": "Subscriber lag measured in log entries per consumer"
+      }
+    },
+    {
+      "primitive_id": "state_machine_replication_principle",
+      "name": "State machine replication principle: identical deterministic processes given the same inputs in the same order reach the same state",
+      "verbatim_quote": "If two identical, deterministic processes begin in the same state and get the same inputs in the same order, they will produce the same output and end in the same state.",
+      "page": "Chapter 1, Logs in Distributed Systems; text lines 340-341",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Processing is deterministic and not timing dependent",
+        "Both processes begin in the same state and consume the identical input sequence"
+      ],
+      "breakdown_regime": "Any nondeterministic input, such as wall clock reads, thread scheduling, or external calls, breaks the guarantee; such inputs must be recorded in the log or excluded",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Deterministic reasoning steps replayed over the same evidence log reproduce the same outputs, which is what makes engine results auditable and regression-testable after code changes.",
+        "source_operator": "state_machine_replication_principle",
+        "telemetry": "Replay output hashes compared across runs"
+      }
+    },
+    {
+      "primitive_id": "log_squeezes_nondeterminism",
+      "name": "The log squeezes nondeterminism out of the input stream so replicas stay in sync",
+      "verbatim_quote": "The purpose of the log here is to squeeze all the nondeterminism out of the input stream to ensure that each replica that is processing this input stays in sync.",
+      "page": "Chapter 1, Logs in Distributed Systems; text lines 359-361",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All inputs that affect processing can be forced through the log",
+        "Ordering decisions are made once, at append time, not independently by each replica"
+      ],
+      "breakdown_regime": "Inputs that bypass the log, such as local sensor reads or operator interventions, reintroduce divergence that the log cannot reconcile",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Routing every engine input through the ordered evidence log removes arrival-order variance between runs, so differences in output reflect logic changes rather than timing accidents.",
+        "source_operator": "log_squeezes_nondeterminism",
+        "telemetry": "Run-to-run output differences on identical retained input"
+      }
+    },
+    {
+      "primitive_id": "replica_state_single_timestamp",
+      "name": "The state of a replica is fully described by the timestamp of the maximum log entry it has processed",
+      "verbatim_quote": "you can describe the state of each replica by a single number: the timestamp for the maximum log entry that it has processed.",
+      "page": "Chapter 1, Logs in Distributed Systems; text lines 373-374",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The replica's processing is deterministic",
+        "The replica started from the same initial state as its peers"
+      ],
+      "breakdown_regime": "The single-number summary fails if the replica applied any out-of-band change not present in the log",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any engine view can report the evidence position it reflects, so staleness is a measurable number rather than a guess, and two views at the same position are known to agree.",
+        "source_operator": "replica_state_single_timestamp",
+        "telemetry": "View positions compared against the log head position"
+      }
+    },
+    {
+      "primitive_id": "logical_statement_logging",
+      "name": "Logical or statement logging records the commands that caused row changes rather than the changed rows",
+      "verbatim_quote": "Logical or statement logging means not logging the changed rows, but instead logging the SQL commands that lead to the row changes",
+      "page": "Chapter 1, Variety of Log-Centric Designs; text lines 391-393",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The commands are deterministic when re-executed against the same starting state",
+        "The receiving system understands the same command language"
+      ],
+      "breakdown_regime": "Nondeterministic statements, such as those reading current time or random values, do not reproduce the original rows when replayed; the book contrasts this with physical row-based logging of changed contents",
+      "domain": "databases",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine logs transformation commands, meaning model versions and parameter sets, alongside outputs, so any output can be recomputed and the effect of a logic change isolated.",
+        "source_operator": "logical_statement_logging",
+        "telemetry": "Transformation and model version registry entries"
+      }
+    },
+    {
+      "primitive_id": "primary_backup_model",
+      "name": "In the primary-backup model a leader processes requests and logs the resulting state changes for followers to apply",
+      "verbatim_quote": "This leader processes requests in the order they arrive and logs the changes to its state that occur as a result of processing the requests.",
+      "page": "Chapter 1, Variety of Log-Centric Designs; text lines 398-400",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single leader is elected at a time",
+        "Followers can take over as leader when the leader fails"
+      ],
+      "breakdown_regime": "Leader failure requires an election and a follower that has applied enough of the log; a lagging follower set limits failover quality",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine writer processes follow the same split: one leader computes state changes from the evidence stream while followers apply the logged changes and stand ready to take over.",
+        "source_operator": "primary_backup_model",
+        "telemetry": "Leader election events and follower apply positions"
+      }
+    },
+    {
+      "primitive_id": "ordering_key_consistency",
+      "name": "Ordering is key to replica consistency because reordering non-commutative operations changes the result",
+      "verbatim_quote": "This example also makes it clear why ordering is key for ensuring consistency between replicas: reordering an addition and multiplication command will yield a different result",
+      "page": "Chapter 1, An Example; text lines 462-464",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At least some operations in the workload do not commute",
+        "All replicas are required to converge to one identical state"
+      ],
+      "breakdown_regime": "For purely commutative workloads the ordering requirement relaxes, but general update streams cannot assume commutativity",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Updates about the same entity are applied by the engine strictly in log order; treating order as optional metadata would corrupt final entity state exactly as reordered arithmetic corrupts the example service.",
+        "source_operator": "ordering_key_consistency",
+        "telemetry": "Per-entity sequence continuity checks"
+      }
+    },
+    {
+      "primitive_id": "log_models_consensus",
+      "name": "A log represents a series of decisions on the next value to append, so it models the consensus problem",
+      "verbatim_quote": "A log, after all, represents a series of decisions on the next value to append.",
+      "page": "Chapter 1, Logs and Consensus; text lines 468-468",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Participants must agree on each appended value in sequence",
+        "Agreement is needed repeatedly, once per log slot, not just once"
+      ],
+      "breakdown_regime": "Single-value consensus results do not directly give a log; practical systems need multi-slot protocols such as multi-Paxos, ZAB, Raft, or Viewstamped Replication",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine agreement problems are framed as agreeing on the next evidence entry, which turns an abstract consensus question into a concrete append decision with a durable result.",
+        "source_operator": "log_models_consensus",
+        "telemetry": "Append decision latency and conflict rates"
+      }
+    },
+    {
+      "primitive_id": "tables_events_dual",
+      "name": "Tables and events are dual: tables support data at rest and logs capture change",
+      "verbatim_quote": "In this sense, you can see tables and events as dual: tables support data at rest and logs capture change.",
+      "page": "Chapter 1, Changelog 101: Tables and Events Are Dual; text lines 504-506",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A table under update can emit a changelog of its changes",
+        "Applying a complete changelog in order reproduces the table"
+      ],
+      "breakdown_regime": "The duality needs a complete changelog; a partial or lossy change stream cannot rebuild the table it claims to mirror",
+      "domain": "databases",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine maintains both views deliberately: current-state tables for fast lookup and the event history behind them, with a changelog connecting the two so either can be regenerated from the other.",
+        "source_operator": "tables_events_dual",
+        "telemetry": "Changelog emission coverage per state table"
+      }
+    },
+    {
+      "primitive_id": "complete_log_recreates_all_versions",
+      "name": "A complete log of changes can recreate every previous version of a table, not only the final one",
+      "verbatim_quote": "The magic of the log is that if it is a complete log of changes, it holds not only the contents of the final version of the table, but can also recreate all other versions that might have existed.",
+      "page": "Chapter 1, Changelog 101: Tables and Events Are Dual; text lines 506-508",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The log is complete from the table's origin",
+        "No part of the retained history has been deleted or compacted away"
+      ],
+      "breakdown_regime": "Retention limits and log compaction deliberately destroy older versions, after which only recent or current states remain recreatable",
+      "domain": "databases",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Retained evidence history lets the engine rebuild what any derived view looked like at an earlier position, which is the basis for auditing how a past conclusion was reached.",
+        "source_operator": "complete_log_recreates_all_versions",
+        "telemetry": "Retention coverage expressed as earliest recreatable log position"
+      }
+    },
+    {
+      "primitive_id": "data_integration_definition",
+      "name": "Data integration means making all of an organization's data available to all the services and systems that need it",
+      "verbatim_quote": "Data integration means making available all the data that an organization has to all the services and systems that need it.",
+      "page": "Chapter 2, Data Integration; text lines 559-560",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The organization can enumerate its data sources",
+        "Consumers can be given one uniform access mechanism"
+      ],
+      "breakdown_regime": "Integration fails in practice at coverage: sources that never publish to the shared fabric remain invisible to every consumer",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The institute and engine share the same integration goal: every source enters one fabric once, and every consumer, present or future, reads from that fabric instead of negotiating private access.",
+        "source_operator": "data_integration_definition",
+        "telemetry": "Source coverage counts against the full source inventory"
+      }
+    },
+    {
+      "primitive_id": "reliable_flow_before_algorithms",
+      "name": "Without reliable and complete data flow, advanced processing infrastructure is wasted",
+      "verbatim_quote": "It’s worth noting the obvious: without a reliable and complete data flow, a Hadoop cluster is little more than a very expensive and difficult-to-assemble space heater.",
+      "page": "Chapter 2, Data Integration; text lines 586-587",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Higher-level processing cannot compensate for missing or unreliable inputs",
+        "Data collection and modeling sit at the base of the usage hierarchy"
+      ],
+      "breakdown_regime": "The claim inverts only when inputs are already complete and trustworthy; then modeling and processing quality become the binding constraint",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Pipeline completeness is measured and reported before model sophistication in the engine: a reasoning improvement is not credited while the feeds beneath it have known coverage holes.",
+        "source_operator": "reliable_flow_before_algorithms",
+        "telemetry": "Feed completeness and failure metrics per source"
+      }
+    },
+    {
+      "primitive_id": "event_data_scale",
+      "name": "Event data is several orders of magnitude larger than transactional data and breaks traditional integration approaches",
+      "verbatim_quote": "This type of event data shakes up traditional data integration approaches because it tends to be several orders of magnitude larger than transactional data.",
+      "page": "Chapter 2, Data is More Diverse; text lines 625-626",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The organization instruments activity and machine events continuously",
+        "Event volume keeps growing with digitization of activity"
+      ],
+      "breakdown_regime": "Small or mostly transactional organizations may never hit this regime; the design pressure appears with continuous instrumentation",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine storage and processing are sized for event streams first, since observations, reports, and measurements outnumber curated entity records by orders of magnitude.",
+        "source_operator": "event_data_scale",
+        "telemetry": "Event volumes per source compared with entity record counts"
+      }
+    },
+    {
+      "primitive_id": "central_log_recipe",
+      "name": "The data integration recipe: put all of the organization's data into a central log for real-time subscription",
+      "verbatim_quote": "Take all of the organization’s data and put it into a central log for real-time subscription.",
+      "page": "Chapter 2, Log-Structured Data Flow; text lines 638-639",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each logical data source can be modeled as its own log",
+        "Subscribers read at their own pace and track their own positions"
+      ],
+      "breakdown_regime": "The recipe solves flow mechanics only; schemas, metadata, and compatibility remain a separate problem the book explicitly leaves open",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine is organized around one central evidence log with one log per signal family; every downstream reasoning component is a subscriber, never a private collector.",
+        "source_operator": "central_log_recipe",
+        "telemetry": "Feed inventory and subscriber registrations per feed"
+      }
+    },
+    {
+      "primitive_id": "log_decouples_producers_consumers",
+      "name": "Neither the data source nor the log knows the destination systems, so consumers can be added and removed with no change in the pipeline",
+      "verbatim_quote": "Neither the originating data source nor the log has knowledge of the various data destination systems, so consumer systems can be added and removed with no change in the pipeline.",
+      "page": "Chapter 2, Log-Structured Data Flow; text lines 671-673",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The log acts as a buffer, so production is asynchronous from consumption and consumers proceed at their own pace",
+        "Consumers can crash or pause and resume from their saved position in the log"
+      ],
+      "breakdown_regime": "A consumer down longer than the retention window loses its place and must be rebuilt from a snapshot or from scratch",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Producers in the engine publish without knowing the consumers, and reasoning components attach or detach freely; because the log buffers records, a slow or failed consumer catches up by replay and its absence does not degrade any other part of the pipeline.",
+        "source_operator": "log_decouples_producers_consumers",
+        "telemetry": "Consumer lag distributions and catch-up durations"
+      }
+    },
+    {
+      "primitive_id": "consumer_isolation_from_origin",
+      "name": "The destination system knows only the log and no details of the system of origin",
+      "verbatim_quote": "Of particular importance: the destination system only knows about the log and does not know any details of the system of origin.",
+      "page": "Chapter 2, Log-Structured Data Flow; text lines 682-683",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The log presents a uniform record contract regardless of origin",
+        "Origin-specific formats are normalized before or at publication"
+      ],
+      "breakdown_regime": "If origin quirks leak into record semantics, consumers silently couple to origins and the isolation benefit is lost",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine consumers depend only on the evidence log contract, so a source system can be replaced or reimplemented without any consumer changing.",
+        "source_operator": "consumer_isolation_from_origin",
+        "telemetry": "Consumer dependencies mapped against the log contract only"
+      }
+    },
+    {
+      "primitive_id": "pairwise_pipeline_explosion",
+      "name": "Point-to-point pipelines between every pair of systems grow quadratically and become inoperable",
+      "verbatim_quote": "Connecting all of these would have led to building custom piping between each pair of systems",
+      "page": "Chapter 2, My Experience at LinkedIn; text lines 785-786",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Data flows in both directions between many system pairs",
+        "Each pair requires its own custom pipeline"
+      ],
+      "breakdown_regime": "The quadratic term shrinks if most systems are pure sources or pure sinks; the book's setting has most systems acting as both",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The hub log is justified to the engine program by this growth law: each new source or consumer costs one integration with the log instead of one integration with every existing participant.",
+        "source_operator": "pairwise_pipeline_explosion",
+        "telemetry": "Counts of integrated systems versus counts of maintained pipelines"
+      }
+    },
+    {
+      "primitive_id": "etl_two_roles",
+      "name": "ETL conflates two roles: liberating and cleaning data, and restructuring it for one destination's query shape",
+      "verbatim_quote": "First, it is an extraction and data cleanup process, essentially liberating data locked up in a variety of systems in the organization and removing any system-specific nonsense.",
+      "page": "Chapter 2, Relationship to ETL and the Data Warehouse; text lines 857-859",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cleanup logic is destination-independent",
+        "Restructuring logic, such as star schema shaping, is destination-specific"
+      ],
+      "breakdown_regime": "Keeping the two roles fused ties the only clean copy of the data to a batch warehouse, leaving real-time consumers without clean data",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine pipelines keep the roles separate: source cleanup happens once at ingestion into the log, while view-specific shaping happens later inside each projection.",
+        "source_operator": "etl_two_roles",
+        "telemetry": "Pipeline stage inventory labeled by cleanup versus shaping"
+      }
+    },
+    {
+      "primitive_id": "producer_owns_feed_quality",
+      "name": "Responsibility for a clean, well-structured feed lies with the producer of the data",
+      "verbatim_quote": "The responsibility of integrating with this pipeline and providing a clean, well-structured data feed lies with the producer of this data feed.",
+      "page": "Chapter 2, ETL and Organizational Scalability; text lines 880-881",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Producers know their own data's semantics best",
+        "The central pipeline offers a well-defined API for adding data"
+      ],
+      "breakdown_regime": "Without enforcement or tooling, producer-side responsibility degrades into inconsistent feeds; the central team must still own the contract and its validation",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Each signal family owner in the engine program publishes a canonical feed meeting the log contract; the platform team owns the contract and validation, not per-source cleanup.",
+        "source_operator": "producer_owns_feed_quality",
+        "telemetry": "Feed schema compliance results per producer"
+      }
+    },
+    {
+      "primitive_id": "derived_log_transformation",
+      "name": "A transformation can be done as a real-time transformation on the log, producing a new, transformed log",
+      "verbatim_quote": "It can be done as a real-time transformation on the log (which in turn produces a new, transformed log).",
+      "page": "Chapter 2, Where Should We Put the Data Transformations?; text lines 918-919",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Transformations at this stage are of general interest, not destination-specific",
+        "The original log is still available alongside the derived log containing augmented data"
+      ],
+      "breakdown_regime": "If the derived log replaces the raw one, enrichment bugs become unrecoverable; the design depends on keeping both",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Enrichment in the engine is a stream process that reads the raw evidence log and writes a derived log of augmented records; the raw log is never mutated, so any enrichment can be redone.",
+        "source_operator": "central_log_recipe",
+        "telemetry": "Derived feed lineage records linking outputs to input ranges"
+      }
+    },
+    {
+      "primitive_id": "event_driven_decoupling",
+      "name": "In the event-driven style the display code records a fact and interested systems subscribe and react independently",
+      "verbatim_quote": "The display code does not need to be aware of these other systems or changed if a new data consumer is added.",
+      "page": "Chapter 2, Decoupling Systems; text lines 991-992",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The recorded event carries the attributes reactors need",
+        "Reactors can tolerate asynchronous, at-their-own-pace delivery"
+      ],
+      "breakdown_regime": "Reactions that must complete synchronously inside the original request cannot be moved behind a subscription without changing the user-visible behavior",
+      "domain": "data integration",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine components publish facts about what they observed or computed and never call consumers directly; new analyses attach by subscribing, with no change to the publisher.",
+        "source_operator": "event_driven_decoupling",
+        "telemetry": "Subscription graph of publishers and reactors"
+      }
+    },
+    {
+      "primitive_id": "partitioning_no_global_order",
+      "name": "Each partition is order preserving with no global order across partitions, and single-sender appends to a partition are delivered in sent order",
+      "verbatim_quote": "the guarantees that we provide are that each partition is order preserving, and Kafka guarantees that appends to a particular partition from a single sender will be delivered in the order they are sent",
+      "page": "Chapter 2, Scaling a Log; text lines 1034-1036",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Messages are assigned to partitions by the writer, usually by a key",
+        "Consumers accept per-partition order as the available guarantee"
+      ],
+      "breakdown_regime": "Any logic that silently assumes a single worldwide event order is unsound under partitioning; cross-partition order must be reconstructed from timestamps carried in the records, if at all",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats cross-feed order as approximate by design: order claims are made only within a keyed feed, and reasoning that spans feeds must state its ordering evidence explicitly.",
+        "source_operator": "partitioning_no_global_order",
+        "telemetry": "Partition assignments and per-partition order checks"
+      }
+    },
+    {
+      "primitive_id": "partitioning_linear_scaling",
+      "name": "Partitioning lets appends proceed without coordination between shards and scales throughput linearly while preserving order within the key",
+      "verbatim_quote": "Partitioning allows log appends to occur without coordination between shards, and allows the throughput of the system to scale linearly with the Kafka cluster size",
+      "page": "Chapter 2, Scaling a Log; text lines 1024-1026",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Workload can be keyed so that ordering-sensitive records share a partition",
+        "Partitions are balanced across the cluster"
+      ],
+      "breakdown_regime": "Skewed keys overload single partitions and break the linear scaling; a hot key is bounded by one partition's throughput",
+      "domain": "distributed systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine ingestion scales by keying each feed, for example by entity, so append throughput grows with partitions while every entity's own history stays strictly ordered.",
+        "source_operator": "partitioning_linear_scaling",
+        "telemetry": "Throughput and load balance per partition"
+      }
+    },
+    {
+      "primitive_id": "stream_processing_generalizes_batch",
+      "name": "Stream processing operates on time-bearing data without requiring a static snapshot, which makes it a generalization of batch processing",
+      "verbatim_quote": "it is just processing that includes a notion of time in the underlying data being processed and so does not require a static snapshot of the data on which to operate",
+      "page": "Chapter 3, Logs and Real-Time Stream Processing; text lines 1151-1153",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Windows give blocking operations, such as maximums and percentiles, precise semantics over streams",
+        "Output can be produced at a user-controlled frequency instead of at the end of a data set"
+      ],
+      "breakdown_regime": "The generalization holds for the computation model; operational concerns such as state size and late data still differ between historical replay and live processing",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats scheduled batch recomputation as a windowed case of the same stream logic used live, avoiding a second implementation of the same reasoning for historical data.",
+        "source_operator": "stream_processing_generalizes_batch",
+        "telemetry": "Job definitions shared between live and replay modes"
+      }
+    },
+    {
+      "primitive_id": "derived_feeds_indistinguishable",
+      "name": "Derived feeds computed from other feeds look no different to consumers than primary feeds",
+      "verbatim_quote": "These derived feeds look no different to consumers than the feeds of primary data from which they are computed",
+      "page": "Chapter 3, Data Flow Graphs; text lines 1198-1199",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Derived feeds are published as logs with the same contract as primary feeds",
+        "Processing stages can be composed into a graph through these feeds"
+      ],
+      "breakdown_regime": "Indistinguishability hides provenance unless lineage is recorded separately; consumers cannot tell a measured fact from a computed one without metadata",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Computed signal feeds in the engine are published with the same contract as raw feeds, so reasoning stages compose into a graph; lineage metadata is kept alongside precisely because the feeds themselves look alike.",
+        "source_operator": "derived_log_transformation",
+        "telemetry": "Feed registry distinguishing primary from derived feeds"
+      }
+    },
+    {
+      "primitive_id": "reprocessing_requirement",
+      "name": "Reprocessing means processing input data over again to re-derive output, and it is required whenever processing code changes",
+      "verbatim_quote": "By “reprocessing,” I mean processing input data over again to re-derive output.",
+      "page": "Chapter 3, Reprocessing Data; text lines 1310-1310",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Input data is retained unchanged so it can be processed again",
+        "Output is a deterministic function of input and code"
+      ],
+      "breakdown_regime": "Systems that discard inputs or mutate them in place cannot reprocess, and so cannot evolve their derivation logic safely",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine derivation is built to be re-run: when reasoning code changes, retained evidence is reprocessed and old and new outputs compared before readers are switched.",
+        "source_operator": "reprocessing_requirement",
+        "telemetry": "Reprocessing runs triggered by code changes"
+      }
+    },
+    {
+      "primitive_id": "lambda_duplication_cost",
+      "name": "The Lambda Architecture's flaw is maintaining code that must produce the same result in two complex distributed systems",
+      "verbatim_quote": "The problem with the Lambda Architecture is that maintaining code that needs to produce the same result in two complex distributed systems is exactly as painful as it seems it would be.",
+      "page": "Chapter 3, And the Bad...; text lines 1323-1325",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Batch and stream frameworks differ enough that code is engineered specifically for each",
+        "Both implementations must be operated and debugged, not just written"
+      ],
+      "breakdown_regime": "A shared abstraction over both frameworks reduces duplicated code but still leaves two systems to operate and only the intersection of their features available",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine program treats dual implementation of one computation as a defect: a derivation lives in one framework, and historical recomputation is done by replay inside that same framework.",
+        "source_operator": "lambda_duplication_cost",
+        "telemetry": "Count of frameworks per derivation, target one"
+      }
+    },
+    {
+      "primitive_id": "replay_reprocessing_alternative",
+      "name": "Reprocessing can be done inside the stream system by retaining the full log and replaying it with a new job version into a new output",
+      "verbatim_quote": "Use Kafka or some other system that will let you retain the full log of the data you want to be able to reprocess and that allows for multiple subscribers.",
+      "page": "Chapter 3, An Alternative; text lines 1373-1374",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Retention is set at least as long as the reprocessing horizon, for example 30 days in the book's example",
+        "Parallelism can be raised so replay catches up quickly",
+        "Readers can be switched from the old output table to the new one"
+      ],
+      "breakdown_regime": "The approach needs temporary double storage in the output store and a store that tolerates high-volume reload writes",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is the engine's standard upgrade path for reasoning logic: retain evidence, run the new version from the beginning into a fresh output, compare, switch readers, and keep the old output briefly for instant rollback.",
+        "source_operator": "reprocessing_requirement",
+        "telemetry": "Retention settings, replay durations, and cutover records"
+      }
+    },
+    {
+      "primitive_id": "stateful_processing_changelog",
+      "name": "A stream processor keeps state in a local store and journals a changelog so the state can be restored after a crash",
+      "verbatim_quote": "It can journal out a changelog for this local index that it keeps to allow it to restore its state in the event of a crash and restart.",
+      "page": "Chapter 3, Stateful Real-Time Processing; text lines 1458-1459",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "State is co-partitioned with the processing so the local store matches the input partition",
+        "The changelog is durable outside the failing process"
+      ],
+      "breakdown_regime": "Restore time grows with changelog length since the last snapshot; very large states need periodic snapshotting to keep recovery practical",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine processors keep large local state, such as per-entity histories, in local stores backed by changelogs, so a failed processor restores its exact state and republishes it as a subscribable stream.",
+        "source_operator": "tables_events_dual",
+        "telemetry": "State sizes and measured restore durations per processor"
+      }
+    },
+    {
+      "primitive_id": "log_compaction",
+      "name": "Log compaction garbage-collects tail records superseded by a more recent update for the same key, keeping the log a complete backup of current state",
+      "verbatim_quote": "Any record in the tail of the log that has a more recent update is eligible for this kind of cleanup.",
+      "page": "Chapter 3, Log Compaction; text lines 1510-1511",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Records are keyed updates to mutable entities, not unrelated events",
+        "Only the latest state per key must remain recreatable"
+      ],
+      "breakdown_regime": "Compaction deliberately destroys superseded historical states; after it runs, earlier versions of an entity can no longer be replayed from the log",
+      "domain": "stream processing",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Current-state materialization in the engine follows compaction discipline: the latest authoritative record per entity is always retained and recreatable, while superseded records are eligible for cleanup under an explicit policy.",
+        "source_operator": "complete_log_recreates_all_versions",
+        "telemetry": "Compaction ratios and earliest retained position per keyed feed"
+      }
+    },
+    {
+      "primitive_id": "log_serving_layer_factoring",
+      "name": "A log-centric system factors into the log, which captures state changes in order, and a serving layer holding query indexes",
+      "verbatim_quote": "The system is divided into two logical pieces: the log and the serving layer. The log captures the state changes in sequential order.",
+      "page": "Chapter 4, The Place of the Log in System Architecture; text lines 1631-1632",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Serving nodes subscribe to the log and apply writes to local indexes in log order",
+        "Log and serving layer share the same partitioning"
+      ],
+      "breakdown_regime": "The factoring pays off only if the log is genuinely shared; a private per-system log recreates the integration problem inside the system boundary",
+      "domain": "data architecture",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine architecture separates the truth layer, the evidence log, from serving views optimized for particular questions, so consistency and recovery logic live once in the log instead of inside every view.",
+        "source_operator": "log_serving_layer_factoring",
+        "telemetry": "Serving view inventory and their subscription positions"
+      }
+    },
+    {
+      "primitive_id": "read_your_write_timestamp",
+      "name": "Read-your-write semantics come from passing the write's log timestamp with the query so a serving node can wait until it has indexed that far",
+      "verbatim_quote": "delay the request until it has indexed up to at least that time to avoid serving stale data",
+      "page": "Chapter 4, The Place of the Log in System Architecture; text lines 1648-1649",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Writes return their log position to the writer",
+        "A serving node knows its own indexed position and can delay a request until it catches up"
+      ],
+      "breakdown_regime": "Freshness is bought with latency: a lagging serving node must hold the query, so the guarantee degrades under heavy replication lag",
+      "domain": "data architecture",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine queries that must reflect a just-recorded observation carry the evidence position with them, and any view answering must have processed at least that position, which rules out silent stale reads.",
+        "source_operator": "read_your_write_timestamp",
+        "telemetry": "Query freshness checks comparing requested and served positions"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "22689eaf30cb4f1a-t1",
+      "think": "This book argues that a single, almost embarrassingly simple data structure, the append-only log, is the hidden spine of data systems. Kreps starts from the database commit log: a database writes what it is about to change into a log before it changes anything, so the log becomes the authoritative record and every table and index is only a projection of that history. From there the argument widens in three steps. First, the same sequence of changes that keeps internal structures consistent is exactly what a remote replica needs, so the log becomes a replication and publish-subscribe mechanism. Second, the state machine replication principle turns the log into a consistency mechanism for arbitrary distributed processes: feed identical deterministic processes the same inputs in the same order and they end in the same state, so the hard problem of distributed agreement collapses into the narrower problem of maintaining one consistent log. Third, once an organization has a central log, the log stops being an internal detail and becomes the integration fabric: every source publishes its changes once, every consumer subscribes at its own pace, and stream processors read logs and write new logs, so the whole data flow of the organization becomes a graph of logs and the processes that transform them. The machinery fits together through a small set of load-bearing ideas. Order is the first: the log entry number is a logical timestamp, decoupled from physical clocks, so the state of any replica or subscriber can be named by a single number, the highest entry it has processed. The table and event duality is the second: a table is the current state obtained by applying a changelog in order, and any table under update can emit a changelog, so state and history are two views of one thing, and a complete log can rebuild any earlier version of a table. Buffering is the third: because the log persists records, producers and consumers are decoupled in time, a consumer can crash, be maintained, or be replaced and catch up by replay, and blocking never cascades through the processing graph. Reprocessing is the fourth: because history is retained, derived data can be recomputed when code changes by replaying the log with a new version of the job and switching readers to the new output, which is Kreps's answer to the Lambda Architecture and its duplicated logic. Compaction is the fifth: for keyed updates, records superseded by a newer update for the same key can be garbage collected, so the log stays a complete backup of current state without growing without bound. For a reasoning engine, the transfer is direct. An engine that ingests many signal families needs exactly what this book describes: one append-only evidence log where every observation is recorded once, in order, with its provenance, and every derived artifact, every feature, index, ranking, and explanation, is a projection that can be rebuilt by replay. Offsets give the engine a logical clock for evidence: any conclusion can be audited by naming the log position it was computed from, and any consumer of the evidence can be checked for staleness by comparing positions. The duality matters because it separates the record of what happened from the many materialized views different consumers need, so no single view becomes the system of record. The reprocessing pattern matters because reasoning logic changes constantly: when a model, a weighting, or a feature definition improves, the engine can replay retained history through the new logic and compare old and new outputs side by side before switching, instead of trusting the new code on faith. Stateful processing with changelog-backed local state shows how a processor can keep large co-partitioned state locally, restore it after failure from its own changelog, and publish that state as yet another subscribable log. The book is equally clear about where the model breaks. A partitioned log has total order only inside a partition; there is no global order across partitions, so any reasoning that assumes a single worldwide sequence of events is unsound. Determinism is a real constraint: a process whose output depends on wall-clock time, thread scheduling, or other out-of-band input cannot be kept consistent by a log alone, and replaying history through such a process does not reproduce its earlier outputs. Retention is finite: time-windowed retention deletes old events, and compaction deliberately destroys superseded states, so after cleanup the log can rebuild current state but not every historical state, and any audit claim must respect what was retained. Schemas, semantics, and data quality are explicitly out of scope: the log solves the mechanics of flow, not the meaning of records, and Kreps is blunt that metadata and compatibility are the rest of the story. Finally, the log does not remove the need for consensus; it reframes it, since building the consistent log itself rests on protocols in the Paxos, ZAB, Raft, and Viewstamped Replication family. There is also an organizational argument woven through the technical one. Point-to-point pipelines grow quadratically: with many systems that are both sources and destinations, integration work explodes, coverage stays spotty, and a central warehouse team becomes a bottleneck that cannot scale with the rest of the organization. The log inverts the responsibility: each producer publishes one clean, canonical, lossless feed to the central pipeline, and each consumer integrates once with the log rather than with every producer. Transformations are placed deliberately: cleanup by the producer before publication, general enrichment as stream processing that produces a derived log, and destination-specific aggregation only at load time. This is why the book treats data integration, not any single storage or processing engine, as the base of the pyramid: without complete and reliable flow, higher-level machinery, however sophisticated, runs on partial and stale inputs and produces confident output from bad data. The LinkedIn history is the evidence offered: the mundane pipelines turned out to be the valuable asset, because making data available in a new processing environment unlocked products and analyses that no algorithm could have produced from locked-up data.",
+      "retrocausal_genealogy": "The ideas descend from the database commit log present as early as IBM System R, where logging made atomicity and durability possible, and from the log shipping protocols of Oracle, MySQL, PostgreSQL, and MongoDB, which turned an internal recovery mechanism into a replication feed. The distributed systems lineage runs through Paxos and multi-Paxos, Viewstamped Replication, ZAB, and Raft, which model consensus as the construction of a consistent log. Version control systems are the same pattern applied to source code, and Datomic and the event sourcing community converged on the idea independently in different contexts. Kreps's contribution is synthesis and relocation: he carried the abstraction out of database internals and, from the databus and Hadoop loading experience at LinkedIn, rebuilt it as Kafka, a general purpose log service for an entire organization.",
+      "theory_of_mind": "Kreps believes the reader, a working engineer, systematically undervalues mundane plumbing and overvalues algorithms and processing engines. His model of the domain is that an organization is one very complicated distributed database, that its many query systems are just different index types over shared data, and that the binding constraint is never processing power but complete, reliable, well understood data flow. He assumes producers, not a central team, know their data best and must own its clean publication, and he assumes infrastructure abstractions commoditize: once an abstraction is right, as with the hash table, implementations compete underneath it and engineers stop caring which consensus algorithm provides their log.",
+      "cross_layer_veto": "Several claims in this book veto designs at other layers. Ordering vetoes casual event handling: any layer that applies updates to the same key out of order can end in a wrong final state, so consumers cannot treat order as optional metadata. Determinism vetoes replay guarantees for any processor that reads wall-clock time or other out-of-band input; such a processor cannot promise that replay reproduces its earlier outputs. Retention vetoes historical claims: after time-based deletion or compaction, no layer may claim the log can rebuild states that were discarded. Partitioning vetoes global-order reasoning, because order exists only within a partition key. The lossless publication rule vetoes destructive cleanup before the log, because information destroyed at publication can never be recovered by any downstream layer."
+    }
+  ],
+  "universal_lens": "Read generally, the book says that any domain with changing state should separate the immutable record of what happened from the many mutable views derived from it. Keep one ordered, replayable history as the source of truth; let every table, index, dashboard, model, or ranking be a rebuildable projection of that history; name the state of every consumer by how far through the history it has read; and treat reprocessing, not one-time computation, as the normal case. The pattern applies wherever audit, recovery, and multiple consumers matter: financial ledgers, scientific pipelines, versioned documents, and any institution that must explain later how a present state came to be.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the research infrastructure pattern: a single append-only corpus log in which every source, paper, book, and dataset enters once, in order, with provenance, while syllabi, concept indexes, and cross-domain mappings are derived projections that can be rebuilt when the organizing logic improves. Offsets become citation-grade positions, so any teaching artifact can name the exact corpus position it rests on. The reprocessing pattern lets improved extraction or synthesis logic replay the retained corpus instead of re-collecting it, and compaction discipline, keeping the latest authoritative version of each keyed record, governs how superseded editions are retained without corrupting current state.",
+  "gse_mapping": "For the Galaxy Sports Edge engine, the log is the evidence spine. Every ingested signal, injury report, usage figure, matchup fact, and market observation is appended once to a durable, ordered evidence log, and projections, rankings, and reasoning traces are derived views that can be regenerated by replay when the reasoning logic changes. Subscriber positions give a staleness check for every consumer of a signal: a view that has not processed the latest entries is known to be behind, by a number. Changelog-backed state shows how processors keep large local state that restores after failure. The vetoes transfer too: no global order across unrelated feeds, no replay promise for nondeterministic steps, and no historical claim beyond what retention kept."
+}

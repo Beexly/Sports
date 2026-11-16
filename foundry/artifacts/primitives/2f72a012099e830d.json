@@ -1,0 +1,724 @@
+{
+ "book_id": "2f72a012099e830d",
+ "source_status": "COMPLETE",
+ "source_note": "Edited volume: Brain Injury and Neurodegeneration: Molecular, Functional, and Translational Approach 2.0, edited by Kumar Vaibhav, Pankaj Ahluwalia, Pankaj Gaur, and Meenakshi Ahluwalia, MDPI, 2025. It is the publisher reprint of the Biomedicines Special Issue of the same name (ISBN 978-3-7258-3458-7 for the PDF; DOI 10.3390/books978-3-7258-3458-7), containing 16 works per the Preface: 1 editorial, 9 research articles, and 6 reviews including 1 systematic review, with articles originally published in Biomedicines from 2022 to 2024. The local file is the publisher PDF, 310 pages, 44914957 bytes, full sha256 2f72a012099e830d3ceac2721b8cacc1387600754672cd49d3f0edb3f4ebb4ac, and book_id is the first 16 hex of sha256(str(size) + PDF bytes). Extracted text (1564155 bytes) is clean born-digital MDPI text; article opening pages interleave a citation sidebar into body lines, so every verbatim quote was chosen from a passage proven contiguous in the text file under the fleet normalization and machine-checked as a normalized substring before inclusion. This 2025 reprint (Approach 2.0) is a different file and a different work from the 2023 edition extracted separately under book_id c6c3833b920a77a7; no quotes were taken from the 2023 text. One source equation is used (the paired-pulse ratio definition). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "editorial_multimodal_chronic_assessment",
+   "name": "Chronic post-TBI pathology overlaps neurodegenerative disease, so assessment must be multimodal: imaging, fluid biomarkers, and cognitive testing together",
+   "verbatim_quote": "TBI-induced chronic pathologies and CTE show similarities with Alzheimer's disease (AD) and other neurodegenerative diseases; therefore, a battery of diverse and innovative diagnosis tools is needed",
+   "page": "Editorial (Ahluwalia, Gaur, Ahluwalia, Vaibhav), printed p. 2, Biomedicines 2024, 12, 2586",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CTE and chronic TBI pathology genuinely share mechanisms with Alzheimer's disease and related disorders",
+    "No single modality covers clinical, radiological, metabolic, and molecular levels at once"
+   ],
+   "breakdown_regime": "The overlap is partial; a shared biomarker such as GFAP or tau does not make TBI and Alzheimer's disease the same condition, and antemortem CTE diagnosis remains poor in the source's own account",
+   "domain": "evidence_synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When one observable cannot separate two long-run states, the engine should require a battery of unlike measurements before assigning a state label, and should store which level each measurement covers: structure, fluid chemistry, function, or behavior. A single strong signal upgrades a hypothesis; it does not close it.",
+    "source_operator": "editorial_multimodal_chronic_assessment",
+    "telemetry": "modality coverage per case: imaging present or absent, fluid markers present or absent, functional test scores, and time since the index event"
+   }
+  },
+  {
+   "primitive_id": "tgf_latent_activation_switch",
+   "name": "TGF-beta is secreted in a latent complex and must be activated before it can bind receptors, so ligand abundance is not the same as signaling activity",
+   "verbatim_quote": "Latent TGF-β must be activated before binding to the receptors",
+   "page": "Luo, TGF-beta review, Section 2, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Latent complex storage in the extracellular matrix is the default state in the tissues discussed",
+    "Activators named by the review (integrins, proteases, thrombospondin-1, reactive oxygen species) are present at the site"
+   ],
+   "breakdown_regime": "Breaks where activation is constitutive or where measured total ligand is used as a proxy for active ligand; the switch also saturates when activators are absent",
+   "domain": "molecular_signaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Separate stock from flow in every modeled pathway: a stored precursor pool, an activation step with its own triggers, and only then an effect. The engine should never read a stock variable as an effect variable; it should ask what activated it, when, and at what rate.",
+    "source_operator": "tgf_latent_activation_switch",
+    "telemetry": "precursor pool size, activator presence, active fraction, and time since activation trigger"
+   }
+  },
+  {
+   "primitive_id": "tgf_canonical_smad_cascade",
+   "name": "Canonical TGF-beta signaling runs receptor to SMAD: TGFBR2 phosphorylates and activates TGFBR1 (ALK5), which phosphorylates SMAD2 and SMAD3",
+   "verbatim_quote": "In the receptor complex, TGFBR2 sub units phosphorylate and activate TGFBR1, which phosphorylates SMAD2 and SMAD3.",
+   "page": "Luo, TGF-beta review, Section 2, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The heteromeric TGFBR1 and TGFBR2 complex forms on ligand binding",
+    "Phosphorylated SMAD2 and SMAD3 complex with SMAD4 and enter the nucleus to bind Smad binding elements"
+   ],
+   "breakdown_regime": "Noncanonical SMAD-independent routes (mTOR, MAPK, NF-kB and others named in the review) bypass this chain, so blocking one node does not silence the whole pathway",
+   "domain": "molecular_signaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A causal chain with named intermediate nodes lets the engine localize failure: if the output is missing, check each node in order rather than re-scoring the whole pathway. Node-level state also predicts which interventions can work: an upstream block and a downstream block are not interchangeable.",
+    "source_operator": "tgf_canonical_smad_cascade",
+    "telemetry": "per-node activation state: receptor complex formed, TGFBR1 active, SMAD2/3 phosphorylated, nuclear translocation observed"
+   }
+  },
+  {
+   "primitive_id": "tgf_context_dependent_astrogliosis",
+   "name": "TGF-beta action on astrocytes is context dependent and can either promote or inhibit astrogliosis",
+   "verbatim_quote": "The action of TGF-β on astrocytes is highly context-dependent and can promote or inhibit astrogliosis.",
+   "page": "Luo, TGF-beta review, Section 4, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same ligand and receptor system is present in both directions of effect",
+    "Inflammatory co-signals decide the direction: TGF-beta1 alone induces reactivity markers, while with IL-1alpha, TNF-alpha, and C1q present it reverses an inflammatory phenotype"
+   ],
+   "breakdown_regime": "Any rule that assigns TGF-beta a fixed sign fails; the direction reverses with the inflammatory background, disease stage, and cell state",
+   "domain": "glial_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Store effect signs as functions of context, not as constants. When the engine carries a factor whose sign flips with background conditions, the background variables must be first-class inputs, and a prediction made without them should be labeled underdetermined rather than averaged.",
+    "source_operator": "tgf_context_dependent_astrogliosis",
+    "telemetry": "co-signal panel present at prediction time, disease stage, and cell-state markers for the target population"
+   }
+  },
+  {
+   "primitive_id": "tgf_blood_borne_factors_vascular_glial_link",
+   "name": "Blood-borne factors entering through a failed blood-brain barrier are a primary activation signal for astrocyte reactivity and TGF-beta signaling after TBI",
+   "verbatim_quote": "These results identify blood-borne factors as a primary activation signal for astrocyte reactivity and TGF-β signaling, and support a detrimental role of astrocytic TGF-β signaling in TBI.",
+   "page": "Luo, TGF-beta review, Section 5.1, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fibrinogen and thrombin reach astrocytes because barrier integrity is lost",
+    "Blocking TGF-beta signaling abolishes fibrinogen-induced glial scar formation in the cited experiments"
+   ],
+   "breakdown_regime": "Applies where vascular damage and barrier leakage occur; in injuries without barrier failure this route is silent, and the same signaling is protective in stroke contexts elsewhere in the review",
+   "domain": "glial_biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A boundary failure upstream can be the true cause of a downstream state change. The engine should model barrier or gate integrity as a variable in its own right: when the gate fails, outside factors enter the system and drive states that look endogenous but are not.",
+    "source_operator": "tgf_blood_borne_factors_vascular_glial_link",
+    "telemetry": "barrier integrity indicators, blood-derived factor levels in tissue, and downstream glial state markers"
+   }
+  },
+  {
+   "primitive_id": "tgf_astrocytic_signaling_protective_after_stroke",
+   "name": "Astrocytic TGF-beta signaling is protective after stroke: blocking TGFBR2 in astrocytes worsens neuroinflammation and motor outcomes",
+   "verbatim_quote": "Together, these experiments demonstrate that TGF-β signaling in astrocytes plays a protective role in stroke.",
+   "page": "Luo, TGF-beta review, Section 5.2, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The dominant-negative Tgfbr2 and receptor blockade experiments isolate the astrocytic arm of the pathway",
+    "Motor outcome and inflammation readouts track the manipulation"
+   ],
+   "breakdown_regime": "This protective direction is stroke-specific in the review's evidence and conflicts with the detrimental direction reported for TBI scar formation, so it cannot be exported across conditions without a context check",
+   "domain": "glial_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The same pathway can be a load-bearing support in one regime and a liability in another. The engine should keep regime labels attached to every causal claim and should refuse to average opposing regime-specific effects into a single weak effect.",
+    "source_operator": "tgf_astrocytic_signaling_protective_after_stroke",
+    "telemetry": "regime label (condition and phase), pathway activity in the specific cell type, inflammation markers, and functional outcome scores"
+   }
+  },
+  {
+   "primitive_id": "tgf_aging_signaling_response_failure",
+   "name": "The aged brain has reduced TGF-beta signaling and fails to upregulate TGF-beta1, Smad3, and phospho-Smad3 after an inflammatory stimulus",
+   "verbatim_quote": "The aged brain not only has reduced TGF-β signaling, but it also fails to upregulate TGF-β1, Smad3, and p-Smad3 upon LPS stimulation",
+   "page": "Luo, TGF-beta review, Section 5.3, printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Baseline ligand elevation with age coexists with reduced SMAD expression, so response capacity, not ligand supply, is the limiting factor",
+    "The LPS challenge reveals the failure that resting measurements hide"
+   ],
+   "breakdown_regime": "Resting-state measurements alone miss this failure mode; it appears under challenge. Findings are from aging brain studies in humans and mice and vary by cell type",
+   "domain": "aging_neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Capacity under challenge is a different variable from resting level. The engine should, where possible, score how a system responds to a probe or stressor, not only its baseline, because aging and degradation often show up first as a lost response range.",
+    "source_operator": "tgf_aging_signaling_response_failure",
+    "telemetry": "baseline pathway level, post-challenge change in ligand and effector phosphorylation, and age or wear indicators"
+   }
+  },
+  {
+   "primitive_id": "astrocyte_subset_targeting_over_global_blockade",
+   "name": "Global blockade of astrocyte reactivity gives inconsistent outcomes; the therapeutic target is the specific maladaptive astrocyte subset",
+   "verbatim_quote": "Therefore, it is of high importance to identify and target the astrocyte subsets that acquire maladaptive functions and are \"harmful\" for the diseased brain.",
+   "page": "Luo, TGF-beta review, Section 7 (Conclusions), printed pp. 6-43 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reactive astrocytes are heterogeneous subpopulations with distinct molecular signatures set by insult, disease state, and distance from the lesion",
+    "Beneficial and detrimental subsets coexist in the same tissue"
+   ],
+   "breakdown_regime": "Subset targeting requires markers that separate the subsets; without them the advice is correct but not yet actionable, which the review states plainly",
+   "domain": "glial_biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Aggregate interventions on a mixed population average away the effect and can net to zero or harm. The engine should prefer subpopulation-resolved models: estimate the mixture first, then apply effects per component, and flag any aggregate claim that hides a known mixture.",
+    "source_operator": "astrocyte_subset_targeting_over_global_blockade",
+    "telemetry": "subpopulation mixture proportions, subset-specific markers, and distance or severity gradients across the population"
+   }
+  },
+  {
+   "primitive_id": "oral_microbiota_diet_modulated_systemic_factor",
+   "name": "The oral microbiota is a diet-modulated systemic variable linked to oral, cardiovascular, and neurodegenerative disease (systematic review: 121 studies screened, 79 included)",
+   "verbatim_quote": "This systematic review highlights the importance of the oral microbiota in health and pathological conditions and the diet's modulatory capacity over the oral microbiota.",
+   "page": "Giordano-Kelhoffer et al., Systematic review, Section 5 (Conclusions), printed pp. 44-62 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The review followed PRISMA with PROSPERO registration CRD42022299692, screening PubMed studies from January 2003 to April 2022",
+    "Diet is a modifiable input to the microbial composition, not only a correlate"
+   ],
+   "breakdown_regime": "The evidence is associational across heterogeneous studies; the review itself calls the systemic routes plausible and still poorly understood, so causality per route is not established",
+   "domain": "microbiome",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A peripheral, easily perturbed reservoir can feed a central system through slow accumulation. The engine should track reservoir states that sit outside the main system boundary, especially when they are cheap to measure and respond to daily inputs.",
+    "source_operator": "oral_microbiota_diet_modulated_systemic_factor",
+    "telemetry": "reservoir composition samples, dietary input logs, and downstream inflammatory markers"
+   }
+  },
+  {
+   "primitive_id": "oral_microbes_reach_distant_organs",
+   "name": "Oral cavity microbes are found at distant sites including small intestine, heart, lungs, placenta, and brain, so the oral reservoir is not sealed",
+   "verbatim_quote": "Interestingly, oral cavity-associated microbes have been found in many distant organ sites, such as small intestines, heart, lungs, placenta and brain",
+   "page": "Giordano-Kelhoffer et al., Systematic review, Section 2.1, printed pp. 44-62 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Detection at distant sites reflects translocation, not contamination, in the studies reviewed",
+    "Host barriers and immune state gate how much translocation occurs"
+   ],
+   "breakdown_regime": "Presence at a site is not proof of pathogenic action there; compromised immunity and barrier failure change the rate, and healthy hosts clear most swallowed organisms",
+   "domain": "microbiome",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Do not treat subsystem boundaries as sealed by default. The engine should carry a leakage term between coupled compartments, scaled by barrier state, instead of assuming zero transfer because the compartments have different names.",
+    "source_operator": "oral_microbes_reach_distant_organs",
+    "telemetry": "barrier state indicators, organism detection at downstream sites, and immune status"
+   }
+  },
+  {
+   "primitive_id": "p_gingivalis_periodontal_route_to_abeta",
+   "name": "Repeated oral application of Porphyromonas gingivalis induces neurodegeneration and extracellular Abeta42 formation in young adult wild-type mice",
+   "verbatim_quote": "Repeated oral application of P. gingivalis induces neurodegeneration and the formation of extracellular Aβ42 in young adult wild type mice",
+   "page": "Giordano-Kelhoffer et al., Systematic review, Section 4.3, printed pp. 44-62 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The mouse result is presented as evidence that low-grade chronic periodontal infection can produce Alzheimer-like neuropathology",
+    "The proposed route runs through intestinal permeability, lipopolysaccharide leakage, and systemic inflammation"
+   ],
+   "breakdown_regime": "A mouse oral-application model is not a human dose or timeline; the review frames this as a compelling hypothesis requiring further investigation",
+   "domain": "microbiome",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Chronic low-grade inputs can cross a threshold into a different pathology class given enough repetitions. The engine should integrate exposure over time with a dose counter, because per-event effects that look negligible can dominate after thousands of repetitions.",
+    "source_operator": "p_gingivalis_periodontal_route_to_abeta",
+    "telemetry": "exposure count and duration, permeability markers, systemic inflammatory markers, and downstream pathology markers"
+   }
+  },
+  {
+   "primitive_id": "abi_tbi_nontbi_partition",
+   "name": "Acquired brain injury partitions into traumatic injury from external force and non-traumatic injury from internal processes such as tumor, vessel occlusion, infection, or alcohol",
+   "verbatim_quote": "ABI is mainly divided into TBI and Non-TBI injuries. Non-TBI can arise from tumors, vessel occlusion, infection, or alcohol consumption.",
+   "page": "Goldman et al., Understanding Acquired Brain Injury, Figure 1 caption and Section 1, printed pp. 63-93 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ABI is defined by timing (post-birth) and exclusion of congenital and degenerative causes",
+    "Both branches converge on damaged brain tissue but differ in mechanism and premorbid profile"
+   ],
+   "breakdown_regime": "The partition is coarse: mixed cases exist, and the review notes outcome depends on the specific process plus age, genetics, and socioeconomic background",
+   "domain": "clinical_taxonomy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Start classification from the generating process, not the surface presentation. Two cases with identical presentations but different generating processes need different forward models, while cases from one process share structure the engine can reuse.",
+    "source_operator": "abi_tbi_nontbi_partition",
+    "telemetry": "generating process label, mechanism evidence, premorbid variables, and presentation features"
+   }
+  },
+  {
+   "primitive_id": "concussion_membrane_ion_flux",
+   "name": "Concussion symptoms arise when abnormal brain movement disrupts neuronal membranes and axons, causing extensive ion flux and diffuse waves of depolarization",
+   "verbatim_quote": "This, in turn, causes the extensive flux of ions across neuronal membranes resulting in diffuse waves of depolarization, which precipitate the classic concussion symptoms",
+   "page": "Goldman et al., Understanding Acquired Brain Injury, Section 2.1.1, printed pp. 63-93 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The mechanical event precedes the molecular cascade; symptoms are downstream of membrane and axonal disruption",
+    "Ion flux and depolarization waves are the mediating step between motion and symptoms"
+   ],
+   "breakdown_regime": "This mechanism describes concussion as a functional disturbance; it does not capture structural lesions such as hematoma, which follow different dynamics",
+   "domain": "tbi_pathophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Translate a mechanical input into a state disturbance through an explicit mediating variable. The engine should model the mediator (here, membrane integrity and ion balance) because recovery of the mediator, not the disappearance of the input, sets the recovery clock.",
+    "source_operator": "concussion_membrane_ion_flux",
+    "telemetry": "mechanical load descriptors, mediator state markers, and symptom time course"
+   }
+  },
+  {
+   "primitive_id": "abi_excitotoxic_energy_failure",
+   "name": "In acquired brain injury, restricted blood flow depletes energy reserves, depolarizes membranes, and reduces glutamate uptake, driving excitotoxic cell death",
+   "verbatim_quote": "In ABI, restricted blood flow to the brain diminishes energy reserves and causes membrane depolarization, thus leading to the reduced uptake of glutamate from the surroundings.",
+   "page": "Goldman et al., Understanding Acquired Brain Injury, Section 3.3.1, printed pp. 63-93 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Glutamate clearance is ATP-dependent, so energy failure and excitotoxicity are coupled, not independent",
+    "NMDA and AMPA receptor activation mediates the sodium and calcium entry that kills cells"
+   ],
+   "breakdown_regime": "Receptor blockade showed preclinical protection but with side effects on normal function, and antioxidant candidates named in the review failed to produce significant clinical effects",
+   "domain": "tbi_pathophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Coupled failure loops are the dangerous structures: energy loss disables clearance, clearance failure raises toxicity, toxicity consumes more energy. The engine should detect positive feedback couplings explicitly, because linear models understate how fast coupled systems collapse.",
+    "source_operator": "abi_excitotoxic_energy_failure",
+    "telemetry": "energy reserve proxies, excitatory transmitter levels, membrane state, and cell death markers over time"
+   }
+  },
+  {
+   "primitive_id": "secondary_lesion_expansion_mass_effect",
+   "name": "Secondary lesions grow by hematoma or contusion expansion and by mass effect from edema, so damage after the primary event is a moving target",
+   "verbatim_quote": "Lesions can occur as a result of the expansion of a hematoma or contusion, or as a result of the mass effect caused by various subsequent effects of damage, such as edema around the lesions.",
+   "page": "Goldman et al., Understanding Acquired Brain Injury, Section 3.2, printed pp. 63-93 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cerebrovascular injury at the primary site seeds the later lesions",
+    "Raised intracranial pressure and herniation are the lethal endpoints of unchecked expansion"
+   ],
+   "breakdown_regime": "Expansion rates vary by lesion type and patient factors such as anticoagulant use, which the review flags in older adults; not every lesion expands",
+   "domain": "tbi_pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Score the trajectory, not the snapshot. For any expanding process the engine should estimate current size, growth rate, and the ceiling imposed by the containing space, because the same snapshot value is benign when stable and critical when growing.",
+    "source_operator": "secondary_lesion_expansion_mass_effect",
+    "telemetry": "serial size measurements, growth rate, container pressure proxies, and medication or coagulation state"
+   }
+  },
+  {
+   "primitive_id": "behavioral_dyscontrol_five_year_profile",
+   "name": "Five years after TBI, the most common behavioral dyscontrol features are irritability and lack of initiative (44 percent each) with inappropriate social behavior at 26 percent",
+   "verbatim_quote": "In the five years following TBI, the most common BD were irritability and lack of initiative (44%) with inappropriate social behavior (26%)",
+   "page": "Torregrossa et al., Behavioral and Psychiatric Symptoms, Section 3.1, printed pp. 94-111 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Percentages come from the follow-up cohorts the review synthesizes, mostly moderate to severe TBI",
+    "Behavioral dyscontrol is treated as a measurable outcome class, split by the review into excess, deficit, affective, and psychosis subgroups"
+   ],
+   "breakdown_regime": "Prevalence estimates across the review range widely (25 to 88 percent) with methodology, so single-cohort percentages should not be read as universal rates",
+   "domain": "neuropsychiatry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long-horizon outcome profiles differ from acute profiles: the features that dominate at five years are quiet deficit features, not the dramatic acute ones. The engine should keep separate outcome models per horizon instead of extrapolating the acute profile forward.",
+    "source_operator": "behavioral_dyscontrol_five_year_profile",
+    "telemetry": "horizon-specific outcome frequencies, deficit versus excess feature counts, and cohort severity mix"
+   }
+  },
+  {
+   "primitive_id": "premorbid_history_amplifies_nps",
+   "name": "Pre-injury psychiatric history raises post-TBI neuropsychiatric symptom rates: 83.2 percent with a pre-injury history versus 63.6 percent without",
+   "verbatim_quote": "Lauterbach et al. have showed that NPS were higher in patients with a pre-injury history (83.2%) than those without (63.6%).",
+   "page": "Torregrossa et al., Behavioral and Psychiatric Symptoms, Section 2, printed pp. 94-111 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "New symptoms and exacerbations of compensated pre-existing conditions are both counted in the review's framing",
+    "Substance use was the most common pre-injury disorder in the cited cohort"
+   ],
+   "breakdown_regime": "The comparison is observational; pre-injury history may proxy for other risk factors, and the review notes onset and evolution of symptoms remain partly indeterminate",
+   "domain": "neuropsychiatry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Baseline state before an event is a multiplier on post-event outcomes, not a footnote. The engine should carry pre-event status as an explicit input to every post-event model and should separate genuinely new outcomes from reactivations of old ones.",
+    "source_operator": "premorbid_history_amplifies_nps",
+    "telemetry": "pre-event status flags, reactivation versus new-onset labels, and post-event outcome rates stratified by baseline"
+   }
+  },
+  {
+   "primitive_id": "depression_dominant_psychiatric_burden",
+   "name": "Depression is the most common psychiatric complication after TBI, with reported prevalence from 6 to 77 percent, ahead of generalized anxiety at 2 to 50 percent",
+   "verbatim_quote": "The most common psychiatric complication associated with TBI is depression, with prevalence rates ranging between 6% and 77%",
+   "page": "Torregrossa et al., Behavioral and Psychiatric Symptoms, Section 2, printed pp. 94-111 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wide ranges reflect different cohorts, severities, and instruments rather than a single true rate",
+    "Mood and anxiety disorders rise through the first year, with anxiety tending to emerge earlier"
+   ],
+   "breakdown_regime": "Depression after TBI can present as irritability, frustration, and aggression rather than sadness, so symptom checklists tuned to classic presentations undercount it",
+   "domain": "neuropsychiatry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When a measurement range spans an order of magnitude across studies, the instrument and cohort are part of the data. The engine should store the measurement method with every rate and should distrust any pooled rate that hides method variance.",
+    "source_operator": "depression_dominant_psychiatric_burden",
+    "telemetry": "rate estimates with instrument and cohort metadata, presentation variant flags, and time since event"
+   }
+  },
+  {
+   "primitive_id": "phase_matched_neuropsychological_assessment",
+   "name": "Assessment must match phase: in acute severe TBI only observational scales (GCS, DRS, CRS-R, LCF) can be administered, while domain testing waits for active participation",
+   "verbatim_quote": "In particular, in the acute phase of sTBI, only observational scales, such as the Glasgow coma scale (GCS), the Disability Rating Scale (DRS), the Coma Recovery Scale-Revised (CRS-R), and Level of Cognitive Functioning (LCF), can be administered",
+   "page": "Torregrossa et al., Neuropsychological Assessment, Section 1, printed pp. 112-128 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observational scales need only spontaneous behavior or simple responses",
+    "Domain tests for memory, attention, and executive function require a patient who has passed the minimally conscious state"
+   ],
+   "breakdown_regime": "Using a domain test too early produces floor artifacts that look like data; using only observational scales too late wastes resolution the patient could now provide",
+   "domain": "clinical_measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Match instrument resolution to the state of the measured system. The engine should gate its measurement plan by system state: coarse passive instruments while the system cannot respond, fine active instruments once it can, and a recorded switch point between the two regimes.",
+    "source_operator": "phase_matched_neuropsychological_assessment",
+    "telemetry": "system responsiveness state, instrument class used, switch point timing, and score distributions per instrument"
+   }
+  },
+  {
+   "primitive_id": "post_recovery_dysfunction_domains",
+   "name": "After consciousness recovers, post-TBI dysfunction spans sensory-motor impairment and cognitive deficits across attention, executive function, memory, reasoning, and problem-solving",
+   "verbatim_quote": "Even after the recovery of consciousness, the main dysfunctions following TBI are (i) sensory-motor impairments, (ii) cognitive deficits involving attentional processes, executive functions, memory abilities, reasoning and problem-solving",
+   "page": "Torregrossa et al., Neuropsychological Assessment, Section 1, printed pp. 112-128 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The domain list comes from the review's synthesis of moderate to severe TBI cohorts",
+    "Behavioral alterations (apathy, irritability, aggression, disinhibition, mood disorders) accompany the cognitive domains in the same passage"
+   ],
+   "breakdown_regime": "Domain deficits are separable: a patient can recover in one domain and not another, so a single global score hides the structure the review is organized around",
+   "domain": "clinical_measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decompose recovery into domains and track each on its own clock. The engine should resist collapsing multi-domain states into one scalar while the domains are still moving at different rates; the scalar is a reporting convenience, not the state.",
+    "source_operator": "post_recovery_dysfunction_domains",
+    "telemetry": "per-domain scores over time, domain recovery rates, and divergence between fastest and slowest domains"
+   }
+  },
+  {
+   "primitive_id": "breacher_mirna_signature",
+   "name": "Experienced breachers show 14 differentially expressed whole-blood microRNAs versus matched unexposed controls (8 upregulated, 6 downregulated, p less than 0.05)",
+   "verbatim_quote": "We identified 14 miRNAs differentially expressed in experienced breachers compared to unexposed controls (p < 0.05).",
+   "page": "Vorn et al., Repetitive Low-Level Blast pilot, Section 3 (Results), printed pp. 129-139 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Groups were matched on age, sex, and race; the breachers averaged 4659.20 career breaching exposures versus 5.86 in controls",
+    "RNA sequencing used DESeq2 with false discovery rate control; microRNA used a NanoString panel"
+   ],
+   "breakdown_regime": "Pilot scale (15 breachers, 14 controls), all male, self-reported exposure counts; the microRNA threshold reported is unadjusted p less than 0.05, weaker than the FDR-controlled gene analysis",
+   "domain": "biomarker_transcriptomics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cumulative occupational exposure leaves a readable molecular signature long after each event. The engine should treat repeated small exposures as a dose integral with a persistent trace, and should look for the trace in cheap peripheral measurements when the target organ cannot be sampled.",
+    "source_operator": "breacher_mirna_signature",
+    "telemetry": "cumulative exposure count, peripheral molecular panel values, symptom reports, and matched-control baselines"
+   }
+  },
+  {
+   "primitive_id": "combined_paraoxon_mtbi_additive_deficits",
+   "name": "Paraoxon exposure combined with mild TBI produces the most significant cognitive and behavioral deficits in mice, an additive effect of the two insults",
+   "verbatim_quote": "Animals that received both paraoxon and mTBI insults exhibited the most significant cognitive and behavioral deficits, suggesting an additive effect.",
+   "page": "Freidin et al., Combined Organophosphate Toxicity and mTBI, Conclusions, printed pp. 140-153 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The design separates control, mTBI alone, paraoxon alone, and both orders of combined exposure, with outcomes measured 30 days later",
+    "Paraoxon dose (0.3 mg/kg) was set below the level that would induce seizures on its own"
+   ],
+   "breakdown_regime": "Additivity is shown for this dose pair and model; it does not establish the interaction form at other doses, and isoflurane anesthesia may have mitigated some paraoxon effects, as the authors note",
+   "domain": "neurotoxicology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Test combined exposures explicitly instead of summing single-exposure models by assumption. Here the sum happened to hold, but the design lesson is general: the engine should include interaction checks for co-occurring stressors and record the order of exposure, because order changed the regional outcome in this study.",
+    "source_operator": "combined_paraoxon_mtbi_additive_deficits",
+    "telemetry": "exposure identities, doses, order and interval between exposures, and outcome severity per combination"
+   }
+  },
+  {
+   "primitive_id": "combined_insult_region_specific_survival",
+   "name": "Neuron survival loss is region specific under combined insult: cortical loss follows paraoxon with or without mTBI, while dentate gyrus hilus loss appears only when paraoxon precedes mTBI",
+   "verbatim_quote": "Mice exposed to paraoxon with or without mTBI experienced a decrease in cortical neuronal survival, while those exposed to paraoxon and then mTBI exhibited a decrease only in the dentate gyrus hilus.",
+   "page": "Freidin et al., Combined Organophosphate Toxicity and mTBI, Conclusions, printed pp. 140-153 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cell counting was performed in temporal cortex and hippocampal dentate gyrus with NeuN staining",
+    "Exposure order is part of the result: pre-paraoxon then mTBI is the combination that reaches the dentate gyrus hilus"
+   ],
+   "breakdown_regime": "Regional specificity in one mouse model does not map one-to-one onto human anatomy or onto other organophosphates; the dentate gyrus finding is a single-region result",
+   "domain": "neurotoxicology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregate damage scores hide where the damage is. The engine should keep outcomes resolved by region or subsystem, because an intervention or exposure can be invisible in the total while decisive in one compartment, and order of inputs can decide which compartment is hit.",
+    "source_operator": "combined_insult_region_specific_survival",
+    "telemetry": "per-region outcome values, exposure order, and compartment-level baselines"
+   }
+  },
+  {
+   "primitive_id": "glucocorticoid_effect_receptor_balance_rule",
+   "name": "Glucocorticoid effects on a cell population depend on concentration, exposure duration, and cell type through its balance of intracellular and membrane glucocorticoid and mineralocorticoid receptors",
+   "verbatim_quote": "In general, the effects of GCs on specific cell populations depend on: (1) their concentration, (2) duration of exposure, (3) cell type with definite balance of specific intracellular and extracellular GRs and MRs.",
+   "page": "Komoltsev and Gulyaeva, Brain Trauma, Glucocorticoids and Neuroinflammation, Section on receptor mechanisms, printed pp. 154-172 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "High-affinity mineralocorticoid receptors bind at low hormone levels; lower-affinity glucocorticoid receptors engage as levels rise",
+    "Intracellular receptors act slowly and genomically; membrane receptors act rapidly through G-proteins and ion channels"
+   ],
+   "breakdown_regime": "The rule is qualitative: the review gives the dependency structure, not a dose-response surface, and receptor expression varies by brain region and circadian phase",
+   "domain": "neuroendocrinology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dose effect that runs through two receptor systems with different affinities is non-monotonic by construction: low dose engages one system, high dose engages both and can reverse the net effect. The engine should model affinity-tiered responders explicitly whenever a signal acts through more than one receptor class.",
+    "source_operator": "glucocorticoid_effect_receptor_balance_rule",
+    "telemetry": "dose level, exposure duration, receptor expression ratio per cell type, and fast versus slow response components"
+   }
+  },
+  {
+   "primitive_id": "prior_stress_glucocorticoid_priming",
+   "name": "Previous stress and elevated glucocorticoid levels before a pro-inflammatory impact inflate the inflammatory effect, and long moderate elevation also enhances neuroinflammation",
+   "verbatim_quote": "Previous stress and elevated GC level prior to pro-inflammatory impact may inflate pro-inflammatory effects.",
+   "page": "Komoltsev and Gulyaeva, Brain Trauma, Glucocorticoids and Neuroinflammation, Section 9 (Conclusions), printed pp. 154-172 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hypothalamic-pituitary-adrenal axis state at the moment of injury is part of the injury's causal field",
+    "The hippocampus is the vulnerable target because it both regulates the axis and is damaged by its excess output"
+   ],
+   "breakdown_regime": "Priming is a modifier, not a sole cause; the review's mechanisms are assembled from TBI, stroke, and epilepsy models and human cortisol studies with differing designs",
+   "domain": "neuroendocrinology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "History changes sensitivity. The engine should carry a priming state that scales the response to the next insult, decaying over time, instead of treating each event as if the system started from the same baseline.",
+    "source_operator": "prior_stress_glucocorticoid_priming",
+    "telemetry": "prior stressor history, baseline hormone levels, time since priming event, and response magnitude to the current insult"
+   }
+  },
+  {
+   "primitive_id": "alcohol_basement_membrane_remodeling",
+   "name": "Chronic alcohol exposure remodels the vascular basement membrane: collagen-IV, laminin-111, and fibronectin expression rises and the membrane thickens while microvascular density falls and membrane continuity breaks",
+   "verbatim_quote": "Furthermore, increased expression of BM proteins (collagen-IV, laminin-111, and fibronectin) was noted in both age-matched and chronic alcoholics, which leads to the thickening of the vascular BM.",
+   "page": "Skuja et al., Alcohol-Induced Alterations in the Vascular Basement Membrane, Section 5 (Conclusions), printed pp. 173-197 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Postmortem substantia nigra tissue from 44 individuals was grouped into controls, age-matched alcoholics, and non-age-matched alcoholics",
+    "Protein accumulation is interpreted as aggregation or clumping coupled with loss of membrane integrity, not as healthy strengthening"
+   ],
+   "breakdown_regime": "Postmortem cross-sectional design cannot order cause and effect over a drinking lifetime, and aging independently regulates vessel density, which the authors separate only partly through age matching",
+   "domain": "vascular_biology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "More material is not more integrity. A barrier can thicken and weaken at the same time when deposition is disordered. The engine should track composition quality and continuity separately from bulk quantity in any barrier or structural variable.",
+    "source_operator": "alcohol_basement_membrane_remodeling",
+    "telemetry": "barrier component levels, continuity or defect counts, vessel density, and exposure duration"
+   }
+  },
+  {
+   "primitive_id": "wps_nfkb_cerebellar_multipathway_injury",
+   "name": "Six months of waterpipe smoke exposure drives cerebellar inflammation, oxidative stress, DNA damage, and apoptosis through mechanisms associated with NF-kB activation, with microgliosis and astrogliosis",
+   "verbatim_quote": "In summary, we can conclude that our findings demonstrate for the first time, that chronic exposure to WPS triggers inflammatory responses, oxidative stress, DNA damage and apoptosis through mechanisms associated with NF-κB activation.",
+   "page": "Hamadi et al., Waterpipe Smoke and the Cerebellum, Discussion summary, printed pp. 198-215 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mouse cerebellar homogenates were compared against air-exposed controls after six months of exposure",
+    "Marker panels cover each claimed pathway: cytokines for inflammation, 8-isoprostane and TBARS for oxidative stress, 8-OHdG for DNA damage, cytochrome C and cleaved caspase-3 for apoptosis"
+   ],
+   "breakdown_regime": "The NF-kB role is associational in this design; the authors state that inhibitor or knockout work is needed to establish its causal role, and no behavioral motor testing was performed",
+   "domain": "neurotoxicology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When one upstream regulator is associated with several downstream damage classes at once, model the regulator as a hub and the damage classes as its fan-out. The engine gains leverage by measuring the hub, but must label hub causality as unproven until a blocking experiment exists.",
+    "source_operator": "wps_nfkb_cerebellar_multipathway_injury",
+    "telemetry": "hub regulator activity, per-pathway marker panels, glial cell counts, and exposure duration"
+   }
+  },
+  {
+   "primitive_id": "hypoxia_paired_pulse_ratio_definition",
+   "name": "The paired-pulse ratio is the average synaptic response to the second pulse divided by the average response to the first pulse, and it reports presynaptic release behavior",
+   "verbatim_quote": "paired-pulse ratio (PPR) of synaptic peak amplitudes (average of six consecutive responses to the second pulse (R2) divided by the average of six consecutive responses to the first one (R1))",
+   "page": "Zironi and Aicardi, Hypoxia in the Infant Rat Motor Cortex, Figure 4 caption, printed pp. 216-227 (article range)",
+   "latex": "\\mathrm{PPR} = \\frac{R_2}{R_1}",
+   "symbol_and_unit_ledger": {
+    "PPR": "paired-pulse ratio, dimensionless",
+    "R_2": "mean amplitude of six consecutive synaptic responses to the second pulse, in the same amplitude units as R_1",
+    "R_1": "mean amplitude of six consecutive synaptic responses to the first pulse, in the same amplitude units as R_2"
+   },
+   "assumptions": [
+    "Pulses are delivered at a 50 ms interval and six consecutive responses are averaged for each pulse",
+    "A ratio below 1 is paired-pulse depression and above 1 is facilitation, in the usage of this study"
+   ],
+   "breakdown_regime": "The ratio is an indirect presynaptic indicator; postsynaptic changes can contaminate it, which is why the study cross-checks it with pharmacological blockers",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A self-normalizing ratio cancels shared noise: dividing the second response by the first removes slice-to-slice scale differences and isolates the change in release behavior. The engine should prefer ratio features built from paired measurements of the same unit when absolute scales are unreliable.",
+    "source_operator": "hypoxia_paired_pulse_ratio_definition",
+    "telemetry": "first and second response amplitudes per unit, inter-stimulus interval, and the computed ratio over time"
+   }
+  },
+  {
+   "primitive_id": "hypoxia_reversible_depression_energy_sparing",
+   "name": "Hypoxia reversibly depresses glutamatergic transmission and neuronal excitability in infant rat motor cortex through presynaptic adenosine A1 receptors and a postsynaptic NO/cGMP pathway, and the depression is protective because it limits energy failure",
+   "verbatim_quote": "The results of the present study provide the first evidence that hypoxia causes a reversible depression of glutamatergic synaptic transmission and neuronal excitability in primary motor cortex slices from infant rats.",
+   "page": "Zironi and Aicardi, Hypoxia in the Infant Rat Motor Cortex, Section 5 (Conclusions), printed pp. 216-227 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ten minutes of hypoxia in slices from 16 to 18 day old rats, with recovery on reoxygenation, defines the regime",
+    "Blocker dissociation assigns the presynaptic arm to A1 receptors (DPCPX prevents the paired-pulse change) and excludes NO from the release arm while keeping it in the postsynaptic arm"
+   ],
+   "breakdown_regime": "An in vitro slice at one developmental window; the same depression that protects acutely could harm if sustained, and adult tissue responds differently in the cited literature",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deliberate down-regulation under resource shortage is a survival strategy, not a failure: cutting demand to match supply prevents collapse and preserves recovery. The engine should distinguish protective suppression from damage by checking reversibility when supply returns.",
+    "source_operator": "hypoxia_reversible_depression_energy_sparing",
+    "telemetry": "supply level, transmission amplitude, paired-pulse ratio, blocker condition, and recovery after supply restoration"
+   }
+  },
+  {
+   "primitive_id": "carotid_occlusion_reversible_mep_response",
+   "name": "Five minutes of uni- or bilateral common carotid occlusion in rats produces reversible, not total, inhibition of corticospinal transmission, and MEP amplitude tracks the ischemic course more sensitively than latency",
+   "verbatim_quote": "The parameters of MEP amplitude and temperature variability are more sensitive in monitoring the efferent transmission of the corticospinal tract than the MEP latency parameter in observing the course of ischemic effects in experimental conditions.",
+   "page": "Szymankiewicz-Szukala et al., Temporary Occlusion of Common Carotid Arteries, Section 5 (Conclusions), printed pp. 228-243 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Forty-two male Wistar rats across permanent, bilateral, and released occlusion groups, with histological verification",
+    "Five minutes of restored flow stabilized amplitude in the release groups in the results section"
+   ],
+   "breakdown_regime": "The authors warn that rat infarction symptoms are more optimistic than human stroke presentations, so reversibility margins do not transfer directly to patients",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Choose the readout with the best sensitivity to the process, not the most familiar one: amplitude moved earlier and further than latency here. The engine should rank its observable features by demonstrated sensitivity per process and weight them accordingly, while keeping the less sensitive ones as confirmation.",
+    "source_operator": "carotid_occlusion_reversible_mep_response",
+    "telemetry": "evoked response amplitude and latency over time, temperature, occlusion state and duration, and tissue verification"
+   }
+  },
+  {
+   "primitive_id": "fatty_acid_nondipping_network",
+   "name": "Blood fatty acid levels and their inflammatory metabolites are associated with the nondipping blood pressure phenomenon in stroke patients, inside a network linking fatty acids, leukotriene B4, inflammation, hypertension, and obstructive sleep apnea",
+   "verbatim_quote": "In our study we demonstrated the potential novel associations between the blood fatty acid levels and their inflammatory metabolites in the pathogenesis of the nondipping phenomenon in stroke patients.",
+   "page": "Drozd et al., Fatty Acid Levels and Nondipping Status, Section 5 (Conclusions), printed pp. 244-256 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sixty-four ischemic stroke patients split into 33 with preserved dipping and 31 nondippers, with 24 hour blood pressure recording and Epworth scoring",
+    "Specific pattern in results: nondippers show higher C16:0 palmitic acid, lower C20:0, C22:0, and C24:1 nervonic acid, and lower leukotriene B4"
+   ],
+   "breakdown_regime": "Associations are cross-sectional in a small single cohort; several expected mediators showed no group difference, and correlations with sleepiness appeared only after splitting by dipping group",
+   "domain": "cardiometabolic",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stratification can create and destroy correlations: nothing correlated with sleepiness in the pooled cohort, while rich structure appeared inside each dipping group. The engine should test pooled and stratified views side by side and report which view each claim comes from.",
+    "source_operator": "fatty_acid_nondipping_network",
+    "telemetry": "fatty acid panel values, eicosanoid levels, dipping status from 24 hour monitoring, sleepiness scores, and group-stratified correlations"
+   }
+  },
+  {
+   "primitive_id": "nlrp3_mcc950_barrier_rescue",
+   "name": "Under oxygen-glucose deprivation, rt-PA damages brain endothelial cells and MCC950 inhibition of NLRP3 stabilizes the Cell Index, preserves ZO-1, and reduces cell death",
+   "verbatim_quote": "Coincubation with MCC950, though, stabilizes the Cell Index of the rt-PA + MCC950 group until 15 h of OGD in comparison to rt-PA administration only",
+   "page": "Bellut et al., NLRP3 Inhibition and rt-PA, Section 3 (Results), printed pp. 257-264 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Immortalized bEnd5 cells stand in for the blood-brain barrier endothelium, with rt-PA at the concentration measured in patients behind an occluding thrombus",
+    "Cell Index is used as the real-time proxy for monolayer integrity and correlates with counted cell death"
+   ],
+   "breakdown_regime": "In vitro only: no symptom severity, bleeding outcome, or whole-organism endpoint can be read from this model, which the authors state as a limitation; barrier rescue is time limited (stabilization held to about 15 hours of deprivation)",
+   "domain": "vascular_biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An effective treatment can create the hazard that a second agent then removes: rt-PA restores flow but injures the barrier, and blocking the injury pathway widens the safe window. The engine should model treatment side-effect pathways as separate attackable nodes rather than folding them into a single net benefit score.",
+    "source_operator": "nlrp3_mcc950_barrier_rescue",
+    "telemetry": "barrier integrity index over time, tight junction protein levels, cell death counts, inflammasome expression, and treatment combination"
+   }
+  },
+  {
+   "primitive_id": "app_colocalization_pathway_choice",
+   "name": "Whether APP follows the amyloidogenic or non-amyloidogenic pathway depends largely on its co-localization with the secretases, which caveolin-1 influences",
+   "verbatim_quote": "The fate of APP along the amyloidogenic or non-amyloidogenic pathway largely depends on the co-localization of APP and secretases that can be influenced by caveolin-1",
+   "page": "Sharifulina et al., APP and Secretases after Photothrombotic Stroke, Figure 9 caption, printed pp. 265-290 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Alpha-secretase processing occurs mainly at the cell surface and in non-raft membrane regions, while amyloidogenic processing follows internalization into endosomes",
+    "Spatial segregation of APP and BACE1 into different vesicles limits amyloidogenic cleavage under normal conditions"
+   ],
+   "breakdown_regime": "Co-localization measurements differ between studies and methods, and the review of evidence inside the paper notes the degree of co-localization remains unclear",
+   "domain": "molecular_neuroscience",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reaction outcomes can be governed by spatial arrangement rather than by amounts: the same molecules produce different products depending on whether they meet. The engine should carry proximity or co-location as a state variable wherever pathway choice depends on it, instead of inferring the pathway from concentrations alone.",
+    "source_operator": "app_colocalization_pathway_choice",
+    "telemetry": "co-localization coefficients per compartment, compartment identity, enzyme and substrate levels, and product ratios"
+   }
+  },
+  {
+   "primitive_id": "app_astrocytic_gamma_secretase_surge",
+   "name": "After photothrombotic stroke, gamma-secretase complex proteins presenilin-1 and nicastrin increase in penumbra astrocytes, not neurons, on the first day and into early recovery",
+   "verbatim_quote": "Thus, the expression of the main proteins of the γ-secretase complex, presenilin-1, and nicastrin, increased in penumbra astrocytes on the first day after PTS",
+   "page": "Sharifulina et al., APP and Secretases after Photothrombotic Stroke, Section 3.7, printed pp. 265-290 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Western blot and immunofluorescence agree: nicastrin rose about 6 fold at 4 hours and 10 fold at 24 hours in cytoplasmic fractions, with the increase assigned to astrocytes by marker co-localization",
+    "APP N- and C-terminal fragments also rose at 24 hours and co-immunoprecipitated with caveolin-1"
+   ],
+   "breakdown_regime": "Rat and mouse photothrombotic models with small group sizes; the presenilin-1 cytoplasmic rise at 4 hours is reported with a weak significance value in the text, so the 24 hour point is the solid one",
+   "domain": "molecular_neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cell-type assignment changes the meaning of a molecular surge: the same protein increase is a neuronal event in one reading and a glial reaction in the data. The engine should never accept a tissue-level measurement without asking which cell population carries it.",
+    "source_operator": "app_astrocytic_gamma_secretase_surge",
+    "telemetry": "protein levels by cell type, marker co-localization, time since event, and regional (core versus penumbra) sampling"
+   }
+  },
+  {
+   "primitive_id": "dapt_selective_inhibitor_benefit",
+   "name": "Among alpha-, beta-, and gamma-secretase inhibitors tested after photothrombotic stroke, only the gamma-secretase inhibitor DAPT reduced infarct volume and apoptosis, while caveolin-1 inhibition shifted APP processing toward Abeta synthesis and astroglial activation",
+   "verbatim_quote": "Among the three secretase inhibitors studied, only DAPT reduced the infarct volume on days 7 and 14 after PTS, preventing the increase in apoptosis of mouse cerebral cortex cells in the area adjacent to the infarction zone.",
+   "page": "Sharifulina et al., APP and Secretases after Photothrombotic Stroke, Section 4 (Discussion), printed pp. 265-290 (article range)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Batimastat (alpha) and LY2886721 (beta) showed no detected effect on infarct volume or apoptosis at the doses used, which is a dose-bound negative, not proof of no effect",
+    "DAPT benefit persisted at days 7 and 14 and came with reduced GFAP in cortical astrocytes"
+   ],
+   "breakdown_regime": "Mouse results with a human translation caveat stated by the authors: the inhibitors act on the presenilin-1 gamma-secretase complex rather than the presenilin-2 complex in humans, and Notch signaling side effects must be considered",
+   "domain": "molecular_neuroscience",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A clean inhibitor dissociation is strong causal evidence: three adjacent nodes blocked, one moves the outcome. The engine should weight dissociation experiments above single-agent results, and should record negative arms with their doses, because a negative at one dose bounds the claim rather than erasing the node.",
+    "source_operator": "dapt_selective_inhibitor_benefit",
+    "telemetry": "per-inhibitor outcome deltas with doses, infarct volume, apoptosis counts, glial activation markers, and product levels"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "2f72a012099e830d-t1",
+   "think": "This volume is a reprint of a Biomedicines special issue, and its sixteen works are best read as one argument built from unlike evidence. The argument is that brain injury and neurodegeneration are not single lesions but cascades running through interacting cell populations, barriers, and systemic inputs, and that the same cascade can help or harm depending on context, timing, dose, and cell type. The editorial sets the frame: neurons, astrocytes, microglia, and endothelial cells form one communicating system, distant organs talk back to it through routes such as the oral microbiome, and an insult starts inflammatory, necrotic, and apoptotic pathways whose consequences can last days or a lifetime. The deepest single thread is the astrocyte. Luo's review makes astrocyte reactivity the central state variable of the volume: a heterogeneous, dynamic, reversible response that can protect tissue or drive progression. TGF-beta sits on top of that state as a control signal with a latent activation switch, a canonical SMAD pathway, and several noncanonical routes. The review refuses a fixed sign for the signal. In culture it can induce the reactivity markers; in an inflammatory bath it can reverse them. After traumatic injury, blood-borne factors leaking through a broken barrier activate it and drive scar formation, which reads as damage. After stroke, astrocytic signaling through the same receptor protects against inflammation and motor loss. With aging, the ligand rises while the SMAD machinery falls, so the system looks supplied and is actually unresponsive. The lesson the volume keeps teaching is that a pathway name is not a prediction; the prediction lives in the context variables around the pathway. The systemic inputs form the second layer. The oral microbiome review shows a peripheral reservoir, shaped by diet and lifestyle, whose organisms and products reach intestine, heart, lung, placenta, and brain, with one periodontal pathogen producing Alzheimer-like pathology in mice after repeated oral application. The glucocorticoid review shows an endocrine input whose effect is set by concentration, duration, and the receptor balance of the receiving cell, and whose prior elevation primes a stronger inflammatory response to the next insult. Alcohol remodels the vascular basement membrane of the substantia nigra, thickening it with deposited protein while vessels thin out and continuity breaks. Waterpipe smoke, given chronically, lights up inflammation, oxidative stress, DNA damage, and apoptosis in the cerebellum under one transcriptional hub. Paraoxon plus mild traumatic injury shows two insults adding, with the order of exposure deciding which hippocampal subregion loses neurons. Career breachers show that thousands of individually small blasts leave a readable whole-blood transcriptomic trace. None of these inputs is dramatic per event; all of them matter as integrals over time. The clinical papers supply the measurement discipline. Acquired brain injury is partitioned by generating process, traumatic against non-traumatic, and its physiology is organized as primary damage followed by secondary expansion: excitotoxicity from energy failure, hematoma growth, edema, and mass effect. The behavioral overview shows outcomes unfolding over years, dominated late by quiet deficit features such as lack of initiative, and strongly conditioned by what the patient carried before the injury. The assessment review matches instrument to phase: observational scales while the patient cannot participate, domain testing after, with recovery tracked per domain rather than as one score. The experimental papers supply causal leverage. In infant rat motor cortex, hypoxia depresses transmission reversibly, and blockers split the mechanism into a presynaptic adenosine arm and a postsynaptic nitric oxide arm, with the paired-pulse ratio doing the diagnostic work. In carotid occlusion, evoked potential amplitude moves earlier and further than latency, teaching that observable choice is part of method. In stroke patients, fatty acid and eicosanoid structure appears only after stratifying by dipping status, teaching that pooling can erase the signal. In endothelial culture, a standard treatment injures the barrier and a targeted inflammasome inhibitor removes that injury, teaching that side-effect pathways are separate attackable nodes. In photothrombotic stroke, APP processing is decided by spatial co-localization, gamma-secretase components surge in astrocytes rather than neurons, and a three-way inhibitor comparison singles out the gamma node while punishing caveolin-1 blockade. Taken together, the volume's machinery is a set of coupled state variables: barrier integrity, glial state, endocrine tone, microbial reservoir, exposure integrals, and pathway activity per cell type, each with context-dependent signs. Its recurring failure mode is aggregation: pooling strata, averaging cell types, reading ligand as activity, or scoring a snapshot instead of a trajectory. Its recurring strength is dissociation: blockers, stratifications, and cell-specific manipulations that show which node actually carries the effect. The editorial adds a synthesis layer that the individual papers do not state on their own: chronic traumatic pathology and chronic traumatic encephalopathy share features with Alzheimer's disease and other neurodegenerative diseases, repetitive low-level blast and cumulative occupational exposure belong in the same frame as single severe injuries, and assessment of a chronic condition that unfolds across clinical, radiological, metabolic, and molecular levels cannot rest on one tool. That is why the volume pairs mechanism papers with measurement papers instead of letting either stand alone.  The volume also disciplines its own claims, and a careful reading has to keep the limits attached to each result. The breacher study is a pilot with fifteen exposed men and self-reported exposure counts. The alcohol study is postmortem and cross-sectional, so it cannot order cause across a drinking lifetime. The endothelial inflammasome work is a cell culture model whose authors state that symptom severity and bleeding outcomes cannot be read from it. The hypoxia and carotid work is rodent physiology, elegant and mechanistically clean, but at developmental stages and scales that do not transfer directly to patients. The systematic review of the oral microbiome is explicit that its systemic routes are plausible and still poorly understood. Keeping these limits attached is not pedantry; it is what separates a usable evidence map from a pile of confident sentences, and it is the standard this extraction has tried to preserve by binding every primitive to its design and its breakdown regime.",
+   "retrocausal_genealogy": "The ideas here descend from several older lines that converged late. Glial biology moved astrocytes from passive support to active signaling partners over the late twentieth century, and the reactivity concept matured into the consensus position, cited in Luo's review, that reactivity is a graded, context-dependent continuum rather than a switch. TGF-beta biology came from development and fibrosis research, where latency, extracellular storage, and SMAD transcription were worked out before being imported into brain injury. The microbiome line descends from germ theory's inversion: commensal communities as organs, extended from gut to oral cavity and then to brain. The secondary injury concept descends from decades of trauma care showing that patients die of the cascade, not the impact. The APP and secretase work descends directly from Alzheimer genetics and the amyloid cascade, transplanted here into acute stroke, where the same machinery is asked what it does in the first days after an infarct rather than over decades of plaque formation.",
+   "theory_of_mind": "The editors and authors write for a translational reader who is expected to hold mechanism and clinic in one view. Their model of the problem is that no brain disorder in this volume is monocausal: every condition is presented as a network of cell types, barriers, endocrine signals, and environmental inputs, and every author assumes the reader will ask not whether a pathway matters but under what conditions it matters and in which direction. Reviews are organized by context (injury type, age, disease) rather than by molecule, and experimental papers are organized around dissociation designs: blockers, orders of exposure, stratified groups. The implied reader is a researcher or clinician who will use the volume as a map of levers, each lever labeled with the regime in which pulling it helps, harms, or does nothing.",
+   "cross_layer_veto": "Several findings in this volume veto habits that other layers of a reasoning system might default to. The TGF-beta evidence vetoes fixed-sign pathway claims: any layer that scores this pathway as simply good or bad is contradicted inside one review. The glucocorticoid analysis vetoes dose-free reasoning, because concentration, duration, and receptor balance can reverse the effect. The fatty acid study vetoes pooled-cohort correlations, since its structure exists only inside strata. The breacher pilot vetoes per-event safety reasoning for repeated exposures. The inhibitor comparison in the APP paper vetoes node equivalence: three adjacent targets were blocked and only one moved the outcome, while a fourth manipulation made things worse. Any synthesis layer that averages these into smooth generalities destroys exactly the information the volume worked to produce."
+  }
+ ],
+ "universal_lens": "Read as a general template, this volume is about systems whose behavior is set by context variables that are easy to omit: the state of a barrier, the history of prior stress, the mixture of subpopulations inside an aggregate, the spatial arrangement of components, and the integral of many small inputs over time. Its method is equally general. Separate stock from active flow. Match the instrument to the phase of the system. Stratify before correlating. Resolve outcomes by compartment and by cell type. Prefer dissociation experiments, where adjacent nodes are blocked one at a time, over single demonstrations. Treat reversibility as the test that separates protective suppression from damage. These rules transfer to any domain where heterogeneous agents respond to coupled signals under resource limits.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume is a model of how to study a complex human performance system without flattening it. Its clinical papers show how to partition a problem by generating process, how to stage measurement from passive observation to active domain testing as the subject recovers capacity, and how to track recovery per domain on separate clocks. Its exposure studies show how occupational dose accumulates into molecular and behavioral signatures, which is the correct frame for training load, contact exposure, and environmental stress in athletes. Its endocrine and microbiome papers widen the variable set beyond the obvious: prior stress state, sleep-linked blood pressure patterns, diet-shaped microbial reservoirs, and barrier integrity all belong in a serious model of the performing human.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the transferable assets are structural. Context-conditioned effect signs, as with TGF-beta and glucocorticoids, argue for storing background variables as first-class inputs and labeling predictions made without them as underdetermined. The breacher and organophosphate studies argue for exposure integrals and explicit interaction and order terms between co-occurring stressors. The fatty acid study argues for running pooled and stratified analyses side by side. The paired-pulse ratio and the motor evoked potential work argue for self-normalizing ratio features and for ranking observables by demonstrated sensitivity. The inhibitor dissociations argue for weighting causal evidence by design quality. None of this is about the brain as a topic; it is about how to reason with coupled, heterogeneous, history-dependent systems, which is the engine's actual job."
+}
