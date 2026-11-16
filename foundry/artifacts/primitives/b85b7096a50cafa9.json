@@ -1,0 +1,720 @@
+{
+  "book_id": "b85b7096a50cafa9",
+  "source_status": "COMPLETE",
+  "source_note": "Silverberg, Noah D., Ponsford, Jennie L., and Barlow, Karen M. (eds.), Concussion Rehabilitation, Frontiers in Neurology Research Topic eBook, Frontiers Media SA, Lausanne, September 2020 (DOI 10.3389/978-2-88966-037-7); 17 articles, Front. Neurol. 10 and 11, 2019-2020. The local file is the publisher's complete eBook PDF (7,556,938 bytes; sha256 b85b7096a50cafa997ab756f117326f798347f97b81c0e37e46ee4ae61b88131 over str(size) plus file bytes, book_id b85b7096a50cafa9). The extracted text is the publisher's two-column layout with columns interleaved in the text stream; every verbatim quote was taken from a passage that is contiguous in that stream and was verified by normalized substring search against the text file, so some quotes are sentence fragments where a column break interrupts the sentence. The work is a clinical rehabilitation literature collection: it contains no displayed equations, so all primitives carry empty latex and statistics are quoted as reported estimates. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "mtbi_gcs_definition",
+      "name": "Mild traumatic brain injury is defined by Glasgow Coma Scale (GCS) score 13-15",
+      "verbatim_quote": "defined by Glasgow Coma Scale (GCS) score 13-15 (3,",
+      "page": "Yue et al., Front. Neurol. 10:343, eBook p. 5; text line 299",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "GCS at emergency department presentation is the severity classifier",
+        "The definition is applied to patients presenting to acute care"
+      ],
+      "breakdown_regime": "GCS 13-15 compresses a wide severity range into one class; patients who never present to care fall outside the frame entirely",
+      "domain": "clinical epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A class label defined by one threshold is a coarse prior, not a state estimate: the engine should treat threshold-defined classes as heterogeneous mixtures and demand within-class features before reasoning about an individual case.",
+        "source_operator": "mtbi_gcs_definition",
+        "telemetry": "Severity scores at presentation, class definitions, cohort provenance"
+      }
+    },
+    {
+      "primitive_id": "preinjury_psychiatric_migraine_prognosis",
+      "name": "Pre-injury psychiatric history and headache/migraine history are risk factors for worse functional and post-concussive outcomes at 3 and 6 months after mTBI",
+      "verbatim_quote": "Pre-injury psychiatric and pre-injury headache/migraine symptoms are risk factors for worse functional and post-concussive outcomes at 3- and 6-months post-mTBI.",
+      "page": "Yue et al., Front. Neurol. 10:343, eBook p. 5; text line 276",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pre-injury comorbidity status is accurately captured by clinical interview and record review",
+        "GOSE and ACE subdomains measure the outcomes of interest"
+      ],
+      "breakdown_regime": "Association is observational in a 260-patient blunt mTBI cohort; confounding by socioeconomic status, treatment access and reporting style is not excluded",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Baseline state dominates event severity in trajectory prediction: pre-event features of the unit carry more signal about recovery time than the event's own measured severity, so the engine should weight pre-event baselines above event descriptors when forecasting return to full function.",
+        "source_operator": "preinjury_psychiatric_migraine_prognosis",
+        "telemetry": "Pre-injury history fields, prior symptom burden, prior absence records, baseline functional scores"
+      }
+    },
+    {
+      "primitive_id": "preinjury_migraine_or_functional_disability",
+      "name": "Pre-injury headache/migraine history carried an odds ratio of 4.10 for functional disability (GOSE 6 or less) at 3 months after mTBI",
+      "verbatim_quote": "headache/migraine (GOSE ≤ 6: OR = 4.10 [1.67-10.07]; ACE-sleep: B = 0.57 [0.15-1.00]; ACE-emotional: B = 0.92 [0.35-1.49]), and gastrointestinal history (ACE-physical: B = 1.25 [0.41-2.10]) were multivariable predictors of worse outcomes.",
+      "page": "Yue et al., Front. Neurol. 10:343, eBook p. 5; text line 269",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Multivariable model included comorbidities above 10 percent incidence",
+        "Bonferroni threshold p < 0.0083 controls false positives"
+      ],
+      "breakdown_regime": "Confidence interval is wide (1.67 to 10.07); a single-cohort estimate that needs external replication before use as a calibrated weight",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A single strong baseline marker can outweigh the headline event variable by a large factor; the engine should maintain per-feature effect sizes with uncertainty intervals and let a wide-interval strong marker flag a case for surveillance rather than forcing a point prediction.",
+        "source_operator": "preinjury_migraine_or_functional_disability",
+        "telemetry": "Feature-level odds ratios with confidence intervals, cohort size, replication status"
+      }
+    },
+    {
+      "primitive_id": "functional_disability_base_rate_mtbi",
+      "name": "30.8 percent of mTBI patients had functional disability (GOSE 6 or less) at 3 and 6 months; psychiatric history carried OR 2.75 at 3 months",
+      "verbatim_quote": "separately, 30.8% had GOSE ≤ 6. At 3-months, psychiatric (GOSE ≤ 6: OR = 2.75,",
+      "page": "Yue et al., Front. Neurol. 10:343, eBook p. 5; text line 255",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "GOSE 6 or less is a valid cut for functional disability",
+        "Follow-up completers resemble the enrolled cohort"
+      ],
+      "breakdown_regime": "Base rate is specific to trauma-center blunt mTBI with CT indication; community and sports concussion populations differ",
+      "domain": "clinical epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Recovery base rates anchor every individual forecast: the engine should start from the population non-recovery rate at each horizon and update from it, instead of assuming full recovery as the default outcome.",
+        "source_operator": "functional_disability_base_rate_mtbi",
+        "telemetry": "Outcome rates by horizon, follow-up completeness, population definition"
+      }
+    },
+    {
+      "primitive_id": "prolonged_rest_advice_harm",
+      "name": "Advice to rest for more than 2 days after mTBI is associated with delayed return to work and school at 1 to 2 months",
+      "verbatim_quote": "prolonged rest after mTBI is generally unhelpful, as patients in the exposure group were less likely to have resumed work/school at 1-2 months post-injury.",
+      "page": "Silverberg & Otamendi, Front. Neurol. 10:362, eBook p. 14; text line 862",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Retrospective self-report of rest advice is accurate",
+        "Case-control comparison groups are exchangeable apart from the advice"
+      ],
+      "breakdown_regime": "Exposure measured by recall up to 3 months post-injury; residual confounding by injury severity or clinician style is possible; 121 of 146 patients reported the exposure, so the comparison group is small",
+      "domain": "rehabilitation practice",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Inactivity is an intervention with its own harm profile: holding a unit out beyond a short window degrades the very outcome the hold was meant to protect, so return-to-activity timing in the engine is an optimization with costs on both sides, not a safety-only decision.",
+        "source_operator": "prolonged_rest_advice_harm",
+        "telemetry": "Time out of activity, return dates, advice or protocol exposure flags"
+      }
+    },
+    {
+      "primitive_id": "bctt_heart_rate_threshold",
+      "name": "The Buffalo Concussion Treadmill Test identifies the heart rate threshold (HRt) of exercise tolerance in concussed patients",
+      "verbatim_quote": "The Buffalo Concussion Treadmill Test (BCTT) identifies the heart rate threshold (HRt) of exercise tolerance in concussed patients.",
+      "page": "Haider et al., Front. Neurol. 10:395, eBook p. 20; text line 1238",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Treadmill protocol increments workload in a standardized way",
+        "The symptom exacerbation point is identifiable during the test"
+      ],
+      "breakdown_regime": "Threshold depends on protocol, medications, fitness and effort; a single absolute value does not transfer across individuals",
+      "domain": "physiology of recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A stress test reveals state that resting measurement cannot, and failure-point telemetry converts a vague status (not recovered) into a number that can be tracked and prescribed against; the engine should record the load at which performance degrades, not only whether it degraded.",
+        "source_operator": "bctt_heart_rate_threshold",
+        "telemetry": "Graded exertion results, threshold heart rates, test protocol identifiers"
+      }
+    },
+    {
+      "primitive_id": "delta_hr_recovery_prediction",
+      "name": "Delta HR (resting HR to HRt) was significantly lower in prolonged recovery over 30 days, and correlated with recovery duration in the rest and placebo groups but not the aerobic group",
+      "verbatim_quote": "(p = 0.011, R2 = 0.126) but not for AG (p = 0.084, R2 = 0.059). 1HR values were significantly lower in participants with prolonged recovery (>30 days) in RG (p = 0.01)",
+      "page": "Haider et al., Front. Neurol. 10:395, eBook p. 20; text line 1255",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Resting heart rate is measured under comparable conditions",
+        "Data pooled from two prior randomized trials of adolescents within 10 days of injury"
+      ],
+      "breakdown_regime": "The predictor lost significance in the aerobic-exercise group, so the marker's validity is treatment-dependent; adolescent athlete cohort only",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Normalizing a measurement by the subject's own resting baseline removes between-subject scale differences, but a predictor can be invalidated by the intervention itself; the engine should re-validate markers within each treatment arm instead of assuming transportability.",
+        "source_operator": "delta_hr_recovery_prediction",
+        "telemetry": "Resting baselines, threshold measurements, paired within-subject series, treatment arm labels"
+      }
+    },
+    {
+      "primitive_id": "exercise_intolerance_definition",
+      "name": "Symptom-limited exercise intolerance is the inability to exercise to the level predicted for one's age and fitness because of symptom exacerbation",
+      "verbatim_quote": "exercise to the level predicted for one's age and fitness because of symptom exacerbation, helps",
+      "page": "Haider et al., Front. Neurol. 10:395, eBook p. 20; text line 1277",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Predicted exercise capacity for age and fitness is estimable",
+        "Symptom exacerbation on exertion reflects physiology rather than effort alone"
+      ],
+      "breakdown_regime": "Exercise intolerance is not specific to concussion; cervical, vestibular and deconditioning causes can produce the same test behavior",
+      "domain": "physiology of recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Define dysfunction by performance under graded load relative to a predicted level, not by resting complaints; the engine should express capacity as achieved-versus-predicted under load wherever a load test exists.",
+        "source_operator": "exercise_intolerance_definition",
+        "telemetry": "Achieved versus predicted workload, symptom onset point, age and fitness norms"
+      }
+    },
+    {
+      "primitive_id": "ppcs_time_thresholds",
+      "name": "Persistent post-concussive symptoms are symptoms lasting more than 2 weeks in adults and more than 1 month in adolescents",
+      "verbatim_quote": "2 weeks in adults and for more than 1 month in adolescents,",
+      "page": "Haider et al., Front. Neurol. 10:395, eBook p. 20; text line 1297",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Age group determines which threshold applies",
+        "Persistence is judged against expected recovery windows (most recover in 7 to 10 days)"
+      ],
+      "breakdown_regime": "Thresholds are conventions that differ across guidelines; crossing a time threshold changes the label, not the underlying biology",
+      "domain": "clinical epidemiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Time-based state transitions need explicit, population-specific thresholds in the engine, with the threshold carried as data so a case can be reclassified when conventions change.",
+        "source_operator": "ppcs_time_thresholds",
+        "telemetry": "Days since event, age band, guideline threshold tables"
+      }
+    },
+    {
+      "primitive_id": "no_cognitive_instrument_fully_validated",
+      "name": "There is insufficient evidence for the validity and reliability of instruments measuring cognitive functioning longitudinally in TBI",
+      "verbatim_quote": "Conclusions: There is insufficient evidence for the validity and reliability of instruments measuring cognitive functioning, longitudinally, in persons with TBI. Several instruments with well-defined construct validity in TBI samples warrant further assessment for test-retest reliability and responsiveness.",
+      "page": "D'Souza et al., Front. Neurol. 10:353, eBook p. 27; text line 1757",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The systematic review (38 longitudinal studies, 15 instruments) captured the evaluative literature",
+        "Feinstein and Kirshner-Guyatt criteria are the right standard for evaluative measures"
+      ],
+      "breakdown_regime": "Absence of assessment is not absence of validity; the finding describes the evidence base as of the 2019 search, and properties are population-specific",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Widely used instruments can be unvalidated for the exact use they are put to; the engine should track validation status per use case, not per instrument name, and downgrade confidence where the specific use is untested.",
+        "source_operator": "no_cognitive_instrument_fully_validated",
+        "telemetry": "Validation coverage matrices, instrument by population by property"
+      }
+    },
+    {
+      "primitive_id": "responsiveness_definition",
+      "name": "Responsiveness is an instrument's ability to detect small, clinically significant differences in a construct over time",
+      "verbatim_quote": "Responsiveness refers to an instrument's ability to detect small,",
+      "page": "D'Souza et al., Front. Neurol. 10:353, eBook p. 27; text line 1808",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A clinically significant difference can be specified independently of the instrument",
+        "Responsiveness is inversely related to between-person variability in change scores"
+      ],
+      "breakdown_regime": "In high-variability populations a larger true effect is needed before the instrument registers it, so null results may be instrument failures rather than absence of change",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Detection limits belong in the engine's signal model: every tracked metric has a smallest detectable change, and movements below it should be reported as unresolved rather than as zero change.",
+        "source_operator": "responsiveness_definition",
+        "telemetry": "Smallest detectable change per metric, change-score variability"
+      }
+    },
+    {
+      "primitive_id": "fnirs_rtms_response_biomarker",
+      "name": "A two-patient case study suggests fNIRS may be sensitive to physiological changes accompanying rTMS treatment in persistent post-concussion symptoms",
+      "verbatim_quote": "Conclusion: This case study suggests fNIRS may be sensitive to physiological changes that accompany rTMS treatment. Further studies exploring fNIRS as a cost-effective technology for monitoring rTMS response in patients with PPCS are suggested.",
+      "page": "Stilling et al., Front. Neurol. 10:476, eBook p. 51; text line 3451",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "fNIRS hemodynamic response to a working memory task reflects cortical physiology",
+        "Clinical improvement over the same window was attributable to the rTMS course"
+      ],
+      "breakdown_regime": "Two-patient case study with no control condition; hypothesis-generating only, and cost-effectiveness is asserted, not measured",
+      "domain": "neuromodulation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A cheap portable proxy sensor that moves with clinical state can serve as an early response readout before outcomes mature; the engine should cultivate leading physiological indicators but label case-study-grade evidence as unproven.",
+        "source_operator": "fnirs_rtms_response_biomarker",
+        "telemetry": "Proxy sensor streams, response marker time series, evidence grade per marker"
+      }
+    },
+    {
+      "primitive_id": "rtms_mechanism",
+      "name": "Repetitive transcranial magnetic stimulation applies a rapidly alternating magnetic field to the scalp to induce an electrical stimulus in targeted brain tissue",
+      "verbatim_quote": "alternating magnetic field applied to the scalp induces an",
+      "page": "Stilling et al., Front. Neurol. 10:476, eBook p. 51; text line 3473",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Induced current depolarizes neurons in the target region",
+        "Frequency and intensity determine excitatory versus inhibitory effect (the study used 10 Hz, 600 pulses, 70 percent of resting motor threshold to left DLPFC)"
+      ],
+      "breakdown_regime": "Effects are focal and protocol-dependent; evidence for PPCS treatment was preliminary at the time of writing",
+      "domain": "neuromodulation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Targeted perturbation is a diagnostic as well as a treatment: applying a known stimulus to one node and watching the response identifies the node's state, a pattern the engine can reuse whenever it can intervene on a single component and observe.",
+        "source_operator": "rtms_mechanism",
+        "telemetry": "Stimulation parameters, target sites, pre and post response measures"
+      }
+    },
+    {
+      "primitive_id": "pcs_symptom_nonspecificity",
+      "name": "Defining the post-concussion syndrome is fundamentally challenged by the non-specificity of its symptoms, which are common in healthy people",
+      "verbatim_quote": "A fundamental challenge in defining the syndrome is",
+      "page": "Iverson, Front. Neurol. 10:489, eBook p. 60; text line 4050",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Base rates of the same symptoms in uninjured people are the right comparator",
+        "Symptom checklists elicit the same items across populations"
+      ],
+      "breakdown_regime": "Non-specificity does not mean symptoms are unrelated to injury in a given case; it means the symptom alone cannot carry the attribution",
+      "domain": "diagnostic frameworks",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Every signal needs a base rate in the unaffected population before it can be evidence: the engine should store false-positive base rates for its indicators and compute attribution against them, not against zero.",
+        "source_operator": "pcs_symptom_nonspecificity",
+        "telemetry": "Symptom base rates in controls, indicator prevalence by population"
+      }
+    },
+    {
+      "primitive_id": "network_perspective_thesis",
+      "name": "Adopting a network perspective for persistent symptoms after MTBI could lead to new insights and targeted treatment and rehabilitation strategies",
+      "verbatim_quote": "It is the thesis of this paper that adopting a network perspective for persistent symptoms following MTBI, including the post-concussion syndrome, could lead to new insights and targeted treatment and rehabilitation strategies.",
+      "page": "Iverson, Front. Neurol. 10:489, eBook p. 60; text line 4066",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Symptoms causally influence each other (insomnia worsens fatigue, fatigue worsens concentration)",
+        "The network, not a hidden disease entity, is the unit of analysis"
+      ],
+      "breakdown_regime": "At the time of writing no published study had applied network analysis to persistent symptoms after MTBI; the thesis is a research program, not a result",
+      "domain": "systems modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Some target states are networks, not latent variables: when indicators reinforce each other, the engine should model the interaction graph directly instead of compressing indicators into one hidden score.",
+        "source_operator": "network_perspective_thesis",
+        "telemetry": "Symptom co-occurrence data, longitudinal symptom panels, edge weight estimates"
+      }
+    },
+    {
+      "primitive_id": "network_mutually_reinforcing_symptoms",
+      "name": "In the network perspective, symptoms co-occur because they are strongly inter-related, activating, amplifying and mutually reinforcing, not because they arise from a common latent disease entity",
+      "verbatim_quote": "The network perspective posits that symptoms co-occur because they are strongly inter-related, activating, amplifying, and mutually reinforcing, not because they arise from a common latent disease entity.",
+      "page": "Iverson, Front. Neurol. 10:489, eBook p. 60; text line 3971",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pairwise symptom associations reflect real causal interplay",
+        "A latent common cause is not required to explain co-occurrence"
+      ],
+      "breakdown_regime": "Network edges estimated from cross-sectional data are associations; causal direction and within-person dynamics require longitudinal data the field largely lacks",
+      "domain": "systems modeling",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mutual reinforcement creates persistence without any single cause staying active: the engine should expect self-sustaining states after the original trigger resolves, and should model exit as breaking the loop rather than removing the trigger.",
+        "source_operator": "network_mutually_reinforcing_symptoms",
+        "telemetry": "Longitudinal symptom panels, loop gain estimates, state persistence after trigger removal"
+      }
+    },
+    {
+      "primitive_id": "precision_rehabilitation_network",
+      "name": "Precision rehabilitation requires understanding the interconnections among symptoms and problems to produce more individualized and effective treatment",
+      "verbatim_quote": "The promise of precision rehabilitation requires us to better understand the",
+      "page": "Iverson, Front. Neurol. 10:489, eBook p. 60; text line 3983",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Symptom interconnections can be estimated per subgroup",
+        "Sequencing interventions by network structure improves on uniform protocols"
+      ],
+      "breakdown_regime": "Programmatic claim from a conceptual paper; no trial in the volume tests a network-guided rehabilitation sequence",
+      "domain": "systems modeling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Personalization follows from structure: once the engine knows which elements are connected and which are central for a subgroup, it can sequence interventions per subgroup instead of applying one protocol to everyone.",
+        "source_operator": "precision_rehabilitation_network",
+        "telemetry": "Subgroup profiles, intervention sequences, per-profile outcomes"
+      }
+    },
+    {
+      "primitive_id": "early_mvpa_delays_clearance",
+      "name": "Youth ice hockey players with high accelerometer-measured MVPA in the first 3 days after concussion took significantly longer to be medically cleared to return to play (p = 0.041)",
+      "verbatim_quote": "high activity group took significantly more time to be medically cleared to return to play (chi2 = 4.18, p = 0.041) compared to the low activity group (Figure 2).",
+      "page": "Lishchynsky et al., Front. Neurol. 10:588, eBook p. 70; text line 4683",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Median split at 148.5 cumulative MVPA minutes separates exposure meaningfully",
+        "Medical clearance time is a valid recovery endpoint"
+      ],
+      "breakdown_regime": "Small cohort (30 players); observational, so high early activity may mark milder perceived symptoms rather than cause delay; the direction contradicts other early-activity studies and needs replication",
+      "domain": "activity and recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Dose timing matters and more is not monotone better: very early high load after an event was associated with slower clearance in this cohort, so the engine should model activity dose by time window with a possible harm region, not a single linear benefit.",
+        "source_operator": "early_mvpa_delays_clearance",
+        "telemetry": "Objective activity minutes by day since event, clearance dates, dose window definitions"
+      }
+    },
+    {
+      "primitive_id": "self_report_activity_unreliable",
+      "name": "Self-reported physical activity is an unreliable measurement method, prone to desirability bias; accelerometry is the valid alternative",
+      "verbatim_quote": "shown to be an unreliable method of measuring activity, prone",
+      "page": "Lishchynsky et al., Front. Neurol. 10:588, eBook p. 70; text line 4738",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Actigraph accelerometry validated against oxygen consumption is the reference standard here",
+        "Adolescent cut-points from Romanzini et al. classify intensity correctly"
+      ],
+      "breakdown_regime": "Accelerometers miss some activities (swimming, upper-body work) and wear compliance varies; objective does not mean complete",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-reported exposure data should be down-weighted against instrumented measurement wherever both exist; the engine should tag every exposure variable with its measurement route and bias profile.",
+        "source_operator": "self_report_activity_unreliable",
+        "telemetry": "Measurement route metadata, device wear time, self-report versus device discrepancies"
+      }
+    },
+    {
+      "primitive_id": "fear_avoidance_cycle",
+      "name": "Avoiding exercise after concussion bolsters the fear that symptoms mean greater injury, generating a self-maintaining cycle of disability",
+      "verbatim_quote": "exercise, bolstering their fear, and generating a cycle of disability.",
+      "page": "Chrisman et al., Front. Neurol. 10:623, eBook p. 78; text line 5235",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The pain fear-avoidance model transfers to concussion symptoms",
+        "Avoidance maintains deconditioning and symptom focus"
+      ],
+      "breakdown_regime": "Model is theoretical for concussion; the trial measured fear-avoidance of pain but found no significant group difference on it",
+      "domain": "behavioral mechanisms",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Avoidance loops are self-sealing: a unit that stops exposing itself to a load never generates the evidence that the load is now safe, so the engine should treat non-exposure as missing data with a known bias, not as evidence of incapacity.",
+        "source_operator": "fear_avoidance_cycle",
+        "telemetry": "Exposure and avoidance behavior logs, fear or confidence ratings, return-to-activity attempts"
+      }
+    },
+    {
+      "primitive_id": "step_program_symptom_trajectory",
+      "name": "In a pilot RCT, a 6-week sub-threshold exercise program made concussive symptoms decline more rapidly than stretching control (p = 0.02)",
+      "verbatim_quote": "more rapidly in intervention youth than control (p = 0.02).",
+      "page": "Chrisman et al., Front. Neurol. 10:623, eBook p. 78; text line 5158",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Exponential trajectory model fits symptom decline",
+        "Two in-person visits plus weekly phone contact is a deliverable dose"
+      ],
+      "breakdown_regime": "Pilot trial: 32 randomized, 30 completed, weighted 2:1 allocation; effect is a trajectory difference, not a clearance or cure difference",
+      "domain": "rehabilitation practice",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Compare trajectories, not endpoints: modeling the rate of decline separates treatments that merely end at the same place, and the engine should fit decay rates to recovery curves as first-class parameters.",
+        "source_operator": "step_program_symptom_trajectory",
+        "telemetry": "Longitudinal symptom scores, trajectory model parameters, completion rates"
+      }
+    },
+    {
+      "primitive_id": "psychosocial_predictors_distress",
+      "name": "Patients with earlier anxiety and whiplash-associated disorder were more likely to develop psychological distress after MTBI (with low education and earlier psychiatric diagnosis also implicated)",
+      "verbatim_quote": "earlier anxiety and WAD were more likely to develop a psychological distress after a MTBI.",
+      "page": "Vikane et al., Front. Neurol. 10:639, eBook p. 88; text line 5775",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "HAD scale at 2 months measures psychological distress",
+        "Hierarchical regression steps separate demographic, injury and post-injury variables"
+      ],
+      "breakdown_regime": "Norwegian rehabilitation-clinic cohort of 162 sick-listed patients; in the final regression step only self-reported anxiety and WAD remained associated",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Distress outcomes are predicted by who the person was before the event and by comorbid injury, not by event severity; the engine should route psychological-outcome forecasts through baseline and comorbidity features first.",
+        "source_operator": "psychosocial_predictors_distress",
+        "telemetry": "Education, psychiatric history, anxiety history, associated injury flags"
+      }
+    },
+    {
+      "primitive_id": "injury_severity_null_distress",
+      "name": "Psychological distress after MTBI showed no association with injury characteristics like Glasgow Coma Scale severity or intracranial injury",
+      "verbatim_quote": "injury-characteristics like severity at Glasgow Coma Scale or intracranial injury.",
+      "page": "Vikane et al., Front. Neurol. 10:639, eBook p. 88; text line 5771",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "GCS and intracranial injury status were accurately recorded",
+        "The cohort had enough severity variation to detect an association if present"
+      ],
+      "breakdown_regime": "Null result in one modest cohort; range restriction (all MTBI) limits the severity contrast the test can detect",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A null association is information: when the obvious severity variable fails to predict an outcome class, the engine should stop spending model capacity on it for that outcome and reallocate to the feature family that does predict.",
+        "source_operator": "injury_severity_null_distress",
+        "telemetry": "Feature-outcome association tables including nulls, severity distributions"
+      }
+    },
+    {
+      "primitive_id": "activity_dose_timing_principle",
+      "name": "Low levels of activity benefit the acute stage after concussion, while higher levels of activity may provide benefit at later stages",
+      "verbatim_quote": "Although low levels of activity have been previously shown to be beneficial during the acute stage of injury, higher levels of activity may provide benefit at later stages.",
+      "page": "Remigio-Baker et al., Front. Neurol. 10:602, eBook p. 96; text line 6357",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Activity level and type were measured with a multi-domain questionnaire at 1 and 3 months",
+        "Neurobehavioral Symptom Inventory measures subsequent symptoms"
+      ],
+      "breakdown_regime": "Small sample (39 service members); correlational, so activity at 1 month may reflect recovery already underway rather than cause it; the 1-month activity association with 3-month symptoms did not extend to 6 months",
+      "domain": "activity and recovery",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Effects have an action window: the same exposure helps, harms or does nothing depending on the stage at which it is applied, so the engine should estimate effects per time window and let them expire instead of pooling all post-event time.",
+        "source_operator": "activity_dose_timing_principle",
+        "telemetry": "Activity by domain and month, symptom scores at staggered horizons, stage labels"
+      }
+    },
+    {
+      "primitive_id": "retrospective_baseline_stability",
+      "name": "Children and adolescents recall retrospective pre-injury symptom ratings with good-to-perfect stability over the first 3 months after concussion",
+      "verbatim_quote": "ratings with good-to-perfect stability over the first 3-months following their concussion.",
+      "page": "Teel et al., Front. Neurol. 10:672, eBook p. 105; text line 6884",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Repeated retrospective queries measure recall stability (Gini's mean difference)",
+        "PCSI age-banded versions (SR5, SR8, SR13) are comparable"
+      ],
+      "breakdown_regime": "Stability of recall is not accuracy of recall; a stable but biased baseline (good-old-days bias) would pass this test, and item-level stability was much weaker than scale-level",
+      "domain": "measurement",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A reconstructed baseline can be reliable enough to use when a true pre-event baseline was never collected, provided its stability is measured; the engine should quantify reconstruction stability before trusting reconstructed baselines.",
+        "source_operator": "retrospective_baseline_stability",
+        "telemetry": "Repeated baseline reconstructions, stability coefficients, time since event"
+      }
+    },
+    {
+      "primitive_id": "rts_rta_parallel_progression",
+      "name": "Youth can progress simultaneously through return-to-school and return-to-activity protocols during stages 1 to 3 after concussion",
+      "verbatim_quote": "Youth can progress simultaneously through the RTS and RTA protocols during",
+      "page": "DeMatteo et al., Front. Neurol. 10:792, eBook p. 115; text line 7671",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "CanChild six-stage protocols for school and activity are comparable in staging",
+        "Electronic surveys every 48 hours captured stage progression"
+      ],
+      "breakdown_regime": "Single-cohort observational data; the recommendation to delay full-contact stage 6 until school reintegration is the authors' inference, not a randomized contrast",
+      "domain": "return to activity",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Parallel tracks with one gated final stage beat a strict sequence when the tracks load different systems: the engine should model return pathways as parallel progressions with explicit cross-track gates only where a real dependency exists.",
+        "source_operator": "rts_rta_parallel_progression",
+        "telemetry": "Stage progression timestamps per track, gate conditions, completion order"
+      }
+    },
+    {
+      "primitive_id": "rts_rta_median_times",
+      "name": "Median full return to school was 35 days (21 percent still symptomatic) and median full return to sport competition 38 days (15 percent still symptomatic)",
+      "verbatim_quote": "Median full return to school time is 35 days with 21% of youth symptomatic at full",
+      "page": "DeMatteo et al., Front. Neurol. 10:792, eBook p. 115; text line 7660",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Full return is self-reported through the protocol surveys",
+        "Symptomatic-at-return is measured at the return date"
+      ],
+      "breakdown_regime": "Return dates under protocol supervision differ from unmonitored settings; medians hide the long right tail of slow recoveries, and 64 percent reported school problems during recovery",
+      "domain": "return to activity",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "A substantial minority return while still symptomatic, so return date is not a recovery certificate; the engine should keep symptom state and participation state as separate variables that can diverge.",
+        "source_operator": "rts_rta_median_times",
+        "telemetry": "Return dates, symptom status at return, protocol stage at return"
+      }
+    },
+    {
+      "primitive_id": "response_inconsistency_mediation",
+      "name": "In former professional football players, concussion exposure had an indirect effect on depression, mania and aggression via inconsistency of responding on a go/no-go task",
+      "verbatim_quote": "Mediation analysis revealed that concussion exposure had a significant indirect effect on PAI Depression, Mania, and Aggression via inconsistency of responding on the go/no-go task.",
+      "page": "Terpstra et al., Front. Neurol. 10:712, eBook p. 124; text line ?",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Go/no-go response inconsistency is a valid executive-function marker",
+        "Cross-sectional mediation reflects a causal pathway"
+      ],
+      "breakdown_regime": "Cross-sectional mediation cannot establish direction; pre-morbid cohort factors also contributed, and the sample is 61 high-functioning former players with 31 controls",
+      "domain": "neuropsychology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Variability of performance can carry more signal than average performance: response inconsistency mediated the exposure-outcome link here, so the engine should compute consistency statistics (within-subject variance) as features, not only means.",
+        "source_operator": "response_inconsistency_mediation",
+        "telemetry": "Trial-level response data, within-subject variability, exposure counts"
+      }
+    },
+    {
+      "primitive_id": "mph_inverted_u_dose",
+      "name": "Methylphenidate dose effects follow an inverted U-shaped function: high doses impair cognition, too low a dose fails to improve it",
+      "verbatim_quote": "dose effects of MPH have an inverted U-shaped function where high doses may cause",
+      "page": "Levin et al., Front. Neurol. 10:925, eBook p. 136; text line 9011",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "MPH raises extracellular dopamine and norepinephrine (PET and SPECT evidence)",
+        "Cognitive performance tracks catecholamine levels non-monotonically"
+      ],
+      "breakdown_regime": "Inverted-U position varies by person and baseline state; the optimum cannot be read off a population curve for an individual patient",
+      "domain": "pharmacology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Non-monotone dose response breaks linear intuition: for any input with an inverted-U effect, the engine must estimate where the subject sits on the curve before recommending more or less, because the same increment helps on one side and harms on the other.",
+        "source_operator": "mph_inverted_u_dose",
+        "telemetry": "Dose levels, baseline state markers, response by dose"
+      }
+    },
+    {
+      "primitive_id": "dat_stratified_mph_response",
+      "name": "A translational SPECT study found that TBI patients with low pretreatment dopamine transporter (DAT) level in the caudate were the ones who responded to methylphenidate",
+      "verbatim_quote": "TBI patients found that those with low pretreatment DAT level",
+      "page": "Levin et al., Front. Neurol. 10:925, eBook p. 136; text line 9059",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Pretreatment DAT level is measurable by SPECT",
+        "The study used 0.3 mg/kg MPH for 2 weeks in a randomized cross-over design with complex reaction time as outcome"
+      ],
+      "breakdown_regime": "Single translational study in moderate to severe TBI; patients with normal baseline DAT showed no significant MPH effect, and the biomarker is not part of routine clinical workup",
+      "domain": "pharmacology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Treatment response can be gated by a pretreatment biomarker: the engine should look for responder subgroups defined by baseline state before averaging a treatment effect across everyone.",
+        "source_operator": "dat_stratified_mph_response",
+        "telemetry": "Pretreatment biomarker values, response by biomarker stratum"
+      }
+    },
+    {
+      "primitive_id": "aerobic_training_fluid_cognition",
+      "name": "Only sub-symptom aerobic training, not stretching, was potentially beneficial for neurocognitive recovery (fluid cognition), while quality of life improved in both groups",
+      "verbatim_quote": "Quality of life improved significantly in both the aerobic exercise and stretching groups; however, this study suggests that only sub-symptom exacerbation aerobic training was potentially beneficial for neurocognitive recovery, particularly the fluid cognition subset in the NIH Toolbox.",
+      "page": "Gladstone et al., Front. Neurol. 10:1002, eBook p. 146; text line 9671",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "NIH Toolbox age-adjusted cognition scores are valid outcomes",
+        "Within-group paired tests are interpretable despite null between-group tests"
+      ],
+      "breakdown_regime": "Pilot trial with 30 adolescents and only 22 percent of eligible participants enrolled; between-group differences were not significant, so the claim is suggestive, not confirmatory",
+      "domain": "rehabilitation practice",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Non-specific benefits (quality of life) can improve under any structured activity while specific benefits (cognition) track the active ingredient; the engine should separate generic engagement effects from mechanism-specific effects when crediting an intervention.",
+        "source_operator": "aerobic_training_fluid_cognition",
+        "telemetry": "Outcome by domain, control-arm outcomes, enrollment fraction"
+      }
+    },
+    {
+      "primitive_id": "active_rehab_cluster_trial",
+      "name": "The Active Rehab Study is an international cluster-randomized pragmatic trial evaluating early multidimensional rehabilitation integrated with return-to-sport strategy",
+      "verbatim_quote": "cluster-randomized pragmatic trial evaluates the effectiveness of early multi-dimensional",
+      "page": "Register-Mihalik et al., Front. Neurol. 10:1176, eBook p. 155; text line 10206",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cluster randomization by site prevents protocol contamination",
+        "Pre-season baseline enrollment captures true pre-injury status across 28 sites in three countries"
+      ],
+      "breakdown_regime": "Methodology paper: no outcome results yet; primary endpoints are time to medical clearance and time to become asymptomatic",
+      "domain": "trial design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When individual randomization is impractical, randomize clusters and enroll before the event: the engine's own evaluation designs should likewise pre-register baselines before outcomes occur and assign interventions at the unit level that avoids contamination.",
+        "source_operator": "active_rehab_cluster_trial",
+        "telemetry": "Site assignments, baseline batteries, endpoint definitions"
+      }
+    },
+    {
+      "primitive_id": "atypical_somatic_symptoms_poor_recovery",
+      "name": "Adults with poor recovery from mTBI had significantly higher atypical somatic symptoms than healthy controls (Sample 1: b = 4.308, p < 0.001) and than good-recovery patients",
+      "verbatim_quote": "compared to the healthy control group in Sample 1 (b = 4.308, p < 0.001) and to",
+      "page": "Stubbs et al., Front. Neurol. 11:43, eBook p. 170; text line 11118",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PHQ-15 captures atypical somatic burden and RPQ captures typical post-concussion symptoms",
+        "GOSE 8 versus less than 8 separates good from poor recovery"
+      ],
+      "breakdown_regime": "Atypical symptoms overlap with depression, anxiety and PTSD, which were not fully separable; somatization is an interpretation of the pattern, not a direct measurement",
+      "domain": "somatization",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Off-target symptom burden is a signal, not noise: symptoms that cannot belong to the primary condition still track outcome and may mark a modifiable amplifier, so the engine should monitor implausible-symptom load as its own variable.",
+        "source_operator": "atypical_somatic_symptoms_poor_recovery",
+        "telemetry": "Atypical symptom counts, typical symptom counts, recovery status"
+      }
+    },
+    {
+      "primitive_id": "somatization_modifiable_factor",
+      "name": "Somatization may represent an important, modifiable factor in mTBI recovery, alongside the typical post-concussion symptoms that predominate",
+      "verbatim_quote": "Our results suggest that although \"typical\" post-concussion symptoms predominate after mTBI, a broad range of somatic symptoms also frequently accompanies mTBI, and that somatization may represent an important, modifiable factor in mTBI recovery.",
+      "page": "Stubbs et al., Front. Neurol. 11:43, eBook p. 170; text line 4940",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The atypical symptom elevation is not fully explained by typical symptom severity",
+        "Somatization is in principle treatable, unlike fixed injury characteristics"
+      ],
+      "breakdown_regime": "Cross-sectional and cohort associations cannot prove that treating somatization improves recovery; that requires an intervention trial",
+      "domain": "somatization",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Prefer modifiable factors when allocating attention: among all correlates of a bad outcome, the engine should rank highest those that can actually be changed, because only they convert prediction into intervention.",
+        "source_operator": "somatization_modifiable_factor",
+        "telemetry": "Modifiability tags per risk factor, intervention availability, factor prevalence"
+      }
+    },
+    {
+      "primitive_id": "mental_health_strongest_recovery_factor",
+      "name": "Pre- and post-injury mental health problems are the strongest established contributor to poor recovery and functional limitation after mTBI",
+      "verbatim_quote": "problems are the strongest established contributor to poor",
+      "page": "Stubbs et al., Front. Neurol. 11:43, eBook p. 170; text line 11154",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The cited literature ranking reflects consistent multivariable findings",
+        "Mental health is measurable pre- and post-injury with standard instruments"
+      ],
+      "breakdown_regime": "Strength ranking is a literature consensus statement; individual studies differ in which covariates they adjust for",
+      "domain": "prognostication",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Across this whole volume the same ranking recurs: psychological state outpredicts injury mechanics for recovery. The engine should give mental-health and expectation features first-class status in any human recovery model, ahead of event descriptors.",
+        "source_operator": "mental_health_strongest_recovery_factor",
+        "telemetry": "Mental health history and current status, expectation measures, recovery outcomes"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "b85b7096a50cafa9-t1",
+      "think": "This volume is a Frontiers in Neurology Research Topic eBook, Concussion Rehabilitation, edited by Noah D. Silverberg, Jennie L. Ponsford and Karen M. Barlow and published in September 2020, collecting seventeen peer-reviewed articles from 2019 and early 2020. It is not a textbook with one voice; it is a cross-section of a field mid-correction, and its value to a reasoning engine is that the correction is visible in the data rather than asserted in an editorial. The old model of concussion care, complete rest until symptoms resolve, is dismantled from several directions at once: Silverberg and Otamendi show that patients advised to rest beyond two days returned to work and school later; the exercise physiology group around the Buffalo Concussion Treadmill Test shows that graded exertion is measurable, prescribable and prognostic; and two pediatric exercise trials show symptom trajectories bending under sub-symptom aerobic programs. Running through all of it is a second, quieter argument about prediction. Yue and colleagues, in 260 TRACK-TBI patients, find that who the patient was before the injury, psychiatric history and migraine history above all, predicts disability at three and six months, while Vikane finds that injury characteristics such as Glasgow Coma Scale score and intracranial injury do not predict psychological distress at all. Stubbs closes the volume by showing that even symptoms that cannot plausibly belong to the injury track poor recovery, and names somatization as a modifiable factor. The machinery of the book, taken together, is a hierarchy: baseline state first, measurement validity second, mechanism third, intervention dose and timing fourth. D'Souza and colleagues supply the measurement warning in its sharpest form: of fifteen cognitive instruments used longitudinally in TBI, none had been assessed for all the properties an evaluative measure needs, so a literature built on change scores rests partly on unvalidated rulers. Iverson supplies the ontology: persistent symptoms are a network of mutually reinforcing problems embedded in a biopsychosocial context, not the shadow of one latent lesion, which is why anxiety, headache and sleep sit at the center of his hypothetical network and why he argues for precision rehabilitation aimed at central nodes in sequence. The remaining articles fill in working parts: autonomic uncoupling as the proposed mechanism of exercise intolerance, heart rate threshold as its measurable failure point, delta heart rate as the individualized correction to a crude absolute cut-off, fear-avoidance as the behavioral loop that keeps patients from generating recovery evidence, retrospective baselines shown stable enough to reconstruct what was never measured, return-to-school and return-to-activity as parallel staged tracks rather than a sequence, response inconsistency as a mediating executive marker in former professional players, an inverted-U catecholamine pharmacology with a biomarker-stratified responder subgroup, and a 28-site cluster-randomized design for testing early multidimensional rehabilitation properly. For a reasoning engine the transferable lessons are concrete. Recovery is a trajectory estimation problem whose strongest features are pre-event. Every outcome label hides a definition that must travel with the data. Every metric needs a validation status and a smallest detectable change. Dose-response can be non-monotone and time-windowed, so effects must be estimated per window and allowed to expire. Aggregation stabilizes noisy items. Variability can outpredict level. And the factors worth acting on are the modifiable ones. The volume's limits are equally concrete: most trials are pilots with tens of participants, several headline findings are single-cohort and observational, the network program had no published application to this population when proposed, and there is not one displayed equation in the book; every quantitative claim arrives as an estimate with an interval, which is exactly how the engine should store them. The individual results reward close reading because several pairs of articles constrain each other. Lishchynsky's hockey cohort, with activity measured by accelerometer rather than self-report, found that the high-activity group in the first three days took significantly longer to clear, which sits in visible tension with the early-activity benefit reported elsewhere in the literature and even with Remigio-Baker's military data, where activity at one month predicted fewer symptoms at three months but activity at three months predicted nothing at six. Read together, the pair does not say activity is good or bad; it says the effect of a dose depends on the window in which it is delivered, and that self-reported dose cannot be trusted to test the question. Haider's treadmill data make the complementary point about markers: the absolute heart rate threshold cut-off inherited from earlier work was replaced inside the same paper by a within-subject delta, and that delta then failed to predict in the very group that received the active treatment, a neat demonstration that a prognostic marker and a treatment can interact. Chrisman's pilot shows a symptom trajectory bending under a home program with only two in-person visits, while Gladstone's pilot shows the discipline of a null between-group result: quality of life rose in both arms, cognition only in the aerobic arm, and the authors say plainly that the sample cannot settle the question. Terpstra's former players add the long-horizon warning that inconsistency of responding, a variability statistic, mediated the link between concussion exposure and psychiatric symptoms, and Levin's review adds the pharmacological version of the same lesson, since the stimulant helped only the subgroup whose dopamine transporter binding was low before treatment. DeMatteo's school data, with sixty-four percent of youth reporting school problems during recovery and a fifth returning to school still symptomatic, show why return dates cannot be read as recovery dates. A reasoning engine that ingests this volume properly does not come away with a concussion protocol; it comes away with a set of structural commitments about baselines, windows, markers, variability and modifiability that apply to every recovery process it will ever model.",
+      "retrocausal_genealogy": "The ideas descend from several lineages that converge in this volume. The rest doctrine traces to early twentieth century concussion care and was formalized in the first international concussion consensus statements, which the 2013 Ontario guidelines and the Berlin consensus then reversed. The measurement lineage runs from Feinstein's clinimetrics and Kirshner and Guyatt's evaluative-instrument criteria in the 1980s into the COSMIN-era systematic reviews. The network model descends from Borsboom's network theory of mental disorders in psychiatry, imported here by Iverson. The exercise lineage runs from Leddy and Willer's Buffalo treadmill work through the autonomic dysfunction literature, and the fear-avoidance model migrates from chronic pain psychology, Vlaeyen's tradition, into pediatric concussion care.",
+      "theory_of_mind": "The editors and authors write for clinicians who manage concussion and for researchers designing the next trials, and their shared model of the reader is someone still tempted by two simplifications: that the injury's measured severity should forecast the recovery, and that rest is the safe default. Nearly every article is structured to break one of those habits, substituting baseline assessment, objective measurement and active rehabilitation. They assume the reader accepts randomized and prospective cohort evidence as the arbiter, and they write as reformers inside a guideline-driven field, frequently noting where practice still lags the evidence.",
+      "cross_layer_veto": "Several findings veto common moves in adjacent layers of reasoning. The measurement review vetoes trusting change on any cognitive instrument whose responsiveness is unassessed: a null or positive delta may be ruler error. The prognostic studies veto severity-first triage, since GCS and imaging findings failed to predict distress and disability where psychiatric history succeeded. The network paper vetoes single-cause explanations of persistent symptoms, and the rest studies veto inactivity as a neutral default. Any engine layer that ranks event severity above baseline state, or treats non-exposure as safety, is contradicted by this volume."
+    }
+  ],
+  "universal_lens": "Read as a template, the volume describes how any damaged system recovers: the pre-damage state of the unit predicts the trajectory better than the damage report; measurement instruments must be validated for change, not just for status; graded load below the failure threshold is both the diagnostic and the therapy; avoidance prevents the system from learning it is safe; and the presenting problem is usually a network of reinforcing faults embedded in a context, so repair means finding the central, modifiable nodes and sequencing work on them. That pattern transfers intact to organizations, machines and portfolios, not only to injured brains.",
+  "gsi_mapping": "The Galaxy Sports Institute takes a curriculum and a research agenda: teach prognostic humility (baseline over severity), measurement validity as a gate for every metric taught, exercise dosing as a fraction of an individually measured threshold, and network thinking about symptom clusters. Its applied arm gains validated constructs for athlete health monitoring: heart rate threshold testing, retrospective baseline reconstruction with stability coefficients, parallel return-to-learn and return-to-play staging, and somatization screening as a recovery risk marker worth a treatment pathway rather than a dismissal.",
+  "gse_mapping": "The Galaxy Sports Edge reasoning engine takes feature and architecture upgrades, all in prediction quality rather than wagering: pre-event baseline features weighted above event severity in any availability or recovery forecast; outcome definitions stored beside every label; per-metric validation status and smallest detectable change; dose-response curves that can bend (inverted-U) and expire (time-windowed effects); within-subject deltas preferred over raw levels; consistency statistics as features; symptom-network centrality for prioritizing which absence or limitation matters most; and modifiability ranking so forecasts point at the factors that can actually change before the next observation."
+}
