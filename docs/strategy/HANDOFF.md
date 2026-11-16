@@ -3,6 +3,26 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 (Hermes autonomous cycle #4 — the 2026-11-15 sweep's four false-positive copy-gate hits, cleared in the shared scanners)
+
+- **What changed**:
+  - `scripts/guardrails/trust-gate.mjs` + `apps/web/lib/trust-claims.ts` (PR #1290, branch `fix/lock-digest-shapes-and-attributed-positioning-2026-11-16`, squash-merged to `origin/main` `a3942ae2d`): the 2026-11-15 morning analytics sweep (`7305b780f`) appended its digest to `AGENTS.md` and turned `origin/main` CI red on four jobs/tests in three files — trust-gate, `docs-public-copy-scan.test.ts` (banned-phrase **and** positioning), `guardrails.test.ts`, `calibration-cockpit.test.ts`. Four distinct causes, all false positives of invariants that are real:
+    1-3. Three chart-transcription shapes of the NFL QB named **Lock** no existing surname context covered: `Lock (Weeks 1, 2, 9: 5 TD, 0 INT, 2 sacks)`, `As printed: Lock +0.400 EPA/dropback in 2026`, `the hawkblogger Lock chart` (plus the line-final possessive `Lock's`). New `LOCK_SURNAME_DIGEST_SHAPES`, added to **both mirrored scanners**, case-sensitive and anchored to the chart-copy shape (a `Weeks … :` parenthetical, `±d.d EPA`, the word `chart`, the possessive) — never to the surname alone.
+    4. `3 commercial + 1 free AI-driven @TwoGunFF` is a **third party's** own descriptor, transcribed. `trust-gate.mjs` already exempts attributed third-party positioning copy (`attributedQuote`) but `docs-public-copy-scan.test.ts` had no equivalent, so the two gates were not in lock-step. Added `isAttributedThirdPartyDigestLine` (requires BOTH the `@handle` AND that post's numeric ID — a bare handle is not enough) plus the `positioningDigestExempt` option, applied to root memory docs only.
+  - `AGENTS.md` was **not** edited: it is a protected agent-instruction file and unattended sessions fix the shared scanner — the precedent already written into `trust-claims.ts` by the 2026-10-01 and 2026-11-14 cycles. The three `LOCK_*` constants' comments now carry the new shapes and the same case-sensitivity rationale.
+- **What was proven**:
+  - Before: reproduced locally in the detached `origin/main` worktree — `node scripts/guardrails/trust-gate.mjs` → `FAIL - 3 banned phrase hit(s)` at `AGENTS.md:21845`, `21871`, `21881` (identical to CI run `43894107242`). After → `OK - scanned 4795 file(s); no banned phrases`, re-confirmed on the merged tree `a3942ae2d`.
+  - `node scripts/guardrails/trust-gate.test.mjs` → **11/11** (new test pins the three shapes pass AND `Take the Lock (Weeks 1-3) parlay at 2.5u`, `Lock +0.400 means we lock this in`, `check the lock chart, it's a lock` still fail).
+  - `vitest run __tests__/trust-claims.test.ts` → **41/41**; `__tests__/docs-public-copy-scan.test.ts` → **38/38**; `guardrails.test.ts` + `calibration-cockpit.test.ts` + `public-copy-scanner` + `public-copy-scan-strong` + `brand-safety-v2` + `frontier-guardrail-hardening` + `public-copy-integrity` → **140/140** (includes `trust-gate guardrail exits 0`).
+  - CI on #1290: `Trust gate` and `All guardrails` flipped to SUCCESS; `Run tests (all workspaces)` and the full `Test, type-check, lint, Prisma` job SUCCESS. Only `epistemic-gate` fails, on the pre-existing roster-freshness gate (`roster config as_of 2026-11-07 is 9 days old (max 5)`) — data staleness, not a code defect.
+  - Live surfaces unchanged and consistent: `/llms.txt` still renders `79-46-0 +81.47u`, calibration `53/200`, `47-19-1` labelled superseded.
+- **What was not proven**:
+  - No production runtime logic was exercised — both new constants live in scanners (a CI guard and a doc-scan test), not in an app path. That is the whole change surface.
+- **What the next role must do**:
+  - `epistemic-gate` is the only remaining red on `main`. It is not a code bug: refresh the roster/injury transactions so `preflight_live_roster_injury_gate` passes (config `as_of` must be ≤5 days old), or decide explicitly that the job stays informational. Do not silence it by editing the freshness threshold without a stated reason.
+  - Unchanged from cycles #2/#3: the nightly overnight job's two honest-data defects (`Missing writeup-mnf-401873051`; inactive `tyreek hill` in `canonical_looped_funnel_projections`). Both are Week-9-era artifacts; fixing them means regenerating canonical projections from real roster data, not editing the test.
+  - When a research lane appends a new digest to `AGENTS.md`, expect new surname/copy shapes: reproduce with `node scripts/guardrails/trust-gate.mjs` and extend the shared scanners in both files, keeping each pattern anchored to the transcription shape and case-sensitive.
+
 ## 2026-11-16 (Hermes autonomous cycle #3 — Two-Host Rule: the 22 hardcoded intelligence paths, made portable)
 
 - **What changed**:
