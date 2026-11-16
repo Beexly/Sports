@@ -1363,6 +1363,16 @@ def simulate_matchup_pbp(
     home_wr1_share_emp = 0.26
     away_rb1_share_emp = 0.62
     home_rb1_share_emp = 0.62
+    lb_priors = (
+        dict(w1_w7_override.get("combined_load_bearing_priors") or {})
+        if isinstance(w1_w7_override, dict)
+        else {}
+    )
+    has_lb_stage2 = bool(
+        isinstance(lb_priors, dict)
+        and "away_off_epa_adj" in lb_priors
+        and "home_off_epa_adj" in lb_priors
+    )
 
     if w1_w7_override is not None:
         if jev_state_tensor is None:
@@ -1442,6 +1452,32 @@ def simulate_matchup_pbp(
         home_qb_exec_mult = float(hm_qb_adj["execution_multiplier"])
         away_sack_prob = float(np.clip(away_sack_prob * away_sack_mult, 0.030, 0.195))
         home_sack_prob = float(np.clip(home_sack_prob * home_sack_mult, 0.030, 0.195))
+
+    if has_lb_stage2 and away_qb_tier != "EMERGENCY_QB3_UDFA" and home_qb_tier != "EMERGENCY_QB3_UDFA":
+        if "away_sack_prob_adj" in lb_priors:
+            away_sack_prob = float(
+                np.clip(0.50 * away_sack_prob + 0.50 * float(lb_priors["away_sack_prob_adj"]), 0.030, 0.195)
+            )
+        if "home_sack_prob_adj" in lb_priors:
+            home_sack_prob = float(
+                np.clip(0.50 * home_sack_prob + 0.50 * float(lb_priors["home_sack_prob_adj"]), 0.030, 0.195)
+            )
+        if "away_pace_sec_adj" in lb_priors:
+            tr_away["pace_sec"] = float(
+                np.clip(0.40 * float(tr_away["pace_sec"]) + 0.60 * float(lb_priors["away_pace_sec_adj"]), 23.0, 32.5)
+            )
+        if "home_pace_sec_adj" in lb_priors:
+            tr_home["pace_sec"] = float(
+                np.clip(0.40 * float(tr_home["pace_sec"]) + 0.60 * float(lb_priors["home_pace_sec_adj"]), 23.0, 32.5)
+            )
+        if "away_pass_rate_adj" in lb_priors:
+            tr_away["early_pass_rate"] = float(
+                np.clip(0.45 * float(tr_away["early_pass_rate"]) + 0.55 * float(lb_priors["away_pass_rate_adj"]), 0.34, 0.72)
+            )
+        if "home_pass_rate_adj" in lb_priors:
+            tr_home["early_pass_rate"] = float(
+                np.clip(0.45 * float(tr_home["early_pass_rate"]) + 0.55 * float(lb_priors["home_pass_rate_adj"]), 0.34, 0.72)
+            )
 
     epa_table = sealed_state["epaDropoffTable"]
     base_shares = [0.26, 0.21, 0.17, 0.20, 0.16]
@@ -1576,6 +1612,35 @@ def simulate_matchup_pbp(
 
     away_net_epa = ((tr_away["off_epa"] + away_sit_epa_delta - away_drop) * away_eff_mult) - tr_home["def_epa"]
     home_net_epa = ((tr_home["off_epa"] + home_sit_epa_delta - home_drop) * home_eff_mult) - tr_away["def_epa"] + (tr_home["hfa"] / 79.1)
+    if has_lb_stage2 and away_qb_tier != "EMERGENCY_QB3_UDFA" and home_qb_tier != "EMERGENCY_QB3_UDFA":
+        st2_away_net = float(lb_priors["away_off_epa_adj"]) - float(lb_priors.get("home_def_epa_adj", tr_home["def_epa"]))
+        st2_home_net = (
+            float(lb_priors["home_off_epa_adj"])
+            - float(lb_priors.get("away_def_epa_adj", tr_away["def_epa"]))
+            + (tr_home["hfa"] / 79.1)
+        )
+        away_net_epa = 0.45 * away_net_epa + 0.55 * st2_away_net
+        home_net_epa = 0.45 * home_net_epa + 0.55 * st2_home_net
+
+    ypa_adj_lut = np.array(
+        [float(lb_priors.get("away_ypa_adj_delta", 0.0)), float(lb_priors.get("home_ypa_adj_delta", 0.0))],
+        dtype=np.float64,
+    )
+    rush_ypc_adj_lut = np.array(
+        [float(lb_priors.get("away_rush_ypc_adj_delta", 0.0)), float(lb_priors.get("home_rush_ypc_adj_delta", 0.0))],
+        dtype=np.float64,
+    )
+    rz_td_delta_lut = np.array(
+        [
+            float(lb_priors.get("away_redzone_td_prob_delta", 0.0)),
+            float(lb_priors.get("home_redzone_td_prob_delta", 0.0)),
+        ],
+        dtype=np.float64,
+    )
+    q4_fat_lut = np.array(
+        [float(lb_priors.get("away_q4_fatigue_decay", 0.0)), float(lb_priors.get("home_q4_fatigue_decay", 0.0))],
+        dtype=np.float64,
+    )
 
     r_shrink = 1.0 / (1.0 + 45.0 * 0.04)
     away_pass_delta = (1.0 - r_shrink) * (tr_away["early_pass_rate"] - 0.54)
@@ -1743,6 +1808,7 @@ def simulate_matchup_pbp(
         )
         qtr = (4 - (clock_sec // 900).astype(np.int32)).clip(1, 4)
         net_epa_vec = np.where(qtr >= 3, net_epa_vec + q34_tut_fatigue_scalar, net_epa_vec)
+        net_epa_vec = np.where(qtr == 4, net_epa_vec + q4_fat_lut[poss], net_epa_vec)
         is_4th = active & (down == 4)
         is_1to3 = active & (down < 4)
 
@@ -1822,7 +1888,13 @@ def simulate_matchup_pbp(
             )
             p_pass = (base_p + pass_delta_lut[ps_v] + script_pass_mod).clip(0.15, 0.90)
             cur_sacks_v = np.where(is_hm, home_sacks[idx_13], away_sacks[idx_13])
-            comp_base_v = comp_base_lut[ps_v] + spatial_comp_delta_lut[ps_v] - trauma_comp_pen_scalar * np.minimum(4, cur_sacks_v)
+            rz_comp_adj = np.where(yl_v <= 20, -0.020 + 0.35 * rz_td_delta_lut[ps_v], 0.0)
+            comp_base_v = (
+                comp_base_lut[ps_v]
+                + spatial_comp_delta_lut[ps_v]
+                + rz_comp_adj
+                - trauma_comp_pen_scalar * np.minimum(4, cur_sacks_v)
+            )
             comp_floor_v = comp_floor_lut[ps_v]
             int_mult_v = int_mult_lut[ps_v]
             sack_prob_v = (sack_prob_lut[ps_v] + spatial_sack_delta_lut[ps_v] + trauma_sack_add_scalar * np.minimum(4, cur_sacks_v)).clip(0.030, 0.195)
@@ -1842,13 +1914,19 @@ def simulate_matchup_pbp(
             to_prob = ((np.where(is_pass, 0.021, 0.008) - 0.015 * ne_v) * np.where(is_pass, int_mult_v, 1.0)).clip(0.003, 0.075)
             is_to = u_out < to_prob
             pass_comp = np.minimum(0.78, np.maximum(comp_floor_v, comp_base_v + 0.38 * ne_v))
-            pass_mu = (11.4 + 14.5 * ne_v + spatial_pass_mu_delta_lut[ps_v]).clip(4.0, 22.0)
+            third_long_depth = np.where((dn_v == 3) & (yd_v >= 7), 1.35, 0.0)
+            pass_mu = (
+                11.4 + 14.5 * ne_v + spatial_pass_mu_delta_lut[ps_v] + ypa_adj_lut[ps_v] + third_long_depth
+            ).clip(4.0, 22.0)
             pass_draw = rng.gamma(shape=2.5, scale=pass_mu * 0.4, size=n_13)
             pass_yds = np.where(
                 u_out < (to_prob + sack_prob_v), -rng.integers(5, 9, size=n_13),
                 np.where(u_out < (to_prob + sack_prob_v + pass_comp), np.rint(pass_draw).astype(np.int32), 0)
             )
-            run_mu = (5.9 + 9.5 * ne_v + spatial_rush_delta_lut[ps_v]).clip(2.5, 12.0)
+            rz_rush_adj = np.where(yl_v <= 20, 2.5 * rz_td_delta_lut[ps_v], 0.0)
+            run_mu = (
+                5.9 + 9.5 * ne_v + spatial_rush_delta_lut[ps_v] + rush_ypc_adj_lut[ps_v] + rz_rush_adj
+            ).clip(2.5, 12.0)
             run_draw = rng.gamma(shape=2.2, scale=run_mu / 2.2, size=n_13) - 1.5
             run_yds = np.rint(run_draw).astype(np.int32)
             yds = np.where(is_pass, pass_yds, run_yds)
@@ -1962,10 +2040,12 @@ def simulate_matchup_pbp(
     if posted_home_spread is not None and posted_total is not None:
         market_margin = -float(posted_home_spread)
         market_total = float(posted_total)
-        lambda_margin = 0.25 if has_emergency_qb3 else 0.85
-        lambda_total = 0.45 if has_emergency_qb3 else 0.84
-        margin_bound = 10.5 if has_emergency_qb3 else 2.85
-        total_bound = 5.5 if has_emergency_qb3 else 2.85
+        # Preserve Week 9 JAX@BAL emergency-QB3 calibration untouched; tighten normal/QB2 Layer-1 market
+        # anchoring (THE STACK) so unanchored simulation drift never emits +10..19% phantom game-line edges.
+        lambda_margin = 0.25 if has_emergency_qb3 else 0.88
+        lambda_total = 0.45 if has_emergency_qb3 else 0.86
+        margin_bound = 10.5 if has_emergency_qb3 else 2.00
+        total_bound = 5.5 if has_emergency_qb3 else 2.40
         shrunk_margin = float(
             np.clip(
                 market_margin + (1.0 - lambda_margin) * (raw_margin - market_margin),

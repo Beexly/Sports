@@ -7,71 +7,71 @@
 
 | Player | Team | Pos | Salary | Proj Median | P90 Ceiling |
 |---|---|---|---|---|---|
-| Trevor Lawrence | JAX | QB | $6600 | 23.75 | 51.06 |
-| C.J. Stroud | HOU | QB | $5900 | 23.01 | 49.47 |
-| Josh Allen | BUF | QB | $7500 | 23.29 | 50.07 |
-| Christian McCaffrey | SF | RB | $8500 | 23.16 | 49.79 |
-| James Cook III | BUF | RB | $7400 | 22.73 | 48.87 |
-| Kyren Williams | LAR | RB | $7100 | 19.98 | 42.96 |
-| Ashton Jeanty | LV | RB | $5400 | 18.43 | 39.62 |
-| CeeDee Lamb | DAL | WR | $8800 | 18.96 | 40.76 |
-| Matthew Golden | GB | WR | $7300 | 15.58 | 33.5 |
-| Jaxon Smith-Njigba | SEA | WR | $9300 | 15.12 | 32.51 |
-| George Pickens | DAL | WR | $6300 | 14.05 | 30.21 |
-| Tetairoa McMillan | CAR | WR | $6700 | 13.81 | 29.69 |
-| Dalton Schultz | HOU | TE | $3400 | 12.68 | 27.26 |
-| Brock Bowers | LV | TE | $7600 | 14.09 | 30.29 |
-| George Kittle | SF | TE | $6500 | 13.39 | 28.79 |
-| Cardinals | ARI | DST | $2200 | 8.29 | 18.24 |
-| Titans | TEN | DST | $2000 | 7.85 | 17.27 |
-| Raiders | LV | DST | $2400 | 7.71 | 16.96 |
+| Josh Allen | BUF | QB | $7500 | 22.72 | 28.45 |
+| Trevor Lawrence | JAX | QB | $6600 | 20.91 | 27.7 |
+| Brock Purdy | SF | QB | $7000 | 20.64 | 25.63 |
+| Emmett Johnson | KC | RB | $4700 | 25.56 | 34.67 |
+| Christian McCaffrey | SF | RB | $8500 | 21.91 | 31.85 |
+| Bijan Robinson | ATL | RB | $8200 | 20.67 | 29.06 |
+| Kyren Williams | LAR | RB | $7100 | 18.58 | 27.5 |
+| CeeDee Lamb | DAL | WR | $8800 | 24.41 | 35.09 |
+| Christian Watson | GB | WR | $7700 | 18.65 | 27.99 |
+| Matthew Golden | GB | WR | $7300 | 17.64 | 26.91 |
+| Drake London | ATL | WR | $6600 | 17.23 | 26.44 |
+| Parker Washington | JAX | WR | $6200 | 16.6 | 26.21 |
+| Travis Kelce | KC | TE | $4700 | 15.91 | 25.02 |
+| George Kittle | SF | TE | $6500 | 16.77 | 26.57 |
+| Gavin Bartholomew | MIN | TE | $2500 | 12.14 | 20.33 |
+| Cardinals | ARI | DST | $2200 | 8.59 | 18.9 |
+| Titans | TEN | DST | $2000 | 7.72 | 16.98 |
+| Dolphins | MIA | DST | $2600 | 8.27 | 18.19 |
 
 ## 2. Combinatorial Roster Sweeps
 
 | Archetype | Team | Core Stack | Total Sal | Combined Median |
 |---|---|---|---|---|
-| QB + WR1 Primary Stack | BUF | Josh Allen + Khalil Shakir | $12800 | 34.83 |
-| QB + WR1 + TE1 Double Pass-Catcher | BUF | Josh Allen + Khalil Shakir + Dalton Kincaid | $17900 | 45.01 |
-| QB + WR1 + BringBack Game Stack | BUF | Josh Allen + Khalil Shakir + Breece Hall | $18700 | 47.4 |
-| QB + WR1 Primary Stack | NYJ | Geno Smith + Garrett Wilson | $11300 | 30.86 |
-| QB + WR1 + TE1 Double Pass-Catcher | NYJ | Geno Smith + Garrett Wilson + Mason Taylor | $14200 | 38.64 |
-| QB + WR1 + BringBack Game Stack | NYJ | Geno Smith + Garrett Wilson + James Cook III | $18700 | 53.59 |
-| QB + WR1 Primary Stack | CAR | Bryce Young + Tetairoa McMillan | $12500 | 34.45 |
-| QB + WR1 + TE1 Double Pass-Catcher | CAR | Bryce Young + Tetairoa McMillan + Feleipe Franks | $15000 | 40.45 |
-| QB + WR1 + BringBack Game Stack | CAR | Bryce Young + Tetairoa McMillan + Chris Olave | $19500 | 46.5 |
-| QB + WR1 Primary Stack | NO | Tyler Shough + Chris Olave | $12600 | 29.11 |
+| QB + WR1 Primary Stack | BUF | Josh Allen + Khalil Shakir | $12800 | 36.49 |
+| QB + WR1 + TE1 Double Pass-Catcher | BUF | Josh Allen + Khalil Shakir + Dalton Kincaid | $17900 | 51.27 |
+| QB + WR1 + BringBack Game Stack | BUF | Josh Allen + Khalil Shakir + Breece Hall | $18700 | 48.8 |
+| QB + WR1 Primary Stack | NYJ | Geno Smith + Garrett Wilson | $11300 | 26.27 |
+| QB + WR1 + TE1 Double Pass-Catcher | NYJ | Geno Smith + Garrett Wilson + Kenyon Sadiq | $14100 | 31.02 |
+| QB + WR1 + BringBack Game Stack | NYJ | Geno Smith + Garrett Wilson + James Cook III | $18700 | 45.05 |
+| QB + WR1 Primary Stack | CAR | Bryce Young + Tetairoa McMillan | $12500 | 32.87 |
+| QB + WR1 + TE1 Double Pass-Catcher | CAR | Bryce Young + Tetairoa McMillan + Darren Waller | $16100 | 39.38 |
+| QB + WR1 + BringBack Game Stack | CAR | Bryce Young + Tetairoa McMillan + Chris Olave | $19500 | 49.62 |
+| QB + WR1 Primary Stack | NO | Tyler Shough + Chris Olave | $12600 | 32.17 |
 
 ## 3. Contest Archetype: Cash Optimal (0.60*Median + 0.40*P25 Floor)
 
-**Total Salary:** $50000 | **Projected Median:** 147.22 | **P90 Ceiling:** 316.93
+**Total Salary:** $49900 | **Projected Median:** 160.39 | **P90 Ceiling:** 240.05
 
 | Slot | Player | Team | Pos | Salary | Proj Pts | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
-| QB | C.J. Stroud | HOU | QB | $5900 | 23.01 | 9.66 | 49.47 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 23.16 | 9.73 | 49.79 |
-| RB | James Cook III | BUF | RB | $7400 | 22.73 | 9.55 | 48.87 |
-| WR | George Pickens | DAL | WR | $6300 | 14.05 | 5.9 | 30.21 |
-| WR | Nico Collins | HOU | WR | $6900 | 13.42 | 5.64 | 28.85 |
-| WR | Xavier Hutchinson | HOU | WR | $4000 | 11.45 | 4.81 | 24.62 |
-| TE | Dalton Schultz | HOU | TE | $3400 | 12.68 | 5.33 | 27.26 |
-| FLEX | Ashton Jeanty | LV | RB | $5400 | 18.43 | 7.74 | 39.62 |
-| DST | Cardinals | ARI | DST | $2200 | 8.29 | 2.9 | 18.24 |
+| QB | Patrick Mahomes | KC | QB | $6000 | 19.28 | 16.62 | 24.33 |
+| RB | Emmett Johnson | KC | RB | $4700 | 25.56 | 20.77 | 34.67 |
+| RB | Bijan Robinson | ATL | RB | $8200 | 20.67 | 16.26 | 29.06 |
+| WR | Drake London | ATL | WR | $6600 | 17.23 | 12.39 | 26.44 |
+| WR | Parker Washington | JAX | WR | $6200 | 16.6 | 11.55 | 26.21 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 24.41 | 18.8 | 35.09 |
+| TE | Travis Kelce | KC | TE | $4700 | 15.91 | 11.12 | 25.02 |
+| FLEX | Gavin Bartholomew | MIN | TE | $2500 | 12.14 | 7.84 | 20.33 |
+| DST | Cardinals | ARI | DST | $2200 | 8.59 | 3.01 | 18.9 |
 
 ## 4. Contest Archetype: High-Ownership Chalk Benchmark
 
-**Total Salary:** $49900 | **Projected Median:** 149.65 | **P90 Ceiling:** 322.15
+**Total Salary:** $50000 | **Projected Median:** 157.02 | **P90 Ceiling:** 239.36
 
 | Slot | Player | Team | Pos | Salary | Proj Pts | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
-| QB | C.J. Stroud | HOU | QB | $5900 | 23.01 | 9.66 | 49.47 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 23.16 | 9.73 | 49.79 |
-| RB | James Cook III | BUF | RB | $7400 | 22.73 | 9.55 | 48.87 |
-| WR | Xavier Worthy | KC | WR | $4300 | 10.94 | 4.59 | 23.52 |
-| WR | CeeDee Lamb | DAL | WR | $8800 | 18.96 | 7.96 | 40.76 |
-| WR | Xavier Hutchinson | HOU | WR | $4000 | 11.45 | 4.81 | 24.62 |
-| TE | Dalton Schultz | HOU | TE | $3400 | 12.68 | 5.33 | 27.26 |
-| FLEX | Ashton Jeanty | LV | RB | $5400 | 18.43 | 7.74 | 39.62 |
-| DST | Cardinals | ARI | DST | $2200 | 8.29 | 2.9 | 18.24 |
+| QB | Trevor Lawrence | JAX | QB | $6600 | 20.91 | 17.34 | 27.7 |
+| RB | Emmett Johnson | KC | RB | $4700 | 25.56 | 20.77 | 34.67 |
+| RB | Christian McCaffrey | SF | RB | $8500 | 21.91 | 16.68 | 31.85 |
+| WR | Parker Washington | JAX | WR | $6200 | 16.6 | 11.55 | 26.21 |
+| WR | Jakobi Meyers | JAX | WR | $4200 | 10.95 | 6.69 | 19.06 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 24.41 | 18.8 | 35.09 |
+| TE | Travis Kelce | KC | TE | $4700 | 15.91 | 11.12 | 25.02 |
+| FLEX | Brenton Strange | JAX | TE | $4100 | 12.18 | 7.61 | 20.86 |
+| DST | Cardinals | ARI | DST | $2200 | 8.59 | 3.01 | 18.9 |
 
 ## 5. MME 20-Max Portfolio Summary
 
@@ -79,4 +79,4 @@ Generated 20 diversified lineups with max overlap <= 6 and exposure capping.
 Full JSON packet available at `main_lateswap_packet.json`.
 
 ---
-*Generated by GSE Weekly Empirical DFS Orchestrator at 2026-11-15 20:29:36 UTC*
+*Generated by GSE Weekly Empirical DFS Orchestrator at 2026-11-16 08:39:14 UTC*

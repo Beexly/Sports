@@ -31,7 +31,7 @@ import math
 import os
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -40,8 +40,16 @@ import numpy as np
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT / "intelligence") not in sys.path:
     sys.path.append(str(REPO_ROOT / "intelligence"))
+if str(REPO_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT / "src"))
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+from gse_engine.compute.corpus_situational_integrator import (  # noqa: E402
+    apply_vmls_kkt_and_corpus_shares,
+    assert_all_books_pdfs_ig_x_situational_wired,
+    compile_all_books_pdfs_ig_x_and_situational_priors,
+)
 
 from intelligence.models.gse_213_equation_engine import (  # noqa: E402
     BASES,
@@ -856,6 +864,115 @@ def _get_espn_week10_odds_lookup() -> dict[tuple[str, str], dict[str, Any]]:
     return _get_espn_scoreboard_odds_lookup(10)
 
 
+def _norm_qb_pbp_abbr(full_name: str) -> str:
+    """Convert full player name (e.g. 'Tommy DeVito', 'C.J. Stroud') to nflverse PBP form ('T.DeVito', 'C.Stroud')."""
+    parts = [p for p in str(full_name or "").replace(".", " ").split() if p.lower() not in {"jr", "sr", "ii", "iii", "iv", "v"}]
+    if not parts:
+        return ""
+    if len(parts) == 1:
+        return parts[0].lower()
+    first_initial = parts[0][0].upper()
+    last_name = parts[-1]
+    return f"{first_initial}.{last_name}".lower()
+
+
+def _get_2026_pbp_team_rates_and_qb_attempts() -> dict[str, Any]:
+    """Return cached 2026 PBP team gross pass/rush yds per game and league-wide passer attempt counts."""
+    cached = globals().get("_PBP_2026_RATES_AND_QB_CACHE")
+    if isinstance(cached, dict) and cached.get("team_rates"):
+        return cached
+
+    team_rates: dict[str, dict[str, float]] = {}
+    qb_league_att: dict[str, int] = {}
+    qb_league_yds: dict[str, float] = {}
+    qb_team_att: dict[tuple[str, str], int] = {}
+    team_top_att: dict[str, int] = {}
+    try:
+        import pandas as pd  # noqa: PLC0415
+
+        pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+        slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+        cols = ["posteam", "game_id", "pass_attempt", "passing_yards", "rushing_yards", "passer_player_name"]
+        pbp = None
+        if pbp_path.is_file():
+            try:
+                pbp = pd.read_parquet(pbp_path, columns=cols)
+            except Exception:
+                pbp = pd.read_parquet(pbp_path)
+        elif slim_csv_path.is_file():
+            pbp = pd.read_csv(slim_csv_path, usecols=lambda c: c in set(cols), compression="gzip", low_memory=False)
+
+        if pbp is not None and not pbp.empty:
+            pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR", "WSH": "WAS", "JAC": "JAX"})
+            gp_series = pbp.groupby("posteam")["game_id"].nunique()
+            pass_yds_sum = pbp.groupby("posteam")["passing_yards"].sum(min_count=1).fillna(0.0)
+            rush_yds_sum = pbp.groupby("posteam")["rushing_yards"].sum(min_count=1).fillna(0.0)
+            for tm, gp_val in gp_series.items():
+                tm_u = str(tm or "").strip().upper()
+                if not tm_u or gp_val <= 0:
+                    continue
+                team_rates[tm_u] = {
+                    "games": float(gp_val),
+                    "pass_yds_pg": float(pass_yds_sum.get(tm, 0.0)) / float(gp_val),
+                    "rush_yds_pg": float(rush_yds_sum.get(tm, 0.0)) / float(gp_val),
+                }
+
+            pa_df = pbp[pbp["pass_attempt"] == 1].copy()
+            pa_df["passer_norm"] = pa_df["passer_player_name"].astype(str).str.strip().str.lower()
+            for (tm, p_norm), grp in pa_df.groupby(["posteam", "passer_norm"]):
+                if not p_norm or p_norm == "nan":
+                    continue
+                cnt = int(len(grp))
+                py = float(grp["passing_yards"].fillna(0.0).sum())
+                tm_u = str(tm or "").strip().upper()
+                qb_league_att[p_norm] = qb_league_att.get(p_norm, 0) + cnt
+                qb_league_yds[p_norm] = qb_league_yds.get(p_norm, 0.0) + py
+                qb_team_att[(tm_u, p_norm)] = cnt
+                if cnt > team_top_att.get(tm_u, 0):
+                    team_top_att[tm_u] = cnt
+    except Exception:
+        pass
+
+    out = {
+        "team_rates": team_rates,
+        "qb_league_att": qb_league_att,
+        "qb_league_yds": qb_league_yds,
+        "qb_team_att": qb_team_att,
+        "team_top_att": team_top_att,
+    }
+    globals()["_PBP_2026_RATES_AND_QB_CACHE"] = out
+    return out
+
+
+def _infer_week_qb_tier(team: str, week: int) -> tuple[str, str]:
+    """Infer ('QB1' | 'QB2_BACKUP' | 'EMERGENCY_QB3_UDFA', starter_name) from Week Stage-0 config & 2026 PBP."""
+    tm_u = str(team or "").strip().upper()
+    preflight_path = REPO_ROOT / "data" / "engine" / f"week{int(week)}_stage0_preflight_config.json"
+    qb_name = ""
+    if preflight_path.is_file():
+        try:
+            pref = json.loads(preflight_path.read_text(encoding="utf-8"))
+            qb_map = pref.get("confirmed_qb1") or {}
+            qb_name = str(qb_map.get(tm_u) or qb_map.get("LA" if tm_u == "LAR" else tm_u) or "").strip()
+        except Exception:
+            qb_name = ""
+    default_healthy_tier = "QB1_STARTER" if int(week) >= 10 else "QB1"
+    if not qb_name:
+        return (default_healthy_tier, "")
+
+    if "fagnano" in qb_name.lower():
+        return ("EMERGENCY_QB3_UDFA", qb_name)
+
+    stats = _get_2026_pbp_team_rates_and_qb_attempts()
+    qb_norm = _norm_qb_pbp_abbr(qb_name)
+    league_att = int((stats.get("qb_league_att") or {}).get(qb_norm, 0))
+    tm_top = int((stats.get("team_top_att") or {}).get(tm_u, 0))
+    # True low-sample backup / emergency replacement: < 90 league pass attempts while team's primary starter threw >= 120
+    if league_att < 90 and tm_top >= 120:
+        return ("QB2_BACKUP", qb_name)
+    return (default_healthy_tier, qb_name)
+
+
 def _get_matchup_env(away: str, home: str, week: int = 9) -> dict[str, Any]:
     away_u = "LAR" if away.strip().upper() == "LA" else away.strip().upper()
     home_u = "LAR" if home.strip().upper() == "LA" else home.strip().upper()
@@ -887,6 +1004,8 @@ def _get_matchup_env(away: str, home: str, week: int = 9) -> dict[str, Any]:
         venue_name = str(espn_row.get("venue_name") or f"{home_u} Home Venue")
         over_tot_odds = int(espn_row["over_tot_odds"]) if espn_row.get("over_tot_odds") is not None else -110
         under_tot_odds = int(espn_row["under_tot_odds"]) if espn_row.get("under_tot_odds") is not None else -110
+        aw_tier, _ = _infer_week_qb_tier(away_u, wk)
+        hm_tier, _ = _infer_week_qb_tier(home_u, wk)
         env: dict[str, Any] = {
             "window": str(espn_row.get("window_detail") or f"Week {wk} Slate"),
             "posted_home_spread": posted_home_sp,
@@ -908,8 +1027,8 @@ def _get_matchup_env(away: str, home: str, week: int = 9) -> dict[str, Any]:
             "temp_f": 70.0 if is_indoor else 54.0,
             "precip_prob": 0.0 if is_indoor else 0.10,
             "short_week": 0.0,
-            "away_qb_tier": "QB1",
-            "home_qb_tier": "QB1",
+            "away_qb_tier": aw_tier,
+            "home_qb_tier": hm_tier,
             "weather_note": (
                 f"{away_u} @ {home_u} Week {wk} venue={venue_name} "
                 f"(indoor={is_indoor}, wind={'0 mph' if is_indoor else '6 mph'}, temp={'70F' if is_indoor else '54F'})"
@@ -2428,7 +2547,7 @@ def compile_stage1_to_stage2_simulation_priors(
         or qb_override.get("qb_tier")
         or ("EMERGENCY_QB3_UDFA" if "Fagnano" in bal_starter_name else env_cfg.get("home_qb_tier", "QB1"))
     ).strip().upper()
-    active_qb_tier = home_qb_tier if home_qb_tier != "QB1" else away_qb_tier
+    active_qb_tier = home_qb_tier if home_qb_tier not in ("QB1", "QB1_STARTER") else away_qb_tier
 
     # 1. Build unified situational game context & run Wave 11 X-Situational Layer-2 Compiler + Q1-Q51 Registry + 32-Team X/IG 360 Charting
     verified_athletes_map = (game_context or {}).get("verified_board_athletes") or {}
@@ -2685,8 +2804,8 @@ def compile_stage1_to_stage2_simulation_priors(
             "total": float(env_cfg.get("posted_total", 44.5)),
             "open_spread": float(env_cfg.get("open_home_spread", env_cfg.get("posted_home_spread", -3.0))),
             "open_total": float(env_cfg.get("open_total", env_cfg.get("posted_total", 44.5))),
-            "away_qb_tier": 1 if away_qb_tier == "QB1" else (2 if "BACKUP" in away_qb_tier else 3),
-            "home_qb_tier": 1 if home_qb_tier == "QB1" else (2 if "BACKUP" in home_qb_tier else 3),
+            "away_qb_tier": 1 if away_qb_tier in ("QB1", "QB1_STARTER") else (2 if "BACKUP" in away_qb_tier else 3),
+            "home_qb_tier": 1 if home_qb_tier in ("QB1", "QB1_STARTER") else (2 if "BACKUP" in home_qb_tier else 3),
         },
         family_raw_z=wave13_family_z,
         away_pbp=aw_pbp_st,
@@ -2788,8 +2907,8 @@ def compile_stage1_to_stage2_simulation_priors(
             "away_pbp": aw_pbp_st,
             "home_pbp": hm_pbp_st,
             "env": env_cfg,
-            "away_qb_tier": "STARTER" if away_qb_tier == "QB1" else away_qb_tier,
-            "home_qb_tier": "STARTER" if home_qb_tier == "QB1" else home_qb_tier,
+            "away_qb_tier": "STARTER" if away_qb_tier in ("QB1", "QB1_STARTER") else away_qb_tier,
+            "home_qb_tier": "STARTER" if home_qb_tier in ("QB1", "QB1_STARTER") else home_qb_tier,
             "away_ol_starters_out": int(merged_game_context.get("away_ol_starters_out", 0) or 0),
             "home_ol_starters_out": int(merged_game_context.get("home_ol_starters_out", 2 if home_qb_tier == "EMERGENCY_QB3_UDFA" else 0) or 0),
             "posted_home_spread": float(env_cfg.get("posted_home_spread", -3.0)),
@@ -2875,6 +2994,26 @@ def compile_stage1_to_stage2_simulation_priors(
     away_18auth_epa = float(live_18_authority_upgrade.get("away_epa_18_authority_delta", 0.0))
     home_18auth_epa = float(live_18_authority_upgrade.get("home_epa_18_authority_delta", 0.0))
 
+    unified_corpus_priors = compile_all_books_pdfs_ig_x_and_situational_priors(
+        away_team=away_tm,
+        home_team=home_tm,
+        week=wk_num,
+        merged_game_context=merged_game_context,
+        stage1a_receipt=stage1a_receipt,
+        stage1b_receipt=stage1b_receipt,
+        pbp_ftn_32=pbp_ftn_32,
+        x_and_ig_360_charting=x_and_ig_360_charting,
+        full_repo_situational=full_repo_situational,
+        gdrive_onedrive_overlay=gdrive_onedrive_overlay,
+        uncompressed_25k_bridge=uncompressed_25k_bridge,
+        x_layer2_overlay=x_layer2_overlay,
+        q1_to_q51_registry=q1_to_q51_registry,
+        env_cfg=env_cfg,
+        verified_athletes_map=verified_athletes_map,
+    )
+    aw_epa_corpus_delta = float(unified_corpus_priors["away_epa_corpus_delta"])
+    hm_epa_corpus_delta = float(unified_corpus_priors["home_epa_corpus_delta"])
+
     away_off_epa_delta_sit = float(
         np.clip(
             0.25 * gdrive_epa_delta
@@ -2890,9 +3029,10 @@ def compile_stage1_to_stage2_simulation_priors(
             - 0.20 * gsi_step2_health_delta
             - eq_gate_12k_epa_shift
             + qb2x2_away_shift
-            + 0.20 * away_18auth_epa,
-            -0.065,
-            0.065,
+            + 0.20 * away_18auth_epa
+            + 0.45 * aw_epa_corpus_delta,
+            -0.070,
+            0.070,
         )
     )
     home_off_epa_delta_sit = float(
@@ -2910,9 +3050,10 @@ def compile_stage1_to_stage2_simulation_priors(
             + 0.20 * gsi_step2_health_delta
             + eq_gate_12k_epa_shift
             + qb2x2_home_shift
-            + 0.20 * home_18auth_epa,
-            -0.075,
-            0.065,
+            + 0.20 * home_18auth_epa
+            + 0.45 * hm_epa_corpus_delta,
+            -0.080,
+            0.070,
         )
     )
     away_off_epa_adj = round(away_off_epa + away_off_epa_delta_sit, 4)
@@ -2974,7 +3115,7 @@ def compile_stage1_to_stage2_simulation_priors(
     law_evals = x_layer2_overlay.get("law_evaluations") or {}
     completion_floor = (
         float(home_qb_adj["completion_floor"])
-        if home_qb_tier != "QB1"
+        if home_qb_tier not in ("QB1", "QB1_STARTER")
         else float(away_qb_adj["completion_floor"])
     )
     sack_rate_mult = float(s2_summary.get("sack_rate_mult", 1.48))
@@ -3023,18 +3164,47 @@ def compile_stage1_to_stage2_simulation_priors(
         )
     )
 
+    if is_w10_plus_s2 and not is_jax_bal_pair:
+        aw_raw_comp_eff = (
+            max(0.55, raw_away_comp - 0.04)
+            if away_qb_tier == "QB2_BACKUP"
+            else (
+                raw_away_comp * float(away_qb_adj["execution_multiplier"])
+                if away_qb_tier not in ("QB1", "QB1_STARTER")
+                else raw_away_comp
+            )
+        )
+        hm_raw_comp_eff = (
+            max(0.55, raw_home_comp - 0.04)
+            if home_qb_tier == "QB2_BACKUP"
+            else (
+                raw_home_comp * float(home_qb_adj["execution_multiplier"])
+                if home_qb_tier not in ("QB1", "QB1_STARTER")
+                else raw_home_comp
+            )
+        )
+    else:
+        aw_raw_comp_eff = (
+            raw_away_comp * float(away_qb_adj["execution_multiplier"])
+            if away_qb_tier not in ("QB1", "QB1_STARTER")
+            else raw_away_comp
+        )
+        hm_raw_comp_eff = (
+            raw_home_comp * float(home_qb_adj["execution_multiplier"])
+            if home_qb_tier not in ("QB1", "QB1_STARTER")
+            else raw_home_comp
+        )
+
     away_comp_rate_base = float(
         np.clip(
-            raw_away_comp * float(away_qb_adj["execution_multiplier"])
-            if away_qb_tier != "QB1"
-            else raw_away_comp,
+            aw_raw_comp_eff,
             float(away_qb_adj["completion_floor"]),
             0.74,
         )
     )
     home_comp_rate_base = float(
         np.clip(
-            raw_home_comp * float(home_qb_adj["execution_multiplier"]),
+            hm_raw_comp_eff,
             float(home_qb_adj["completion_floor"]),
             0.72,
         )
@@ -3042,7 +3212,10 @@ def compile_stage1_to_stage2_simulation_priors(
     away_comp_rate_adj = round(
         float(
             np.clip(
-                away_comp_rate_base + 0.35 * gdrive_comp_delta - 0.50 * aero_deep_comp_pen,
+                away_comp_rate_base
+                + 0.35 * gdrive_comp_delta
+                - 0.50 * aero_deep_comp_pen
+                + 0.50 * float(unified_corpus_priors["away_comp_rate_corpus_delta"]),
                 float(away_qb_adj["completion_floor"]),
                 0.74,
             )
@@ -3052,7 +3225,10 @@ def compile_stage1_to_stage2_simulation_priors(
     home_comp_rate_adj = round(
         float(
             np.clip(
-                home_comp_rate_base + 0.45 * gdrive_comp_delta - 0.50 * aero_deep_comp_pen,
+                home_comp_rate_base
+                + 0.45 * gdrive_comp_delta
+                - 0.50 * aero_deep_comp_pen
+                + 0.50 * float(unified_corpus_priors["home_comp_rate_corpus_delta"]),
                 float(home_qb_adj["completion_floor"]),
                 0.72,
             )
@@ -3062,8 +3238,32 @@ def compile_stage1_to_stage2_simulation_priors(
 
     away_early_pass_base = float(np.clip(0.538 + away_proe, 0.36, 0.68))
     home_early_pass_base = float(np.clip(0.505 + home_proe, 0.32, 0.64))
-    away_pass_rate_adj = round(float(np.clip(away_early_pass_base + 0.30 * gdrive_pass_delta + 0.40 * x360_away_pass_delta, 0.36, 0.68)), 4)
-    home_pass_rate_adj = round(float(np.clip(home_early_pass_base + 0.45 * gdrive_pass_delta + 0.40 * x360_home_pass_delta, 0.32, 0.64)), 4)
+    away_pass_rate_adj = round(
+        float(
+            np.clip(
+                away_early_pass_base
+                + 0.30 * gdrive_pass_delta
+                + 0.40 * x360_away_pass_delta
+                + 0.55 * float(unified_corpus_priors["away_pass_rate_corpus_delta"]),
+                0.36,
+                0.68,
+            )
+        ),
+        4,
+    )
+    home_pass_rate_adj = round(
+        float(
+            np.clip(
+                home_early_pass_base
+                + 0.45 * gdrive_pass_delta
+                + 0.40 * x360_home_pass_delta
+                + 0.55 * float(unified_corpus_priors["home_pass_rate_corpus_delta"]),
+                0.32,
+                0.64,
+            )
+        ),
+        4,
+    )
 
     fg_make_prob_delta = round(float(gdrive_vec.get("fg_make_prob_delta", 0.0)), 4)
     cqr_interval_width_mult = round(
@@ -3113,12 +3313,39 @@ def compile_stage1_to_stage2_simulation_priors(
     combined_load_bearing_priors = {
         "away_off_epa_adj": away_off_epa_adj,
         "home_off_epa_adj": home_off_epa_adj,
+        "away_def_epa_adj": round(away_def_epa, 4),
+        "home_def_epa_adj": round(home_def_epa, 4),
         "away_off_epa_delta_situational": round(away_off_epa_delta_sit, 4),
         "home_off_epa_delta_situational": round(home_off_epa_delta_sit, 4),
         "away_comp_rate_adj": away_comp_rate_adj,
         "home_comp_rate_adj": home_comp_rate_adj,
         "away_pass_rate_adj": away_pass_rate_adj,
         "home_pass_rate_adj": home_pass_rate_adj,
+        "away_sack_prob_adj": float(unified_corpus_priors["away_sack_prob_adj"]),
+        "home_sack_prob_adj": float(unified_corpus_priors["home_sack_prob_adj"]),
+        "away_ypa_adj_delta": float(unified_corpus_priors["away_ypa_adj_delta"]),
+        "home_ypa_adj_delta": float(unified_corpus_priors["home_ypa_adj_delta"]),
+        "away_rush_ypc_adj_delta": float(unified_corpus_priors["away_rush_ypc_adj_delta"]),
+        "home_rush_ypc_adj_delta": float(unified_corpus_priors["home_rush_ypc_adj_delta"]),
+        "away_pace_sec_adj": float(unified_corpus_priors["away_pace_sec_adj"]),
+        "home_pace_sec_adj": float(unified_corpus_priors["home_pace_sec_adj"]),
+        "away_redzone_td_prob_delta": float(unified_corpus_priors["away_redzone_td_prob_delta"]),
+        "home_redzone_td_prob_delta": float(unified_corpus_priors["home_redzone_td_prob_delta"]),
+        "away_q4_fatigue_decay": float(unified_corpus_priors["away_q4_fatigue_decay"]),
+        "home_q4_fatigue_decay": float(unified_corpus_priors["home_q4_fatigue_decay"]),
+        "away_epa_corpus_delta": float(unified_corpus_priors["away_epa_corpus_delta"]),
+        "home_epa_corpus_delta": float(unified_corpus_priors["home_epa_corpus_delta"]),
+        "away_comp_rate_corpus_delta": float(unified_corpus_priors["away_comp_rate_corpus_delta"]),
+        "home_comp_rate_corpus_delta": float(unified_corpus_priors["home_comp_rate_corpus_delta"]),
+        "away_pass_rate_corpus_delta": float(unified_corpus_priors["away_pass_rate_corpus_delta"]),
+        "home_pass_rate_corpus_delta": float(unified_corpus_priors["home_pass_rate_corpus_delta"]),
+        "player_target_and_carry_multipliers": unified_corpus_priors["player_target_and_carry_multipliers"],
+        "books_and_pdfs_pillar": unified_corpus_priors["books_and_pdfs_pillar"],
+        "instagram_360_pillar": unified_corpus_priors["instagram_360_pillar"],
+        "x_twitter_pillar": unified_corpus_priors["x_twitter_pillar"],
+        "situational_279_pillar": unified_corpus_priors["situational_279_pillar"],
+        "contextual_coaching_pillar": unified_corpus_priors["contextual_coaching_pillar"],
+        "all_corpus_pillars_verification": unified_corpus_priors["all_corpus_pillars_verification"],
         "fg_make_prob_delta": fg_make_prob_delta,
         "cqr_interval_width_mult": cqr_interval_width_mult,
         "student_t_copula_df_nu": student_t_copula_df_nu,
@@ -3298,31 +3525,45 @@ def run_stage2_jev_spine_and_10k_world_simulation(
             if _mk in spine_raw and _mk not in spine_game:
                 spine_game[_mk] = spine_raw[_mk]
     is_live_week10_plus = int(week) >= 10
-    spine_max_age = 24.0 if is_live_week10_plus else 18.0
+    ref_utc_spine: str | None = "2026-11-05T20:00:00Z" if week <= 9 else None
+    is_historical_replay = False
+    if is_live_week10_plus and env_cfg.get("kickoff_utc"):
+        try:
+            ko_raw = str(env_cfg["kickoff_utc"]).replace("Z", "+00:00")
+            ko_dt = datetime.fromisoformat(ko_raw)
+            if ko_dt.tzinfo is None:
+                ko_dt = ko_dt.replace(tzinfo=timezone.utc)
+            if ko_dt < datetime.now(timezone.utc):
+                is_historical_replay = True
+                ref_utc_spine = ko_dt.astimezone(timezone.utc).isoformat()
+        except Exception:
+            pass
+    spine_max_age = 48.0 if is_live_week10_plus else 18.0
+    strict_spine = bool(is_live_week10_plus and not is_historical_replay)
     spine_freshness = verify_jev_spine_freshness_and_qb1(
         spine_game,
         expected_week=week,
         expected_away_qb1=stage0_allowlist["confirmed_qb1"][away],
         expected_home_qb1=stage0_allowlist["confirmed_qb1"][home],
         max_age_hours=spine_max_age,
-        reference_utc="2026-11-05T20:00:00Z" if week <= 9 else None,
-        strict=is_live_week10_plus,
+        reference_utc=ref_utc_spine,
+        strict=strict_spine,
     )
     jev_tensor = build_jev_state_tensor(
         spine_game,
-        enforce_freshness=is_live_week10_plus,
+        enforce_freshness=strict_spine,
         expected_week=week,
         expected_away_qb1=stage0_allowlist["confirmed_qb1"][away],
         expected_home_qb1=stage0_allowlist["confirmed_qb1"][home],
         max_age_hours=spine_max_age,
-        reference_utc="2026-11-05T20:00:00Z" if week <= 9 else None,
-        strict=is_live_week10_plus,
+        reference_utc=ref_utc_spine,
+        strict=strict_spine,
     )
     if is_live_week10_plus and (not jev_tensor or int(jev_tensor.get("total_snaps_ingested") or 0) <= 0):
         raise RuntimeError(
             f"STAGE2_GATE_FAIL: Empty JEV state tensor after spine validation for {away}@{home} week={week}"
         )
-    active_jev_tensor = jev_tensor if spine_freshness.get("valid") else None
+    active_jev_tensor = jev_tensor if (spine_freshness.get("valid") or is_historical_replay) else None
 
     # SG-2: Dynamically compile Stage 1A + Stage 1B into Stage 2 simulation priors
     compiled_stage1_priors = compile_stage1_to_stage2_simulation_priors(
@@ -3366,6 +3607,10 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         raise RuntimeError(
             "Week 10+ requires a loaded live corpus situational conditioner from 07_corpus_wired_calibration_and_hold_gate_receipt.json"
         )
+
+    assert_all_books_pdfs_ig_x_situational_wired(
+        compiled_stage1_priors["combined_load_bearing_priors"]
+    )
 
     sim_branch_a = simulate_matchup_pbp(
         away=away,
@@ -3520,22 +3765,85 @@ def run_stage3_and_4_conserved_post_sim_projections(
     n_sims = len(vecs_a["away_pass_yds"])
     athletes = stage0_allowlist["verified_board_athletes"]
 
-    # For non-JAX@BAL matchups (or Week 10+), anchor team pass/rush yardage vectors (two-sided) and
-    # per-world score-to-pass_tds conservation across BOTH simulation branches.
+    # For non-JAX@BAL matchups (or Week 10+), anchor team pass/rush yardage vectors (two-sided) to
+    # Layer-1 market implied team totals (THE STACK) + true team-GP PBP rates + QB tier efficiency
+    # (eliminating the sum(rec_yds_per_pg) summation bug and the artificial 285.0/155.0 clamps).
     is_jax_bal_s34 = (away, home) == ("JAX", "BAL") and int(week) <= 9
     if not is_jax_bal_s34:
         eq_shift = float(load_bearing.get("eq_gate_12k_epa_shift", 0.0))
         aw_epa_adj = float(load_bearing.get("away_off_epa_adj", 0.0))
         hm_epa_adj = float(load_bearing.get("home_off_epa_adj", 0.0))
-        for side_key, tm_code, epa_mod in (
-            ("away", away, 1.0 + float(np.clip((aw_epa_adj + 0.5 * eq_shift) * 0.45, -0.14, 0.18))),
-            ("home", home, 1.0 + float(np.clip((hm_epa_adj - 0.5 * eq_shift) * 0.45, -0.14, 0.18))),
+        posted_tot_val = float(env_cfg.get("posted_total", 44.5))
+        posted_hm_sp_val = float(env_cfg.get("posted_home_spread", 0.0))
+        pbp_pack = _get_2026_pbp_team_rates_and_qb_attempts()
+        tm_pbp_rates = pbp_pack.get("team_rates") or {}
+        pbp_ftn_32_map = _get_2026_team_pbp_ftn_stats()
+        qb_att_map = pbp_pack.get("qb_league_att") or {}
+        qb_yds_map = pbp_pack.get("qb_league_yds") or {}
+
+        for side_key, tm_code, epa_mod, qb_tier_side in (
+            ("away", away, 1.0 + float(np.clip((aw_epa_adj + 0.5 * eq_shift) * 0.40, -0.12, 0.14)), str(env_cfg.get("away_qb_tier", "QB1"))),
+            ("home", home, 1.0 + float(np.clip((hm_epa_adj - 0.5 * eq_shift) * 0.40, -0.12, 0.14)), str(env_cfg.get("home_qb_tier", "QB1"))),
         ):
             tm_aths = [inf for inf in athletes.values() if inf["team"] == tm_code]
-            pbp_rec_sum = sum(float(inf["pbp_2026"].get("rec_yds_per_pg", 0.0)) for inf in tm_aths if inf["position"] in ("WR", "TE", "RB"))
-            pbp_rush_sum = sum(float(inf["pbp_2026"].get("rush_yds_per_pg", 0.0)) for inf in tm_aths if inf["position"] in ("RB", "QB", "WR"))
-            target_pass_mean = float(np.clip(max(165.0, pbp_rec_sum * 1.02) * epa_mod, 155.0, 285.0))
-            target_rush_mean = float(np.clip(max(85.0, pbp_rush_sum * 1.02) * epa_mod, 75.0, 165.0))
+            team_gp = max([int(inf["pbp_2026"].get("team_gp") or 0) for inf in tm_aths] + [6])
+            athlete_rec_pg = sum(float(inf["pbp_2026"].get("rec_yds") or 0.0) for inf in tm_aths if inf["position"] in ("WR", "TE", "RB")) / float(team_gp)
+            athlete_rush_pg = sum(float(inf["pbp_2026"].get("rush_yds") or 0.0) for inf in tm_aths if inf["position"] in ("RB", "QB", "WR", "TE")) / float(team_gp)
+
+            pbp_row = tm_pbp_rates.get(tm_code) or {}
+            true_pbp_pass_pg = float(pbp_row.get("pass_yds_pg") or max(145.0, athlete_rec_pg))
+            true_pbp_rush_pg = float(pbp_row.get("rush_yds_pg") or max(80.0, athlete_rush_pg))
+
+            # If QB1 switched teams (e.g. Jacoby Brissett -> BAL, Kirk Cousins -> MIN), blend his 2026 league-wide YPG/efficiency
+            qb_starter_nm = str((stage0_allowlist.get("confirmed_qb1") or {}).get(tm_code) or "")
+            qb_norm_nm = _norm_qb_pbp_abbr(qb_starter_nm)
+            qb_att_lg = int(qb_att_map.get(qb_norm_nm, 0))
+            qb_yds_lg = float(qb_yds_map.get(qb_norm_nm, 0.0))
+            if qb_att_lg >= 100 and qb_yds_lg > 0.0:
+                qb_eff_2026_pg = (qb_yds_lg / float(qb_att_lg)) * 31.5
+                pbp_pass_base = 0.65 * true_pbp_pass_pg + 0.35 * qb_eff_2026_pg
+            else:
+                pbp_pass_base = true_pbp_pass_pg
+
+            qb_pass_mult = 0.74 if qb_tier_side == "QB2_BACKUP" else (0.60 if qb_tier_side == "EMERGENCY_QB3_UDFA" else 1.0)
+            pbp_pass_adj = pbp_pass_base * qb_pass_mult
+
+            # Layer-1 Market Implied Team Total anchor (posted_home_spread < 0 => home favored)
+            # Empirical NFL scoring-to-yardage regression has a positive intercept (~214 pass yds at 21.5 pts,
+            # ~112 rush yds at 21.5 pts) so losing/17-pt underdogs aren't crushed to 150 pass yds.
+            mkt_team_pts = 0.5 * (posted_tot_val + posted_hm_sp_val) if side_key == "away" else 0.5 * (posted_tot_val - posted_hm_sp_val)
+            mkt_team_pts = float(np.clip(mkt_team_pts, 10.5, 36.5))
+            tm_ftn = pbp_ftn_32_map.get(tm_code) or {}
+            tm_pass_rate = float(tm_ftn.get("pass_rate") or 0.57)
+            pass_lean = float(np.clip(tm_pass_rate / 0.57, 0.84, 1.20))
+            rush_lean = float(np.clip((1.0 - tm_pass_rate) / 0.43, 0.80, 1.24))
+            mkt_pass_implied = (214.0 + 4.8 * (mkt_team_pts - 21.5)) * pass_lean * (0.80 if qb_tier_side == "QB2_BACKUP" else 1.0)
+            mkt_rush_implied = (112.0 + 3.4 * (mkt_team_pts - 21.5)) * rush_lean
+
+            qb_core_lines = (athletes.get(qb_starter_nm) or {}).get("core_lines") or {}
+            qb_pass_line_raw = qb_core_lines.get("Total Passing Yards (incl. overtime)")
+            if qb_pass_line_raw is not None and float(qb_pass_line_raw) > 100.0 and qb_tier_side != "EMERGENCY_QB3_UDFA":
+                raw_pass_blend = 0.48 * float(qb_pass_line_raw) + 0.28 * mkt_pass_implied + 0.24 * pbp_pass_adj
+            else:
+                raw_pass_blend = 0.52 * mkt_pass_implied + 0.48 * pbp_pass_adj
+
+            board_rb_rush_sum = sum(
+                float((inf.get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)") or 0.0)
+                for inf in tm_aths
+                if inf["position"] == "RB" and (inf.get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)") is not None
+            )
+            if board_rb_rush_sum >= 45.0:
+                raw_rush_blend = 0.45 * (board_rb_rush_sum + 18.0) + 0.30 * mkt_rush_implied + 0.25 * true_pbp_rush_pg
+            else:
+                raw_rush_blend = 0.48 * mkt_rush_implied + 0.52 * true_pbp_rush_pg
+
+            ypa_c_delta = float(load_bearing.get(f"{side_key}_ypa_adj_delta", 0.0))
+            pr_c_delta = float(load_bearing.get(f"{side_key}_pass_rate_corpus_delta", 0.0))
+            rypc_c_delta = float(load_bearing.get(f"{side_key}_rush_ypc_adj_delta", 0.0))
+            pass_corpus_mod = float(np.clip(1.0 + ypa_c_delta * 0.018 + pr_c_delta * 0.35, 0.96, 1.04))
+            rush_corpus_mod = float(np.clip(1.0 + rypc_c_delta * 0.040 - pr_c_delta * 0.30, 0.95, 1.05))
+            target_pass_mean = float(np.clip(raw_pass_blend * epa_mod * pass_corpus_mod, 125.0, 330.0))
+            target_rush_mean = float(np.clip(raw_rush_blend * (0.98 + 0.4 * (epa_mod - 1.0)) * rush_corpus_mod, 65.0, 185.0))
 
             pbp_ptds = sum(
                 float(inf["pbp_2026"].get("pass_tds", 0)) / max(1, int(inf["pbp_2026"].get("player_gp") or 1))
@@ -3553,17 +3861,17 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 pa_key = f"{side_key}_pass_att"
                 pc_key = f"{side_key}_pass_comp"
                 cur_py_m = max(1.0, float(np.mean(vec_map[py_key])))
-                if cur_py_m < target_pass_mean * 0.90 or cur_py_m > target_pass_mean * 1.08:
+                if abs(cur_py_m - target_pass_mean) / max(1.0, target_pass_mean) > 0.015:
                     py_scale = target_pass_mean / cur_py_m
                     vec_map[py_key] = np.asarray(vec_map[py_key], dtype=np.float64) * py_scale
                     if pa_key in vec_map and pc_key in vec_map:
-                        vol_scale = float(np.clip(py_scale ** 0.5, 0.82, 1.18))
+                        vol_scale = float(np.clip(py_scale ** 0.5, 0.80, 1.22))
                         att_arr = np.maximum(12.0, np.asarray(vec_map[pa_key], dtype=np.float64) * vol_scale)
                         comp_arr = np.asarray(vec_map[pc_key], dtype=np.float64) * (vol_scale ** 0.85)
                         vec_map[pa_key] = att_arr
                         vec_map[pc_key] = np.minimum(att_arr * 0.92, np.maximum(0.0, comp_arr))
                 cur_ry_m = max(1.0, float(np.mean(vec_map[ry_key])))
-                if cur_ry_m < target_rush_mean * 0.90 or cur_ry_m > target_rush_mean * 1.08:
+                if abs(cur_ry_m - target_rush_mean) / max(1.0, target_rush_mean) > 0.015:
                     ry_scale = target_rush_mean / cur_ry_m
                     vec_map[ry_key] = np.asarray(vec_map[ry_key], dtype=np.float64) * ry_scale
 
@@ -3628,30 +3936,66 @@ def run_stage3_and_4_conserved_post_sim_projections(
         wr2_name = team_wrs[1][0] if len(team_wrs) >= 2 else ""
         wr3_name = team_wrs[2][0] if len(team_wrs) >= 3 else ""
 
+        n_boarded_rec = sum(
+            1
+            for inf in athletes.values()
+            if inf["team"] == team
+            and inf["position"] in ("WR", "TE", "RB")
+            and ((inf.get("core_lines") or {}).get("Total Receiving Yards (incl. overtime)") or 0.0) > 0.0
+        )
+        n_boarded_rush = sum(
+            1
+            for inf in athletes.values()
+            if inf["team"] == team
+            and inf["position"] == "RB"
+            and ((inf.get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)") or 0.0) > 0.0
+        )
+
         for name, info in athletes.items():
             if info["team"] != team:
                 continue
             pos = info["position"]
             pbp_st = info["pbp_2026"]
+            core_l = info.get("core_lines") or {}
             sit_mult = float(info.get("situational_multiplier", 1.0))
             p_adj = player_adj_map.get(name) or {}
             rt_tgt_mult = float(p_adj.get("target_share_mult", 1.0))
             rt_car_mult = float(p_adj.get("carry_share_mult", 1.0))
             active_gp = max(1, int(pbp_st.get("player_gp") or 1))
 
-            # Receiving share weight (WR, TE, RB) using active player_gp denominator + load-bearing adjustments
+            # Receiving share weight (WR, TE, RB): anchor Week 10+ to receiving-yardage expectation
+            # blending live Layer-1 prop lines (`core_lines`) with 2026 PBP rec_yds/GP.
             if pos in ("WR", "TE", "RB"):
                 if int(week) <= 9 and name in ("Bhayshul Tuten", "Malik Davis", "Alec Pierce") and not (name == "Bhayshul Tuten" and tuten_active):
                     rec_weights[name] = 1e-6
-                else:
-                    if not is_jax_bal_s34 and int(week) >= 10:
-                        base_t = _effective_tgt_pg(info)
+                elif not is_jax_bal_s34 and int(week) >= 10:
+                    raw_rec_y = float(pbp_st.get("rec_yds") or 0.0)
+                    tgp_rec = max(1, int(pbp_st.get("team_gp") or 6))
+                    if int(info.get("prop_count") or 0) == 0 and active_gp <= 2 and tgp_rec >= 5:
+                        pbp_rec_yd_pg = (raw_rec_y + 3.0 * 12.0) / (float(active_gp) + 3.0)
                     else:
-                        base_t = (
-                            float(pbp_st["targets"]) / float(active_gp)
-                            if pbp_st.get("targets") is not None and float(pbp_st.get("targets", 0.0)) > 0.0
-                            else float(pbp_st["targets_per_pg"])
-                        )
+                        pbp_rec_yd_pg = raw_rec_y / float(active_gp) if raw_rec_y > 0.0 else float(pbp_st.get("rec_yds_per_pg") or 0.0)
+                    mkt_rec_yds = core_l.get("Total Receiving Yards (incl. overtime)")
+                    if mkt_rec_yds is not None and float(mkt_rec_yds) > 0.0:
+                        pbp_term = pbp_rec_yd_pg if pbp_rec_yd_pg >= 8.0 else float(mkt_rec_yds)
+                        base_rec_w = 0.65 * float(mkt_rec_yds) + 0.35 * pbp_term
+                    elif n_boarded_rec >= 3:
+                        base_rec_w = min(12.0, max(1.5, pbp_rec_yd_pg * 0.32))
+                    else:
+                        base_rec_w = max(4.0, pbp_rec_yd_pg)
+                    abs_mult = 1.0
+                    if wr1_is_decoy_or_limited:
+                        if name == wr2_name:
+                            abs_mult = wr2_lift_mult
+                        elif name == wr3_name:
+                            abs_mult = wr3_lift_mult
+                    rec_weights[name] = max(1e-4, base_rec_w * sit_mult * rt_tgt_mult * abs_mult)
+                else:
+                    base_t = (
+                        float(pbp_st["targets"]) / float(active_gp)
+                        if pbp_st.get("targets") is not None and float(pbp_st.get("targets", 0.0)) > 0.0
+                        else float(pbp_st["targets_per_pg"])
+                    )
                     if base_t <= 0.0:
                         base_t = 0.35 if pos in ("WR", "TE") else 0.20
                     if is_jax_bal_s34 and name == "Bhayshul Tuten" and tuten_active:
@@ -3664,21 +4008,46 @@ def run_stage3_and_4_conserved_post_sim_projections(
                             abs_mult = wr3_lift_mult
                     rec_weights[name] = max(1e-4, base_t * sit_mult * rt_tgt_mult * abs_mult)
 
-            # Rushing share weight (RB, QB, WR) using active player_gp denominator + load-bearing adjustments
-            if pos in ("RB", "QB", "WR"):
+            # Rushing share weight:
+            # For Week 10+ / non-legacy-Week9, QB rushing is modeled separately via simulated scrambles+kneels
+            # (`away_qb_rush_yds`/`home_qb_rush_yds`), so only RB and real gadget WR/TE (>= 0.35 car/pg) share
+            # the non-QB rushing pool, anchored to Layer-1 rushing prop lines + PBP rush_yds/GP.
+            if not is_jax_bal_s34 and int(week) >= 10:
+                if pos in ("RB", "WR", "TE"):
+                    rcar = float(pbp_st.get("carries") or 0.0)
+                    rrush_y = float(pbp_st.get("rush_yds") or 0.0)
+                    tgp_r = max(1, int(pbp_st.get("team_gp") or 6))
+                    if int(info.get("prop_count") or 0) == 0 and active_gp <= 2 and tgp_r >= 5 and rcar > 0.0:
+                        pbp_rush_yd_pg = (rrush_y + 3.0 * 10.0) / (float(active_gp) + 3.0)
+                        cpg_eff = rcar / float(active_gp)
+                    else:
+                        pbp_rush_yd_pg = rrush_y / float(active_gp) if rrush_y > 0.0 else float(pbp_st.get("rush_yds_per_pg") or 0.0)
+                        cpg_eff = rcar / float(active_gp) if rcar > 0.0 else float(pbp_st.get("carries_per_pg") or 0.0)
+                    mkt_rush_yds = core_l.get("Total Rushing Yards (incl. overtime)")
+                    if mkt_rush_yds is not None and float(mkt_rush_yds) > 0.0:
+                        pbp_r_term = pbp_rush_yd_pg if pbp_rush_yd_pg >= 10.0 else float(mkt_rush_yds)
+                        base_rush_w = 0.68 * float(mkt_rush_yds) + 0.32 * pbp_r_term
+                        rush_weights[name] = max(1e-4, base_rush_w * sit_mult * rt_car_mult)
+                    elif pos == "RB":
+                        base_rush_w = (
+                            min(14.0, max(2.0, pbp_rush_yd_pg * 0.35))
+                            if n_boarded_rush >= 1
+                            else max(8.0, pbp_rush_yd_pg)
+                        )
+                        rush_weights[name] = max(1e-4, base_rush_w * sit_mult * rt_car_mult)
+                    elif cpg_eff >= 0.35:
+                        base_rush_w = min(8.0, max(1.0, pbp_rush_yd_pg * 0.50))
+                        rush_weights[name] = max(1e-4, base_rush_w * sit_mult * rt_car_mult)
+            elif pos in ("RB", "QB", "WR"):
                 if int(week) <= 9 and name in ("Bhayshul Tuten", "Malik Davis", "Alec Pierce") and not (name == "Bhayshul Tuten" and tuten_active):
                     rush_weights[name] = 1e-6
                 else:
                     rcar = float(pbp_st.get("carries") or 0.0)
-                    tgp_r = max(1, int(pbp_st.get("team_gp") or 6))
-                    if not is_jax_bal_s34 and int(week) >= 10 and int(info.get("prop_count") or 0) == 0 and active_gp <= 2 and tgp_r >= 5 and rcar > 0.0:
-                        base_c = (rcar + 4.0 * 1.5) / (float(active_gp) + 4.0)
-                    else:
-                        base_c = (
-                            rcar / float(active_gp)
-                            if pbp_st.get("carries") is not None and rcar > 0.0
-                            else float(pbp_st["carries_per_pg"])
-                        )
+                    base_c = (
+                        rcar / float(active_gp)
+                        if pbp_st.get("carries") is not None and rcar > 0.0
+                        else float(pbp_st["carries_per_pg"])
+                    )
                     if base_c <= 0.0:
                         if pos == "RB":
                             base_c = 2.5
@@ -3737,6 +4106,31 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 athletes=athletes,
                 team=team,
                 opp_f7_outs=opp_f7_outs,
+                max_wr_share=0.46,
+                max_rb_target_share=0.20,
+            )
+
+        # Apply corpus Books/IG/X/Coaching player multipliers (damped when anchored to live DK prop line)
+        # and solve exact Boyd & Vandenberghe VMLS KKT simplex conservation for Week 10+
+        if not is_jax_bal_s34 and int(week) >= 10:
+            corpus_player_mults = dict(load_bearing.get("player_target_and_carry_multipliers") or {})
+            rec_damped_mults: dict[str, float] = {}
+            rush_damped_mults: dict[str, float] = {}
+            for k in rec_weights:
+                raw_m = float(corpus_player_mults.get(k, 1.0))
+                has_rec_prop = bool(((athletes.get(k) or {}).get("core_lines") or {}).get("Total Receiving Yards (incl. overtime)"))
+                rec_damped_mults[k] = 1.0 + 0.25 * (raw_m - 1.0) if has_rec_prop else raw_m
+            for k in rush_weights:
+                raw_m = float(corpus_player_mults.get(k, 1.0))
+                has_rush_prop = bool(((athletes.get(k) or {}).get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)"))
+                rush_damped_mults[k] = 1.0 + 0.25 * (raw_m - 1.0) if has_rush_prop else raw_m
+            rec_shares_norm = apply_vmls_kkt_and_corpus_shares(rec_weights, rec_damped_mults)
+            rush_shares_norm = apply_vmls_kkt_and_corpus_shares(rush_weights, rush_damped_mults)
+            tk_sum = sum(tackle_weights.values()) or 1.0
+            return (
+                rec_shares_norm,
+                rush_shares_norm,
+                {k: v / tk_sum for k, v in tackle_weights.items()},
             )
 
         # Normalize shares to sum to 1.0
@@ -3826,23 +4220,36 @@ def run_stage3_and_4_conserved_post_sim_projections(
     )
 
     zero_tds = [0.0] * n_sims
+    if not is_jax_bal_s34 and int(week) >= 10 and "away_qb_rush_yds" in vecs_a and "home_qb_rush_yds" in vecs_a:
+        aw_non_qb_rush_target = np.maximum(
+            0.0,
+            np.asarray(vecs_a["away_rush_yds"], dtype=np.float64) - np.maximum(0.0, np.asarray(vecs_a["away_qb_rush_yds"], dtype=np.float64)),
+        )
+        hm_non_qb_rush_target = np.maximum(
+            0.0,
+            np.asarray(vecs_a["home_rush_yds"], dtype=np.float64) - np.maximum(0.0, np.asarray(vecs_a["home_qb_rush_yds"], dtype=np.float64)),
+        )
+    else:
+        aw_non_qb_rush_target = np.asarray(vecs_a["away_rush_yds"], dtype=np.float64)
+        hm_non_qb_rush_target = np.asarray(vecs_a["home_rush_yds"], dtype=np.float64)
+
     jax_rush_yds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["away_rush_yds"], jax_rush_sh_a, stat_family="rushing_yds", n_worlds=n_sims, concentration=20.0, seed=44
+        aw_non_qb_rush_target, jax_rush_sh_a, stat_family="rushing_yds", n_worlds=n_sims, concentration=20.0, seed=44
     )
     assert_pbp_conservation(
         [jax_rush_yds_alloc[k].tolist() for k in jax_rush_sh_a],
-        vecs_a["away_rush_yds"].tolist(),
+        aw_non_qb_rush_target.tolist(),
         [zero_tds for _ in jax_rush_sh_a],
         zero_tds,
         player_keys=list(jax_rush_sh_a.keys()),
     )
 
     bal_rush_yds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["home_rush_yds"], bal_rush_sh_a, stat_family="rushing_yds", n_worlds=n_sims, concentration=20.0, seed=45
+        hm_non_qb_rush_target, bal_rush_sh_a, stat_family="rushing_yds", n_worlds=n_sims, concentration=20.0, seed=45
     )
     assert_pbp_conservation(
         [bal_rush_yds_alloc[k].tolist() for k in bal_rush_sh_a],
-        vecs_a["home_rush_yds"].tolist(),
+        hm_non_qb_rush_target.tolist(),
         [zero_tds for _ in bal_rush_sh_a],
         zero_tds,
         player_keys=list(bal_rush_sh_a.keys()),
@@ -3916,40 +4323,59 @@ def run_stage3_and_4_conserved_post_sim_projections(
         }
 
         if pos == "QB":
-            p_yds_vec = np.asarray(vecs_a["away_pass_yds"] if tm == away else vecs_a["home_pass_yds"], dtype=np.float64)
-            p_tds_vec = np.asarray(vecs_a["away_pass_tds"] if tm == away else vecs_a["home_pass_tds"], dtype=np.float64)
-            if ("away_qb_rush_yds" if tm == away else "home_qb_rush_yds") in vecs_a:
-                r_yds_vec = np.asarray(
-                    vecs_a["away_qb_rush_yds"] if tm == away else vecs_a["home_qb_rush_yds"],
-                    dtype=np.float64,
-                )
+            confirmed_starter_qb = str((stage0_allowlist.get("confirmed_qb1") or {}).get(tm) or "").strip()
+            is_non_starter_qb = bool(
+                not is_jax_bal_s34
+                and int(week) >= 10
+                and confirmed_starter_qb
+                and name.lower() != confirmed_starter_qb.lower()
+            )
+            if is_non_starter_qb:
+                z_vec = np.zeros(n_sims, dtype=np.float64)
+                p_yds_vec = z_vec
+                p_tds_vec = z_vec
+                att_vec = z_vec
+                comp_vec = z_vec
+                int_vec = z_vec
+                scr_vec = z_vec
+                sacks_vec = z_vec
+                r_yds_vec = z_vec
+                carries_vec = z_vec
             else:
-                r_yds_vec = np.asarray(
-                    jax_rush_yds_alloc.get(name, np.zeros(n_sims))
-                    if tm == away
-                    else bal_rush_yds_alloc.get(name, np.zeros(n_sims)),
-                    dtype=np.float64,
-                )
-            att_key = "away_pass_att" if tm == away else "home_pass_att"
-            comp_key = "away_pass_comp" if tm == away else "home_pass_comp"
-            int_key = "away_ints" if tm == away else "home_ints"
-            scr_key = "away_qb_scrambles" if tm == away else "home_qb_scrambles"
-            sack_key = "away_sacks" if tm == away else "home_sacks"
+                p_yds_vec = np.asarray(vecs_a["away_pass_yds"] if tm == away else vecs_a["home_pass_yds"], dtype=np.float64)
+                p_tds_vec = np.asarray(vecs_a["away_pass_tds"] if tm == away else vecs_a["home_pass_tds"], dtype=np.float64)
+                if ("away_qb_rush_yds" if tm == away else "home_qb_rush_yds") in vecs_a:
+                    r_yds_vec = np.asarray(
+                        vecs_a["away_qb_rush_yds"] if tm == away else vecs_a["home_qb_rush_yds"],
+                        dtype=np.float64,
+                    )
+                else:
+                    r_yds_vec = np.asarray(
+                        jax_rush_yds_alloc.get(name, np.zeros(n_sims))
+                        if tm == away
+                        else bal_rush_yds_alloc.get(name, np.zeros(n_sims)),
+                        dtype=np.float64,
+                    )
+                att_key = "away_pass_att" if tm == away else "home_pass_att"
+                comp_key = "away_pass_comp" if tm == away else "home_pass_comp"
+                int_key = "away_ints" if tm == away else "home_ints"
+                scr_key = "away_qb_scrambles" if tm == away else "home_qb_scrambles"
+                sack_key = "away_sacks" if tm == away else "home_sacks"
 
-            att_vec = np.asarray(vecs_a[att_key], dtype=np.float64) if att_key in vecs_a else np.clip(p_yds_vec / (7.45 if tm == away else 5.65), 14.0, 52.0)
-            comp_vec = np.asarray(vecs_a[comp_key], dtype=np.float64) if comp_key in vecs_a else att_vec * (0.658 if tm == away else 0.542)
-            int_vec = np.asarray(vecs_a[int_key], dtype=np.float64) if int_key in vecs_a else rng_disp.poisson(np.maximum(0.45, att_vec * (0.022 if tm == away else 0.038))).astype(np.float64)
-            if float(np.std(int_vec)) < 0.90:
-                int_vec = np.maximum(0.0, int_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
-            if is_jax_bal_s34 and float(np.std(p_tds_vec)) < 0.90:
-                p_tds_vec = np.maximum(0.0, p_tds_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
-            scr_vec = np.asarray(vecs_a[scr_key], dtype=np.float64) if scr_key in vecs_a else np.clip(r_yds_vec / 5.2, 0.0, 10.0)
-            sacks_vec = np.asarray(vecs_a[sack_key], dtype=np.float64) if sack_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
-            kneel_key = "away_kneeldowns" if tm == away else "home_kneeldowns"
-            kneel_vec = np.asarray(vecs_a[kneel_key], dtype=np.float64) if kneel_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
-            carries_vec = scr_vec + kneel_vec
-            # Pure simulated qb_rush_yds allowing 0 or negative kneeldown yards (-1, -2) without artificial +5.9 Gamma floor clamp
-            r_yds_vec = np.asarray(r_yds_vec, dtype=np.float64)
+                att_vec = np.asarray(vecs_a[att_key], dtype=np.float64) if att_key in vecs_a else np.clip(p_yds_vec / (7.45 if tm == away else 5.65), 14.0, 52.0)
+                comp_vec = np.asarray(vecs_a[comp_key], dtype=np.float64) if comp_key in vecs_a else att_vec * (0.658 if tm == away else 0.542)
+                int_vec = np.asarray(vecs_a[int_key], dtype=np.float64) if int_key in vecs_a else rng_disp.poisson(np.maximum(0.45, att_vec * (0.022 if tm == away else 0.038))).astype(np.float64)
+                if float(np.std(int_vec)) < 0.90:
+                    int_vec = np.maximum(0.0, int_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
+                if is_jax_bal_s34 and float(np.std(p_tds_vec)) < 0.90:
+                    p_tds_vec = np.maximum(0.0, p_tds_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
+                scr_vec = np.asarray(vecs_a[scr_key], dtype=np.float64) if scr_key in vecs_a else np.clip(r_yds_vec / 5.2, 0.0, 10.0)
+                sacks_vec = np.asarray(vecs_a[sack_key], dtype=np.float64) if sack_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
+                kneel_key = "away_kneeldowns" if tm == away else "home_kneeldowns"
+                kneel_vec = np.asarray(vecs_a[kneel_key], dtype=np.float64) if kneel_key in vecs_a else np.zeros(n_sims, dtype=np.float64)
+                carries_vec = scr_vec + kneel_vec
+                # Pure simulated qb_rush_yds allowing 0 or negative kneeldown yards (-1, -2) without artificial +5.9 Gamma floor clamp
+                r_yds_vec = np.asarray(r_yds_vec, dtype=np.float64)
 
             proj_entry["projections"]["pass_yds"] = _quantiles_from_vec(p_yds_vec, cqr_mult)
             proj_entry["projections"]["pass_tds"] = _quantiles_from_vec(p_tds_vec, cqr_mult)
@@ -4005,8 +4431,11 @@ def run_stage3_and_4_conserved_post_sim_projections(
                     if comp_arr_opt is not None
                     else np.full(n_sims, 18.0, dtype=np.float64)
                 )
+                base_rec_vec = rec_yds_vec / ypr
+                rec_m = float(np.mean(base_rec_vec))
+                rec_disp_scale = min(1.0, max(0.0, rec_m / 2.2))
                 receptions_vec = np.minimum(
-                    np.maximum(0.0, rec_yds_vec / ypr + (rng_disp.gamma(4.0, 0.425, size=n_sims) - 1.70)),
+                    np.maximum(0.0, base_rec_vec + rec_disp_scale * (rng_disp.gamma(4.0, 0.425, size=n_sims) - 1.70)),
                     tm_comp_cap,
                 )
 
@@ -4016,7 +4445,13 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 else 4.15
             )
             ypc = float(np.clip(ypc, 3.2, 5.8))
-            carries_vec = np.maximum(0.0, rush_yds_vec / ypc + (rng_disp.gamma(4.0, 0.575, size=n_sims) - 2.30))
+            base_car_vec = rush_yds_vec / ypc
+            car_m = float(np.mean(base_car_vec))
+            if car_m <= 0.02:
+                carries_vec = np.zeros(n_sims, dtype=np.float64)
+            else:
+                car_disp_scale = min(1.0, max(0.0, car_m / 2.8))
+                carries_vec = np.maximum(0.0, base_car_vec + car_disp_scale * (rng_disp.gamma(4.0, 0.575, size=n_sims) - 2.30))
 
             proj_entry["projections"]["rec_yds"] = _quantiles_from_vec(rec_yds_vec, cqr_mult)
             proj_entry["projections"]["receptions"] = _quantiles_from_vec(receptions_vec, cqr_mult)
@@ -5117,6 +5552,8 @@ def run_stage5_360_conjunction_gate(
         _vol_rec = stat_key in ("rec_yds", "receptions", "rush_plus_rec_yds")
         _vol_rush = stat_key in ("rush_yds", "carries")
         sniper_vetoes: list[str] = []
+        if _pos == "QB" and mean_v <= 0.0 and float(st_quant["std"]) <= 0.0:
+            sniper_vetoes.append("non-starter backup QB (not confirmed QB1)")
         if _pos in ("WR", "TE", "RB") and (_vol_rec or _vol_rush):
             if _snap_sh < 0.40:
                 sniper_vetoes.append(f"snap-leak veto: snap_share {_snap_sh:.2f} < 0.40")
@@ -6198,10 +6635,27 @@ def execute_connected_game_workflow(
         # the repo ESPN week scoreboard so Week 10+ packets never inherit the
         # Week 9 historical pin (temporal leakage). None if unavailable.
         kickoff_utc = _lookup_espn_scoreboard_kickoff(away_u, home_u, week)
+    as_of_resolved = "2026-11-05T18:00:00Z" if week <= 9 else datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if week >= 10 and kickoff_utc:
+        try:
+            ko_clean = str(kickoff_utc).strip().replace(" ", "T")
+            if ko_clean.endswith("Z"):
+                ko_clean = ko_clean[:-1] + "+00:00"
+            ko_dt_armed = datetime.fromisoformat(ko_clean)
+            if ko_dt_armed.tzinfo is None:
+                ko_dt_armed = ko_dt_armed.replace(tzinfo=timezone.utc)
+            ko_utc_dt = ko_dt_armed.astimezone(timezone.utc)
+            now_utc = datetime.now(timezone.utc)
+            # For post-kickoff historical Week 10+ autopsy replays, anchor as_of strictly pre-kickoff (-15m)
+            # and canonicalize both timestamps to ISO-8601 UTC ('T...Z') for lexical safety in layer_registry.
+            kickoff_utc = ko_utc_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+            as_of_resolved = min(now_utc, ko_utc_dt - timedelta(minutes=15)).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        except Exception:
+            pass
     armed_bundle = build_armed_context_and_reasoning_trace(
         game_id=armed_gid,
-        # Week 9 replays keep their historical pin; Week 10+ arms at run time.
-        as_of_utc="2026-11-05T18:00:00Z" if week <= 9 else datetime.now(timezone.utc).isoformat(),
+        # Week 9 replays keep their historical pin; Week 10+ arms strictly pre-kickoff.
+        as_of_utc=as_of_resolved,
         persist=True,
         kickoff_utc=kickoff_utc,
     )

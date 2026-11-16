@@ -7,71 +7,71 @@
 
 | Player | Team | Pos | Salary | Proj Median | P90 Ceiling |
 |---|---|---|---|---|---|
-| Brock Purdy | SF | QB | $7000 | 19.27 | 41.43 |
-| Fernando Mendoza | LV | QB | $4600 | 16.63 | 35.75 |
-| Dak Prescott | DAL | QB | $6400 | 17.01 | 36.57 |
-| Christian McCaffrey | SF | RB | $8500 | 23.16 | 49.79 |
-| Kyren Williams | LAR | RB | $7100 | 19.98 | 42.96 |
-| Ashton Jeanty | LV | RB | $5400 | 18.43 | 39.62 |
-| Javonte Williams | DAL | RB | $7500 | 18.78 | 40.38 |
-| CeeDee Lamb | DAL | WR | $8800 | 18.96 | 40.76 |
-| Jaxon Smith-Njigba | SEA | WR | $9300 | 15.12 | 32.51 |
-| George Pickens | DAL | WR | $6300 | 14.05 | 30.21 |
-| Ryan Flournoy | DAL | WR | $5300 | 10.17 | 21.87 |
-| Deebo Samuel Sr. | SF | WR | $5500 | 9.55 | 20.53 |
-| Brock Bowers | LV | TE | $7600 | 14.09 | 30.29 |
-| George Kittle | SF | TE | $6500 | 13.39 | 28.79 |
-| Trey McBride | ARI | TE | $7100 | 12.31 | 26.47 |
-| Cardinals | ARI | DST | $2200 | 8.29 | 18.24 |
-| Raiders | LV | DST | $2400 | 7.71 | 16.96 |
-| Cowboys | DAL | DST | $2300 | 5.51 | 12.12 |
+| Brock Purdy | SF | QB | $7000 | 20.64 | 25.63 |
+| Dak Prescott | DAL | QB | $6400 | 18.99 | 23.83 |
+| Matthew Stafford | LAR | QB | $6200 | 16.99 | 22.66 |
+| Christian McCaffrey | SF | RB | $8500 | 21.91 | 31.85 |
+| Kyren Williams | LAR | RB | $7100 | 18.58 | 27.5 |
+| Javonte Williams | DAL | RB | $7500 | 17.26 | 25.42 |
+| Ashton Jeanty | LV | RB | $5400 | 13.4 | 20.33 |
+| CeeDee Lamb | DAL | WR | $8800 | 24.41 | 35.09 |
+| Jaxon Smith-Njigba | SEA | WR | $9300 | 17.33 | 27.15 |
+| George Pickens | DAL | WR | $6300 | 16.0 | 25.63 |
+| Deebo Samuel Sr. | SF | WR | $5500 | 10.58 | 19.09 |
+| Ryan Flournoy | DAL | WR | $5300 | 9.68 | 17.84 |
+| George Kittle | SF | TE | $6500 | 16.77 | 26.57 |
+| Tyler Higbee | LAR | TE | $4200 | 12.51 | 21.34 |
+| Colby Parkinson | LAR | TE | $3000 | 9.22 | 17.17 |
+| Cardinals | ARI | DST | $2200 | 8.59 | 18.9 |
+| Raiders | LV | DST | $2400 | 7.63 | 16.79 |
+| Seahawks | SEA | DST | $3300 | 6.35 | 13.97 |
 
 ## 2. Combinatorial Roster Sweeps
 
 | Archetype | Team | Core Stack | Total Sal | Combined Median |
 |---|---|---|---|---|
-| QB + WR1 Primary Stack | SEA | Drew Lock + Jaxon Smith-Njigba | $14300 | 29.93 |
-| QB + WR1 + TE1 Double Pass-Catcher | SEA | Drew Lock + Jaxon Smith-Njigba + AJ Barner | $18200 | 38.27 |
-| QB + WR1 + BringBack Game Stack | SEA | Drew Lock + Jaxon Smith-Njigba + Ashton Jeanty | $19700 | 48.36 |
-| QB + WR1 Primary Stack | LV | Fernando Mendoza + Tre Tucker | $9700 | 24.81 |
-| QB + WR1 + TE1 Double Pass-Catcher | LV | Fernando Mendoza + Tre Tucker + Brock Bowers | $17300 | 38.9 |
-| QB + WR1 + BringBack Game Stack | LV | Fernando Mendoza + Tre Tucker + Jaxon Smith-Njigba | $19000 | 39.93 |
-| QB + WR1 Primary Stack | LAR | Matthew Stafford + Brennan Presley | $9200 | 20.66 |
-| QB + WR1 + TE1 Double Pass-Catcher | LAR | Matthew Stafford + Brennan Presley + Tyler Higbee | $13400 | 30.6 |
-| QB + WR1 + BringBack Game Stack | LAR | Matthew Stafford + Brennan Presley + Trey McBride | $16300 | 32.97 |
-| QB + WR1 Primary Stack | ARI | Carson Beck + Harrison Wallace III | $7200 | 19.2 |
+| QB + WR1 Primary Stack | SEA | Drew Lock + Jaxon Smith-Njigba | $14300 | 29.56 |
+| QB + WR1 + TE1 Double Pass-Catcher | SEA | Drew Lock + Jaxon Smith-Njigba + AJ Barner | $18200 | 35.94 |
+| QB + WR1 + BringBack Game Stack | SEA | Drew Lock + Jaxon Smith-Njigba + Ashton Jeanty | $19700 | 42.96 |
+| QB + WR1 Primary Stack | LV | Fernando Mendoza + Dareke Young | $7600 | 17.48 |
+| QB + WR1 + TE1 Double Pass-Catcher | LV | Fernando Mendoza + Dareke Young + Brock Bowers | $15200 | 27.7 |
+| QB + WR1 + BringBack Game Stack | LV | Fernando Mendoza + Dareke Young + Jaxon Smith-Njigba | $16900 | 34.81 |
+| QB + WR1 Primary Stack | LAR | Matthew Stafford + Konata Mumpfield | $10200 | 24.52 |
+| QB + WR1 + TE1 Double Pass-Catcher | LAR | Matthew Stafford + Konata Mumpfield + Tyler Higbee | $14400 | 37.03 |
+| QB + WR1 + BringBack Game Stack | LAR | Matthew Stafford + Konata Mumpfield + Trey McBride | $17300 | 34.97 |
+| QB + WR1 Primary Stack | ARI | Carson Beck + Harrison Wallace III | $7200 | 16.71 |
 
 ## 3. Contest Archetype: Cash Optimal (0.60*Median + 0.40*P25 Floor)
 
-**Total Salary:** $49400 | **Projected Median:** 129.77 | **P90 Ceiling:** 278.7
+**Total Salary:** $49600 | **Projected Median:** 133.27 | **P90 Ceiling:** 209.92
 
 | Slot | Player | Team | Pos | Salary | Proj Pts | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
-| QB | Brock Purdy | SF | QB | $7000 | 19.27 | 8.09 | 41.43 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 23.16 | 9.73 | 49.79 |
-| RB | Javonte Williams | DAL | RB | $7500 | 18.78 | 7.89 | 40.38 |
-| WR | George Pickens | DAL | WR | $6300 | 14.05 | 5.9 | 30.21 |
-| WR | KhaDarel Hodge | SF | WR | $3000 | 7.2 | 2.88 | 15.12 |
-| WR | Wesley Grimes | SF | WR | $3000 | 7.2 | 2.88 | 15.12 |
-| TE | George Kittle | SF | TE | $6500 | 13.39 | 5.62 | 28.79 |
-| FLEX | Ashton Jeanty | LV | RB | $5400 | 18.43 | 7.74 | 39.62 |
-| DST | Cardinals | ARI | DST | $2200 | 8.29 | 2.9 | 18.24 |
+| QB | Dak Prescott | DAL | QB | $6400 | 18.99 | 16.44 | 23.83 |
+| RB | Christian McCaffrey | SF | RB | $8500 | 21.91 | 16.68 | 31.85 |
+| RB | Ashton Jeanty | LV | RB | $5400 | 13.4 | 9.76 | 20.33 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 24.41 | 18.8 | 35.09 |
+| WR | George Pickens | DAL | WR | $6300 | 16.0 | 10.94 | 25.63 |
+| WR | Jordan Hudson | DAL | WR | $3000 | 7.2 | 2.88 | 15.12 |
+| TE | George Kittle | SF | TE | $6500 | 16.77 | 11.62 | 26.57 |
+| FLEX | Michael Trigg | DAL | TE | $2500 | 6.0 | 2.4 | 12.6 |
+| DST | Cardinals | ARI | DST | $2200 | 8.59 | 3.01 | 18.9 |
 
 ## 4. Contest Archetype: High-Ownership Chalk Benchmark
 
-**Total Salary:** $49400 | **Projected Median:** 133.17 | **P90 Ceiling:** 286.36
+**Total Salary:** $49700 | **Projected Median:** 134.43 | **P90 Ceiling:** 212.27
 
 | Slot | Player | Team | Pos | Salary | Proj Pts | P25 Floor | P90 Ceiling |
 |---|---|---|---|---|---|---|---|
-| QB | Fernando Mendoza | LV | QB | $4600 | 16.63 | 6.98 | 35.75 |
-| RB | Christian McCaffrey | SF | RB | $8500 | 23.16 | 9.73 | 49.79 |
-| RB | Javonte Williams | DAL | RB | $7500 | 18.78 | 7.89 | 40.38 |
-| WR | CeeDee Lamb | DAL | WR | $8800 | 18.96 | 7.96 | 40.76 |
-| WR | George Pickens | DAL | WR | $6300 | 14.05 | 5.9 | 30.21 |
-| WR | Dareke Young | LV | WR | $3000 | 7.2 | 2.88 | 15.12 |
-| TE | Michael Mayer | LV | TE | $3100 | 7.67 | 3.22 | 16.49 |
-| FLEX | Ashton Jeanty | LV | RB | $5400 | 18.43 | 7.74 | 39.62 |
-| DST | Cardinals | ARI | DST | $2200 | 8.29 | 2.9 | 18.24 |
+| QB | Dak Prescott | DAL | QB | $6400 | 18.99 | 16.44 | 23.83 |
+| RB | Christian McCaffrey | SF | RB | $8500 | 21.91 | 16.68 | 31.85 |
+| RB | Kyren Williams | LAR | RB | $7100 | 18.58 | 13.89 | 27.5 |
+| WR | CeeDee Lamb | DAL | WR | $8800 | 24.41 | 18.8 | 35.09 |
+| WR | George Pickens | DAL | WR | $6300 | 16.0 | 10.94 | 25.63 |
+| WR | Anthony Smith | DAL | WR | $3000 | 7.2 | 2.88 | 15.12 |
+| TE | Tyler Higbee | LAR | TE | $4200 | 12.51 | 7.87 | 21.34 |
+| FLEX | Camden Brown | DAL | WR | $3000 | 7.2 | 2.88 | 15.12 |
+| DST | Raiders | LV | DST | $2400 | 7.63 | 2.67 | 16.79 |
 
 ## 5. MME 20-Max Portfolio Summary
 
@@ -79,4 +79,4 @@ Generated 20 diversified lineups with max overlap <= 6 and exposure capping.
 Full JSON packet available at `afternoon_packet.json`.
 
 ---
-*Generated by GSE Weekly Empirical DFS Orchestrator at 2026-11-15 20:27:27 UTC*
+*Generated by GSE Weekly Empirical DFS Orchestrator at 2026-11-16 08:37:46 UTC*

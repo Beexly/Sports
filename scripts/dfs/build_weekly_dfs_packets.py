@@ -180,8 +180,6 @@ def _kickoff_rank(r: Mapping[str, Any]) -> float:
         return 3.0
     if t in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
         return 2.0
-    if t in {"HOU", "GB", "NE", "CHI", "BUF", "MIN", "TB"}:
-        return 2.0
     return 1.0
 
 
@@ -667,8 +665,38 @@ class WeeklyDFSPacketBuilder:
                     + 6.0 * skill_td,
                     2,
                 )
-                p25 = round(med * 0.42, 2)
-                p90 = round(med * 2.15, 2)
+
+                # Sub-Gaussian RSS variance aggregation (replaces flat 0.42x / 2.15x comonotonic tails)
+                def _stat_std(key: str, mean_v: float, rel: float = 0.35) -> float:
+                    s_raw = float((projs.get(key) or {}).get("std", 0.0) or 0.0)
+                    if s_raw > 0.0:
+                        return s_raw
+                    p90_s = float((projs.get(key) or {}).get("p90", 0.0) or 0.0)
+                    p10_s = float((projs.get(key) or {}).get("p10", 0.0) or 0.0)
+                    if p90_s > p10_s:
+                        return max(0.25, (p90_s - p10_s) / 2.563)
+                    return max(0.25, rel * abs(mean_v)) if mean_v > 0 else 0.0
+
+                std_py = _stat_std("pass_yds", py)
+                std_ptd = _stat_std("pass_tds", ptd, 0.55)
+                std_int = _stat_std("interceptions", ints, 0.70)
+                std_ry = _stat_std("rush_yds", ry)
+                std_recy = _stat_std("rec_yds", recy)
+                std_rec = _stat_std("receptions", rec)
+                std_rtd = _stat_std("rush_tds", rtd, 0.75)
+                std_rectd = _stat_std("rec_tds", rectd, 0.75)
+
+                sigma_fpts = math.sqrt(
+                    (0.04 * std_py) ** 2
+                    + (4.0 * std_ptd) ** 2
+                    + (1.0 * std_int) ** 2
+                    + (0.10 * std_ry) ** 2
+                    + (0.10 * std_recy + 0.85 * std_rec) ** 2
+                    + (6.0 * math.sqrt(std_rtd ** 2 + std_rectd ** 2)) ** 2
+                )
+                sigma_fpts = max(2.2, min(11.5, sigma_fpts))
+                p25 = round(max(0.5, med - 0.674 * sigma_fpts), 2)
+                p90 = round(max(med + 1.5, med + 1.282 * sigma_fpts), 2)
             else:
                 # Heuristic fallback based on salary
                 val_mult = 2.6 if pos in ("QB", "RB") else 2.4

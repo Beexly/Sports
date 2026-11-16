@@ -131,3 +131,88 @@ def reallocate_vacated_volume(
         named_carry_attribution=round(named_c_ratio, 6),
         efficiency_boost=eff_boost,
     )
+
+
+def conserve_non_qb_rushing_and_prune_zero_carry_wrs(
+    rush_weights: dict[str, float],
+    positions: dict[str, str],
+    carries_per_pg: dict[str, float],
+    *,
+    gadget_carry_floor: float = 0.35,
+    exclude_qb: bool = True,
+) -> dict[str, float]:
+    """Prune zero-carry WRs/TEs and exclude QBs when QB scrambling is modeled separately.
+
+    Fixes the Week 10 double-allocation bug (where QBs absorbed 25-72% of team rush shares
+    before being overwritten by simulated scramble yards) and Jensen inflation smearing ~1.6
+    carries onto every zero-carry WR.
+    """
+    filtered: dict[str, float] = {}
+    for name, raw_w in rush_weights.items():
+        pos = str(positions.get(name, "")).strip().upper()
+        if exclude_qb and pos == "QB":
+            continue
+        cpg = float(carries_per_pg.get(name, 0.0))
+        if pos == "RB" or (pos in {"WR", "TE"} and cpg >= gadget_carry_floor):
+            filtered[name] = max(1e-4, float(raw_w))
+
+    if not filtered:
+        for name, raw_w in rush_weights.items():
+            if str(positions.get(name, "")).strip().upper() == "RB":
+                filtered[name] = max(1.0, float(raw_w))
+
+    tot = sum(filtered.values())
+    if tot <= 0.0:
+        return {}
+    return {k: round(v / tot, 6) for k, v in filtered.items()}
+
+
+def anchor_team_priors_to_market_stack(
+    *,
+    posted_total: float,
+    posted_home_spread: float,
+    pbp_team_pass_pg: float,
+    pbp_team_rush_pg: float,
+    side: str,
+    qb_tier: str = "QB1",
+    epa_mod: float = 1.0,
+    pass_rate: float = 0.57,
+) -> tuple[float, float, float]:
+    """Compute Layer-1 Market + Stage-1 PBP team pass/rush yard priors without 285.0 walls.
+
+    Returns ``(mkt_implied_pts, target_pass_yds, target_rush_yds)``.
+    """
+    side_low = side.strip().lower()
+    if side_low not in {"away", "home"}:
+        raise ValueError(f"side must be 'away' or 'home', got {side!r}")
+    raw_mkt_pts = (
+        0.5 * (posted_total + posted_home_spread)
+        if side_low == "away"
+        else 0.5 * (posted_total - posted_home_spread)
+    )
+    mkt_pts = min(36.5, max(10.5, raw_mkt_pts))
+
+    tier_up = qb_tier.strip().upper()
+    qb_mult = (
+        0.74
+        if tier_up == "QB2_BACKUP"
+        else (0.60 if tier_up == "EMERGENCY_QB3_UDFA" else 1.0)
+    )
+    pass_lean = min(1.20, max(0.84, pass_rate / 0.57))
+    rush_lean = min(1.24, max(0.80, (1.0 - pass_rate) / 0.43))
+    mkt_pass_implied = (
+        (214.0 + 4.8 * (mkt_pts - 21.5))
+        * pass_lean
+        * (0.80 if tier_up == "QB2_BACKUP" else 1.0)
+    )
+    mkt_rush_implied = (112.0 + 3.4 * (mkt_pts - 21.5)) * rush_lean
+
+    bounded_epa = min(1.14, max(0.88, float(epa_mod)))
+    raw_pass = (0.52 * mkt_pass_implied + 0.48 * (pbp_team_pass_pg * qb_mult)) * bounded_epa
+    raw_rush = (0.48 * mkt_rush_implied + 0.52 * pbp_team_rush_pg) * (
+        0.94 + 0.5 * (bounded_epa - 1.0)
+    )
+
+    target_pass = round(min(330.0, max(125.0, raw_pass)), 2)
+    target_rush = round(min(185.0, max(65.0, raw_rush)), 2)
+    return round(mkt_pts, 2), target_pass, target_rush

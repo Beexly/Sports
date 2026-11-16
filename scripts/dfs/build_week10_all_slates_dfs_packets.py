@@ -278,52 +278,56 @@ def _dk_fpts_from_dossier_record(
     pos: str,
     td_prob: float,
 ) -> tuple[float, float, float]:
-    """Compute DraftKings (p50/mean, p25_floor, p90_ceiling) strictly from Stage 3/4 quantiles."""
+    """Compute DraftKings (mean, p25_floor, p90_ceiling) via RSS sub-Gaussian variance aggregation.
+
+    Avoids the comonotonic quantile-sum fallacy (summing independent category P90s).
+    """
     pr = rec.get("projections") or {}
 
-    def _compute(sf: str) -> float:
-        if pos == "K":
-            fg = _metric_val(pr, "fg_made", sf)
-            pat = _metric_val(pr, "pat_made", sf)
-            if fg > 0 or pat > 0:
-                return round(3.3 * fg + 1.0 * pat, 3)
-            return round(_metric_val(pr, "kicking_points", sf), 3)
+    if pos == "K":
+        fg_m = _metric_val(pr, "fg_made", "mean")
+        pat_m = _metric_val(pr, "pat_made", "mean")
+        med = round(3.3 * fg_m + 1.0 * pat_m, 3) if (fg_m > 0 or pat_m > 0) else round(_metric_val(pr, "kicking_points", "mean"), 3)
+        std_k = max(1.8, _metric_val(pr, "kicking_points", "std"))
+        p25 = round(max(0.5, med - 0.674 * std_k), 3)
+        p90 = round(max(med + 1.2, med + 1.282 * std_k), 3)
+        return med, p25, p90
 
-        pass_yds = _metric_val(pr, "pass_yds", sf)
-        pass_tds = _metric_val(pr, "pass_tds", sf)
-        ints = _metric_val(pr, "interceptions", sf)
-        rush_yds = _metric_val(pr, "rush_yds", sf)
-        rec_yds = _metric_val(pr, "rec_yds", sf)
-        recs = _metric_val(pr, "receptions", sf)
-        rec_tds = _metric_val(pr, "rec_tds", sf)
-        if "rush_tds" in pr and isinstance(pr.get("rush_tds"), Mapping):
-            rush_tds = _metric_val(pr, "rush_tds", sf)
-        else:
-            lam_td = -math.log(max(1e-6, 1.0 - min(0.92, max(0.0, td_prob)))) if td_prob > 0 else 0.0
-            rush_tds = max(0.0, lam_td - rec_tds)
-        if pos == "QB":
-            rush_tds = min(0.45, rush_tds)
+    pass_yds = _metric_val(pr, "pass_yds", "mean")
+    pass_tds = _metric_val(pr, "pass_tds", "mean")
+    ints = _metric_val(pr, "interceptions", "mean")
+    rush_yds = _metric_val(pr, "rush_yds", "mean")
+    rec_yds = _metric_val(pr, "rec_yds", "mean")
+    recs = _metric_val(pr, "receptions", "mean")
+    rec_tds = _metric_val(pr, "rec_tds", "mean")
+    if "rush_tds" in pr and isinstance(pr.get("rush_tds"), Mapping):
+        rush_tds = _metric_val(pr, "rush_tds", "mean")
+    else:
+        lam_td = -math.log(max(1e-6, 1.0 - min(0.92, max(0.0, td_prob)))) if td_prob > 0 else 0.0
+        rush_tds = max(0.0, lam_td - rec_tds)
+    if pos == "QB":
+        rush_tds = min(0.45, rush_tds)
 
-        def _metric_sigma(metric_name: str, mean_val: float) -> float:
-            s = _metric_val(pr, metric_name, "std")
-            if s > 1.0:
-                return s
-            p90_v = _metric_val(pr, metric_name, "p90")
-            p10_v = _metric_val(pr, metric_name, "p10")
-            if p90_v > p10_v:
-                return max(1.0, (p90_v - p10_v) / 2.563)
-            return max(1.0, 0.35 * max(mean_val, 1.0))
+    def _metric_sigma(metric_name: str, mean_val: float, rel: float = 0.35) -> float:
+        s = _metric_val(pr, metric_name, "std")
+        if s > 0.2:
+            return s
+        p90_v = _metric_val(pr, metric_name, "p90")
+        p10_v = _metric_val(pr, metric_name, "p10")
+        if p90_v > p10_v:
+            return max(0.25, (p90_v - p10_v) / 2.563)
+        return max(0.25, rel * abs(mean_val)) if mean_val > 0 else 0.0
 
-        def _tail_bonus_prob(metric_name: str, thresh: float, val: float) -> float:
-            if sf != "mean":
-                return 1.0 if val >= thresh else 0.0
-            if val <= 0.0:
-                return 0.0
-            sigma = _metric_sigma(metric_name, val)
-            z = (thresh - val) / (sigma * math.sqrt(2.0))
-            return min(1.0, max(0.0, 0.5 * math.erfc(z)))
+    def _tail_bonus_prob(metric_name: str, thresh: float, val: float) -> float:
+        if val <= 0.0:
+            return 0.0
+        sigma = max(1.0, _metric_sigma(metric_name, val))
+        z = (thresh - val) / (sigma * math.sqrt(2.0))
+        return min(1.0, max(0.0, 0.5 * math.erfc(z)))
 
-        pts = (
+    med = round(
+        max(
+            0.0,
             0.04 * pass_yds
             + 4.0 * pass_tds
             - 1.0 * ints
@@ -333,14 +337,32 @@ def _dk_fpts_from_dossier_record(
             + 6.0 * (rec_tds + rush_tds)
             + 3.0 * _tail_bonus_prob("pass_yds", 300.0, pass_yds)
             + 3.0 * _tail_bonus_prob("rush_yds", 100.0, rush_yds)
-            + 3.0 * _tail_bonus_prob("rec_yds", 100.0, rec_yds)
-        )
-        return round(max(0.0, pts), 3)
+            + 3.0 * _tail_bonus_prob("rec_yds", 100.0, rec_yds),
+        ),
+        3,
+    )
 
-    med = _compute("mean")
-    p25 = min(med, _compute("p25"))
-    p90 = max(med, _compute("p90"))
-    return round(med, 3), round(max(0.1, p25), 3), round(max(med, p90), 3)
+    std_py = _metric_sigma("pass_yds", pass_yds)
+    std_ptd = _metric_sigma("pass_tds", pass_tds, 0.55)
+    std_int = _metric_sigma("interceptions", ints, 0.70)
+    std_ry = _metric_sigma("rush_yds", rush_yds)
+    std_recy = _metric_sigma("rec_yds", rec_yds)
+    std_rec = _metric_sigma("receptions", recs)
+    std_rtd = _metric_sigma("rush_tds", rush_tds, 0.75)
+    std_rectd = _metric_sigma("rec_tds", rec_tds, 0.75)
+
+    sigma_fpts = math.sqrt(
+        (0.04 * std_py) ** 2
+        + (4.0 * std_ptd) ** 2
+        + (1.0 * std_int) ** 2
+        + (0.10 * std_ry) ** 2
+        + (0.10 * std_recy + 0.85 * std_rec) ** 2
+        + (6.0 * math.sqrt(std_rtd ** 2 + std_rectd ** 2)) ** 2
+    )
+    sigma_fpts = max(2.2, min(11.5, sigma_fpts))
+    p25 = round(max(0.1, med - 0.674 * sigma_fpts), 3)
+    p90 = round(max(med + 1.5, med + 1.282 * sigma_fpts), 3)
+    return round(med, 3), p25, p90
 
 
 def extract_active_decoy_keys(injury_decoy_audit: Mapping[str, Any] | None) -> set[str]:
@@ -578,9 +600,9 @@ def _apply_vacated_volume_and_trench_conservation(
         te_ir_cnt = len(te_outs_by_team.get(tm, set()))
         rb_ir_cnt = len(rb_outs_by_team.get(tm, set()))
 
-        effective_team_rush = team_rush_yds * (1.0 + 0.07 * min(5, opp_f7_outs))
-        if opp_f7_outs >= 3:
-            effective_team_rush = max(effective_team_rush, 102.0)
+        # Team rushing & passing totals in connected dossiers ALREADY incorporate Stage 2/3
+        # opposing front-7 injury priors -- do NOT re-multiply team_rush_yds by opp_f7_outs.
+        effective_team_rush = team_rush_yds
 
         vac_rush = max(0.0, effective_team_rush - sum(raw_rush.values()))
         vac_rec = max(0.0, team_pass_yds - sum(raw_rec.values()))
@@ -592,9 +614,9 @@ def _apply_vacated_volume_and_trench_conservation(
             pos = str(pool_df.loc[i, "position"])
             w = max(1.0, raw_rec[i])
             if pos == "TE" and wr_ir_cnt >= 2:
-                w *= 1.0 + 0.55 * wr_ir_cnt + 0.25 * te_ir_cnt
+                w *= 1.0 + 0.35 * min(2, wr_ir_cnt) + 0.15 * min(2, te_ir_cnt)
             elif pos == "RB" and (len(rb_idxs) == 1 or rb_ir_cnt >= 2):
-                w *= 1.75
+                w *= 1.25
             rec_weights[i] = w
         rec_w_sum = sum(rec_weights.values()) or 1.0
 
@@ -602,21 +624,21 @@ def _apply_vacated_volume_and_trench_conservation(
             pos = str(pool_df.loc[i, "position"])
             if pos == "QB":
                 continue
-            r_share = (raw_rush[i] / rb_rush_sum) if (pos == "RB" and rb_idxs) else 0.0
-            c_share = rec_weights.get(i, 0.0) / rec_w_sum
+            r_share = min(0.68, (raw_rush[i] / rb_rush_sum)) if (pos == "RB" and rb_idxs) else 0.0
+            c_share = min(0.34, rec_weights.get(i, 0.0) / rec_w_sum)
 
             new_rush = raw_rush[i] + vac_rush * r_share
             new_rec = raw_rec[i] + vac_rec * c_share
             new_recs = raw_recs[i] + vac_recs * c_share
             rush_td = (
-                team_rush_tds * (0.85 * r_share) * (1.0 + 0.06 * min(5, opp_f7_outs))
+                team_rush_tds * (0.78 * r_share)
                 if pos == "RB"
                 else 0.0
             )
-            rec_td = max(team_pass_tds, 0.38 * est_total_tds) * c_share
+            rec_td = team_pass_tds * c_share
 
-            bonus_100_rush = 3.0 * (1.0 if new_rush >= 95.0 else max(0.0, (new_rush - 45.0) / 105.0))
-            bonus_100_rec = 3.0 * (1.0 if new_rec >= 95.0 else max(0.0, (new_rec - 45.0) / 105.0))
+            bonus_100_rush = 1.5 * max(0.0, min(1.0, (new_rush - 70.0) / 55.0))
+            bonus_100_rec = 1.5 * max(0.0, min(1.0, (new_rec - 70.0) / 55.0))
             conserved_med = round(
                 0.1 * new_rush
                 + 0.1 * new_rec
@@ -628,13 +650,21 @@ def _apply_vacated_volume_and_trench_conservation(
             )
             old_med = float(pool_df.loc[i, "median_fpts"])
             if conserved_med > old_med:
-                pool_df.loc[i, "median_fpts"] = conserved_med
-                pool_df.loc[i, "projection"] = conserved_med
+                # Cap post-conserved uplift to avoid compounding single-RB saturation
+                adj_med = round(min(conserved_med, old_med + max(3.5, 0.25 * old_med)), 3)
+                delta_med = adj_med - old_med
+                sigma_est = max(
+                    3.2,
+                    min(10.5, (float(pool_df.loc[i, "p90_ceiling_fpts"]) - old_med) / 1.282),
+                )
+                pool_df.loc[i, "median_fpts"] = adj_med
+                pool_df.loc[i, "projection"] = adj_med
                 pool_df.loc[i, "p25_floor_fpts"] = round(
-                    max(float(pool_df.loc[i, "p25_floor_fpts"]), 0.44 * conserved_med), 3
+                    max(0.5, adj_med - 0.674 * sigma_est), 3
                 )
                 pool_df.loc[i, "p90_ceiling_fpts"] = round(
-                    max(float(pool_df.loc[i, "p90_ceiling_fpts"]), 2.15 * conserved_med), 3
+                    max(adj_med + 1.5, adj_med + 1.282 * (sigma_est + 0.20 * max(0.0, delta_med))),
+                    3,
                 )
 
 
@@ -1055,8 +1085,6 @@ def _format_classic_lineup(df_lu: pd.DataFrame, mode: str, lineup_index: int, sa
         if t in {"PIT", "CIN"}:
             return 3.0
         if t in {"SEA", "LV", "LAR", "LA", "ARI", "SF", "DAL"}:
-            return 2.0
-        if t in {"HOU", "GB", "NE", "CHI", "BUF", "MIN", "TB"}:
             return 2.0
         return 1.0
 

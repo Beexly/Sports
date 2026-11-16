@@ -15,12 +15,16 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+ESPN_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+ESPN_SUMMARY_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary"
 
 
 def resolve_window_for_event(event: Dict[str, Any]) -> str:
@@ -132,8 +136,275 @@ def parse_game_scores_and_market(event: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _norm_person_name(name: str) -> str:
+    cleaned = re.sub(r"[^a-zA-Z0-9\s]", " ", str(name or "").lower())
+    tokens = [t for t in cleaned.split() if t not in {"jr", "sr", "ii", "iii", "iv", "v"}]
+    return " ".join(tokens)
+
+
+def refresh_espn_scoreboard_preserving_odds(
+    sb_file: Path,
+    *,
+    season: int,
+    week: int,
+    timeout: float = 12.0,
+) -> Dict[str, Any]:
+    """Fetch live ESPN NFL scoreboard and merge scores/status while preserving prior closing odds."""
+    existing_odds_by_id: Dict[str, List[Dict[str, Any]]] = {}
+    existing_data: Dict[str, Any] = {}
+    if sb_file.is_file():
+        try:
+            existing_data = json.loads(sb_file.read_text(encoding="utf-8"))
+            for ev in existing_data.get("events") or []:
+                ev_id = str(ev.get("id") or "")
+                comp = (ev.get("competitions") or [{}])[0]
+                odds = comp.get("odds") or []
+                if ev_id and odds:
+                    existing_odds_by_id[ev_id] = odds
+        except Exception:
+            existing_data = {}
+
+    url = f"{ESPN_SCOREBOARD_URL}?dates={int(season)}&seasontype=2&week={int(week)}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 GSE-Autopsy/1.0"})
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            live_data = json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        if existing_data:
+            return existing_data
+        raise FileNotFoundError(f"Authoritative ESPN scoreboard unavailable offline and missing at: {sb_file}")
+
+    # Preserve DraftKings closing odds when ESPN strips odds after game goes STATUS_FINAL
+    for ev in live_data.get("events") or []:
+        ev_id = str(ev.get("id") or "")
+        comp_list = ev.get("competitions") or []
+        if not comp_list:
+            continue
+        comp = comp_list[0]
+        if not (comp.get("odds") or []) and ev_id in existing_odds_by_id:
+            comp["odds"] = existing_odds_by_id[ev_id]
+
+    sb_file.parent.mkdir(parents=True, exist_ok=True)
+    sb_file.write_text(json.dumps(live_data, indent=2), encoding="utf-8")
+    return live_data
+
+
+def _parse_espn_summary_boxscore(summary_json: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract team passing/rushing totals and per-player stats from ESPN summary JSON."""
+    box = summary_json.get("boxscore") or {}
+    teams_out: Dict[str, Dict[str, float]] = {}
+    players_out: Dict[Tuple[str, str], Dict[str, float]] = {}
+
+    for tm_entry in box.get("players") or []:
+        tm_ab = str((tm_entry.get("team") or {}).get("abbreviation") or "").upper()
+        if tm_ab == "LA":
+            tm_ab = "LAR"
+        elif tm_ab == "WSH":
+            tm_ab = "WAS"
+        tm_totals = {"pass_yds": 0.0, "pass_tds": 0.0, "rush_yds": 0.0, "rush_tds": 0.0}
+        for cat in tm_entry.get("statistics") or []:
+            cname = str(cat.get("name") or "").lower()
+            labels = [str(lb).upper() for lb in (cat.get("labels") or [])]
+            for ath_row in cat.get("athletes") or []:
+                disp = str(((ath_row.get("athlete") or {}).get("displayName")) or "").strip()
+                norm_disp = _norm_person_name(disp)
+                stats_arr = ath_row.get("stats") or []
+                stat_map = {labels[i]: stats_arr[i] for i in range(min(len(labels), len(stats_arr)))}
+                rec = players_out.setdefault((tm_ab, norm_disp), {"name": disp})  # type: ignore[arg-type]
+
+                def _num(k: str) -> float:
+                    raw = str(stat_map.get(k, "0") or "0")
+                    if "/" in raw:
+                        raw = raw.split("/")[0]
+                    if "-" in raw and not raw.startswith("-"):
+                        raw = raw.split("-")[0]
+                    try:
+                        return float(raw)
+                    except ValueError:
+                        return 0.0
+
+                if cname == "passing":
+                    py = _num("YDS")
+                    ptd = _num("TD")
+                    ints = _num("INT")
+                    comp_att = str(stat_map.get("C/ATT", "0/0"))
+                    parts = comp_att.split("/")
+                    pc = float(parts[0]) if len(parts) == 2 and parts[0].isdigit() else 0.0
+                    pa = float(parts[1]) if len(parts) == 2 and parts[1].isdigit() else 0.0
+                    tm_totals["pass_yds"] += py
+                    tm_totals["pass_tds"] += ptd
+                    rec["pass_yds"] = rec.get("pass_yds", 0.0) + py
+                    rec["pass_tds"] = rec.get("pass_tds", 0.0) + ptd
+                    rec["interceptions"] = rec.get("interceptions", 0.0) + ints
+                    rec["pass_completions"] = rec.get("pass_completions", 0.0) + pc
+                    rec["pass_attempts"] = rec.get("pass_attempts", 0.0) + pa
+                elif cname == "rushing":
+                    ry = _num("YDS")
+                    rcar = _num("CAR")
+                    rtd = _num("TD")
+                    tm_totals["rush_yds"] += ry
+                    tm_totals["rush_tds"] += rtd
+                    rec["rush_yds"] = rec.get("rush_yds", 0.0) + ry
+                    rec["carries"] = rec.get("carries", 0.0) + rcar
+                    rec["rush_tds"] = rec.get("rush_tds", 0.0) + rtd
+                elif cname == "receiving":
+                    recy = _num("YDS")
+                    recs = _num("REC")
+                    rectd = _num("TD")
+                    rec["rec_yds"] = rec.get("rec_yds", 0.0) + recy
+                    rec["receptions"] = rec.get("receptions", 0.0) + recs
+                    rec["rec_tds"] = rec.get("rec_tds", 0.0) + rectd
+        teams_out[tm_ab] = tm_totals
+
+    return {"teams": teams_out, "players": players_out}
+
+
+def compare_game_against_dossier(
+    game: Dict[str, Any],
+    *,
+    week: int,
+    repo_root: Path = REPO_ROOT,
+    fetch_boxscore: bool = True,
+) -> Optional[Dict[str, Any]]:
+    """Compare completed game actuals (team + boxscore players) vs pregame dossier projections."""
+    if not game.get("is_completed"):
+        return None
+    away = game["away_team"]
+    home = game["home_team"]
+    candidates = [
+        repo_root / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week{week}.json",
+    ]
+    if away == "WAS":
+        candidates.append(repo_root / "data" / "engine" / f"connected_workflow_dossier_wsh_{home.lower()}_week{week}.json")
+    if home == "WAS":
+        candidates.append(repo_root / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_wsh_week{week}.json")
+
+    dossier_path = next((p for p in candidates if p.is_file()), None)
+    if dossier_path is None:
+        return None
+
+    try:
+        dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    s34 = dossier.get("stage3_4_conserved_post_sim_projections") or {}
+    tp = s34.get("team_post_sim_projections") or {}
+    ap = s34.get("athlete_post_sim_projections") or {}
+    s5 = dossier.get("stage5_360_conjunction_gate") or {}
+
+    aw_proj = tp.get(away) or tp.get("WSH" if away == "WAS" else away) or {}
+    hm_proj = tp.get(home) or tp.get("WSH" if home == "WAS" else home) or {}
+
+    aw_pts_proj = float((aw_proj.get("points") or {}).get("mean", 0.0))
+    hm_pts_proj = float((hm_proj.get("points") or {}).get("mean", 0.0))
+    aw_pass_proj = float((aw_proj.get("pass_yds") or {}).get("mean", 0.0))
+    hm_pass_proj = float((hm_proj.get("pass_yds") or {}).get("mean", 0.0))
+    aw_rush_proj = float((aw_proj.get("rush_yds") or {}).get("mean", 0.0))
+    hm_rush_proj = float((hm_proj.get("rush_yds") or {}).get("mean", 0.0))
+
+    act_margin = game["home_score"] - game["away_score"]
+    proj_margin = hm_pts_proj - aw_pts_proj
+    act_total = game["home_score"] + game["away_score"]
+    proj_total = hm_pts_proj + aw_pts_proj
+
+    box_parsed: Dict[str, Any] = {"teams": {}, "players": {}}
+    if fetch_boxscore and game.get("event_id"):
+        try:
+            url = f"{ESPN_SUMMARY_URL}?event={game['event_id']}"
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 GSE-Autopsy/1.0"})
+            with urllib.request.urlopen(req, timeout=10.0) as resp:
+                sum_json = json.loads(resp.read().decode("utf-8"))
+            box_parsed = _parse_espn_summary_boxscore(sum_json)
+        except Exception:
+            box_parsed = {"teams": {}, "players": {}}
+
+    tm_box = box_parsed.get("teams") or {}
+    aw_act_box = tm_box.get(away) or {}
+    hm_act_box = tm_box.get(home) or {}
+
+    player_errors: List[Dict[str, Any]] = []
+    pl_box = box_parsed.get("players") or {}
+    if pl_box:
+        for p_name, p_rec in ap.items():
+            p_tm = str(p_rec.get("team") or "").upper()
+            p_tm_norm = "WAS" if p_tm == "WSH" else ("LAR" if p_tm == "LA" else p_tm)
+            act_row = pl_box.get((p_tm_norm, _norm_person_name(p_name)))
+            if not act_row:
+                continue
+            projs = p_rec.get("projections") or {}
+            pos = str(p_rec.get("position") or "").upper()
+            if pos == "QB" and "pass_yds" in projs and "pass_yds" in act_row:
+                p_m = float((projs["pass_yds"] or {}).get("mean", 0.0))
+                if p_m <= 0.0 and float(act_row.get("pass_attempts", 0.0)) < 10.0:
+                    continue
+                player_errors.append({
+                    "player": p_name, "team": p_tm_norm, "position": pos, "stat": "pass_yds",
+                    "projected": round(p_m, 2), "actual": round(act_row["pass_yds"], 2),
+                    "error": round(p_m - act_row["pass_yds"], 2),
+                })
+            if pos == "RB" and "rush_yds" in projs and "rush_yds" in act_row:
+                p_m = float((projs["rush_yds"] or {}).get("mean", 0.0))
+                player_errors.append({
+                    "player": p_name, "team": p_tm_norm, "position": pos, "stat": "rush_yds",
+                    "projected": round(p_m, 2), "actual": round(act_row["rush_yds"], 2),
+                    "error": round(p_m - act_row["rush_yds"], 2),
+                })
+            if pos in ("WR", "TE") and "rec_yds" in projs and "rec_yds" in act_row:
+                p_m = float((projs["rec_yds"] or {}).get("mean", 0.0))
+                player_errors.append({
+                    "player": p_name, "team": p_tm_norm, "position": pos, "stat": "rec_yds",
+                    "projected": round(p_m, 2), "actual": round(act_row["rec_yds"], 2),
+                    "error": round(p_m - act_row["rec_yds"], 2),
+                })
+
+    return {
+        "dossier_file": dossier_path.name,
+        "qb1_projected": (dossier.get("stage0_roster_and_board_allowlist") or {}).get("confirmed_qb1", {}),
+        "projected_away_pts": round(aw_pts_proj, 2),
+        "projected_home_pts": round(hm_pts_proj, 2),
+        "actual_away_pts": game["away_score"],
+        "actual_home_pts": game["home_score"],
+        "team_points_mae": round(0.5 * (abs(aw_pts_proj - game["away_score"]) + abs(hm_pts_proj - game["home_score"])), 2),
+        "spread_error_pts": round(abs(proj_margin - act_margin), 2),
+        "total_error_pts": round(abs(proj_total - act_total), 2),
+        "projected_away_pass_yds": round(aw_pass_proj, 2),
+        "projected_home_pass_yds": round(hm_pass_proj, 2),
+        "actual_away_pass_yds": round(float(aw_act_box.get("pass_yds", 0.0)), 2) if aw_act_box else None,
+        "actual_home_pass_yds": round(float(hm_act_box.get("pass_yds", 0.0)), 2) if hm_act_box else None,
+        "projected_away_rush_yds": round(aw_rush_proj, 2),
+        "projected_home_rush_yds": round(hm_rush_proj, 2),
+        "actual_away_rush_yds": round(float(aw_act_box.get("rush_yds", 0.0)), 2) if aw_act_box else None,
+        "actual_home_rush_yds": round(float(hm_act_box.get("rush_yds", 0.0)), 2) if hm_act_box else None,
+        "player_errors_count": len(player_errors),
+        "player_yards_mae": round(sum(abs(e["error"]) for e in player_errors) / len(player_errors), 2) if player_errors else None,
+        "top_player_misses": sorted(player_errors, key=lambda e: -abs(e["error"]))[:8],
+        "stage5_game_lines": [
+            {
+                "market": gl.get("market"),
+                "selection": gl.get("selection"),
+                "post_sim_prob": gl.get("post_sim_prob"),
+                "market_prob_devig": gl.get("market_prob_devig"),
+                "net_edge": gl.get("net_edge"),
+                "decision": gl.get("decision"),
+            }
+            for gl in (s5.get("game_line_evaluations") or [])
+        ],
+    }
+
+
 def grade_completed_game(game: Dict[str, Any]) -> Dict[str, Any]:
-    """Grade spread, total, and moneyline results against market lines."""
+    """Grade spread, total, and moneyline results against market lines (PENDING if incomplete)."""
+    if not game.get("is_completed"):
+        return {
+            "is_graded": False,
+            "margin": None,
+            "total_points": None,
+            "spread_result": "PENDING",
+            "total_result": "PENDING",
+            "ml_result": "PENDING",
+        }
+
     home_score = game["home_score"]
     away_score = game["away_score"]
     margin = home_score - away_score
@@ -141,12 +412,15 @@ def grade_completed_game(game: Dict[str, Any]) -> Dict[str, Any]:
 
     # Spread grading: spread is home point spread (e.g. -2.5 means home is favored by 2.5)
     spread = game["spread"]
-    if margin + spread > 0:
-        spread_result = "HOME_COVER"
-    elif margin + spread < 0:
-        spread_result = "AWAY_COVER"
+    if game.get("details") or spread != 0.0:
+        if margin + spread > 0:
+            spread_result = "HOME_COVER"
+        elif margin + spread < 0:
+            spread_result = "AWAY_COVER"
+        else:
+            spread_result = "PUSH"
     else:
-        spread_result = "PUSH"
+        spread_result = "UNAVAILABLE"
 
     # Total grading
     ou = game["over_under"]
@@ -169,7 +443,7 @@ def grade_completed_game(game: Dict[str, Any]) -> Dict[str, Any]:
         ml_result = "TIE"
 
     return {
-        "is_graded": game["is_completed"],
+        "is_graded": True,
         "margin": margin,
         "total_points": total_points,
         "spread_result": spread_result,
@@ -184,6 +458,7 @@ def synthesize_autopsy_learning_record(
     season: int,
     week: int,
     window: str,
+    projection_autopsy: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Generate a clean, structured trainer-ready learning loop record."""
     matchup = game["matchup"]
@@ -191,18 +466,28 @@ def synthesize_autopsy_learning_record(
     home = game["home_team"]
 
     if game["is_completed"]:
+        proj_note = ""
+        if projection_autopsy:
+            proj_note = (
+                f"\nPregame Dossier Projection: {away} {projection_autopsy['projected_away_pts']} - "
+                f"{home} {projection_autopsy['projected_home_pts']} "
+                f"(Team Pts MAE={projection_autopsy['team_points_mae']}, "
+                f"Spread Err={projection_autopsy['spread_error_pts']}, "
+                f"Total Err={projection_autopsy['total_error_pts']})."
+            )
         prompt = (
             f"NFL {season} Week {week} Post-Game Autopsy: {matchup} ({window.upper()}).\n"
             f"Final Score: {away} {game['away_score']}, {home} {game['home_score']} (Total {grading['total_points']}).\n"
             f"Closing Lines: Spread {game['details']} ({game['spread']}), Over/Under {game['over_under']}.\n"
-            f"Outcomes: Spread {grading['spread_result']}, Total {grading['total_result']}, Moneyline {grading['ml_result']}.\n"
+            f"Outcomes: Spread {grading['spread_result']}, Total {grading['total_result']}, Moneyline {grading['ml_result']}."
+            f"{proj_note}\n"
             f"Analyze key situational catalysts, trench pressure rates, and pass/run script elasticity."
         )
         completion = (
             f"Autopsy Review for {matchup}:\n"
             f"1. Score Dynamics: {home} finished with margin {grading['margin']:+d} against spread {game['spread']}.\n"
             f"2. Total Calibration: Combined points ({grading['total_points']}) settled {grading['total_result']} vs {game['over_under']}.\n"
-            f"3. Situational Feedback: Graded via free ESPN scoreboard consensus path. Model weights updated for situational elasticity."
+            f"3. Situational Feedback: Graded via live ESPN scoreboard + boxscore autopsy. Model weights updated for situational elasticity."
         )
     else:
         prompt = (
@@ -214,8 +499,8 @@ def synthesize_autopsy_learning_record(
             f"Pre-settlement expectation established for {matchup}. Awaiting official post-game scoreboard settlement."
         )
 
-    return {
-        "schema": "gse-post-window-autopsy-feed-v1",
+    rec_out: Dict[str, Any] = {
+        "schema": "gse-post-window-autopsy-feed-v2",
         "season": season,
         "week": week,
         "window": window,
@@ -238,6 +523,63 @@ def synthesize_autopsy_learning_record(
         "trainer_completion": completion,
         "generated_utc": datetime.now(timezone.utc).isoformat(),
     }
+    if projection_autopsy is not None:
+        rec_out["projection_autopsy"] = projection_autopsy
+    return rec_out
+
+
+def _sync_deduped_grading_corpus(
+    repo_root: Path,
+    completed_records: List[Dict[str, Any]],
+) -> int:
+    """Deduplicate data/corpus/grading_feedback_records.jsonl by game_id and upsert Week 10 grades."""
+    corpus_path = repo_root / "data" / "corpus" / "grading_feedback_records.jsonl"
+    by_gid: Dict[str, Dict[str, Any]] = {}
+    if corpus_path.is_file():
+        for raw_line in corpus_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except Exception:
+                continue
+            gid = str(obj.get("game_id") or "")
+            if gid:
+                by_gid[gid] = obj
+
+    for rec in completed_records:
+        if not rec.get("is_completed"):
+            continue
+        gs = rec["game_summary"]
+        gid = f"{rec['season']}_{int(rec['week']):02d}_{gs['away_team']}_{gs['home_team']}"
+        autopsy = rec.get("projection_autopsy") or {}
+        by_gid[gid] = {
+            "game_id": gid,
+            "season": int(rec["season"]),
+            "week": int(rec["week"]),
+            "matchup": f"{gs['away_team']} @ {gs['home_team']}",
+            "actual_score": f"{gs['away_team']} {gs['away_score']} - {gs['home_team']} {gs['home_score']}",
+            "projected_score": (
+                f"{gs['away_team']} {autopsy.get('projected_away_pts')} - "
+                f"{gs['home_team']} {autopsy.get('projected_home_pts')}"
+                if autopsy
+                else None
+            ),
+            "spread_result": rec["grading"]["spread_result"],
+            "total_result": rec["grading"]["total_result"],
+            "ml_result": rec["grading"]["ml_result"],
+            "team_points_mae": autopsy.get("team_points_mae"),
+            "spread_error_pts": autopsy.get("spread_error_pts"),
+            "total_error_pts": autopsy.get("total_error_pts"),
+            "graded_utc": rec["generated_utc"],
+        }
+
+    corpus_path.parent.mkdir(parents=True, exist_ok=True)
+    with corpus_path.open("w", encoding="utf-8") as fh:
+        for gid in sorted(by_gid.keys()):
+            fh.write(json.dumps(by_gid[gid], separators=(",", ":")) + "\n")
+    return len(by_gid)
 
 
 def run_post_window_settlement_and_autopsy(
@@ -249,15 +591,27 @@ def run_post_window_settlement_and_autopsy(
     output_feed_path: Optional[Path | str] = None,
     date_str: Optional[str] = None,
     repo_root: Path = REPO_ROOT,
+    live_refresh: Optional[bool] = None,
+    fetch_boxscore: Optional[bool] = None,
+    sync_grading_corpus: Optional[bool] = None,
 ) -> Dict[str, Any]:
     """Execute post-window settlement and generate trainer-ready learning feeds."""
+    use_default_sb = scoreboard_path is None
     sb_file = (
         Path(scoreboard_path)
         if scoreboard_path
         else (repo_root / "data" / "engine" / f"espn_{season}_week{week}_scoreboard.json")
     )
-    if not sb_file.is_file():
-        raise FileNotFoundError(f"Authoritative ESPN scoreboard not found: {sb_file}")
+    do_live = bool(use_default_sb) if live_refresh is None else bool(live_refresh)
+    do_box = bool(use_default_sb) if fetch_boxscore is None else bool(fetch_boxscore)
+    do_sync_corpus = bool(use_default_sb and output_feed_path is None) if sync_grading_corpus is None else bool(sync_grading_corpus)
+
+    if do_live:
+        sb_data = refresh_espn_scoreboard_preserving_odds(sb_file, season=season, week=week)
+    else:
+        if not sb_file.is_file():
+            raise FileNotFoundError(f"Authoritative ESPN scoreboard not found: {sb_file}")
+        sb_data = json.loads(sb_file.read_text(encoding="utf-8"))
 
     today_str = date_str or datetime.now(timezone.utc).strftime("%Y-%m-%d")
     out_file = (
@@ -274,7 +628,6 @@ def run_post_window_settlement_and_autopsy(
             "Only the Windows trainer owns brain/mind.jsonl. Feeds must go to brain/feeds/<date>/."
         )
 
-    sb_data = json.loads(sb_file.read_text(encoding="utf-8"))
     events = sb_data.get("events") or []
 
     window_games: List[Dict[str, Any]] = []
@@ -293,14 +646,30 @@ def run_post_window_settlement_and_autopsy(
     with out_file.open("w", encoding="utf-8") as fh:
         for gm in window_games:
             grading = grade_completed_game(gm)
+            proj_autopsy = compare_game_against_dossier(
+                gm,
+                week=week,
+                repo_root=repo_root,
+                fetch_boxscore=do_box,
+            )
             if gm["is_completed"]:
                 completed_count += 1
             else:
                 pending_count += 1
-            rec = synthesize_autopsy_learning_record(gm, grading, season, week, window)
+            rec = synthesize_autopsy_learning_record(
+                gm,
+                grading,
+                season,
+                week,
+                gm.get("detected_window") or window,
+                projection_autopsy=proj_autopsy,
+            )
             records.append(rec)
             fh.write(json.dumps(rec, separators=(",", ":")) + "\n")
 
+    corpus_count = _sync_deduped_grading_corpus(repo_root, records) if do_sync_corpus and completed_count > 0 else None
+
+    autopsy_games = [r["projection_autopsy"] for r in records if isinstance(r.get("projection_autopsy"), dict)]
     summary = {
         "status": "PASS",
         "season": season,
@@ -312,11 +681,28 @@ def run_post_window_settlement_and_autopsy(
         "pending_games_cataloged": pending_count,
         "feed_output_path": str(out_file),
         "records_written": len(records),
+        "deduped_grading_corpus_rows": corpus_count,
+        "mean_team_points_mae": (
+            round(sum(a["team_points_mae"] for a in autopsy_games) / len(autopsy_games), 2)
+            if autopsy_games
+            else None
+        ),
+        "mean_spread_error_pts": (
+            round(sum(a["spread_error_pts"] for a in autopsy_games) / len(autopsy_games), 2)
+            if autopsy_games
+            else None
+        ),
+        "mean_total_error_pts": (
+            round(sum(a["total_error_pts"] for a in autopsy_games) / len(autopsy_games), 2)
+            if autopsy_games
+            else None
+        ),
         "games": [
             {
                 "matchup": r["matchup"],
                 "is_completed": r["is_completed"],
                 "grading": r["grading"],
+                "projection_autopsy": r.get("projection_autopsy"),
             }
             for r in records
         ],
