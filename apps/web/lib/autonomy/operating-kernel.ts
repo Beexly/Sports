@@ -43,7 +43,10 @@ export type AutonomyActionKind =
   | "SEAL_SUN_NOON_MNF_LOCK"
   | "RUN_T90M_INACTIVES_ADJUSTMENT"
   | "REBUILD_DFS_LATE_SWAP_PACKETS"
-  | "QUARANTINE_ENGINE_INTEGRITY_LEAK";
+  | "QUARANTINE_ENGINE_INTEGRITY_LEAK"
+  // Wave 14/16 Compound-Intelligence Fabric & GSI ADR-0003 Doctrine Monitoring
+  | "RUN_COMPOUND_FABRIC_AUDIT"
+  | "QUARANTINE_GSI_DOCTRINE_BREACH";
 
 export interface AutonomyAction {
   readonly kind: AutonomyActionKind;
@@ -101,10 +104,17 @@ export interface AutonomyObservation {
   readonly minSettledForLearning: number;
   /** Optional pregame cadence & integrity status (ADR-0010). */
   readonly pregameCadence?: PregameCadenceObservation | null;
+  /** Age of Foundry compound-corpus index in minutes; null = missing, undefined = not probed. */
+  readonly compoundFabricAgeMinutes?: number | null;
+  /** Wave 16 GSI ADR-0003 rule-in-only neuro-biomarker doctrine check; undefined = not probed. */
+  readonly gsiRuleInDoctrineHeld?: boolean;
 }
 
 /** I8 SLA: free-spine durable snap age ceiling (minutes). */
 export const FREE_SPINE_SLA_MINUTES = 120;
+
+/** Wave 14/16 compound-fabric index freshness ceiling (minutes). */
+export const COMPOUND_FABRIC_SLA_MINUTES = 360;
 
 export interface AutonomyIntrospection {
   readonly honestyScore: number; // 0..100
@@ -409,6 +419,43 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
     }
   }
 
+  // ── Compound-Intelligence Fabric & GSI ADR-0003 Doctrine (Wave 14/16) ──
+  if (obs.gsiRuleInDoctrineHeld === false) {
+    severity = worse(severity, "P0");
+    actions.push({
+      kind: "QUARANTINE_GSI_DOCTRINE_BREACH",
+      priority: 1210,
+      severity: "P0",
+      title: "Quarantine ADR-0003 neuro-biomarker doctrine breach",
+      detail:
+        "GSI biomarker check detected a non-rule-in return-to-play / clearance breach (ADR-0003). Quarantine biomedical modifiers immediately.",
+      target: "gsi:adr0003:quarantine",
+      requiresOwner: true,
+      autonomousSafe: false,
+    });
+  }
+
+  if (
+    obs.compoundFabricAgeMinutes === null ||
+    (typeof obs.compoundFabricAgeMinutes === "number" &&
+      obs.compoundFabricAgeMinutes > COMPOUND_FABRIC_SLA_MINUTES)
+  ) {
+    severity = worse(severity, "P2");
+    actions.push({
+      kind: "RUN_COMPOUND_FABRIC_AUDIT",
+      priority: 350,
+      severity: "P2",
+      title: "Audit compound-intelligence fabric + GSI telemetry",
+      detail:
+        obs.compoundFabricAgeMinutes === null
+          ? "Compound-corpus index timestamp missing/unreadable — run read-only fabric & GSI audit."
+          : `Compound-corpus index age ${obs.compoundFabricAgeMinutes}m exceeds ${COMPOUND_FABRIC_SLA_MINUTES}m SLA — run idempotent audit.`,
+      target: "/api/cron/compound-fabric-audit",
+      requiresOwner: false,
+      autonomousSafe: true,
+    });
+  }
+
   // ── Law / refuse-default (always reinforce when public surfaces look tempting) ─
   if (obs.liveBoardEnabled || obs.publicPicksEnabled || obs.performanceStatsEnabled || obs.publishLedgerEnabled) {
     // If any public gate is open while settlement critical or board suppressed — hold
@@ -559,6 +606,9 @@ function introspect(
   }
   if (obs.pregameCadence?.engineIntegrityLeakDetected) {
     contradictions.push("Engine integrity leak detected in pregame projections — quarantine active.");
+  }
+  if (obs.gsiRuleInDoctrineHeld === false) {
+    contradictions.push("GSI ADR-0003 rule-in-only doctrine breached — clearance contamination quarantined.");
   }
 
   const growthEdges: string[] = [];

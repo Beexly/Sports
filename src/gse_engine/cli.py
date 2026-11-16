@@ -21,6 +21,14 @@ from gse_engine.compute.skfolio_allocator import (
     CandidateBetTicket,
     allocate_skfolio_kelly_portfolio,
 )
+from gse_engine.fabric import (
+    BrokerlessMicrotaskCoordinator,
+    HotSwapInferenceEngine,
+    OpportunisticWorkerDaemon,
+    execute_deterministic_microtask_kernel,
+    run_evolutionary_campaign,
+    sweep_foundry_and_corpus_primitives,
+)
 from gse_engine.gates.cage_policy import evaluate_cage_slate_policy
 from gse_engine.governance.agent_org_roster import (
     DEFAULT_GSE_ORG_CHART,
@@ -38,6 +46,7 @@ from gse_engine.observability.skill_registry_router import (
     build_arize_deep_link,
     route_gse_capability_domain,
 )
+from gse_engine.science.gsi_translational_bridge import load_and_verify_wave16_telemetry
 from gse_engine.storage.trajectory_checkpoint import TrajectoryCheckpointer
 from gse_engine.workflows.slate_window import resolve_lock_version
 
@@ -348,6 +357,7 @@ def _build_commands() -> dict[str, Any]:
             "multi_agent_wave",
             "dossier_copy",
             "corpus_tree_search",
+            "gsi_translational_science",
         }
         chosen: CapabilityDomain = (
             domain if domain in valid else "accelerated_simulation"  # type: ignore[assignment]
@@ -390,6 +400,77 @@ def _build_commands() -> dict[str, Any]:
             }
         )
 
+    def fabric_campaign(
+        generations: int = 2, seed: int = 20261116, db_path: str = ":memory:"
+    ) -> str:
+        """Run distributed ETTC multi-island campaign with e-process gate."""
+        return json.dumps(
+            run_evolutionary_campaign(
+                generations=generations,
+                campaign_seed=seed,
+                db_target=db_path,
+            )
+        )
+
+    def fabric_worker(
+        node_id: str = "cli-cpu-1",
+        db_path: str = "data/engine/fabric_queue.sqlite",
+        max_iterations: int = 5,
+    ) -> str:
+        """Run self-throttling opportunistic compute worker over SQLite coordinator."""
+        coord = BrokerlessMicrotaskCoordinator(
+            db_target=db_path,
+            spot_check_oracle=execute_deterministic_microtask_kernel,
+        )
+        daemon = OpportunisticWorkerDaemon(coord, node_id)
+        processed = daemon.run_loop(max_iterations=max_iterations)
+        coord.close()
+        return json.dumps({"node_id": node_id, "processed": processed})
+
+    def fabric_sweep_corpus(limit: int = 0) -> str:
+        """Sweep 12,469 Foundry artifacts & PDF manifest into fast 6-family index."""
+        res = sweep_foundry_and_corpus_primitives(batch_limit=limit if limit > 0 else None)
+        out = {k: v for k, v in res.items() if k != "curated_rrf_candidates"}
+        out["curated_candidates_count"] = len(res.get("curated_rrf_candidates") or [])
+        return json.dumps(out)
+
+    def fabric_hotswap_bench() -> str:
+        """Measure <5ms in-memory query latency from SHA-256 verified ChampionBundle."""
+        eng = HotSwapInferenceEngine()
+        samples = [
+            eng.query(p1=0.56, p2=0.52, pairing="QB-WR", market_fair_prob=0.26).latency_ms
+            for _ in range(100)
+        ]
+        return json.dumps(
+            {
+                "bundle_sha256": eng.active_bundle.bundle_sha256,
+                "max_latency_ms": round(max(samples), 5),
+                "mean_latency_ms": round(sum(samples) / float(len(samples)), 5),
+            }
+        )
+
+    def gsi_science_audit(
+        telemetry_path: str = (
+            "data/engine/gsi_wave16_translational_and_datascience_telemetry_2026.json"
+        ),
+    ) -> str:
+        """Verify ADR-0003 GSI translational & paired statistical progression telemetry."""
+        bundle = load_and_verify_wave16_telemetry(Path(telemetry_path))
+        verdict = route_gse_capability_domain("gsi_translational_science")
+        return json.dumps(
+            {
+                "ok": True,
+                "generated_utc": bundle.generated_utc,
+                "route_domain": verdict.domain,
+                "progression_count": len(bundle.progression_reports),
+                "biomarker_count": len(bundle.biomarker_structures),
+                "clinical_trial_portfolios": len(bundle.clinical_trials),
+                "sar_target": bundle.sar_benchmark.target_chembl_id,
+                "sar_compounds_evaluated": bundle.sar_benchmark.evaluated_compounds,
+                "sar_winning_model": bundle.sar_benchmark.winning_model,
+            }
+        )
+
     return {
         "lock": lock,
         "adjust": adjust,
@@ -407,6 +488,11 @@ def _build_commands() -> dict[str, Any]:
         "arize-link": arize_link,
         "route-skill": route_skill,
         "cloud-ci-check": cloud_ci_check,
+        "fabric-campaign": fabric_campaign,
+        "fabric-worker": fabric_worker,
+        "fabric-sweep-corpus": fabric_sweep_corpus,
+        "fabric-hotswap-bench": fabric_hotswap_bench,
+        "gsi-science-audit": gsi_science_audit,
     }
 
 
@@ -432,6 +518,15 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
     parser.add_argument("--project-id", type=str, default="UHJvamVjdDoxOmdzZQ==")
     parser.add_argument("--trace-id", type=str, default=None)
     parser.add_argument("--span-id", type=str, default=None)
+    parser.add_argument("--generations", type=int, default=2)
+    parser.add_argument("--seed", type=int, default=20261116)
+    parser.add_argument("--node-id", type=str, default="cli-cpu-1")
+    parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument(
+        "--telemetry-path",
+        type=str,
+        default="data/engine/gsi_wave16_translational_and_datascience_telemetry_2026.json",
+    )
     ns = parser.parse_args(argv)
 
     cmd = ns.command
@@ -457,7 +552,13 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
         print(fn(checkpoint_dir=ns.checkpoint_dir))
     elif cmd == "memory-stats":
         print(fn(db_path=ns.db_path))
-    elif cmd in {"eval-skills", "org-status", "portfolio-kelly", "cloud-ci-check"}:
+    elif cmd in {
+        "eval-skills",
+        "org-status",
+        "portfolio-kelly",
+        "cloud-ci-check",
+        "fabric-hotswap-bench",
+    }:
         print(fn())
     elif cmd == "compact-context":
         print(fn(max_tokens=ns.max_tokens))
@@ -475,6 +576,14 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
         )
     elif cmd == "route-skill":
         print(fn(domain=ns.domain))
+    elif cmd == "fabric-campaign":
+        print(fn(generations=ns.generations, seed=ns.seed, db_path=ns.db_path))
+    elif cmd == "fabric-worker":
+        print(fn(node_id=ns.node_id, db_path=ns.db_path))
+    elif cmd == "fabric-sweep-corpus":
+        print(fn(limit=ns.limit))
+    elif cmd == "gsi-science-audit":
+        print(fn(telemetry_path=ns.telemetry_path))
 
 
 def main() -> None:

@@ -221,4 +221,65 @@ describe("executeAutonomyCycle", () => {
         .every((a) => a.status === "skipped_owner"),
     ).toBe(true);
   });
+
+  it("maps RUN_COMPOUND_FABRIC_AUDIT to /api/cron/compound-fabric-audit and executes idempotently", async () => {
+    const fetchImpl = vi.fn(async (input: string) => {
+      expect(String(input)).toContain("/api/cron/compound-fabric-audit");
+      return new Response(JSON.stringify({ ok: true, idempotent: true }), { status: 200 });
+    });
+    const plan = planAutonomyCycle(
+      baseObs({
+        compoundFabricAgeMinutes: 420,
+        gsiRuleInDoctrineHeld: true,
+        canonicalSettled: 120,
+      }),
+    );
+    const audit = plan.autonomousQueue.find((a) => a.kind === "RUN_COMPOUND_FABRIC_AUDIT");
+    expect(audit).toBeDefined();
+    expect(executableTargetFor(audit!)).toBe(EXECUTABLE_CRON_TARGETS.RUN_COMPOUND_FABRIC_AUDIT);
+    expect(executableRequestFor(audit!)).toBe("/api/cron/compound-fabric-audit");
+
+    const result = await executeAutonomyCycle({
+      plan,
+      baseUrl: "https://www.galaxysportsedge.com",
+      cronSecret: "test-secret",
+      dryRun: false,
+      maxActions: 1,
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(result.executedCount).toBe(1);
+    expect(
+      result.acts.some(
+        (a) =>
+          a.kind === "RUN_COMPOUND_FABRIC_AUDIT" &&
+          a.status === "executed" &&
+          a.target === "/api/cron/compound-fabric-audit",
+      ),
+    ).toBe(true);
+  });
+
+  it("refuses autonomous execution for QUARANTINE_GSI_DOCTRINE_BREACH", async () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        gsiRuleInDoctrineHeld: false,
+        compoundFabricAgeMinutes: 10,
+      }),
+    );
+    const breach = plan.ownerQueue.find((a) => a.kind === "QUARANTINE_GSI_DOCTRINE_BREACH");
+    expect(breach).toBeDefined();
+    expect(executableTargetFor(breach!)).toBeNull();
+
+    const result = await executeAutonomyCycle({
+      plan,
+      baseUrl: "https://www.galaxysportsedge.com",
+      cronSecret: "x",
+      dryRun: true,
+    });
+    expect(
+      result.acts
+        .filter((a) => a.kind === "QUARANTINE_GSI_DOCTRINE_BREACH")
+        .every((a) => a.status === "skipped_owner"),
+    ).toBe(true);
+  });
 });

@@ -1,22 +1,22 @@
 # NFL 2026 Week 10 Post-Game Forensic Autopsy & Wave 8 Projection Engine Remediation
 
 **Date:** `2026-11-16` (`UTC`)
-**Scope:** Live ESPN Week 10 Settlement (`13` completed `STATUS_FINAL` games + `LAC @ BAL` MNF `PENDING`), Boxscore Player vs Projection MAE Autopsy (`12` connected dossiers), DFS Variance Fix, and `THE STACK` Layer-1 Market Re-Calibration.
-**Ledger Updates:** `data/engine/lessons_learned_permanent_ledger.jsonl` (`LL-2026-11-16-013`..`LL-2026-11-16-020`), `data/corpus/grading_feedback_records.jsonl` (`28` deduplicated rows, `13` Week 10 games).
+**Scope:** Live ESPN Week 10 Settlement (`13` completed `STATUS_FINAL` games + `LAC @ BAL` MNF `PENDING`), Boxscore Player vs Projection MAE Autopsy (`12` connected dossiers), DFS Variance Fix, and `THE STACK` Layer-1 Market Re-Calibration (`Wave 8A -> Wave 15`).
+**Ledger Updates:** `data/engine/lessons_learned_permanent_ledger.jsonl` (`LL-2026-11-16-013`..`LL-2026-11-16-032`), `data/corpus/grading_feedback_records.jsonl` (`28` deduplicated rows, `13` Week 10 games).
 
 ---
 
-## 1. Executive Summary: Pre-Fix vs Wave 8A vs Wave 8B vs Wave 9 Accuracy Scorecard (Week 10)
+## 1. Executive Summary: Pre-Fix vs Wave 8A through Wave 15 Accuracy Scorecard (Week 10)
 
-Running `scripts/ops/run_post_window_settlement_and_autopsy.py --season 2026 --week 10 --window all` against live ESPN Week 10 finals and individual player boxscores (`/summary?event=<id>`) across the 12 completed Sunday dossiers established exact empirical errors across Pre-Fix, Wave 8A (team normalization + non-QB rushing + backup QB tier), Wave 8B (`THE STACK` Layer-1 prop weighting + cross-team PBP fallback + suffix dedup + `max_wr_share=0.46` + non-starter QB zeroing), and **Wave 9 (`100%` 5-Pillar Books/PDFs/IG/X/Situational + Hybrid RRF ArXiv/Book Retrieval + Snap-by-Snap PBP Simulator LUT Physics + VMLS KKT Simplex Share Reconciler + Healthy `QB1_STARTER` Fix)**:
+Running `scripts/ops/run_post_window_settlement_and_autopsy.py --season 2026 --week 10 --window all` against live ESPN Week 10 finals and individual player boxscores (`/summary?event=<id>`) across the 12 completed Sunday dossiers established exact empirical errors across Pre-Fix, Wave 8A through Wave 12, and **Wave 15 (32-Team Empirical Scale Centering, 3-Way RRF over 12,469 Foundry Artifacts, Barber-Romano CQR, Cross-Language `Philox-4x32-10` Fabric, and 6 Omitted Live Upstream Signal Integrations)**:
 
-| Metric | Pre-Fix Baseline | Wave 8A | Wave 8B | Wave 9 Final | Total Delta (vs Pre-Fix) |
-|---|---:|---:|---:|---:|---:|
-| **Team Passing Yards MAE (yds/team)** | `79.5` | `70.3` | `67.0` | **`65.0`** | **`-14.5` (`-18.2%`)** |
-| **Team Rushing Yards MAE (yds/team)** | `31.4` | `30.4` | `31.1` | **`29.9`** | **`-1.5` (`-4.8%`)** |
-| **Player Yards MAE (yds/player, n=187)** | `32.1` | `29.6` | `27.5` | **`27.27`** | **`-4.83` (`-15.0%`)** |
-| **Game Total Points MAE (pts)** | `9.10` | `8.84` | `8.84` | **`8.89`** *(vs DK Close `9.00`)* | **`-0.21`** |
-| **Team Points MAE (pts/team)** | `7.58` | `7.53` | `7.53` | `7.61` | `+0.03` |
+| Metric | Pre-Fix | Wave 8A | Wave 8B | Wave 9 | Wave 10 | Wave 11 | Wave 12 | Wave 15 Final | Total Delta (vs Pre-Fix) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Team Passing Yards MAE (yds/team)** | `79.5` | `70.3` | `67.0` | `65.0` | `64.6` | `64.6` | `64.5` | **`64.4`** | **`-15.1` (`-19.0%`)** |
+| **Team Rushing Yards MAE (yds/team)** | `31.4` | `30.4` | `31.1` | `29.9` | `26.4` | `26.3` | `26.4` | **`26.0`** | **`-5.4` (`-17.2%`)** |
+| **Player Yards MAE (yds/player, n=187)** | `32.1` | `29.6` | `27.5` | `27.27` | `26.51` | `26.48` | `26.45` | **`26.47`** | **`-5.63` (`-17.5%`)** |
+| **Game Total Points MAE (pts)** | `9.10` | `8.84` | `8.84` | `8.89` | `8.88` | `8.88` | `8.89` | **`8.84`** *(vs DK Close `9.00`)* | **`-0.26`** |
+| **Team Points MAE (pts/team)** | `7.58` | `7.53` | `7.53` | `7.61` | `7.60` | `7.59` | `7.61` | **`7.57`** | **`-0.01`** |
 
 Largest Wave 8B per-matchup improvements (Pre-Fix -> Wave 8A -> Wave 8B):
 - `MIN @ GB`: Pass Yds MAE **`51.6` -> `31.3` -> `21.2`** (`-30.4` yds), Player MAE **`20.3` -> `19.1` -> `16.9`**

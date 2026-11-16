@@ -19,6 +19,7 @@ import {
 } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
+import { probeCompoundFabricAndGsiHealth } from "@/lib/autonomy/compound-fabric-probe";
 import {
   executeAutonomyCycle,
   resolveAutonomyBaseUrl,
@@ -98,6 +99,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     freeSpineSource = "none";
   }
 
+  const compoundProbe = probeCompoundFabricAndGsiHealth();
+
   const observation = {
     observedAt: new Date().toISOString(),
     deploymentSha,
@@ -122,6 +125,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     openPicks: null,
     canonicalSettled: null,
     minSettledForLearning: gates.minSettledPicksForLearning ?? 100,
+    compoundFabricAgeMinutes: compoundProbe.compoundFabricAgeMinutes,
+    gsiRuleInDoctrineHeld: compoundProbe.gsiRuleInDoctrineHeld,
   };
 
   const plan = planAutonomyCycle(observation);
@@ -159,6 +164,8 @@ export async function GET(request: Request): Promise<NextResponse> {
       settlementOverdue: observation.settlementOverdue,
       databaseOk: observation.databaseOk,
       ingestionOk: observation.ingestionOk,
+      compoundFabricAgeMinutes: observation.compoundFabricAgeMinutes ?? null,
+      gsiRuleInDoctrineHeld: observation.gsiRuleInDoctrineHeld ?? null,
     },
     plan: {
       severity: plan.severity,

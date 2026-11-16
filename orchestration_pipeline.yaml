@@ -1,0 +1,71 @@
+modelVersion: "1.0"
+pipelineId: orchestration_pipeline
+description: "GSE compound-intelligence fabric audit, GSI translational science telemetry check, Stage-2 integrity gate, and BigQuery rollup."
+runner: airflow
+owner: gse-platform
+tags:
+  - "job:datacloud:antigravity"
+
+defaults:
+  projectId: "{{ project }}"
+  location: "{{ region }}"
+  retryPolicy:
+    maxRetries: 2
+    exponentialBackoff:
+      initialDelay: "10s"
+      maxDelay: "5m"
+      multiplier: 2.0
+      randomizeJitter: true
+
+triggers:
+  - schedule:
+      interval: "0 6 * * *"
+      startTime: "2026-11-16T00:00:00"
+      endTime: "2027-11-16T00:00:00"
+      catchup: false
+      timezone: "America/Chicago"
+
+actions:
+  - python:
+      name: verify_compound_fabric_and_feeds
+      executionTimeout: "10m"
+      mainFilePath: "scripts/ops/gse_gcp_orchestration_tasks.py"
+      pythonCallable: "run_fabric_and_corpus_audit"
+      engine:
+        local: {}
+
+  - python:
+      name: verify_gsi_translational_science
+      dependsOn:
+        - verify_compound_fabric_and_feeds
+      executionTimeout: "10m"
+      mainFilePath: "scripts/ops/gse_gcp_orchestration_tasks.py"
+      pythonCallable: "run_gsi_translational_science_audit"
+      engine:
+        local: {}
+
+  - python:
+      name: verify_stage2_matchup_compile
+      dependsOn:
+        - verify_gsi_translational_science
+      executionTimeout: "10m"
+      mainFilePath: "scripts/ops/gse_gcp_orchestration_tasks.py"
+      pythonCallable: "run_stage2_matchup_integrity_gate"
+      opKwargs:
+        away_team: "NE"
+        home_team: "DET"
+        week: 10
+      engine:
+        local: {}
+
+  - sql:
+      name: audit_bigquery_sovereign_primitives
+      dependsOn:
+        - verify_stage2_matchup_compile
+      executionTimeout: "5m"
+      engine:
+        bigquery:
+          location: "US"
+          destinationTable: "galaxysportsedge.gse_data.compound_fabric_audit_rollup"
+      query:
+        inline: "SELECT COUNT(*) AS primitive_row_count, CURRENT_TIMESTAMP() AS audited_at FROM galaxysportsedge.gse_data.sovereign_primitives"

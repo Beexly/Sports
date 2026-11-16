@@ -3,6 +3,20 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 -- Waves 13-17 Empirical Centering, Distributed Fabric, Deep Research, GSI Translational Bridge, Autonomy Kernel & GCP Orchestration
+
+- **What changed**:
+  - **Waves 13-15 (Empirical Centering, Cross-Language Philox Fabric & Week 10 Live Re-Sim)**: Centered 32-team scale baselines (`light_box_6_or_fewer_pct = 0.0853`, `ass_score = 0.1282`, `first_read_pct = 0.6258`), wired 3-way RRF (`k=60`), dynamic Dirichlet `[14, 28]`, Barber-Romano CQR, loop-hoisted `equation_gate.py`, and built bit-exact cross-language `Philox-4x32-10` Python/TS/WGSL + `BrokerlessMicrotaskCoordinator` + 5-island MAP-Elites + `SequentialEProcessGate` + <5ms `HotSwapInferenceEngine` (`src/gse_engine/fabric/*`, `packages/prediction-engine/src/fabric/*`), sweeping `12,469` Foundry/corpus files (`47,645` primitives) into `data/engine/foundry_compound_corpus_index_2026.json` and rebuilding all `13` Week 10 dossiers + `5` DK DFS slates.
+  - **Wave 16 (GSI Translational Bridge & 28 License Attestations)**: Created `src/gse_engine/science/gsi_translational_bridge.py`, `data/engine/gsi_wave16_translational_and_datascience_telemetry_2026.json`, `28` `.licenses/*_LICENSE.txt` files, and translational TBI/MMT biomarker + `MMP13` SAR research reports.
+  - **Wave 17 (Stage-2 GSI/HotSwap Coupling, Autonomy Kernel & GCP Composer/BigQuery Pipeline)**: Wired `_compile_gsi_and_compound_fabric_pillar` + `ADR-0003` `QUESTIONABLE`/`DOUBTFUL` `<= 1.0` cap + `assert_all_books_pdfs_ig_x_situational_wired()` into `src/gse_engine/compute/corpus_situational_integrator.py` and `scripts/ops/gse_connected_game_workflow.py`; added `scripts/ops/gse_gcp_orchestration_tasks.py`; wired `apps/web/lib/autonomy/compound-fabric-probe.ts`, Bearer-only `apps/web/app/api/cron/compound-fabric-audit/route.ts`, and `COMPOUND_FABRIC_SLA_MINUTES = 360` into `operating-kernel.ts` / `execute-autonomy-cycle.ts` / `safe-cron-targets.ts`; initialized GCP `deployment.yaml` and `orchestration_pipeline.yaml` (validated with `gcloud beta orchestration-pipelines validate --environment=dev --mode=syntax-only`); appended `LL-2026-11-16-033` to `data/engine/lessons_learned_permanent_ledger.jsonl`.
+- **What was proven**:
+  - `node scripts/ops/overnight-verify-and-ship.mjs` passed `17/17` stages (`exit=0`): `pytest` (`85 passed, 1 skipped` live LocalStack test), `ruff check` (`0` errors), `mypy --strict src/gse_engine` (`53` source files clean), `cli backtest` (`real_money_stake_cleared: false`), all `4` TypeScript workspaces, all `4` Vitest suites (`35/35` web security/autonomy tests), `guardrails-run-all` (`36/36`), `osv-polyglot-audit` (`973` deps), `mobile-lint-rules` (`0` violations), `connected-workflow-dossier-guard`, and `cdp-storefront-smoke`.
+  - Week 10 live ESPN autopsy across `12` completed games (`n=187` players): Pass MAE `64.4`, Rush MAE `26.0`, Player MAE `26.47`, Game Total MAE `8.84`, Team Points MAE `7.57`.
+- **What was not proven**:
+  - Unified Master Plan v4.0 (`K01`-`K25`) mathematical kernel upgrades (scheduled next in Waves 18A-18F); live Cloud Composer `composer.googleapis.com` API deployment (service not enabled in dev project).
+- **What the next role must do**:
+  - Execute Master Plan v4.0 Waves 18A-18F integrating `K01`-`K25` in-place, run property/unit suites + Week 10 13-game re-simulation and live ESPN autopsy, verify `17/17` in `overnight-verify-and-ship.mjs`, and push to `origin/feat/pregame-engine-dfs-harmony-2026-11-15`.
+
 ## 2026-11-16 (UTC Rollover) -- Wave 1-7 Pregame Engine v3.5, Storefront Recovery, CAGE ENFORCE & 87/87 (100%) OSS Corpus Closure
 
 - **What changed**:

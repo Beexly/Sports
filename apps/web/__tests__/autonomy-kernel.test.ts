@@ -269,6 +269,67 @@ describe("autonomy operating kernel", () => {
       expect(plan.introspection.contradictions.some((c) => c.includes("integrity leak"))).toBe(true);
     });
   });
+
+  describe("compound-intelligence fabric & GSI ADR-0003 monitoring (Wave 14/16)", () => {
+    it("queues autonomous P2 RUN_COMPOUND_FABRIC_AUDIT when index is stale or missing", () => {
+      const stalePlan = planAutonomyCycle(
+        baseObs({
+          compoundFabricAgeMinutes: 400,
+          gsiRuleInDoctrineHeld: true,
+        }),
+      );
+      const staleAct = stalePlan.autonomousQueue.find((a) => a.kind === "RUN_COMPOUND_FABRIC_AUDIT");
+      expect(staleAct).toBeDefined();
+      expect(staleAct!.severity).toBe("P2");
+      expect(staleAct!.autonomousSafe).toBe(true);
+      expect(staleAct!.requiresOwner).toBe(false);
+      expect(staleAct!.target).toBe("/api/cron/compound-fabric-audit");
+
+      const missingPlan = planAutonomyCycle(
+        baseObs({
+          compoundFabricAgeMinutes: null,
+          gsiRuleInDoctrineHeld: true,
+        }),
+      );
+      expect(
+        missingPlan.autonomousQueue.some((a) => a.kind === "RUN_COMPOUND_FABRIC_AUDIT"),
+      ).toBe(true);
+    });
+
+    it("omits RUN_COMPOUND_FABRIC_AUDIT when compound-fabric age is fresh", () => {
+      const freshPlan = planAutonomyCycle(
+        baseObs({
+          compoundFabricAgeMinutes: 15,
+          gsiRuleInDoctrineHeld: true,
+          canonicalSettled: 120,
+        }),
+      );
+      expect(freshPlan.autonomousQueue.some((a) => a.kind === "RUN_COMPOUND_FABRIC_AUDIT")).toBe(
+        false,
+      );
+      expect(freshPlan.severity).toBe("OK");
+    });
+
+    it("triggers P0 owner-only QUARANTINE_GSI_DOCTRINE_BREACH on ADR-0003 violation", () => {
+      const breachPlan = planAutonomyCycle(
+        baseObs({
+          gsiRuleInDoctrineHeld: false,
+          compoundFabricAgeMinutes: 10,
+        }),
+      );
+      expect(breachPlan.severity).toBe("P0");
+      const q = breachPlan.ownerQueue.find((a) => a.kind === "QUARANTINE_GSI_DOCTRINE_BREACH");
+      expect(q).toBeDefined();
+      expect(q!.requiresOwner).toBe(true);
+      expect(q!.autonomousSafe).toBe(false);
+      expect(
+        breachPlan.autonomousQueue.some((a) => a.kind === "QUARANTINE_GSI_DOCTRINE_BREACH"),
+      ).toBe(false);
+      expect(breachPlan.introspection.contradictions.some((c) => c.includes("ADR-0003"))).toBe(
+        true,
+      );
+    });
+  });
 });
 
 describe("settlement learning loop", () => {

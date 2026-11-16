@@ -16,7 +16,7 @@
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards"
   ],
   "all_gates_passed": true,
-  "final_receipt_sha256": "e4d4404852653c08410408ee72e616e35d730cff9280b6a4660eaeb8eb1efdaf",
+  "final_receipt_sha256": "21d0ae88550de2426ad8cd5a1a46a4f6a06c13aff4285bcfdfb502a037c465dd",
   "gates": {
     "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification": {
       "gate": "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
@@ -28,13 +28,13 @@
         "events_count": 14,
         "scoreboard_source": "local_snapshot"
       },
-      "timestamp_utc": "2026-11-16T04:03:58.284961+00:00",
-      "receipt_sha256": "3177b74db4d265616441d800f05749b8bee4297859359b702b7beebcdfcf0321"
+      "timestamp_utc": "2026-11-16T19:46:05.366625+00:00",
+      "receipt_sha256": "0be1eccecc0a8491c641c26d3e081c4d2d161d8aba06cde77c137c906ca5d25f"
     },
     "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates": {
       "gate": "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
       "passed": true,
-      "parent_sha256": "3177b74db4d265616441d800f05749b8bee4297859359b702b7beebcdfcf0321",
+      "parent_sha256": "0be1eccecc0a8491c641c26d3e081c4d2d161d8aba06cde77c137c906ca5d25f",
       "payload": {
         "lessons_total": 12,
         "lessons_passed": 12,
@@ -71,13 +71,13 @@
           "receipt_verified": true
         }
       },
-      "timestamp_utc": "2026-11-16T04:03:58.573403+00:00",
-      "receipt_sha256": "808cd5784dd362bb2df72523262a797345c265f687beb1d12c8427ad0e385a2f"
+      "timestamp_utc": "2026-11-16T19:46:05.798742+00:00",
+      "receipt_sha256": "781d5ebd346c9862a876bcf62e80c52acf71449e3e90fcb8445587e096d94605"
     },
     "Gate_1_Coaching_Weather_Circadian_FoundryRO": {
       "gate": "Gate_1_Coaching_Weather_Circadian_FoundryRO",
       "passed": true,
-      "parent_sha256": "808cd5784dd362bb2df72523262a797345c265f687beb1d12c8427ad0e385a2f",
+      "parent_sha256": "781d5ebd346c9862a876bcf62e80c52acf71449e3e90fcb8445587e096d94605",
       "payload": {
         "coaching_python_files_count": 59,
         "foundry_db_readonly_ok": true,
@@ -86,7 +86,7 @@
           "matchup": "NE@DET",
           "espn_event_id": "401873053",
           "kickoff_utc": "2026-11-15T14:30Z",
-          "status": "STATUS_SCHEDULED",
+          "status": "STATUS_FINAL",
           "venue": "FC Bayern Munich Stadium",
           "city": "Munich",
           "state": null,
@@ -100,7 +100,7 @@
           "matchup": "KC@ATL",
           "espn_event_id": "401873058",
           "kickoff_utc": "2026-11-15T18:00Z",
-          "status": "STATUS_SCHEDULED",
+          "status": "STATUS_FINAL",
           "venue": "Mercedes-Benz Stadium",
           "city": "Atlanta",
           "state": "GA",
@@ -111,56 +111,56 @@
           "outdoor_weather_suppressed": true
         }
       },
-      "timestamp_utc": "2026-11-16T04:03:58.578465+00:00",
-      "receipt_sha256": "f6cb8196c6db4edaed469602e69bb98cfec9351b76204084bbdb213782cafb47"
+      "timestamp_utc": "2026-11-16T19:46:05.802228+00:00",
+      "receipt_sha256": "035faecaef4c0ef70837e12ce1c942e059d6823af0fd5c7842fdc3ce0e7192e8"
     },
     "Gate_2_Situational_Overlay_80Rules_CognitiveRouter": {
       "gate": "Gate_2_Situational_Overlay_80Rules_CognitiveRouter",
       "passed": true,
-      "parent_sha256": "f6cb8196c6db4edaed469602e69bb98cfec9351b76204084bbdb213782cafb47",
+      "parent_sha256": "035faecaef4c0ef70837e12ce1c942e059d6823af0fd5c7842fdc3ce0e7192e8",
       "payload": {
         "x_situational_80_rules_exists": true,
         "master_situational_aggregator_exists": true,
         "mcp_cognitive_router_exists": true
       },
-      "timestamp_utc": "2026-11-16T04:03:58.578994+00:00",
-      "receipt_sha256": "cbb21e407b1d6be12ddabc4a33b797a05db7384c476ee7a2ecc0b2c5179ef557"
+      "timestamp_utc": "2026-11-16T19:46:05.802611+00:00",
+      "receipt_sha256": "c024b012631f7ddeb2f0b1bb37f13320b796704a41a98f9a6b6fac90e62e1889"
     },
     "Gate_3_Fence1_LineFree_Trajectory_Sim_Check": {
       "gate": "Gate_3_Fence1_LineFree_Trajectory_Sim_Check",
       "passed": true,
-      "parent_sha256": "cbb21e407b1d6be12ddabc4a33b797a05db7384c476ee7a2ecc0b2c5179ef557",
+      "parent_sha256": "c024b012631f7ddeb2f0b1bb37f13320b796704a41a98f9a6b6fac90e62e1889",
       "payload": {
         "week": 10,
         "line_free_games_verified": 13,
         "stage0_eligible_target_violations": 0
       },
-      "timestamp_utc": "2026-11-16T04:03:58.582953+00:00",
-      "receipt_sha256": "c1733ad43c4c54ab1bc5d24b83ce4d03c2729904b1d96ccc616554419519274d"
+      "timestamp_utc": "2026-11-16T19:46:05.804409+00:00",
+      "receipt_sha256": "e91c1737587898969e894bf3b60cc8ea0ed2f4e5e79e3b038978e7413a269ab4"
     },
     "Gate_4_Conformal_Calibration_And_RLVR_Bridge": {
       "gate": "Gate_4_Conformal_Calibration_And_RLVR_Bridge",
       "passed": true,
-      "parent_sha256": "c1733ad43c4c54ab1bc5d24b83ce4d03c2729904b1d96ccc616554419519274d",
+      "parent_sha256": "e91c1737587898969e894bf3b60cc8ea0ed2f4e5e79e3b038978e7413a269ab4",
       "payload": {
         "calibration_heads_present": true,
         "rlvr_scenarios_verified": 18,
         "rlvr_all_passed": true,
         "bridge_smoke_approved": true
       },
-      "timestamp_utc": "2026-11-16T04:03:58.631542+00:00",
-      "receipt_sha256": "f7597bed3564111f2382c2dcf5d6dfc27bdcdcc7e59864c74f04bd1566d9e2d7"
+      "timestamp_utc": "2026-11-16T19:46:05.837000+00:00",
+      "receipt_sha256": "547c2d14a8e6ac61d5009ad3793f9f077ac001db6fa197d6780853298b22442a"
     },
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards": {
       "gate": "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards",
       "passed": true,
-      "parent_sha256": "f7597bed3564111f2382c2dcf5d6dfc27bdcdcc7e59864c74f04bd1566d9e2d7",
+      "parent_sha256": "547c2d14a8e6ac61d5009ad3793f9f077ac001db6fa197d6780853298b22442a",
       "payload": {
         "js_and_dossier_guards_executed": false,
         "guard_runs": []
       },
-      "timestamp_utc": "2026-11-16T04:03:58.631625+00:00",
-      "receipt_sha256": "e4d4404852653c08410408ee72e616e35d730cff9280b6a4660eaeb8eb1efdaf"
+      "timestamp_utc": "2026-11-16T19:46:05.837065+00:00",
+      "receipt_sha256": "21d0ae88550de2426ad8cd5a1a46a4f6a06c13aff4285bcfdfb502a037c465dd"
     }
   },
   "gse_engine_v3": {
@@ -193,8 +193,8 @@
     "mode": "t90m-adjust",
     "target": "all-remaining",
     "window": "sun_late",
-    "generated_utc": "2026-11-16T04:03:58.665154+00:00",
-    "elapsed_seconds": 0.033,
+    "generated_utc": "2026-11-16T19:46:05.866199+00:00",
+    "elapsed_seconds": 0.029,
     "sla_badge_180s": true,
     "sla_badge_label": "<180s T-90m SLA ACHIEVED",
     "fast_diff_applied": true,

@@ -15,6 +15,7 @@ export const AUTONOMY_SAFE_CRON_TARGETS = [
   "/api/cron/refresh-odds",
   "/api/cron/generate-drafts",
   "/api/cron/calibration-metrics",
+  "/api/cron/compound-fabric-audit",
   // "/api/cron/generate-signal-slate" removed per the #421 resolution. This list and
   // EXECUTABLE_CRON_TARGETS are checked against each other at load time precisely
   // because they must agree; the planner has no RUN_GENERATE_SIGNAL_SLATE action, so
@@ -32,7 +33,7 @@ export const AUTONOMY_MAX_ACTIONS_PER_CYCLE = 4;
 export const AUTONOMY_FREE_SPINE_SLA_MINUTES = 120;
 
 export const AUTONOMY_EXECUTE_HINT_ON =
-  "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health, settle-picks, refresh-odds, generate-drafts, calibration-metrics (autonomousSafe only). Owner-queue + LAWS never auto-run.";
+  "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health, settle-picks, refresh-odds, generate-drafts, calibration-metrics, compound-fabric-audit (autonomousSafe only). Owner-queue + LAWS never auto-run.";
 
 export const AUTONOMY_EXECUTE_HINT_OFF =
   "Default dry-run: autonomy-cycle plans only. Set AUTONOMY_EXECUTE=true (exact string) to close plan→act for allow-listed free-path crons (I9).";

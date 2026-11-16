@@ -3,8 +3,8 @@
 - **Mode**: `t90m-adjust`
 - **Target**: `all-remaining`
 - **Window**: `sun_late`
-- **Generated**: `2026-11-16T04:03:58.665154+00:00`
-- **Timing Telemetry**: `0.033s`
+- **Generated**: `2026-11-16T19:46:05.866199+00:00`
+- **Timing Telemetry**: `0.029s`
 - **SLA Badge**: **`<180s T-90m SLA ACHIEVED`**
 - **Inactives Diff Count**: `0` (Fast diff applied: `True`)
 

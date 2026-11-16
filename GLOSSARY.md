@@ -64,6 +64,22 @@ _Avoid_: Phantom team sink, flat scaling across injured backups.
 The domain isolation boundary separating college football variance and home-field parameters from NFL probability calibration heads.
 _Avoid_: Mixed-league pooling.
 
+**Coverage-Shell Vulnerability Factor**:
+Position-specific adjustment measuring how much an opposing defense over-allows or suppresses production in a target coverage shell relative to league average.
+_Avoid_: Flat opponent rank applied identically across shells.
+
+**Clean-Pocket Baseline Execution**:
+Pass-game efficiency isolated to dropbacks without defensive disruption, filtering out protection noise to estimate stable quarterback accuracy and decision skill.
+_Avoid_: Unfiltered raw passing yards under heavy pressure variance.
+
+**Spread-Script Volume Elasticity**:
+Systematic reallocation of offense play-calling between rushing and passing volume driven by expected point margin, lead protection, and catch-up urgency.
+_Avoid_: Static market-margin regression ignoring blowout run scripts.
+
+**Orthogonalized Situational Shrinkage**:
+Decorrelating multi-factor contextual signals via matrix whitening and applying positive-part multi-parameter shrinkage toward zero before market comparison.
+_Avoid_: Additive unwhitened stacking of correlated contextual deltas.
+
 ## Dynamical Systems & Biophysical Domain (`GSI`)
 
 **Phase-Transition Criticality**:

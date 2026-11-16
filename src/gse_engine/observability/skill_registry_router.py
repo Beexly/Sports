@@ -16,6 +16,7 @@ CapabilityDomain = Literal[
     "multi_agent_wave",
     "dossier_copy",
     "corpus_tree_search",
+    "gsi_translational_science",
 ]
 
 _BASE64_PATH_RE = re.compile(r"^[A-Za-z0-9+/=]{4,}$")
@@ -32,6 +33,7 @@ _DOMAIN_ROUTES: dict[CapabilityDomain, tuple[str, str, float]] = {
     "multi_agent_wave": ("ethos-orchestrate", "squad-hub", 86.12),
     "dossier_copy": ("ethos-write", "boardstate", 86.12),
     "corpus_tree_search": ("ethos-explore", "brain-graph", 86.12),
+    "gsi_translational_science": ("dgx-spark-skills", "brain-graph", 86.12),
 }
 
 

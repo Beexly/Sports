@@ -27,21 +27,98 @@ from __future__ import annotations
 import importlib
 import json
 import math
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from gse_engine.fabric.registry_hotswap import (
+    HotSwapInferenceEngine,
+    verify_champion_bundle,
+)
+from gse_engine.observability.skill_registry_router import (
+    CapabilityDomain,
+    route_gse_capability_domain,
+)
+from gse_engine.science.gsi_translational_bridge import load_and_verify_wave16_telemetry
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MANIFEST_877_PATH = REPO_ROOT / "data" / "sports_research_papers" / "manifest_877_pdfs.json"
+LESSONS_LEDGER_PATH = REPO_ROOT / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl"
+FOUNDRY_INDEX_PATH = REPO_ROOT / "data" / "engine" / "foundry_compound_corpus_index_2026.json"
+GSI_TELEMETRY_PATH = (
+    REPO_ROOT / "data" / "engine" / "gsi_wave16_translational_and_datascience_telemetry_2026.json"
+)
 PBP_2026_PATH = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
 FTN_2026_PATH = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
 
 _MANIFEST_CACHE: dict[str, Any] | None = None
 _MANIFEST_PAPERS_CACHE: list[str] | None = None
+_STATIC_CORPUS_CANDIDATES_CACHE: list[dict[str, Any]] | None = None
+_LESSONS_INDEXED_COUNT_CACHE: int = 0
+_FOUNDRY_SWEPT_FILES_CACHE: int = 0
+_FOUNDRY_PRIMITIVES_COUNT_CACHE: int = 0
 _PBP_TEAM_SIGNALS_CACHE: dict[str, Any] | None = None
 _ELASTICITY_TEAM_CACHE: dict[str, float] | None = None
 _DIRE_TEAM_CACHE: dict[str, dict[str, Any]] | None = None
 _BOOKS_RAW_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
+_OPENAI_721_CACHE: dict[tuple[str, str, float, int], dict[str, Any]] = {}
+_COACH_PA_CACHE: dict[str, float] = {}
+_GSI_FABRIC_PILLAR_CACHE: dict[str, Any] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class TeamPillarSignals:
+    """Immutable per-team signal bundle compiled symmetrically across all 5 pillars."""
+
+    team: str
+    eager_ypa: float = 7.42
+    eager_ypa_delta: float = 0.0
+    pass_funnel: float = 0.0
+    opp_def_stuff_rate: float = 0.185
+    opp_light_box: float = 0.0853
+    rush_ypc_adj_delta: float = 0.0
+    adot_drop: bool = False
+    sched_epa: float = 0.0
+    sched_delta: float = 0.0
+    pgwe_luck: float = 0.0
+    exp_yprr: float = 1.75
+    ypa_adj_delta: float = 0.0
+    pace_sec_adj: float = 27.2
+    dvf_wr: float = 1.0
+    dvf_te: float = 1.0
+    ass_score: float = 0.128
+    first_read_pct: float = 62.6
+    xfp_gap: float = 0.0
+    opp_cover1_rate: float = 0.25
+    pen_epa_delta: float = 0.0
+    clean_epa: float = 0.08
+    self_press: float = 0.20
+    trench_nl: float = 1.0
+    cox_survival_prob: float = 0.65
+    sack_prob_adj: float = 0.064
+    markov_rz_eff: float = 0.55
+    expected_drive_pts_own25: float = 2.0
+    redzone_td_prob_delta: float = 0.0
+    comp_corpus_delta: float = 0.0
+    qb_vcl: float = 0.38
+    dire_rate: float = 0.24
+    script_elast: float = -0.15
+    pa_delta: float = 0.0
+    hidden_game_pts_pg: float = 0.0
+    q41_scripted_epa_delta: float = 0.0
+    q44_neutral_wp_epa: float = 0.0
+    q46_scramble_net_sack_epa: float = -0.35
+    q49_toxic_diff: float = 0.065
+    q51_target_sr: float = 0.48
+    tukey_epa_delta: float = 0.0
+    pressure_epa_cost: float = 0.35
+    first_downs_donated_pg: float = 1.6
+    patton_surv_2_5s: float = 0.68
+    patton_p2s_rate: float = 0.18
+    shrunk_prob_delta: float = 0.0
+    js_shrink_factor: float = 1.0
+    whitened_6fam: tuple[tuple[str, float], ...] = ()
 
 
 def _load_attr(module_path: str, attr_name: str) -> Any:
@@ -70,6 +147,78 @@ def _norm_last_initial(full_name: str) -> str:
     if len(parts) >= 2:
         return f"{parts[0][0]}.{parts[1]}"
     return str(full_name or "")
+
+
+def _compute_dynamic_markov_drive_metrics(
+    off_epa_clean: float,
+    rz_td_edge: float,
+    sack_prob: float,
+) -> dict[str, float]:
+    """Solve N=(I-Q)^(-1), B=NR for a team's live cleaned EPA, RZ edge, and sack rate."""
+    np_mod: Any = importlib.import_module("numpy")
+    adv = _clip(off_epa_clean * 0.45 - (sack_prob - 0.064) * 0.70, -0.055, 0.055)
+    rz_s = _clip(rz_td_edge * 0.40, -0.055, 0.055)
+    q_mat = np_mod.array(
+        [
+            [0.18, max(0.28, 0.40 + adv), 0.07, 0.02, 0.00],
+            [0.03, 0.22, max(0.24, 0.34 + adv), 0.08, 0.02],
+            [0.00, 0.04, 0.24, max(0.26, 0.36 + adv), 0.09],
+            [0.00, 0.00, 0.05, 0.25, max(0.28, 0.40 + adv)],
+            [0.00, 0.00, 0.00, 0.04, 0.28],
+        ],
+        dtype=float,
+    )
+    r_mat = np_mod.array(
+        [
+            [0.01, 0.00, max(0.14, 0.27 - adv), 0.04],
+            [0.03, 0.01, max(0.12, 0.22 - adv), 0.04],
+            [0.06, 0.06, max(0.05, 0.12 - 0.6 * adv), 0.03],
+            [0.09 + 0.3 * rz_s, 0.14 - 0.2 * rz_s, 0.02, 0.03],
+            [max(0.28, 0.42 + rz_s), max(0.12, 0.23 - rz_s), 0.00, 0.03],
+        ],
+        dtype=float,
+    )
+    row_sums = q_mat.sum(axis=1, keepdims=True) + r_mat.sum(axis=1, keepdims=True)
+    q_mat = q_mat / row_sums
+    r_mat = r_mat / row_sums
+    n_mat = np_mod.linalg.inv(np_mod.eye(5, dtype=float) - q_mat)
+    b_mat = n_mat @ r_mat
+    pts_vec = np_mod.array([6.95, 3.0, 0.0, 0.0], dtype=float)
+    exp_pts = b_mat @ pts_vec
+    return {
+        "expected_drive_points_own25": round(float(exp_pts[1]), 4),
+        "markov_rz_ptd_dynamic": round(float(b_mat[4, 0]), 4),
+    }
+
+
+def _orthogonalize_and_js_shrink_6families(
+    family_deltas: Mapping[str, float],
+    market_prob: float,
+) -> dict[str, Any]:
+    """Run live 6-family Cholesky whitening + Positive-Part James-Stein shrinkage."""
+    try:
+        agg_fn = _load_attr(
+            "intelligence.coaching.full_repo_279_family_situational_reasoning_matrix",
+            "execute_master_6family_cholesky_aggregator",
+        )
+        res = dict(agg_fn(family_deltas=dict(family_deltas), market_prob=market_prob))
+        whitened = {
+            str(k): float(v) for k, v in (res.get("whitened_family_deltas") or {}).items()
+        }
+        norm_sq = sum(v * v for v in whitened.values())
+        js_shrink = max(0.0, 1.0 - (4.0 * 0.0004) / max(1e-6, norm_sq))
+        raw_clamped = float(res.get("clamped_prob_delta", 0.0))
+        return {
+            "whitened_family_deltas": {k: round(v, 5) for k, v in whitened.items()},
+            "positive_part_js_shrinkage_factor": round(js_shrink, 5),
+            "shrunk_prob_delta": round(raw_clamped * js_shrink, 5),
+        }
+    except Exception:
+        return {
+            "whitened_family_deltas": {str(k): float(v) for k, v in family_deltas.items()},
+            "positive_part_js_shrinkage_factor": 1.0,
+            "shrunk_prob_delta": 0.0,
+        }
 
 
 def _read_manifest_877_summary() -> dict[str, Any]:
@@ -124,6 +273,124 @@ def _embed_6d_topic_vector(text: str) -> list[float]:
     return [v / norm for v in vec]
 
 
+def _read_static_corpus_candidates() -> list[dict[str, Any]]:
+    """Cache normalized 877-PDF manifest, ledger & Foundry primitives RRF candidates."""
+    global _STATIC_CORPUS_CANDIDATES_CACHE, _LESSONS_INDEXED_COUNT_CACHE
+    global _FOUNDRY_SWEPT_FILES_CACHE, _FOUNDRY_PRIMITIVES_COUNT_CACHE
+    if _STATIC_CORPUS_CANDIDATES_CACHE is not None:
+        return _STATIC_CORPUS_CANDIDATES_CACHE
+
+    _read_manifest_877_summary()
+    pdf_titles = list(_MANIFEST_PAPERS_CACHE or [])
+    items: list[dict[str, Any]] = []
+    high_auth_kw = (
+        "arxiv",
+        "conformal",
+        "sinkhorn",
+        "bayesian",
+        "markov",
+        "weibull",
+        "hidden_game",
+        "football_analytics",
+        "elo",
+        "nflwar",
+        "barber",
+        "romano",
+    )
+    for title in pdf_titles:
+        txt_l = title.lower()
+        auth_p = 0.86 if any(k in txt_l for k in high_auth_kw) else 0.72
+        items.append(
+            {
+                "doc_id": title,
+                "source_type": "877_pdf_manifest",
+                "text": title,
+                "txt_l": txt_l,
+                "vec_6d": _embed_6d_topic_vector(txt_l),
+                "bm25f_score": 0.0,
+                "authority_prior": auth_p,
+            }
+        )
+
+    lessons_count = 0
+    if LESSONS_LEDGER_PATH.is_file():
+        sev_map = {"CRITICAL": 0.96, "HIGH": 0.91, "MEDIUM": 0.84}
+        for raw_ln in LESSONS_LEDGER_PATH.read_text(encoding="utf-8").splitlines():
+            line = raw_ln.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(row, dict):
+                continue
+            lid = str(row.get("lesson_id") or "").strip()
+            title_or_gate = str(
+                row.get("title") or row.get("gate_name") or row.get("source_work") or lid
+            )
+            doc_id = f"{lid}:{title_or_gate}" if lid else title_or_gate
+            sev = str(row.get("severity") or "").upper()
+            auth_p = sev_map.get(sev, 0.80)
+            bm_sc = 2.0 if sev == "CRITICAL" else (1.5 if sev == "HIGH" else 1.0)
+            txt = (
+                f"{doc_id} {row.get('gate_name', '')} {row.get('root_cause', '')} "
+                f"{row.get('permanent_fix', '')} {row.get('lesson_summary', '')}"
+            )
+            txt_l = txt.lower()
+            items.append(
+                {
+                    "doc_id": doc_id,
+                    "source_type": "lessons_learned_ledger",
+                    "text": txt,
+                    "txt_l": txt_l,
+                    "vec_6d": _embed_6d_topic_vector(txt_l),
+                    "bm25f_score": bm_sc,
+                    "authority_prior": auth_p,
+                }
+            )
+            lessons_count += 1
+
+    foundry_swept = 0
+    foundry_prims = 0
+    if FOUNDRY_INDEX_PATH.is_file():
+        try:
+            f_data = json.loads(FOUNDRY_INDEX_PATH.read_text(encoding="utf-8"))
+            foundry_swept = int(f_data.get("files_swept") or 0)
+            foundry_prims = int(f_data.get("primitives_extracted_total") or 0)
+            for row in f_data.get("curated_rrf_candidates") or []:
+                if not isinstance(row, dict):
+                    continue
+                txt = str(row.get("text") or row.get("doc_id") or "")
+                txt_l = txt.lower()
+                raw_vec = row.get("vec_6d")
+                vec_6d = (
+                    [float(v) for v in raw_vec[:6]]
+                    if isinstance(raw_vec, list) and len(raw_vec) == 6
+                    else _embed_6d_topic_vector(txt_l)
+                )
+                items.append(
+                    {
+                        "doc_id": str(row.get("doc_id") or "foundry_prim"),
+                        "source_type": "foundry_book_primitive",
+                        "text": txt,
+                        "txt_l": txt_l,
+                        "vec_6d": vec_6d,
+                        "bm25f_score": 1.4,
+                        "authority_prior": float(row.get("authority_prior") or 0.85),
+                    }
+                )
+        except Exception:
+            foundry_swept = 0
+            foundry_prims = 0
+
+    _LESSONS_INDEXED_COUNT_CACHE = lessons_count
+    _FOUNDRY_SWEPT_FILES_CACHE = foundry_swept
+    _FOUNDRY_PRIMITIVES_COUNT_CACHE = foundry_prims
+    _STATIC_CORPUS_CANDIDATES_CACHE = items
+    return items
+
+
 def hybrid_rrf_corpus_and_arxiv_retriever(
     away_team: str,
     home_team: str,
@@ -132,9 +399,8 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     top_k: int = 8,
     rrf_k: int = 60,
 ) -> dict[str, Any]:
-    """Fuse sparse keyword rank and dense 6D situational cosine rank via RRF (k=60)."""
-    _read_manifest_877_summary()
-    pdf_titles = list(_MANIFEST_PAPERS_CACHE or [])
+    """Fuse sparse, dense 6D cosine, and empirical authority ranks via 3-way RRF (k=60)."""
+    static_items = _read_static_corpus_candidates()
     lessons = list(bm25f_lessons or [])
 
     q_norm = math.sqrt(sum(float(x) ** 2 for x in situational_vector)) or 1.0
@@ -142,26 +408,30 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     if len(q_unit) < 6:
         q_unit.extend([0.0] * (6 - len(q_unit)))
 
-    candidates: list[dict[str, Any]] = []
-    for title in pdf_titles:
-        candidates.append({"doc_id": title, "source_type": "877_pdf_manifest", "text": title})
+    candidates: list[dict[str, Any]] = list(static_items)
     for idx, les in enumerate(lessons):
         doc_title = str(les.get("source_work") or les.get("doc_id") or f"bm25f_{idx}")
         txt = f"{doc_title} {les.get('category', '')} {les.get('lesson_summary', '')}"
+        txt_l = txt.lower()
+        bm_sc = float(les.get("bm25f_plus_score") or 0.0)
         candidates.append(
             {
                 "doc_id": doc_title,
                 "source_type": "bm25f_lesson",
                 "text": txt,
-                "bm25f_score": float(les.get("bm25f_plus_score") or 0.0),
+                "txt_l": txt_l,
+                "vec_6d": _embed_6d_topic_vector(txt_l),
+                "bm25f_score": bm_sc,
+                "authority_prior": _clip(0.82 + 0.04 * bm_sc, 0.72, 0.99),
             }
         )
 
     if not candidates:
         return {
             "matchup": f"{away_team} @ {home_team}",
-            "fusion_method": "reciprocal_rank_fusion_k60",
+            "fusion_method": "reciprocal_rank_fusion_3way_k60",
             "candidates_evaluated": 0,
+            "lessons_ledger_indexed": _LESSONS_INDEXED_COUNT_CACHE,
             "rrf_coherence_score": 0.0,
             "top_fused_citations": [],
         }
@@ -177,25 +447,31 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
 
     sparse_scored: list[tuple[float, int]] = []
     dense_scored: list[tuple[float, int]] = []
+    authority_scored: list[tuple[float, int]] = []
     for idx, c in enumerate(candidates):
-        txt_l = str(c["text"]).lower()
+        txt_l = str(c["txt_l"])
         sp = sum(1.0 for tok in query_tokens if tok in txt_l) + 0.15 * float(
             c.get("bm25f_score", 0.0)
         )
-        d_vec = _embed_6d_topic_vector(txt_l)
+        d_vec = c["vec_6d"]
         dn = sum(a * b for a, b in zip(q_unit, d_vec, strict=True))
         sparse_scored.append((sp, idx))
         dense_scored.append((dn, idx))
+        authority_scored.append((float(c.get("authority_prior", 0.72)), idx))
 
     sparse_order = sorted(sparse_scored, key=lambda x: (-x[0], x[1]))
     dense_order = sorted(dense_scored, key=lambda x: (-x[0], x[1]))
+    auth_order = sorted(authority_scored, key=lambda x: (-x[0], x[1]))
     sparse_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(sparse_order)}
     dense_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(dense_order)}
+    authority_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(auth_order)}
 
     fused: list[tuple[float, int]] = []
     for idx in range(len(candidates)):
-        rrf_val = (1.0 / float(rrf_k + sparse_rank[idx])) + (
-            1.0 / float(rrf_k + dense_rank[idx])
+        rrf_val = (
+            (1.0 / float(rrf_k + sparse_rank[idx]))
+            + (1.0 / float(rrf_k + dense_rank[idx]))
+            + (1.0 / float(rrf_k + authority_rank[idx]))
         )
         fused.append((rrf_val, idx))
     fused.sort(key=lambda x: (-x[0], x[1]))
@@ -210,9 +486,10 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
                 "rrf_score": round(score, 6),
                 "sparse_rank": sparse_rank[idx],
                 "dense_rank": dense_rank[idx],
+                "authority_rank": authority_rank[idx],
             }
         )
-    max_possible = 2.0 / float(rrf_k + 1)
+    max_possible = 3.0 / float(rrf_k + 1)
     coherence = _clip(
         sum(float(it["rrf_score"]) for it in top_items) / max(1e-9, top_k * max_possible),
         0.0,
@@ -220,8 +497,9 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     )
     return {
         "matchup": f"{away_team} @ {home_team}",
-        "fusion_method": "reciprocal_rank_fusion_k60",
+        "fusion_method": "reciprocal_rank_fusion_3way_k60",
         "candidates_evaluated": len(candidates),
+        "lessons_ledger_indexed": _LESSONS_INDEXED_COUNT_CACHE,
         "rrf_coherence_score": round(coherence, 4),
         "top_fused_citations": top_items,
     }
@@ -251,22 +529,27 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
 
     cols = [
         "game_id",
+        "week",
         "drive",
         "posteam",
+        "posteam_type",
         "defteam",
         "play_type",
         "down",
         "ydstogo",
         "yardline_100",
+        "half_seconds_remaining",
         "yards_gained",
         "air_yards",
         "epa",
+        "wp",
         "cpoe",
         "xpass",
         "pass_attempt",
         "complete_pass",
         "incomplete_pass",
         "interception",
+        "fumble_lost",
         "sack",
         "qb_hit",
         "qb_scramble",
@@ -284,11 +567,13 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
         "receiver_player_name",
         "rusher_player_name",
         "score_differential",
+        "result",
     ]
     pbp = pd.read_parquet(PBP_2026_PATH, columns=cols)
-    pbp["posteam"] = pbp["posteam"].astype(str).replace({"LA": "LAR", "WSH": "WAS"})
-    pbp["defteam"] = pbp["defteam"].astype(str).replace({"LA": "LAR", "WSH": "WAS"})
-    pbp["penalty_team"] = pbp["penalty_team"].astype(str).replace({"LA": "LAR", "WSH": "WAS"})
+    tm_norm_map = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+    pbp["posteam"] = pbp["posteam"].astype(str).replace(tm_norm_map)
+    pbp["defteam"] = pbp["defteam"].astype(str).replace(tm_norm_map)
+    pbp["penalty_team"] = pbp["penalty_team"].astype(str).replace(tm_norm_map)
 
     if FTN_2026_PATH.is_file():
         ftn_cols = [
@@ -318,6 +603,44 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
             tm_d = _norm_team(str(row.get("team") or ""))
             if tm_d:
                 dire_by_team[tm_d] = row
+    except Exception:
+        pass
+
+    sched_epa_by_team: dict[str, dict[str, Any]] = {}
+    pgwe_by_team: dict[str, dict[str, Any]] = {}
+    recent_adot_drop_teams: set[str] = set()
+    try:
+        fn_sched_epa = _load_attr(
+            "intelligence.coaching.schedule_cleaned_epa",
+            "compute_schedule_adjusted_epa",
+        )
+        fn_paired_adot = _load_attr(
+            "intelligence.coaching.schedule_cleaned_epa",
+            "detect_paired_adot_drop",
+        )
+        fn_pgwe = _load_attr(
+            "intelligence.coaching.pgwe_luck_audit",
+            "compute_pgwe_luck_delta",
+        )
+        tm_ok = pbp["posteam"].str.len().isin([2, 3]) & pbp["defteam"].str.len().isin([2, 3])
+        valid_tm = pbp[tm_ok]
+        sc_res = fn_sched_epa(valid_tm)
+        for row in sc_res.get("teams") or []:
+            tm_s = _norm_team(str(row.get("team") or ""))
+            if tm_s:
+                sched_epa_by_team[tm_s] = row
+        ad_res = fn_paired_adot(valid_tm)
+        max_wk = int(valid_tm["week"].max()) if len(valid_tm) else 0
+        for flag in ad_res.get("flags") or []:
+            if int(flag.get("week") or 0) >= max(1, max_wk - 1):
+                tm_f = _norm_team(str(flag.get("team") or ""))
+                if tm_f:
+                    recent_adot_drop_teams.add(tm_f)
+        pg_res = fn_pgwe(valid_tm)
+        for row in pg_res.get("teams") or []:
+            tm_p = _norm_team(str(row.get("team") or ""))
+            if tm_p:
+                pgwe_by_team[tm_p] = row
     except Exception:
         pass
 
@@ -459,12 +782,85 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
             pr_trail = float(trail["play_type"].eq("pass").mean()) if len(trail) >= 8 else 0.65
             elasticity_by_team[tm] = round(pr_lead - pr_trail, 4)
 
+        drive_starts = (
+            off.groupby(["game_id", "drive"], sort=False)["yardline_100"].first().dropna()
+        )
+        mean_start_yl100 = float(drive_starts.mean()) if len(drive_starts) else 75.0
+        drives_pg = max(8.0, float(len(drive_starts)) / float(n_games))
+        off_giveaways_pg = (
+            float(off["interception"].fillna(0).sum()) + float(off["fumble_lost"].fillna(0).sum())
+        ) / float(n_games)
+        def_takeaways_pg = (
+            float(dfn["interception"].fillna(0).sum()) + float(dfn["fumble_lost"].fillna(0).sum())
+        ) / float(n_games)
+        hidden_game_pts_pg = round(
+            _clip(
+                (75.0 - mean_start_yl100) * 0.06 * drives_pg
+                + net_pen_diff_pg * 0.065
+                + (def_takeaways_pg - off_giveaways_pg) * 3.8,
+                -6.5,
+                6.5,
+            ),
+            3,
+        )
+
+        play_idx_in_game = off.groupby("game_id", sort=False).cumcount()
+        first15_epa = off.loc[play_idx_in_game < 15, "epa"].dropna()
+        unscripted_epa = off.loc[play_idx_in_game >= 15, "epa"].dropna()
+        raw_q41 = (
+            float(first15_epa.mean()) - float(unscripted_epa.mean())
+            if (len(first15_epa) >= 15 and len(unscripted_epa) >= 30)
+            else 0.0
+        )
+        q41_scripted_epa_delta = round(raw_q41 * gp_wt, 4)
+
+        neutral_wp_s = off.loc[off["wp"].between(0.20, 0.80, inclusive="both"), "epa"].dropna()
+        q44_neutral_wp_epa = (
+            round(float(neutral_wp_s.mean()), 4) if len(neutral_wp_s) >= 20 else 0.0
+        )
+
+        scr_sack_s = off_pass.loc[
+            (off_pass["qb_scramble"] == 1) | (off_pass["sack"] == 1), "epa"
+        ].dropna()
+        q46_scramble_net_sack_epa = (
+            round(float(scr_sack_s.mean()), 4) if len(scr_sack_s) >= 5 else -0.35
+        )
+
+        is_explosive = (
+            (off["play_type"] == "pass") & (off["yards_gained"].fillna(0) >= 20)
+        ) | ((off["play_type"] == "run") & (off["yards_gained"].fillna(0) >= 12))
+        is_to = (off["interception"].fillna(0) == 1) | (off["fumble_lost"].fillna(0) == 1)
+        q49_toxic_diff = (
+            round(float(is_explosive.mean()) - float(is_to.mean()), 4)
+            if len(off) >= 30
+            else 0.065
+        )
+        pass_epa = off_pass["epa"].dropna()
+        q51_target_sr = round(float((pass_epa > 0.0).mean()), 4) if len(pass_epa) >= 15 else 0.48
+        off_epa_s = off["epa"].dropna()
+        if len(off_epa_s) >= 20:
+            q25 = float(off_epa_s.quantile(0.25))
+            q75 = float(off_epa_s.quantile(0.75))
+            iqr = q75 - q25
+            lo_f = q25 - 1.5 * iqr
+            hi_f = q75 + 1.5 * iqr
+            fenced = off_epa_s[(off_epa_s >= lo_f) & (off_epa_s <= hi_f)]
+            tukey_epa_delta = round(float(fenced.mean()) - float(off_epa_s.mean()), 4)
+        else:
+            tukey_epa_delta = 0.0
+
         fd_donated = float(hid_prof.get("first_downs_donated", 0.0)) / float(n_games)
+        sc_row = sched_epa_by_team.get(tm) or {}
+        pg_row = pgwe_by_team.get(tm) or {}
         team_table[tm] = {
             "games_played": n_games,
             "net_penalty_diff_pg": round(net_pen_diff_pg, 3),
             "first_downs_donated_pg": round(fd_donated, 3),
             "pressure_epa_cost": round(float(p_mat.get("pressure_epa_cost", 0.35)), 4),
+            "clean_epa_per_db": round(float(p_mat.get("clean_epa_per_db", 0.08)), 4),
+            "self_invited_pressure_pct": round(
+                float(p_mat.get("self_invited_pressure_pct", 0.20)), 4
+            ),
             "mof_comp_pct": round(float(q_comp.get("middle_of_field_comp_pct", 0.68)), 4),
             "rb_explosive_12plus_rate": round(float(rb_mat.get("explosive_12plus_rate", 0.11)), 4),
             "off_stuffed_rate": round(float(rb_mat.get("stuffed_rate", 0.17)), 4),
@@ -476,6 +872,19 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
             "rz_def_td_allowed_per_play": round(rz_dfn_td_allowed, 4),
             "qb_fault_sack_rate": round(qb_fault_sack_rate, 4),
             "wr_drop_rate": round(drop_rate, 4),
+            "schedule_cleaned_epa_per_play": float(
+                sc_row.get("schedule_cleaned_epa_per_play", 0.0)
+            ),
+            "schedule_cleaned_delta_vs_league": float(sc_row.get("delta_vs_league", 0.0)),
+            "paired_adot_drop_flagged": bool(tm in recent_adot_drop_teams),
+            "pgwe_luck_delta_wins": float(pg_row.get("luck_delta_wins", 0.0)),
+            "hidden_game_pts_pg": hidden_game_pts_pg,
+            "q41_scripted_epa_delta": q41_scripted_epa_delta,
+            "q44_neutral_wp_epa": q44_neutral_wp_epa,
+            "q46_scramble_net_sack_epa": q46_scramble_net_sack_epa,
+            "q49_toxic_diff": q49_toxic_diff,
+            "q51_target_sr": q51_target_sr,
+            "tukey_fenced_epa_delta": tukey_epa_delta,
         }
 
         rec_rows = off_pass[off_pass["receiver_player_name"].notna()]
@@ -495,6 +904,288 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
     _DIRE_TEAM_CACHE = dire_by_team
     _ELASTICITY_TEAM_CACHE = elasticity_by_team
     return _PBP_TEAM_SIGNALS_CACHE
+
+
+def _get_cached_pressure_answer_delta(
+    tm_u: str, pa_prof_fn: Callable[[int, str], Mapping[str, Any]]
+) -> float:
+    """Return cached two-year pressure-answer delta for a franchise."""
+    if tm_u in _COACH_PA_CACHE:
+        return _COACH_PA_CACHE[tm_u]
+    for yr in (2026, 2025):
+        try:
+            res = pa_prof_fn(yr, tm_u)
+            val = res.get("mean_answer_delta")
+            if val is not None:
+                _COACH_PA_CACHE[tm_u] = float(val)
+                return _COACH_PA_CACHE[tm_u]
+        except Exception:
+            continue
+    _COACH_PA_CACHE[tm_u] = 0.0
+    return 0.0
+
+
+def _build_team_pillar_signals(
+    *,
+    team_u: str,
+    opp_u: str,
+    pbt: Mapping[str, Any],
+    opp_pbt: Mapping[str, Any],
+    ftn: Mapping[str, Any],
+    opp_ftn: Mapping[str, Any],
+    sr: Mapping[str, Any],
+    sh: Mapping[str, Any],
+    opp_sh: Mapping[str, Any],
+    fp: Mapping[str, Any],
+    ks: Mapping[str, Any],
+    opp_wl: Mapping[str, Any],
+    patton: Mapping[str, Any],
+    ranks: Mapping[str, Any],
+    opp_ranks: Mapping[str, Any],
+    epa_delta_360: float,
+    pr_delta_360: float,
+    exp_yprr: float,
+    sack_mult_360: float,
+    markov_rz_ptd_static: float,
+    wind_ypa_penalty: float,
+    wind_comp_penalty: float,
+    q4_fatigue_decay: float,
+    mkt_prob: float,
+    pass_funnels: set[str],
+    run_funnels: set[str],
+    stuff_top10: Mapping[str, Any],
+    cox_survival: Callable[..., Mapping[str, Any]],
+    qb_vcl_fn: Callable[..., Mapping[str, Any]],
+    pa_delta: float,
+    dire_rate: float,
+    script_elast: float,
+    q_feats: Mapping[str, Any],
+) -> TeamPillarSignals:
+    """Symmetrically compile one franchise's immutable 5-pillar signal bundle."""
+    eager_ypa = float(pbt.get("eager_regressed_ypa", 7.42))
+    eager_ypa_delta = (eager_ypa - 7.42) * 0.45
+    pass_funnel = 0.024 if opp_u in pass_funnels else (-0.020 if opp_u in run_funnels else 0.0)
+    opp_stuff = float(
+        (stuff_top10.get(opp_u) or {}).get("stuff_rate") or opp_pbt.get("def_stuffed_rate", 0.185)
+    )
+    opp_box_raw = float(opp_sh.get("light_box_pct", 8.53))
+    opp_light_box = opp_box_raw / 100.0 if opp_box_raw > 1.0 else opp_box_raw
+    rush_ypc_adj_delta = _clip(
+        (0.195 - opp_stuff) * 3.5
+        + (opp_light_box - 0.0853) * 2.5
+        + (float(pbt.get("rb_explosive_12plus_rate", 0.115)) - 0.115) * 2.5
+        + (-pass_funnel * 4.0 if opp_u in run_funnels else 0.0),
+        -0.45,
+        0.45,
+    )
+
+    adot_drop = bool(pbt.get("paired_adot_drop_flagged", False))
+    sched_epa = float(pbt.get("schedule_cleaned_epa_per_play", 0.0))
+    sched_delta = float(pbt.get("schedule_cleaned_delta_vs_league", 0.0))
+    pgwe_luck = float(pbt.get("pgwe_luck_delta_wins", 0.0))
+    ypa_adj_delta = _clip(
+        eager_ypa_delta
+        + (exp_yprr - 1.75) * 0.85
+        + wind_ypa_penalty
+        + pass_funnel * 12.0
+        + (-0.08 if adot_drop else 0.0),
+        -1.15,
+        1.15,
+    )
+    pace_sec_adj = _clip(
+        float(sr.get("neutral_pace_sec_per_play") or ftn.get("neutral_pace_sec") or 27.2),
+        24.0,
+        31.8,
+    )
+
+    dvf_wr = _clip(1.0 + (float(opp_ranks.get("WR", 16.5)) - 16.5) * 0.0025, 0.96, 1.04)
+    dvf_te = _clip(1.0 + (float(opp_ranks.get("TE", 16.5)) - 16.5) * 0.0025, 0.96, 1.04)
+    ass_score = float(fp.get("ass_avg_separation_score", 0.128))
+    first_read_pct = float(fp.get("first_read_target_share_pct", 62.6))
+    xfp_gap = float(ks.get("fppg_minus_xfppg", 0.0))
+    opp_cover1_rate = float(opp_wl.get("cover_1_rate", 0.25))
+
+    first_downs_donated_pg = float(pbt.get("first_downs_donated_pg", 1.6))
+    pressure_epa_cost = float(pbt.get("pressure_epa_cost", 0.35))
+    tukey_epa_delta = float(pbt.get("tukey_fenced_epa_delta", 0.0))
+    patton_surv_2_5s = float(patton.get("survival_curve_2_5s", 0.68))
+    patton_p2s = float(patton.get("pressure_to_sack_rate", 0.18))
+
+    pen_epa_delta = _clip(
+        float(pbt.get("net_penalty_diff_pg", 0.0)) * 0.0012
+        - (first_downs_donated_pg - 1.6) * 0.0015,
+        -0.016,
+        0.016,
+    )
+    clean_epa = float(pbt.get("clean_epa_per_db", 0.08))
+    self_press = float(pbt.get("self_invited_pressure_pct", 0.20))
+
+    opp_blitz_raw = float(opp_sh.get("blitz_pct", 26.5))
+    opp_stunt_raw = float(opp_sh.get("stunt_pct", 20.0))
+    opp_blitz_frac = opp_blitz_raw / 100.0 if opp_blitz_raw > 1.0 else opp_blitz_raw
+    opp_stunt_frac = opp_stunt_raw / 100.0 if opp_stunt_raw > 1.0 else opp_stunt_raw
+    trench_nl = _clip(
+        1.0
+        + max(0.0, self_press - 0.18) * ((opp_blitz_frac - 0.24) + (opp_stunt_frac - 0.18)),
+        0.95,
+        1.12,
+    )
+
+    pbwr = max(0.75, 0.94 - float(ftn.get("sack_rate_allowed", 0.065)) * 1.4)
+    cox_res = cox_survival(2.65, trench={"pbwr_avg": pbwr})
+    cox_surv = 0.70 * float(cox_res.get("survival_prob", 0.65)) + 0.30 * patton_surv_2_5s
+    sack_base = float(ftn.get("sack_rate_allowed") or 0.064)
+    sack_prob_adj = _clip(
+        (0.55 * sack_base + 0.45 * float(opp_ftn.get("def_sack_rate", 0.064)))
+        * sack_mult_360
+        * (1.0 + 0.25 * (float(pbt.get("qb_fault_sack_rate", 0.18)) - 0.18))
+        * (1.0 + 0.12 * (patton_p2s - 0.18))
+        * (1.0 + 0.15 * (0.65 - cox_surv))
+        * trench_nl,
+        0.032,
+        0.165,
+    )
+
+    rz_pbp_edge = float(pbt.get("rz_off_td_rate_per_play", 0.145)) - float(
+        opp_pbt.get("rz_def_td_allowed_per_play", 0.145)
+    )
+    rz_rank_edge = (16.5 - float(ranks.get("Red zone", 16.5))) * 0.0012
+    mk_dyn = _compute_dynamic_markov_drive_metrics(sched_epa, rz_pbp_edge, sack_prob_adj)
+    markov_rz_eff = 0.50 * markov_rz_ptd_static + 0.50 * mk_dyn["markov_rz_ptd_dynamic"]
+    redzone_td_prob_delta = _clip(
+        rz_pbp_edge * 0.35 + rz_rank_edge + (markov_rz_eff - 0.55) * 0.18,
+        -0.08,
+        0.08,
+    )
+    comp_corpus_delta = _clip(
+        float(pbt.get("cpoe_mean", 0.0)) * 0.0022
+        - (float(pbt.get("wr_drop_rate", 0.045)) - 0.045) * 0.40
+        + wind_comp_penalty,
+        -0.035,
+        0.035,
+    )
+
+    blitz_faced = float(opp_ftn.get("dc_blitz_rate", 0.25))
+    vcl_res = qb_vcl_fn(
+        active_mot_targets=5 if blitz_faced >= 0.28 else 4,
+        disguise_rate=_clip(1.0 - float(opp_pbt.get("mof_comp_pct", 0.68)), 0.15, 0.55),
+        pocket_voronoi_sq_yds=_clip(6.0 * cox_surv, 2.5, 6.8),
+        target_closing_speed_ms=_clip(
+            5.8 + float(opp_ftn.get("def_sack_rate", 0.064)) * 18.0, 4.5, 8.2
+        ),
+        throwing_window_yds=max(1.1, exp_yprr * 0.95),
+    )
+    qb_vcl = float(vcl_res.get("visual_cognitive_load_index", 0.38))
+
+    hidden_pts = float(pbt.get("hidden_game_pts_pg", 0.0))
+    q41_val = float(pbt.get("q41_scripted_epa_delta", q_feats.get("Q41", 0.0)))
+    q44_val = float(pbt.get("q44_neutral_wp_epa", q_feats.get("Q44", 0.0)))
+    q46_val = float(pbt.get("q46_scramble_net_sack_epa", q_feats.get("Q46", -0.35)))
+    q49_val = float(pbt.get("q49_toxic_diff", q_feats.get("Q49", 0.065)))
+    q51_val = float(pbt.get("q51_target_sr", q_feats.get("Q51", 0.48)))
+
+    press_blitz_pen = (
+        max(0.0, pressure_epa_cost - 0.35) * max(0.0, opp_blitz_frac - 0.25) * 0.08
+    )
+    live_6fam = {
+        "pressure": _clip((0.064 - sack_prob_adj) * 0.30 - press_blitz_pen, -0.055, 0.055),
+        "weather": _clip(wind_comp_penalty * 0.80, -0.04, 0.04),
+        "restFatigue": _clip(q4_fatigue_decay * 0.80, -0.04, 0.04),
+        "coveragePersonnel": _clip(
+            epa_delta_360 * 0.85 + (exp_yprr - 1.75) * 0.02, -0.05, 0.05
+        ),
+        "qbSkillScript": _clip(
+            sched_delta * 0.25
+            + (clean_epa - 0.08) * 0.10
+            - (qb_vcl - 0.38) * 0.04
+            + q44_val * 0.08
+            + (q49_val - 0.065) * 0.12,
+            -0.06,
+            0.06,
+        ),
+        "marketMicrostructure": _clip(pen_epa_delta - pgwe_luck * 0.004, -0.04, 0.04),
+    }
+    js_res = _orthogonalize_and_js_shrink_6families(live_6fam, mkt_prob)
+    whitened_items = tuple(
+        (str(k), float(v)) for k, v in (js_res.get("whitened_family_deltas") or {}).items()
+    )
+
+    return TeamPillarSignals(
+        team=team_u,
+        eager_ypa=round(eager_ypa, 3),
+        eager_ypa_delta=round(eager_ypa_delta, 5),
+        pass_funnel=round(pass_funnel, 4),
+        opp_def_stuff_rate=round(opp_stuff, 4),
+        opp_light_box=round(opp_light_box, 4),
+        rush_ypc_adj_delta=round(rush_ypc_adj_delta, 4),
+        adot_drop=adot_drop,
+        sched_epa=round(sched_epa, 4),
+        sched_delta=round(sched_delta, 4),
+        pgwe_luck=round(pgwe_luck, 3),
+        exp_yprr=round(exp_yprr, 3),
+        ypa_adj_delta=round(ypa_adj_delta, 4),
+        pace_sec_adj=round(pace_sec_adj, 2),
+        dvf_wr=round(dvf_wr, 4),
+        dvf_te=round(dvf_te, 4),
+        ass_score=round(ass_score, 3),
+        first_read_pct=round(first_read_pct, 2),
+        xfp_gap=round(xfp_gap, 3),
+        opp_cover1_rate=round(opp_cover1_rate, 4),
+        pen_epa_delta=round(pen_epa_delta, 5),
+        clean_epa=round(clean_epa, 4),
+        self_press=round(self_press, 4),
+        trench_nl=round(trench_nl, 4),
+        cox_survival_prob=round(cox_surv, 4),
+        sack_prob_adj=round(sack_prob_adj, 4),
+        markov_rz_eff=round(markov_rz_eff, 4),
+        expected_drive_pts_own25=round(mk_dyn["expected_drive_points_own25"], 4),
+        redzone_td_prob_delta=round(redzone_td_prob_delta, 5),
+        comp_corpus_delta=round(comp_corpus_delta, 5),
+        qb_vcl=round(qb_vcl, 4),
+        dire_rate=round(dire_rate, 4),
+        script_elast=round(script_elast, 4),
+        pa_delta=round(pa_delta, 4),
+        hidden_game_pts_pg=round(hidden_pts, 3),
+        q41_scripted_epa_delta=round(q41_val, 4),
+        q44_neutral_wp_epa=round(q44_val, 4),
+        q46_scramble_net_sack_epa=round(q46_val, 4),
+        q49_toxic_diff=round(q49_val, 4),
+        q51_target_sr=round(q51_val, 4),
+        tukey_epa_delta=round(tukey_epa_delta, 4),
+        pressure_epa_cost=round(pressure_epa_cost, 4),
+        first_downs_donated_pg=round(first_downs_donated_pg, 3),
+        patton_surv_2_5s=round(patton_surv_2_5s, 4),
+        patton_p2s_rate=round(patton_p2s, 4),
+        shrunk_prob_delta=float(js_res["shrunk_prob_delta"]),
+        js_shrink_factor=float(js_res["positive_part_js_shrinkage_factor"]),
+        whitened_6fam=whitened_items,
+    )
+
+
+def _compute_team_epa_corpus_delta(
+    sig: TeamPillarSignals,
+    *,
+    math_epa: float,
+    epa_delta_360: float,
+    probe: Mapping[str, Any],
+) -> float:
+    """Combine bounded 5-pillar offensive EPA corpus deltas for one franchise."""
+    return _clip(
+        sig.pen_epa_delta
+        + (sig.dire_rate - 0.24) * 0.06
+        + float(probe.get("stage4_situational_log_odds", 0.0)) * 0.08
+        + math_epa * 0.15
+        + sig.sched_delta * 0.06
+        + (sig.clean_epa - 0.08) * 0.04
+        + epa_delta_360 * 0.25
+        + sig.shrunk_prob_delta * 0.12
+        + sig.tukey_epa_delta * 0.15
+        - _clip(sig.xfp_gap * 0.0020, -0.008, 0.008)
+        - sig.pgwe_luck * 0.004
+        - (sig.qb_vcl - 0.38) * 0.025,
+        -0.045,
+        0.045,
+    )
 
 
 def compile_all_books_pdfs_ig_x_and_situational_priors(
@@ -543,17 +1234,41 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         live_books_res = dict(run_books(away=away_u, home=home_u, week=int(week)))
         _BOOKS_RAW_CACHE[cache_key] = live_books_res
 
-    eval_openai_721 = _load_attr(
-        "intelligence.coaching.openai_math_721_manuscript_and_lean_engine",
-        "evaluate_openai_math_721_pre_projection_overlay",
+    oai_key = (home_u, away_u, round(eff_wind, 2), 4 if is_short_week else 2)
+    openai_math_res = _OPENAI_721_CACHE.get(oai_key)
+    if openai_math_res is None:
+        eval_openai_721 = _load_attr(
+            "intelligence.coaching.openai_math_721_manuscript_and_lean_engine",
+            "evaluate_openai_math_721_pre_projection_overlay",
+        )
+        openai_math_res = dict(
+            eval_openai_721(
+                home_team=home_u,
+                away_team=away_u,
+                crosswind_mph=oai_key[2],
+                cumulative_interior_hits=oai_key[3],
+                mean_defender_separation_yds=2.45,
+            )
+        )
+        _OPENAI_721_CACHE[oai_key] = openai_math_res
+
+    wave8_blk = live_books_res.get("wave8_hidden_game_eager_ifaf_quant_and_github_engines") or {}
+    wave8_local_pdfs = int(wave8_blk.get("wave8_local_pdfs_wired", 36))
+    wave8_gh_repos = int(wave8_blk.get("wave8_github_books_notebooks_repos_wired", 77))
+    oai_kernels = openai_math_res.get("kernels") or {}
+    sogge_defl = float(
+        (oai_kernels.get("sogge_local_smoothing") or {}).get(
+            "deep_pass_trajectory_deflection_yds", 0.0
+        )
     )
-    openai_math_res = dict(
-        eval_openai_721(
-            home_team=home_u,
-            away_team=away_u,
-            crosswind_mph=eff_wind,
-            cumulative_interior_hits=4 if is_short_week else 2,
-            mean_defender_separation_yds=2.45,
+    radial_collapse = float(
+        (oai_kernels.get("radial_pair_potential") or {}).get("collapse_probability", 0.5)
+    )
+    amp_retention = float(openai_math_res.get("amplitude_damping_retention", 0.85))
+    cnf_sat = float(openai_math_res.get("cnf_conjunction_satisfaction_prob", 0.22))
+    ricci_kappa = float(
+        (oai_kernels.get("bounded_treewidth_l1") or {}).get(
+            "ollivier_ricci_curvature_kappa", 0.0
         )
     )
 
@@ -584,17 +1299,29 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         or {}
     )
     aero_blk = aero_outer.get("prolate_spheroid_aerodynamics_mt_bank") or {}
+    fiedler_lambda2 = float(
+        (aero_outer.get("coaching_network_graph_laplacian") or {}).get(
+            "fiedler_algebraic_connectivity_lambda2", 0.0
+        )
+    )
     wobble_loss_yds = float(
         aero_blk.get("deep_pass_yardage_loss_under_pressure_wobble_yds", 1.25)
     )
     wind_factor = max(0.0, (eff_wind - 8.0) / 10.0)
     wind_comp_penalty = round(-0.022 * wind_factor, 5)
-    wind_ypa_penalty = round(-0.28 * wind_factor - 0.08 * wobble_loss_yds * wind_factor, 4)
+    wind_ypa_penalty = round(
+        -0.28 * wind_factor
+        - 0.08 * wobble_loss_yds * wind_factor
+        - 0.03 * sogge_defl * wind_factor,
+        4,
+    )
 
     markov_outer = (
         live_books_res.get("tukey_huff_levitin_game_theory_and_markov_drive_engine") or {}
     )
     markov_blk = markov_outer.get("absorbing_markov_chain_drive_matrix") or {}
+    nash_blk = markov_outer.get("zero_sum_nash_equilibrium_play_calling") or {}
+    nash_saddle_epa = float(nash_blk.get("saddle_point_game_value_epa", 0.0))
     aw_markov_rz_ptd = float(
         (markov_blk.get(away_u) or {}).get("from_redzone_opp15_zone4", {}).get("p_td", 0.56)
     )
@@ -602,10 +1329,147 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         (markov_blk.get(home_u) or {}).get("from_redzone_opp15_zone4", {}).get("p_td", 0.54)
     )
 
-    aw_eager_ypa = float(aw_pbt.get("eager_regressed_ypa", 7.42))
-    hm_eager_ypa = float(hm_pbt.get("eager_regressed_ypa", 7.42))
-    aw_eager_ypa_delta = (aw_eager_ypa - 7.42) * 0.45
-    hm_eager_ypa_delta = (hm_eager_ypa - 7.42) * 0.45
+    # Pillar 2: Instagram 360 Charting
+    dl_mod = "intelligence.coaching.downloads_social_radio_and_dfs_signals"
+    funnel_rpt = _load_attr(dl_mod, "STATRANKINGS_FUNNEL_REPORT")
+    pass_funnels = set(funnel_rpt.get("pass_funnel_top5", []))
+    run_funnels = set(funnel_rpt.get("run_funnel_top5", []))
+    stuff_top10 = _load_attr(dl_mod, "PATTON_STATRANKINGS_DEF_STUFF_RATE_TOP10")
+
+    aw_360 = dict(x_and_ig_360_charting.get("away_360_charting") or {})
+    hm_360 = dict(x_and_ig_360_charting.get("home_360_charting") or {})
+    synth_360 = dict(x_and_ig_360_charting.get("matchup_synthesis") or {})
+
+    aw_sr = dict(aw_360.get("statrankings_magicsportsbreakdown") or {})
+    hm_sr = dict(hm_360.get("statrankings_magicsportsbreakdown") or {})
+    aw_sh = dict(aw_360.get("sam_hoppen_sumersports") or {})
+    hm_sh = dict(hm_360.get("sam_hoppen_sumersports") or {})
+    aw_fp = dict(aw_360.get("fantasy_pts_data") or {})
+    hm_fp = dict(hm_360.get("fantasy_pts_data") or {})
+    aw_ks = dict(aw_360.get("koalaty_stats") or {})
+    hm_ks = dict(hm_360.get("koalaty_stats") or {})
+    aw_wl = dict(aw_360.get("wide_left_coverage") or {})
+    hm_wl = dict(hm_360.get("wide_left_coverage") or {})
+    aw_patton = dict(aw_360.get("patton_analytics") or {})
+    hm_patton = dict(hm_360.get("patton_analytics") or {})
+    aw_ranks = dict(aw_sr.get("matchup_ranks_11_layer") or {})
+    hm_ranks = dict(hm_sr.get("matchup_ranks_11_layer") or {})
+
+    aw_epa_delta_360 = float(synth_360.get("away_epa_delta_360", 0.0))
+    hm_epa_delta_360 = float(synth_360.get("home_epa_delta_360", 0.0))
+    aw_pr_delta_360 = float(synth_360.get("away_pass_rate_delta_360", 0.0))
+    hm_pr_delta_360 = float(synth_360.get("home_pass_rate_delta_360", 0.0))
+    aw_exp_yprr = float(synth_360.get("away_expected_yprr_vs_opp_shell", 1.75))
+    hm_exp_yprr = float(synth_360.get("home_expected_yprr_vs_opp_shell", 1.75))
+
+    cox_survival = _load_attr(
+        "intelligence.coaching.trench_pocket_physics", "compute_cox_weibull_pocket_survival"
+    )
+    qb_vcl_fn = _load_attr(
+        "intelligence.coaching.qb_visual_cognitive_load",
+        "compute_qb_visual_cognitive_load",
+    )
+    pa_prof_fn = _load_attr("intelligence.coaching.pressure_answer", "pressure_answer_profile")
+    coach_probe_fn = _load_attr(
+        "intelligence.coaching.coach_speak_emotional_deflection_probe",
+        "extract_coach_emotional_deflection",
+    )
+
+    aw_pa_delta = _get_cached_pressure_answer_delta(away_u, pa_prof_fn)
+    hm_pa_delta = _get_cached_pressure_answer_delta(home_u, pa_prof_fn)
+
+    dire_map = _DIRE_TEAM_CACHE or {}
+    aw_dire_row = dire_map.get(away_u) or {}
+    hm_dire_row = dire_map.get(home_u) or {}
+    aw_dire_raw = float(aw_dire_row.get("dire_score_rate") or 0.24)
+    hm_dire_raw = float(hm_dire_row.get("dire_score_rate") or 0.24)
+    aw_dire_rate = (
+        aw_dire_raw if aw_dire_row.get("publishable", True) else 0.5 * (aw_dire_raw + 0.24)
+    )
+    hm_dire_rate = (
+        hm_dire_raw if hm_dire_row.get("publishable", True) else 0.5 * (hm_dire_raw + 0.24)
+    )
+    aw_dire_gap = round(float(aw_dire_row.get("dire_survival_gap") or 0.0), 4)
+    hm_dire_gap = round(float(hm_dire_row.get("dire_survival_gap") or 0.0), 4)
+    elast_map = _ELASTICITY_TEAM_CACHE or {}
+    aw_script_elast = float(elast_map.get(away_u, -0.15))
+    hm_script_elast = float(elast_map.get(home_u, -0.15))
+
+    aw_mkt_sp = -float(env_cfg.get("posted_home_spread", 0.0) or 0.0)
+    aw_mkt_prob = _clip(0.50 - aw_mkt_sp * 0.025, 0.20, 0.80)
+    hm_mkt_prob = _clip(1.0 - aw_mkt_prob, 0.20, 0.80)
+    q_feats = dict(q1_to_q51_registry.get("features") or {})
+
+    aw_sig = _build_team_pillar_signals(
+        team_u=away_u,
+        opp_u=home_u,
+        pbt=aw_pbt,
+        opp_pbt=hm_pbt,
+        ftn=aw_ftn,
+        opp_ftn=hm_ftn,
+        sr=aw_sr,
+        sh=aw_sh,
+        opp_sh=hm_sh,
+        fp=aw_fp,
+        ks=aw_ks,
+        opp_wl=hm_wl,
+        patton=aw_patton,
+        ranks=aw_ranks,
+        opp_ranks=hm_ranks,
+        epa_delta_360=aw_epa_delta_360,
+        pr_delta_360=aw_pr_delta_360,
+        exp_yprr=aw_exp_yprr,
+        sack_mult_360=float(synth_360.get("away_sack_multiplier_360", 1.0)),
+        markov_rz_ptd_static=aw_markov_rz_ptd,
+        wind_ypa_penalty=wind_ypa_penalty,
+        wind_comp_penalty=wind_comp_penalty,
+        q4_fatigue_decay=away_q4_fatigue_decay,
+        mkt_prob=aw_mkt_prob,
+        pass_funnels=pass_funnels,
+        run_funnels=run_funnels,
+        stuff_top10=stuff_top10,
+        cox_survival=cox_survival,
+        qb_vcl_fn=qb_vcl_fn,
+        pa_delta=aw_pa_delta,
+        dire_rate=aw_dire_rate,
+        script_elast=aw_script_elast,
+        q_feats=q_feats,
+    )
+    hm_sig = _build_team_pillar_signals(
+        team_u=home_u,
+        opp_u=away_u,
+        pbt=hm_pbt,
+        opp_pbt=aw_pbt,
+        ftn=hm_ftn,
+        opp_ftn=aw_ftn,
+        sr=hm_sr,
+        sh=hm_sh,
+        opp_sh=aw_sh,
+        fp=hm_fp,
+        ks=hm_ks,
+        opp_wl=aw_wl,
+        patton=hm_patton,
+        ranks=hm_ranks,
+        opp_ranks=aw_ranks,
+        epa_delta_360=hm_epa_delta_360,
+        pr_delta_360=hm_pr_delta_360,
+        exp_yprr=hm_exp_yprr,
+        sack_mult_360=float(synth_360.get("home_sack_multiplier_360", 1.0)),
+        markov_rz_ptd_static=hm_markov_rz_ptd,
+        wind_ypa_penalty=wind_ypa_penalty,
+        wind_comp_penalty=wind_comp_penalty,
+        q4_fatigue_decay=home_q4_fatigue_decay,
+        mkt_prob=hm_mkt_prob,
+        pass_funnels=pass_funnels,
+        run_funnels=run_funnels,
+        stuff_top10=stuff_top10,
+        cox_survival=cox_survival,
+        qb_vcl_fn=qb_vcl_fn,
+        pa_delta=hm_pa_delta,
+        dire_rate=hm_dire_rate,
+        script_elast=hm_script_elast,
+        q_feats=q_feats,
+    )
 
     bm25f_blk = live_books_res.get("bm25f_corpus_and_book_lesson_retriever") or {}
     bm25f_lessons = list(bm25f_blk.get("top_15_ranked_lessons") or [])
@@ -614,7 +1478,7 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         max(0.05, eff_wind / 15.0),
         1.0 if (is_short_week or circadian_h >= 5.0) else 0.15,
         max(0.1, float(aw_ftn.get("dc_man_rate", 0.28)) * 2.0),
-        max(0.1, abs(aw_eager_ypa - hm_eager_ypa) + 0.35),
+        max(0.1, abs(aw_sig.eager_ypa - hm_sig.eager_ypa) + 0.35),
         max(0.1, abs(float(env_cfg.get("posted_home_spread", 0.0) or 0.0)) / 10.0 + 0.25),
     ]
     hybrid_rrf_res = hybrid_rrf_corpus_and_arxiv_retriever(
@@ -634,192 +1498,121 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "manifest_total_pdfs": int(manifest_877.get("total_pdfs", 0)),
         "live_books_engines_count": int(live_books_res.get("engines_executed_count", 22)),
         "uncompressed_25k_books_count": int(census.get("canonical_textbooks_count", 12)),
+        "wave8_local_pdfs_wired": wave8_local_pdfs,
+        "wave8_github_repos_wired": wave8_gh_repos,
+        "foundry_books_swept_count": _FOUNDRY_SWEPT_FILES_CACHE,
+        "foundry_primitives_indexed_count": _FOUNDRY_PRIMITIVES_COUNT_CACHE,
         "openai_math_manuscripts_wired": int(openai_math_res.get("manuscripts_wired", 721)),
         "openai_math_pre_proj_epa_delta": float(
             openai_math_res.get("pre_projection_epa_delta", 0.0)
         ),
+        "sogge_wind_deflection_yds": round(sogge_defl, 4),
+        "radial_collapse_prob": round(radial_collapse, 4),
+        "amplitude_damping_retention": round(amp_retention, 4),
+        "cnf_conjunction_satisfaction_prob": round(cnf_sat, 4),
         "hybrid_rrf_corpus_and_arxiv": hybrid_rrf_res,
-        "away_eager_regressed_ypa": round(aw_eager_ypa, 3),
-        "home_eager_regressed_ypa": round(hm_eager_ypa, 3),
-        "away_markov_rz_ptd": round(aw_markov_rz_ptd, 4),
-        "home_markov_rz_ptd": round(hm_markov_rz_ptd, 4),
+        "away_eager_regressed_ypa": aw_sig.eager_ypa,
+        "home_eager_regressed_ypa": hm_sig.eager_ypa,
+        "away_markov_rz_ptd": aw_sig.markov_rz_eff,
+        "home_markov_rz_ptd": hm_sig.markov_rz_eff,
         "wind_comp_penalty": wind_comp_penalty,
         "wind_ypa_penalty": wind_ypa_penalty,
         "away_q4_fatigue_decay": away_q4_fatigue_decay,
         "home_q4_fatigue_decay": home_q4_fatigue_decay,
+        "nash_saddle_point_epa": round(nash_saddle_epa, 5),
+        "away_expected_drive_points_own25": aw_sig.expected_drive_pts_own25,
+        "home_expected_drive_points_own25": hm_sig.expected_drive_pts_own25,
+        "away_hidden_game_points_pg": aw_sig.hidden_game_pts_pg,
+        "home_hidden_game_points_pg": hm_sig.hidden_game_pts_pg,
+        "ollivier_ricci_curvature_kappa": round(ricci_kappa, 4),
+        "coaching_fiedler_lambda2": round(fiedler_lambda2, 4),
+        "away_tukey_fenced_epa_delta": aw_sig.tukey_epa_delta,
+        "home_tukey_fenced_epa_delta": hm_sig.tukey_epa_delta,
     }
-
-    # Pillar 2: Instagram 360 Charting
-    dl_mod = "intelligence.coaching.downloads_social_radio_and_dfs_signals"
-    funnel_rpt = _load_attr(dl_mod, "STATRANKINGS_FUNNEL_REPORT")
-    pass_funnels = set(funnel_rpt.get("pass_funnel_top5", []))
-    run_funnels = set(funnel_rpt.get("run_funnel_top5", []))
-    stuff_top10 = _load_attr(dl_mod, "PATTON_STATRANKINGS_DEF_STUFF_RATE_TOP10")
-
-    aw_360 = dict(x_and_ig_360_charting.get("away_360_charting") or {})
-    hm_360 = dict(x_and_ig_360_charting.get("home_360_charting") or {})
-    synth_360 = dict(x_and_ig_360_charting.get("matchup_synthesis") or {})
-
-    aw_sr = dict(aw_360.get("statrankings_magicsportsbreakdown") or {})
-    hm_sr = dict(hm_360.get("statrankings_magicsportsbreakdown") or {})
-    aw_sh = dict(aw_360.get("sam_hoppen_sumersports") or {})
-    hm_sh = dict(hm_360.get("sam_hoppen_sumersports") or {})
-    aw_ranks = dict(aw_sr.get("matchup_ranks_11_layer") or {})
-    hm_ranks = dict(hm_sr.get("matchup_ranks_11_layer") or {})
-
-    aw_pass_funnel = 0.024 if home_u in pass_funnels else (-0.020 if home_u in run_funnels else 0.0)
-    hm_pass_funnel = 0.024 if away_u in pass_funnels else (-0.020 if away_u in run_funnels else 0.0)
-
-    hm_def_stuff_rate = float(
-        (stuff_top10.get(home_u) or {}).get("stuff_rate") or hm_pbt.get("def_stuffed_rate", 0.185)
-    )
-    aw_def_stuff_rate = float(
-        (stuff_top10.get(away_u) or {}).get("stuff_rate") or aw_pbt.get("def_stuffed_rate", 0.185)
-    )
-    hm_box_raw = float(hm_sh.get("light_box_pct", 51.0))
-    aw_box_raw = float(aw_sh.get("light_box_pct", 51.0))
-    hm_light_box = hm_box_raw / 100.0 if hm_box_raw > 1.0 else hm_box_raw
-    aw_light_box = aw_box_raw / 100.0 if aw_box_raw > 1.0 else aw_box_raw
-
-    away_rush_ypc_adj_delta = _clip(
-        (0.195 - hm_def_stuff_rate) * 3.5
-        + (hm_light_box - 0.51) * 1.4
-        + (float(aw_pbt.get("rb_explosive_12plus_rate", 0.115)) - 0.115) * 2.5
-        + (-aw_pass_funnel * 4.0 if home_u in run_funnels else 0.0),
-        -0.45,
-        0.45,
-    )
-    home_rush_ypc_adj_delta = _clip(
-        (0.195 - aw_def_stuff_rate) * 3.5
-        + (aw_light_box - 0.51) * 1.4
-        + (float(hm_pbt.get("rb_explosive_12plus_rate", 0.115)) - 0.115) * 2.5
-        + (-hm_pass_funnel * 4.0 if away_u in run_funnels else 0.0),
-        -0.45,
-        0.45,
-    )
-
-    aw_exp_yprr = float(synth_360.get("away_expected_yprr_vs_opp_shell", 1.75))
-    hm_exp_yprr = float(synth_360.get("home_expected_yprr_vs_opp_shell", 1.75))
-    away_ypa_adj_delta = _clip(
-        aw_eager_ypa_delta + (aw_exp_yprr - 1.75) * 0.85 + wind_ypa_penalty + aw_pass_funnel * 12.0,
-        -1.15,
-        1.15,
-    )
-    home_ypa_adj_delta = _clip(
-        hm_eager_ypa_delta + (hm_exp_yprr - 1.75) * 0.85 + wind_ypa_penalty + hm_pass_funnel * 12.0,
-        -1.15,
-        1.15,
-    )
-
-    away_pace_sec_adj = _clip(
-        float(aw_sr.get("neutral_pace_sec_per_play") or aw_ftn.get("neutral_pace_sec") or 27.2),
-        24.0,
-        31.8,
-    )
-    home_pace_sec_adj = _clip(
-        float(hm_sr.get("neutral_pace_sec_per_play") or hm_ftn.get("neutral_pace_sec") or 27.2),
-        24.0,
-        31.8,
-    )
-
-    aw_rz_pbp_edge = float(aw_pbt.get("rz_off_td_rate_per_play", 0.145)) - float(
-        hm_pbt.get("rz_def_td_allowed_per_play", 0.145)
-    )
-    hm_rz_pbp_edge = float(hm_pbt.get("rz_off_td_rate_per_play", 0.145)) - float(
-        aw_pbt.get("rz_def_td_allowed_per_play", 0.145)
-    )
-    aw_rz_rank_edge = (16.5 - float(aw_ranks.get("Red zone", 16.5))) * 0.0012
-    hm_rz_rank_edge = (16.5 - float(hm_ranks.get("Red zone", 16.5))) * 0.0012
-    away_redzone_td_prob_delta = _clip(
-        aw_rz_pbp_edge * 0.35 + aw_rz_rank_edge + (aw_markov_rz_ptd - 0.55) * 0.18,
-        -0.08,
-        0.08,
-    )
-    home_redzone_td_prob_delta = _clip(
-        hm_rz_pbp_edge * 0.35 + hm_rz_rank_edge + (hm_markov_rz_ptd - 0.55) * 0.18,
-        -0.08,
-        0.08,
-    )
 
     instagram_360_pillar = {
         "wired": True,
         "all_32_teams_360_charting": bool(aw_360 and hm_360),
-        "away_pass_funnel_boost": round(aw_pass_funnel, 4),
-        "home_pass_funnel_boost": round(hm_pass_funnel, 4),
-        "away_opp_def_stuff_rate": round(hm_def_stuff_rate, 4),
-        "home_opp_def_stuff_rate": round(aw_def_stuff_rate, 4),
-        "away_expected_yprr_vs_opp_shell": round(aw_exp_yprr, 3),
-        "home_expected_yprr_vs_opp_shell": round(hm_exp_yprr, 3),
+        "away_pass_funnel_boost": aw_sig.pass_funnel,
+        "home_pass_funnel_boost": hm_sig.pass_funnel,
+        "away_opp_def_stuff_rate": aw_sig.opp_def_stuff_rate,
+        "home_opp_def_stuff_rate": hm_sig.opp_def_stuff_rate,
+        "away_expected_yprr_vs_opp_shell": aw_sig.exp_yprr,
+        "home_expected_yprr_vs_opp_shell": hm_sig.exp_yprr,
         "away_sack_multiplier_360": float(synth_360.get("away_sack_multiplier_360", 1.0)),
         "home_sack_multiplier_360": float(synth_360.get("home_sack_multiplier_360", 1.0)),
         "away_11_layer_composite_rank": float(synth_360.get("away_11_layer_composite_rank", 16.5)),
         "home_11_layer_composite_rank": float(synth_360.get("home_11_layer_composite_rank", 16.5)),
-        "away_pace_sec_adj": round(away_pace_sec_adj, 2),
-        "home_pace_sec_adj": round(home_pace_sec_adj, 2),
+        "away_epa_delta_360": round(aw_epa_delta_360, 5),
+        "home_epa_delta_360": round(hm_epa_delta_360, 5),
+        "away_pass_rate_delta_360": round(aw_pr_delta_360, 5),
+        "home_pass_rate_delta_360": round(hm_pr_delta_360, 5),
+        "away_ass_separation_score": aw_sig.ass_score,
+        "home_ass_separation_score": hm_sig.ass_score,
+        "away_first_read_pct": aw_sig.first_read_pct,
+        "home_first_read_pct": hm_sig.first_read_pct,
+        "away_fppg_minus_xfppg": aw_sig.xfp_gap,
+        "home_fppg_minus_xfppg": hm_sig.xfp_gap,
+        "away_opp_cover1_rate": aw_sig.opp_cover1_rate,
+        "home_opp_cover1_rate": hm_sig.opp_cover1_rate,
+        "away_dvf_wr": aw_sig.dvf_wr,
+        "home_dvf_wr": hm_sig.dvf_wr,
+        "away_dvf_te": aw_sig.dvf_te,
+        "home_dvf_te": hm_sig.dvf_te,
+        "away_pace_sec_adj": aw_sig.pace_sec_adj,
+        "home_pace_sec_adj": hm_sig.pace_sec_adj,
+        "away_patton_surv_2_5s": aw_sig.patton_surv_2_5s,
+        "home_patton_surv_2_5s": hm_sig.patton_surv_2_5s,
+        "away_patton_p2s_rate": aw_sig.patton_p2s_rate,
+        "home_patton_p2s_rate": hm_sig.patton_p2s_rate,
     }
 
-    # Pillar 3: X Production Signals & Forensic Laws
-    aw_pen_epa_delta = _clip(float(aw_pbt.get("net_penalty_diff_pg", 0.0)) * 0.0012, -0.014, 0.014)
-    hm_pen_epa_delta = _clip(float(hm_pbt.get("net_penalty_diff_pg", 0.0)) * 0.0012, -0.014, 0.014)
-
-    cox_survival = _load_attr(
-        "intelligence.coaching.trench_pocket_physics", "compute_cox_weibull_pocket_survival"
-    )
-    aw_pbwr = max(0.75, 0.94 - float(aw_ftn.get("sack_rate_allowed", 0.065)) * 1.4)
-    hm_pbwr = max(0.75, 0.94 - float(hm_ftn.get("sack_rate_allowed", 0.065)) * 1.4)
-    aw_cox = cox_survival(2.65, trench={"pbwr_avg": aw_pbwr})
-    hm_cox = cox_survival(2.65, trench={"pbwr_avg": hm_pbwr})
-    aw_sack_base = float(aw_ftn.get("sack_rate_allowed") or 0.064)
-    hm_sack_base = float(hm_ftn.get("sack_rate_allowed") or 0.064)
-    away_sack_prob_adj = _clip(
-        (0.55 * aw_sack_base + 0.45 * float(hm_ftn.get("def_sack_rate", 0.064)))
-        * float(synth_360.get("away_sack_multiplier_360", 1.0))
-        * (1.0 + 0.25 * (float(aw_pbt.get("qb_fault_sack_rate", 0.18)) - 0.18))
-        * (1.0 + 0.15 * (0.65 - float(aw_cox.get("survival_prob", 0.65)))),
-        0.032,
-        0.165,
-    )
-    home_sack_prob_adj = _clip(
-        (0.55 * hm_sack_base + 0.45 * float(aw_ftn.get("def_sack_rate", 0.064)))
-        * float(synth_360.get("home_sack_multiplier_360", 1.0))
-        * (1.0 + 0.25 * (float(hm_pbt.get("qb_fault_sack_rate", 0.18)) - 0.18))
-        * (1.0 + 0.15 * (0.65 - float(hm_cox.get("survival_prob", 0.65)))),
-        0.032,
-        0.165,
-    )
-
-    aw_comp_corpus_delta = _clip(
-        float(aw_pbt.get("cpoe_mean", 0.0)) * 0.0022
-        - (float(aw_pbt.get("wr_drop_rate", 0.045)) - 0.045) * 0.40
-        + wind_comp_penalty,
-        -0.035,
-        0.035,
-    )
-    hm_comp_corpus_delta = _clip(
-        float(hm_pbt.get("cpoe_mean", 0.0)) * 0.0022
-        - (float(hm_pbt.get("wr_drop_rate", 0.045)) - 0.045) * 0.40
-        + wind_comp_penalty,
-        -0.035,
-        0.035,
-    )
-
     x_laws_triggered = list((x_layer2_overlay.get("law_evaluations") or {}).keys())
+    l2_sum = x_layer2_overlay.get("stage2_priors_summary") or {}
     x_twitter_pillar = {
         "wired": True,
         "x_sweep_5_mechanisms_executed": bool(aw_pbt and hm_pbt),
         "x_layer2_laws_count": len(x_laws_triggered),
         "q1_to_q51_all_51_present": bool(q1_to_q51_registry.get("all_51_present", False)),
-        "away_net_penalty_epa_delta": round(aw_pen_epa_delta, 5),
-        "home_net_penalty_epa_delta": round(hm_pen_epa_delta, 5),
-        "away_sack_prob_adj": round(away_sack_prob_adj, 4),
-        "home_sack_prob_adj": round(home_sack_prob_adj, 4),
-        "away_comp_corpus_delta": round(aw_comp_corpus_delta, 5),
-        "home_comp_corpus_delta": round(hm_comp_corpus_delta, 5),
+        "away_net_penalty_epa_delta": aw_sig.pen_epa_delta,
+        "home_net_penalty_epa_delta": hm_sig.pen_epa_delta,
+        "away_first_downs_donated_pg": aw_sig.first_downs_donated_pg,
+        "home_first_downs_donated_pg": hm_sig.first_downs_donated_pg,
+        "away_pressure_epa_cost": aw_sig.pressure_epa_cost,
+        "home_pressure_epa_cost": hm_sig.pressure_epa_cost,
+        "away_sack_prob_adj": aw_sig.sack_prob_adj,
+        "home_sack_prob_adj": hm_sig.sack_prob_adj,
+        "away_comp_corpus_delta": aw_sig.comp_corpus_delta,
+        "home_comp_corpus_delta": hm_sig.comp_corpus_delta,
         "away_mof_comp_pct": float(aw_pbt.get("mof_comp_pct", 0.68)),
         "home_mof_comp_pct": float(hm_pbt.get("mof_comp_pct", 0.68)),
+        "away_schedule_cleaned_epa_per_play": aw_sig.sched_epa,
+        "home_schedule_cleaned_epa_per_play": hm_sig.sched_epa,
+        "away_paired_adot_drop_flagged": aw_sig.adot_drop,
+        "home_paired_adot_drop_flagged": hm_sig.adot_drop,
+        "away_pgwe_luck_delta_wins": aw_sig.pgwe_luck,
+        "home_pgwe_luck_delta_wins": hm_sig.pgwe_luck,
+        "away_clean_pocket_epa": aw_sig.clean_epa,
+        "home_clean_pocket_epa": hm_sig.clean_epa,
+        "away_self_invited_pressure_pct": aw_sig.self_press,
+        "home_self_invited_pressure_pct": hm_sig.self_press,
+        "away_trench_nonlinear_mult": aw_sig.trench_nl,
+        "home_trench_nonlinear_mult": hm_sig.trench_nl,
+        "away_q41_scripted_epa_delta": aw_sig.q41_scripted_epa_delta,
+        "home_q41_scripted_epa_delta": hm_sig.q41_scripted_epa_delta,
+        "away_q44_neutral_wp_epa": aw_sig.q44_neutral_wp_epa,
+        "home_q44_neutral_wp_epa": hm_sig.q44_neutral_wp_epa,
+        "away_q46_scramble_net_sack_epa": aw_sig.q46_scramble_net_sack_epa,
+        "home_q46_scramble_net_sack_epa": hm_sig.q46_scramble_net_sack_epa,
+        "away_q49_toxic_differential": aw_sig.q49_toxic_diff,
+        "home_q49_toxic_differential": hm_sig.q49_toxic_diff,
+        "away_q51_target_success_rate": aw_sig.q51_target_sr,
+        "home_q51_target_success_rate": hm_sig.q51_target_sr,
+        "layer2_pressure_disruption_prob": float(l2_sum.get("pressure_disruption_prob", 0.35)),
+        "layer2_stage5_command": str(l2_sum.get("stage5_command", "STAGE5_OK")),
     }
 
-    # Pillar 4: Situational 279-Family Pillar
+    gd_vec = gdrive_onedrive_overlay.get("omni_situational_vector") or gdrive_onedrive_overlay
     situational_279_pillar = {
         "wired": True,
         "equation_families_count": int(full_repo_situational.get("equation_families_count", 279)),
@@ -833,15 +1626,24 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "onedrive_roster_truth_cards_count": int(
             gdrive_onedrive_overlay.get("onedrive_roster_truth_build_cards_count", 68)
         ),
-        "away_cox_pocket_survival": round(float(aw_cox.get("survival_prob", 0.65)), 4),
-        "home_cox_pocket_survival": round(float(hm_cox.get("survival_prob", 0.65)), 4),
+        "gdrive_fg_make_prob_delta": round(float(gd_vec.get("fg_make_prob_delta", 0.0)), 4),
+        "gdrive_cqr_interval_width_mult": round(
+            float(gd_vec.get("cqr_interval_width_mult", 1.0)), 4
+        ),
+        "away_cox_pocket_survival": aw_sig.cox_survival_prob,
+        "home_cox_pocket_survival": hm_sig.cox_survival_prob,
+        "away_qb_visual_cognitive_load": aw_sig.qb_vcl,
+        "home_qb_visual_cognitive_load": hm_sig.qb_vcl,
+        "live_6family_cholesky_whitened": {
+            "away": dict(aw_sig.whitened_6fam),
+            "home": dict(hm_sig.whitened_6fam),
+        },
+        "positive_part_js_shrinkage_factor": {
+            "away": aw_sig.js_shrink_factor,
+            "home": hm_sig.js_shrink_factor,
+        },
     }
 
-    # Pillar 5: Contextual & Coaching Mind
-    coach_probe_fn = _load_attr(
-        "intelligence.coaching.coach_speak_emotional_deflection_probe",
-        "extract_coach_emotional_deflection",
-    )
     beat_blk = x_and_ig_360_charting.get("beat_desk_and_narrative_tracker") or {}
     active_narrs = list(beat_blk.get("active_narrative_entries") or [])
     tm_profs = (stage1a_receipt or {}).get("team_coaching_mind_profiles") or {}
@@ -860,13 +1662,40 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
     aw_probe = coach_probe_fn(_beat_text(away_u), speaker=f"{away_u}_HC", role="HEAD_COACH")
     hm_probe = coach_probe_fn(_beat_text(home_u), speaker=f"{home_u}_HC", role="HEAD_COACH")
 
-    dire_map = _DIRE_TEAM_CACHE or {}
-    aw_dire_rate = float((dire_map.get(away_u) or {}).get("dire_score_rate") or 0.24)
-    hm_dire_rate = float((dire_map.get(home_u) or {}).get("dire_score_rate") or 0.24)
-
-    elast_map = _ELASTICITY_TEAM_CACHE or {}
-    aw_script_elast = float(elast_map.get(away_u, -0.15))
-    hm_script_elast = float(elast_map.get(home_u, -0.15))
+    aw_gp = float(aw_360.get("games_played_2026") or 9.0)
+    hm_gp = float(hm_360.get("games_played_2026") or 9.0)
+    n_weeks = max(3, min(17, int(round(min(aw_gp, hm_gp)))))
+    max_vcl = max(aw_sig.qb_vcl, hm_sig.qb_vcl)
+    max_defl = max(
+        float(aw_probe.get("deflection_score", 0.5)),
+        float(hm_probe.get("deflection_score", 0.5)),
+    )
+    env_risk = (0.04 if is_short_week else 0.0) + (
+        0.04 if (circadian_h >= 5.0 or (not is_indoor and eff_wind >= 12.0)) else 0.0
+    )
+    decay_rho = _clip(
+        0.92
+        - max(0.0, max_vcl - 0.42) * 0.20
+        - max(0.0, max_defl - 0.55) * 0.15
+        - env_risk * 0.5,
+        0.68,
+        0.94,
+    )
+    w_seq = [decay_rho**i for i in range(n_weeks)]
+    w_sum = sum(w_seq) or 1.0
+    barber_effective_sample_n = round(1.0 / sum((w / w_sum) ** 2 for w in w_seq), 4)
+    cqr_scale = (1.0 + 1.0 / max(2.0, barber_effective_sample_n)) / 1.0833
+    min_cox_surv = min(aw_sig.cox_survival_prob, hm_sig.cox_survival_prob)
+    instab_mult = (
+        1.0
+        + max(0.0, max_vcl - 0.45) * 0.18
+        + max(0.0, max_defl - 0.55) * 0.14
+        + max(0.0, 0.65 - min_cox_surv) * 0.12
+        + env_risk
+    )
+    barber_romano_cqr_width_mult = round(_clip(cqr_scale * instab_mult, 0.94, 1.24), 4)
+    situational_279_pillar["barber_effective_sample_n"] = barber_effective_sample_n
+    situational_279_pillar["barber_romano_cqr_width_mult"] = barber_romano_cqr_width_mult
 
     rec_reg_map = pbp_tables["receivers"]
     player_mults: dict[str, float] = {}
@@ -874,6 +1703,7 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         for nm, inf in verified_athletes_map.items():
             tm_p = _norm_team(str(inf.get("team") or ""))
             pos_p = str(inf.get("position") or "").upper()
+            sig_p = aw_sig if tm_p == away_u else hm_sig
             mult_p = 1.0
             if pos_p in ("WR", "TE"):
                 rec_abbr = _norm_last_initial(nm)
@@ -882,46 +1712,106 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                     mult_p *= 1.035
                 opp_man_raw = float((hm_sh if tm_p == away_u else aw_sh).get("man_pct", 29.0))
                 opp_man = opp_man_raw / 100.0 if opp_man_raw > 1.0 else opp_man_raw
+                eff_man = _clip(0.70 * opp_man + 0.30 * sig_p.opp_cover1_rate, 0.15, 0.55)
                 off_sr_p = aw_sr if tm_p == away_u else hm_sr
                 yprr_man = float(off_sr_p.get("receiver_yprr_vs_man", 1.80))
                 yprr_zone = float(off_sr_p.get("receiver_yprr_vs_zone", 1.80))
-                shell_edge = (yprr_man * opp_man + yprr_zone * (1.0 - opp_man) - 1.80) * 0.03
-                mult_p *= _clip(1.0 + shell_edge, 0.96, 1.05)
+                shell_edge = (yprr_man * eff_man + yprr_zone * (1.0 - eff_man) - 1.80) * 0.03
+                dvf_pos = sig_p.dvf_wr if pos_p == "WR" else sig_p.dvf_te
+                sep_boost = _clip((sig_p.ass_score - 0.128) * 0.10, -0.025, 0.025)
+                mult_p *= _clip((1.0 + shell_edge + sep_boost) * dvf_pos, 0.95, 1.07)
+                if pos_p == "TE":
+                    pbt_tm = aw_pbt if tm_p == away_u else hm_pbt
+                    mof_c = float(pbt_tm.get("mof_comp_pct", 0.68))
+                    mult_p *= _clip(1.0 + (mof_c - 0.68) * 0.08 * (1.0 - eff_man), 0.985, 1.025)
+                if sig_p.adot_drop:
+                    mult_p *= 0.985
+            elif pos_p == "RB":
+                opp_ranks_p = hm_ranks if tm_p == away_u else aw_ranks
+                pbt_p = aw_pbt if tm_p == away_u else hm_pbt
+                stuff_edge = (0.185 - sig_p.opp_def_stuff_rate) * 0.35
+                box_edge = (sig_p.opp_light_box - 0.0853) * 0.35
+                exp_edge = (float(pbt_p.get("rb_explosive_12plus_rate", 0.115)) - 0.115) * 0.20
+                tack_rank = float(opp_ranks_p.get("Tackling", 16.5))
+                tackling_edge = (tack_rank - 16.5) * 0.0012
+                rb_raw_mult = 1.0 + stuff_edge + box_edge + exp_edge + tackling_edge
+                mult_p *= _clip(rb_raw_mult, 0.95, 1.06)
             inj_st = str((inf.get("injury_status") or {}).get("report_status") or "").upper()
             probe_tm = aw_probe if tm_p == away_u else hm_probe
             defl = float(probe_tm.get("deflection_score", 0.5))
+            inj_conceal = float(probe_tm.get("injury_concealment_stress", 0.0))
             if inj_st in {"QUESTIONABLE", "DOUBTFUL"} and defl >= 0.60:
                 mult_p *= 0.92
+            if inj_st in {"QUESTIONABLE", "DOUBTFUL", "LIMITED"} and inj_conceal > 0.0:
+                mult_p *= max(0.92, 1.0 - 0.06 * inj_conceal)
+            # ADR-0003: rule-in attenuation only for injured athletes; never inflate.
+            if inj_st in {"QUESTIONABLE", "DOUBTFUL"}:
+                mult_p = min(mult_p, 1.0)
             player_mults[nm] = round(_clip(mult_p, 0.88, 1.08), 4)
 
     math_epa = float(openai_math_res.get("pre_projection_epa_delta", 0.0))
-    away_epa_corpus_delta = _clip(
-        aw_pen_epa_delta
-        + (aw_dire_rate - 0.24) * 0.06
-        + float(aw_probe.get("stage4_situational_log_odds", 0.0)) * 0.08
-        + math_epa * 0.15,
-        -0.045,
-        0.045,
+    away_epa_corpus_delta = _compute_team_epa_corpus_delta(
+        aw_sig, math_epa=math_epa, epa_delta_360=aw_epa_delta_360, probe=aw_probe
     )
-    home_epa_corpus_delta = _clip(
-        hm_pen_epa_delta
-        + (hm_dire_rate - 0.24) * 0.06
-        + float(hm_probe.get("stage4_situational_log_odds", 0.0)) * 0.08
-        + math_epa * 0.15,
-        -0.045,
-        0.045,
+    home_epa_corpus_delta = _compute_team_epa_corpus_delta(
+        hm_sig, math_epa=math_epa, epa_delta_360=hm_epa_delta_360, probe=hm_probe
     )
+    away_pass_rate_eff_delta = _clip(aw_sig.pass_funnel + aw_pr_delta_360 * 0.45, -0.04, 0.04)
+    home_pass_rate_eff_delta = _clip(hm_sig.pass_funnel + hm_pr_delta_360 * 0.45, -0.04, 0.04)
 
     contextual_coaching_pillar = {
         "wired": True,
         "away_coach_deflection": aw_probe,
         "home_coach_deflection": hm_probe,
-        "away_dire_score_rate": round(aw_dire_rate, 4),
-        "home_dire_score_rate": round(hm_dire_rate, 4),
-        "away_script_elasticity": round(aw_script_elast, 4),
-        "home_script_elasticity": round(hm_script_elast, 4),
+        "away_dire_score_rate": aw_sig.dire_rate,
+        "home_dire_score_rate": hm_sig.dire_rate,
+        "away_dire_survival_gap": aw_dire_gap,
+        "home_dire_survival_gap": hm_dire_gap,
+        "away_injury_concealment_stress": round(
+            float(aw_probe.get("injury_concealment_stress", 0.0)), 4
+        ),
+        "home_injury_concealment_stress": round(
+            float(hm_probe.get("injury_concealment_stress", 0.0)), 4
+        ),
+        "away_script_elasticity": aw_sig.script_elast,
+        "home_script_elasticity": hm_sig.script_elast,
+        "away_pressure_answer_delta": aw_sig.pa_delta,
+        "home_pressure_answer_delta": hm_sig.pa_delta,
         "active_narratives_count": len(active_narrs),
     }
+
+    max_log_odds = max(abs(away_epa_corpus_delta), abs(home_epa_corpus_delta))
+    cap_domains: tuple[CapabilityDomain, ...] = (
+        "corpus_tree_search",
+        "dossier_copy",
+        "cv_biomechanics",
+        "accelerated_simulation",
+        "multi_agent_wave",
+    )
+    cap_verdicts = [
+        route_gse_capability_domain(
+            dom,
+            sinkhorn_l1_divergence=1e-7,
+            max_delta_log_odds=max_log_odds,
+        )
+        for dom in cap_domains
+    ]
+    nvidia_hermes_routes = {
+        "routes": [
+            {
+                "domain": v.domain,
+                "nvidia_skill": v.nvidia_skill,
+                "hermes_plugin": v.hermes_plugin,
+                "wiring_score": v.wiring_score,
+                "attribution_header": v.attribution_header,
+                "dgx_invariants_ok": v.dgx_invariants_ok,
+            }
+            for v in cap_verdicts
+        ],
+        "blinkenbar_nvidia_ethos_green": all(v.dgx_invariants_ok for v in cap_verdicts),
+        "blinkenbar_stealth_86_12_green": all(v.wiring_score == 86.12 for v in cap_verdicts),
+    }
+    gsi_and_compound_fabric_pillar = _compile_gsi_and_compound_fabric_pillar(max_log_odds)
 
     payload: dict[str, Any] = {
         "books_and_pdfs_pillar": books_and_pdfs_pillar,
@@ -929,30 +1819,92 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "x_twitter_pillar": x_twitter_pillar,
         "situational_279_pillar": situational_279_pillar,
         "contextual_coaching_pillar": contextual_coaching_pillar,
+        "gsi_and_compound_fabric_pillar": gsi_and_compound_fabric_pillar,
+        "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
-        "away_comp_rate_corpus_delta": round(aw_comp_corpus_delta, 5),
-        "home_comp_rate_corpus_delta": round(hm_comp_corpus_delta, 5),
-        "away_pass_rate_corpus_delta": round(aw_pass_funnel, 5),
-        "home_pass_rate_corpus_delta": round(hm_pass_funnel, 5),
-        "away_sack_prob_adj": round(away_sack_prob_adj, 4),
-        "home_sack_prob_adj": round(home_sack_prob_adj, 4),
-        "away_ypa_adj_delta": round(away_ypa_adj_delta, 4),
-        "home_ypa_adj_delta": round(home_ypa_adj_delta, 4),
-        "away_rush_ypc_adj_delta": round(away_rush_ypc_adj_delta, 4),
-        "home_rush_ypc_adj_delta": round(home_rush_ypc_adj_delta, 4),
-        "away_pace_sec_adj": round(away_pace_sec_adj, 2),
-        "home_pace_sec_adj": round(home_pace_sec_adj, 2),
-        "away_redzone_td_prob_delta": round(away_redzone_td_prob_delta, 5),
-        "home_redzone_td_prob_delta": round(home_redzone_td_prob_delta, 5),
+        "away_comp_rate_corpus_delta": aw_sig.comp_corpus_delta,
+        "home_comp_rate_corpus_delta": hm_sig.comp_corpus_delta,
+        "away_pass_rate_corpus_delta": round(away_pass_rate_eff_delta, 5),
+        "home_pass_rate_corpus_delta": round(home_pass_rate_eff_delta, 5),
+        "away_sack_prob_adj": aw_sig.sack_prob_adj,
+        "home_sack_prob_adj": hm_sig.sack_prob_adj,
+        "away_ypa_adj_delta": aw_sig.ypa_adj_delta,
+        "home_ypa_adj_delta": hm_sig.ypa_adj_delta,
+        "away_rush_ypc_adj_delta": aw_sig.rush_ypc_adj_delta,
+        "home_rush_ypc_adj_delta": hm_sig.rush_ypc_adj_delta,
+        "away_pace_sec_adj": aw_sig.pace_sec_adj,
+        "home_pace_sec_adj": hm_sig.pace_sec_adj,
+        "away_redzone_td_prob_delta": aw_sig.redzone_td_prob_delta,
+        "home_redzone_td_prob_delta": hm_sig.redzone_td_prob_delta,
         "away_q4_fatigue_decay": away_q4_fatigue_decay,
         "home_q4_fatigue_decay": home_q4_fatigue_decay,
+        "barber_romano_cqr_width_mult": barber_romano_cqr_width_mult,
         "player_target_and_carry_multipliers": player_mults,
     }
     payload["all_corpus_pillars_verification"] = assert_all_books_pdfs_ig_x_situational_wired(
         payload
     )
     return payload
+
+
+def _compile_gsi_and_compound_fabric_pillar(max_log_odds: float) -> dict[str, Any]:
+    """Verify Wave 16 GSI translational bundle & Wave 14 SHA-256 HotSwap fabric (cached)."""
+    global _GSI_FABRIC_PILLAR_CACHE
+    if _GSI_FABRIC_PILLAR_CACHE is None:
+        _read_static_corpus_candidates()
+        manifest_sum = _read_manifest_877_summary()
+        gsi_bundle = load_and_verify_wave16_telemetry(GSI_TELEMETRY_PATH)
+        biomarkers_ok = bool(gsi_bundle.biomarker_structures) and all(
+            b.rule_in_only_doctrine for b in gsi_bundle.biomarker_structures
+        )
+        gfap_disorder_ok = any(
+            b.gene_symbol == "GFAP" and b.intrinsically_disordered_warning
+            for b in gsi_bundle.biomarker_structures
+        )
+        hs_engine = HotSwapInferenceEngine()
+        bundle_ok, bundle_reason = verify_champion_bundle(hs_engine.active_bundle)
+        hs_resp = hs_engine.query(
+            p1=0.58,
+            p2=0.51,
+            pairing="QB-WR",
+            market_fair_prob=0.25,
+        )
+        _GSI_FABRIC_PILLAR_CACHE = {
+            "wired": True,
+            "adr0003_rule_in_only_doctrine": biomarkers_ok,
+            "biomarkers_verified": [b.gene_symbol for b in gsi_bundle.biomarker_structures],
+            "gfap_disorder_warning_held": gfap_disorder_ok,
+            "sar_target": gsi_bundle.sar_benchmark.target_chembl_id,
+            "sar_compounds_evaluated": gsi_bundle.sar_benchmark.evaluated_compounds,
+            "sar_downsampled": gsi_bundle.sar_benchmark.downsampled,
+            "hotswap_sha256_verified": bool(bundle_ok),
+            "hotswap_verify_reason": bundle_reason,
+            "hotswap_version_tag": hs_resp.version_tag,
+            "hotswap_bundle_sha256": hs_resp.bundle_sha256,
+            "hotswap_latency_ms": round(float(hs_resp.latency_ms), 4),
+            "foundry_files_swept": _FOUNDRY_SWEPT_FILES_CACHE,
+            "foundry_lessons_ledger_count": _LESSONS_INDEXED_COUNT_CACHE,
+            "manifest_total_pdfs": int(manifest_sum.get("total_pdfs") or 0),
+        }
+
+    verdict = route_gse_capability_domain(
+        "gsi_translational_science",
+        sinkhorn_l1_divergence=1e-7,
+        max_delta_log_odds=max_log_odds,
+    )
+    out = dict(_GSI_FABRIC_PILLAR_CACHE)
+    out.update(
+        {
+            "route_domain": verdict.domain,
+            "nvidia_skill": verdict.nvidia_skill,
+            "hermes_plugin": verdict.hermes_plugin,
+            "wiring_score": verdict.wiring_score,
+            "attribution_header": verdict.attribution_header,
+            "dgx_invariants_ok": verdict.dgx_invariants_ok,
+        }
+    )
+    return out
 
 
 def apply_vmls_kkt_and_corpus_shares(
@@ -976,7 +1928,8 @@ def apply_vmls_kkt_and_corpus_shares(
             "vmls_kkt_constrained_boxscore_reconciler",
         )
         res = kkt_fn(prior_shares=prior_shares, team_total_target=1.0, reg_lambda=0.08)
-        solved = [max(1e-7, float(x)) for x in (res.get("reconciled_shares") or prior_shares)]
+        vec = res.get("reconciled_vector") or res.get("reconciled_shares") or prior_shares
+        solved = [max(1e-7, float(x)) for x in vec]
     except Exception:
         solved = prior_shares
     s_tot = sum(solved) or 1.0
@@ -997,6 +1950,20 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         blk = priors.get(p_name)
         if not isinstance(blk, Mapping) or blk.get("wired") is not True:
             missing_or_unwired.append(p_name)
+
+    gsi_blk = priors.get("gsi_and_compound_fabric_pillar")
+    gsi_wired = False
+    if gsi_blk is not None:
+        if (
+            not isinstance(gsi_blk, Mapping)
+            or gsi_blk.get("wired") is not True
+            or gsi_blk.get("adr0003_rule_in_only_doctrine") is not True
+            or gsi_blk.get("hotswap_sha256_verified") is not True
+            or gsi_blk.get("sar_compounds_evaluated") != 81
+        ):
+            missing_or_unwired.append("gsi_and_compound_fabric_pillar")
+        else:
+            gsi_wired = True
 
     required_scalars = (
         "away_epa_corpus_delta",
@@ -1028,6 +1995,16 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         ):
             invalid_scalars.append(s_name)
 
+    nav_routes = priors.get("nvidia_hermes_capability_routes")
+    if not isinstance(nav_routes, Mapping):
+        missing_or_unwired.append("nvidia_hermes_capability_routes")
+    else:
+        routes_list = nav_routes.get("routes") or []
+        if len(routes_list) != 5 or not all(
+            isinstance(r, Mapping) and bool(r.get("dgx_invariants_ok")) for r in routes_list
+        ):
+            missing_or_unwired.append("nvidia_hermes_capability_routes")
+
     if missing_or_unwired or invalid_scalars:
         raise RuntimeError(
             "STAGE2_PRE_SIM_CORPUS_WIRING_FAIL: "
@@ -1036,6 +2013,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
 
     return {
         "all_5_pillars_wired": True,
+        "gsi_and_compound_fabric_wired": gsi_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

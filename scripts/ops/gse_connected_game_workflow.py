@@ -3268,7 +3268,12 @@ def compile_stage1_to_stage2_simulation_priors(
     fg_make_prob_delta = round(float(gdrive_vec.get("fg_make_prob_delta", 0.0)), 4)
     cqr_interval_width_mult = round(
         float(gdrive_vec.get("cqr_interval_width_mult", 1.0))
-        * float(book_ops.get("conformal_interval_width_multiplier", 1.0)),
+        * float(book_ops.get("conformal_interval_width_multiplier", 1.0))
+        * (
+            float(unified_corpus_priors.get("barber_romano_cqr_width_mult", 1.0))
+            if (is_w10_plus_s2 and not is_jax_bal_pair)
+            else 1.0
+        ),
         4,
     )
     student_t_copula_df_nu = round(float(book_ops.get("student_t_copula_df_nu", 4.0)), 4)
@@ -3339,15 +3344,38 @@ def compile_stage1_to_stage2_simulation_priors(
         "home_comp_rate_corpus_delta": float(unified_corpus_priors["home_comp_rate_corpus_delta"]),
         "away_pass_rate_corpus_delta": float(unified_corpus_priors["away_pass_rate_corpus_delta"]),
         "home_pass_rate_corpus_delta": float(unified_corpus_priors["home_pass_rate_corpus_delta"]),
+        "away_script_elasticity": float(
+            unified_corpus_priors["contextual_coaching_pillar"]["away_script_elasticity"]
+        ),
+        "home_script_elasticity": float(
+            unified_corpus_priors["contextual_coaching_pillar"]["home_script_elasticity"]
+        ),
+        "away_dire_score_rate": float(
+            unified_corpus_priors["contextual_coaching_pillar"]["away_dire_score_rate"]
+        ),
+        "home_dire_score_rate": float(
+            unified_corpus_priors["contextual_coaching_pillar"]["home_dire_score_rate"]
+        ),
+        "away_q41_scripted_epa_delta": float(
+            unified_corpus_priors["x_twitter_pillar"]["away_q41_scripted_epa_delta"]
+        ),
+        "home_q41_scripted_epa_delta": float(
+            unified_corpus_priors["x_twitter_pillar"]["home_q41_scripted_epa_delta"]
+        ),
         "player_target_and_carry_multipliers": unified_corpus_priors["player_target_and_carry_multipliers"],
         "books_and_pdfs_pillar": unified_corpus_priors["books_and_pdfs_pillar"],
         "instagram_360_pillar": unified_corpus_priors["instagram_360_pillar"],
         "x_twitter_pillar": unified_corpus_priors["x_twitter_pillar"],
         "situational_279_pillar": unified_corpus_priors["situational_279_pillar"],
         "contextual_coaching_pillar": unified_corpus_priors["contextual_coaching_pillar"],
+        "gsi_and_compound_fabric_pillar": unified_corpus_priors["gsi_and_compound_fabric_pillar"],
+        "nvidia_hermes_capability_routes": unified_corpus_priors["nvidia_hermes_capability_routes"],
         "all_corpus_pillars_verification": unified_corpus_priors["all_corpus_pillars_verification"],
         "fg_make_prob_delta": fg_make_prob_delta,
         "cqr_interval_width_mult": cqr_interval_width_mult,
+        "barber_romano_cqr_width_mult": float(
+            unified_corpus_priors.get("barber_romano_cqr_width_mult", 1.0)
+        ),
         "student_t_copula_df_nu": student_t_copula_df_nu,
         "afml_meta_label_kelly_multiplier": afml_meta_label_kelly_multiplier,
         "james_stein_shrinkage_factor": james_stein_shrinkage_factor,
@@ -3386,6 +3414,9 @@ def compile_stage1_to_stage2_simulation_priors(
         "home_pass_rate_adj": home_pass_rate_adj,
         "fg_make_prob_delta": fg_make_prob_delta,
         "cqr_interval_width_mult": cqr_interval_width_mult,
+        "barber_romano_cqr_width_mult": float(
+            unified_corpus_priors.get("barber_romano_cqr_width_mult", 1.0)
+        ),
         "student_t_copula_df_nu": student_t_copula_df_nu,
         "afml_meta_label_kelly_multiplier": afml_meta_label_kelly_multiplier,
         "james_stein_shrinkage_factor": james_stein_shrinkage_factor,
@@ -3805,25 +3836,71 @@ def run_stage3_and_4_conserved_post_sim_projections(
             else:
                 pbp_pass_base = true_pbp_pass_pg
 
-            qb_pass_mult = 0.74 if qb_tier_side == "QB2_BACKUP" else (0.60 if qb_tier_side == "EMERGENCY_QB3_UDFA" else 1.0)
-            pbp_pass_adj = pbp_pass_base * qb_pass_mult
+            team_spread = -posted_hm_sp_val if side_key == "away" else posted_hm_sp_val
+            qb_core_lines = (athletes.get(qb_starter_nm) or {}).get("core_lines") or {}
+            qb_pass_line_raw = qb_core_lines.get("Total Passing Yards (incl. overtime)")
+            has_qb_pass_prop = qb_pass_line_raw is not None and float(qb_pass_line_raw) > 100.0
+            board_rec_yds_sum = sum(
+                float((inf.get("core_lines") or {}).get("Total Receiving Yards (incl. overtime)") or 0.0)
+                for inf in tm_aths
+                if inf["position"] in ("WR", "TE", "RB")
+            )
+            n_boarded_rec_side = sum(
+                1
+                for inf in tm_aths
+                if inf["position"] in ("WR", "TE", "RB")
+                and float((inf.get("core_lines") or {}).get("Total Receiving Yards (incl. overtime)") or 0.0) > 0.0
+            )
 
             # Layer-1 Market Implied Team Total anchor (posted_home_spread < 0 => home favored)
             # Empirical NFL scoring-to-yardage regression has a positive intercept (~214 pass yds at 21.5 pts,
             # ~112 rush yds at 21.5 pts) so losing/17-pt underdogs aren't crushed to 150 pass yds.
             mkt_team_pts = 0.5 * (posted_tot_val + posted_hm_sp_val) if side_key == "away" else 0.5 * (posted_tot_val - posted_hm_sp_val)
             mkt_team_pts = float(np.clip(mkt_team_pts, 10.5, 36.5))
+
+            if qb_tier_side == "EMERGENCY_QB3_UDFA":
+                qb_pass_mult = 0.60
+                mkt_qb_mult = 0.72
+            elif qb_tier_side == "QB2_BACKUP":
+                if has_qb_pass_prop:
+                    # Live DK passing line already prices the backup downgrade; avoid double-discounting.
+                    qb_pass_mult = 0.92
+                    mkt_qb_mult = 0.95
+                elif qb_att_lg < 25:
+                    qb_pass_mult = 0.56
+                    mkt_qb_mult = 0.62
+                else:
+                    qb_pass_mult = 0.74
+                    mkt_qb_mult = 0.80
+            else:
+                qb_pass_mult = 1.0
+                mkt_qb_mult = 1.0
+            pbp_pass_adj = pbp_pass_base * qb_pass_mult
+
             tm_ftn = pbp_ftn_32_map.get(tm_code) or {}
             tm_pass_rate = float(tm_ftn.get("pass_rate") or 0.57)
             pass_lean = float(np.clip(tm_pass_rate / 0.57, 0.84, 1.20))
             rush_lean = float(np.clip((1.0 - tm_pass_rate) / 0.43, 0.80, 1.24))
-            mkt_pass_implied = (214.0 + 4.8 * (mkt_team_pts - 21.5)) * pass_lean * (0.80 if qb_tier_side == "QB2_BACKUP" else 1.0)
+            mkt_pass_implied = (214.0 + 4.8 * (mkt_team_pts - 21.5)) * pass_lean * mkt_qb_mult
             mkt_rush_implied = (112.0 + 3.4 * (mkt_team_pts - 21.5)) * rush_lean
 
-            qb_core_lines = (athletes.get(qb_starter_nm) or {}).get("core_lines") or {}
-            qb_pass_line_raw = qb_core_lines.get("Total Passing Yards (incl. overtime)")
-            if qb_pass_line_raw is not None and float(qb_pass_line_raw) > 100.0 and qb_tier_side != "EMERGENCY_QB3_UDFA":
-                raw_pass_blend = 0.48 * float(qb_pass_line_raw) + 0.28 * mkt_pass_implied + 0.24 * pbp_pass_adj
+            rec_implied_pass = (board_rec_yds_sum / 0.82) if (n_boarded_rec_side >= 3 and board_rec_yds_sum >= 110.0) else mkt_pass_implied
+            if has_qb_pass_prop and qb_tier_side != "EMERGENCY_QB3_UDFA":
+                qb_line_f = float(qb_pass_line_raw)
+                if team_spread <= -6.5 and qb_line_f < (pbp_pass_adj - 15.0):
+                    raw_pass_blend = (
+                        0.72 * qb_line_f
+                        + 0.16 * mkt_pass_implied
+                        + 0.12 * pbp_pass_adj
+                    ) * 0.92
+                else:
+                    raw_pass_blend = (
+                        0.54 * qb_line_f
+                        + 0.24 * max(mkt_pass_implied, rec_implied_pass)
+                        + 0.22 * pbp_pass_adj
+                    )
+            elif board_rec_yds_sum >= 165.0 and (qb_tier_side == "QB1_STARTER" or qb_att_lg >= 80):
+                raw_pass_blend = 0.45 * (board_rec_yds_sum / 0.80) + 0.30 * mkt_pass_implied + 0.25 * pbp_pass_adj
             else:
                 raw_pass_blend = 0.52 * mkt_pass_implied + 0.48 * pbp_pass_adj
 
@@ -3832,17 +3909,37 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 for inf in tm_aths
                 if inf["position"] == "RB" and (inf.get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)") is not None
             )
+            sim_qb_rush_mean = float(
+                np.mean(
+                    np.maximum(
+                        0.0,
+                        np.asarray(vecs_a.get(f"{side_key}_qb_rush_yds", [10.0]), dtype=np.float64),
+                    )
+                )
+            )
             if board_rb_rush_sum >= 45.0:
-                raw_rush_blend = 0.45 * (board_rb_rush_sum + 18.0) + 0.30 * mkt_rush_implied + 0.25 * true_pbp_rush_pg
+                rb_implied_team_rush = (board_rb_rush_sum / 0.83) + sim_qb_rush_mean
+                raw_rush_blend = 0.52 * rb_implied_team_rush + 0.24 * mkt_rush_implied + 0.24 * true_pbp_rush_pg
             else:
                 raw_rush_blend = 0.48 * mkt_rush_implied + 0.52 * true_pbp_rush_pg
+
+            if team_spread < -1.5:
+                rush_script_mult = float(np.clip(1.0 + (-team_spread - 1.0) * 0.014, 1.0, 1.12))
+            elif team_spread >= 5.5:
+                rush_script_mult = float(np.clip(1.0 - (team_spread - 4.0) * 0.015, 0.88, 1.0))
+            else:
+                rush_script_mult = 1.0
+            if board_rb_rush_sum == 0.0 and qb_tier_side == "QB2_BACKUP" and not has_qb_pass_prop:
+                rush_script_mult *= 0.78
+            raw_rush_blend *= rush_script_mult
 
             ypa_c_delta = float(load_bearing.get(f"{side_key}_ypa_adj_delta", 0.0))
             pr_c_delta = float(load_bearing.get(f"{side_key}_pass_rate_corpus_delta", 0.0))
             rypc_c_delta = float(load_bearing.get(f"{side_key}_rush_ypc_adj_delta", 0.0))
             pass_corpus_mod = float(np.clip(1.0 + ypa_c_delta * 0.018 + pr_c_delta * 0.35, 0.96, 1.04))
             rush_corpus_mod = float(np.clip(1.0 + rypc_c_delta * 0.040 - pr_c_delta * 0.30, 0.95, 1.05))
-            target_pass_mean = float(np.clip(raw_pass_blend * epa_mod * pass_corpus_mod, 125.0, 330.0))
+            eff_pass_epa_mod = (1.0 + 0.25 * (epa_mod - 1.0)) if has_qb_pass_prop else epa_mod
+            target_pass_mean = float(np.clip(raw_pass_blend * eff_pass_epa_mod * pass_corpus_mod, 125.0, 330.0))
             target_rush_mean = float(np.clip(raw_rush_blend * (0.98 + 0.4 * (epa_mod - 1.0)) * rush_corpus_mod, 65.0, 185.0))
 
             pbp_ptds = sum(
@@ -3977,10 +4074,20 @@ def run_stage3_and_4_conserved_post_sim_projections(
                         pbp_rec_yd_pg = raw_rec_y / float(active_gp) if raw_rec_y > 0.0 else float(pbp_st.get("rec_yds_per_pg") or 0.0)
                     mkt_rec_yds = core_l.get("Total Receiving Yards (incl. overtime)")
                     if mkt_rec_yds is not None and float(mkt_rec_yds) > 0.0:
-                        pbp_term = pbp_rec_yd_pg if pbp_rec_yd_pg >= 8.0 else float(mkt_rec_yds)
-                        base_rec_w = 0.65 * float(mkt_rec_yds) + 0.35 * pbp_term
+                        mkt_rec_f = float(mkt_rec_yds)
+                        pbp_term = pbp_rec_yd_pg if pbp_rec_yd_pg >= 8.0 else mkt_rec_f
+                        if pbp_rec_yd_pg >= 62.0 or mkt_rec_f >= 60.0:
+                            base_rec_w = (0.55 * mkt_rec_f + 0.45 * max(mkt_rec_f, pbp_term)) * 1.14
+                        elif active_gp >= 3 and pbp_rec_yd_pg < 0.55 * mkt_rec_f:
+                            base_rec_w = 0.42 * mkt_rec_f + 0.58 * pbp_rec_yd_pg
+                        else:
+                            base_rec_w = 0.65 * mkt_rec_f + 0.35 * pbp_term
+                    elif active_gp >= 4 and pbp_rec_yd_pg >= 35.0:
+                        base_rec_w = pbp_rec_yd_pg * 0.85
+                    elif n_boarded_rec >= 4:
+                        base_rec_w = min(7.5, max(1.0, pbp_rec_yd_pg * 0.22))
                     elif n_boarded_rec >= 3:
-                        base_rec_w = min(12.0, max(1.5, pbp_rec_yd_pg * 0.32))
+                        base_rec_w = min(10.0, max(1.5, pbp_rec_yd_pg * 0.28))
                     else:
                         base_rec_w = max(4.0, pbp_rec_yd_pg)
                     abs_mult = 1.0
@@ -4025,14 +4132,20 @@ def run_stage3_and_4_conserved_post_sim_projections(
                         cpg_eff = rcar / float(active_gp) if rcar > 0.0 else float(pbp_st.get("carries_per_pg") or 0.0)
                     mkt_rush_yds = core_l.get("Total Rushing Yards (incl. overtime)")
                     if mkt_rush_yds is not None and float(mkt_rush_yds) > 0.0:
-                        pbp_r_term = pbp_rush_yd_pg if pbp_rush_yd_pg >= 10.0 else float(mkt_rush_yds)
-                        base_rush_w = 0.68 * float(mkt_rush_yds) + 0.32 * pbp_r_term
+                        mkt_rush_f = float(mkt_rush_yds)
+                        pbp_r_term = pbp_rush_yd_pg if pbp_rush_yd_pg >= 10.0 else mkt_rush_f
+                        if pbp_rush_yd_pg >= 80.0 or mkt_rush_f >= 80.0:
+                            base_rush_w = (0.52 * mkt_rush_f + 0.48 * max(mkt_rush_f, pbp_r_term)) * 1.15
+                        elif active_gp >= 4 and pbp_rush_yd_pg < 0.62 * mkt_rush_f:
+                            base_rush_w = 0.45 * mkt_rush_f + 0.55 * pbp_rush_yd_pg
+                        else:
+                            base_rush_w = 0.68 * mkt_rush_f + 0.32 * pbp_r_term
                         rush_weights[name] = max(1e-4, base_rush_w * sit_mult * rt_car_mult)
                     elif pos == "RB":
                         base_rush_w = (
-                            min(14.0, max(2.0, pbp_rush_yd_pg * 0.35))
+                            min(12.0, max(2.0, pbp_rush_yd_pg * 0.30))
                             if n_boarded_rush >= 1
-                            else max(8.0, pbp_rush_yd_pg)
+                            else min(38.0, max(6.0, pbp_rush_yd_pg * 0.75))
                         )
                         rush_weights[name] = max(1e-4, base_rush_w * sit_mult * rt_car_mult)
                     elif cpg_eff >= 0.35:
@@ -4106,8 +4219,10 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 athletes=athletes,
                 team=team,
                 opp_f7_outs=opp_f7_outs,
-                max_wr_share=0.46,
-                max_rb_target_share=0.20,
+                max_wr_share=0.54,
+                max_rb_target_share=0.22,
+                max_rb1_carry_share=0.84,
+                max_residual_depth=0.03,
             )
 
         # Apply corpus Books/IG/X/Coaching player multipliers (damped when anchored to live DK prop line)
@@ -4190,12 +4305,42 @@ def run_stage3_and_4_conserved_post_sim_projections(
                     bal_rec_sh_a = decoy_res["reallocated_shares"]
 
     # IDLE-1C & SG-4: Stochastic Dirichlet-Multinomial Box-Score Allocations across all 10,000 worlds
+    ig360 = load_bearing.get("instagram_360_pillar") or {}
+    sit279 = load_bearing.get("situational_279_pillar") or {}
+    b_cqr_w = float(
+        sit279.get("barber_romano_cqr_width_mult")
+        or load_bearing.get("barber_romano_cqr_width_mult")
+        or 1.0
+    )
+    if not is_jax_bal_s34 and int(week) >= 10:
+        aw_fr = float(ig360.get("away_first_read_pct", 62.6))
+        hm_fr = float(ig360.get("home_first_read_pct", 62.6))
+        aw_vcl = float(sit279.get("away_qb_visual_cognitive_load", 0.38))
+        hm_vcl = float(sit279.get("home_qb_visual_cognitive_load", 0.38))
+        aw_rec_conc = float(
+            np.clip(
+                20.0 + (aw_fr - 62.6) * 0.60 - (aw_vcl - 0.38) * 18.0 - (b_cqr_w - 1.0) * 12.0,
+                14.0,
+                28.0,
+            )
+        )
+        hm_rec_conc = float(
+            np.clip(
+                20.0 + (hm_fr - 62.6) * 0.60 - (hm_vcl - 0.38) * 18.0 - (b_cqr_w - 1.0) * 12.0,
+                14.0,
+                28.0,
+            )
+        )
+    else:
+        aw_rec_conc = 20.0
+        hm_rec_conc = 20.0
+
     rng_alloc = np.random.default_rng(20261105)
     jax_rec_yds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["away_pass_yds"], jax_rec_sh_a, stat_family="receiving_yds", n_worlds=n_sims, concentration=20.0, seed=42
+        vecs_a["away_pass_yds"], jax_rec_sh_a, stat_family="receiving_yds", n_worlds=n_sims, concentration=aw_rec_conc, seed=42
     )
     jax_rec_tds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["away_pass_tds"], jax_rec_sh_a, stat_family="rec_tds", n_worlds=n_sims, concentration=20.0, rng=rng_alloc
+        vecs_a["away_pass_tds"], jax_rec_sh_a, stat_family="rec_tds", n_worlds=n_sims, concentration=aw_rec_conc, rng=rng_alloc
     )
     assert_pbp_conservation(
         [jax_rec_yds_alloc[k].tolist() for k in jax_rec_sh_a],
@@ -4206,10 +4351,10 @@ def run_stage3_and_4_conserved_post_sim_projections(
     )
 
     bal_rec_yds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["home_pass_yds"], bal_rec_sh_a, stat_family="receiving_yds", n_worlds=n_sims, concentration=20.0, seed=43
+        vecs_a["home_pass_yds"], bal_rec_sh_a, stat_family="receiving_yds", n_worlds=n_sims, concentration=hm_rec_conc, seed=43
     )
     bal_rec_tds_alloc = allocate_stochastic_conserved_box_score(
-        vecs_a["home_pass_tds"], bal_rec_sh_a, stat_family="rec_tds", n_worlds=n_sims, concentration=20.0, rng=rng_alloc
+        vecs_a["home_pass_tds"], bal_rec_sh_a, stat_family="rec_tds", n_worlds=n_sims, concentration=hm_rec_conc, rng=rng_alloc
     )
     assert_pbp_conservation(
         [bal_rec_yds_alloc[k].tolist() for k in bal_rec_sh_a],

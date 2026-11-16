@@ -30,6 +30,7 @@ export const EXECUTABLE_CRON_TARGETS = {
   RUN_REFRESH_ODDS_FREE: "/api/cron/refresh-odds",
   RUN_GENERATE_DRAFTS: "/api/cron/generate-drafts",
   RUN_CALIBRATION_METRICS: "/api/cron/calibration-metrics",
+  RUN_COMPOUND_FABRIC_AUDIT: "/api/cron/compound-fabric-audit",
   // RUN_GENERATE_SIGNAL_SLATE deliberately absent — see #421 resolution.
   // `AutonomyActionKind` has no such member, so the planner cannot emit it and the
   // executor could never reach this entry. Adding the member to satisfy the compiler
@@ -162,6 +163,9 @@ export function executableTargetFor(action: AutonomyAction): string | null {
   }
   if (action.kind === "RUN_CALIBRATION_METRICS") {
     return EXECUTABLE_CRON_TARGETS.RUN_CALIBRATION_METRICS;
+  }
+  if (action.kind === "RUN_COMPOUND_FABRIC_AUDIT") {
+    return EXECUTABLE_CRON_TARGETS.RUN_COMPOUND_FABRIC_AUDIT;
   }
   // Safe subset of Wave A: settle path only (free-spine is usually a sibling item).
   if (action.kind === "ATTACK_RCA_WAVE_A") {
