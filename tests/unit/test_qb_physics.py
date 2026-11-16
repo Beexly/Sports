@@ -29,7 +29,7 @@ def test_pocket_passer_has_no_phantom_floor_and_reflects_kneeldowns() -> None:
 
 
 def test_mobile_qb_projects_meaningful_scramble_and_designed_rush_volume() -> None:
-    """High-scramble dual-threat QBs project materially higher rushing medians than pocket passers."""
+    """Dual-threat QBs project materially higher rushing medians than pocket passers."""
     mobile_qb = QuarterbackRushInput(
         player_id="qb_mobile",
         player_name="Lamar Jackson",

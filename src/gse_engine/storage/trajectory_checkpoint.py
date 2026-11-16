@@ -12,8 +12,9 @@ import json
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 
@@ -109,7 +110,7 @@ class TrajectoryCheckpointer:
                 "sha256": _sha256_file(final_npy),
             }
 
-        created_utc = datetime.now(timezone.utc).isoformat()
+        created_utc = datetime.now(UTC).isoformat()
         canonical_arrays = json.dumps(array_manifest, sort_keys=True).encode("utf-8")
         digest = hashlib.sha256(canonical_arrays).hexdigest()
 
@@ -166,7 +167,7 @@ class TrajectoryCheckpointer:
             raise CheckpointIntegrityError("Manifest SHA-256 checksum mismatch.")
 
         loaded: dict[str, np.ndarray] = {}
-        mmap_mode = "r" if mmap else None
+        mmap_mode: Literal["r"] | None = "r" if mmap else None
         for name, spec in arrays_spec.items():
             filename = str(spec["filename"])
             npy_path = (target_dir / filename).resolve()

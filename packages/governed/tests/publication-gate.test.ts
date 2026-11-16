@@ -6,7 +6,7 @@ import {
   verifyReceiptEd25519,
   type CandidateSlatePacket,
   type ReceiptSigner,
-} from "../index";
+} from "../src/index.js";
 
 describe("CAGE deterministic publication gate (ENFORCE)", () => {
   let publicKeyPem = "";

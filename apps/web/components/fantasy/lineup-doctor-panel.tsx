@@ -62,7 +62,7 @@ export function LineupDoctorPanel({ canSeeRepairs }: { readonly canSeeRepairs: b
       <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-mineral pb-4">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-plasma">
-            Instant Pre-Lock Check · Active Starters &amp; Salary Cap
+            Instant Pre-Kickoff Check · Active Starters &amp; Salary Cap
           </p>
           <h2 id="lineup-doctor-heading" className="mt-1 font-display text-2xl font-semibold text-ion-white">
             DraftKings Lineup Doctor (Classic 2-TE &amp; Showdown)

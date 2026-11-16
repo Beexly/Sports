@@ -15,12 +15,12 @@ from gse_engine.models import PlayerShare
 def test_vacated_starter_volume_conserved_without_phantom_sinks() -> None:
     """When WR1 is OUT, active teammates absorb targets within role caps and residual bounds."""
     roster = [
-        PlayerShare("wr1", "Starter WR1", "WR", active=False, base_target_share=0.28, base_carry_share=0.02),
-        PlayerShare("wr2", "Alpha WR2", "WR", active=True, base_target_share=0.20, base_carry_share=0.0),
-        PlayerShare("wr3", "Slot WR3", "WR", active=True, base_target_share=0.14, base_carry_share=0.0),
-        PlayerShare("te1", "Primary TE", "TE", active=True, base_target_share=0.18, base_carry_share=0.0),
-        PlayerShare("rb1", "Lead RB1", "RB", active=True, base_target_share=0.12, base_carry_share=0.68),
-        PlayerShare("rb2", "Change RB2", "RB", active=True, base_target_share=0.05, base_carry_share=0.28),
+        PlayerShare("wr1", "Starter WR1", "WR", False, 0.28, 0.02),
+        PlayerShare("wr2", "Alpha WR2", "WR", True, 0.20, 0.0),
+        PlayerShare("wr3", "Slot WR3", "WR", True, 0.14, 0.0),
+        PlayerShare("te1", "Primary TE", "TE", True, 0.18, 0.0),
+        PlayerShare("rb1", "Lead RB1", "RB", True, 0.12, 0.68),
+        PlayerShare("rb2", "Change RB2", "RB", True, 0.05, 0.28),
     ]
 
     res = reallocate_vacated_volume(roster, opp_front7_outs=3)
@@ -38,6 +38,4 @@ def test_vacated_starter_volume_conserved_without_phantom_sinks() -> None:
 def test_raises_when_no_active_players_remain() -> None:
     """Empty active rosters fail loudly instead of silently dumping into OTHER_TEAM sinks."""
     with pytest.raises(ValueError, match="zero active Stage-0 players"):
-        reallocate_vacated_volume(
-            [PlayerShare("wr1", "Out WR1", "WR", active=False, base_target_share=0.30, base_carry_share=0.0)]
-        )
+        reallocate_vacated_volume([PlayerShare("wr1", "Out WR1", "WR", False, 0.30, 0.0)])

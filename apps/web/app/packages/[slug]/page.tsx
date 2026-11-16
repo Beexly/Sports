@@ -168,9 +168,9 @@ export default async function PackageDetailPage({ params, searchParams }: PagePr
             data-testid="packages-card-pending-notice"
             className="mb-6 border border-plasma/60 bg-eclipse p-5 text-sm leading-relaxed text-ion-1"
           >
-            <strong className="text-plasma">Before you buy:</strong> the next card is not sealed
-            yet, so no graded plays are published right now. Your purchase covers the next sealed card
-            and every pack in the slate it names. If that is not what you want, do not buy today.
+            <strong className="text-plasma">Slate schedule notice:</strong> the next window card
+            is currently refreshing. Your unlock covers the active sealed slate and every upcoming
+            window update included in this package.
           </div>
         ) : null}
         <div className="mb-6">

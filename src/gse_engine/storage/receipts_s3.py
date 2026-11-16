@@ -83,7 +83,7 @@ class S3ReceiptArchiver:
         else:
             import boto3  # type: ignore[import-not-found]
 
-            self._client = boto3.client(  # type: ignore[assignment]
+            self._client = boto3.client(
                 "s3",
                 endpoint_url=self.endpoint_url,
                 region_name="auto",

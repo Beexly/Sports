@@ -51,9 +51,13 @@ def assign_latest_kickoff_flex(
     """Assigns Classic RB/WR/TE slots with latest-kickoff eligible skill player in FLEX."""
     total_skill = len(rb_list) + len(wr_list) + len(te_list)
     if total_skill != 7:
-        raise ValueError(f"Expected 7 skill players (2 RB, 3 WR, 1 TE + 1 FLEX), got {total_skill}.")
+        raise ValueError(
+            f"Expected 7 skill players (2 RB, 3 WR, 1 TE + 1 FLEX), got {total_skill}."
+        )
     if len(te_list) > MAX_TES_CLASSIC:
-        raise ValueError(f"At most {MAX_TES_CLASSIC} tight ends permitted (received {len(te_list)}).")
+        raise ValueError(
+            f"At most {MAX_TES_CLASSIC} tight ends permitted (received {len(te_list)})."
+        )
 
     rbs = list(rb_list)
     wrs = list(wr_list)
@@ -68,7 +72,7 @@ def assign_latest_kickoff_flex(
     if len(flex_candidates) == 0:
         raise ValueError("Invalid positional counts for Classic FLEX placement.")
 
-    # Latest kickoff_utc maximizes late-swap optionality; tie-break by lower salary/proj flexibility.
+    # Latest kickoff_utc maximizes late-swap optionality; tie-break by lower proj flexibility.
     flex_pos, flex_player = max(
         flex_candidates,
         key=lambda item: (item[1].kickoff_utc, item[1].projected_points),

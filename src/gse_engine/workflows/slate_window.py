@@ -20,7 +20,9 @@ def _workflow_defn(cls: type) -> type:
     return cls
 
 
-def _workflow_run(fn: Callable[..., Awaitable[SlateLockResult]]) -> Callable[..., Awaitable[SlateLockResult]]:
+def _workflow_run(
+    fn: Callable[..., Awaitable[SlateLockResult]],
+) -> Callable[..., Awaitable[SlateLockResult]]:
     """Applies @temporalio.workflow.run when temporalio is installed."""
     if _temporal_workflow is not None:
         return _temporal_workflow.run(fn)  # type: ignore[no-any-return]
@@ -95,7 +97,10 @@ class SlateWindowWorkflow:
             neon_packet_id = await deps.persist_neon_slate_packet(cfg, cage_sha256, r2_key)
             captured_pkt = neon_packet_id
             compensations.append(
-                ("unpublish_neon_slate_packet", lambda: deps.unpublish_neon_slate_packet(captured_pkt))
+                (
+                    "unpublish_neon_slate_packet",
+                    lambda: deps.unpublish_neon_slate_packet(captured_pkt),
+                )
             )
 
             drafts = await deps.emit_content_os_drafts(cfg, neon_packet_id)

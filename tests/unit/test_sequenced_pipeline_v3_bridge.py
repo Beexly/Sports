@@ -1,4 +1,4 @@
-"""Unit tests verifying scripts/ops/run_permanent_sequenced_weekly_pipeline.py connects gse_engine v3."""
+"""Tests linking run_permanent_sequenced_weekly_pipeline.py to gse_engine v3."""
 
 from __future__ import annotations
 

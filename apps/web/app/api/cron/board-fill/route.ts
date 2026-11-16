@@ -4,7 +4,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { canMintSignalPicksNow } from "@/lib/cron/noon-lock-window-guard";
+import { canMintSignalPicksNow } from "@/lib/cron/noon-window-guard";
 import { captureError } from "@/lib/observability/sentry";
 import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
 

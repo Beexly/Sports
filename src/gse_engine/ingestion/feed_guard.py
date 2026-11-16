@@ -68,7 +68,9 @@ def verify_feed_payload(raw_bytes: bytes, expected_kind: FeedKind) -> FeedGuardV
         )
 
     if expected_kind == "parquet":
-        valid_parquet = len(raw_bytes) >= 8 and raw_bytes[:4] == b"PAR1" and raw_bytes[-4:] == b"PAR1"
+        valid_parquet = (
+            len(raw_bytes) >= 8 and raw_bytes[:4] == b"PAR1" and raw_bytes[-4:] == b"PAR1"
+        )
         return FeedGuardVerdict(
             ok=valid_parquet,
             expected_kind=expected_kind,

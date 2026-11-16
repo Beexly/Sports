@@ -57,7 +57,7 @@ export default async function DfsSuitePage() {
   const note = salaryIsReal
     ? `Licensed DFS salaries are live. ${measuredCopy}`
     : feedDown
-      ? `DraftKings and FanDuel pool projections are active below with role shares verified ahead of lock. ${measuredCopy}`
+      ? `DraftKings and FanDuel pool projections are active below with role shares verified ahead of kickoff. ${measuredCopy}`
       : `DFS salary board pricing is gated to active Fantasy, Pro, and DFS Pack members. ${measuredCopy}`;
 
   const dfsPackage = getPackageBySlug("week8-all-access") ?? LIVE_PACKAGE_CATALOG[4]!;

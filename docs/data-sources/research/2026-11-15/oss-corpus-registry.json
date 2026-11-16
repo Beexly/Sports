@@ -1,7 +1,8 @@
 {
-  "schema_version": "2026-11-15",
+  "schema_version": "2026-11-16",
   "doctrine": "INGEST-AND-LEARN (never SKIP/DEAD; untested items default to UNTESTED_QUEUED_FOR_EVALUATION)",
-  "total_entries": 59,
+  "total_submitted_urls": 88,
+  "total_entries": 87,
   "entries": [
     {
       "id": 1,
@@ -472,6 +473,230 @@
       "url": "https://github.com/Arize-ai/arize-skills",
       "category": "ml-observability-and-evals",
       "gse_target_surface": "src/gse_engine/observability/arize_tracing.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 60,
+      "url": "https://github.com/ag-ui-protocol/ag-ui",
+      "category": "agent-ui-streaming-protocol",
+      "gse_target_surface": "apps/web/lib/ag-ui/protocol.ts",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 61,
+      "url": "https://github.com/dream-num/univer",
+      "category": "isomorphic-spreadsheet-engine",
+      "gse_target_surface": "apps/web/lib/viz/univer-dfs-workbook.ts",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 62,
+      "url": "https://github.com/google-labs-code/stitch-skills",
+      "category": "design-to-code-agent-skills",
+      "gse_target_surface": "docs/agents/domain.md & UI design-to-code workflow",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 63,
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "category": "browser-cdp-telemetry-mcp",
+      "gse_target_surface": "scripts/ops/cdp-storefront-smoke.mjs",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 64,
+      "url": "https://github.com/ggml-org/ggml",
+      "category": "quantized-tensor-inference",
+      "gse_target_surface": "local GGUF quantized workhorse inference alongside XNNPACK",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 65,
+      "url": "https://github.com/NVIDIA/SkillEvaluator",
+      "category": "agent-skill-evaluation-harness",
+      "gse_target_surface": "src/gse_engine/observability/skill_evaluator.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 66,
+      "url": "https://github.com/milind-soni/OpenMausBot",
+      "category": "contact-roster-agent-sandbox",
+      "gse_target_surface": "cockpit multi-agent contact roster session patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 67,
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "category": "trace-forest-pedagogical-rag",
+      "gse_target_surface": "/research educational film-study & Trace Forest concepts",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 68,
+      "url": "https://github.com/ranxianglei/billion-context",
+      "category": "lsm-hierarchical-context-compaction",
+      "gse_target_surface": "src/gse_engine/memory/billion_context.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 69,
+      "url": "https://github.com/serenakeyitan/agent-org-chart",
+      "category": "declarative-agent-org-topology",
+      "gse_target_surface": "src/gse_engine/governance/agent_org_roster.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 70,
+      "url": "https://github.com/ccch1mneyyy/dsh-Go",
+      "category": "mobile-remote-harness-client",
+      "gse_target_surface": "apps/mobile remote operator SSH/harness queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 71,
+      "url": "https://github.com/zts212653/clowder-ai",
+      "category": "multi-agent-consensus-rails",
+      "gse_target_surface": "src/gse_engine/governance/agent_org_roster.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 72,
+      "url": "https://github.com/elie222/rakazo",
+      "category": "persistent-teammate-routines",
+      "gse_target_surface": "Beexly/agent-bus persistent routine & memory patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 73,
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "category": "temporal-recency-trend-synthesis",
+      "gse_target_surface": "src/gse_engine/ingestion/recency_last30days.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 74,
+      "url": "https://github.com/Keys-Wasserman/Imagination-Studio-by-keys-Wasserman",
+      "category": "local-ai-film-and-slate-studio",
+      "gse_target_surface": "apps/web/lib/content-os/ autonomous slate video queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 75,
+      "url": "https://github.com/hoodiehq/hoodie",
+      "category": "offline-first-client-sync",
+      "gse_target_surface": "apps/mobile & apps/web offline SealedSlatePacket cache",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 76,
+      "url": "https://github.com/d3/d3",
+      "category": "data-driven-svg-visualization",
+      "gse_target_surface": "apps/web/lib/viz/d3-calibration-curves.ts",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 77,
+      "url": "https://github.com/docmost/docmost",
+      "category": "collaborative-wiki-knowledge-base",
+      "gse_target_surface": "internal engineering wiki & runbook patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 78,
+      "url": "https://github.com/freeCodeCamp/freeCodeCamp",
+      "category": "deterministic-challenge-curriculum",
+      "gse_target_surface": "MIND-FIRST deterministic assertion & onboarding corpus (submitted 2x)",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 79,
+      "url": "https://github.com/tensorflow/tensorflow",
+      "category": "deep-learning-and-probability-calibration",
+      "gse_target_surface": "TFLite / XNNPACK model export & calibration layers",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 80,
+      "url": "https://github.com/anomalyco/opencode",
+      "category": "terminal-coding-agent",
+      "gse_target_surface": "LSP-integrated coding harness & multi-provider patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 81,
+      "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "category": "llm-agent-reference-patterns",
+      "gse_target_surface": "multi-agent, MCP & hybrid RAG pattern reference",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 82,
+      "url": "https://github.com/paperclipai/paperclip",
+      "category": "agent-company-budget-control-plane",
+      "gse_target_surface": "src/gse_engine/governance/agent_org_roster.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 83,
+      "url": "https://github.com/opencv/opencv",
+      "category": "computer-vision-broadcast-homography",
+      "gse_target_surface": "All-22 pre-snap motion & player tracking queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 84,
+      "url": "https://github.com/facebookresearch/xformers",
+      "category": "memory-efficient-transformer-attention",
+      "gse_target_surface": "175-snap trajectory transformer memory optimization",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 85,
+      "url": "https://github.com/sohutv/cachecloud",
+      "category": "cache-telemetry-and-governance",
+      "gse_target_surface": "in-process cache hit-rate & eviction hygiene monitoring",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 86,
+      "url": "https://github.com/zjunlp/DeepKE",
+      "category": "knowledge-graph-relation-extraction",
+      "gse_target_surface": "src/gse_engine/ingestion/deepke_triples.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 87,
+      "url": "https://github.com/skfolio/skfolio",
+      "category": "convex-portfolio-kelly-risk-allocation",
+      "gse_target_surface": "src/gse_engine/compute/skfolio_allocator.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
       "status": "WIRED_V3"
     }

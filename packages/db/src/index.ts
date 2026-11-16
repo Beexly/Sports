@@ -1,3 +1,4 @@
+/// <reference path="./vendor-ambient.d.ts" />
 import { PrismaClient } from "@prisma/client";
 import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";

@@ -47,7 +47,7 @@ describe("per-slug unlock cookies and Noon Lock window guard", () => {
     const req = new Request("https://www.galaxysportsedge.com/api/cron/generate-signal-slate");
     expect(canMintSignalPicksNow(req, wedNoon, prodEnv)).toEqual({
       allowed: true,
-      reason: "within_canonical_lock_window",
+      reason: "within_canonical_seal_window",
     });
 
     // Tuesday 2026-11-17 03:15 America/Chicago == 09:15Z (off-cadence)
@@ -63,7 +63,7 @@ describe("per-slug unlock cookies and Noon Lock window guard", () => {
     );
     expect(canMintSignalPicksNow(overrideReq, tueOffHours, prodEnv)).toEqual({
       allowed: true,
-      reason: "query_lock_window_override",
+      reason: "query_window_override",
     });
   });
 });

@@ -16,16 +16,16 @@ _DEFAULT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "OUT",
         re.compile(
-            r"(?P<player>[A-Z][a-zA-Z'.-]+(?:\s+[A-Z][a-zA-Z'.-]+){1,2})\s+"
-            r"(?:\((?P<team>[A-Z]{2,3})\)\s+)?(?:is|ruled)\s+OUT\b[^.\n]*",
+            r"(?P<player>[A-Z][a-zA-Z'.-]+\s+[A-Z][a-zA-Z'.-]+(?:\s+(?:III?|IV|Jr\.|Sr\.))?)\s+"
+            r"(?:\((?P<team>[A-Z]{2,3})\)\s+)?(?:is\s+ruled|is|ruled)\s+OUT\b[^.\n]*",
         ),
     ),
     (
         "SNAP_COUNT",
         re.compile(
-            r"(?P<player>[A-Z][a-zA-Z'.-]+(?:\s+[A-Z][a-zA-Z'.-]+){1,2})\s+"
-            r"(?:\((?P<team>[A-Z]{2,3})\)\s+)?(?:expected to play|on a)\s+"
-            r"(?P<limit>\d{1,2})\s*(?:%|snaps?|snap count)\b[^.\n]*",
+            r"(?P<player>[A-Z][a-zA-Z'.-]+\s+[A-Z][a-zA-Z'.-]+(?:\s+(?:III?|IV|Jr\.|Sr\.))?)\s+"
+            r"(?:\((?P<team>[A-Z]{2,3})\)\s+)?(?:is\s+)?(?:expected to play|on a)\s+"
+            r"(?P<limit>\d{1,2})\s*(?:%|\bsnaps?\b|\bsnap count\b)[^.\n]*",
         ),
     ),
 )
@@ -98,7 +98,9 @@ def extract_grounded_beat_claims(
     if not transcript or not transcript.strip():
         return []
 
-    raw_items = extractor_fn(transcript) if extractor_fn is not None else _deterministic_extract(transcript)
+    raw_items = (
+        extractor_fn(transcript) if extractor_fn is not None else _deterministic_extract(transcript)
+    )
     verified: list[SpanGroundedClaim] = []
     for item in raw_items:
         claim = _validate_claim_span(transcript, item)

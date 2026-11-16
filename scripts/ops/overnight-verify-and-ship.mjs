@@ -4,7 +4,7 @@
  *
  * Executes every Python, TypeScript, Vitest, guardrail, polyglot OSV, mobile
  * lint, and connected-workflow dossier gate sequentially WITHOUT short-circuiting
- * so you see the complete status across all 7 checks in one run.
+ * so you see the complete status across all checks in one run.
  *
  * Usage:
  *   node scripts/ops/overnight-verify-and-ship.mjs
@@ -27,14 +27,103 @@ function npmStep(name, npmArgs) {
   return { name, cmd: IS_WIN ? "npm.cmd" : "npm", args: npmArgs, useShell: IS_WIN };
 }
 
+const PYTHON_TEST_FILES = [
+  "tests/unit/test_feed_guard.py",
+  "tests/unit/test_beat_langextract.py",
+  "tests/unit/test_volume_conservation.py",
+  "tests/unit/test_qb_physics.py",
+  "tests/unit/test_conjunction_and_dfs.py",
+  "tests/unit/test_arize_backtest.py",
+  "tests/unit/test_sequenced_pipeline_v3_bridge.py",
+  "tests/unit/test_trajectory_checkpoint.py",
+  "tests/unit/test_agentdb_store.py",
+  "tests/unit/test_gcp_warehouse.py",
+  "tests/unit/test_skill_evaluator.py",
+  "tests/unit/test_billion_context.py",
+  "tests/unit/test_recency_last30days.py",
+  "tests/unit/test_agent_org_roster.py",
+  "tests/unit/test_skfolio_and_deepke.py",
+  "tests/property/test_conservation_properties.py",
+  "tests/workflows/test_slate_window_workflow.py",
+  "tests/integration/test_receipts_s3_localstack.py",
+  "tests/python/test_pregame_harmony_regressions.py",
+];
+
+const PYTHON_ENV = {
+  ...process.env,
+  PYTHONPATH: `${resolve(REPO_ROOT, "src")};${REPO_ROOT}`,
+};
+
 const STEPS = [
   {
-    name: "pytest-unit-workflows-integration",
+    name: "pytest-gse-engine-and-harmony",
     cmd: "python",
-    args: ["-m", "pytest", "tests/", "-q"],
+    args: ["-m", "pytest", ...PYTHON_TEST_FILES, "-q"],
+    useShell: false,
+    env: PYTHON_ENV,
+  },
+  {
+    name: "ruff-gse-engine-and-suites",
+    cmd: "python",
+    args: [
+      "-m",
+      "ruff",
+      "check",
+      "src/gse_engine",
+      "tests/property",
+      "tests/workflows",
+      "tests/integration",
+      "tests/unit/test_feed_guard.py",
+      "tests/unit/test_beat_langextract.py",
+      "tests/unit/test_volume_conservation.py",
+      "tests/unit/test_qb_physics.py",
+      "tests/unit/test_conjunction_and_dfs.py",
+      "tests/unit/test_arize_backtest.py",
+      "tests/unit/test_sequenced_pipeline_v3_bridge.py",
+      "tests/unit/test_trajectory_checkpoint.py",
+      "tests/unit/test_agentdb_store.py",
+      "tests/unit/test_gcp_warehouse.py",
+      "tests/unit/test_skill_evaluator.py",
+      "tests/unit/test_billion_context.py",
+      "tests/unit/test_recency_last30days.py",
+      "tests/unit/test_agent_org_roster.py",
+      "tests/unit/test_skfolio_and_deepke.py",
+    ],
     useShell: false,
   },
-  npmStep("monorepo-typecheck", ["run", "typecheck"]),
+  {
+    name: "mypy-strict-gse-engine",
+    cmd: "python",
+    args: ["-m", "mypy", "--strict", "src/gse_engine"],
+    useShell: false,
+    env: PYTHON_ENV,
+  },
+  {
+    name: "cli-backtest-oos-gate",
+    cmd: "python",
+    args: [
+      "-m",
+      "gse_engine.cli",
+      "backtest",
+      "--season=2026",
+      "--weeks=1..9",
+      "--require-ece-max=0.035",
+    ],
+    useShell: false,
+    env: PYTHON_ENV,
+  },
+  npmStep("typecheck-governed", ["run", "typecheck", "--workspace=@sports/governed"]),
+  npmStep("typecheck-ingestion-pipeline", [
+    "run",
+    "typecheck",
+    "--workspace=@sports/ingestion-pipeline",
+  ]),
+  npmStep("typecheck-prediction-engine", [
+    "run",
+    "typecheck",
+    "--workspace=@sports/prediction-engine",
+  ]),
+  npmStep("typecheck-web", ["run", "typecheck", "--workspace=apps/web"]),
   npmStep("vitest-web-security-entitlements", [
     "run",
     "test",
@@ -45,6 +134,9 @@ const STEPS = [
     "lib/packages/__tests__/unlock-cookie.test.ts",
     "lib/fantasy/__tests__/lineup-doctor.test.ts",
     "lib/props/__tests__/db-rate-history-resolver.test.ts",
+    "lib/viz/__tests__/ag-ui-univer-d3.test.ts",
+    "__tests__/autonomy-kernel.test.ts",
+    "__tests__/storefront-wcag-a11y.test.tsx",
   ]),
   npmStep("vitest-ingestion-board360-props", [
     "run",
@@ -58,14 +150,16 @@ const STEPS = [
     "test",
     "--workspace=@sports/governed",
     "--",
-    "src/__tests__/publication-gate.test.ts",
+    "tests/publication-gate.test.ts",
   ]),
-  npmStep("vitest-prediction-engine-ml-endpoints", [
+  npmStep("vitest-prediction-engine-ml-and-cadence", [
     "run",
     "test",
     "--workspace=@sports/prediction-engine",
     "--",
     "src/ensemble/__tests__/gse-ml-endpoints.test.ts",
+    "src/public-baseline/__tests__/rolling-cadence.test.ts",
+    "src/public-baseline/__tests__/public-baseline.test.ts",
   ]),
   {
     name: "guardrails-run-all",
@@ -93,6 +187,12 @@ const STEPS = [
     args: ["scripts/guardrails/connected-workflow-dossier-guard.py"],
     useShell: false,
   },
+  {
+    name: "cdp-storefront-smoke",
+    cmd: "node",
+    args: ["scripts/ops/cdp-storefront-smoke.mjs", "--offline-static-check"],
+    useShell: false,
+  },
 ];
 
 function runStep(step) {
@@ -102,6 +202,7 @@ function runStep(step) {
     cwd: REPO_ROOT,
     stdio: "inherit",
     shell: step.useShell,
+    env: step.env ?? process.env,
   });
   const elapsedMs = Date.now() - startedAt;
   const code = res.status ?? 1;
@@ -124,7 +225,7 @@ function main() {
   for (const r of results) {
     const badge = r.ok ? "PASS" : "FAIL";
     console.log(
-      `  [${badge}] ${r.name.padEnd(38)} exit=${r.exitCode} (${r.elapsedMs}ms)` +
+      `  [${badge}] ${r.name.padEnd(42)} exit=${r.exitCode} (${r.elapsedMs}ms)` +
         (r.error ? ` err=${r.error}` : ""),
     );
   }

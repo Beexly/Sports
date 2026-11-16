@@ -876,7 +876,7 @@ export function runMasterSituationalReasoningOverlay(input: OverlayInput): Overl
     assertNamesClean(input.stage0Check.candidatePlayerNames, cfg);
     result.stage0Verified = {
       week: cfg.week,
-      asOf: cfg.as_of,
+      asOf: cfg.as_of ?? "",
       candidateCount: input.stage0Check.candidatePlayerNames.length,
     };
     mark("0:stage0RosterGate", true, `week ${cfg.week} verified (${cfg.as_of})`);

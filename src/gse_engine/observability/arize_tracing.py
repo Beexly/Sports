@@ -18,7 +18,7 @@ MIN_CLV_BEAT_RATE = 0.50
 def trace_engine_stage(stage_name: str) -> Iterator[None]:
     """Wraps an engine execution phase in an OpenTelemetry/Arize span when configured."""
     try:
-        from opentelemetry import trace  # type: ignore[import-not-found]
+        from opentelemetry import trace
 
         tracer = trace.get_tracer("gse_engine")
         with tracer.start_as_current_span(f"gse.{stage_name}"):

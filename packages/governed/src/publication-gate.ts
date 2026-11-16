@@ -87,7 +87,7 @@ export function evaluateCagePublicationPolicy(packet: CandidateSlatePacket): Gat
     if (!isValidConfidenceDisplay(item.confidenceDisplay)) {
       reasons.push(`CONFIDENCE_PERCENT_FORBIDDEN:${tag}`);
     }
-    if (isActivePlay && item.market && !isTwoSidedMarketItem(item)) {
+    if (item.publishAllowed && item.market && !isTwoSidedMarketItem(item)) {
       reasons.push(`SINGLE_SIDED_PROP_FORBIDDEN:${tag}`);
     }
     if (item.publicCopy && JARGON_LEAK_RE.test(item.publicCopy)) {
@@ -137,7 +137,7 @@ export async function enforceSlatePublication<T>(
     {
       policyVersion: CAGE_POLICY_VERSION,
       policyHash: CAGE_POLICY_SHA256,
-      agentId: options?.agentId ?? "gse-noon-lock",
+      agentId: options?.agentId ?? "gse-noon-seal",
       mode: "ENFORCE",
     },
     publishFn,

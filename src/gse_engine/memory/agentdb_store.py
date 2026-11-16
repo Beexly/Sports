@@ -98,7 +98,9 @@ class AgentDbMemoryStore:
         meta_dict = dict(metadata or {})
         self._conn.execute(
             """
-            INSERT INTO memories (entry_id, namespace, text, recorded_utc, embedding_json, metadata_json)
+            INSERT INTO memories (
+                entry_id, namespace, text, recorded_utc, embedding_json, metadata_json
+            )
             VALUES (?, ?, ?, ?, ?, ?)
             ON CONFLICT(entry_id) DO UPDATE SET
                 namespace = excluded.namespace,

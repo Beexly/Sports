@@ -78,7 +78,8 @@ class GcpWarehouseAdapter:
         estimated_bytes = self._bq.estimate_query_bytes(sql)
         if estimated_bytes > max_bytes_billed:
             raise BytesBilledLimitExceeded(
-                f"Dry-run estimated {estimated_bytes} bytes exceeds cap of {max_bytes_billed} bytes."
+                f"Dry-run estimated {estimated_bytes} bytes "
+                f"exceeds cap of {max_bytes_billed} bytes."
             )
 
         rows = self._bq.execute_query(sql, max_bytes_billed=max_bytes_billed)

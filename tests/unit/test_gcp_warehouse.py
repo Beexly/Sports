@@ -80,4 +80,5 @@ def test_executes_bounded_query_and_uploads_sha256_gcs_artifact() -> None:
     expected_sha = hashlib.sha256(payload).hexdigest()
     assert res["uri"] == "gs://gse-archive-bucket/receipts/w10.json"
     assert res["sha256"] == expected_sha
-    assert fake_gcs.uploads[("gse-archive-bucket", "receipts/w10.json")]["metadata"]["sha256"] == expected_sha
+    uploaded = fake_gcs.uploads[("gse-archive-bucket", "receipts/w10.json")]
+    assert uploaded["metadata"]["sha256"] == expected_sha
