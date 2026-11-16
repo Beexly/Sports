@@ -206,3 +206,33 @@ staged copies, so the engine feed does not wait on that push.
 Running feed total: 10,553 records (10,324 through 2026-11-14 PM + 44 IG AM
 + 122 X For You AM + 63 X analytics AM). Poster numbers in the deltas are
 claims as printed, not verified facts.
+
+## 2026-11-15 PM delta (Instagram lane; other PM lanes pending)
+
+IG For You PM delta: `delta-2026-11-15-ig-pm.jsonl`, 44 records
+(20 dossier, 24 inventoried) from ~/workspace/ig-for-you-sweep/reports/
+2026-11-15-PM.md; counts verified against the report on 2026-11-16
+(~02:05 UTC) by the proactivity research run. Headline dossier:
+TradingAgents (TauricResearch/TradingAgents, 122,726 stars, Apache-2.0;
+the post's "MIT" label is wrong), filed TEST as a fleet
+architecture / transcript-audit specimen.
+
+Status correction carried with this delta: the inventoried Oracle Cloud
+Always Free item (INV-20) is verified as an offer, but Garrett ruled
+Oracle out on 2026-10-16 (his earlier account was closed after sitting
+idle; "dont worry about that"). It must NOT be carried in the feed as a
+live TEST or claim recommendation; its status is closed-by-Garrett's-
+ruling. Everything else in the delta stands as printed.
+
+Running feed total: 10,597 records (10,553 through 2026-11-15 AM + 44 IG
+PM). X For You PM and X analytics PM deltas for 2026-11-15 had not
+landed in this directory at verification time.
+
+Landing confirmation (Motif, 2026-11-15 evening): the delta was
+Motif-verified (44 records, 16-key schema exact, 0 collisions against
+base plus prior deltas, no em/en dashes) and appended to
+ig-for-you-feed.jsonl; the feed was pushed to this branch (commit
+f897381) and the remote size read back at 1,952,453 bytes, matching the
+local file byte-for-byte. The Oracle record (item_key DfwXBcUND-Q)
+carries verdict CLOSED in the feed itself, with the status correction
+appended to its summary, per the ruling above.
