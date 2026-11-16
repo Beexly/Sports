@@ -3,6 +3,21 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 (Hermes autonomous cycle #3 — Two-Host Rule: the 22 hardcoded intelligence paths, made portable)
+
+- **What changed**:
+  - 22 `intelligence/**.py` files (PR #1289, branch `fix/two-host-rule-intelligence-paths-2026-11-16`, squash-merged to `origin/main` `ce8e6ad5e`): each carried the dev-box host path (`C:\Users\Garrett\...`) or the Google Drive root (`G:\My Drive\...`) as a literal, which is exactly what the three same-named `test_zero_hardcoded_local_host_paths_*` detectors catch. **No detector was edited.** The sources now resolve portably: repo-internal paths (foundry.db, gatekeeper.py, artifacts/{primitives,rlvr_vetoes,gcp_sync}, .env.local, audit manifest, unpacker, bq staging) -> `REPO_ROOT = Path(__file__).resolve().parents[2]`; per-host tool/data roots (ocr-venv python, hermes-jev-skills, Downloads, AppData Cloud SDK `bq.cmd`, `.gemini` scratch, prepack-audit worktree, temp dump) -> `Path.home()`-relative with env overrides (`OCR_VENV_PYTHON`, `HERMES_JEV_PATH`); the Drive masters -> a `GDRIVE_ROOT` env var defaulting to `Path.home()/"My Drive"`. Module-header docstrings rewritten repo-relative; the PII-guard fixture in `intelligence/tests/test_multi_lane_sovereign_extractor.py` now uses `Path.home()`-based paths.
+- **What was proven**:
+  - Reproduced first in a detached `origin/main` worktree: all three detectors red (22 files / `Two-Host Rule violation` / `Found hardcoded local host paths`). After the edit -> `3 passed`, and again on the merged tree `ce8e6ad5e` -> `3 passed`.
+  - All 22 files `py_compile`; all 16 edited non-test modules `import` clean (only `intelligence.calibration.oof_logit_temp_calibration` fails, on a missing `scipy`, which is pre-existing and unrelated).
+  - `pytest tests/unit/test_deep_read_multi_cli_and_laptop_workspaces.py intelligence/tests/test_master_plan_gates.py` -> `40 passed`; the detector + PII-guard set -> `17 passed`.
+  - CI on #1289: `44 SUCCESS`, the only failure is `epistemic-gate` (pre-existing, documented non-blocker; that job runs the full suite), including the ~13-minute `Test, type-check, lint, Prisma`. The squash commit touches exactly the 22 files.
+- **What was not proven**:
+  - Dev-box behaviour is preserved by construction (home == `C:\Users\Garrett`, repo root == `C:\Users\Garrett\Sports`) but the scripts were not re-executed end-to-end; they need the G: Drive masters / foundry DB not mounted in this worktree. The change is path resolution only, no logic.
+- **What the next role must do**:
+  - The `zero_hardcoded_local_host_paths_*` invariant is now green on main. Keep it green: new `intelligence/**` code must derive paths from `REPO_ROOT`/`Path.home()`, never a literal host path.
+  - Unchanged from cycle #2: the nightly overnight job's two honest-data defects (`Missing writeup-mnf-401873051`; inactive `tyreek hill` in `canonical_looped_funnel_projections`). Do not "fix" by editing the test.
+
 ## 2026-11-16 (Hermes autonomous cycle #2 — a stale equation-executor assertion, reproduced then fixed)
 
 - **What changed**:
