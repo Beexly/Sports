@@ -1,0 +1,685 @@
+{
+ "book_id": "61f7a32a58e897be",
+ "source_status": "COMPLETE",
+ "source_note": "Traumatic Brain Injury and Chronic Traumatic Encephalopathy as a Cause of Alzheimer's Disease, edited by Dimitrios Kanakis (Professor of Pathology and Neuropathology, University of Nicosia Medical School), MDPI Books reprint of an International Journal of Molecular Sciences Special Issue (ISSN 1422-0067), 2025 (articles 2024-2026), ISBN 978-3-7258-7379-1 (PDF). Eight contributions: Kanakis editorial; Katramadou, Bender and Kanakis review; Blaschke et al. concussion model study; Joseph ASL review; Neuschmid et al. calcium review; Mitroshina and Vedunova HIF-1 review; Egoraeva et al. SDEA study; Pszczolowska et al. CTE review; plus the Volloch and Rits-Volloch ACH2.0 Perspective. Local file is the publisher PDF, 35291392 bytes, sha256 61f7a32a58e897be9db0fc2938adb4d332442aa564363e01c1cd1550101ea0f8 (digest over str(size) plus full file bytes; book_id is its first 16 hex characters). Extracted text (1515693 bytes) is a clean MDPI text layer; occasional mid-word line breaks occur, and every quote in this artifact was verified as one contiguous string in that text file under the fleet normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tbi_dose_response_dementia_risk",
+   "name": "Dementia risk rises in dose-response with TBI severity: adjusted hazard ratios 2.36 (mild, no loss of consciousness), 2.51 (mild, with loss of consciousness), 3.77 (moderate-to-severe) in a propensity-matched veterans cohort",
+   "verbatim_quote": "A large-scale, propensity-matched cohort study of over 170,000 U.S. military veterans demonstrated that dementia risk increased proportionally with TBI severity, with adjusted hazard ratios of 2.36 for mild TBI without loss of consciousness, 2.51 for mild TBI with loss of consciousness, and 3.77 for moderate-to-severe TBI [37]",
+   "page": "Contribution 1 (Katramadou, Bender and Kanakis), Section 1.4; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "Cohort is U.S. military veterans, propensity matched; hazard ratios are adjusted estimates, not raw counts",
+    "Meta-analysis in the same section gives pooled odds ratios: all-cause dementia 1.79, Alzheimer disease 1.60, vascular dementia 2.03, frontotemporal lobar degeneration 3.99"
+   ],
+   "breakdown_regime": "Association is epidemiological; it does not by itself prove the injury caused the dementia in any individual, and veteran cohorts may not transfer to civilian or athletic populations",
+   "domain": "epidemiology / risk quantification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Exposure dose maps to outcome risk through a monotone severity ladder with no safe threshold step: the engine should accumulate weighted exposure history (count times severity) as a state variable whose effect on late outcomes scales with dose, rather than treating each exposure event as binary and independent.",
+    "source_operator": "tbi_dose_response_dementia_risk",
+    "telemetry": "Longitudinal exposure logs with severity grades; cohort outcome rates by exposure band"
+   }
+  },
+  {
+   "primitive_id": "cbi_m_phenotyping_framework",
+   "name": "CBI-M framework: TBI classification should integrate four pillars, clinical presentation, biomarkers, imaging, and patient-specific modifiers, instead of severity grade alone",
+   "verbatim_quote": "The Clinical, Biomarker, Imaging Modifiers (CBI-M) framework provides a more holistic approach to TBI classification.",
+   "page": "Contribution 1, Section 1.2; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "Framework attributed in the review to Manley et al. 2025 and the NIH-NINDS TBI classification initiative",
+    "The Glasgow Coma Scale bands (mild 13-15, moderate 9-12, severe 3-8) remain in use but are treated as insufficient on their own"
+   ],
+   "breakdown_regime": "A classification framework is only as good as the availability of its four inputs; where biomarker or imaging data are missing, the framework degrades back to clinical grade alone",
+   "domain": "classification / phenotyping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A four-channel phenotyping kernel: any entity state estimate should fuse a presentation channel, a measured-marker channel, an imaging or structural channel, and a modifier channel, and should report which channels were actually observed so downstream reasoning can discount single-channel estimates.",
+    "source_operator": "cbi_m_phenotyping_framework",
+    "telemetry": "Per-case channel availability flags; marker panels; imaging summaries; modifier lists"
+   }
+  },
+  {
+   "primitive_id": "dai_axonal_transport_amyloidogenesis",
+   "name": "Diffuse axonal injury causes axonal transport failure, so APP, its cleaving enzyme BACE1, and presenilin-1 co-accumulate inside the axon and generate amyloid-beta locally",
+   "verbatim_quote": "Disrupted axonal transport also leads to intra-axonal accumulation of amyloid precursor protein (APP), along with β-secretase (BACE1) and presenilin-1, promoting intra-axonal amyloid-beta generation [48,49].",
+   "page": "Contribution 1, Section 2.1.4; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "Rotational acceleration is the mechanical driver of diffuse axonal injury in this account",
+    "APP accumulation in damaged axons is detectable within hours of injury and is used as a histological marker of diffuse axonal injury"
+   ],
+   "breakdown_regime": "Demonstrated mainly in moderate-to-severe injury and postmortem tissue; how much intra-axonal amyloid generation occurs after a single mild injury in living humans is not directly measurable",
+   "domain": "mechanism / axonal injury",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A transport-blockade accumulation kernel: when a flow network is interrupted, substrate and processing machinery pile up at the blockage and react locally, so damage output concentrates at failure points rather than spreading uniformly. Reasoning should look for co-location of substrate, enzyme, and product as the signature of a blocked-flow process.",
+    "source_operator": "dai_axonal_transport_amyloidogenesis",
+    "telemetry": "Spatial co-location maps of substrate, enzyme, and product; flow interruption markers"
+   }
+  },
+  {
+   "primitive_id": "cte_pathognomonic_lesion",
+   "name": "The defining CTE lesion is perivascular hyperphosphorylated tau at the depths of cortical sulci, a distribution not seen in Alzheimer disease",
+   "verbatim_quote": "The central lesion in CTE is the perivascular deposition of hyperphosphorylated tau (p-tau) in neurons and astrocytes, located deep in the cortical sulci [83].",
+   "page": "Contribution 1, Section 2 (CTE); book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "Lesion definition follows the NINDS/NIBIB consensus criteria discussed in the volume (2016, refined 2021)",
+    "Cryo-electron microscopy cited in the volume shows the CTE tau filament fold differs from the Alzheimer fold"
+   ],
+   "breakdown_regime": "The lesion is a postmortem histological definition; it cannot currently be confirmed in a living person, so all in-life CTE statements are probabilistic",
+   "domain": "neuropathology / diagnostic criteria",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A signature-geometry test: two processes that produce the same aggregate (tau tangles) are distinguished by the spatial pattern of deposition, perivascular and sulcal versus laminar and diffuse. The engine should classify by pattern geometry, not by aggregate identity alone.",
+    "source_operator": "cte_pathognomonic_lesion",
+    "telemetry": "Spatial distribution maps of deposits; perivascular clustering statistics; sulcal depth profiles"
+   }
+  },
+  {
+   "primitive_id": "bbb_vegf_tight_junction_failure",
+   "name": "After TBI, VEGF rises and downregulates the tight junction proteins occludin and claudin-5, so the blood-brain barrier leaks; in APOE e4 carriers the CypA/MMP-9 pathway and LRP1 loss add a genetic route to the same failure",
+   "verbatim_quote": "Vascular endothelial growth factor (VEGF) rises sharply after TBI, inducing angiogenesis but simultaneously downregulating tight junction proteins such as occludin and claudin-5, weakening endothelial cohesions and increasing vascular leakage [103,104].",
+   "page": "Contribution 1, Section 2.2.1; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "The same section reports that in APOE e4 carriers, increased barrier permeability is linked to cyclophilin A / matrix metalloproteinase 9 (CypA/MMP-9) pathway activation and LRP1 degradation",
+    "Chronic barrier failure involves pericyte loss and reduced LRP1 and Caveolin-1, impairing amyloid-beta and tau clearance"
+   ],
+   "breakdown_regime": "VEGF is also required for repair angiogenesis, so the same signal is damaging early and useful later; timing determines sign of effect",
+   "domain": "mechanism / neurovascular unit",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A barrier-integrity kernel with two failure inputs: a damage signal that loosens junctions (VEGF) and a clearance failure that lets toxic product accumulate (LRP1 loss). Any gated system should be modeled with both a leak rate and a clearance rate; outcomes depend on their ratio, not on either alone.",
+    "source_operator": "bbb_vegf_tight_junction_failure",
+    "telemetry": "Junction protein expression; permeability imaging; clearance rate estimates; genotype strata"
+   }
+  },
+  {
+   "primitive_id": "biomarker_release_kinetics",
+   "name": "Blood biomarkers of brain injury have distinct, ordered release kinetics: S100B detectable at 15 minutes and back to baseline in 1-2 hours, GFAP detectable within 1 hour and peaking at 20-24 hours, UCH-L1 peaking at 8-12 hours",
+   "verbatim_quote": "GFAP becomes detectable within the first hour after injury and peaks between 20 and 24 h, and declines over the following 72 h [178]. S100B concentrations are detectable in the peripheral circulation as early as 15 min and return to baseline within 1-2 h [179]. UCH-L1 is detectable in peripheral blood shortly post injury and increases, reaching a peak 8-12 h after initial trauma [180].",
+   "page": "Contribution 1, biomarker section; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "Kinetics are population summaries drawn from cohorts including CENTER-TBI (n = 2869 as cited in the review)",
+    "CSF neurofilament light is reported in the same review to keep rising for up to two weeks and to predict outcome at 1 year and at 10-15 years"
+   ],
+   "breakdown_regime": "A single measurement without a timestamp is nearly uninterpretable; each marker has a different informative window, and renal function, age, and extracranial injury shift the curves",
+   "domain": "measurement / temporal signatures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A lead-time kernel: each observable has a known detection onset, peak, and decay, so a panel of staggered markers timestamps the underlying event and orders its phases. The engine should schedule which signal to trust at which lag after an event instead of treating all signals as simultaneous.",
+    "source_operator": "biomarker_release_kinetics",
+    "telemetry": "Timestamped serial marker measurements; per-marker onset, peak, and half-life tables"
+   }
+  },
+  {
+   "primitive_id": "genetic_risk_amplification_apoe_trem2",
+   "name": "Genetic modifiers multiply post-TBI neurodegeneration risk: APOE e4 carriers with a TBI history show a tenfold increased risk of Alzheimer diagnosis, and the TREM2 R47H variant carries an odds ratio of 5.05 for Alzheimer disease",
+   "verbatim_quote": "Previous studies have shown a tenfold increased risk of AD diagnosis among ε4 carriers with a TBI history [137].",
+   "page": "Contribution 1, genetics section; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "TREM2 R47H figure from the same section: fivefold increased risk of Alzheimer disease (OR = 5.05, 95% CI: 2.77-9.16)",
+    "APOE e4 is described as the strongest genetic risk factor for early and late onset Alzheimer disease and for poor outcome after TBI"
+   ],
+   "breakdown_regime": "Effect sizes come from association studies with wide confidence intervals; a risk multiplier is not a deterministic outcome and interacts with age, sex, and injury history",
+   "domain": "genetics / risk modification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multiplicative prior modifiers: a background genotype scales the effect of an exposure rather than adding to it. The engine should store such factors as multipliers on exposure pathways, applied before outcome estimation, and should never average them away into a population base rate.",
+    "source_operator": "genetic_risk_amplification_apoe_trem2",
+    "telemetry": "Genotype or analogous background-factor strata; exposure histories within each stratum"
+   }
+  },
+  {
+   "primitive_id": "nlrp3_inflammasome_tau_coupling",
+   "name": "The NLRP3 inflammasome couples post-injury inflammation to tau pathology: prolonged activation drives IL-1b release and caspase-mediated pyroptosis and regulates pathological tau accumulation",
+   "verbatim_quote": "The inflammasome pathway further links inflammation with tau pathology.",
+   "page": "Contribution 1, neuroinflammation section; book pp. 4-44",
+   "latex": "",
+   "assumptions": [
+    "The following sentence in the source names NOD-, LRR-, and pyrin domain-containing protein 3 (NLRP3) as the inflammasome that regulates pathological tau accumulation",
+    "The review cites AKT/NFkB/NLRP3 pathway inhibition as attenuating microglial-mediated injury in experimental work"
+   ],
+   "breakdown_regime": "Evidence is largely preclinical; inflammasome activation is also part of normal host defense, so suppression has a therapeutic window problem",
+   "domain": "mechanism / neuroinflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A cross-domain coupling kernel: an inflammatory state variable feeds a protein-aggregation state variable, so two processes that look independent in cross-section are one coupled system over time. The engine should carry explicit coupling terms between process families instead of scoring each family in isolation.",
+    "source_operator": "nlrp3_inflammasome_tau_coupling",
+    "telemetry": "Inflammatory marker trajectories; tau burden measures; time-lagged cross-correlations"
+   }
+  },
+  {
+   "primitive_id": "unrestrained_rotational_cbi_model",
+   "name": "A concussion model with an unrestrained head: reproducible mean head rotation of 22 degrees, a softened impactor at 5 mm/s that never fractures the skull (6 mm/s does), and no macroscopic lesion on 9.4 T MRI or histology",
+   "verbatim_quote": "Inducing the concussion, we observed a reproducible head rotation (Figure 1C), with only minor variations depending on the exact position of the mouse head (mean rotation 22◦ , SD = 6.7◦ ). The impact parameters were chosen based on previous finite element analyses in mice [20] to reproduce similar biomechanical forces as in human CBI. To mitigate the focal strain on the skull and the brain, we used a rounded impactor tip that was additionally softened by a custom-made silicon cap. Hitting the skull with this tip at 5 mm/s did not cause a skull fracture in any of the mice, while a higher impactor speed of 6 mm/s led to occasional skull fractures.",
+   "page": "Contribution 2 (Blaschke et al.), Results 2.1; book pp. 45-62",
+   "latex": "",
+   "assumptions": [
+    "Male C57Bl/6J mice; closed-head acceleration-deceleration injury with the head free to rotate in a foam bed",
+    "Impact parameters were chosen from prior finite element analyses to approximate human concussion biomechanics"
+   ],
+   "breakdown_regime": "Mouse skull and brain scale differ from human; a model with no visible lesion tests functional and barrier outcomes, not structural ones, and cannot speak to fracture or hemorrhage regimes",
+   "domain": "methods / animal model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sub-threshold insult modeling: the informative regime is the one below visible structural damage, where functional deficits still occur. The engine should include a below-detection band in which absence of a structural signal does not imply absence of effect.",
+    "source_operator": "unrestrained_rotational_cbi_model",
+    "telemetry": "Functional outcome measures in cases with negative structural imaging; dose parameters near damage thresholds"
+   }
+  },
+  {
+   "primitive_id": "bbb_disruption_tracks_function",
+   "name": "In the concussion model, overall functional deficit correlates with blood-brain barrier disruption (R squared = 0.29), leading the authors to propose the barrier as both a severity biomarker and a treatment target",
+   "verbatim_quote": "Based on these findings, the BBB may function as both a biomarker of CBI severity and as a potential treatment target to improve recovery from concussion.",
+   "page": "Contribution 2, Abstract; book pp. 45-62",
+   "latex": "",
+   "assumptions": [
+    "Barrier disruption was measured by fluorescent dextran and IgG extravasation, worst in hippocampus",
+    "Hippocampal IgG extravasation correlated with Y-maze spatial cognition impairment (R squared = 0.18) in the same study"
+   ],
+   "breakdown_regime": "Correlation in one mouse model; barrier disruption explains under a third of functional variance, so most of the outcome is driven by other processes",
+   "domain": "measurement / biomarker validity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mediator-as-gauge: when a mediating variable sits on the causal path between insult and outcome, its measured level grades severity better than the insult parameters do. The engine should prefer mediator measurements over exposure parameters when both are available.",
+    "source_operator": "bbb_disruption_tracks_function",
+    "telemetry": "Mediator levels paired with functional outcomes; exposure parameters for comparison"
+   }
+  },
+  {
+   "primitive_id": "tspo_pet_signal_confounded_by_bbb_leakage",
+   "name": "The TSPO PET signal read as neuroinflammation after concussion is confounded: tracer uptake rose without any increase in Iba-1 microglial activation and instead correlated with IgG extravasation (R squared = 0.21), meaning the signal tracks barrier leakage",
+   "verbatim_quote": "Functional deficits were correlated to a parallel disruption of the BBB, (R2 = 0.29, p < 0.01), even detectable by a significant increase in hippocampal uptake of [18 F]DPA-714, which was not due to activation of microglia, as confirmed immunohistochemically.",
+   "page": "Contribution 2, Abstract and Results 2.5; book pp. 45-62",
+   "latex": "",
+   "assumptions": [
+    "Immunohistochemistry showed no significant change in Iba-1 positive microglia or GFAP positive astrocytes versus sham at the measured time point",
+    "The tracer is [18F]DPA-714, a TSPO ligand widely used as a neuroinflammation marker"
+   ],
+   "breakdown_regime": "Shown at one post-injury window in one model; at other times or severities a genuine microglial component may coexist, so the confound is a correction factor, not a blanket dismissal of TSPO imaging",
+   "domain": "measurement / confounded signals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A confound-audit kernel: before any proxy signal is interpreted as its target process, test whether a second process that also moves the proxy (here barrier leakage moving a tracer) explains the reading. The engine should require a discriminating measurement before a proxy is allowed to update beliefs about its nominal target.",
+    "source_operator": "tspo_pet_signal_confounded_by_bbb_leakage",
+    "telemetry": "Proxy readings paired with target-specific and confounder-specific measurements"
+   }
+  },
+  {
+   "primitive_id": "recovery_interval_effect",
+   "name": "Spacing changes outcome at fixed total dose: mice concussed at weekly intervals recovered to baseline fastest (by day 7 after the last concussion), while 48-hour spacing produced the worst spatial cognition deficits",
+   "verbatim_quote": "Interestingly, mice subjected to repetitive CBI at weekly intervals-allowing longer recovery phases between concussions-recovered most rapidly from their last concussion, reaching mostly their baseline cognitive level 7 days after their last concussion",
+   "page": "Contribution 2, Results 2.3; book pp. 45-62",
+   "latex": "",
+   "assumptions": [
+    "Groups compared single concussion, repetitive concussion every 48 hours, and repetitive concussion at weekly intervals",
+    "High-frequency (48 h) repetition also produced the most persistent barrier disruption, still incomplete at 7 days"
+   ],
+   "breakdown_regime": "A preconditioning-like benefit of spacing in mice does not license shorter return intervals in humans; the direction and size of the effect are model and endpoint specific",
+   "domain": "dynamics / dose timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A spacing kernel: outcome depends on the interval distribution of repeated insults, not only their count, because recovery processes run between events. The engine should carry time-since-last-event and interval history as state, and should model partial recovery between events explicitly.",
+    "source_operator": "recovery_interval_effect",
+    "telemetry": "Event timestamps and intervals; recovery curves measured between repeated events"
+   }
+  },
+  {
+   "primitive_id": "late_phase_asl_clearance_rate",
+   "name": "Late-phase 3D arterial spin labeling turns trapped labeled water into a measurement: its clearance rate indexes blood-brain barrier and glymphatic integrity, detects minor leakage that gadolinium DCE-MRI misses, and is non-invasive enough for serial use",
+   "verbatim_quote": "Since the signal measured is largely from trapped labeled water protons in the late phase of perfusion, it is much more sensitive in determining minor BBB leakages than gadolinium (large molecule)-based DCE [127]. Since this is a non-invasive technique, it is suitable for sequential studies without risk of exogenous contrast.",
+   "page": "Contribution 3 (Joseph), Section 1.3.4; book pp. 63-78",
+   "latex": "",
+   "assumptions": [
+    "The method uses multiple post-labeling delays and reads the late phase, when signal is nearly completely extravascular water normally cleared by the glymphatic system",
+    "Delayed capillary mean transit time and reduced glymphatic outflow are the physiological correlates of the leakage location in this account"
+   ],
+   "breakdown_regime": "Requires a 3 Tesla magnet and has reduced signal-to-noise; the supporting athlete data are pilot scale, and clearance rate is an indirect index, not a direct permeability constant",
+   "domain": "measurement / imaging method",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A clearance-rate kernel: the decay slope of a trapped tracer measures the health of the removal system, which static levels cannot. The engine should prefer rate-of-removal observables over level observables when judging whether a clearance pathway is intact.",
+    "source_operator": "late_phase_asl_clearance_rate",
+    "telemetry": "Serial tracer or signal decay curves; fitted clearance slopes; repeat measurements over recovery"
+   }
+  },
+  {
+   "primitive_id": "shear_permanent_bbb_recoverable_partition",
+   "name": "TBI splits into an irreversible component and a treatable one: white matter shear injury is permanent and no current therapy restores it, while blood-brain barrier integrity can be restored and is the component amenable to intervention",
+   "verbatim_quote": "Further, of the two pathologic features of traumatic brain injury, the restoration of BBB integrity as opposed to shear injury appears to be the most amenable to intervention.",
+   "page": "Contribution 3, Sections 1.1.3-1.1.4; book pp. 63-78",
+   "latex": "",
+   "assumptions": [
+    "The same review states that shear injury to white matter tracts is the most troublesome and permanent sequela of TBI and that the current state of the art possesses no means of restoring shear tract injury",
+    "Barrier repair is presented as time-limited and signaling dependent (for example IL-1b downregulates ZO-1 and occludin acutely, then Pentraxin 3 promotes restoration)"
+   ],
+   "breakdown_regime": "The partition is a clinical judgment from a narrative review, not a measured ratio; some axonal injury may remodel, and some barrier failure becomes chronic, so the boundary is fuzzy at the edges",
+   "domain": "prognosis / intervention targeting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An irreversibility partition: decompose any damage state into a permanent component and a recoverable component, forecast them separately, and aim intervention only at the recoverable part. The engine should never let improvement in the recoverable component mask a fixed permanent deficit in the total.",
+    "source_operator": "shear_permanent_bbb_recoverable_partition",
+    "telemetry": "Component-wise outcome trajectories; which components respond to intervention and which stay fixed"
+   }
+  },
+  {
+   "primitive_id": "calcium_gradient_and_hypothesis",
+   "name": "Neurons hold a roughly 10,000-fold calcium gradient (about 1 mM outside, about 100 nM cytosolic) that collapses within seconds of TBI; the calcium hypothesis holds that this dysregulation is an initiating driver of Alzheimer neurodegeneration, preceding and amplifying amyloid and tau pathology",
+   "verbatim_quote": "Under physiological conditions, neurons maintain a steep calcium gradient with extracellular concentrations (~1 mM) approximately 10,000 times higher than cytosolic levels (~100 nM), which allows tightly regulated signaling for synaptic transmission, plasticity, gene transcription, and cell survival [18]. In TBI, this gradient collapses within seconds of injury due to excitotoxicity, mitochondrial and endoplasmic reticulum (ER) dysfunction, and membrane disruption [17].",
+   "page": "Contribution 4 (Neuschmid et al.), Sections 2-3; book pp. 79-107",
+   "latex": "",
+   "assumptions": [
+    "The hypothesis is supported in the review by three criteria: calcium imbalance precedes Alzheimer pathology, it is a convergent pathway for diverse risk factors, and it forms a self-perpetuating cycle with amyloid and tau",
+    "Familial presenilin mutations increasing endoplasmic reticulum calcium leak are cited as genetic evidence for an upstream role"
+   ],
+   "breakdown_regime": "A unifying hypothesis, not a proven sole cause; the review itself notes the mechanisms remain incompletely defined and no disease-modifying therapy has emerged from it yet",
+   "domain": "mechanism / calcium signaling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A gradient-collapse kernel: a system maintained far from equilibrium by continuous pumping fails catastrophically and fast when the barrier or pump fails, and the released gradient then drives downstream chemistry. The engine should flag state variables held at extreme ratios as fragility points whose failure is abrupt, not gradual.",
+    "source_operator": "calcium_gradient_and_hypothesis",
+    "telemetry": "Ion or analogous gradient ratios; time-to-collapse after insult; downstream enzyme activation timing"
+   }
+  },
+  {
+   "primitive_id": "calpain_p35_p25_cdk5_axis",
+   "name": "Calpain is the central calcium-activated protease node: activated within minutes of TBI and persisting for days to weeks, it upregulates BACE1 and cleaves the CDK5 activator p35 to p25, locking CDK5 into sustained activity that phosphorylates APP at Thr668 and raises amyloidogenic processing",
+   "verbatim_quote": "Normally restrained and tightly regulated by the endogenous inhibitor calpastatin [123], calpain becomes activated within minutes after TBI, persisting for days to weeks [56]. In AD, calpain is similarly elevated [124], where it promotes Aβ pathology by upregulating BACE1 expression [125]. Inhibition of calpain reduces BACE1 activity, Aβ accumulation, neuroinflammation, and memory deficits [25,125]. Following both controlled cortical impact [126] and blast exposure [127], calpain cleaves the CDK5 activator p35 to p25, resulting in sustained CDK5 activation and altered substrate specificity [128].",
+   "page": "Contribution 4, calpain section; book pp. 79-107",
+   "latex": "",
+   "assumptions": [
+    "Calcium/calmodulin binding is reported in the same review to raise BACE1 enzymatic activity about 2.5-fold in vitro",
+    "Calpain also generates measurable products, including spectrin breakdown product SBDP145 and tau fragments, linking the mechanism to biomarker readouts"
+   ],
+   "breakdown_regime": "Calpain has many substrates and physiological roles; the axis is assembled from cell and animal studies, and human causal weight per substrate is not separately quantified",
+   "domain": "mechanism / protease network",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A latch kernel: a transient trigger (calcium spike) flips a proteolytic switch (p35 to p25) that converts a normally brief enzyme activity into a sustained one, so the effect outlives the trigger by orders of magnitude. The engine should model such latching nodes explicitly, because removing the trigger after the latch flips does not stop the process.",
+    "source_operator": "calpain_p35_p25_cdk5_axis",
+    "telemetry": "Trigger duration versus effect duration; latch-node activation states; cleavage product levels"
+   }
+  },
+  {
+   "primitive_id": "pp2a_phosphatase_balance",
+   "name": "Tau phosphorylation is a balance, and the brake is quantifiable: PP2A performs about 70 percent of tau dephosphorylation in the human brain, and its activity is reduced in both TBI and Alzheimer disease, leaving kinase activity unopposed",
+   "verbatim_quote": "PP2A is responsible for approximately 70% of tau dephosphorylation in the human brain [211]. Both TBI and AD exhibit reduced PP2A activity, leading to sustained tau hyperphosphorylation [212].",
+   "page": "Contribution 4, phosphatase section; book pp. 79-107",
+   "latex": "",
+   "assumptions": [
+    "Injury severity is reported to correlate with tau phosphorylation and with increased GSK3b and decreased PP2A expression, an inverse regulation",
+    "Pharmacological PP2A activation (sodium selenate) is cited as reducing tau phosphorylation and improving cognition in TBI and Alzheimer models"
+   ],
+   "breakdown_regime": "The 70 percent figure is a literature estimate for the human brain; the effective share varies by tau site, cell type, and disease stage",
+   "domain": "mechanism / phosphorylation balance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A brake-share model: when one component performs a known majority share of an opposing process, its degradation predicts runaway of the forward process better than forward-process activation does. The engine should track brake capacity as a first-class variable with a measured share, not as a footnote to the accelerator.",
+    "source_operator": "pp2a_phosphatase_balance",
+    "telemetry": "Opposing-process activity ratios; brake component levels; net flux estimates"
+   }
+  },
+  {
+   "primitive_id": "shared_polygenic_architecture_tbi_ad",
+   "name": "TBI and Alzheimer disease share genetic architecture without sharing genetic correlation: in the VA Million Veteran Program GWAS (111,494 TBI cases, SNP heritability 0.060), about 60 percent of influential Alzheimer variants are also influential for TBI, with mixed effect directions",
+   "verbatim_quote": "A genome-wide association study (GWAS) from the VA Million Veteran Program (111,494 TBI cases) identified top signals including NCAM1, APOE, FTO, and FOXP2, with a single-nucleotide polymorphism (SNP) based heritability of 0.060. Using bivariate mixer model (MiXeR) analysis, the authors demonstrated that AD harbored fewer risk variants (lower polygenicity), but each had stronger detectable effects (higher discoverability) compared to TBI, and that approximately 60% of influential AD variants are shared with TBI, despite near-zero genome-wide genetic correlation, implying mixed effect directions and shared architecture not fully captured by correlation analysis alone [78].",
+   "page": "Contribution 4, genetics section; book pp. 79-107",
+   "latex": "",
+   "assumptions": [
+    "A separate CENTER-TBI / TRACK-TBI outcome GWAS cited alongside estimated liability-scale heritability of post-injury outcome at 0.26 with no genome-wide significant hits",
+    "Shared variants with opposite effect directions cancel in a correlation, which is why overlap and correlation disagree here"
+   ],
+   "breakdown_regime": "Overlap estimates are model based (MiXeR) and cohort specific; shared architecture does not mean the same variant pushes both conditions the same way in an individual",
+   "domain": "genetics / statistical architecture",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An overlap-without-correlation kernel: two outcome families can share most of their causal components while their summary correlation is near zero, because component effects differ in sign. The engine must not use a near-zero correlation as evidence of no shared mechanism; it should test component overlap directly.",
+    "source_operator": "shared_polygenic_architecture_tbi_ad",
+    "telemetry": "Component-level effect estimates for both outcome families; sign concordance tables; overlap fractions"
+   }
+  },
+  {
+   "primitive_id": "hif1_oxygen_sensing_circuit",
+   "name": "The HIF-1 oxygen sensor is a hydroxylation switch: in normoxia, PHD enzymes hydroxylate HIF-1a at Pro402 and Pro564 using oxygen, Fe2+, and 2-oxoglutarate, marking it for pVHL-mediated ubiquitination and 26S proteasome destruction; when oxygen falls, the mark is not made and HIF-1a accumulates and switches on over 100 genes",
+   "verbatim_quote": "Under normoxic conditions, HIF-1α undergoes hydroxylation at the Pro402 and Pro564 residues within the ODDD, facilitated by prolyl hydroxylase (PHD) enzymes [77,81,82]. This hydroxylation process necessitates molecular oxygen (O2 ), iron in its ferrous state (Fe2+ ), and 2-oxoglutarate as cofactors. In its hydroxylated form, HIF-1α is recognized by the von Hippel-Lindau protein (pVHL) and E3 ubiquitin ligase, leading to its targeting for rapid ubiquitin-mediated proteasomal degradation by the 26S proteasome [83,84].",
+   "page": "Contribution 5 (Mitroshina and Vedunova), Section 2; book pp. 108-131",
+   "latex": "",
+   "assumptions": [
+    "A second hydroxylation, by FIH on an asparagine residue, blocks coactivator (CBP/p300) recruitment and is described in the same review",
+    "HIF target genes named in the review include EPO, VEGF, GLUT1 and GLUT3, LDHA, and PDK1"
+   ],
+   "breakdown_regime": "The circuit is described for HIF-1a; HIF-2a shares machinery with different tissue roles, and chronic activation rewires metabolism in ways the acute switch description does not capture",
+   "domain": "mechanism / oxygen sensing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A conditional-degradation sensor kernel: a signal is read by whether a destruction tag gets attached, and the tag requires the sensed quantity as a substrate, so absence of the quantity is itself the signal. The engine can use this pattern anywhere a level is controlled by gated destruction rather than gated production.",
+    "source_operator": "hif1_oxygen_sensing_circuit",
+    "telemetry": "Oxygen or analogous resource levels; tag attachment rates; effector protein half-lives under both regimes"
+   }
+  },
+  {
+   "primitive_id": "hypoxia_amyloidogenic_shift",
+   "name": "Hypoxia reroutes APP processing toward amyloid: it suppresses the alpha-secretases ADAM10 and ADAM17, HIF-1a binds a hypoxia-responsive element in the BACE1 promoter to raise beta-secretase, and gamma-secretase subunit expression rises, so more APP is cut on the amyloidogenic path",
+   "verbatim_quote": "Hypoxia not only suppresses α-secretase activity but also enhances the diversion of APP processing toward the amyloidogenic pathway",
+   "page": "Contribution 5, Section 3.2; book pp. 109-110",
+   "latex": "",
+   "assumptions": [
+    "The same passage reports that chronic hypoxia upregulates BACE1 expression and that the BACE1 gene promoter contains a functional hypoxia-responsive element bound by HIF-1a",
+    "Chronic hypoxia is reported to lower DNMT3b, demethylating promoters of gamma-secretase components (PEN2, NCT, PS1) and raising their expression; neprilysin mediated amyloid clearance falls as well"
+   ],
+   "breakdown_regime": "Much of the evidence is cellular and animal work at defined oxygen tensions; the dose of hypoxia delivered by a human head injury varies by region and time and is rarely measured directly",
+   "domain": "mechanism / metabolic rerouting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A pathway-rerouting kernel: one environmental variable moves several valves at once (down the safe branch, up the harmful branch, down the clearance branch), so the output shift is multiplicative across valves. The engine should model such variables as valve controllers acting on a whole pathway, not as single-edge effects.",
+    "source_operator": "hypoxia_amyloidogenic_shift",
+    "telemetry": "Branch enzyme activities; product ratios between pathways; clearance enzyme levels; oxygen exposure history"
+   }
+  },
+  {
+   "primitive_id": "hif1_dual_role_sign_flip",
+   "name": "HIF-1 has no fixed sign: it is protective in early and mild hypoxia (metabolic adaptation, EPO, VEGF) and pro-death in chronic or severe hypoxia (Bnip3, p53 stabilization), so the same pathway must be helped in one regime and blocked in another",
+   "verbatim_quote": "The role of the HIF-1 factor in AD pathogenesis is dual. On the one hand, several studies indicate a decrease in HIF-1 expression in AD, likely contributing to disturbances in glucose metabolism.",
+   "page": "Contribution 5, Section 3.2; book p. 116; book pp. 108-131",
+   "latex": "",
+   "assumptions": [
+    "PHD inhibitors (including roxadustat/FG-4592, deferoxamine, and the multimodal agent M30) are discussed in the review as the therapeutic exploitation of the protective side",
+    "The review reports HIF-1a conditional knockout reducing substantia nigra tyrosine hydroxylase expression by 40 percent, showing the pathway is also load-bearing in normal function"
+   ],
+   "breakdown_regime": "The protective-to-harmful crossover point is not given as a measurable threshold; regime assignment in a real case is retrospective",
+   "domain": "dynamics / regime-dependent sign",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sign-flip variable: some drivers help below a dose or duration boundary and harm above it, so their coefficient must be regime conditional. The engine should store such variables with an explicit regime test (dose, duration, severity) instead of a single signed weight.",
+    "source_operator": "hif1_dual_role_sign_flip",
+    "telemetry": "Dose and duration of the driver; regime indicators; outcomes stratified by regime"
+   }
+  },
+  {
+   "primitive_id": "sdea_phasic_neurogenesis_rescue",
+   "name": "Mild TBI hits neurogenesis at one phase only: dentate gyrus Ki-67 positive proliferating cells fell from 1288.4 to 317.3 cells per cubic millimeter at 11 weeks while DCX positive immature neurons were preserved, and the omega-3 ethanolamide SDEA partially restored proliferation to 599.5",
+   "verbatim_quote": "SDEA treatment partially restored proliferative activity in injured mice (599.5 ± 87.5 cells/mm3 ), while not affecting baseline proliferation in sham animals (757.1 ± 127.8 cells/mm3 ).",
+   "page": "Contribution 6 (Egoraeva et al.), Results 2.2; book pp. 132-160",
+   "latex": "",
+   "assumptions": [
+    "Ki-67 marks proliferating cells and DCX marks immature neurons, so the two markers separate the proliferation phase from the differentiation phase",
+    "SDEA is N-stearidonoylethanolamine, the ethanolamide of stearidonic acid (18:4, n-3); it did not change proliferation in sham animals, so its effect is injury conditional"
+   ],
+   "breakdown_regime": "Mouse closed-head mild TBI at a single late time point (11 weeks); whether the proliferation dip is a transient phase or a fixed loss cannot be told from one measurement",
+   "domain": "mechanism / neurogenesis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A phase-localization kernel: a multi-stage production process can be damaged at exactly one stage while later-stage inventories look normal, because earlier stock flows through. The engine should diagnose which stage is hit using stage-specific markers rather than judging the process by its final output alone.",
+    "source_operator": "sdea_phasic_neurogenesis_rescue",
+    "telemetry": "Stage-specific marker counts along a production chain; stage inventories over time"
+   }
+  },
+  {
+   "primitive_id": "sdea_arc_activity_restoration",
+   "name": "Activity-dependent plasticity signaling collapses and is selectively restored: Arc positive cells in the dentate gyrus fell from 4009.8 to 1948.8 cells per cubic millimeter after mild TBI, and SDEA brought them back to 3219.1, near sham levels, without changing baseline Arc in uninjured animals",
+   "verbatim_quote": "After mTBI, Arc expression markedly decreased compared to sham animals (1948.8 ± 294.4 vs. 4009.8 ± 521.4, cells/mm3 , p = 0.0004). Treatment with SDEA restored Arc levels in the injured group (3219.1 ± 345.0 cells/mm3 ), which were significantly higher than in \"mTBI\" mice (p = 0.0078) and became comparable to sham controls (p = 0.400).",
+   "page": "Contribution 6, Results 2.3; book pp. 132-160",
+   "latex": "",
+   "assumptions": [
+    "Arc is an immediate early gene required for synaptic plasticity and AMPA receptor trafficking; recognition memory (novel object recognition) was nevertheless preserved in all groups, a molecular-behavioral dissociation the authors discuss",
+    "Anxiety-like behavior did change (open-arm time rose from 19.13 percent to 34.66 percent with SDEA), matching CA1 rather than dentate sensitivity"
+   ],
+   "breakdown_regime": "Arc at 11 weeks reflects sustained network state, not acute induction; a restored marker does not prove restored function on tasks not tested",
+   "domain": "measurement / plasticity markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A silent-deficit pattern: molecular and structural measures can be strongly abnormal while headline behavior tests stay normal, because compensation covers the tested function. The engine should treat a normal outcome test as weak evidence when mechanism-level measures disagree, and should look for the untested function the deficit actually maps to.",
+    "source_operator": "sdea_arc_activity_restoration",
+    "telemetry": "Mechanism-level markers alongside outcome tests; mapping from deficit location to the function it should affect"
+   }
+  },
+  {
+   "primitive_id": "sdea_ca1_spine_rescue",
+   "name": "Structural synaptic loss is region selective and partly reversible: CA1 apical spine density fell from 2.99 to 2.20 spines per micrometer after mild TBI (mature mushroom spines 0.91 to 0.64), dentate gyrus spines were largely spared, and SDEA restored CA1 density to 2.72 and mushroom spines to 1.02",
+   "verbatim_quote": "TBI significantly reduced total spine density (\"Sham\": 2.99 ± 0.09 vs. \"mTBI\": 2.2 ± 0.12 spines/μm; p = 0.004), whereas treatment with SDEA partially restored it (\"mTBI + SDEA\": 2.72 ± 0.15; p = 0.047 vs. \"mTBI\") reaching levels not different from controls (p = 0.61)",
+   "page": "Contribution 6, Results 2.4.1; book p. 139; book pp. 132-160",
+   "latex": "",
+   "assumptions": [
+    "The authors attribute CA1 vulnerability to high excitatory drive, dense NMDA receptor expression, and susceptibility to glutamate toxicity; dentate granule cells are buffered by their neurogenic niche",
+    "Postsynaptic PSD-95 protein fell to 0.66 of sham and was restored by SDEA, while presynaptic synaptophysin rose, showing the two sides of the synapse move in opposite directions"
+   ],
+   "breakdown_regime": "Golgi staining samples a subset of neurons; spine counts at one time point cannot separate prevented loss from regrowth",
+   "domain": "mechanism / selective vulnerability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A selective-vulnerability weighting kernel: identical insults produce very different losses across subunits because subunits differ in drive, receptor density, and repair capacity. The engine should weight exposure by subunit vulnerability profiles instead of applying a uniform damage coefficient.",
+    "source_operator": "sdea_ca1_spine_rescue",
+    "telemetry": "Per-subunit loss measurements under a common insult; subunit property profiles (drive, receptor density, repair markers)"
+   }
+  },
+  {
+   "primitive_id": "sdea_gfap_astroglial_attenuation",
+   "name": "Chronic astroglial activation is still measurable 11 weeks after mild TBI and is drug responsive: GFAP positive area in CA1 reached 12.52 percent after injury, SDEA reduced it to 7.53 percent, and SDEA had no effect in sham animals, so the action is specific to the post-traumatic state",
+   "verbatim_quote": "In the \"mTBI\" group, the GFAP-positive area was markedly elevated (12.52 ± 0.68%), reflecting persistent astrocytic reactivity 11 weeks post-injury.",
+   "page": "Contribution 6, Results 2.5; book pp. 132-160",
+   "latex": "",
+   "assumptions": [
+    "The same study found SDEA normalized the Alzheimer risk gene BIN1 at the mRNA level (4.28 fold after injury back to 1.12) and lowered serum MBP, S100B, GFAP, and IL-6",
+    "The authors caution that serum markers are indirect indicators because blood-brain barrier integrity was not directly assessed in their study"
+   ],
+   "breakdown_regime": "GFAP area fraction is a reactivity index, not a direct measure of astrocyte function; suppressing reactivity is assumed beneficial here, but reactive astrocytes also perform repair roles",
+   "domain": "mechanism / glial response",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A state-conditional intervention pattern: the treatment moves the variable only in the injured state and is inert at baseline, which separates true repair modulation from general suppression. The engine should test interventions for state conditionality before crediting them with repair.",
+    "source_operator": "sdea_gfap_astroglial_attenuation",
+    "telemetry": "Intervention effects measured separately in baseline and perturbed states; chronic-phase glial markers"
+   }
+  },
+  {
+   "primitive_id": "cte_ad_tangle_topography",
+   "name": "CTE and Alzheimer tangles occupy different anatomy: CTE tangles are perivascular and concentrated in superficial cortical layers II-III with substantia nigra involvement, while Alzheimer tangles favor deeper layers V-VI, so topography separates the two tauopathies",
+   "verbatim_quote": "Neurofibrillary tangles occur in the substantia nigra of people with CTE but are rare in AD.",
+   "page": "Contribution 7 (Pszczolowska et al.), neuropathology comparison; book pp. 161-179",
+   "latex": "",
+   "assumptions": [
+    "The same comparison places CTE tangles mainly in superficial layers II and III and Alzheimer tangles in deeper layers, with different hippocampal subfield patterns (CA1 in AD, CA1-CA4 horn of Ammon in CTE)",
+    "The diseases can coexist in one brain, so topography is a discriminator, not an exclusivity rule"
+   ],
+   "breakdown_regime": "Topography is assessed postmortem in selected cohorts (heavily exposed athletes and military cases), which biases the contrast with typical Alzheimer series",
+   "domain": "neuropathology / differential diagnosis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A distribution fingerprint: when two conditions share a molecular product, the spatial distribution of that product is the classifier. The engine should keep distribution features as first-class discriminators between otherwise identical aggregate signals.",
+    "source_operator": "cte_ad_tangle_topography",
+    "telemetry": "Layer and region distribution profiles of the shared product; co-occurrence rates"
+   }
+  },
+  {
+   "primitive_id": "abeta_stage_gating_in_cte",
+   "name": "Amyloid is a late, accelerating guest in CTE, not a founding lesion: absent in stage I, present in 19 percent of over-50 cases by stage II, rising through stages III-IV, and its presence raises the tauopathy stage and accelerates dementia",
+   "verbatim_quote": "Studies show that Aβ is not present in stage I of CTE; in stage II, it is already observed in 19% of patients older than 50, and the number grows significantly in stages III and IV [8]. It was also observed that it increased the stage of CTE tauopathy. It also accelerated the development of dementia.",
+   "page": "Contribution 7, amyloid in CTE section; book pp. 161-179",
+   "latex": "",
+   "assumptions": [
+    "In the Stein cohort cited in the same review, amyloid plaques (diffuse or neuritic) were found in 52 percent of CTE cases overall",
+    "CTE amyloid is described as more peripheral in distribution than Alzheimer amyloid, suggesting impaired CSF clearance as its route"
+   ],
+   "breakdown_regime": "Stage assignment and amyloid scoring are cross-sectional postmortem observations; the claim that amyloid accelerates stage is an inference from association across stages, not a longitudinal observation",
+   "domain": "dynamics / disease staging",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A stage-gated accelerant kernel: a second process that is absent in stage one can enter later and, once present, speed up the first process. The engine should model such accelerants as stage conditional multipliers, never as constant background rates.",
+    "source_operator": "abeta_stage_gating_in_cte",
+    "telemetry": "Stage stratified prevalence of the second process; stage transition rates with and without it"
+   }
+  },
+  {
+   "primitive_id": "cis_ptau_early_driver",
+   "name": "A toxic tau conformer appears within hours of injury, before any tangle: phosphorylation at Thr231 flips tau into the cis conformation, which shows up in neurons ahead of oligomers and neurofibrillary tangles and is positioned as an early driver of post-TBI neurodegeneration",
+   "verbatim_quote": "Phosphorylation of tau at Thr231 induces a cis-trans conformational change in p-tau. Within hours after a TBI, the cis p-tau conformation appears in neurons before tau oligomers, prefibrillar tangles, and NFTs are formed and cause damage to axons [36].",
+   "page": "Contribution 7, tau mechanisms section; book p. 164; book pp. 161-179",
+   "latex": "",
+   "assumptions": [
+    "The cited primary work (Nakamura et al.) showed an antibody against cis p-tau blocking brain injury and tauopathy in models, which is the basis for the driver claim",
+    "Conformation, not just phosphorylation state, is the toxic property in this account"
+   ],
+   "breakdown_regime": "The driver status rests substantially on one research program and animal models; how much human post-TBI tauopathy is cis initiated is unresolved",
+   "domain": "mechanism / protein conformation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A conformer-first kernel: the earliest pathogenic species is a shape variant of a normal protein that appears hours after the trigger and seeds everything downstream. The engine should include pre-aggregate species in its state model, because by the time aggregates are visible the seeding process is long established.",
+    "source_operator": "cis_ptau_early_driver",
+    "telemetry": "Conformer specific assays; time from trigger to first conformer detection; seeding activity measures"
+   }
+  },
+  {
+   "primitive_id": "cte_ad_molecular_discrimination",
+   "name": "CTE tau filaments are a different fold from Alzheimer tau (a hydrophobic cavity and distinct protofilament interfaces), and protein panels separate the diseases: in multiplex ELISA, CCL21 was the most specific marker for CTE and FLT3L for Alzheimer disease, with CCL11 raised in CTE frontal cortex but not in Alzheimer disease",
+   "verbatim_quote": "In the work that used multiplex ELISA, there were specific clusters for each tauopathy identified. There were different proteins characteristic of CTE and AD. CCL21 was the most specific for CTE and FLT3L for AD [132].",
+   "page": "Contribution 7, molecular comparison section; book pp. 161-179",
+   "latex": "",
+   "assumptions": [
+    "The fold difference is from cryo-electron microscopy of tau filaments extracted from CTE versus Alzheimer brains, cited in the same section",
+    "CCL11 elevation in CTE frontal cortex is from Cherry et al., cited in the review"
+   ],
+   "breakdown_regime": "Marker specificity comes from small postmortem panels; fold and marker claims await large prospective validation, and mixed pathology cases blur both tests",
+   "domain": "measurement / molecular classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A structure-over-identity rule: the same protein in a different fold is a different disease entity with different markers and different spread. The engine should treat conformational or structural variants as distinct entities in classification, even when the underlying molecule is identical.",
+    "source_operator": "cte_ad_molecular_discrimination",
+    "telemetry": "Structural fingerprints of aggregates; disease specific soluble marker panels"
+   }
+  },
+  {
+   "primitive_id": "unconventional_ad_trauma_isr_trigger",
+   "name": "ACH2.0 splits Alzheimer disease by trigger: in unconventional AD the neuronal integrated stress response is switched on by non-amyloid stressors, and traumatic brain injury and CTE are named, cited members of that trigger class alongside viral and bacterial infection and inflammation",
+   "verbatim_quote": "conditions potentially resulting in unconventional AD. They include brain trauma (traumatic brain injury, TBI) [242-244] and chronic traumatic encephalopathy, CTE [245].",
+   "page": "Contribution 8 (Volloch and Rits-Volloch), Sections 51-52; book p. 247; book pp. 180-268",
+   "latex": "",
+   "assumptions": [
+    "The companion passage states the neuronal ISR in unconventional AD is elicited by stressors distinct from AbPP-derived intraneuronal amyloid and arising from brain trauma, viral and bacterial infections, and various types of inflammation",
+    "The same section reports viral encephalitis raising the probability of unconventional AD more than thirtyfold and bacterial infections more than tenfold, as association figures"
+   ],
+   "breakdown_regime": "ACH2.0 is a heterodox framework argued by its authors, not a field consensus; the trigger classification is a theoretical commitment whose value depends on the framework's other claims surviving testing",
+   "domain": "theory / disease taxonomy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A trigger-class kernel: outcomes that look like one disease can be entered through distinct trigger classes that converge on a shared internal state (here a sustained stress response). The engine should classify cases by entry trigger as well as by final state, because prevention and timing differ by trigger even when the end state is shared.",
+    "source_operator": "unconventional_ad_trauma_isr_trigger",
+    "telemetry": "Trigger exposure histories; internal state markers (stress response activation); latency by trigger class"
+   }
+  },
+  {
+   "primitive_id": "isr_suppresses_proteolytic_amyloid",
+   "name": "In the current ACH2.0 iteration, the sustained neuronal stress response suppresses the conventional proteolytic production of amyloid in affected neurons, and the disease is instead driven by C99 produced independently of the amyloid precursor protein",
+   "verbatim_quote": "In its third, the current, iteration, the ACH2.0 posits that proteolytic production of Aβ is suppressed in AD-affected neurons and that the disease is driven by C99 generated independently of AβPP.",
+   "page": "Contribution 8, Introduction and Sections 5-6; book pp. 180-268",
+   "latex": "",
+   "assumptions": [
+    "Under the integrated stress response, cap-dependent translation is globally suppressed, which is the stated reason the whole AbPP proteolytic pathway shuts down in affected neurons",
+    "Tau production is argued to persist under the stress response because human tau mRNA carries an internal ribosome entry site in its 5 prime UTR"
+   ],
+   "breakdown_regime": "This inverts the standard amyloid cascade reading and is contested; it predicts findings (such as C100, the Met-extended C99) that the authors say are only detectable in suitable living model systems, not in postmortem tissue",
+   "domain": "theory / mechanism revision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A suppression-inversion warning: under a sustained stress state, the canonical production pathway for a blamed product can be off while the disease worsens, because a parallel pathway supplies the product. The engine should check whether the canonical pathway is even active in the affected state before attributing output to it.",
+    "source_operator": "isr_suppresses_proteolytic_amyloid",
+    "telemetry": "Pathway activity measures inside the affected state; product levels by source pathway"
+   }
+  },
+  {
+   "primitive_id": "self_sustaining_c99_feedback_engine",
+   "name": "Once switched on, the AbPP-independent C99 pathway is a self-sustaining engine: its intraneuronal amyloid output keeps the PKR and HRI kinases active, keeps eIF2a phosphorylated, and so keeps the stress response and its own production running without further input from the original trigger",
+   "verbatim_quote": "This feedback loop ensures the uninterrupted production of C99 and iAβ independently of AβPP and constitutes the Engine that drives the disease.",
+   "page": "Contribution 8, Section 26; book pp. 207-208",
+   "latex": "",
+   "assumptions": [
+    "Trigger side of the loop: accumulated intraneuronal amyloid activates PKR (via PACT or TNFa) and HRI (via mitochondrial OMA1 cleavage of DELE1), both phosphorylating eIF2a at Ser51",
+    "The loop explains, within the framework, why removing the original trigger or the extracellular amyloid late in disease does not stop progression"
+   ],
+   "breakdown_regime": "The loop is a theoretical construct assembled from cited parts; its gain and time constants in human neurons are not measured, and the framework's proposed decisive tests (human neuronal cell systems) are still proposals in this text",
+   "domain": "dynamics / feedback systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A positive-feedback latch with named components: trigger sensor (PKR/HRI), state holder (phosphorylated eIF2a), and a production pathway whose output re-excites the sensor. The engine should represent such loops explicitly, because interventions must break the loop, not merely reduce the original input, and because loop systems show threshold, not graded, behavior.",
+    "source_operator": "self_sustaining_c99_feedback_engine",
+    "telemetry": "Sensor activation states; state holder levels; loop output rates; response to input removal"
+   }
+  },
+  {
+   "primitive_id": "t1_threshold_rate_law",
+   "name": "Disease timing is a threshold crossing problem: if accumulated intraneuronal amyloid never crosses the T1 threshold that triggers the stress response within a lifetime, there is no Alzheimer disease, and if it does cross, onset timing is inversely proportional to the rate of accumulation",
+   "verbatim_quote": "If no T1 crossing occurs within the lifetime of an individual, there is no AD. This, actually, describes the majority of the human population: most individuals do not develop the disease. If, however, the T1 threshold is crossed, the timing of the crossing, and, consequently, of the commencement of AD is reversely proportional to the rate of accrual of AβPP-derived iAβ: greater the latter, shorter the former.",
+   "page": "Contribution 8, Section 27; book pp. 210-212",
+   "latex": "",
+   "assumptions": [
+    "ApoE4 is the worked example: it speeds cellular uptake of extracellular amyloid, raising the accumulation rate, so carriers cross T1 sooner, with a dose effect between one and two alleles",
+    "A second threshold T0, below T1, defines aging-associated cognitive decline as damage accrued in the band between T0 and T1"
+   ],
+   "breakdown_regime": "T1 is a theoretical construct with no current assay; the law is qualitative (inverse proportionality), and individual thresholds are asserted to vary between subpopulations without a measurement method",
+   "domain": "dynamics / threshold models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A rate-times-threshold timing law: for slow accumulation processes, onset time is set by accumulation rate divided into a threshold, so small rate differences produce large timing differences and many individuals never cross within the observation window. The engine should forecast threshold crossing times from measured rates instead of forecasting the outcome directly.",
+    "source_operator": "t1_threshold_rate_law",
+    "telemetry": "Accumulation rate estimates; threshold proxies; age-at-crossing distributions by rate stratum"
+   }
+  },
+  {
+   "primitive_id": "met671_kozak_c99_route",
+   "name": "A sequence singularity supplies the alternative C99 source: the AUG codon encoding Met671 of human AbPP is the only AUG in the entire AbPP mRNA sitting in an optimal Kozak initiation context, so a 5 prime truncated mRNA (proposed to arise by RNA-dependent mRNA amplification) can be translated directly into C99",
+   "verbatim_quote": "Even more remarkable is the fact, also noticed by Breimer and Denny [59], that the AUG encoding Met671 of human AβPP is the only AUG codon in AβPP mRNA that is situated within the optimal translation initiation nucleotide context.",
+   "page": "Contribution 8, Sections 9-17; book pp. 180-268",
+   "latex": "",
+   "assumptions": [
+    "Human AbPP mRNA contains twenty in-frame methionine AUG codons; not even the initiator AUG is in an optimal Kozak context, per Breimer and Denny 1987 as cited",
+    "The framework states the AbPP-independent C99 pathway is inoperative in mice, so current transgenic mouse models cannot develop the full pathology and human neuronal cells are proposed as the adequate model system"
+   ],
+   "breakdown_regime": "The mRNA amplification mechanism is established in the authors' cited work but not independently replicated as an Alzheimer mechanism; the Kozak observation is a sequence fact, while its exploitation in disease is the inference built on it",
+   "domain": "mechanism / translation control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A latent-entry-point pattern: a sequence can contain a dormant alternative start site that only becomes usable when an unusual processing event exposes it. The engine should audit important sequences and processes for latent alternative entry points that activate under stress states, not only for their canonical pathway.",
+    "source_operator": "met671_kozak_c99_route",
+    "telemetry": "Sequence context scans for alternative start sites; truncated transcript detection; stress state dependence of alternative products"
+   }
+  },
+  {
+   "primitive_id": "bace_activation_therapy_inversion",
+   "name": "ACH2.0 inverts the failed drug direction: because BACE1 and BACE2 also cut inside intraneuronal amyloid and destroy it, activating their intra-amyloid cleavage (especially BACE2) is proposed as therapy, alongside targeted C99 and intraneuronal amyloid degraders such as PROTACs, the opposite of the BACE inhibitor strategy",
+   "verbatim_quote": "Thus, the activation of intra-iAβ cleaving potential of BACE1 and, especially, BACE2 (because intra-iAβ cleavages are its major activity) is, apparently, a plausible therapeutic strategy.",
+   "page": "Contribution 8, Section 44; book pp. 236-237",
+   "latex": "",
+   "assumptions": [
+    "The falsification pressure behind the inversion: the BACE1 inhibitor verubecestat cut CSF amyloid by 80 percent with no clinical benefit, and about a third of the aged population carries Alzheimer-level extracellular amyloid without disease, both cited in the same article",
+    "Flemish mutation suppression of BACE2 intra-amyloid cleavage is cited as the human genetic mirror image: less cleavage, more disease"
+   ],
+   "breakdown_regime": "A proposal inside a contested framework; systemic BACE activation would also raise canonical amyloid production, so the strategy depends on compartment and substrate selectivity that does not yet exist as a drug",
+   "domain": "therapeutics / strategy inversion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dual-use enzyme rule: an enzyme that both creates and destroys a product cannot be assigned a single therapeutic direction from its name or its canonical reaction. The engine should evaluate interventions per reaction and per compartment, and should treat a failed inhibition trial as information about which reaction dominates, not as noise.",
+    "source_operator": "bace_activation_therapy_inversion",
+    "telemetry": "Reaction specific activity measures; trial outcomes by target engagement; compartment level product changes"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "61f7a32a58e897be-t1",
+   "think": "This volume is an edited Special Issue reprint, not a single-author monograph, and its value for a reasoning engine is that eight contributions attack one causal question from different levels: can a mechanical event, sometimes minutes long and sometimes repeated over years, start a neurodegenerative process that only declares itself decades later. The load-bearing structure is a chain with five links. First, physics: rotational acceleration shears axons and vessels, and the dose ladder is quantitative, with dementia hazard ratios rising from 2.36 to 3.77 across severity bands and a parallel dose response for CTE with years of exposure. Second, transport and barrier failure: diffuse axonal injury stalls axonal transport so that APP, BACE1, and presenilin-1 pile up together and make amyloid at the blockage, while VEGF loosens tight junctions and the blood-brain barrier leaks, losing both its gate function and, through LRP1 loss, its clearance function. Third, intracellular chemistry: the calcium gradient collapses in seconds, calpain latches on for weeks by converting p35 to p25 and locking CDK5 into sustained activity, hypoxia throws the HIF-1 switch and reroutes APP processing toward the amyloidogenic branch at several valves at once, and the tau phosphorylation balance tips because PP2A, the brake performing about 70 percent of dephosphorylation, loses activity. Fourth, coupling and spread: the NLRP3 inflammasome ties inflammation to tau accumulation, cis p-tau appears within hours as a seeding conformer, and in CTE amyloid arrives late, stage gated, and then accelerates the tauopathy it joined. Fifth, measurement: the volume is unusually honest about its own instruments, giving ordered biomarker kinetics (S100B at minutes, GFAP peaking at a day, UCH-L1 at half a day, neurofilament light rising for weeks), a clearance-rate imaging method in late-phase ASL, and a demonstrated confound in which the standard TSPO PET neuroinflammation signal turns out to track barrier leakage rather than microglial activation. Around the chain sit two modifiers. Genetics acts as multiplication, not addition: APOE e4 raises Alzheimer risk tenfold in people with a TBI history, TREM2 R47H carries an odds ratio of about five, and the Million Veteran Program analysis shows the two conditions share roughly 60 percent of their influential variants while their genetic correlation sits near zero, a combination that punishes any engine that reads correlation as mechanism. Timing acts as a second modifier: identical insults spaced 48 hours apart produce the worst outcomes in the concussion model, while weekly spacing produces the fastest recovery, and barrier repair runs on its own clock, still incomplete at seven days after high-frequency injury. The intervention evidence in the volume teaches a matching discipline. Effects are repeatedly state conditional: SDEA moves proliferation, Arc expression, spine density, GFAP area, and even the Alzheimer risk gene BIN1 in injured animals and does essentially nothing in sham animals, which is the signature of a repair modulator rather than a general stimulant. Damage is repeatedly subunit selective: CA1 pyramidal neurons lose spines and postsynaptic protein while dentate granule cells, buffered by their neurogenic niche, hold their structure, and behavior follows the vulnerable subunit, with anxiety changing while recognition memory stays normal. And the trial record is repeatedly humbling: corticosteroids in CRASH and citicoline in COBRIT failed to improve outcomes despite confident rationales, which is why the review's staged therapy logic, excitotoxicity first, inflammation second, tau last, should be read as a hypothesis about timing rather than as a validated protocol. The final contribution, the Volloch and Rits-Volloch Perspective on ACH2.0, is the volume's theory stress test. It argues that Alzheimer disease is a disease of a sustained neuronal integrated stress response, that brain trauma is one of the non-amyloid triggers of that response (the unconventional category), that once triggered a self-sustaining feedback loop through PKR, HRI, and phosphorylated eIF2a drives production of C99 independently of AbPP, and that onset timing obeys a threshold law in which the only variables are the accumulation rate of intraneuronal amyloid and the height of the T1 threshold. Whether or not the framework survives, it contributes three reusable reasoning devices: classify by trigger class as well as by end state, expect threshold rather than graded behavior from positive feedback systems, and check whether the canonical pathway is even active in the affected state before crediting it with the product. It also inverts a drug direction on evidence, proposing BACE activation rather than inhibition after an inhibitor cut CSF amyloid by 80 percent without helping patients. For the engine, the operational lessons are concrete. Carry exposure as accumulated dose with intervals, not as event counts. Give every signal a lead-time profile and a confound audit before it moves a belief. Partition damage into permanent and recoverable components and forecast them separately. Weight subunits by selective vulnerability, since CA1 and dentate gyrus take the same insult very differently. Treat brake capacity, clearance rate, and barrier integrity as first-class state variables with measured shares. And respect the volume's own limits: much of the mechanism is mouse work, CTE remains a postmortem diagnosis, several headline numbers are single-cohort or single-program results, and the most ambitious theory in the book is explicitly heterodox, valuable as a structured alternative hypothesis rather than as settled fact. One more structural point deserves emphasis because it recurs at every level of the book: almost nothing here acts alone. Barrier failure worsens amyloid clearance, amyloid worsens barrier failure, calcium overload feeds the inflammasome, the inflammasome feeds tau, hypoxia feeds both amyloid production and barrier failure, and genotype scales several of these edges at once. Single-cause scoring will systematically underrate such a system, because the observed outcome is the product of the coupled edges, and the correct unit of analysis is the loop, not the node.",
+   "retrocausal_genealogy": "The lineage runs from Martland's 1928 description of punch-drunk boxers and Corsellis's 1973 neuropathology of retired fighters, through the amyloid cascade era of the 1990s, Khachaturian's 1994 calcium hypothesis, and the McKee group's 2000s CTE staging work, into the modern consortium period: CENTER-TBI and TRACK-TBI biomarker cohorts, cryo-electron microscopy tau fold structures, and Million Veteran Program genomics. The ACH2.0 Perspective descends from a separate, older thread, Breimer and Denny's 1987 observation about the Met671 Kozak context, revived and extended by its authors across three iterations as inhibitor trial failures accumulated. The volume is therefore a confluence of a clinical-epidemiological tradition and a dissenting molecular tradition, edited into one frame.",
+   "theory_of_mind": "The editors and most contributors believe the open problem is mechanism, not association: the epidemiology is treated as settled enough, and each article is chosen to supply a missing causal link, a better measurement, or a better model. They write for translational readers who will act on staging, biomarkers, and return-to-play timing, so claims are usually paired with their measurement method. Volloch writes from a different stance: he believes the field's founding theory is wrong, argues from anomalies the theory cannot absorb, and treats the reader as a referee who must be given falsifiable structure, thresholds, named molecules, and proposed decisive experiments, rather than as a clinician to be reassured.",
+   "cross_layer_veto": "Several findings in this volume veto readings that other layers would naively support. The TSPO result vetoes any neuroinflammation inference drawn from tracer uptake until barrier leakage is excluded. The permanence of shear injury vetoes recovery forecasts built only on barrier repair or symptom scores. The negative corticosteroid and citicoline trial record vetoes mechanism-free confidence that a plausible-sounding intervention helps. The inoperative status of the AbPP-independent pathway in mice vetoes extrapolating transgenic mouse amyloid results to the human disease without a model-system check. And the postmortem-only status of CTE vetoes definitive in-life CTE claims from any biomarker panel in this book, however suggestive the panel looks."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book is about how brief mechanical insults become slow diseases: a dose-accumulating exposure, a barrier that both gates and clears, a latched molecular switch that outlives its trigger, a feedback loop that makes the process self-sustaining, and a threshold that converts gradual accumulation into a dated onset. The same five-part pattern, exposure, barrier, latch, loop, threshold, describes failures in infrastructure, organizations, and software systems, and the book's measurement discipline transfers with it: know each signal's lead time, audit each proxy for confounds, separate what can recover from what cannot, and never read a near-zero correlation as proof that two systems share no machinery.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume supplies a teaching-grade causal curriculum on head impact and the brain: dose-response risk ladders, the CBI-M four-pillar phenotyping frame, ordered biomarker kinetics that show why timing of measurement matters, a worked example of a confounded imaging signal, and a serious heterodox theory presented with its own falsification conditions. It also supplies method standards worth institutionalizing: quote-level provenance for every extracted claim, explicit breakdown regimes for every mechanism, and a clear separation between what is consensus, what is single-cohort, and what is one research program's position, which is exactly the labeling discipline an institute's corpus needs.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the transferable machinery is structural, not medical. Accumulate exposure as dose with intervals and let spacing change the effect. Give every incoming signal a lead-time profile and a confound audit before it updates a belief, the way TSPO uptake had to be re-read as leakage. Partition every damaged system into permanent and recoverable components and forecast them separately. Weight components by selective vulnerability instead of applying uniform damage. Model brake capacity and clearance rates as state variables with measured shares, the way PP2A and LRP1 function here. And where a positive feedback loop is plausible, switch from graded scoring to threshold logic, forecasting crossing times from measured accumulation rates."
+}
