@@ -1,0 +1,755 @@
+{
+  "book_id": "47da7cd12f78ad9c",
+  "source_status": "COMPLETE",
+  "source_note": "National Institute for Health and Care Excellence (NICE), Rehabilitation for chronic neurological disorders including acquired brain injury, NICE guideline NG252, published 15 October 2025, 145 pages, ISBN 978-1-4731-7254-8. The local file is the full published guideline PDF (685,388 bytes) with recommendations, rationale and impact statements, context, terms used in the guideline, and recommendations for research. Scan digest sha256(str(size) + file bytes) = 47da7cd12f78ad9c4af588db624ad625d6dfea0af465eba7206fe4cf2df130e5. The guideline is a clinical consensus and evidence document and contains no mathematical equations; all primitives carry empty latex and empty symbol ledgers. Verbatim quotes were proven as contiguous substrings of the extracted text file, within single pages, against whitespace-normalised text.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "nice_ng252_rehabilitation_who_definition",
+      "name": "Rehabilitation is the set of interventions that optimise functioning and reduce disability through the person interacting with their environment (WHO definition)",
+      "verbatim_quote": "Rehabilitation is defined by the World Health Organisation as 'a set of interventions designed to optimise functioning and reduce disability in individuals with health conditions in interaction with their environment'.",
+      "page": "Terms, Rehabilitation (guideline p.81; text lines 3666-3669)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Functioning, not diagnosis, is the outcome variable the system optimises.",
+        "The environment is a causal input to functioning, not background noise.",
+        "Disability is reduced by changing the person, the environment, or the fit between them."
+      ],
+      "breakdown_regime": "The definition gives no effect sizes, no dose, and no time course for any intervention; it cannot rank treatments or predict recovery speed for an individual. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Functioning is modelled as an interaction term between the person and the environment, never as a property of the body alone. Any forecast of recovered capacity must condition on the environment the person will actually perform in, so the same impairment yields different predicted functioning under different contexts.",
+        "source_operator": "nice_ng252_rehabilitation_who_definition",
+        "telemetry": "Environment descriptors for each assessment setting, participation outcomes recorded per setting, and functioning scores tracked against the setting they were measured in."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_rehabilitation_process_definition_bsrm",
+      "name": "Rehabilitation is a continuing process of assessment, treatment, management and ongoing evaluation aimed at maximum potential across physical, cognitive, social and psychological function, participation and quality of living (BSRM definition)",
+      "verbatim_quote": "Rehabilitation is defined by the British Society of Rehabilitation Medicine as 'a process of assessment, treatment and management with ongoing evaluation by which the individual and their family/carers are supported to achieve their maximum potential for physical, cognitive, social and psychological function, participation in society and quality of living'.",
+      "page": "Terms, Rehabilitation (guideline p.81; text lines 3678-3681)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Evaluation is ongoing; a one-off assessment is structurally insufficient.",
+        "Family and carers are part of the supported unit, not external observers.",
+        "Maximum potential is individual; population averages do not set the target."
+      ],
+      "breakdown_regime": "The definition does not say how to trade off gains in one domain against losses in another, and it sets no stopping rule for the loop. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Rehabilitation is a closed loop, not an episode: assess, intervene, re-evaluate, and repeat for as long as needs persist. The objective is multi-dimensional, spanning body function, participation in society and quality of living, so a single scalar score cannot represent success.",
+        "source_operator": "nice_ng252_rehabilitation_process_definition_bsrm",
+        "telemetry": "Repeated assessment timestamps, goal attainment per domain, participation measures, and quality of life scores collected across the whole pathway rather than at discharge only."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_rehabilitation_not_one_size_fits_all",
+      "name": "Rehabilitation is not a one size fits all process: aims and goals are identified and agreed with each person and drive personalised treatment programmes",
+      "verbatim_quote": "Rehabilitation is not a 'one size fits all' process and aims and goals should be identified and agreed with each person to fully inform personalised treatment and therapy programmes.",
+      "page": "Context (guideline p.139; text lines 6544-6546)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The person is a co-author of the goals, not a recipient of them.",
+        "Personalisation is applied to aims first and only then to techniques.",
+        "Standardisation applies to the assessment process, not to the resulting plan."
+      ],
+      "breakdown_regime": "Personalisation has limits where safety or scarce resources force standard pathways; the statement gives no rule for resolving conflicts between personal preference and clinical evidence. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A protocol template is only a prior. The operative plan is generated per person from agreed goals, so two people with the same diagnosis can legitimately receive different programmes, and deviation from the template is expected rather than treated as non-compliance.",
+        "source_operator": "nice_ng252_rehabilitation_not_one_size_fits_all",
+        "telemetry": "Per person goal records, programme variants actually delivered, and the gap between template programme and delivered programme logged as data."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_guideline_population_scope",
+      "name": "Scope: rehabilitation in all settings for chronic neurological disorder, impairment or disabling symptoms from acquired brain injury, acquired spinal cord injury, acquired peripheral nerve disorder, functional neurological disorder or progressive neurological disease",
+      "verbatim_quote": "This guideline covers rehabilitation in all settings for children, young people and adults with a chronic neurological disorder, neurological impairment or disabling neurological symptoms due to acquired brain injury, acquired spinal cord injury, acquired peripheral nerve disorder, functional neurological disorder or progressive neurological disease.",
+      "page": "Overview (guideline p.7; text lines 310-313)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Children, young people and adults are in scope under the same architecture.",
+        "Symptoms and impairment count even when the label is a suspected rather than confirmed disorder.",
+        "Stroke in adults, cerebral palsy, dementia and epilepsy are handled by other guidelines and are out of scope here."
+      ],
+      "breakdown_regime": "The shared skeleton breaks where aetiology dominates management, for example acute surgical lesions or rapidly progressive disease needing disease-specific therapy the guideline does not cover. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "One pathway architecture covers five aetiology classes that share a common structure: persistent or progressive neurological impairment with fluctuating, multi-domain needs. Class membership changes parameters such as expected trajectory, but not the assess, plan, coordinate, review skeleton.",
+        "source_operator": "nice_ng252_guideline_population_scope",
+        "telemetry": "Aetiology class recorded at intake, trajectory class (stable, fluctuating, progressive) tracked separately, and outcomes stratified by class to detect where the shared skeleton fails."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_holistic_needs_assessment_definition",
+      "name": "Holistic rehabilitation needs assessment evaluates the whole person rather than the condition alone, combining functional assessments with discussion of the person's priorities and goals",
+      "verbatim_quote": "Focuses on the person as a whole and not just their condition or injury. Made up of a number of functional assessments and discussions with the person about their priorities and goals.",
+      "page": "Terms, Holistic rehabilitation needs assessment (guideline p.77; text lines 3468-3470)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The unit of assessment is the person in their life, not the injured system.",
+        "Multiple functional assessments are composed; no single instrument covers the whole.",
+        "Discussion is a measurement channel, not a courtesy."
+      ],
+      "breakdown_regime": "Holistic assessment is expensive and slow; for a single narrow, well understood deficit a targeted assessment can be sufficient, which the guideline handles through its default rule rather than by abandoning holism. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Assessment is a bundle, not a single test: structured functional measurement plus elicited priorities. The priorities are inputs to the plan with the same standing as measured deficits, so a plan that ignores stated priorities is incomplete even if every test was performed.",
+        "source_operator": "nice_ng252_holistic_needs_assessment_definition",
+        "telemetry": "Assessment bundle completion per domain, priority statements recorded in the person's own terms, and plan items traceable back to either a measured deficit or a stated priority."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_holistic_assessment_default_rule",
+      "name": "Default rule: a referral for one specific functional assessment triggers a full holistic assessment unless it is already clear the specific assessment will surface any new needs",
+      "verbatim_quote": "If a referral for a specific functional needs assessment is received, offer holistic rehabilitation needs assessment unless it is clear that any new rehabilitation needs can be identified through a specific functional needs assessment.",
+      "page": "Section 1.8, recommendation 1.8.2 (guideline p.22; text lines 964-967)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Unreported needs are common enough that discovery has positive expected value.",
+        "The burden of proof sits on the narrow route, not on escalation.",
+        "Escalation happens once per presentation, not repeatedly without new information."
+      ],
+      "breakdown_regime": "The rule wastes resources when needs genuinely are isolated and stable, and it can delay a simple intervention if the holistic route has a long queue; the guideline mitigates this by forbidding delay to interventions already indicated. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Narrow queries are escalated to full state estimation by default, because a presenting deficit in a chronic neurological condition is treated as a sample from a wider, partly hidden need state. The exception requires positive evidence that the narrow route is complete, not merely the absence of other complaints.",
+        "source_operator": "nice_ng252_holistic_assessment_default_rule",
+        "telemetry": "Referral type received, escalation decisions with reasons, and needs discovered by holistic assessment that the original referral did not mention."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_assessment_trigger_on_suspicion",
+      "name": "Assessment starts as soon as a chronic neurological disorder is diagnosed or suspected, because early assessment enables timely intervention and may slow symptom progression",
+      "verbatim_quote": "Evidence showed that starting holistic rehabilitation needs assessment as soon as a chronic neurological disorder is diagnosed or suspected enables timely access to interventions and may slow symptom progression.",
+      "page": "Rationale and impact, holistic rehabilitation needs assessment (guideline p.98; text lines 4487-4489)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Assessment itself is low risk relative to the cost of late intervention.",
+        "A suspected disorder that is later excluded still leaves the person assessed and routed correctly.",
+        "Progression is at least partly modifiable early in at least some of these conditions."
+      ],
+      "breakdown_regime": "Acting on suspicion fails when assessment capacity is the binding constraint and low-probability referrals crowd out confirmed cases; the guideline accepts this trade explicitly rather than solving it. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The trigger threshold for assessment is suspicion, not confirmation. Waiting for diagnostic certainty spends the window in which intervention has its largest effect, so the system acts on a probability of disorder rather than on a settled label.",
+        "source_operator": "nice_ng252_assessment_trigger_on_suspicion",
+        "telemetry": "Time from first suspicion to assessment start, proportion of assessments started pre-confirmation, and progression measures compared between early and late assessment cohorts."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_no_delay_intervention_during_assessment",
+      "name": "Interventions must not be delayed while holistic needs assessment is still being completed",
+      "verbatim_quote": "Do not delay starting rehabilitation interventions while undertaking holistic needs assessment.",
+      "page": "Section 1.8, recommendation 1.8.8 (guideline p.23; text lines 1007-1008)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At least some beneficial interventions are identifiable before assessment completes.",
+        "Early intervention does not invalidate later assessment findings.",
+        "The plan is versioned and expected to change."
+      ],
+      "breakdown_regime": "Parallel running breaks when an intervention is contraindicated by a not yet assessed factor, for example an unassessed swallowing risk before oral intake training; clinical judgement, not this rule, arbitrates those cases. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Assessment and intervention run in parallel, not in sequence. Measurement is not a gate on action when an indicated intervention is already known; the plan is revised as assessment results arrive instead of waiting for a complete state estimate before acting.",
+        "source_operator": "nice_ng252_no_delay_intervention_during_assessment",
+        "telemetry": "Intervention start dates relative to assessment completion dates, and plan revisions triggered by late arriving assessment results."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_multimorbidity_single_plan",
+      "name": "Multiple coexisting neurological disorders, including functional disorder alongside another disorder, are assessed by combined impact and managed under a single rehabilitation plan",
+      "verbatim_quote": "Be aware that a person may have multiple chronic neurological disorders, including a functional neurological disorder alongside another neurological disorder. If this is the case, undertake holistic rehabilitation needs assessment based on the impact of all disorders and agree a single rehabilitation plan.",
+      "page": "Section 1.8, recommendation 1.8.3 (guideline p.22; text lines 968-971)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Impact is additive or worse across conditions; it is never assumed independent.",
+        "A functional disorder does not cancel or explain away a coexisting structural disorder.",
+        "One accountable plan exists even when many services contribute."
+      ],
+      "breakdown_regime": "A single plan strains when conditions need genuinely incompatible management at the same time; the guideline offers coordination, not a resolution rule, for true conflicts. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Comorbidity is handled by superposition at the level of impact, not by running parallel single-condition plans. The plan is indexed to the person and their total functional state, so interactions between conditions are planned for instead of emerging as conflicts between separate teams.",
+        "source_operator": "nice_ng252_multimorbidity_single_plan",
+        "telemetry": "Number of active condition labels per person, plan count per person held at one, and interaction problems logged when condition specific advice conflicts."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_fluctuation_and_context_variation",
+      "name": "Functioning varies by environment, time of day, day to day and over longer periods, and assessment must sample that variation rather than a single performance",
+      "verbatim_quote": "The committee agreed that holistic needs assessments should recognise variations in the person's functioning across different real-life environments, such as managing tasks at home versus a busy town centre. They also noted that abilities and needs may fluctuate throughout the day, from day to day, or over time.",
+      "page": "Rationale and impact, holistic rehabilitation needs assessment (guideline p.101; text lines 4645-4648)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fluctuation is a property of the condition, not measurement error to be averaged away.",
+        "Environment changes the measured value, so context is part of the measurement.",
+        "Long term drift and short term fluctuation are separate components to track."
+      ],
+      "breakdown_regime": "Sampling variation costs time and can still miss rare worst case states, for example infrequent seizures or crashes after exertion; the rule improves estimates but cannot bound the tail. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Capacity is a distribution over contexts and times, not a point value. A single clinic measurement is one sample, biased by setting and timing, so estimates of ability carry a context label and a spread, and planning uses worst relevant context as well as typical performance.",
+        "source_operator": "nice_ng252_fluctuation_and_context_variation",
+        "telemetry": "Repeated measures across settings and times of day, within person variance recorded alongside means, and discrepancies between clinic performance and home performance flagged as signal."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_invisible_symptoms_multimethod_assessment",
+      "name": "When symptoms are invisible or the person lacks insight and cannot articulate needs, assessment must use multiple methods including direct observation",
+      "verbatim_quote": "If the person has 'invisible' or less easily recognisable symptoms or impairments or lacks awareness and insight into the effects of their injury or condition, and therefore struggles to articulate their rehabilitation needs, assess using multiple methods, including observation.",
+      "page": "Section 1.8, recommendation 1.8.13 (guideline p.24; text lines 1052-1055)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Lack of insight is itself a symptom of several of these conditions.",
+        "Unarticulated need is not absent need.",
+        "Observation in real tasks reveals what interview and clinic tests miss."
+      ],
+      "breakdown_regime": "Multi-method assessment cannot fully correct for impairments that only appear in unobserved settings, and observation changes behaviour; residual blind spots remain and are acknowledged rather than closed. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Self-report is a sensor that fails for exactly the impairments that most need detection. When the reporting channel is itself impaired, the system switches to independent channels, observation and informant report and performance testing, and treats a clean self-report as weak evidence rather than as clearance.",
+        "source_operator": "nice_ng252_invisible_symptoms_multimethod_assessment",
+        "telemetry": "Method mix used per assessment, cases where observation contradicted self-report, and needs first detected by observation or by family and carer report."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_executive_function_definition",
+      "name": "Executive function is the set of cognitive processes that direct and coordinate other cognitive functions: planning, goal pursuit, self-control, following multi-step directions under interruption, and sustained focus despite distraction",
+      "verbatim_quote": "A set of cognitive processes that help direct and coordinate other cognitive functions. These processes help a person to plan, meet their goals, display self-control, follow multiple-step directions even when interrupted, and stay focused despite distractions.",
+      "page": "Terms, Executive function (guideline p.76; text lines 3415-3418)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Control processes are separable from the functions they control.",
+        "Interruption and distraction are diagnostic stressors, not nuisances.",
+        "Self-control and planning belong to the same measurable system."
+      ],
+      "breakdown_regime": "The definition does not decompose executive function into separately trainable parts, and test performance in structured settings systematically overstates control in unstructured daily life. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Executive function is a control layer sitting above content skills. A person can retain knowledge and single skills while losing the controller that sequences and monitors them, so assessment and prediction must test control under load, interruption and distraction, not only isolated skills in quiet conditions.",
+        "source_operator": "nice_ng252_executive_function_definition",
+        "telemetry": "Performance on multi-step tasks with interruptions, error monitoring behaviour, initiation latency, and divergence between single-task scores and sequenced real-world task completion."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_executive_deficit_invisibility",
+      "name": "Deficits in initiation and insight are routinely missed because they are neither self-reported nor observable without specialist assessment, and missing them produces unmet needs and increased vulnerability",
+      "verbatim_quote": "Failure to recognise deficits in initiation and insight can result in unmet needs and increased vulnerability, as these impairments may not be self-reported or observable without specialist assessment.",
+      "page": "Terms, Executive function (guideline p.76; text lines 3425-3427)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Initiation failure looks like laziness or non-engagement to untrained observers.",
+        "Insight failure removes the person's own alarm system.",
+        "Vulnerability is the downstream cost, so detection is a safety function."
+      ],
+      "breakdown_regime": "Specialist assessment capacity is scarce, so the default route creates queues; the guideline states the risk plainly but does not provide a triage formula for rationing specialist time. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The highest risk deficits are the ones the standard intake cannot see: the person does not report them, and casual observation does not reveal them. The system therefore routes suspected executive impairment to specialist assessment by default and treats non-reporting as a risk marker rather than reassurance.",
+        "source_operator": "nice_ng252_executive_deficit_invisibility",
+        "telemetry": "Referral rates for specialist neuropsychological assessment, deficits found at specialist assessment that intake missed, and safeguarding or crisis events in people whose intake showed no reported needs."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_dual_mode_cognitive_assessment",
+      "name": "Cognitive assessment uses both standard cognitive tests and functional assessments of real-world performance",
+      "verbatim_quote": "Use both standard cognitive tests and functional assessments when assessing the person's cognitive strengths and weaknesses.",
+      "page": "Section 1.18, recommendation 1.18.9 (guideline p.55; text lines 2441-2442)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Component capacity and real-world performance are distinct quantities.",
+        "Ecological validity cannot be assumed from psychometric validity.",
+        "Both modes are needed across the cognitive domains, not only where deficits are suspected."
+      ],
+      "breakdown_regime": "Dual assessment doubles cost and can still miss context specific failure; where the two modes conflict the guideline gives no weighting rule, leaving synthesis to clinician judgement. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Two measurement modes with different failure modes are combined: standardised tests isolate component capacity under controlled conditions, functional assessment measures deployed performance in real tasks. Neither is a proxy for the other, and disagreement between them is itself diagnostic information.",
+        "source_operator": "nice_ng252_dual_mode_cognitive_assessment",
+        "telemetry": "Paired test and functional scores per person, correlation and divergence between the two modes, and plan changes attributable to each mode."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_dynamic_testing_replaces_standard_tests_fnd",
+      "name": "For functional neurological disorder, standard cognitive tests may be replaced by observation and dynamic testing repeated over time and conditions",
+      "verbatim_quote": "For people with a functional neurological disorder consider replacing standard cognitive tests with observation and dynamic testing.",
+      "page": "Section 1.18, recommendation 1.18.10 (guideline p.55; text lines 2444-2445)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In functional disorder, inconsistency is a feature of the condition, not evidence of fabrication.",
+        "Observation over time outranks one-off scores for this population.",
+        "The assessment method must match the mechanism of the condition."
+      ],
+      "breakdown_regime": "Dynamic testing is harder to standardise and compare across services, and inconsistency alone cannot separate functional disorder from other causes of variable performance such as fatigue or pain. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When performance is intrinsically variable and attention dependent, a single fixed test measures the testing situation more than the person. Dynamic testing samples performance across time and conditions, so variability and inconsistency become the measurement instead of noise corrupting it.",
+        "source_operator": "nice_ng252_dynamic_testing_replaces_standard_tests_fnd",
+        "telemetry": "Repeated performance samples per person, within person inconsistency indices, and the rate at which dynamic findings change management compared with single test findings."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_premorbid_baseline_and_confounder_calibration",
+      "name": "Cognitive results are interpreted against the person's own premorbid level and other health conditions: performance can look adequate against population norms while sitting well below the person's previous level",
+      "verbatim_quote": "The committee highlighted the importance of considering the person's cognitive function before neurological injury or development of a neurological disorder and any other health conditions when assessing cognitive function. They noted that cognitive function may appear adequate but still fall below the levels the person previously had.",
+      "page": "Rationale and impact, cognitive function (guideline p.122; text lines 5714-5717)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Premorbid level can be estimated well enough to be useful even without prior testing.",
+        "Fatigue, mood and pain move test scores and must be recorded with them.",
+        "Adequate is defined relative to the person's life demands, not the test manual."
+      ],
+      "breakdown_regime": "Premorbid estimation is itself error prone, especially where records are thin, and overcorrection can manufacture deficits; the guideline endorses the comparison without giving an estimation method. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The reference class for impairment is the individual's own baseline, not the population distribution. A high premorbid performer can lose substantial function and still score in the normal range, so change from baseline is the sensitive statistic and norm referenced scores alone systematically under-detect loss in exactly the people with most to lose.",
+        "source_operator": "nice_ng252_premorbid_baseline_and_confounder_calibration",
+        "telemetry": "Premorbid estimates from education, occupation and prior records, norm referenced scores stored beside baseline referenced change scores, and state confounders at test time such as fatigue, pain and mood."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_internal_compensatory_strategies",
+      "name": "Internal compensatory strategies use cognitive techniques, such as visualisation and association, to adapt to or work around cognitive difficulties",
+      "verbatim_quote": "Internal compensatory strategies involve using cognitive techniques or skills to adapt to, or overcome, cognitive difficulties. For example, using memory aids like visualisation or creating associations to help recall information.",
+      "page": "Terms, Internal compensatory strategies (guideline p.78; text lines 3535-3537)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The underlying impairment may persist while function improves.",
+        "Strategies must be taught and practised; naming them is not training.",
+        "Internal strategies load other cognitive systems, which have their own limits."
+      ],
+      "breakdown_regime": "Compensation fails when the recruited system is also impaired, and heavy reliance on effortful strategies increases fatigue; gains are task specific and do not imply recovery of the original process. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Compensation is a rerouting: a weakened direct process is bypassed by recruiting an intact cognitive process to carry the same function. Selecting a strategy means matching the deficit to a preserved ability, so the inventory of what still works is as important as the inventory of what is lost.",
+        "source_operator": "nice_ng252_internal_compensatory_strategies",
+        "telemetry": "Strategies taught per person, the preserved abilities each strategy recruits, and functional gains measured on the target tasks rather than on the impaired process itself."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_external_compensatory_strategies",
+      "name": "External compensatory strategies offload tasks onto tools and devices, such as calendars, alarms and speech-to-text software",
+      "verbatim_quote": "External compensatory strategies involve using tools or external devices to assist with tasks or challenges. Examples include using calendars, alarms, or speech-to-text software to assist with memory or physical limitations.",
+      "page": "Terms, External compensatory strategies (guideline p.78; text lines 3540-3542)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The environment can hold memory, sequencing and prompting functions the brain currently cannot.",
+        "Adoption depends on usability and on the person's remaining abilities.",
+        "Aid supported performance is real performance for planning purposes."
+      ],
+      "breakdown_regime": "Aids can cap recovery if they substitute for a process that would otherwise retrain, a harm the guideline flags explicitly for functional disorder; dependence on a device is also a fragility if the device is lost or fails. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Function can be restored by moving part of the cognitive work into the environment. The tool becomes a component of the person's cognitive system, so provision, setup and training on the tool are rehabilitation interventions, and removing the tool removes the function it carries.",
+        "source_operator": "nice_ng252_external_compensatory_strategies",
+        "telemetry": "Devices and aids issued, setup and training completion, continued use rates, and functional outcomes measured with the aid in place."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_errorless_error_based_learning_modes",
+      "name": "Two opposed learning modes: errorless learning prevents mistakes through step-by-step guidance and prompts, while error-based learning uses mistakes as the mechanism that identifies and corrects misunderstanding and builds retention",
+      "verbatim_quote": "Errorless learning is an instructional method aimed at preventing mistakes during the learning process. It involves giving clear, step-by-step guidance and prompts to ensure successful completion of tasks without errors. Error-based learning, for example trial and error, allows mistakes to be made as part of the learning process. These errors help people identify and correct misunderstandings, fostering deeper understanding and long-term retention of learning.",
+      "page": "Terms, Errorless learning and Error-based learning (guideline p.76; text lines 3403-3410)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Which mode is better depends on the learner and the task, not on doctrine.",
+        "Practising errors can consolidate them in people with impaired error monitoring.",
+        "Retention and transfer, not in-session performance, are the outcome measures."
+      ],
+      "breakdown_regime": "The definitions give no decision boundary; the guideline's selection rule names the relevant factors but no thresholds, so mode choice remains a judgement that can be wrong in both directions. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Error is a tunable training signal with opposite settings. Suppressing errors protects learners who cannot detect or correct their own mistakes and prevents wrong routines from being practised in; allowing errors exploits the correction signal for learners who can monitor themselves, buying deeper and more durable learning at the cost of visible failure during training.",
+        "source_operator": "nice_ng252_errorless_error_based_learning_modes",
+        "telemetry": "Mode selected per task, error rates during training, retention at follow-up, and transfer of the trained skill to untrained contexts."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_error_mode_selection_rule",
+      "name": "The choice between error-based and errorless technique is made from the person's sensory, perceptual, motor planning and cognitive profile and from the skill or task being trained",
+      "verbatim_quote": "When delivering skills-based learning or task-based training, use error-based or errorless techniques depending on the person's sensory, perceptual, motor planning and cognitive strengths and weaknesses and the skill or task the training is focusing on.",
+      "page": "Section 1.21, recommendation 1.21.8 (guideline p.63; text lines 2835-2838)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Sensory and perceptual limits change whether errors are even perceivable.",
+        "Motor planning deficits change the cost of an error.",
+        "Task risk bounds how much error can be tolerated while learning."
+      ],
+      "breakdown_regime": "Profiles are themselves measured with error, so the matching can be based on a misread profile; the rule also assumes trainers can deliver both modes competently. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Mode selection is a matching problem between learner state and task structure. The same person may need errorless training for a task where errors are dangerous or undetectable to them and error-based training for a task where self-correction is intact, so the choice is recorded per task rather than per person.",
+        "source_operator": "nice_ng252_error_mode_selection_rule",
+        "telemetry": "Per task mode decisions with the profile factors cited, switches of mode mid-training, and outcomes following switches."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_task_based_training_focus",
+      "name": "Task-based training applies skills to specific, realistic tasks from daily life rather than abstract exercises, with the intention of acquiring or reacquiring the skill itself",
+      "verbatim_quote": "The focus is on applying skills to complete specific, realistic tasks rather than focusing on abstract concepts or theoretical knowledge, with the intention of acquiring or reacquiring a skill.",
+      "page": "Terms, Task-based training (guideline p.85; text lines 3855-3857)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Real tasks carry the context cues that trigger the skill in daily life.",
+        "Motivation and adherence are higher for tasks the person values.",
+        "Component drills are supporting work, not the programme."
+      ],
+      "breakdown_regime": "Real tasks are messy and harder to dose and progress systematically than drills; some components, for example isolated strength work, still need decontextualised training alongside. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Training transfers best when the training task is the target task or a close replica. Abstract drills build component capacity whose transfer to real performance is unreliable, so the programme is built from the person's actual daily tasks and progress is measured on those tasks.",
+        "source_operator": "nice_ng252_task_based_training_focus",
+        "telemetry": "Target tasks nominated by the person, training task fidelity to real tasks, and performance change measured on the real tasks in their real settings."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_working_memory_definition",
+      "name": "Working memory is the cognitive system that temporarily stores and manipulates information needed for complex tasks such as reasoning, comprehension and learning",
+      "verbatim_quote": "The cognitive system responsible for temporarily storing and manipulating information needed for complex tasks such as reasoning, comprehension, and learning.",
+      "page": "Terms, Working memory (guideline p.85; text lines 3884-3886)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Storage and manipulation are one system; holding more leaves less capacity to process.",
+        "Overload presents as confusion or task abandonment, not as a reported memory problem.",
+        "External aids directly extend this system."
+      ],
+      "breakdown_regime": "The definition does not quantify capacity or its variation across these conditions, and working memory scores correlate with many other deficits, so isolating its contribution to a given failure is difficult. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Working memory is a small, load limited buffer with active manipulation, and it is the bottleneck through which multi-step instruction, conversation and problem solving must pass. Interventions respect the bottleneck by chunking instructions, externalising intermediate steps, and reducing simultaneous demands rather than by exhorting attention.",
+        "source_operator": "nice_ng252_working_memory_definition",
+        "telemetry": "Span and manipulation measures, instruction lengths actually used in sessions, and task failure rates as a function of simultaneous step count."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_social_cognition_definition",
+      "name": "Social cognition is the set of cognitive, affective and behavioural abilities that govern interaction with other people, including recognising emotions, intentions, beliefs and behaviour in oneself and others",
+      "verbatim_quote": "Describes a variety of disparate cognitive, affective, and behavioural abilities that interact and contribute to a person's interactions with other people. It includes how people understand and make sense of social interactions, such as the recognition of emotions, intentions, beliefs, and behaviours in themselves and others.",
+      "page": "Terms, Social cognition (guideline p.84; text lines 3814-3818)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The abilities interact; a single component deficit degrades the whole interaction.",
+        "Self-perception is part of the system, so insight problems and social problems travel together.",
+        "Social outcomes are rehabilitation outcomes, not soft extras."
+      ],
+      "breakdown_regime": "Social cognition is hard to measure outside contrived tests, and cultural norms shape what counts as correct reading of others; the definition gives no measurement standard. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Social functioning is a cognitive output, not a personality trait. Failures to read emotion or intention after brain injury are impairments in a measurable system, and they predict relationship breakdown, conflict and withdrawal independently of physical recovery, so they belong in assessment and in the plan.",
+        "source_operator": "nice_ng252_social_cognition_definition",
+        "telemetry": "Emotion recognition and perspective taking measures, reported relationship and social participation changes, and incidents attributable to misread social signals."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_functional_neurological_disorder_definition",
+      "name": "Functional neurological disorder produces disabling neurological symptoms, including altered awareness and motor and sensory change, that are not explained by a physical or neurological disease",
+      "verbatim_quote": "Functional neurological disorders can cause a range of disabling neurological symptoms, which include altered awareness, and motor and sensory changes. However, symptoms are not explained by a physical or neurological disease.",
+      "page": "Terms, Functional neurological disorders (guideline p.77; text lines 3452-3454)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Diagnosis rests on positive features of the presentation, not only on normal investigations.",
+        "Functional and structural disorders coexist in the same person often enough that both must be considered.",
+        "Explanation of the diagnosis is itself part of treatment."
+      ],
+      "breakdown_regime": "The definition is exclusion flavoured and can be misused to end investigation early; the guideline counters this by keeping functional disorder inside the same assessment pathway as structural disease. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Real, disabling symptoms can arise from disordered function rather than structural damage. The absence of a structural explanation does not reduce disability and does not make symptoms voluntary; the mechanism points to attention, expectation and learned patterns as treatment targets rather than repair of a lesion.",
+        "source_operator": "nice_ng252_functional_neurological_disorder_definition",
+        "telemetry": "Symptom profiles with positive functional signs, disability measures recorded independently of aetiology, and engagement and outcome tracked for functional presentations alongside structural ones."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_fnd_attention_redirection",
+      "name": "For functional neurological disorder, validate the presence and impact of symptoms while using language and approaches that redirect attention away from them",
+      "verbatim_quote": "validate the presence and impact of symptoms while using language and approaches that redirect attention away from them",
+      "page": "Section 1.12, recommendation 1.12.2 (guideline p.39; text lines 1700-1701)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Validation and redirection must happen together; either alone fails.",
+        "Language that implies structural damage can entrench symptoms.",
+        "The person's experience of symptoms is not in dispute."
+      ],
+      "breakdown_regime": "Redirection can be heard as dismissal if validation is weak, which damages trust and engagement; the balance is a skilled communication act that cannot be reduced to a script. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Attention is a gain control on functional symptoms: focusing on the symptom amplifies it, while absorbing attention in purposeful activity reduces it. Communication is therefore designed as an intervention, acknowledging impact fully while steering attention and expectation toward function and recovery rather than toward monitoring the symptom.",
+        "source_operator": "nice_ng252_fnd_attention_redirection",
+        "telemetry": "Information materials reviewed for symptom focusing language, session observation of attention direction techniques, and symptom severity tracked against engagement in goal directed activity."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_goal_decomposition",
+      "name": "Long-term rehabilitation goals are agreed collaboratively and broken down into short-term steps, focused on what matters most to the person",
+      "verbatim_quote": "Work collaboratively with the person to agree long-term rehabilitation goals, broken down into short-term steps, that focus on what is most important to the person.",
+      "page": "Section 1.9, recommendation 1.9.2 (guideline p.27; text lines 1185-1187)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Agreement is genuine negotiation, including about what is realistic.",
+        "Short steps carry the feedback loop; long goals carry the direction.",
+        "Steps are expected to change as the person changes."
+      ],
+      "breakdown_regime": "Decomposition can fragment a goal whose value lies in the whole, and step completion can be gamed toward easy steps; the guideline relies on collaborative review rather than metrics to police this. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Goals form a two level plan: a long horizon direction owned by the person, decomposed into short steps small enough to attempt, measure and revise. The decomposition is what makes progress visible and keeps long goals from becoming inert statements, and the priority order comes from the person's values rather than clinical convenience.",
+        "source_operator": "nice_ng252_goal_decomposition",
+        "telemetry": "Goal records with step structure, step completion rates, revision history, and the proportion of goals originating from the person's stated priorities."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_maintain_function_objective",
+      "name": "The objective includes maintaining functioning and slowing deterioration, and interventions for maintenance are warranted even with a time-limited prognosis or limited potential for improvement",
+      "verbatim_quote": "Focus on interventions for optimising or maintaining the person's functioning and abilities, even when they have a time-limited prognosis or the potential for improvement appears to be limited.",
+      "page": "Section 1.10, recommendation 1.10.3 (guideline p.32; text lines 1390-1392)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expected decline is the counterfactual against which maintenance is judged.",
+        "Prognosis limits do not remove the value of function while it lasts.",
+        "Maintenance goals are agreed with the person like any other goal."
+      ],
+      "breakdown_regime": "Maintenance is hard to evidence because the counterfactual decline is unobserved for the individual; services can claim credit for stability that would have happened anyway. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "In progressive and severe conditions, holding position is a positive outcome that requires active intervention. A system that only funds or values improvement will withdraw effort exactly where deterioration is fastest, so maintenance work is planned, dosed and reviewed with the same seriousness as restorative work.",
+        "source_operator": "nice_ng252_maintain_function_objective",
+        "telemetry": "Deterioration rates against expected trajectory, maintenance interventions delivered, and outcomes reported as change relative to expected decline rather than to baseline alone."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_intervention_interaction_planning",
+      "name": "Planning treats the timing, intensity and frequency of interventions and the interactions between them as central variables over short and long timeframes",
+      "verbatim_quote": "Therefore, the committee recommended that the timing, intensity and frequency of different interventions, and how interventions relate and interact, should be central when planning interventions over both short and long timeframes.",
+      "page": "Rationale and impact, rehabilitation plan (guideline p.104; text lines 4822-4824)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fatigue and attention are shared resources across all interventions.",
+        "Sequencing can be a therapeutic variable in its own right.",
+        "Interactions are considered over years, not only within a treatment block."
+      ],
+      "breakdown_regime": "Interaction effects are largely unmeasured in the underlying evidence base, so planning handles them by committee judgement; the guideline names the variables without supplying interaction coefficients. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Interventions are not independent line items: they compete for the person's energy and attention, interact in effect, and sequence matters. The plan is therefore a schedule with interaction terms, where adding an intervention changes the value of the others, and total load is a managed quantity.",
+        "source_operator": "nice_ng252_intervention_interaction_planning",
+        "telemetry": "Concurrent intervention counts per person, schedule spacing, reported overload or fatigue following stacked starts, and outcome changes after rescheduling."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_intervention_stacking_overload",
+      "name": "Starting many interventions at once can overwhelm the person, causing disengagement and poorer outcomes",
+      "verbatim_quote": "The committee noted that people can feel overwhelmed if a number of different interventions start at once and this can lead to disengagement and poorer outcomes.",
+      "page": "Rationale and impact, rehabilitation plan (guideline p.104; text lines 4820-4822)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Engagement is the resource every intervention draws on.",
+        "The threshold varies with cognitive and emotional state, including executive impairment.",
+        "A delayed start that preserves engagement beats an immediate start that ends it."
+      ],
+      "breakdown_regime": "The guideline gives no numeric threshold, and under-starting carries its own cost in lost momentum and delayed benefit; the balance is judgement based and person specific. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "There is a dose limit on change itself. Simultaneous starts multiply cognitive, emotional and logistical load, and past a person specific threshold the marginal intervention subtracts value by driving disengagement from all of them. Staggering starts is therefore a therapeutic decision, not an administrative delay.",
+        "source_operator": "nice_ng252_intervention_stacking_overload",
+        "telemetry": "Number of interventions started per time window, disengagement and dropout events following stacked starts, and self-reported overwhelm captured at reviews."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_tiered_single_point_of_contact",
+      "name": "Every person has a single point of contact whose seniority tier, key contact, key worker or complex case manager, is matched to the complexity of their rehabilitation needs",
+      "verbatim_quote": "Commission services that ensure people with a chronic neurological disorder have access to a single point of contact, that is a key contact, key worker or complex case manager depending on their rehabilitation needs.",
+      "page": "Section 1.2, recommendation 1.2.1 (guideline p.12; text lines 530-532)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single route in does not mean a single provider; the contact coordinates many services.",
+        "Tier is reassessed as needs and self-management capacity change.",
+        "Families and carers use the same route where appropriate."
+      ],
+      "breakdown_regime": "Tier boundaries are judgement calls, and a named contact without real authority or capacity becomes a bottleneck and a single point of failure; the model depends on the contact being resourced to act. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Coordination is a staffed function with graded intensity. One named route into the system replaces the person navigating fragmented services, and the tier escalates with need complexity and with the person's capacity to self-manage, so coordination effort is allocated where navigation failure is most likely and most costly.",
+        "source_operator": "nice_ng252_tiered_single_point_of_contact",
+        "telemetry": "Tier assignments per person, tier changes over time, contact response times, and unmet need or crisis events analysed by tier."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_persistent_contact_invariant",
+      "name": "The single point of contact remains in place even when the person is not currently receiving rehabilitation, so access can reopen as needs emerge",
+      "verbatim_quote": "A single point of contact must remain even when the person is not receiving rehabilitation, to ensure access to services as needs emerge.",
+      "page": "Terms, Single point of contact (guideline p.83; text lines 3793-3794)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Discharge ends a treatment episode, not the relationship.",
+        "Needs emergence is expected, so re-entry is a designed path rather than an exception.",
+        "Persistence costs little while dormant and pays off at moments of crisis."
+      ],
+      "breakdown_regime": "Indefinite retention grows caseloads silently and can blur accountability for people who have genuinely left the service; the guideline states the invariant without a review or closure rule. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The coordination link is persistent state, not a per-episode assignment. Chronic and progressive conditions generate needs unpredictably after discharge, and a standing contact converts re-entry from a fresh referral problem into a continuation, cutting the delay and the burden on a person whose capacity to navigate may itself be impaired.",
+        "source_operator": "nice_ng252_persistent_contact_invariant",
+        "telemetry": "Re-entry events routed through the standing contact versus fresh referrals, time from need emerging to service response in each route, and contacts retained per discharged person."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_complex_case_manager_population",
+      "name": "Complex case managers work with people who combine severe, complex, long-term needs with impaired cognitive or executive function, inability to self-advocate, serious comorbidity, learning disability, complex mental health needs, substance misuse or neurobehavioural risk",
+      "verbatim_quote": "A complex case manager works with people who have severe, complex and long-term rehabilitation needs and impaired cognitive or executive function, are unable to advocate for themselves, have serious comorbidities, learning disability, complex mental health needs, misuse drugs or alcohol or neurobehavioural symptoms that place them at risk of harm to themselves or others.",
+      "page": "Terms, Complex case manager (guideline p.75; text lines 3374-3378)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Impaired executive function plus complex needs is the core combination, not either alone.",
+        "Risk to self or others raises the tier independently of service count.",
+        "The role spans health and social care boundaries."
+      ],
+      "breakdown_regime": "The criteria list is inclusive enough to cover a large population, while case management capacity is small; the guideline defines eligibility but not the prioritisation rule when eligible people exceed supply. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The highest coordination tier is defined by compounding: severity multiplied by inability to self-advocate and by risk. The defining feature is that the person cannot operate the system on their own behalf, so the case manager substitutes for the person's navigation, advocacy and monitoring functions rather than merely assisting them.",
+        "source_operator": "nice_ng252_complex_case_manager_population",
+        "telemetry": "Case manager caseload composition against the listed criteria, advocacy actions taken on behalf of people, and adverse events in eligible people not assigned a case manager."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_self_referral_reentry",
+      "name": "Referral and re-referral mechanisms, including self-referral, stay simple and remain open after discharge so people can re-access assessment and support when they need it",
+      "verbatim_quote": "Set up simple referral and re-referral (including self-referral) mechanisms that allow people with a chronic neurological disorder to access rehabilitation needs assessments, interventions and support when they need it, including after they have been discharged from rehabilitation services.",
+      "page": "Section 1.4, recommendation 1.4.2 (guideline p.15; text lines 687-690)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The person and family can recognise emerging need before professionals see it.",
+        "Gatekeeping costs fall hardest on those least able to argue their case.",
+        "Re-entry leads to assessment, not automatically to intervention."
+      ],
+      "breakdown_regime": "Open access can be flooded by low need demand in a capacity constrained system; the guideline accepts simple access as the design goal and leaves demand shaping to assessment. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Access is designed for the state the person is in when need strikes, which may include impaired cognition, fatigue and low advocacy capacity. Low friction re-entry, including self-referral without professional gatekeeping, treats delayed access as a system failure rather than as demand management.",
+        "source_operator": "nice_ng252_self_referral_reentry",
+        "telemetry": "Re-referral volumes by route, time from self-referral to assessment, and needs first presented through crisis routes that a simple re-entry path might have caught earlier."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_exercise_dose_frequency_duration_intensity",
+      "name": "Exercise and physical activity programmes only work at the correct frequency, duration and intensity: the dose must be explicitly agreed, and getting it wrong is common",
+      "verbatim_quote": "The committee agreed that exercise and physical activity programmes are important for optimising muscle strength and physical functioning, but they need to be of the correct frequency, duration and intensity. They agreed that this is often overlooked.",
+      "page": "Rationale and impact, physical activity and exercise (guideline p.112; text lines 5225-5227)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Dose is agreed with the person, which supports adherence.",
+        "Delivered dose, not prescribed dose, drives outcome.",
+        "Dose needs review as capacity changes."
+      ],
+      "breakdown_regime": "The guideline asserts the dose principle without condition specific dose tables for most programmes, so correct dosing still depends on specialist judgement and monitoring. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Exercise is a dosed intervention with three independent parameters, and an unspecified programme is an uncontrolled dose. Frequency, duration and intensity are prescribed and recorded like drug parameters, because under-dosing wastes the programme and over-dosing risks harm and dropout, and the correct dose is individual.",
+        "source_operator": "nice_ng252_exercise_dose_frequency_duration_intensity",
+        "telemetry": "Prescribed versus delivered frequency, duration and intensity per programme, adherence by dose level, and strength and capacity outcomes analysed against delivered dose."
+      }
+    },
+    {
+      "primitive_id": "nice_ng252_treadmill_frequency_response_progressive",
+      "name": "For progressive neurological conditions, low or intermediate frequency treadmill gait training over a longer period is preferred to optimise mobility and exercise capacity",
+      "verbatim_quote": "If the person has a progressive neurological condition, think about low- or intermediate-frequency treadmill gait training over a longer period to optimise their mobility and exercise capacity.",
+      "page": "Section 1.16, recommendation 1.16.10 (guideline p.49; text lines 2163-2165)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The cited frequency evidence comes from Parkinson's disease and is extended to progressive conditions as a class.",
+        "Duration of the programme trades against frequency within a total tolerable load.",
+        "Fatigue and disease progression bound the feasible frequency."
+      ],
+      "breakdown_regime": "The non-monotonic response is established for one condition and one modality; generalising the shape to other progressive conditions and other training types is an inference the recommendation makes but the evidence does not directly prove. no_equation_domain",
+      "domain": "clinical rehabilitation guideline",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The frequency response is non-monotonic: the underlying evidence showed high frequency treadmill training producing worse outcomes than low and intermediate frequency in Parkinson's disease. More training is not monotonically better; there is an interior optimum, and for progressive conditions the sustainable lower frequency over a longer horizon beats intensive bursts.",
+        "source_operator": "nice_ng252_treadmill_frequency_response_progressive",
+        "telemetry": "Training frequency actually delivered, mobility and exercise capacity outcomes by frequency band, and adverse or fatigue effects at high frequency."
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "nice_ng252_trace_01",
+      "think": "This guideline is a clinical practice document, but its load-bearing content is a set of design decisions about how a complex, long-horizon support system should reason about people whose capacities fluctuate, whose worst deficits are the least visible, and whose needs keep emerging after formal episodes of care end. Reading it as a reasoning artefact, the first move is definitional discipline. Rehabilitation is defined twice, once by the World Health Organisation as interventions that optimise functioning through interaction with the environment, and once by the British Society of Rehabilitation Medicine as an ongoing process of assessment, treatment, management and evaluation aimed at maximum potential across physical, cognitive, social and psychological function, participation and quality of living. The pair matters: the first definition fixes the outcome variable as functioning in context rather than impairment in the body, and the second fixes the temporal structure as a loop rather than an episode. Everything else in the document is downstream of those two choices. The second move is an epistemology of assessment. The guideline assumes that the presenting complaint is an unreliable sample of the true need state. A referral for one specific assessment escalates to a holistic assessment by default. Assessment starts on suspicion, before diagnosis is confirmed, because waiting spends the window where intervention has most effect. Assessment and intervention run in parallel, because measurement is not allowed to gate action that is already indicated. Where the person cannot report their own state, because symptoms are invisible or because insight itself is impaired, the system switches sensors: observation, informant report, functional performance. Cognitive assessment is dual mode, standardised tests beside real-world functional assessment, because component capacity and deployed performance are different quantities and their disagreement is diagnostic. Results are calibrated against the person's own premorbid baseline, not only against population norms, because a high-functioning person can lose a great deal and still test as normal. And functioning is treated as a distribution across environments and times of day rather than a point value, so a single clinic measurement is understood to be one biased sample. The third move is a theory of learning and adaptation. The glossary defines two opposed learning modes, errorless learning, which prevents mistakes through guidance, and error-based learning, which uses mistakes as the correction signal, and the guideline refuses to crown either: the choice is a matching problem between the person's sensory, perceptual, motor planning and cognitive profile and the specific task. Compensation is treated the same way, as rerouting: internal strategies recruit intact cognitive processes, external strategies offload work onto tools that become part of the person's functional system, with an explicit warning that an aid can also cap recovery by substituting for a process that would otherwise retrain. Training itself is anchored to real tasks from the person's daily life, because transfer from abstract drills is unreliable, and progress is measured on the real tasks. The fourth move is load management. Interventions interact: they share the person's finite energy, attention and emotional capacity, so timing, intensity, frequency and interaction effects are planning variables, and starting everything at once is identified as a cause of overwhelm, disengagement and worse outcomes. Exercise is specified as a dose with frequency, duration and intensity, and the one place the document cites a dose response directly, treadmill training in progressive conditions, the response is non-monotonic, with high frequency doing worse than low or intermediate frequency. Goals mirror the same realism: long-term goals decomposed into short steps, and maintenance of function, even slowing deterioration, counted as a legitimate objective that justifies intervention when improvement is not available. The fifth move is coordination architecture. Every person has a single point of contact, tiered by complexity and by capacity to self-manage, from key contact through key worker to complex case manager, where the top tier is defined by compounding: severe long-term needs plus impaired executive function plus inability to self-advocate plus risk. The contact persists when treatment stops, referral and self-referral routes stay simple and open after discharge, and multiple coexisting conditions are handled inside one plan indexed to total impact. For functional neurological disorder the document adds a communication doctrine: validate symptoms fully while redirecting attention away from them, because attention amplifies functional symptoms and language implying structural damage can entrench them. Taken together, the work is less a list of treatments than a specification for reasoning under partial observability over long horizons: define the outcome as functioning in context, distrust single samples and self-report where the reporter is impaired, match learning mode to learner and task, manage total load as a scarce resource, and keep the coordination link alive between episodes. Its silences are equally instructive: thresholds, dose tables and prioritisation rules under scarcity are mostly absent, left to committee consensus and clinician judgement, which is exactly where a reasoning system built on this document must mark uncertainty instead of inventing precision. A sixth move deserves separate weight: the document is honest about the limits of its own evidence. Whole recommendation areas, such as 24-hour postural management, rest on committee experience with no identified studies behind them, and the guideline says so in its rationale rather than dressing consensus as proof. It closes with nine named research recommendations, covering among others the effectiveness of transcranial stimulation for cognitive function, the cost effectiveness of complex case management, and interventions for fatigue and for executive function, which converts its weakest points into an explicit open-question register. A reasoning system ingesting this work should inherit that register as first-class state: claims sourced from graded evidence, claims sourced from consensus, and questions declared open are three different epistemic categories, and collapsing them into one confidence level would destroy information the authors took care to preserve.",
+      "retrocausal_genealogy": "The genealogy of this guideline runs from the World Health Organisation's International Classification of Functioning and its definition of rehabilitation as person and environment interaction, through the British Society of Rehabilitation Medicine's process model of specialist rehabilitation, into NICE's evidence review machinery, which graded trial and observational evidence per intervention and fell back on committee consensus where evidence was absent. Earlier NICE guidance on stroke rehabilitation, multiple sclerosis, Parkinson's disease and head injury forms the local ancestry: NG252 exists because people whose conditions fell between those single-condition documents were missing coordinated rehabilitation, so the committee generalised the shared structure across acquired brain injury, spinal cord injury, peripheral nerve disorder, functional neurological disorder and progressive disease, and stated plainly which questions the evidence could not yet answer.",
+      "theory_of_mind": "The committee modelled its readers and subjects as agents with limited bandwidth and impaired self-knowledge. Clinicians are assumed to anchor on the presenting referral, so the document installs defaults that force wider assessment. Services are assumed to ration by gatekeeping, so it mandates simple self-referral and persistent contacts. Most importantly, the person with the condition is modelled as an unreliable narrator of their own state when executive function, insight or communication is impaired: not dishonest, but sensor-limited, which is why observation, informant report and functional testing are given standing equal to self-report, and why information and goals are framed collaboratively, paced, and revisited as capacity and circumstances change.",
+      "cross_layer_veto": "Cross-layer vetoes run through the document. The assessment layer cannot veto the intervention layer: indicated treatment starts while assessment continues. The efficiency layer cannot veto the access layer: simple re-entry and persistent contacts survive discharge and caseload pressure. The normalisation layer cannot veto the individual layer: population-norm test scores cannot clear a person whose own baseline says otherwise. The structural layer cannot veto the functional layer: absence of a lesion does not cancel disabling symptoms in functional disorder. And the improvement layer cannot veto the maintenance layer: lack of restorative potential does not withdraw intervention where the goal is holding function or slowing decline."
+    }
+  ],
+  "universal_lens": "Read universally, NG252 is a specification for supporting any agent whose capabilities are impaired, fluctuating and partly unobservable, over an open-ended horizon. Its transferable claims are that outcomes should be defined as functioning in context rather than as internal state, that self-report fails precisely where impairment is deepest and must be backed by independent observation, that learning mode should be matched to the learner's error-detection capacity and the task, that total change load is a scarce resource with an overload threshold, that holding position against expected decline is a real achievement requiring real work, and that coordination should be a persistent, tiered, low-friction link that outlives individual episodes of help. Any long-horizon coaching, care, education or performance system faces the same five problems and can adopt the same five answers.",
+  "gsi_mapping": "For the Galaxy Sports Institute research programme, NG252 contributes the rehabilitation science layer: definitions of functioning, executive function, working memory and social cognition stated cleanly enough to operationalise; an assessment doctrine covering dual mode testing, premorbid baselining, fluctuation sampling and multi-method assessment when self-report is unreliable; a learning doctrine covering errorless versus error based training and internal versus external compensation; and a load doctrine covering intervention interaction, stacking overload and non-monotonic dose response. These are directly reusable when GSI formalises how injured or impaired performers are assessed, how their recovery is reasoned about, and where the evidence base is thin, since the guideline names its own open research questions, including stimulation techniques for cognition and the cost effectiveness of complex case management.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, NG252 sharpens every judgement that involves health, availability and recovery. Availability reasoning should treat reported status as one sensor among several, weight observation and functional performance, and remember that executive and cognitive deficits are systematically under-reported. Return and recovery reasoning should be calibrated to the individual's own baseline rather than to population averages, should model capacity as varying by context and time rather than as a fixed rating, and should count maintenance of function as a meaningful state rather than a null result. Workload reasoning inherits the dose doctrine: frequency, duration and intensity are separate parameters, response can be non-monotonic, and stacking multiple new demands at once degrades engagement and outcomes. None of this prices anything; it disciplines the health and workload inputs the engine reasons from."
+}
