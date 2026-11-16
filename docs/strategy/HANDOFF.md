@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 (Hermes autonomous cycle #2 — a stale equation-executor assertion, reproduced then fixed)
+
+- **What changed**:
+  - `tests/test_honest_equation_executor_unicode_and_guards.py` (PR #1286, branch `fix/stale-delta-tau-normalized-expr-2026-11-16`): the 2026-11-11 assertion (`d39b2e92e`) expected the *product* reading of `\Delta\tau_{\text{Out}}` -> `Delta tau_Out`, but code commit `aa7aa877f` (2026-11-13) deliberately redefined back-to-back `\Delta\<macro>` with no whitespace as **one** symbol — `Delta_tau_Out` ("the change in tau_Out") — with an explicit rationale in `_rewrite_latex_macros` and a documented product path (`\Delta \tau_{Out}` -> `Delta tau_Out`). The test was never updated, so it has been red on main ever since. Assertion aligned to the documented semantics and extended to lock BOTH readings. **No production code changed** — the executor already behaves this way; the test was lying about the contract.
+- **What was proven**:
+  - Reproduced first in a detached worktree of `origin/main` `d02267d18`: `pytest tests/test_honest_equation_executor_unicode_and_guards.py -q` -> `1 failed, 10 passed` (`AssertionError: assert 'Delta tau_Out' in 'Delta_tau_Out = 3.5'`). After the edit -> `11 passed`.
+  - Same-class failures in the same worktree that are **not** portable-debt: `test_twelve_repo_frontier_integration.py::test_repo9_astral_ruff_...` needs a `ruff` binary on PATH; `tests/python/test_bazel_monorepo_build_optimization.py` (2) expect targets (`aspect_rules_js`, `monorepo_governance_configs`) absent from a stubbed WORKSPACE/BUILD; `test_tier5_..._csv_challenger` fails on the time-bound `roster config as_of 2026-11-07 is 9 days old (max 5)` health gate. Left for a cycle with the intent decided, not guessed at.
+- **What was not proven**:
+  - CI confirmation on #1286 (the `Epistemic Calibration & Sanity Gate` job runs the full suite; this file needs no dev-box artifacts so it should pass there).
+  - Touch-not-fixed: the 22 `intelligence/**.py` hardcoded `C:\Users\Garrett` paths behind `test_zero_hardcoded_local_host_paths_*` (see `origin/main` `git grep -l -i -E 'c:[/\\]+users[/\\]+garrett' -- 'intelligence/*.py'` → 22 files), and the two `test_unified_5000eq_mnf_projections_and_storefront.py` content defects in the nightly overnight job.
+  - **Environment fact (not caused here):** the primary checkout `C:\Users\Garrett\Sports` is on branch `feat/hermes-research-wiring-2026-11-11` (108 ahead / 218 behind `origin/main`) with **36,337 tracked files deleted** from the working tree — all under `data/film_room_2026/**` (~35 KB JPEG frames, ~1.2 GiB). It also predates the intelligence modules main ships, so all main-lane work this cycle was done in a detached `origin/main` worktree. Host `C:` free disk `47 GiB` (91% used).
+- **What the next role must do**:
+  - Re-read #1286's checks (`gh pr checks 1286`) — merge once the epistemic job's own run of the changed file is green; it is a single test file, no runner change.
+  - Decide the `intelligence/**.py` path hygiene (repo-root derivation + env override, behaviour-preserving on the dev box) as one scoped PR — it is the only *genuine* invariant among the three same-named `zero_hardcoded_local_host_paths_*` tests.
+  - The nightly overnight job defects are unchanged and still honest-data questions (MNF side-selection copy; inactive-player leak into `canonical_looped_funnel_projections`) — do not "fix" by editing the test.
+
 ## 2026-11-16 (Hermes autonomous cycle — the sequenced 7-gate pipeline fail-closed on every window it actually ran)
 
 - **What changed**:
