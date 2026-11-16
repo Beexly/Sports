@@ -1,0 +1,768 @@
+{
+ "book_id": "8c1a5f1e756596e2",
+ "source_status": "COMPLETE",
+ "source_note": "Vijay Janapa Reddi, Introduction to Machine Learning Systems: From Algorithms to Silicon: The Engineering of Deep Learning Systems, The MIT Press (copyright 2027, ISBN 978-0-262-05888-9, CC-BY-NC-ND). The tasking named the work Machine Learning Systems, Vol. 1: Foundations (2026); the local file is the full MIT Press text under that title page, 16 chapters plus appendices, and the catalog year differs from the printed copyright year. Local PDF: 14,277,370 bytes, sha256 8c1a5f1e756596e21a0704f89bd7a0129936d1d5ffbf96dc190d6d5e288903f4. Extracted text is clean and complete (75,530 lines) with two-column margin notes in some chapters; all verbatim quotes were proven as contiguous substrings of the extracted text after the fleet normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "dam_product_law",
+   "name": "The D.A.M product law: total execution time factors into Samples/Task (Data) times FLOPs/Sample (Algorithm) times Seconds/FLOP (Machine)",
+   "verbatim_quote": "Across Data (D), Algorithm (A), and Machine (M), every ML task completes by processing a set of samples (examples in vision or tabular workloads, tokens in language models) through an algorithm's operations on hardware.",
+   "page": "Chapter 1, section 1.7, equation 1.2 (book p. 22)",
+   "latex": "T = \\left(\\frac{\\mathrm{Samples}}{\\mathrm{Task}}\\right) \\times \\left(\\frac{\\mathrm{FLOPs}}{\\mathrm{Sample}}\\right) \\times \\left(\\frac{\\mathrm{Seconds}}{\\mathrm{FLOP}}\\right)",
+   "symbol_and_unit_ledger": {
+    "T": "total execution time, seconds",
+    "Samples/Task": "task size in examples or tokens, dimensionless count",
+    "FLOPs/Sample": "arithmetic work per sample, FLOPs",
+    "Seconds/FLOP": "realized machine time per operation, s/FLOP"
+   },
+   "assumptions": [
+    "The task can be decomposed into a sample count and a per-sample operation count",
+    "The same factorization governs training and inference; only the scale of each factor changes"
+   ],
+   "breakdown_regime": "The factorization hides overlap between memory, compute, and latency costs; equation 1.3 exists because the product form alone cannot show which physical term binds.",
+   "domain": "ML systems performance modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE reasoning engine budgets every analysis job the same way: corpus size (Data) times per-item reasoning cost (Algorithm) times realized throughput of the serving stack (Machine). A slow stage is diagnosed by naming which of the three factors grew, not by blaming the model.",
+    "source_operator": "dam_product_law",
+    "telemetry": "job sample counts, per-sample operation estimates, realized seconds per operation from runtime logs"
+   }
+  },
+  {
+   "primitive_id": "iron_law_execution_time",
+   "name": "The iron law of ML systems: execution time is the sum of memory time, compute time, and fixed latency overhead",
+   "verbatim_quote": "Assuming these three physical costs occur sequentially, the iron law of ML systems unpacks total execution time 𝑇 (seconds) into their sum (equation 1.3)",
+   "page": "Chapter 1, section 1.7, equation 1.3 (book pp. 22-23)",
+   "latex": "T = \\frac{D_{vol}}{BW} + \\frac{O}{R_{peak}\\,\\eta_{hw}} + L_{lat}",
+   "symbol_and_unit_ledger": {
+    "T": "total execution time, seconds",
+    "D_vol": "volume of data moved, bytes",
+    "BW": "memory or network bandwidth, bytes/s",
+    "O": "total arithmetic work, FLOPs",
+    "R_peak": "theoretical peak throughput, FLOP/s",
+    "eta_hw": "realized compute utilization, dimensionless, 0 to 1",
+    "L_lat": "latency and orchestration overhead, seconds"
+   },
+   "assumptions": [
+    "The three physical costs are modeled as sequential so their times add",
+    "Bandwidth and peak rate are treated as constants over the modeled execution"
+   ],
+   "breakdown_regime": "Real systems overlap memory and compute, so the sum is an upper-bound style accounting, not a cycle-accurate simulation; the latency term is treated as fixed although engineering can shrink it.",
+   "domain": "ML systems performance modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every GSE pipeline stage gets an iron-law budget: bytes moved over bandwidth, operations over realized throughput, plus fixed orchestration latency. When a pregame run is slow, the budget shows whether data movement, arithmetic, or overhead is the binding term before anyone tunes code.",
+    "source_operator": "iron_law_execution_time",
+    "telemetry": "bytes read per stage, FLOP estimates, measured utilization, orchestration timestamps"
+   }
+  },
+  {
+   "primitive_id": "roofline_attainable_performance",
+   "name": "The roofline bound: attainable performance is the minimum of peak compute and arithmetic intensity times bandwidth; the ridge point separates memory-bound from compute-bound work",
+   "verbatim_quote": "Roofline bound: 𝑅attain ≤ min(𝑅peak , 𝐼 × BW)",
+   "page": "Notation table (book p. xxxvi); developed in Chapter 11, section 11.6",
+   "latex": "R_{attain} \\le \\min(R_{peak},\\ I \\times BW)",
+   "symbol_and_unit_ledger": {
+    "R_attain": "attainable performance, FLOP/s",
+    "R_peak": "peak compute rate, FLOP/s",
+    "I": "arithmetic intensity, FLOP/byte",
+    "BW": "memory bandwidth, bytes/s"
+   },
+   "assumptions": [
+    "Performance is bounded by whichever of compute ceiling or bandwidth slope is lower at the workload's arithmetic intensity",
+    "The ridge intensity I_ridge = R_peak / BW is where the two bounds cross (notation table)"
+   ],
+   "breakdown_regime": "The bound assumes steady-state streaming; small kernels, launch overhead, and cache effects can hold real performance far below the roofline.",
+   "domain": "hardware performance bounds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE simulation and feature computation kernels are classified by arithmetic intensity before optimization: low-intensity stages are bandwidth problems and get data-layout fixes, high-intensity stages are compute problems and get algorithmic fixes. The classification decides the intervention, not intuition.",
+    "source_operator": "roofline_attainable_performance",
+    "telemetry": "kernel FLOP counts, bytes moved per kernel, measured FLOP/s against the device roofline"
+   }
+  },
+  {
+   "primitive_id": "training_flops_scaling_6pd",
+   "name": "Training work for a dense transformer is about 6 FLOPs per parameter per token (forward plus backward), so total training work is O approximately 6PD; inference costs about 2P per token",
+   "verbatim_quote": "Here Samples/Task is the corpus token budget 𝐷 (billions to trillions of tokens), and FLOPs/Sample spans the forward and backward passes (≈ 6𝑃 FLOPs per token for a dense transformer, giving 𝑂 ≈ 6𝑃 𝐷)",
+   "page": "Chapter 1, section 1.7 (book p. 23)",
+   "latex": "O \\approx 6PD",
+   "symbol_and_unit_ledger": {
+    "O": "total training arithmetic work, FLOPs",
+    "P": "parameter count, dimensionless",
+    "D": "training token count, tokens"
+   },
+   "assumptions": [
+    "Dense transformer architecture with standard forward and backward passes",
+    "Inference performs only the forward pass, about 2P FLOPs per token (stated in the same section)"
+   ],
+   "breakdown_regime": "Sparse architectures such as mixture of experts break the dense assumption because only a subset of parameters is active per token; the constant also shifts with activation recomputation and optimizer choices.",
+   "domain": "training cost estimation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine estimates the cost of any proposed model or simulation sweep before running it: parameter count times token or play count times the per-token constant gives a FLOP budget that is checked against available compute, so oversized experiments are resized on paper first.",
+    "source_operator": "training_flops_scaling_6pd",
+    "telemetry": "parameter counts, corpus token counts, measured run FLOPs"
+   }
+  },
+  {
+   "primitive_id": "training_time_law",
+   "name": "The training-time law: run duration is total work divided by peak rate times realized utilization, and memory capacity is a gate outside the law that decides whether a configuration runs at all",
+   "verbatim_quote": "Memory does not appear in the law; it decides whether a configuration runs at all.",
+   "page": "Chapter 8, section 8.2 and Table 8.2 (book p. 493)",
+   "latex": "T_{train} = \\frac{O}{R_{peak} \\times \\eta_{hw}}",
+   "symbol_and_unit_ledger": {
+    "T_train": "training run duration, seconds",
+    "O": "total training work, FLOPs",
+    "R_peak": "peak throughput, FLOP/s",
+    "eta_hw": "realized utilization (MFU-style), dimensionless"
+   },
+   "assumptions": [
+    "Utilization is treated as a single realized factor over the run",
+    "Memory capacity constrains feasibility separately from duration"
+   ],
+   "breakdown_regime": "Utilization varies across phases of a run (data loading, checkpointing, communication), so a single eta hides where time actually leaks; the law gives duration, not energy or cost, without further terms.",
+   "domain": "training systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI training and backtesting runs are scheduled with the same split: duration is forecast from work and realized utilization, while memory feasibility is checked as a separate gate before launch. A run that cannot fit is reconfigured, never launched and watched to fail.",
+    "source_operator": "training_time_law",
+    "telemetry": "run durations, achieved utilization, peak memory per configuration"
+   }
+  },
+  {
+   "primitive_id": "amdahl_speedup_cap",
+   "name": "Amdahl's law at system scope: the untouched share of a pipeline caps end-to-end speedup, so optimizing one stage alone can yield little",
+   "verbatim_quote": "Amdahl's law, which holds that the untouched share of a task caps the speedup of the whole, explains why improving inference alone may produce a small end to-end gain.",
+   "page": "Chapter 1, section 1.11 fallacies discussion (book p. 37)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Execution time shares across pipeline stages are measurable before optimizing",
+    "The unoptimized share stays constant while the optimized share shrinks"
+   ],
+   "breakdown_regime": "The cap assumes fixed stage shares; in practice optimizing one stage can change the workload mix, and parallel slack or caching can move the shares themselves.",
+   "domain": "systems optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine optimization work is sequenced by stage time shares: the reasoning pipeline profiles ingestion, feature computation, inference, and serialization first, and only the largest share gets optimized, because Amdahl's cap makes small-share optimization nearly free of end-to-end effect.",
+    "source_operator": "amdahl_speedup_cap",
+    "telemetry": "per-stage latency profiles of the inference and ingestion pipelines"
+   }
+  },
+  {
+   "primitive_id": "littles_law_serving_concurrency",
+   "name": "Little's law: in any stable queuing system, average in-flight requests equal arrival rate times average latency",
+   "verbatim_quote": "Formulated by John D. C. Little (Little 1961), Little's law establishes an exact relationship among three macroscopic metrics in any stable queuing system: 𝑄req = 𝜆arr ⋅ 𝑇lat (13.3) where 𝑄req is the average number of requests residing in the system, 𝜆arr is the arrival rate (requests per second), and 𝑇lat is the average time each request spends from arrival to completion.",
+   "page": "Chapter 13, section 13.4, equation 13.3 (book p. 998)",
+   "latex": "Q_{req} = \\lambda_{arr} \\cdot T_{lat}",
+   "symbol_and_unit_ledger": {
+    "Q_req": "average requests in system, requests",
+    "lambda_arr": "arrival rate, requests/s",
+    "T_lat": "average time in system, seconds"
+   },
+   "assumptions": [
+    "The system is stable: arrival rate does not exceed service capacity over the long run",
+    "The relationship is exact for long-run averages regardless of arrival or service distributions (stated in the same section)"
+   ],
+   "breakdown_regime": "Little's law gives averages, not tail behavior; percentile latency targets need queueing models beyond it, and it fixes no maximum concurrency, which device capacity sets.",
+   "domain": "serving capacity planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The GSE serving layer plans capacity with Little's law: forecast request rate times measured per-request latency sets the concurrency the prediction API must hold, and any latency regression is immediately converted into a capacity requirement rather than discovered as an outage.",
+    "source_operator": "littles_law_serving_concurrency",
+    "telemetry": "request arrival rates, per-request latency distributions, in-flight request counts"
+   }
+  },
+  {
+   "primitive_id": "bitter_lesson",
+   "name": "The bitter lesson: general methods that leverage computation, especially search and learning, ultimately outperform hand-encoded domain knowledge by a large margin",
+   "verbatim_quote": "General methods that exploit growing computation out pace hand-encoded expertise, which makes systems efficiency a lever of progress.",
+   "page": "Preface summary of Chapter 1, section 1.4 (book p. xxi; section at pp. 15-17), after Sutton 2019",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Computation keeps growing and the general method can actually convert it into performance",
+    "The comparison holds the task fixed across competing approaches"
+   ],
+   "breakdown_regime": "The lesson is about long-term progress, not a claim that domain knowledge has no engineering value; more computation does not guarantee better results when the method cannot use it productively or the data and objective are wrong.",
+   "domain": "AI research strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI research prioritization follows the lesson: invest in general reasoning machinery and data scale that improve with compute, and treat hand-built rule patches as scaffolding with a known expiry, reviewed whenever a learned method can absorb the same signal.",
+    "source_operator": "bitter_lesson",
+    "telemetry": "benchmark comparisons of rule-based versus learned components at fixed tasks"
+   }
+  },
+  {
+   "primitive_id": "software_2_0_data_defined_behavior",
+   "name": "Software 2.0: behavior is defined by learned weights shaped by data rather than human-readable control flow, so debugging must inspect data and learned behavior, not only code",
+   "verbatim_quote": "Static analysis and manual code review cannot reveal what decision the system",
+   "page": "Chapter 1, section 1.2 (book pp. 6-7)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A training process searches a high-dimensional parameter space for weights satisfying an empirical objective",
+    "Engineers still own the surrounding pipelines, loss functions, and serving harnesses"
+   ],
+   "breakdown_regime": "The compiler analogy is approximate: training is stochastic and can produce different weights from the same data, so reproducibility and evaluation discipline carry weight that code review carried in Software 1.0.",
+   "domain": "ML software paradigm",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE engine treats datasets and training corpora as source code: they are versioned, reviewed, and regression-tested like code, because a change in data changes behavior as surely as a change in logic, and postmortems check data diffs before code diffs.",
+    "source_operator": "software_2_0_data_defined_behavior",
+    "telemetry": "dataset version histories, evaluation deltas per data change, data review sign-offs"
+   }
+  },
+  {
+   "primitive_id": "silent_failure_monitoring_gap",
+   "name": "ML systems fail silently: predictive quality can collapse while every infrastructure metric looks nominal, so continuous evaluation from ingestion to serving is a design requirement",
+   "verbatim_quote": "ML system can fail silently while infrastructure metrics appear nominal, system design must integrate continuous evaluation from data ingestion through inference serving.",
+   "page": "Chapter 1, sections 1.6-1.7 (book p. 22)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Host-health signals (CPU, memory, network, HTTP status) do not measure whether predictions are useful",
+    "Degradation can originate in data or in training-serving skew without any code fault"
+   ],
+   "breakdown_regime": "Continuous evaluation detects that quality fell; it does not by itself identify which stage caused it, and labeled outcome evidence often arrives with delay.",
+   "domain": "ML operations and monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's health layer monitors prediction quality directly, with distribution and accuracy tracking on live outputs, because infrastructure dashboards staying green is explicitly not evidence that the reasoning engine is still right. Silent degradation is treated as the default failure mode to defend against.",
+    "source_operator": "silent_failure_monitoring_gap",
+    "telemetry": "live prediction accuracy, feature distribution monitors, infrastructure metrics for contrast"
+   }
+  },
+  {
+   "primitive_id": "drift_divergence_monitoring",
+   "name": "Drift monitoring: track a divergence D(P_t || P_0) between live and reference data as an early warning; the degradation equation separates baseline quality from sensitivity to shift, and outcome evidence, not the warning alone, decides retraining",
+   "verbatim_quote": "Monitoring 𝒟(𝑃𝑡 ‖𝑃0 ) provides a warning that prompts engineers to seek outcome evidence.",
+   "page": "Chapter 1, section 1.7 (book p. 22); developed in section 4.12.1",
+   "latex": "\\mathcal{D}(P_t \\Vert P_0)",
+   "symbol_and_unit_ledger": {
+    "D": "divergence measure between distributions, dimensionless",
+    "P_t": "live data distribution at time t",
+    "P_0": "reference (training) distribution"
+   },
+   "assumptions": [
+    "A reference distribution and a divergence measure are defined for the monitored features",
+    "Better data, objectives, and architectures can change both baseline quality and sensitivity to shift"
+   ],
+   "breakdown_regime": "A divergence warning is not proof of harm: an improved baseline does not by itself establish robustness to drift, and the warning must be confirmed against labeled outcomes before intervention.",
+   "domain": "data drift and model degradation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE signal families carry drift monitors against their training-era distributions; a rising divergence flags the family for outcome review, and the retraining or reweighting decision is made from realized performance evidence, never from the drift signal alone.",
+    "source_operator": "drift_divergence_monitoring",
+    "telemetry": "per-feature divergence series, labeled outcome accuracy by period, retraining decision log"
+   }
+  },
+  {
+   "primitive_id": "hidden_technical_debt",
+   "name": "Hidden technical debt: model code is a small fraction of a production ML system, and the surrounding components accumulate the cost of undocumented dependencies and brittle infrastructure",
+   "verbatim_quote": "That imbalance creates hidden technical debt, the accumulating cost of maintaining undocumented dependencies and brittle infrastructure around the model.",
+   "page": "Chapter 1, section 1.2 (book p. 7), after Sculley et al. 2015",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each surrounding component encodes assumptions about sampling, label meaning, feature timing, serving version, and degradation detection",
+    "Improving the model alone cannot repair a broken measurement, feature pipeline, or feedback signal"
+   ],
+   "breakdown_regime": "Debt is diffuse and rarely appears as a single failure; it surfaces as slow change velocity and unexplained behavior shifts, which makes it easy to undercount until a major incident prices it.",
+   "domain": "ML systems engineering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI platform work budgets explicitly for the surrounding system, data verification, feature extraction, resource management, serving, and monitoring, and tracks assumption changes in those components as debt events, because the model code is the smallest part of what can break.",
+    "source_operator": "hidden_technical_debt",
+    "telemetry": "component inventory, assumption change log, maintenance hours per component"
+   }
+  },
+  {
+   "primitive_id": "system_is_the_model",
+   "name": "The system is the model: user-visible behavior is produced by the data pipeline, trained weights, execution stack, serving path, and monitoring loop together, never by the weights alone",
+   "verbatim_quote": "The system is the model: the behavior a user receives from a machine learning service is produced by the data pipeline, the trained weights, the execution stack, the serving path, and the monitoring loop together, never by the weights alone.",
+   "page": "Chapter 16, section 16.1 (book p. 1229)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A fault at any stage, such as a drifted feature, a miscalibrated quantization range, or a queueing spike, degrades the answer even when weights are untouched",
+    "Each stage has its own mechanism and cost"
+   ],
+   "breakdown_regime": "The claim cuts against stage-local optimization: a stage improved in isolation can still leave end-to-end behavior unchanged or worse, so validation must be end-to-end.",
+   "domain": "ML systems philosophy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE evaluates changes end to end, from ingestion to published output, and rejects model-only validation: a better checkpoint behind a stale feature pipeline is not a better engine, and release decisions require the full path to be measured as one system.",
+    "source_operator": "system_is_the_model",
+    "telemetry": "end-to-end evaluation results, per-stage fault injection tests, release checklists"
+   }
+  },
+  {
+   "primitive_id": "constraint_propagation_workflow",
+   "name": "Constraint propagation: the ML workflow makes constraints explicit at each lifecycle stage and traces how deployment constraints propagate across Data, Algorithm, and Machine",
+   "verbatim_quote": "Carrying constraints around that loop is the job of the ML workflow, the engineering framework that makes constraints explicit at each stage and traces how deployment constraints propagate across Data, Algorithm, and Machine.",
+   "page": "Chapter 3, section 3.2 (book p. 115)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early data preparation decisions cascade directly through training and deployment",
+    "The lifecycle is what gets traversed; the workflow is how the traversal is managed"
+   ],
+   "breakdown_regime": "Constraints discovered late are the expensive ones: a deployment limit learned after training forces rework across every upstream stage, which is why the principle demands explicit constraint records from the first stage.",
+   "domain": "ML lifecycle engineering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every GSE build begins with a constraint sheet, latency, memory, data freshness, and cost limits recorded before model work, and each stage hand-off re-checks downstream constraints, so a late-stage limit violation is caught at the stage that introduced it.",
+    "source_operator": "constraint_propagation_workflow",
+    "telemetry": "constraint sheets per project, stage hand-off checks, late-discovery rework incidents"
+   }
+  },
+  {
+   "primitive_id": "lifecycle_feedback_loop",
+   "name": "The ML lifecycle is a loop, not a line: forward arrows carry work from data collection to monitoring, and evidence sends work back to specific earlier stages",
+   "verbatim_quote": "Forward arrows carry work from data collection to monitoring, and the two labeled return arrows mark where evidence sends it back.",
+   "page": "Chapter 3, section 3.1, Figure 1.7 caption (book p. 109)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The six stages are data collection, preparation, training, evaluation, deployment, and monitoring",
+    "Return paths end at different stages: a failed evaluation and a confirmed production degradation trigger different rework"
+   ],
+   "breakdown_regime": "Feedback determines which work must be repeated; it does not make every alert a retraining instruction, so loop discipline includes triage, not automatic reaction.",
+   "domain": "ML lifecycle engineering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's weekly cycle is run as this loop: monitoring evidence from the previous cycle routes specific work back to data collection or preparation rather than restarting everything, and each return path is logged with the evidence that triggered it.",
+    "source_operator": "lifecycle_feedback_loop",
+    "telemetry": "cycle logs, alert-to-stage routing records, rework counts per stage"
+   }
+  },
+  {
+   "primitive_id": "data_as_code",
+   "name": "Data as code: a data defect is a system behavior defect with no line of code to point to, so data gets the engineering rigor of source code",
+   "verbatim_quote": "A missing accent in a speech corpus, a mislabeled class, or a feature com puted one way in training and another in serving becomes a defect in system behavior with no line of code to point to.",
+   "page": "Chapter 4, section 4.1 (book p. 153)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training-serving consistency of feature computation is part of correctness, not hygiene",
+    "Data cascades propagate through the system the way code changes do"
+   ],
+   "breakdown_regime": "Treating data as code does not make data deterministic: sampling is empirical, so versioning and validation establish provenance rather than formal verification.",
+   "domain": "data engineering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE data pipelines enforce training-serving consistency checks and dataset release gates with the same seriousness as code review, because a feature computed two ways is a defect in behavior, and the defect hunt starts in the data when outputs change without a code change.",
+    "source_operator": "data_as_code",
+    "telemetry": "feature parity checks between training and serving, dataset release records, data defect postmortems"
+   }
+  },
+  {
+   "primitive_id": "data_gravity_principle",
+   "name": "Data gravity: the physical and economic cost of moving data scales directly with data volume and inversely with network bandwidth",
+   "verbatim_quote": "That physical and economic cost is what the data-gravity principle (2) names: data gravity scales directly with data volume (𝐷vol ) and inversely with network bandwidth (BW).",
+   "page": "Chapter 4, section 4.9, Physics of Data (book p. 209)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Movement cost is priced in time and money through the volume over bandwidth ratio",
+    "The principle guides placement: compute moves toward large data rather than the reverse"
+   ],
+   "breakdown_regime": "Locality is not free either: co-locating compute with data can strand capacity and complicate governance, so gravity is a cost term to weigh, not an absolute rule.",
+   "domain": "data engineering economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI data architecture places heavy computation beside the corpus rather than shipping extracts across links, and any design that moves large volumes must justify itself against the volume over bandwidth cost before it is built.",
+    "source_operator": "data_gravity_principle",
+    "telemetry": "dataset volumes, link bandwidths, measured transfer times and costs"
+   }
+  },
+  {
+   "primitive_id": "gradient_descent_update_rule",
+   "name": "The gradient descent update: each parameter moves against its gradient scaled by the learning rate, using local loss sensitivity to reduce loss over successive steps",
+   "verbatim_quote": "Gradient descent turns each parameter's gradient into a parameter change, using each weight's local loss sensitivity to reduce the loss over successive steps.",
+   "page": "Chapter 5, section 5.4, equation 5.22 (book p. 270)",
+   "latex": "\\theta_{new} = \\theta_{old} - \\eta \\nabla_{\\theta} \\mathcal{L}",
+   "symbol_and_unit_ledger": {
+    "theta": "collection of network parameters (weights and biases)",
+    "eta": "learning rate, dimensionless step scale",
+    "grad L": "gradient of the loss with respect to the parameters"
+   },
+   "assumptions": [
+    "Loss landscapes are nonconvex with local minima, saddle points, and plateaus; the rule finds low-loss regions, not a guaranteed global minimum",
+    "The path depends on learning rate schedule, batch size, and initialization"
+   ],
+   "breakdown_regime": "Gradient descent can stall on plateaus, oscillate with a poor learning rate, and converge to solutions whose generalization must be established separately from training loss.",
+   "domain": "optimization foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine calibration routines inherit the same discipline: parameter updates are gradient-driven with explicit step-size schedules, and convergence claims require held-out evidence, because a falling training objective is not proof of a better reasoning engine.",
+    "source_operator": "gradient_descent_update_rule",
+    "telemetry": "loss curves, gradient norms, learning rate schedules, held-out calibration metrics"
+   }
+  },
+  {
+   "primitive_id": "scaled_dot_product_attention",
+   "name": "Scaled dot-product attention: attention weights are the softmax of query-key products scaled by the square root of the head dimension, applied to values",
+   "verbatim_quote": "The transformer architecture computes these weights with the scaled dot-product attention operator introduced by Vaswani et al. (2017)",
+   "page": "Chapter 6, section 6.6 (book p. 361)",
+   "latex": "\\mathrm{Attention}(Q,K,V) = \\mathrm{softmax}\\!\\left(\\frac{QK^{T}}{\\sqrt{d_{head}}}\\right) V",
+   "symbol_and_unit_ledger": {
+    "Q, K, V": "queries, keys, values: learned linear projections of token representations",
+    "d_head": "dimension of each attention head",
+    "softmax": "row-wise normalization producing weights that sum to 1"
+   },
+   "assumptions": [
+    "Queries, keys, and values are learned linear projections of the same token representations in self-attention",
+    "Scaling by the square root of head dimension keeps dot products in a range where softmax gradients survive"
+   ],
+   "breakdown_regime": "Materializing the full attention matrix over long inputs is quadratic in sequence length, and the KV cache that avoids recomputation grows linearly, so attention's cost moves from arithmetic to memory at long context.",
+   "domain": "neural architectures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The reasoning engine's own attention over evidence works the same way conceptually: candidate signals are scored against the current game state, normalized into weights, and combined, with the scaling term preventing any single loud signal from saturating the combination.",
+    "source_operator": "scaled_dot_product_attention",
+    "telemetry": "attention weight distributions, sequence lengths, KV cache sizes in serving benchmarks"
+   }
+  },
+  {
+   "primitive_id": "kv_cache_memory_scaling",
+   "name": "KV cache scaling: at long sequence lengths the key-value cache footprint can rival or exceed the model weights, making cache management and memory bandwidth dominant constraints",
+   "verbatim_quote": "At long sequence lengths, the KV cache footprint can rival or exceed the static model weights",
+   "page": "Chapter 6, section 6.7 (book p. 366)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each generated token appends keys and values for every layer that must be retained for later tokens",
+    "Cache size grows with sequence length, batch, layers, and head dimension"
+   ],
+   "breakdown_regime": "Cache compression, paging, and prefix reuse trade memory against recomputation and complexity; when contexts are short, weights dominate again and cache engineering is wasted effort.",
+   "domain": "LLM serving systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE long-context reasoning jobs are capacity-planned on cache, not weights: context length budgets are set from measured cache growth, and prefix reuse across games sharing context is treated as a first-class optimization.",
+    "source_operator": "kv_cache_memory_scaling",
+    "telemetry": "context lengths, cache bytes per token, memory headroom during generation"
+   }
+  },
+  {
+   "primitive_id": "three_dimensions_of_efficiency",
+   "name": "Three dimensions of ML efficiency, one per iron-law factor: algorithmic efficiency cuts FLOPs per sample, compute efficiency cuts seconds per FLOP, data efficiency cuts samples per task",
+   "verbatim_quote": "Algorithmic efficiency reduces computational requirements (FLOPs/Sample) through model design and training procedures.",
+   "page": "Chapter 1, section 1.8 (book p. 30)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three dimensions align with the three factors of equation 1.2",
+    "Compute efficiency raises realized utilization eta_hw and cuts memory and latency stalls; data selection reduces Samples/Task or redirects a fixed budget to more informative examples"
+   ],
+   "breakdown_regime": "Reducing FLOPs per sample alone has little effect on wall-clock time when the memory term dominates seconds per FLOP; the measured binding constraint and deployment budget determine where to intervene first.",
+   "domain": "ML efficiency strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine improvement proposals must name their dimension: a change is either doing less arithmetic per item, executing arithmetic faster, or needing fewer items, and proposals that cannot name one are not efficiency work. The binding constraint measurement decides which dimension gets the next investment.",
+    "source_operator": "three_dimensions_of_efficiency",
+    "telemetry": "FLOPs per item, realized utilization, samples required to target quality, per release"
+   }
+  },
+  {
+   "primitive_id": "data_parallel_allreduce",
+   "name": "Data parallelism: each device holds a complete model replica, processes a different slice of the batch, and gradients are summed across replicas through an AllReduce collective",
+   "verbatim_quote": "In data parallelism, each device holds a complete replica of the model and processes a different slice of the batch, summing every replica's gradients after the backward pass through an AllReduce collective.",
+   "page": "Part II, distributed training discussion (Chapters 7-8)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The model fits on one device; scaling is over data, not model size",
+    "All replicas must stay synchronized, so communication cost grows with replica count and gradient size"
+   ],
+   "breakdown_regime": "When the model exceeds device memory, data parallelism alone fails and must combine with pipeline or tensor parallelism; AllReduce bandwidth can also become the binding term at large replica counts.",
+   "domain": "distributed training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI batch workloads such as corpus-wide feature extraction shard by data with replicated state and a reduction step, mirroring data parallelism, and the reduction bandwidth is budgeted as part of the job rather than discovered at scale.",
+    "source_operator": "data_parallel_allreduce",
+    "telemetry": "shard counts, reduction times, per-device memory, scaling efficiency curves"
+   }
+  },
+  {
+   "primitive_id": "pipeline_and_tensor_parallelism",
+   "name": "Pipeline and tensor parallelism: pipeline parallelism assigns different layer groups to different devices and passes activations between them; tensor parallelism splits individual tensor operations across devices",
+   "verbatim_quote": "In pipeline parallelism, devices hold different groups of layers and pass activations between them; in tensor parallelism, individual tensor operations split across devices.",
+   "page": "Part II, distributed training discussion (Chapters 7-8)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Frameworks express device ownership, transfers, and synchronization through named device groups while preserving the model's logical structure",
+    "The split dimension is chosen by where the model does not fit or where communication is cheapest"
+   ],
+   "breakdown_regime": "Pipelines suffer bubbles when stages are unbalanced, and tensor splits pay communication on every operation, so both forms trade the memory problem for a scheduling and bandwidth problem.",
+   "domain": "distributed training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's multi-stage reasoning pipeline is load-balanced with the same awareness: stage boundaries are placed where hand-off payloads are small, and stage times are equalized, because an unbalanced pipeline idles exactly like a bubbled training pipeline.",
+    "source_operator": "pipeline_and_tensor_parallelism",
+    "telemetry": "stage time profiles, hand-off payload sizes, device utilization per stage"
+   }
+  },
+  {
+   "primitive_id": "data_selection_codesign",
+   "name": "Data selection as data-algorithm co-design: selection controls sample value, training work, and labeling cost, because not every example teaches the model something new",
+   "verbatim_quote": "Explain data selection as data-algorithm co-design that controls sample value, training work, and labeling cost",
+   "page": "Chapter 9, section 9.1, chapter learning objectives (book p. 593)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Examples differ in information value; redundant and corrupt records consume the same forward pass, backward pass, and optimizer update as informative ones",
+    "Selection itself costs computation and must be engineered, not improvised"
+   ],
+   "breakdown_regime": "The stock of high-quality human-generated text grows slowly (the data wall), so selection cannot manufacture information that is not in the corpus; aggressive pruning can also remove rare cases the model most needs.",
+   "domain": "data selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE corpus curation treats example selection as a model decision: candidate training items are scored for information value before compute is spent on them, and the selection rule is versioned with the model it feeds.",
+    "source_operator": "data_selection_codesign",
+    "telemetry": "per-example value scores, selection rates, quality before and after selection"
+   }
+  },
+  {
+   "primitive_id": "selection_inequality",
+   "name": "The selection inequality: selection pays only when selection cost plus training on the subset is cheaper than training on the full dataset",
+   "verbatim_quote": "Apply the selection inequality to test whether selection overhead beats full-dataset training cost",
+   "page": "Chapter 9, sections 9.2 and 9.7, equation 9.2 (book p. 655 summary)",
+   "latex": "T_{selection} + T_{train}(D_{subset}) < T_{train}(D_{total})",
+   "symbol_and_unit_ledger": {
+    "T_selection": "time cost of running the selection procedure",
+    "T_train(D_subset)": "training time on the selected subset",
+    "T_train(D_total)": "training time on the full dataset",
+    "D_subset, D_total": "selected subset and full dataset sizes"
+   },
+   "assumptions": [
+    "Costs are compared in time; the chapter's fuller accounting extends to compute, storage, labeling, and energy",
+    "The subset must hold target accuracy for the comparison to be meaningful (data compression ratio is defined at target accuracy)"
+   ],
+   "breakdown_regime": "A selection method with high overhead or a subset that needs extra epochs can violate the inequality while looking virtuous; the test must be run with measured times, not assumed savings.",
+   "domain": "data selection economics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every GSE curation or filtering proposal must pass the selection inequality with measured numbers before adoption: filtering cost plus reduced training cost must beat the unfiltered baseline, or the filter is overhead dressed as optimization.",
+    "source_operator": "selection_inequality",
+    "telemetry": "selection runtimes, subset versus full training times, accuracy at subset"
+   }
+  },
+  {
+   "primitive_id": "unstructured_pruning",
+   "name": "Unstructured pruning removes individual weights while preserving the network architecture, retaining more representational capacity at a given sparsity than coarse structural cuts",
+   "verbatim_quote": "unstructured pruning removes individual weights while preserving the overall network architecture. Because individual connections can be zeroed without sacrificing an entire filter or neuron, unstructured masks retain more representational capacity at a given sparsity ratio than coarse structural cuts.",
+   "page": "Chapter 10, section 10.2.1.2 (book p. 666)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Individual connections can be zeroed without removing a filter or neuron",
+    "The choice matters when preserving task accuracy at high sparsity matters more than keeping tensors dense"
+   ],
+   "breakdown_regime": "Sparse weights only become speed or memory gains on hardware and kernels that exploit sparsity; on dense hardware an unstructured-pruned model can be smaller on disk and no faster in execution.",
+   "domain": "model compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine feature pruning follows the same granularity logic: individual weak signals are masked before whole signal families are cut, because fine-grained removal preserves more reasoning capacity at the same budget, and a pruned signal only counts as savings when the runtime actually skips it.",
+    "source_operator": "unstructured_pruning",
+    "telemetry": "sparsity ratios, accuracy at sparsity, realized latency on target hardware"
+   }
+  },
+  {
+   "primitive_id": "post_training_quantization",
+   "name": "Post-training quantization converts a trained FP32 model directly to INT8 without retraining, using a calibration pass to derive per-group scales and zero-points",
+   "verbatim_quote": "PTQ converts a trained FP32 model directly to INT8 without retraining.",
+   "page": "Chapter 10, section 10.3, Figure 10.20 and Algorithm 10.1 (book p. 709)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A representative calibration set is run through the model while observers record per-group value distributions",
+    "Clipping ranges are selected by a stated method (max, entropy, or percentile) before scales and zero-points are derived"
+   ],
+   "breakdown_regime": "If accuracy falls below the production threshold, ranges must widen, granularity must change, or the model must move to quantization-aware training; PTQ is not guaranteed to fit the deployment budget at target quality.",
+   "domain": "model compression",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE model exports for constrained serving follow the PTQ pattern: a calibration set representative of live traffic sets the numeric ranges, and export is gated on a production accuracy threshold, with finer granularity as the first remedy rather than abandonment.",
+    "source_operator": "post_training_quantization",
+    "telemetry": "calibration set composition, per-group ranges, accuracy delta after quantization"
+   }
+  },
+  {
+   "primitive_id": "activation_quantization",
+   "name": "Activation quantization maps layer outputs to a lower-precision representation during inference, cutting intermediate payloads and arithmetic cost while introducing error between layers",
+   "verbatim_quote": "Activation quantization maps layer outputs to a lower-precision representation during inference.",
+   "page": "Chapter 10, section 10.3 (book p. 698)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hardware has an efficient integer path for the benefit to materialize",
+    "Weights are accumulated in higher precision (32-bit registers in the book's INT8 example) before requantization"
+   ],
+   "breakdown_regime": "Error compounds across layers, so a network whose weights quantize cleanly can still fail on activations; benefits are greatest where intermediate payloads dominate, not uniformly.",
+   "domain": "model compression",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Intermediate representations in the reasoning pipeline are precision-managed the same way: bulky intermediate state is stored at the lowest precision that downstream stages tolerate, with error measured at the end of the chain rather than assumed away at each step.",
+    "source_operator": "activation_quantization",
+    "telemetry": "intermediate payload sizes, per-layer error measurements, end-to-end accuracy"
+   }
+  },
+  {
+   "primitive_id": "dark_knowledge_distillation",
+   "name": "Dark knowledge: a teacher's output distribution carries inter-class correlations that a one-hot label destroys, and distillation transfers that structure to the student",
+   "verbatim_quote": "Whereas a one-hot ground-truth label assigns a probability of one exclusively to the correct class, a teacher's distribution keeps the inter-class correlations known as dark knowledge.",
+   "page": "Chapter 10, model compression distillation discussion (book p. 657)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The teacher's softened output distribution is available as a training target (distillation temperature appears in the book's notation)",
+    "The student has capacity to represent the transferred correlations"
+   ],
+   "breakdown_regime": "Distillation transfers the teacher's errors and biases along with its knowledge, and offline distillation targets cost storage per sample; a student trained on soft targets still needs hard-label grounding.",
+   "domain": "model compression and knowledge transfer",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI model compression and model-to-model teaching use distributional targets rather than hard verdicts wherever a teacher exists, because the relative confidence structure is the information; hard labels are kept as the grounding check on what the teacher believes.",
+    "source_operator": "dark_knowledge_distillation",
+    "telemetry": "teacher-student agreement, calibration of student outputs, accuracy gap to teacher"
+   }
+  },
+  {
+   "primitive_id": "mixed_precision_separation",
+   "name": "Mixed precision separates operation precision from weight storage: autocast selects precision per operation while master weight copies and gradient scaling are managed separately",
+   "verbatim_quote": "Operation precision and weight storage are separate choices, so mixed precision also changes how many copies of each parameter training keeps.",
+   "page": "Part II, mixed-precision training passage with torch.amp listing (Chapters 7-8)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Frameworks automatically select precision per operation under autocast, and a gradient scaler preserves small gradients in low precision",
+    "Numerically sensitive operations stay in higher precision"
+   ],
+   "breakdown_regime": "Low precision without loss scaling underflows small gradients, and the extra master copies raise memory use, so mixed precision is a measured trade, not a free speedup.",
+   "domain": "training systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine numeric pipelines declare precision per stage rather than globally: fast approximate stages run reduced precision, accumulation and final scoring run full precision, and the memory cost of master copies is budgeted explicitly.",
+    "source_operator": "mixed_precision_separation",
+    "telemetry": "per-operation precision maps, gradient scale factors, memory per parameter copy"
+   }
+  },
+  {
+   "primitive_id": "three_physical_walls",
+   "name": "Three physical walls bound deployment placement: the light barrier limits remote responsiveness, the power wall restricts sustained throughput, and the memory wall caps data transfer",
+   "verbatim_quote": "The light barrier limits remote responsiveness, the power wall restricts sustained throughput, and the memory wall caps data transfer.",
+   "page": "Chapter 2, section 2.2 (book p. 52)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Where a system runs changes the operational terms the hardware offers, which changes what the hardware can offer the model",
+    "The walls are physics, not engineering backlog: signaling speed, thermodynamics, and memory signaling"
+   ],
+   "breakdown_regime": "Placement can trade one wall against another (moving compute to data relaxes the light and memory terms but tightens the power and capacity terms), so the walls constrain jointly, not independently.",
+   "domain": "deployment systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSI deployment decisions are argued in wall terms: any proposal to centralize or distribute computation must state which wall it relaxes and which it tightens, with numbers, before placement is approved.",
+    "source_operator": "three_physical_walls",
+    "telemetry": "round-trip latencies, sustained power envelopes, memory bandwidth at each tier"
+   }
+  },
+  {
+   "primitive_id": "return_on_compute",
+   "name": "Return on compute: the D.A.M taxonomy organizes diagnosis, the degradation equation and the iron law quantify trade-offs, and efficiency together with return on compute guides which interventions to choose",
+   "verbatim_quote": "The D·A·M taxonomy organizes that diagnosis, the degradation equation and the iron law quantify the trade-offs, and efficiency together with return on compute guides the choice of interventions.",
+   "page": "Chapter 16, conclusion synthesis (book p. 1227)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Interventions compete for the same engineering and compute budget, so they are ranked by return, not by local elegance",
+    "Diagnosis precedes intervention: the taxonomy tells you which axis an intervention moves"
+   ],
+   "breakdown_regime": "Return estimates rest on measured baselines; without the iron-law accounting of where time and quality actually go, return on compute degenerates into opinion about which optimization matters.",
+   "domain": "ML systems strategy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSI engineering planning ranks candidate work by expected return on compute and engineering time, using the same diagnostic order: name the axis, quantify the trade-off with the iron law or the degradation equation, then fund the highest-return intervention.",
+    "source_operator": "return_on_compute",
+    "telemetry": "intervention cost estimates, measured gains per intervention, planning rankings"
+   }
+  },
+  {
+   "primitive_id": "serving_inversion",
+   "name": "The serving inversion: training amortizes fixed costs across millions of examples, while serving pays the full fixed cost on every query under a per-request latency budget",
+   "verbatim_quote": "Training amortizes hardware initialization and weight streaming across millions of examples; serving pays its full fixed cost on every query",
+   "page": "Chapter 13, section 13.1 (book p. 975)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training maximizes aggregate throughput across large scheduled batches; serving answers individual heterogeneous requests under strict latency deadlines",
+    "Network ingress, serialization, preprocessing, queueing, and postprocessing all spend from the same end-to-end latency budget as the model"
+   ],
+   "breakdown_regime": "Capacity provisioned for average traffic collapses at peaks, and capacity provisioned for peaks sits idle and costly the rest of the day; the inversion means training optimizations routinely fail to transfer to serving.",
+   "domain": "model serving",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "GSE serving work is budgeted per request, not per batch: fixed costs such as model loading, feature assembly, and serialization are measured on the single-request path, because that is the path users experience, and batch benchmarks are not accepted as serving evidence.",
+    "source_operator": "serving_inversion",
+    "telemetry": "per-request latency breakdowns, fixed cost per query, peak versus average load curves"
+   }
+  },
+  {
+   "primitive_id": "benchmark_production_gap",
+   "name": "The benchmark-production gap: the difference between performance under the conditions a measurement fixed and performance under the conditions met in deployment; benchmarking exists to measure and narrow it before deployment pays for it",
+   "verbatim_quote": "The benchmark-production gap is the difference between how a machine learning system performs under the conditions a measurement fixed and how it performs under the conditions it meets in deployment.",
+   "page": "Chapter 12, section 12.1 (book p. 873)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every engineering claim about speed, size, or energy is a number measured somewhere: warm or cold accelerator, batch of 256 or batch of one, curated inputs or live inputs",
+    "Benchmarking tests claims against representative evidence rather than peak specifications alone (Definition 12.1)"
+   ],
+   "breakdown_regime": "Stage-local favorable numbers interact once stages run together under real load, so a benchmark that fixes unrealistic conditions manufactures confidence; the gap is only narrowed by making measured conditions match deployed ones.",
+   "domain": "benchmarking and evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "GSE validation standards require production-shaped benchmarks: cold starts, realistic batch sizes, and live-like input distributions, and any performance claim measured under fixed synthetic conditions is labeled with its conditions until re-measured under deployment conditions.",
+    "source_operator": "benchmark_production_gap",
+    "telemetry": "benchmark condition sheets, production versus benchmark metric deltas, cold versus warm timings"
+   }
+  },
+  {
+   "primitive_id": "speculative_decoding",
+   "name": "Speculative decoding: a small, fast draft model proposes a block of candidate tokens over sequential decode steps, and the large target model evaluates the candidates in a single forward pass",
+   "verbatim_quote": "small, fast draft model runs 𝛾 sequential decode steps to propose a block of 𝛾",
+   "page": "Chapter 13, section 13.9, LLM Serving (book p. 1042)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The draft model is cheap enough that proposing gamma candidates costs less than one target-model decode step per token",
+    "Verification by the target model preserves the target's output distribution when acceptance rules are followed"
+   ],
+   "breakdown_regime": "When the draft and target disagree often, acceptance rates collapse and the draft's work is wasted; gains depend on the draft-target alignment for the actual workload, not on the mechanism alone.",
+   "domain": "LLM serving optimization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The reasoning engine uses the same propose-and-verify shape for expensive inference: a cheap pass drafts candidate conclusions over several steps, and the full reasoning pass verifies them in one sweep, so verification cost is paid once per block instead of once per step.",
+    "source_operator": "speculative_decoding",
+    "telemetry": "draft acceptance rates, tokens per forward pass, latency per generated token"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "8c1a5f1e756596e2-t1",
+   "think": "Introduction to Machine Learning Systems is a textbook about a single uncomfortable fact: a trained model is the smallest part of a machine learning system, and the system around it decides whether the model matters. Reddi builds the whole book on the Data, Algorithm, Machine triad. Every task is factored into samples times operations per sample times seconds per operation, and every failure is traced to one of those axes or to the interfaces between them. The iron law then unpacks time into memory movement, arithmetic, and latency overhead, which gives the reader a accounting system rather than a bag of tips. That accounting discipline is the book's real contribution. A training stall, a serving timeout, and a silent accuracy collapse look like different problems, but the book forces each one into the same ledger: which term grew, which axis owns it, and what measurement proves it. The lifecycle chapters extend the ledger across time. Data preparation decisions cascade into training and deployment, constraints propagate around the loop, and feedback from monitoring routes work back to specific stages rather than triggering generic retraining. Data is treated as code because a feature computed two ways is a behavior defect with no line of code to blame, and data gravity prices the movement of that data in volume over bandwidth. The development chapters ground the abstractions: gradient descent as the parameter update everything else serves, attention as the operator whose memory behavior reshapes serving, and parallelism as three different answers to the question of what to split. The optimization chapters are where the book is most distinctive. Data selection is framed as economics with an inequality that a selection method must satisfy to be worth its overhead. Compression is framed as fitting a deployment budget, with pruning, quantization, and distillation each changing a different property of the model: what it computes, how values are stored, and how it executes. Benchmarking is framed as an honesty discipline: the gap between measured conditions and deployed conditions is where engineering claims go to die, and the chapter insists that claims be tested against representative evidence. Serving inverts training's economics, because fixed costs that amortize across millions of training examples are paid in full on every request, and queueing theory becomes a capacity planning tool rather than a curiosity. Operations closes the loop with silent failure as the default enemy: infrastructure metrics can be perfectly green while prediction quality rots, so evaluation must be continuous and quality must be monitored directly. What this changes for a reasoning engine is substantial. It says the engine is not its model. It is the corpus pipelines, the feature computations, the serving path, the monitoring loop, and the retraining discipline, and each of those deserves the same quantitative treatment the book gives accelerators. It also says optimization is a diagnosis problem before it is an intervention problem: measure which term binds, apply the intervention that moves that term, and verify under production conditions. Where the book breaks is at its own boundaries. Its constants are dense-transformer constants, and sparse or retrieval-heavy systems violate them in instructive ways. Its laws are steady-state laws, and bursty, adversarial, or rapidly shifting workloads spend much of their lives outside steady state. Its treatment of quality is mostly about accuracy-like quantities, and a reasoning system whose output is an argument rather than a label needs a richer notion of degradation. Even so, the framework absorbs those objections gracefully, because the triad and the ledger do not depend on the constants: when a constant changes, the accounting still tells you where to look. That is why the book rewards extraction at the level of laws and inequalities rather than tips. The primitives compose: the product law scopes a job, the iron law budgets it, the roofline classifies its kernels, the selection inequality prices its data, Little's law sizes its serving, and the drift divergence watches it age. A system built from those primitives can explain its own costs, which is the precondition for improving them. Two further habits deserve extraction because they generalize beyond machine learning. The first is the lighthouse method: each chapter anchors its abstractions in one reference system worked end to end, a digit recognizer, a vision network, a mid-size language model, so that every law is forced to survive contact with concrete numbers. Abstractions that cannot price a real workload are exposed immediately, and the reader learns to distrust any principle that has never been made to compute something. The second is the fallacies and pitfalls discipline: every chapter ends by naming the standard misreadings of its own material, which converts the book from a reference into a review instrument, since a design can be checked against the fallacy list before it is built. The energy-movement principle deserves mention alongside the time laws: fetching a value from off-chip memory can cost far more energy than computing with it, so the same data movement term that governs time also governs energy, and minimizing movement is doubly rewarded. Taken together, the book argues that maturity in this field looks like accounting: every quantity that matters has a unit, every claim has a measurement, every measurement has stated conditions, and every system has a ledger in which its costs and its quality are recorded in the same place. A research program that adopts the ledger gains a second benefit almost for free: its postmortems become shorter, because the argument about what went wrong is replaced by a lookup in records the system was already keeping.",
+   "retrocausal_genealogy": "The book's lineage runs through computer architecture's quantitative tradition: the iron law is a direct descendant of the CPU performance equation, the roofline model comes from Williams, Waterman, and Patterson, and Amdahl's law and Little's law are imported whole from performance engineering and queueing theory. On the machine learning side it descends from Sculley and colleagues on hidden technical debt, from Sutton's bitter lesson essay, from Karpathy's Software 2.0 framing, and from the scaling-law literature that made training cost a predictable quantity. The D.A.M triad is the author's synthesis: a way to hold the architecture tradition and the ML tradition in one frame, so that a data problem and a bandwidth problem can be compared in the same units of time and quality.",
+   "theory_of_mind": "The author believes the reader is an engineer who will be trusted with real systems and who has been misled by model-centric training into thinking the model is the work. His model of the domain is that machine learning systems fail at interfaces: between data and algorithm, between training and serving, between measured conditions and deployed conditions, between what infrastructure metrics show and what users experience. He assumes physics is the honest broker: bandwidth, latency, and energy cannot be argued with, so every claim should be reducible to quantities that can be measured. He also assumes scale changes kind, not just degree, which is why a technique that is harmless in a notebook becomes a governing constraint in production, and why the book keeps returning to orders of magnitude.",
+   "cross_layer_veto": "This work vetoes several habits that other layers of a research program may encourage. It vetoes model-only validation: no signal, however strong in isolation, ships on benchmark evidence gathered under conditions unlike deployment. It vetoes unpriced data work: any curation, filtering, or feature layer must pass the selection inequality against measured costs before it is allowed to consume budget. It vetoes infrastructure-green complacency: monitoring layers cannot declare health from host metrics while prediction quality is unmeasured. And it vetoes premature optimization across all layers, because Amdahl's cap and the roofline bound together mean that optimizing a non-binding term is waste regardless of how elegant the optimization is. Any layer proposing work must name the binding term it moves."
+  }
+ ],
+ "universal_lens": "Any complex production system can be read as data times algorithm times machine: a workload factored into how much stuff, how much work per unit of stuff, and how fast the substrate really moves. Around that factorization sit three universal disciplines: price every transformation against the cost of doing nothing, measure under the conditions you will actually face, and monitor the quality of the output itself rather than the health of the machinery, because systems built from learned or negotiated components fail silently in ways their dashboards cannot see.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as its systems curriculum: the D.A.M triad and the iron law as the shared diagnostic language for every research system, data treated as code with release discipline, selection economics applied to corpus building, and benchmark honesty as the standard for evaluating methods before they are taught or published. Its thirteen quantitative principles in the conclusion map directly onto GSI's own principle-driven research program, giving the Institute a ready-made spine for teaching ML systems as engineering rather than as model craft.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operating system for its own improvement: iron-law budgets for every pipeline stage, drift divergence monitors on every signal family with retraining decided by outcome evidence, Little's law capacity planning for serving, the selection inequality as the gate for every data investment, and end-to-end validation under production conditions as the release standard. The book's central claim, that the system is the model, becomes the engine's release doctrine: no model change ships on model-only evidence."
+}
