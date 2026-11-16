@@ -1,9 +1,9 @@
 """Comprehensive Pytest Verification Suite for GSE Week 10 Master Plan Gates.
 
 Drop-in Path:
-    C:\\Users\\Garrett\\Sports\\intelligence\\tests\\test_master_plan_gates.py
+    intelligence/tests/test_master_plan_gates.py
 
-Runs natively under ``pytest -v`` on Windows (``C:\\Users\\Garrett\\Sports``) and also
+Runs natively under ``pytest -v`` on Windows (repo root) and also
 includes a zero-dependency ``unittest`` fallback shim so every test and parametrized
 case executes identically in air-gapped environments where the ``pytest`` wheel is
 not installed.

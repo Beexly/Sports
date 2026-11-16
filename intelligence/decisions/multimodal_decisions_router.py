@@ -1,7 +1,7 @@
 """Multimodal Decisions Router & Confidence-Weighted Opinion Pooling (WP-1).
 
 Drop-in Path:
-    C:\\Users\\Garrett\\Sports\\intelligence\\decisions\\multimodal_decisions_router.py
+    intelligence/decisions/multimodal_decisions_router.py
 
 Implements the critical blocking engineering fixes from ``master_overall_plan.md``
 (WP-1) and ``unified_hivemind_projection_and_membership_plan``:

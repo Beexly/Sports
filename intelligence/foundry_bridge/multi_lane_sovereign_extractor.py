@@ -2,10 +2,10 @@
 """
 Multi-Lane Sovereign Corpus Extractor (Track 2A — Zero-Collision Shard A 4..7 + Vision-OCR Classics).
 
-Reads `C:\\Users\\Garrett\\Sports\\foundry\\foundry.db` strictly in URI read-only mode
-(`mode=ro`) and NEVER mutates `C:\\Users\\Garrett\\Sports`. Writes gatekeeper-validated
+Reads `foundry/foundry.db` strictly in URI read-only mode
+(`mode=ro`) and NEVER mutates the repository root. Writes gatekeeper-validated
 `COMPLETE` primitive JSON artifacts into:
-  `C:\\Users\\Garrett\\Sports_prepack_audit_wt\\foundry\\artifacts\\primitives\\<book_id>.json`
+  `<prepack-worktree>/foundry/artifacts/primitives/<book_id>.json`
 
 Zero-collision partition contract:
   - Rescued Vision-OCR Tier-A classics (`ocr_rescue/<book_id>_vision_ocr_core.txt`):
@@ -44,10 +44,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-SHARED_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
-SHARED_GATEKEEPER_PY = Path(r"C:\Users\Garrett\Sports\foundry\gatekeeper.py")
-SHARED_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
-SHARED_ENV_LOCAL = Path(r"C:\Users\Garrett\Sports\.env.local")
+SHARED_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
+SHARED_GATEKEEPER_PY = REPO_ROOT / "foundry" / "gatekeeper.py"
+SHARED_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
+SHARED_ENV_LOCAL = REPO_ROOT / ".env.local"
 HERMES_ENV_FILES: Tuple[Path, ...] = (
     Path.home() / "AppData" / "Local" / "hermes" / ".env",
     Path.home() / ".hermes" / ".env",
@@ -112,7 +112,7 @@ def _load_shard_b_source_sets(
 OCR_RESCUE_DIR = (
     REPO_ROOT / "docs" / "engine" / "research" / "2026-11-13" / "ocr_rescue"
 )
-OCR_VENV_PYTHON = Path(r"C:\Users\Garrett\ocr-venv\Scripts\python.exe")
+OCR_VENV_PYTHON = Path(os.environ.get("OCR_VENV_PYTHON", str(Path.home() / "ocr-venv" / "Scripts" / "python.exe")))
 
 OCR_CLASSICS_IDS: Tuple[str, ...] = (
     "3d7cafefb6ffa2ae",
@@ -373,7 +373,7 @@ def _valid_domains(gatekeeper_mod: Any) -> set[str]:
 def compute_gatekeeper_sha256(file_path: Path) -> str:
     """
     Compute the exact Foundry gatekeeper digest (`sha256(str(size) + bytes)`),
-    matching `C:\\Users\\Garrett\\Sports\\foundry\\gatekeeper.py` lines 140-149.
+    matching `foundry/gatekeeper.py` lines 140-149.
     """
     size = file_path.stat().st_size
     h = hashlib.sha256()
@@ -686,7 +686,7 @@ def extract_pdf_pages_fast(file_path: Path, max_pages: int = 36) -> Tuple[int, D
         pass
 
     if not OCR_VENV_PYTHON.exists():
-        raise RuntimeError("PyMuPDF unavailable in current python and C:\\Users\\Garrett\\ocr-venv missing")
+        raise RuntimeError("PyMuPDF unavailable in current python and ocr-venv missing")
 
     helper = (
         "import json, sys, pymupdf; "
@@ -794,7 +794,7 @@ def extract_all_pdf_pages(file_path: Path) -> Tuple[int, Dict[int, str]]:
         return 1, {}
 
     if not OCR_VENV_PYTHON.exists():
-        raise RuntimeError("PyMuPDF unavailable in current python and C:\\Users\\Garrett\\ocr-venv missing")
+        raise RuntimeError("PyMuPDF unavailable in current python and ocr-venv missing")
 
     with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tf:
         tmp_json = Path(tf.name)

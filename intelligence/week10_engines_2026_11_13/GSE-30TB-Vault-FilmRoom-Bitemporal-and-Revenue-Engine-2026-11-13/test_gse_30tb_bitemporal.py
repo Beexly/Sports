@@ -341,7 +341,7 @@ class TestGSEBitemporalAndFilmRoomPipeline(unittest.TestCase):
 
         # 2. Verify C:\ disk protection guard
         with self.assertRaises(gse.LocalCDiskProtectionError):
-            gse.FilmRoom30TBWorker(ephemeral_work_dir=r"C:\Users\Garrett\temp_video_dump")
+            gse.FilmRoom30TBWorker(ephemeral_work_dir=r"C:\temp_video_dump")
 
         # 3. Verify 138-point NFL grid & 8-DoF Hartley Point+Line Homography accuracy
         grid = gse.build_nfl_138_field_grid()

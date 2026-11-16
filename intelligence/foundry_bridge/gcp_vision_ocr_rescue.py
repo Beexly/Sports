@@ -31,10 +31,9 @@ DEFAULT_DPI = 180
 BATCH_IMAGES_PER_REQUEST = 5
 VISION_ANNOTATE_URL = "https://vision.googleapis.com/v1/images:annotate"
 DEFAULT_PROJECT_ID = "galaxysportsedge"
-DEFAULT_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
-DEFAULT_OUT_DIR = Path(
-    r"C:\Users\Garrett\Sports_prepack_audit_wt\docs\engine\research\2026-11-13\ocr_rescue"
-)
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
+DEFAULT_OUT_DIR = Path.home() / "Sports_prepack_audit_wt" / "docs" / "engine" / "research" / "2026-11-13" / "ocr_rescue"
 
 # Priority page budgets per Tier-A blocked book (sum = 107 <= MAX_VISION_PAGES_PER_RUN=120):
 # Full 17-page rescue for Dixon & Coles (1997) plus TOC & opening theoretical foundations for the 4 classics.

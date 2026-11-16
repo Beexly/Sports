@@ -57,9 +57,7 @@ def _resolve_bq_executable() -> str:
     found = shutil.which("bq.cmd") or shutil.which("bq")
     if found:
         return found
-    fallback = Path(
-        r"C:\Users\Garrett\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin\bq.cmd"
-    )
+    fallback = Path.home() / "AppData" / "Local" / "Google" / "Cloud SDK" / "google-cloud-sdk" / "bin" / "bq.cmd"
     if fallback.is_file():
         return str(fallback)
     return "bq.cmd" if os.name == "nt" else "bq"

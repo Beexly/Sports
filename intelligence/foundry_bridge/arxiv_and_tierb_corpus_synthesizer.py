@@ -2,7 +2,7 @@
 r"""ArXiv Program + Sovereign Tier-A/Tier-B Equation & Trainer-Feed Synthesizer.
 
 Implements `META-CORPUS-ARXIV-TIERB-01` under MIND-FIRST + WIRE-FIRST SEQUENCING:
-  - Reads `C:\\Users\\Garrett\\Sports\\foundry\\foundry.db` strictly in URI read-only mode
+  - Reads `foundry/foundry.db` strictly in URI read-only mode
     (`?mode=ro`) to audit Shard A `0..3`, `4..7`, and `8..f` across Tier-A and Tier-B.
   - Reads all Gatekeeper-validated Sovereign primitive artifacts (`COMPLETE` + fail-closed
     `INSUFFICIENT_SOURCE_ACCESS` stub receipts) across the worktree (precedence) and shared
@@ -44,9 +44,9 @@ from intelligence.foundry_bridge.sovereign_to_cognitive_router_wiring import (
     positive_part_james_stein_shrink,
 )
 
-SHARED_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
-SHARED_GATEKEEPER_PY = Path(r"C:\Users\Garrett\Sports\foundry\gatekeeper.py")
-SHARED_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
+SHARED_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
+SHARED_GATEKEEPER_PY = REPO_ROOT / "foundry" / "gatekeeper.py"
+SHARED_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
 WT_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
 
 DEFAULT_ARXIV_DOCS_DIR = REPO_ROOT / "docs" / "arxiv-program"

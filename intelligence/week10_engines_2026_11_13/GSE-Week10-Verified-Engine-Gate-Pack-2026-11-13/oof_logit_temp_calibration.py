@@ -1,7 +1,7 @@
 """OOF Logit-Temperature Calibration, 3-Class Push EV, Purged Splitter & Barber Conformal Gate (WP-2).
 
 Drop-in Path:
-    C:\\Users\\Garrett\\Sports\\intelligence\\calibration\\oof_logit_temp_calibration.py
+    intelligence/calibration/oof_logit_temp_calibration.py
 
 Implements the critical blocking statistical and calibration gates from
 ``master_overall_plan.md`` (WP-2) and ``unified_hivemind_projection_and_membership_plan``:
