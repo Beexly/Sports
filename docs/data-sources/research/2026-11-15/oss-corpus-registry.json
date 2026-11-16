@@ -1,0 +1,479 @@
+{
+  "schema_version": "2026-11-15",
+  "doctrine": "INGEST-AND-LEARN (never SKIP/DEAD; untested items default to UNTESTED_QUEUED_FOR_EVALUATION)",
+  "total_entries": 59,
+  "entries": [
+    {
+      "id": 1,
+      "url": "https://github.com/bregman-arie/devops-exercises",
+      "category": "devops-runbooks",
+      "gse_target_surface": "docs/ops/runbooks/pregame-incident-and-recovery-runbook.md",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 2,
+      "url": "https://github.com/localstack/localstack",
+      "category": "local-cloud-emulator",
+      "gse_target_surface": "docker-compose.localstack.yml & src/gse_engine/storage/receipts_s3.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 3,
+      "url": "https://github.com/LibreChat-AI/LibreChat",
+      "category": "agent-workspace-ui",
+      "gse_target_surface": "apps/web agent chat & streaming patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 4,
+      "url": "https://github.com/serverless/serverless",
+      "category": "serverless-iac",
+      "gse_target_surface": "workers/ & docs/ops",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 5,
+      "url": "https://github.com/open-guides/og-aws",
+      "category": "aws-reference-architecture",
+      "gse_target_surface": "docs/adr & LocalStack/R2 parity boundary",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 6,
+      "url": "https://github.com/google/osv.dev",
+      "category": "polyglot-supply-chain-security",
+      "gse_target_surface": "scripts/ops/osv-polyglot-audit.mjs",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 7,
+      "url": "https://github.com/google/ffn",
+      "category": "volumetric-segmentation-research",
+      "gse_target_surface": "gse-ml-service vision/tracking evaluation queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 8,
+      "url": "https://github.com/google/hdmitsuba",
+      "category": "physically-based-rendering-research",
+      "gse_target_surface": "gse visual rendering evaluation queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 9,
+      "url": "https://github.com/google/esmeralda",
+      "category": "simulation-data-research",
+      "gse_target_surface": "gse synthetic data evaluation queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 10,
+      "url": "https://github.com/google/gvisor",
+      "category": "container-sandbox-isolation",
+      "gse_target_surface": "untamed python model execution hardening",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 11,
+      "url": "https://github.com/google/open-location-code-swift",
+      "category": "geospatial-swift-sdk",
+      "gse_target_surface": "apps/mobile stadium weather geofencing",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 12,
+      "url": "https://github.com/google/XNNPACK",
+      "category": "simd-inference-kernels",
+      "gse_target_surface": "gse-ml-service & mobile on-device inference",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 13,
+      "url": "https://github.com/google/orbax",
+      "category": "jax-checkpointing",
+      "gse_target_surface": "src/gse_engine/storage/trajectory_checkpoint.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 14,
+      "url": "https://github.com/google/nearby",
+      "category": "mobile-connectivity",
+      "gse_target_surface": "apps/mobile watch-party discovery queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 15,
+      "url": "https://github.com/google/site-kit-wp",
+      "category": "seo-analytics-integration",
+      "gse_target_surface": "apps/web SEO & analytics instrumentation",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 16,
+      "url": "https://github.com/google/j2cl",
+      "category": "cross-language-transpiler",
+      "gse_target_surface": "shared domain logic portability queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 17,
+      "url": "https://github.com/google/cybernetic-agent-governance-engine",
+      "category": "agent-governance",
+      "gse_target_surface": "packages/governed/src/publication-gate.ts & src/gse_engine/gates/conjunction.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 18,
+      "url": "https://github.com/google/filament-assets",
+      "category": "pbr-3d-assets",
+      "gse_target_surface": "apps/web Redline 3D stadium visuals",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 19,
+      "url": "https://github.com/google/three-live",
+      "category": "realtime-3d-web",
+      "gse_target_surface": "apps/web Redline interactive canvas",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 20,
+      "url": "https://github.com/google/mobly",
+      "category": "device-integration-testing",
+      "gse_target_surface": "apps/mobile E2E device harness",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 21,
+      "url": "https://github.com/google/moodle-on-gcp",
+      "category": "gcp-reference-deployment",
+      "gse_target_surface": "gse-ml-service GCP deployment reference",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 22,
+      "url": "https://github.com/google/magika",
+      "category": "content-type-detection",
+      "gse_target_surface": "src/gse_engine/ingestion/feed_guard.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 23,
+      "url": "https://github.com/google/zx",
+      "category": "js-cli-automation",
+      "gse_target_surface": "scripts/ops/ shell ergonomics",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 24,
+      "url": "https://github.com/google/styleguide",
+      "category": "engineering-standards",
+      "gse_target_surface": "CODING_STANDARDS.md",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 25,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/Rguide.md",
+      "category": "r-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md (nflfastR research scripts)",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 26,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/pyguide.md",
+      "category": "python-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & pyproject.toml ruff Google docstrings",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 27,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/tsguide.md",
+      "category": "typescript-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & strict TS packages",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 28,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/jsoncguide.md",
+      "category": "jsonc-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & JSON config schemas",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 29,
+      "url": "https://google.github.io/swift/",
+      "category": "swift-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & apps/mobile iOS extensions",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 30,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/jsguide.md",
+      "category": "javascript-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & scripts/ops/*.mjs",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 31,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/csharpguide.md",
+      "category": "csharp-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 32,
+      "url": "https://github.com/google/styleguide/blob/gh-pages/cppguide.md",
+      "category": "cpp-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md & future native extensions",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 33,
+      "url": "https://angular.dev/style-guide",
+      "category": "angular-style-guide",
+      "gse_target_surface": "CODING_STANDARDS.md reference corpus",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 34,
+      "url": "https://github.com/google/googletest",
+      "category": "cpp-testing-framework",
+      "gse_target_surface": "native kernel unit testing queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 35,
+      "url": "https://github.com/google/leveldb",
+      "category": "embedded-kv-storage",
+      "gse_target_surface": "high-speed local snap cache evaluation queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 36,
+      "url": "https://github.com/google/langextract",
+      "category": "source-grounded-extraction",
+      "gse_target_surface": "src/gse_engine/ingestion/beat_langextract.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 37,
+      "url": "https://github.com/google/python-fire",
+      "category": "python-cli-ergonomics",
+      "gse_target_surface": "src/gse_engine/cli.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 38,
+      "url": "https://github.com/google/flatbuffers",
+      "category": "zero-copy-serialization",
+      "gse_target_surface": "src/gse_engine/storage/trajectory_checkpoint.py (mmap binary tensors)",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 39,
+      "url": "https://github.com/google/skills",
+      "category": "agent-skill-catalog",
+      "gse_target_surface": "CLAUDE.md & agent skill workflows",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 40,
+      "url": "https://github.com/googleapis/google-cloud-python",
+      "category": "gcp-python-sdks",
+      "gse_target_surface": "src/gse_engine/cloud/gcp_warehouse.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 41,
+      "url": "https://github.com/googleapis/google-cloud-go",
+      "category": "gcp-go-sdks",
+      "gse_target_surface": "future high-throughput ingestion workers",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 42,
+      "url": "https://github.com/googleapis/google-cloud-java",
+      "category": "gcp-java-sdks",
+      "gse_target_surface": "polyglot GCP SDK corpus",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 43,
+      "url": "https://github.com/googleapis/google-cloud-node",
+      "category": "gcp-node-sdks",
+      "gse_target_surface": "apps/web & packages/* cloud adapters",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 44,
+      "url": "https://github.com/GoogleCloudPlatform/python-docs-samples",
+      "category": "gcp-python-recipes",
+      "gse_target_surface": "src/gse_engine/cloud/gcp_warehouse.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 45,
+      "url": "https://github.com/antonitz/google-cloud-associate-cloud-engineer",
+      "category": "gcp-ops-training",
+      "gse_target_surface": "docs/ops/runbooks/pregame-incident-and-recovery-runbook.md",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 46,
+      "url": "https://github.com/googleapis/google-cloud-ruby",
+      "category": "gcp-ruby-sdks",
+      "gse_target_surface": "polyglot GCP SDK corpus",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 47,
+      "url": "https://github.com/rclone/rclone",
+      "category": "cold-object-sync",
+      "gse_target_surface": "scripts/ops/rclone-r2-offload.mjs",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 48,
+      "url": "https://github.com/GoogleCloudPlatform/generative-ai",
+      "category": "gemini-genkit-patterns",
+      "gse_target_surface": "src/gse_engine/flows/matchup_prose.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 49,
+      "url": "https://github.com/firebase/functions-samples",
+      "category": "event-driven-functions",
+      "gse_target_surface": "webhook & push notification fanout queue",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+    },
+    {
+      "id": 50,
+      "url": "https://github.com/AppFlowy-IO/AppFlowy",
+      "category": "local-first-knowledge-workspace",
+      "gse_target_surface": "internal research notebook & knowledge-base patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 51,
+      "url": "https://github.com/toeverything/AFFiNE",
+      "category": "local-first-canvas-workspace",
+      "gse_target_surface": "slate board collaborative research canvas patterns",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 52,
+      "url": "https://github.com/hcengineering/platform",
+      "category": "integrated-project-crm",
+      "gse_target_surface": "docs/agents/issue-tracker.md workflow model",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 53,
+      "url": "https://github.com/makeplane/plane",
+      "category": "issue-and-sprint-tracker",
+      "gse_target_surface": ".scratch/master-plan-v3/issues/ triage model",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 54,
+      "url": "https://github.com/leapwork/play-antigravity-plugin",
+      "category": "e2e-automation-antigravity",
+      "gse_target_surface": "Leapwork Play Antigravity integration",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 55,
+      "url": "https://github.com/leapwork/Jenkins-plugin",
+      "category": "e2e-ci-jenkins",
+      "gse_target_surface": "CI/CD test runner corpus",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 56,
+      "url": "https://github.com/leapwork/Azure-DevOps-plugin",
+      "category": "e2e-ci-azure",
+      "gse_target_surface": "CI/CD test runner corpus",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 57,
+      "url": "https://github.com/leapwork/Github-action",
+      "category": "e2e-ci-github-actions",
+      "gse_target_surface": "docs/ops/ci-templates/leapwork-and-osv.yml",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 58,
+      "url": "https://github.com/leapwork/play-agent-plugins",
+      "category": "e2e-agent-plugins",
+      "gse_target_surface": "Leapwork Play capability automation",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "PHASE_3_ADAPTER"
+    },
+    {
+      "id": 59,
+      "url": "https://github.com/Arize-ai/arize-skills",
+      "category": "ml-observability-and-evals",
+      "gse_target_surface": "src/gse_engine/observability/arize_tracing.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "status": "WIRED_V3"
+    }
+  ]
+}

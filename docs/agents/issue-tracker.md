@@ -1,15 +1,40 @@
-# Week 10 Sunday Dual-Lock Issue Tracker
+# Issue tracker: Local Markdown (primary) + GitHub Issues mirror (`Beexly/Sports`)
 
-This concise pointer ledger tracks active workstreams for `AUTON-WEEK10-DUAL-LOCK-25` on branch `feat/week10-sunday-dual-lock-2026-11-15` (base `2264336ff`), keeping full logs out of context.
+Active specs and vertical-slice issues for this repo live primarily as markdown files in `.scratch/`, with optional GitHub Issues synchronization via `gh` when working online.
 
-- Canonical task ledger: [AGENT_LEDGER.md](file:///C:/Users/Garrett/Sports-wt-triage/docs/ops/AGENT_LEDGER.md) (`AUTON-WEEK10-DUAL-LOCK-25`)
-- Canonical vocabulary: [GLOSSARY.md](file:///C:/Users/Garrett/Sports-wt-triage/GLOSSARY.md)
-- Standing cadence rule (Week 11+): Full 14-game 10,000-world workflows, DFS packets, storefront sync, and Owner's Master Call-Sheet MUST be completed and locked by Friday at the latest; Sunday 10:32 AM CST is strictly a rapid delta-only swap on newly ruled-out starters.
+## Local Markdown Conventions (Primary)
 
-## Workstreams
-1. `ISSUE-W10-00` (DONE): Reclaim disposable disk caches (`C:` free space `3.52 GiB >= 3.5 GiB`) without removing worktrees, tracked files, `data/`, or `foundry/artifacts/`.
-2. `ISSUE-W10-01` (DONE): Integrate 6 unmerged 48h branches & refresh corpus compilation (`07_corpus_wired_calibration_and_hold_gate_receipt.json`).
-3. `ISSUE-W10-02` (DONE): Wire Stage-2 `corpus_conditioner` into `gse_connected_game_workflow.py` (TDD) & serialize real two-sided `over_american`/`under_american` in `build_week10_game_boards.py` (never fabricate `-110/-110`).
-4. `ISSUE-W10-03` (DONE): Purge `Malik Davis` / stale `DAL @ IND` from `coach-writeup-engine.ts`, repoint hardcoded `36-13-1`/`47-19-1` to `@/lib/ledger/public-record`, publish pick-free SEO/social pack & owner cutover wizard.
-5. `ISSUE-W10-04` (DONE): Lock 1 (`ee96a5b4c` pushed to `origin/main` -- `12` unstarted Week 10 games through 6-stage workflow at `n_sims=10000`, `4` remaining live DK DFS slates with `NE @ DET` Munich sealed, guardrails, production Next.js build verified).
-6. `ISSUE-W10-05` (DONE): Lock 2 after official NFL Noon 90-minute inactives (`353` total excluded / `49` newly ruled-out Noon players incl. Jordan Addison, Ja'Tavion Sanders, Wyatt Teller, Kevin Zeitler + `177` Bovada line/juice moves; re-ran 7 Noon games at `n_sims=10000` + refreshed aggregates, rebuilt `156416` & `156418`, synced storefront, and generated Owner's Master Call-Sheet).
+- One feature per directory: `.scratch/<feature-slug>/`
+- The spec is `.scratch/<feature-slug>/spec.md`
+- Implementation issues are one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`, never a single combined tickets file
+- Triage state is recorded as a `Status:` line near the top of each issue file (see `docs/agents/triage-labels.md` for the role strings)
+- Blocking relationships are declared as `Blocked by: <NN>, <NN>` (or `None (can start immediately)`)
+- Comments and resolution history append to the bottom of the file under a `## Comments` heading
+
+## GitHub Mirror Conventions (`gh` CLI on `Beexly/Sports`)
+
+When mirroring epics or blockers to GitHub Issues:
+- Verify repo ownership first: `gh repo view --json nameWithOwner` must resolve to `Beexly/Sports`.
+- **Create an issue**: `gh issue create --title "..." --body "..."`
+- **Read an issue**: `gh issue view <number> --json number,title,body,labels,comments`
+- **Blocking**: `gh issue edit <child> --add-blocked-by <blocker>` (`gh` 2.94+)
+- **PRs as a request surface: no.**
+
+## When a skill says "publish to the issue tracker"
+
+Create files under `.scratch/<feature-slug>/` (creating the directory if needed), and optionally mirror to `Beexly/Sports` via `gh issue create` when connected.
+
+## When a skill says "fetch the relevant ticket"
+
+Read the file at `.scratch/<feature-slug>/issues/<NN>-<slug>.md` (or run `gh issue view <n>` if a `#<number>` GitHub issue was supplied).
+
+## Wayfinding operations
+
+Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.
+
+- **Map**: `.scratch/<effort>/map.md` (the Notes / Decisions-so-far / Fog body).
+- **Child ticket**: `.scratch/<effort>/issues/NN-<slug>.md`, numbered from `01`, with the question in the body. A `Type:` line records `research`/`prototype`/`grilling`/`task`; a `Status:` line records `claimed`/`resolved`.
+- **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
+- **Frontier**: scan `.scratch/<effort>/issues/` for files that are open, unblocked, and unclaimed; first by number wins.
+- **Claim**: set `Status: claimed` and save before any work.
+- **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, then append a context pointer (gist + link) to `map.md`.

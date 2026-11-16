@@ -11,6 +11,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -23,9 +24,15 @@ from typing import Any, Dict, List, Optional
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 INTEL_ROOT = REPO_ROOT / "intelligence"
-for _p in (str(REPO_ROOT), str(INTEL_ROOT)):
+SRC_ROOT = REPO_ROOT / "src"
+for _p in (str(REPO_ROOT), str(INTEL_ROOT), str(SRC_ROOT)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
+
+from gse_engine.gates.conjunction import evaluate_prop_board  # noqa: E402
+from gse_engine.ingestion.feed_guard import verify_feed_payload  # noqa: E402
+from gse_engine.models import TwoSidedPropCandidate  # noqa: E402
+from gse_engine.storage.receipts_s3 import InMemoryObjectStore, S3ReceiptArchiver  # noqa: E402
 
 from foundry_bridge.week10_reasoning_mind_bridge import (
     AUTHORITATIVE_WEEK10_TRUTH_2026_11_13,
@@ -559,6 +566,100 @@ def orchestrate_remaining_slate_stages_0_to_6(
     return summary_packet
 
 
+def run_gse_engine_v3_pipeline_bridge(
+    *,
+    repo_root: Path,
+    season: int,
+    week: int,
+) -> Dict[str, Any]:
+    """Run Stage-1 feed guard, two-sided Class B CAGE gate, and receipt archive on v3 engine."""
+    feed_paths = [
+        repo_root / "data" / "nflverse" / f"stage0_truth_s{season}_w{week}.json",
+        repo_root / "data" / "engine" / f"game_boards_360_s{season}_w{week}.json",
+    ]
+    feeds_checked: List[Dict[str, Any]] = []
+    all_feeds_ok = True
+    for fpath in feed_paths:
+        if not fpath.is_file():
+            continue
+        verdict = verify_feed_payload(fpath.read_bytes(), "json")
+        feeds_checked.append({
+            "path": str(fpath.relative_to(repo_root)).replace("\\", "/"),
+            "ok": verdict.ok,
+            "detected_kind": verdict.detected_kind,
+            "sha256": verdict.sha256,
+        })
+        if not verdict.ok:
+            all_feeds_ok = False
+
+    candidates: List[TwoSidedPropCandidate] = []
+    board360_path = repo_root / "data" / "engine" / f"game_boards_360_s{season}_w{week}.json"
+    if board360_path.is_file():
+        try:
+            raw_board = json.loads(board360_path.read_text(encoding="utf-8"))
+            for board in (raw_board.get("game_boards") or {}).values():
+                for suite_name in ("qb_full_game", "skill_full_game"):
+                    for row in (board.get("suites") or {}).get(suite_name) or []:
+                        if (
+                            row.get("two_sided_valid") is True
+                            and isinstance(row.get("athlete"), str)
+                            and row["athlete"].strip()
+                            and isinstance(row.get("line"), (int, float))
+                            and isinstance(row.get("overOdds"), int)
+                            and isinstance(row.get("underOdds"), int)
+                        ):
+                            candidates.append(
+                                TwoSidedPropCandidate(
+                                    prop_id=f"{row.get('team', 'TM')}:{row['athlete']}:{row.get('market', '')}",
+                                    player_id=f"{row.get('team', 'TM')}_{row['athlete']}",
+                                    player_name=row["athlete"],
+                                    market=str(row.get("market", "prop")),
+                                    line=float(row["line"]),
+                                    side="OVER",
+                                    model_prob=0.50,
+                                    conformal_lower_prob=0.45,
+                                    over_american=int(row["overOdds"]),
+                                    under_american=int(row["underOdds"]),
+                                )
+                            )
+                            if len(candidates) >= 20:
+                                break
+                    if len(candidates) >= 20:
+                        break
+                if len(candidates) >= 20:
+                    break
+        except Exception:
+            candidates = []
+
+    decisions, cage_receipt = evaluate_prop_board(candidates)
+    use_live = os.environ.get("GSE_RECEIPT_LIVE_ARCHIVE") == "1"
+    archiver = S3ReceiptArchiver() if use_live else S3ReceiptArchiver(client=InMemoryObjectStore())
+    key = f"s{season}/w{week}/gse_v3_cage_receipt.json"
+    payload_bytes = json.dumps(
+        {
+            "season": season,
+            "week": week,
+            "policy_id": cage_receipt.policy_id,
+            "payload_sha256": cage_receipt.payload_sha256,
+            "evaluated": len(decisions),
+        },
+        sort_keys=True,
+    ).encode("utf-8")
+    archived = archiver.archive_receipt(key, payload_bytes)
+    verified = archiver.verify_receipt(key, archived.sha256)
+
+    return {
+        "feed_guard_all_ok": all_feeds_ok,
+        "feeds_checked": feeds_checked,
+        "props_audited": len(decisions),
+        "cage_policy_id": cage_receipt.policy_id,
+        "cage_receipt_sha256": cage_receipt.payload_sha256,
+        "archived_key": archived.key,
+        "archived_receipt_sha256": archived.sha256,
+        "receipt_verified": verified,
+    }
+
+
 def run_permanent_sequenced_pipeline(
     *,
     season: int = 2026,
@@ -679,12 +780,17 @@ def run_permanent_sequenced_pipeline(
     )
 
     # ------------------------------------------------------------------
-    # Gate 0B: Bitemporal CSV Remapper + 12 Lessons-Learned Hard Gates
+    # Gate 0B: Bitemporal CSV Remapper + 12 Lessons-Learned Hard Gates + gse_engine v3 bridge
     # ------------------------------------------------------------------
     ensure_default_lessons_seeded(repo_root)
     ll_report = run_all_lessons_learned_gates(repo_root)
     sample_remap = remap_motif_csv_season_stats({"player": "Greg Dortch", "team": "ARI"}, week=resolved_week)
-    g0b_ok = (ll_report["all_passed"] and (resolved_week != 10 or sample_remap["active_week_team"] == "BUF")) or dry_run
+    v3_bridge = run_gse_engine_v3_pipeline_bridge(repo_root=repo_root, season=season, week=resolved_week)
+    g0b_ok = (
+        ll_report["all_passed"]
+        and v3_bridge["feed_guard_all_ok"]
+        and (resolved_week != 10 or sample_remap["active_week_team"] == "BUF")
+    ) or dry_run
     _record_gate(
         SEQUENCED_GATES_ORDER[1],
         g0b_ok,
@@ -693,6 +799,7 @@ def run_permanent_sequenced_pipeline(
             "lessons_passed": ll_report["passed_count"],
             "failed_lessons": [g["lesson_id"] for g in ll_report["gates"] if not g["passed"]],
             "sample_bitemporal_remap": sample_remap,
+            "gse_engine_v3": v3_bridge,
         },
     )
 
@@ -863,6 +970,7 @@ def run_permanent_sequenced_pipeline(
         "all_gates_passed": True,
         "final_receipt_sha256": prev_hash,
         "gates": gate_records,
+        "gse_engine_v3": v3_bridge,
         "remaining_slate_orchestration": remaining_orchestration,
     }
     receipt_path = out_dir / f"week{resolved_week}_sequenced_pipeline_receipt.json"

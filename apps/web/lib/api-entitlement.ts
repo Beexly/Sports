@@ -68,8 +68,11 @@ async function evaluateGate(
   message: string
 ): Promise<GateEvaluation> {
   let userId: string | undefined;
+  let userEmail: string | null | undefined;
   try {
-    userId = (await auth())?.user?.id;
+    const session = await auth();
+    userId = session?.user?.id;
+    userEmail = session?.user?.email;
   } catch (error) {
     // BACKSTOP ONLY. `auth()` (lib/auth.ts) catches a throwing session store
     // itself and answers `null`, so in production this catch does not fire —
@@ -93,7 +96,7 @@ async function evaluateGate(
 
   let entitlements: Entitlements;
   try {
-    entitlements = await getUserEntitlements(userId);
+    entitlements = await getUserEntitlements(userId, userEmail);
   } catch (error) {
     // Fail closed (unchanged) — and say so. `getUserEntitlements` only rethrows
     // errors it did NOT classify as an unreachable database, so anything

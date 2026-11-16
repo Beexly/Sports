@@ -1,9 +1,9 @@
 # Full-Stack Orchestration — Post-Simulation 360-Degree Projections & Two-Wave `200+` Pt DraftKings DFS
 
-- **Generated At (UTC)**: `2026-11-08T10:33:11.312506+00:00`
+- **Generated At (UTC)**: `2026-11-16T04:12:01.298306+00:00`
 - **Workflow**: `/antigravity-skills:full-stack-orchestration-full-stack-feature`
 - **Status**: `PASS`
-- **Cryptographic Receipt SHA-256**: `859c4302215ae628f23eaf014d7e9a268f1fd73920f2c56dd9f90e11ef39c5d7`
+- **Cryptographic Receipt SHA-256**: `5ee730894154001db0db6a398b4604b720c7b1fde70ccf2fb19f10ea18b804f1`
 
 ## Phase 1 — Database, Backend & Client Surface Architecture
 - **PostgreSQL 17 / Drizzle ORM Tables**:
@@ -15,11 +15,11 @@
 
 ## Phase 2 — Backend Intelligence Spine & Two-Wave `200+` Pt DFS Execution
 - **Proprietary GSE Metrics Wired**: `22` (`M-GSE-01` .. `M-GSE-22`)
-- **4-Fold OOS Optimization Benchmark**: Market-only DK Lineup MAE `3.832 pts` -> Equal-Weight `1.16 pts` -> James-Stein + Ridge Optimized `0.282 pts`
+- **4-Fold OOS Optimization Benchmark**: Market-only DK Lineup MAE `4.032 pts` -> Equal-Weight `1.097 pts` -> James-Stein + Ridge Optimized `0.335 pts`
 - **Two-Wave Contest Simulation (`120` Candidates vs `500` Field x `10,000` Worlds)**:
-  - Top Lineup `P90` Ceiling: `284.97 DK pts` (`>= 200.0` target cleared)
-  - Top Lineup `P99` Shootout Ceiling: `393.08 DK pts`
-  - Top Lineup `CVaR_0.99` Championship Score: `415.07 DK pts`
+  - Top Lineup `P90` Ceiling: `305.48 DK pts` (`>= 200.0` target cleared)
+  - Top Lineup `P99` Shootout Ceiling: `423.77 DK pts`
+  - Top Lineup `CVaR_0.99` Championship Score: `448.26 DK pts`
 
 ## Phase 3 — Client Surface Contract, Heavy-Juice Firewall & Paywall Redaction
 - **Heavy-Juice Sportsbook Firewall (`-250` / `-300+` Trap Gate)**: Verified (`heavy_juice_minus_300_trap_blocked = True`)
@@ -30,4 +30,4 @@
 ## Phase 4 — Deployment & Zero-Waste Observability Readiness
 - **Sentry Telemetry Sampling**: `tracesSampleRate = 0.1` (`$5,000` startup credit buffer preserved)
 - **Odds API Credit Governance**: Free ceiling `16/day`, Paid ceiling `600/day`, circuit breaker armed
-- **Cached API Response Latency**: `12.509 ms` (`< 500.0 ms` SLO)
+- **Cached API Response Latency**: `15.644 ms` (`< 500.0 ms` SLO)

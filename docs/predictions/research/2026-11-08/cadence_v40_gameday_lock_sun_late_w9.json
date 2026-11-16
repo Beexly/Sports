@@ -10,7 +10,7 @@
     "ct_time": "13:35",
     "label": "T-90 inactives lock refresh + conformal residual diagnostic (flag-only)"
   },
-  "generated_at_utc": "2026-11-14T02:36:09.112601+00:00",
+  "generated_at_utc": "2026-11-16T03:59:29.758292+00:00",
   "inputs": {
     "full_slate_path": "data/engine/week9_full_slate_connected_dossiers_2026_11_06.json",
     "full_slate_sha256": "86da3a233a28ae32d0e2ba95776459946871c665fea8397f89e6eac7ba207c91",
@@ -25,7 +25,7 @@
     "v30_overlay_path": "docs/predictions/research/2026-11-06/cadence_v30_overlay_sunday_w9.json",
     "v30_overlay_sha256": "123770f327ca136251d90722b8cb3dc3abad33dbe7cac6b7c23f8f7935fe4f93",
     "sealed_baseline_path": "data/engine/week9_tuesday_0400ct_sealed_baseline_2026.json",
-    "sealed_baseline_sha256": "059e992b962f9c49c5fed6efabb3a99fdad9af798028ce83b6b1e9d9d585891a",
+    "sealed_baseline_sha256": "0ded082a30f8c9e21ed7a399d158828b3e3af176d5c540368bd8d0caac6ecb1b",
     "stored_snapshot": {
       "source_csv": "data/nflverse/injuries_2026.csv",
       "csv_sha256": "495d7ae957b1059f978d11802e9abbf01c015ddbd46766b90ed4e622af12c088",
@@ -2546,7 +2546,7 @@
         "sunday_doubtful": 5
       }
     },
-    "fetched_at_utc": "2026-11-14T02:36:03.648338+00:00",
+    "fetched_at_utc": "2026-11-16T03:59:28.926989+00:00",
     "games": [
       {
         "game": "HOU @ LAC",
@@ -2557,21 +2557,45 @@
         "designations_applied": [
           {
             "team": "LAC",
-            "player": "Deane Leonard",
-            "position": "CB",
-            "status": "Questionable"
-          },
-          {
-            "team": "LAC",
-            "player": "Keaton Mitchell",
-            "position": "RB",
-            "status": "Questionable"
-          },
-          {
-            "team": "LAC",
             "player": "Ladd McConkey",
             "position": "WR",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Branson Taylor",
+            "position": "G",
+            "status": "Out"
+          },
+          {
+            "team": "LAC",
+            "player": "Kayode Awosika",
+            "position": "G",
             "status": "Questionable"
+          },
+          {
+            "team": "LAC",
+            "player": "Kendall Williamson",
+            "position": "S",
+            "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "David Montgomery",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "HOU",
+            "player": "Woody Marks",
+            "position": "RB",
+            "status": "Doubtful"
+          },
+          {
+            "team": "HOU",
+            "player": "Wyatt Teller",
+            "position": "G",
+            "status": "Out"
           },
           {
             "team": "HOU",
@@ -2581,26 +2605,8 @@
           },
           {
             "team": "HOU",
-            "player": "Will Anderson Jr.",
-            "position": "DE",
-            "status": "Questionable"
-          },
-          {
-            "team": "HOU",
-            "player": "Danielle Hunter",
-            "position": "DE",
-            "status": "Out"
-          },
-          {
-            "team": "HOU",
-            "player": "Brevin Jordan",
-            "position": "TE",
-            "status": "Out"
-          },
-          {
-            "team": "HOU",
-            "player": "Azeez Al-Shaair",
-            "position": "LB",
+            "player": "Marvin Harrison Jr.",
+            "position": "WR",
             "status": "Out"
           }
         ],
@@ -2609,12 +2615,6 @@
             "team": "LAC",
             "player": "Trey Pipkins III",
             "position": "OT",
-            "status": "Injured Reserve"
-          },
-          {
-            "team": "LAC",
-            "player": "David Njoku",
-            "position": "TE",
             "status": "Injured Reserve"
           }
         ]
@@ -2628,67 +2628,66 @@
         "designations_applied": [
           {
             "team": "SEA",
+            "player": "Abraham Lucas",
+            "position": "OT",
+            "status": "Questionable"
+          },
+          {
+            "team": "SEA",
+            "player": "George Holani",
+            "position": "RB",
+            "status": "Questionable"
+          },
+          {
+            "team": "SEA",
+            "player": "Jarran Reed",
+            "position": "DT",
+            "status": "Questionable"
+          },
+          {
+            "team": "SEA",
+            "player": "Emanuel Wilson",
+            "position": "RB",
+            "status": "Out"
+          },
+          {
+            "team": "SEA",
             "player": "Leonard Williams",
             "position": "DT",
             "status": "Out"
           },
           {
-            "team": "SEA",
-            "player": "Quenton Nelson",
-            "position": "G",
-            "status": "Out"
-          },
-          {
-            "team": "SEA",
-            "player": "Charles Cross",
-            "position": "OT",
-            "status": "Out"
-          },
-          {
-            "team": "SEA",
-            "player": "Sam Darnold",
-            "position": "QB",
-            "status": "Out"
+            "team": "ARI",
+            "player": "Jordan Burch",
+            "position": "LB",
+            "status": "Questionable"
           },
           {
             "team": "ARI",
             "player": "Jayden Williams",
             "position": "OT",
-            "status": "Questionable"
-          },
-          {
-            "team": "ARI",
-            "player": "Jon Gaines II",
-            "position": "G",
             "status": "Out"
           },
           {
             "team": "ARI",
-            "player": "Hjalte Froholdt",
-            "position": "C",
+            "player": "Joey Aguilar",
+            "position": "QB",
             "status": "Out"
           },
           {
             "team": "ARI",
-            "player": "Andrew Wingard",
-            "position": "S",
-            "status": "Questionable"
+            "player": "Starling Thomas V",
+            "position": "CB",
+            "status": "Out"
+          },
+          {
+            "team": "ARI",
+            "player": "Eku Leota",
+            "position": "LB",
+            "status": "Out"
           }
         ],
-        "roster_statuses_not_applied": [
-          {
-            "team": "SEA",
-            "player": "Elijah Arroyo",
-            "position": "TE",
-            "status": "Injured Reserve"
-          },
-          {
-            "team": "ARI",
-            "player": "Zachary Carter",
-            "position": "DT",
-            "status": "Injured Reserve"
-          }
-        ]
+        "roster_statuses_not_applied": []
       },
       {
         "game": "GB @ NE",
@@ -2699,26 +2698,8 @@
         "designations_applied": [
           {
             "team": "NE",
-            "player": "Brenden Schooler",
-            "position": "S",
-            "status": "Questionable"
-          },
-          {
-            "team": "NE",
-            "player": "Charles Woods",
-            "position": "CB",
-            "status": "Questionable"
-          },
-          {
-            "team": "NE",
-            "player": "Kevin Byard",
-            "position": "S",
-            "status": "Questionable"
-          },
-          {
-            "team": "NE",
-            "player": "Rhamondre Stevenson",
-            "position": "RB",
+            "player": "Drake Maye",
+            "position": "QB",
             "status": "Questionable"
           },
           {
@@ -2728,34 +2709,52 @@
             "status": "Questionable"
           },
           {
+            "team": "NE",
+            "player": "Dre'Mont Jones",
+            "position": "DE",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "Robert Spillane",
+            "position": "LB",
+            "status": "Questionable"
+          },
+          {
+            "team": "NE",
+            "player": "Brenden Schooler",
+            "position": "S",
+            "status": "Out"
+          },
+          {
             "team": "GB",
-            "player": "Travis Glover",
-            "position": "OT",
+            "player": "Bo Melton",
+            "position": "WR",
             "status": "Questionable"
           },
           {
             "team": "GB",
-            "player": "Sean Rhyan",
+            "player": "Skyy Moore",
+            "position": "WR",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Brandon Cisse",
+            "position": "CB",
+            "status": "Questionable"
+          },
+          {
+            "team": "GB",
+            "player": "Kevin Zeitler",
             "position": "G",
             "status": "Out"
           },
           {
             "team": "GB",
-            "player": "Lukas Van Ness",
-            "position": "DE",
-            "status": "Questionable"
-          },
-          {
-            "team": "GB",
-            "player": "Javon Bullard",
-            "position": "S",
-            "status": "Questionable"
-          },
-          {
-            "team": "GB",
             "player": "Zaire Franklin",
             "position": "LB",
-            "status": "Doubtful"
+            "status": "Out"
           }
         ],
         "roster_statuses_not_applied": []
@@ -2769,21 +2768,27 @@
         "designations_applied": [
           {
             "team": "SF",
-            "player": "Renardo Green",
-            "position": "CB",
-            "status": "Questionable"
+            "player": "Brandin Cooks",
+            "position": "WR",
+            "status": "Out"
           },
           {
             "team": "SF",
-            "player": "Deommodore Lenoir",
-            "position": "CB",
-            "status": "Questionable"
+            "player": "Kurtis Rourke",
+            "position": "QB",
+            "status": "Out"
           },
           {
             "team": "SF",
-            "player": "Dre Greenlaw",
+            "player": "Tatum Bethune",
             "position": "LB",
-            "status": "Questionable"
+            "status": "Out"
+          },
+          {
+            "team": "SF",
+            "player": "Enrique Cruz Jr.",
+            "position": "OT",
+            "status": "Out"
           },
           {
             "team": "SF",
@@ -2792,73 +2797,77 @@
             "status": "Out"
           },
           {
-            "team": "SF",
-            "player": "Trent Williams",
-            "position": "OT",
+            "team": "LV",
+            "player": "Brock Bowers",
+            "position": "TE",
             "status": "Questionable"
+          },
+          {
+            "team": "LV",
+            "player": "Kwity Paye",
+            "position": "DE",
+            "status": "Questionable"
+          },
+          {
+            "team": "LV",
+            "player": "Malik Benson",
+            "position": "WR",
+            "status": "Out"
           },
           {
             "team": "LV",
             "player": "Thomas Booker IV",
             "position": "DT",
-            "status": "Questionable"
+            "status": "Out"
           },
           {
             "team": "LV",
             "player": "Dont'e Thornton Jr.",
             "position": "WR",
-            "status": "Questionable"
+            "status": "Out"
           }
         ],
-        "roster_statuses_not_applied": [
-          {
-            "team": "LV",
-            "player": "Patrick Johnson",
-            "position": "DE",
-            "status": "Injured Reserve"
-          },
-          {
-            "team": "LV",
-            "player": "Keyron Crawford",
-            "position": "DE",
-            "status": "Injured Reserve"
-          },
-          {
-            "team": "LV",
-            "player": "Chigozie Anusiem",
-            "position": "CB",
-            "status": "Injured Reserve"
-          }
-        ]
+        "roster_statuses_not_applied": []
       }
     ],
     "offline": false,
     "summary": {
       "games_polled": 4,
       "games_with_error": 0,
-      "designations_applied": 33,
-      "statuses_not_applied": 7,
+      "designations_applied": 39,
+      "statuses_not_applied": 1,
       "stored_curated_subset_size": 128,
       "newly_listed_not_in_stored_subset": [
-        "Andrew Wingard",
-        "Azeez Al-Shaair",
-        "Brevin Jordan",
-        "Charles Woods",
-        "Danielle Hunter",
-        "Deommodore Lenoir",
+        "Abraham Lucas",
+        "Bo Melton",
+        "Brandin Cooks",
+        "Brandon Cisse",
+        "Branson Taylor",
+        "Brock Bowers",
         "Dont'e Thornton Jr.",
-        "Dre Greenlaw",
-        "Hjalte Froholdt",
-        "Javon Bullard",
-        "Keaton Mitchell",
+        "Drake Maye",
+        "Dre'Mont Jones",
+        "Eku Leota",
+        "Emanuel Wilson",
+        "Enrique Cruz Jr.",
+        "George Holani",
+        "Jarran Reed",
+        "Joey Aguilar",
+        "Jordan Burch",
+        "Kevin Zeitler",
         "Keylan Rutledge",
+        "Kurtis Rourke",
+        "Kwity Paye",
         "Ladd McConkey",
-        "Lukas Van Ness",
-        "Renardo Green",
-        "Rhamondre Stevenson",
+        "Malik Benson",
+        "Marvin Harrison Jr.",
+        "Robert Spillane",
+        "Skyy Moore",
+        "Starling Thomas V",
+        "Tatum Bethune",
         "Thomas Booker IV",
-        "Trent Williams",
-        "Will Anderson Jr."
+        "Woody Marks",
+        "Wyatt Teller"
       ],
       "stored_names_absent_from_refresh": [
         "A.J. Haulcy",
@@ -2880,6 +2889,7 @@
         "Cameron Williams",
         "Carlton Davis III",
         "Cedric Johnson",
+        "Charles Cross",
         "Charlie Jones",
         "Chris Brooks",
         "Christian Kirk",
@@ -2889,10 +2899,10 @@
         "DJ Wonnum",
         "Damien Lewis",
         "Darien Porter",
-        "David Montgomery",
         "David Njoku",
         "DeMarvion Overshown",
         "DeVonta Smith",
+        "Deane Leonard",
         "Deebo Samuel Sr.",
         "Demarcus Robinson",
         "Denzel Perryman",
@@ -2919,6 +2929,7 @@
         "Jer'Zhan Newton",
         "Jihaad Campbell",
         "Joey Porter Jr.",
+        "Jon Gaines II",
         "Jonathan Bullard",
         "Jonathan Jones",
         "Jordyn Tyson",
@@ -2926,12 +2937,11 @@
         "Josh Whyle",
         "Justin Walley",
         "KaVontae Turpin",
-        "Kayode Awosika",
         "Kaytron Allen",
         "Keisean Nixon",
         "Kelvin Banks Jr.",
-        "Kendall Williamson",
         "Kerby Joseph",
+        "Kevin Byard",
         "Kris Abrams-Draine",
         "Kyle Dugger",
         "Kyle Monangai",
@@ -2955,14 +2965,18 @@
         "Omarr Norman-Lott",
         "Pat Bryant",
         "Peter Woods",
+        "Quenton Nelson",
         "Rashid Shaheed",
         "Reed Blankenship",
+        "Sam Darnold",
+        "Sean Rhyan",
         "Sione Vaki",
         "Siran Neal",
         "Talanoa Hufanga",
         "Tanner McKee",
         "Thomas Booker",
         "Torricelli Simpkins III",
+        "Travis Glover",
         "TreVeyon Henderson",
         "Trevin Wallace",
         "Treylon Burks",

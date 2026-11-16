@@ -49,7 +49,7 @@ export async function getViewerEntitlements(): Promise<Entitlements> {
   }
   if (!userId) return getEntitlements("FREE");
   try {
-    return await getUserEntitlements(userId);
+    return await getUserEntitlements(userId, email);
   } catch (error) {
     logEntitlementFailClosed("tier-access:entitlements", userId, error);
     return getEntitlements("FREE"); // fail closed

@@ -28,6 +28,8 @@ export type BoardFillResult = {
 export async function runBoardFillPipeline(opts?: {
   readonly sport?: string;
   readonly logPrefix?: string;
+  readonly skipSignals?: boolean;
+  readonly skipSignalsReason?: string;
 }): Promise<BoardFillResult> {
   const logPrefix = opts?.logPrefix ?? "[board-fill]";
   const oddsPresence = oddsApiKeyPresence();
@@ -42,12 +44,26 @@ export async function runBoardFillPipeline(opts?: {
 
   // 3) Independent signal slate (no book labels). The slate mints only on a
   // stored association trace (see slate-association.ts) — fail-closed.
-  const signals = await generateSignalSlate({
-    logPrefix: `${logPrefix}:signal`,
-    // games already seeded; avoid nested re-seed loop
-    skipSeed: true,
-    trace: await slateAssociationTrace(),
-  });
+  const signals: SignalSlateResult = opts?.skipSignals
+    ? {
+        ok: true,
+        gamesConsidered: 0,
+        candidatesWithIndependents: 0,
+        picksUpserted: 0,
+        picksSkipped: 0,
+        fixtureUnconfirmed: 0,
+        skippedInPlay: 0,
+        seriesRepeatsSkipped: 0,
+        mindWithheld: 0,
+        errors: [],
+        note: opts.skipSignalsReason ?? "skipped_outside_lock_window",
+      }
+    : await generateSignalSlate({
+        logPrefix: `${logPrefix}:signal`,
+        // games already seeded; avoid nested re-seed loop
+        skipSeed: true,
+        trace: await slateAssociationTrace(),
+      });
 
   const ok = odds.ok || signals.picksUpserted > 0 || seed.upserted > 0;
   const note =

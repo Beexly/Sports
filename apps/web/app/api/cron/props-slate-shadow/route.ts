@@ -17,7 +17,11 @@
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
-import { runPropsSlateShadow } from "@sports/ingestion-pipeline";
+import { createDbRateHistoryResolver } from "@/lib/props/db-rate-history-resolver";
+import {
+  createBoard360PropsShadowSource,
+  runPropsSlateShadow,
+} from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -29,7 +33,12 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const result = await runPropsSlateShadow();
+    const source = createBoard360PropsShadowSource({
+      resolveRateHistory: createDbRateHistoryResolver({
+        onError: (err) => captureError(err, { cron: "props-slate-shadow", phase: "db-rate-history" }),
+      }),
+    });
+    const result = await runPropsSlateShadow({ source });
     return NextResponse.json({
       ok: true,
       ...result,

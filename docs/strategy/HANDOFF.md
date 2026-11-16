@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 (UTC Rollover) -- Wave 1 & Wave 2 Pregame Engine v3, Stage-0 DFS Lineup Doctor, CAGE ENFORCE & Board360 Shadow Props Wiring
+
+- **What changed**:
+  - Recovered `localhost:3000` dev ergonomics (`apps/web/next.config.mjs` `@` path anchoring + low-disk cache guard, `scripts/ops/start-web-dev.mjs` 8 GB launcher, `apps/web/instrumentation.ts` opt-in dev ingest) and redirected `/dfs` permanently to `/fantasy/dfs`.
+  - Hardened storefront & entitlement integrity: closed Whop prefix bypasses (`apps/web/lib/integrations/whop.ts`), enforced fail-closed webhook signatures (`apps/web/app/api/webhooks/whop/route.ts`), enforced HMAC-SHA256 slug-bound unlock cookies (`apps/web/lib/packages/unlock-cookie.ts`, `apps/web/app/api/packages/unlock/route.ts`), removed live Stripe product mutations from checkout (`apps/web/app/api/packages/checkout/route.ts`), and unified `Subscription` + unexpired `PackagePurchase` tiers (`apps/web/lib/packages/purchase-ledger.ts`, `apps/web/lib/entitlements.ts`).
+  - Wired CAGE `ENFORCE` publication gating (`packages/governed/src/publication-gate.ts`), added `SealedSlatePacket` (`packages/db/prisma/schema.prisma`, `docs/ops/migrations/20261115_sealed_slate_packet.sql`), updated `apps/web/lib/slate/sealed-slate-store.ts`, aligned `packages/prediction-engine/src/ensemble/gse-ml-endpoints.ts` with `gse-ml-service` Pydantic `ConfigDict(extra="forbid")` (`/predict/etkf` vs `/predict/tda` feature extraction), and shipped the Stage-0 DraftKings Lineup Doctor (`apps/web/lib/fantasy/lineup-doctor.ts`, `apps/web/app/api/dfs/lineup-doctor/route.ts`, `apps/web/components/fantasy/lineup-doctor-panel.tsx`).
+  - Wired real two-sided `createBoard360PropsShadowSource` (`packages/ingestion-pipeline/src/board360-props-shadow-source.ts`) + single-batch fail-closed `createDbRateHistoryResolver` (`apps/web/lib/props/db-rate-history-resolver.ts`) into `apps/web/app/api/cron/props-slate-shadow/route.ts` while keeping `PROPS_SLATE_SHADOW_ENABLED` default-OFF.
+  - Added Python `src/gse_engine` modules (`feed_guard.py`, `beat_langextract.py`, `volume_conservation.py`, `qb_physics.py`, `dfs_optimizer.py`, `conjunction.py`, `slate_window.py`, `receipts_s3.py`, `arize_tracing.py`, `matchup_prose.py`, `trajectory_checkpoint.py` with path-traversal hardening, `agentdb_store.py`, `gcp_warehouse.py`), bridged `run_gse_engine_v3_pipeline_bridge` into `scripts/ops/run_permanent_sequenced_weekly_pipeline.py`, indexed 59 OSS corpus repos (`docs/data-sources/research/2026-11-15/oss-corpus-registry.json`), and authored 20 new TypeScript (`Vitest`, 8) + Python (`pytest`, 12) test suites plus `scripts/ops/overnight-verify-and-ship.mjs`.
+- **What was proven**:
+  - Direct static `read_file` verification across all edited/created source modules, Prisma schema columns, Next.js App Router constraints, and unit test files (catching and fixing lexicographical `w9` > `w10` filename sorting via `parseSeasonWeekSortKey` and checkpoint manifest path-traversal validation).
+  - Pre-commit secret scan scanned 180 staged files with 0 secrets detected, HEAD == upstream (`origin/feat/pregame-engine-dfs-harmony-2026-11-15`), alignment record clean, and tests staged alongside touched packages.
+- **What was not proven**:
+  - Live `run_command` execution in this session was blocked by the host pre-tool WSL `/bin/bash` relay hook (`execvpe(/bin/bash) failed: No such file or directory`); local execution of `node scripts/ops/overnight-verify-and-ship.mjs`, `ruff`, `mypy`, `next build`, and browser UI verification are pending user shell execution.
+- **What the next role must do**:
+  - Run `node scripts/ops/overnight-verify-and-ship.mjs`, `python -m ruff check src/ tests/`, and `python -m mypy src/gse_engine` in a local PowerShell/WSL shell, fix any surfaced runtime issues, verify `localhost:3000/fantasy/dfs` + `/packages`, and keep all public/calibration switches fail-closed (`false`) until explicit operator sign-off.
+
 ## 2026-11-15 (Morning Pre-Munich Launch) -- Week 10 Connected 13/13 Dossiers, IDP Tackle Calibration & 5-Slate DraftKings DFS Readiness (`AUTON-ETHOS-WEEK10-LAUNCH-24`)
 
 - **What changed**:

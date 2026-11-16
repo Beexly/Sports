@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyWhopWebhookSignature } from "@/lib/integrations/whop";
+import { recordPurchaseLedgerEntry } from "@/lib/packages/purchase-ledger";
 
 export async function POST(req: Request) {
   try {
@@ -9,12 +10,22 @@ export async function POST(req: Request) {
       req.headers.get("x-whop-signature") ||
       req.headers.get("webhook-signature");
 
-    const webhookSecret = process.env.WHOP_WEBHOOK_SECRET || "whop_whsec_test_secret";
+    const isProd = process.env.NODE_ENV === "production";
+    const configuredSecret = (process.env.WHOP_WEBHOOK_SECRET || "").trim();
 
-    // Verify signature if secret is configured and not in permissive test mode
-    if (webhookSecret && !webhookSecret.includes("disabled")) {
+    if (isProd && !configuredSecret) {
+      return NextResponse.json(
+        { error: "Whop webhook secret not configured." },
+        { status: 500 },
+      );
+    }
+
+    const webhookSecret = configuredSecret || "whop_whsec_test_secret";
+
+    // Fail closed when signature verification fails in production (or whenever configured).
+    if (isProd || configuredSecret) {
       const isValid = verifyWhopWebhookSignature(rawBody, signature, webhookSecret);
-      if (!isValid && process.env.NODE_ENV === "production") {
+      if (!isValid && isProd) {
         return NextResponse.json(
           { error: "Invalid Whop webhook signature." },
           { status: 401 },
@@ -28,17 +39,34 @@ export async function POST(req: Request) {
 
     switch (action) {
       case "payment.succeeded": {
-        const userId = data.user_id || data.user?.id || "guest";
-        const email = data.email || data.user?.email || "unknown@example.com";
+        const userId = data.user_id || data.user?.id || null;
+        const email = data.email || data.user?.email || null;
         const productId = data.product_id || data.product?.id || "unknown_product";
-        const amountCents = data.amount || data.final_amount || 0;
+        const packageSlug =
+          data.metadata?.packageSlug ||
+          data.metadata?.slug ||
+          data.product?.slug ||
+          "primetime-showdown-pack";
+        const amountCents = Number(data.amount ?? data.final_amount ?? 0) || 0;
+        const paymentId = String(data.id || data.payment_id || `whop_${Date.now()}`);
+
+        await recordPurchaseLedgerEntry({
+          sessionId: paymentId,
+          packageSlug: String(packageSlug),
+          customerEmail: typeof email === "string" ? email : null,
+          userId: typeof userId === "string" ? userId : null,
+          amountCents,
+          currency: String(data.currency || "usd"),
+          metadata: { provider: "whop", productId: String(productId) },
+        });
 
         return NextResponse.json({
           received: true,
           action: "payment.unlocked",
-          userId,
-          email,
+          userId: userId || "guest",
+          email: email || "unknown@example.com",
           productId,
+          packageSlug,
           amountCents,
           unlockedAt: new Date().toISOString(),
         });

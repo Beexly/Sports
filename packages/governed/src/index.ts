@@ -32,3 +32,14 @@ export {
 } from "./rotate-keys";
 
 export { createGoverned, type GateOutput, type GovernedDeps } from "./governed";
+export {
+  CAGE_POLICY_ID,
+  CAGE_POLICY_SHA256,
+  CAGE_POLICY_VERSION,
+  digestCandidatePacket,
+  enforceSlatePublication,
+  evaluateCagePublicationPolicy,
+  type CandidateSlateItem,
+  type CandidateSlatePacket,
+  type ReceiptSigner,
+} from "./publication-gate";

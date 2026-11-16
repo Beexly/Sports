@@ -200,9 +200,9 @@ export const STAGE0_VERIFIED_DFS_CORE_POOL: readonly DfsCorePoolRow[] = [
 
 export const STAGE0_VERIFIED_WEEK9_DFS_LINEUPS = {
   "cashFlagship": {
-    "tag": "Week 10 Sunday Main Classic Cash Anchor",
+    "tag": "Sunday Main Classic Cash Anchor",
     "salary": "$50,000 / $50,000",
-    "projectedPts": "142.0 med (343.0 p90)",
+    "projectedPts": "142.0 med (192.5 p90)",
     "slots": [
       {
         "pos": "QB",

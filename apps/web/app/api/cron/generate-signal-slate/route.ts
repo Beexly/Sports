@@ -5,6 +5,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { canMintSignalPicksNow } from "@/lib/cron/noon-lock-window-guard";
 import { generateSignalSlate, slateAssociationTrace } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,27 @@ export const maxDuration = 300;
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
+
+  const mintGate = canMintSignalPicksNow(request);
+  if (!mintGate.allowed) {
+    return NextResponse.json({
+      ok: true,
+      skipped: true,
+      reason: mintGate.reason,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
+      errors: [],
+      note: mintGate.reason,
+      oddsApiRequired: false as const,
+      claimPosture: "experimental_model_signal_not_book_line",
+    });
+  }
 
   try {
     const result = await generateSignalSlate({

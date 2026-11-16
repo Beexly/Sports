@@ -4,6 +4,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { canMintSignalPicksNow } from "@/lib/cron/noon-lock-window-guard";
 import { captureError } from "@/lib/observability/sentry";
 import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
 
@@ -16,11 +17,18 @@ export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
+  const mintGate = canMintSignalPicksNow(request);
+
   try {
-    const result = await runBoardFillPipeline({ logPrefix: "[cron:board-fill]" });
+    const result = await runBoardFillPipeline({
+      logPrefix: "[cron:board-fill]",
+      skipSignals: !mintGate.allowed,
+      skipSignalsReason: mintGate.reason,
+    });
     return NextResponse.json({
       ok: result.ok,
       note: result.note,
+      mintWindow: mintGate,
       quoteKeys: result.quoteKeys,
       seed: {
         ok: result.seed.ok,

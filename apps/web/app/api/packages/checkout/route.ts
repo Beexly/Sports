@@ -209,29 +209,8 @@ export async function POST(req: Request) {
       });
 
       // Always pass inline `price_data` from `buildStripePackageCheckoutPayload`
-      // so Stripe Checkout renders the exact active Week 10 pack title, description,
-      // and unit amount rather than stale prior-week product metadata on a reused Price ID.
-      const primaryItem = payload.line_items[0];
-      if (pkg.stripeProductId && primaryItem) {
-        void stripe.products
-          .update(pkg.stripeProductId, {
-            name: primaryItem.price_data.product_data.name,
-            description: primaryItem.price_data.product_data.description.slice(0, 450),
-          })
-          .catch(() => null);
-      }
-      void stripe.accounts
-        .retrieve()
-        .then((acct) => {
-          if (acct?.id) {
-            return stripe.accounts.update(acct.id, {
-              business_profile: { name: "Galaxy Sports Edge" },
-            });
-          }
-          return null;
-        })
-        .catch(() => null);
-
+      // so Stripe Checkout displays active pack details without mutating live
+      // Stripe Product or Account objects on every request.
       const stripeSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
         mode: "payment",
         line_items: payload.line_items.map((li) => ({

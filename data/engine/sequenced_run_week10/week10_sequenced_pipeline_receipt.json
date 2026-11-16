@@ -16,7 +16,7 @@
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards"
   ],
   "all_gates_passed": true,
-  "final_receipt_sha256": "671601cb1c0aa5ec1981ba9f483fc95ebb2e3bb1b56df1666bce10d7434ce941",
+  "final_receipt_sha256": "e4d4404852653c08410408ee72e616e35d730cff9280b6a4660eaeb8eb1efdaf",
   "gates": {
     "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification": {
       "gate": "Gate_0A_Live_32Team_ESPN_And_Stage0_Unification",
@@ -28,13 +28,13 @@
         "events_count": 14,
         "scoreboard_source": "local_snapshot"
       },
-      "timestamp_utc": "2026-11-15T20:30:48.861653+00:00",
-      "receipt_sha256": "474e9e16fc51e54170c1e315b4fbe3bf5a1ed6a2aaf5683486903ae8eec07954"
+      "timestamp_utc": "2026-11-16T04:03:58.284961+00:00",
+      "receipt_sha256": "3177b74db4d265616441d800f05749b8bee4297859359b702b7beebcdfcf0321"
     },
     "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates": {
       "gate": "Gate_0B_Bitemporal_CSV_And_Lessons_Learned_12Gates",
       "passed": true,
-      "parent_sha256": "474e9e16fc51e54170c1e315b4fbe3bf5a1ed6a2aaf5683486903ae8eec07954",
+      "parent_sha256": "3177b74db4d265616441d800f05749b8bee4297859359b702b7beebcdfcf0321",
       "payload": {
         "lessons_total": 12,
         "lessons_passed": 12,
@@ -46,15 +46,38 @@
           "active_week_team": "BUF",
           "week": 10,
           "remapped": true
+        },
+        "gse_engine_v3": {
+          "feed_guard_all_ok": true,
+          "feeds_checked": [
+            {
+              "path": "data/nflverse/stage0_truth_s2026_w10.json",
+              "ok": true,
+              "detected_kind": "json",
+              "sha256": "9b8edbccba4970f2db6af9a9affae5c7bd39cc10c27cab263b31017e4b8b369f"
+            },
+            {
+              "path": "data/engine/game_boards_360_s2026_w10.json",
+              "ok": true,
+              "detected_kind": "json",
+              "sha256": "c302f85d305c770dba0b09eeaf64eba51a65b8521b30a39f553b161fa6940a75"
+            }
+          ],
+          "props_audited": 20,
+          "cage_policy_id": "gse-cage-prop-gate-v3",
+          "cage_receipt_sha256": "279c6726dcd23fd2ee1eaf29958a277dc5a2b0c72399dd1bba99164d5c490bf2",
+          "archived_key": "s2026/w10/gse_v3_cage_receipt.json",
+          "archived_receipt_sha256": "12889cee7ccddd8773107fce0c2a6e8d5720223edee543280cd7fd91baeba4e8",
+          "receipt_verified": true
         }
       },
-      "timestamp_utc": "2026-11-15T20:30:49.246645+00:00",
-      "receipt_sha256": "3f20da1610a9f0920d2bffc821750e5be5ba7cef9b05b35f6f2f02036fad7bd4"
+      "timestamp_utc": "2026-11-16T04:03:58.573403+00:00",
+      "receipt_sha256": "808cd5784dd362bb2df72523262a797345c265f687beb1d12c8427ad0e385a2f"
     },
     "Gate_1_Coaching_Weather_Circadian_FoundryRO": {
       "gate": "Gate_1_Coaching_Weather_Circadian_FoundryRO",
       "passed": true,
-      "parent_sha256": "3f20da1610a9f0920d2bffc821750e5be5ba7cef9b05b35f6f2f02036fad7bd4",
+      "parent_sha256": "808cd5784dd362bb2df72523262a797345c265f687beb1d12c8427ad0e385a2f",
       "payload": {
         "coaching_python_files_count": 59,
         "foundry_db_readonly_ok": true,
@@ -88,57 +111,80 @@
           "outdoor_weather_suppressed": true
         }
       },
-      "timestamp_utc": "2026-11-15T20:30:49.253960+00:00",
-      "receipt_sha256": "155d2682e2ce572cb836ba6270960af4226e6391243defd2d061201dcd8f1bd4"
+      "timestamp_utc": "2026-11-16T04:03:58.578465+00:00",
+      "receipt_sha256": "f6cb8196c6db4edaed469602e69bb98cfec9351b76204084bbdb213782cafb47"
     },
     "Gate_2_Situational_Overlay_80Rules_CognitiveRouter": {
       "gate": "Gate_2_Situational_Overlay_80Rules_CognitiveRouter",
       "passed": true,
-      "parent_sha256": "155d2682e2ce572cb836ba6270960af4226e6391243defd2d061201dcd8f1bd4",
+      "parent_sha256": "f6cb8196c6db4edaed469602e69bb98cfec9351b76204084bbdb213782cafb47",
       "payload": {
         "x_situational_80_rules_exists": true,
         "master_situational_aggregator_exists": true,
         "mcp_cognitive_router_exists": true
       },
-      "timestamp_utc": "2026-11-15T20:30:49.254861+00:00",
-      "receipt_sha256": "ce073c9c929711322c14413424f04ca15912578e786a9c3bd8fb65bc71c1e408"
+      "timestamp_utc": "2026-11-16T04:03:58.578994+00:00",
+      "receipt_sha256": "cbb21e407b1d6be12ddabc4a33b797a05db7384c476ee7a2ecc0b2c5179ef557"
     },
     "Gate_3_Fence1_LineFree_Trajectory_Sim_Check": {
       "gate": "Gate_3_Fence1_LineFree_Trajectory_Sim_Check",
       "passed": true,
-      "parent_sha256": "ce073c9c929711322c14413424f04ca15912578e786a9c3bd8fb65bc71c1e408",
+      "parent_sha256": "cbb21e407b1d6be12ddabc4a33b797a05db7384c476ee7a2ecc0b2c5179ef557",
       "payload": {
         "week": 10,
         "line_free_games_verified": 13,
         "stage0_eligible_target_violations": 0
       },
-      "timestamp_utc": "2026-11-15T20:30:49.260495+00:00",
-      "receipt_sha256": "0913375c7a5d6813928db1353a0e15472076e13cbae986b3461289aedc4c899a"
+      "timestamp_utc": "2026-11-16T04:03:58.582953+00:00",
+      "receipt_sha256": "c1733ad43c4c54ab1bc5d24b83ce4d03c2729904b1d96ccc616554419519274d"
     },
     "Gate_4_Conformal_Calibration_And_RLVR_Bridge": {
       "gate": "Gate_4_Conformal_Calibration_And_RLVR_Bridge",
       "passed": true,
-      "parent_sha256": "0913375c7a5d6813928db1353a0e15472076e13cbae986b3461289aedc4c899a",
+      "parent_sha256": "c1733ad43c4c54ab1bc5d24b83ce4d03c2729904b1d96ccc616554419519274d",
       "payload": {
         "calibration_heads_present": true,
         "rlvr_scenarios_verified": 18,
         "rlvr_all_passed": true,
         "bridge_smoke_approved": true
       },
-      "timestamp_utc": "2026-11-15T20:30:49.325471+00:00",
-      "receipt_sha256": "01f3a8f73a5c7a874bf70c4fceea93d650f8b26580a8b1e2ff6b67d1cdd1e717"
+      "timestamp_utc": "2026-11-16T04:03:58.631542+00:00",
+      "receipt_sha256": "f7597bed3564111f2382c2dcf5d6dfc27bdcdcc7e59864c74f04bd1566d9e2d7"
     },
     "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards": {
       "gate": "Gate_5_Fence2_DeVig_Conjunction_And_CopyGuards",
       "passed": true,
-      "parent_sha256": "01f3a8f73a5c7a874bf70c4fceea93d650f8b26580a8b1e2ff6b67d1cdd1e717",
+      "parent_sha256": "f7597bed3564111f2382c2dcf5d6dfc27bdcdcc7e59864c74f04bd1566d9e2d7",
       "payload": {
         "js_and_dossier_guards_executed": false,
         "guard_runs": []
       },
-      "timestamp_utc": "2026-11-15T20:30:49.325586+00:00",
-      "receipt_sha256": "671601cb1c0aa5ec1981ba9f483fc95ebb2e3bb1b56df1666bce10d7434ce941"
+      "timestamp_utc": "2026-11-16T04:03:58.631625+00:00",
+      "receipt_sha256": "e4d4404852653c08410408ee72e616e35d730cff9280b6a4660eaeb8eb1efdaf"
     }
+  },
+  "gse_engine_v3": {
+    "feed_guard_all_ok": true,
+    "feeds_checked": [
+      {
+        "path": "data/nflverse/stage0_truth_s2026_w10.json",
+        "ok": true,
+        "detected_kind": "json",
+        "sha256": "9b8edbccba4970f2db6af9a9affae5c7bd39cc10c27cab263b31017e4b8b369f"
+      },
+      {
+        "path": "data/engine/game_boards_360_s2026_w10.json",
+        "ok": true,
+        "detected_kind": "json",
+        "sha256": "c302f85d305c770dba0b09eeaf64eba51a65b8521b30a39f553b161fa6940a75"
+      }
+    ],
+    "props_audited": 20,
+    "cage_policy_id": "gse-cage-prop-gate-v3",
+    "cage_receipt_sha256": "279c6726dcd23fd2ee1eaf29958a277dc5a2b0c72399dd1bba99164d5c490bf2",
+    "archived_key": "s2026/w10/gse_v3_cage_receipt.json",
+    "archived_receipt_sha256": "12889cee7ccddd8773107fce0c2a6e8d5720223edee543280cd7fd91baeba4e8",
+    "receipt_verified": true
   },
   "remaining_slate_orchestration": {
     "schema": "gse-remaining-slate-full-engine-master-packet-v1",
@@ -147,8 +193,8 @@
     "mode": "t90m-adjust",
     "target": "all-remaining",
     "window": "sun_late",
-    "generated_utc": "2026-11-15T20:30:49.390180+00:00",
-    "elapsed_seconds": 0.064,
+    "generated_utc": "2026-11-16T04:03:58.665154+00:00",
+    "elapsed_seconds": 0.033,
     "sla_badge_180s": true,
     "sla_badge_label": "<180s T-90m SLA ACHIEVED",
     "fast_diff_applied": true,

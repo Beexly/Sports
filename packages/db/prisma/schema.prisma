@@ -3995,3 +3995,31 @@ model MimicStayMetric {
   @@index([septicShockOutcome])
   @@map("mimic_stay_metrics")
 }
+
+// ============================================================
+// SEALED SLATE PACKETS (Three-Noon Master Locks + T-90m Deltas)
+// Replaces static week8/sealed-board.json so /props, /packages/[slug],
+// and mobile endpoints read week-agnostic CAGE-verified packets from Neon.
+// ============================================================
+
+model SealedSlatePacket {
+  id                String   @id @default(cuid())
+  season            Int
+  week              Int
+  windowSlot        String   @db.VarChar(32)
+  lockVersion       String   @db.VarChar(16)
+  status            String   @default("SEALED") @db.VarChar(24)
+  payloadJson       Json
+  proseJson         Json?
+  dfsJson           Json?
+  sha256Receipt     String   @db.VarChar(64)
+  governedSignature String?  @db.Text
+  r2ObjectKey       String?  @db.VarChar(256)
+  sealedAt          DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([season, week, windowSlot, lockVersion])
+  @@index([season, week, status, sealedAt])
+  @@map("sealed_slate_packets")
+}

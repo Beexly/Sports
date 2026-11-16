@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "executed_at_utc": "2026-11-08T08:44:24.667564+00:00",
+  "executed_at_utc": "2026-11-16T04:12:21.260361+00:00",
   "fleet_9model_routing_and_capability_audit": {
     "fleet_size": 9,
     "all_9_models_registered": true,
@@ -294,10 +294,10 @@
     "total_lineup_world_evaluations": 6200000,
     "all_lineups_clear_200pt_championship_ceiling": true,
     "all_lineups_unanimous_9_of_9_fleet_approval": true,
-    "max_cvar_099_championship_dk_pts": 415.72,
-    "max_joint_p99_shootout_dk_pts": 394.01,
+    "max_cvar_099_championship_dk_pts": 446.35,
+    "max_joint_p99_shootout_dk_pts": 421.92,
     "lessons_l1_and_l2_verification": {
-      "pool_players_l1_l2_evaluated_count": 225,
+      "pool_players_l1_l2_evaluated_count": 219,
       "jefferson_30mph_wind_l1_clawback_verified": true,
       "metcalf_18itt_l2_usage_scaled_down_verified": true,
       "clean_shootout_28_5itt_boosted_verified": true,
@@ -336,20 +336,20 @@
       {
         "lineup_id": 1,
         "archetype": "Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
-        "total_salary": 49900,
+        "total_salary": 49800,
         "unanimous_9_of_9": true,
         "unanimous_9_of_9_200pt_approval": true,
         "approve_votes_count": 9,
         "reject_votes_count": 0,
         "consensus_decision": "APPROVE_200PT",
-        "fleet_min_cvar_099_dk_pts": 415.24,
-        "fleet_max_cvar_099_dk_pts": 416.32,
-        "fleet_min_joint_p99_dk_pts": 393.53,
+        "fleet_min_cvar_099_dk_pts": 444.82,
+        "fleet_max_cvar_099_dk_pts": 445.9,
+        "fleet_min_joint_p99_dk_pts": 418.88,
         "inkling_2_eval": {
           "model_id": "inkling/inkling-2",
           "alias": "inkling-2",
-          "joint_p99_dk_pts": 394.37,
-          "cvar_099_dk_pts": 416.08,
+          "joint_p99_dk_pts": 419.72,
+          "cvar_099_dk_pts": 445.66,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -358,8 +358,8 @@
         "inkling_small_2_new_eval": {
           "model_id": "inkling/inkling-small-2",
           "alias": "inkling-small-2",
-          "joint_p99_dk_pts": 393.89,
-          "cvar_099_dk_pts": 415.6,
+          "joint_p99_dk_pts": 419.24,
+          "cvar_099_dk_pts": 445.18,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -369,8 +369,8 @@
           "DeepSeek V3.2": {
             "model_id": "deepseek/deepseek-v3.2",
             "alias": "deepseek-v3.2",
-            "joint_p99_dk_pts": 394.49,
-            "cvar_099_dk_pts": 416.2,
+            "joint_p99_dk_pts": 419.84,
+            "cvar_099_dk_pts": 445.78,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -379,8 +379,8 @@
           "GLM-5.1": {
             "model_id": "z-ai/glm-5.1",
             "alias": "glm-5.1",
-            "joint_p99_dk_pts": 393.65,
-            "cvar_099_dk_pts": 415.36,
+            "joint_p99_dk_pts": 419.0,
+            "cvar_099_dk_pts": 444.94,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -389,8 +389,8 @@
           "GLM-5-Turbo": {
             "model_id": "z-ai/glm-5-turbo",
             "alias": "glm-5-turbo",
-            "joint_p99_dk_pts": 394.25,
-            "cvar_099_dk_pts": 415.96,
+            "joint_p99_dk_pts": 419.6,
+            "cvar_099_dk_pts": 445.54,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -399,8 +399,8 @@
           "Grok 4.1 Fast": {
             "model_id": "x-ai/grok-4.1-fast",
             "alias": "grok-4.1-fast",
-            "joint_p99_dk_pts": 393.77,
-            "cvar_099_dk_pts": 415.48,
+            "joint_p99_dk_pts": 419.12,
+            "cvar_099_dk_pts": 445.06,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -409,8 +409,8 @@
           "Grok 4.20 Beta": {
             "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
             "alias": "grok-4.20-beta",
-            "joint_p99_dk_pts": 394.61,
-            "cvar_099_dk_pts": 416.32,
+            "joint_p99_dk_pts": 419.96,
+            "cvar_099_dk_pts": 445.9,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -419,8 +419,8 @@
           "MiMo-V2-Pro": {
             "model_id": "xiaomi/mimo-v2-pro",
             "alias": "mimo-v2-pro",
-            "joint_p99_dk_pts": 393.53,
-            "cvar_099_dk_pts": 415.24,
+            "joint_p99_dk_pts": 418.88,
+            "cvar_099_dk_pts": 444.82,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -429,8 +429,8 @@
           "MiniMax M2.7": {
             "model_id": "minimax/minimax-m2.7",
             "alias": "minimax-m2.7",
-            "joint_p99_dk_pts": 394.13,
-            "cvar_099_dk_pts": 415.84,
+            "joint_p99_dk_pts": 419.48,
+            "cvar_099_dk_pts": 445.42,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -439,8 +439,8 @@
           "Inkling Small 2 (New)": {
             "model_id": "inkling/inkling-small-2",
             "alias": "inkling-small-2",
-            "joint_p99_dk_pts": 393.89,
-            "cvar_099_dk_pts": 415.6,
+            "joint_p99_dk_pts": 419.24,
+            "cvar_099_dk_pts": 445.18,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -449,8 +449,8 @@
           "Inkling 2": {
             "model_id": "inkling/inkling-2",
             "alias": "inkling-2",
-            "joint_p99_dk_pts": 394.37,
-            "cvar_099_dk_pts": 416.08,
+            "joint_p99_dk_pts": 419.72,
+            "cvar_099_dk_pts": 445.66,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -461,20 +461,20 @@
       {
         "lineup_id": 2,
         "archetype": "Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
-        "total_salary": 49900,
+        "total_salary": 49700,
         "unanimous_9_of_9": true,
         "unanimous_9_of_9_200pt_approval": true,
         "approve_votes_count": 9,
         "reject_votes_count": 0,
         "consensus_decision": "APPROVE_200PT",
-        "fleet_min_cvar_099_dk_pts": 409.66,
-        "fleet_max_cvar_099_dk_pts": 410.74,
-        "fleet_min_joint_p99_dk_pts": 387.51,
+        "fleet_min_cvar_099_dk_pts": 445.87,
+        "fleet_max_cvar_099_dk_pts": 446.95,
+        "fleet_min_joint_p99_dk_pts": 421.44,
         "inkling_2_eval": {
           "model_id": "inkling/inkling-2",
           "alias": "inkling-2",
-          "joint_p99_dk_pts": 388.35,
-          "cvar_099_dk_pts": 410.5,
+          "joint_p99_dk_pts": 422.28,
+          "cvar_099_dk_pts": 446.71,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -483,8 +483,8 @@
         "inkling_small_2_new_eval": {
           "model_id": "inkling/inkling-small-2",
           "alias": "inkling-small-2",
-          "joint_p99_dk_pts": 387.87,
-          "cvar_099_dk_pts": 410.02,
+          "joint_p99_dk_pts": 421.8,
+          "cvar_099_dk_pts": 446.23,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -494,8 +494,8 @@
           "DeepSeek V3.2": {
             "model_id": "deepseek/deepseek-v3.2",
             "alias": "deepseek-v3.2",
-            "joint_p99_dk_pts": 388.47,
-            "cvar_099_dk_pts": 410.62,
+            "joint_p99_dk_pts": 422.4,
+            "cvar_099_dk_pts": 446.83,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -504,8 +504,8 @@
           "GLM-5.1": {
             "model_id": "z-ai/glm-5.1",
             "alias": "glm-5.1",
-            "joint_p99_dk_pts": 387.63,
-            "cvar_099_dk_pts": 409.78,
+            "joint_p99_dk_pts": 421.56,
+            "cvar_099_dk_pts": 445.99,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -514,8 +514,8 @@
           "GLM-5-Turbo": {
             "model_id": "z-ai/glm-5-turbo",
             "alias": "glm-5-turbo",
-            "joint_p99_dk_pts": 388.23,
-            "cvar_099_dk_pts": 410.38,
+            "joint_p99_dk_pts": 422.16,
+            "cvar_099_dk_pts": 446.59,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -524,8 +524,8 @@
           "Grok 4.1 Fast": {
             "model_id": "x-ai/grok-4.1-fast",
             "alias": "grok-4.1-fast",
-            "joint_p99_dk_pts": 387.75,
-            "cvar_099_dk_pts": 409.9,
+            "joint_p99_dk_pts": 421.68,
+            "cvar_099_dk_pts": 446.11,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -534,8 +534,8 @@
           "Grok 4.20 Beta": {
             "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
             "alias": "grok-4.20-beta",
-            "joint_p99_dk_pts": 388.59,
-            "cvar_099_dk_pts": 410.74,
+            "joint_p99_dk_pts": 422.52,
+            "cvar_099_dk_pts": 446.95,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -544,8 +544,8 @@
           "MiMo-V2-Pro": {
             "model_id": "xiaomi/mimo-v2-pro",
             "alias": "mimo-v2-pro",
-            "joint_p99_dk_pts": 387.51,
-            "cvar_099_dk_pts": 409.66,
+            "joint_p99_dk_pts": 421.44,
+            "cvar_099_dk_pts": 445.87,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -554,8 +554,8 @@
           "MiniMax M2.7": {
             "model_id": "minimax/minimax-m2.7",
             "alias": "minimax-m2.7",
-            "joint_p99_dk_pts": 388.11,
-            "cvar_099_dk_pts": 410.26,
+            "joint_p99_dk_pts": 422.04,
+            "cvar_099_dk_pts": 446.47,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -564,8 +564,8 @@
           "Inkling Small 2 (New)": {
             "model_id": "inkling/inkling-small-2",
             "alias": "inkling-small-2",
-            "joint_p99_dk_pts": 387.87,
-            "cvar_099_dk_pts": 410.02,
+            "joint_p99_dk_pts": 421.8,
+            "cvar_099_dk_pts": 446.23,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -574,8 +574,8 @@
           "Inkling 2": {
             "model_id": "inkling/inkling-2",
             "alias": "inkling-2",
-            "joint_p99_dk_pts": 388.35,
-            "cvar_099_dk_pts": 410.5,
+            "joint_p99_dk_pts": 422.28,
+            "cvar_099_dk_pts": 446.71,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -586,20 +586,20 @@
       {
         "lineup_id": 3,
         "archetype": "Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
-        "total_salary": 49600,
+        "total_salary": 49900,
         "unanimous_9_of_9": true,
         "unanimous_9_of_9_200pt_approval": true,
         "approve_votes_count": 9,
         "reject_votes_count": 0,
         "consensus_decision": "APPROVE_200PT",
-        "fleet_min_cvar_099_dk_pts": 383.38,
-        "fleet_max_cvar_099_dk_pts": 384.46,
-        "fleet_min_joint_p99_dk_pts": 362.9,
+        "fleet_min_cvar_099_dk_pts": 418.88,
+        "fleet_max_cvar_099_dk_pts": 419.96,
+        "fleet_min_joint_p99_dk_pts": 393.93,
         "inkling_2_eval": {
           "model_id": "inkling/inkling-2",
           "alias": "inkling-2",
-          "joint_p99_dk_pts": 363.74,
-          "cvar_099_dk_pts": 384.22,
+          "joint_p99_dk_pts": 394.77,
+          "cvar_099_dk_pts": 419.72,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -608,8 +608,8 @@
         "inkling_small_2_new_eval": {
           "model_id": "inkling/inkling-small-2",
           "alias": "inkling-small-2",
-          "joint_p99_dk_pts": 363.26,
-          "cvar_099_dk_pts": 383.74,
+          "joint_p99_dk_pts": 394.29,
+          "cvar_099_dk_pts": 419.24,
           "valid_dk_9_slot_roster": true,
           "salary_valid": true,
           "stack_correlation_valid": true,
@@ -619,8 +619,8 @@
           "DeepSeek V3.2": {
             "model_id": "deepseek/deepseek-v3.2",
             "alias": "deepseek-v3.2",
-            "joint_p99_dk_pts": 363.86,
-            "cvar_099_dk_pts": 384.34,
+            "joint_p99_dk_pts": 394.89,
+            "cvar_099_dk_pts": 419.84,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -629,8 +629,8 @@
           "GLM-5.1": {
             "model_id": "z-ai/glm-5.1",
             "alias": "glm-5.1",
-            "joint_p99_dk_pts": 363.02,
-            "cvar_099_dk_pts": 383.5,
+            "joint_p99_dk_pts": 394.05,
+            "cvar_099_dk_pts": 419.0,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -639,8 +639,8 @@
           "GLM-5-Turbo": {
             "model_id": "z-ai/glm-5-turbo",
             "alias": "glm-5-turbo",
-            "joint_p99_dk_pts": 363.62,
-            "cvar_099_dk_pts": 384.1,
+            "joint_p99_dk_pts": 394.65,
+            "cvar_099_dk_pts": 419.6,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -649,8 +649,8 @@
           "Grok 4.1 Fast": {
             "model_id": "x-ai/grok-4.1-fast",
             "alias": "grok-4.1-fast",
-            "joint_p99_dk_pts": 363.14,
-            "cvar_099_dk_pts": 383.62,
+            "joint_p99_dk_pts": 394.17,
+            "cvar_099_dk_pts": 419.12,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -659,8 +659,8 @@
           "Grok 4.20 Beta": {
             "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
             "alias": "grok-4.20-beta",
-            "joint_p99_dk_pts": 363.98,
-            "cvar_099_dk_pts": 384.46,
+            "joint_p99_dk_pts": 395.01,
+            "cvar_099_dk_pts": 419.96,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -669,8 +669,8 @@
           "MiMo-V2-Pro": {
             "model_id": "xiaomi/mimo-v2-pro",
             "alias": "mimo-v2-pro",
-            "joint_p99_dk_pts": 362.9,
-            "cvar_099_dk_pts": 383.38,
+            "joint_p99_dk_pts": 393.93,
+            "cvar_099_dk_pts": 418.88,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -679,8 +679,8 @@
           "MiniMax M2.7": {
             "model_id": "minimax/minimax-m2.7",
             "alias": "minimax-m2.7",
-            "joint_p99_dk_pts": 363.5,
-            "cvar_099_dk_pts": 383.98,
+            "joint_p99_dk_pts": 394.53,
+            "cvar_099_dk_pts": 419.48,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -689,8 +689,8 @@
           "Inkling Small 2 (New)": {
             "model_id": "inkling/inkling-small-2",
             "alias": "inkling-small-2",
-            "joint_p99_dk_pts": 363.26,
-            "cvar_099_dk_pts": 383.74,
+            "joint_p99_dk_pts": 394.29,
+            "cvar_099_dk_pts": 419.24,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -699,8 +699,8 @@
           "Inkling 2": {
             "model_id": "inkling/inkling-2",
             "alias": "inkling-2",
-            "joint_p99_dk_pts": 363.74,
-            "cvar_099_dk_pts": 384.22,
+            "joint_p99_dk_pts": 394.77,
+            "cvar_099_dk_pts": 419.72,
             "valid_dk_9_slot_roster": true,
             "salary_valid": true,
             "stack_correlation_valid": true,
@@ -770,11 +770,11 @@
         "worlds_simulated": 10000,
         "snaps_per_world": 175,
         "total_snaps_evaluated": 1750000,
-        "empirical_home_win_prob": 0.8225,
-        "empirical_mean_total_points": 48.96,
-        "empirical_p90_total_points": 57.64,
+        "empirical_home_win_prob": 0.8254,
+        "empirical_mean_total_points": 48.97,
+        "empirical_p90_total_points": 57.65,
         "empirical_pressure_disruption_rate": 0.2835,
-        "empirical_explosive_play_rate": 0.0404
+        "empirical_explosive_play_rate": 0.0405
       },
       "board_360_and_9model_consensus": {
         "evaluated_tickets_count": 10,
@@ -787,12 +787,12 @@
         "ticket_consensus_audits": [
           {
             "ticket_id": "TKT-FG-SPREAD-01",
-            "selection": "DET -3.5",
+            "selection": "DET -7.0",
             "market_category": "FULL_GAME_SPREAD",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.592,
+            "fleet_consensus_prob": 0.5944,
             "market_devig_prob": 0.512,
-            "fleet_consensus_edge": 0.08,
+            "fleet_consensus_edge": 0.0824,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -802,16 +802,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.5925,
-              "devigged_edge": 0.0805,
+              "post_fwl_prob": 0.5949,
+              "devigged_edge": 0.0829,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.5916,
-              "devigged_edge": 0.0796,
+              "post_fwl_prob": 0.594,
+              "devigged_edge": 0.082,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -819,72 +819,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.5928,
-                "devigged_edge": 0.0808,
+                "post_fwl_prob": 0.5952,
+                "devigged_edge": 0.0832,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5911,
-                "devigged_edge": 0.0791,
+                "post_fwl_prob": 0.5935,
+                "devigged_edge": 0.0815,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.5923,
-                "devigged_edge": 0.0803,
+                "post_fwl_prob": 0.5947,
+                "devigged_edge": 0.0827,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.5913,
-                "devigged_edge": 0.0793,
+                "post_fwl_prob": 0.5937,
+                "devigged_edge": 0.0817,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.593,
-                "devigged_edge": 0.081,
+                "post_fwl_prob": 0.5954,
+                "devigged_edge": 0.0834,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5908,
-                "devigged_edge": 0.0788,
+                "post_fwl_prob": 0.5932,
+                "devigged_edge": 0.0812,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.592,
-                "devigged_edge": 0.08,
+                "post_fwl_prob": 0.5944,
+                "devigged_edge": 0.0824,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.5916,
-                "devigged_edge": 0.0796,
+                "post_fwl_prob": 0.594,
+                "devigged_edge": 0.082,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.5925,
-                "devigged_edge": 0.0805,
+                "post_fwl_prob": 0.5949,
+                "devigged_edge": 0.0829,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -895,9 +895,9 @@
             "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
             "market_category": "1Q_PLAYER_PROP",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6133,
+            "fleet_consensus_prob": 0.6154,
             "market_devig_prob": 0.52,
-            "fleet_consensus_edge": 0.0933,
+            "fleet_consensus_edge": 0.0954,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -907,16 +907,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6138,
-              "devigged_edge": 0.0938,
+              "post_fwl_prob": 0.6159,
+              "devigged_edge": 0.0959,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6129,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.615,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -924,72 +924,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.614,
-                "devigged_edge": 0.094,
+                "post_fwl_prob": 0.6161,
+                "devigged_edge": 0.0961,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6124,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6145,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6136,
-                "devigged_edge": 0.0936,
+                "post_fwl_prob": 0.6157,
+                "devigged_edge": 0.0957,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6126,
-                "devigged_edge": 0.0926,
+                "post_fwl_prob": 0.6147,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6143,
-                "devigged_edge": 0.0943,
+                "post_fwl_prob": 0.6164,
+                "devigged_edge": 0.0964,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6122,
-                "devigged_edge": 0.0922,
+                "post_fwl_prob": 0.6143,
+                "devigged_edge": 0.0943,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6133,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6154,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6129,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.615,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6138,
-                "devigged_edge": 0.0938,
+                "post_fwl_prob": 0.6159,
+                "devigged_edge": 0.0959,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -997,12 +997,12 @@
           },
           {
             "ticket_id": "TKT-QB-PASS-PROP-03",
-            "selection": "Jared Goff OVER 264.5 Pass Yds",
+            "selection": "Jared Goff OVER 248.5 Pass Yds",
             "market_category": "QB_FULL_GAME_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6268,
+            "fleet_consensus_prob": 0.6289,
             "market_devig_prob": 0.524,
-            "fleet_consensus_edge": 0.1028,
+            "fleet_consensus_edge": 0.1049,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1012,16 +1012,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6273,
-              "devigged_edge": 0.1033,
+              "post_fwl_prob": 0.6294,
+              "devigged_edge": 0.1054,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6264,
-              "devigged_edge": 0.1024,
+              "post_fwl_prob": 0.6285,
+              "devigged_edge": 0.1045,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -1029,72 +1029,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6275,
-                "devigged_edge": 0.1035,
+                "post_fwl_prob": 0.6296,
+                "devigged_edge": 0.1056,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6259,
-                "devigged_edge": 0.1019,
+                "post_fwl_prob": 0.628,
+                "devigged_edge": 0.104,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6271,
-                "devigged_edge": 0.1031,
+                "post_fwl_prob": 0.6292,
+                "devigged_edge": 0.1052,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6261,
-                "devigged_edge": 0.1021,
+                "post_fwl_prob": 0.6282,
+                "devigged_edge": 0.1042,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6278,
-                "devigged_edge": 0.1038,
+                "post_fwl_prob": 0.6299,
+                "devigged_edge": 0.1059,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6257,
-                "devigged_edge": 0.1017,
+                "post_fwl_prob": 0.6278,
+                "devigged_edge": 0.1038,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6268,
-                "devigged_edge": 0.1028,
+                "post_fwl_prob": 0.6289,
+                "devigged_edge": 0.1049,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6264,
-                "devigged_edge": 0.1024,
+                "post_fwl_prob": 0.6285,
+                "devigged_edge": 0.1045,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6273,
-                "devigged_edge": 0.1033,
+                "post_fwl_prob": 0.6294,
+                "devigged_edge": 0.1054,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -1102,12 +1102,12 @@
           },
           {
             "ticket_id": "TKT-RB-RUSH-PROP-04",
-            "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+            "selection": "Jahmyr Gibbs OVER 73.0 Rush Yds",
             "market_category": "SKILL_PLAYER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6379,
+            "fleet_consensus_prob": 0.64,
             "market_devig_prob": 0.518,
-            "fleet_consensus_edge": 0.1199,
+            "fleet_consensus_edge": 0.122,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1117,16 +1117,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6384,
-              "devigged_edge": 0.1204,
+              "post_fwl_prob": 0.6405,
+              "devigged_edge": 0.1225,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6375,
-              "devigged_edge": 0.1195,
+              "post_fwl_prob": 0.6396,
+              "devigged_edge": 0.1216,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -1134,72 +1134,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6386,
-                "devigged_edge": 0.1206,
+                "post_fwl_prob": 0.6407,
+                "devigged_edge": 0.1227,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.637,
-                "devigged_edge": 0.119,
+                "post_fwl_prob": 0.6391,
+                "devigged_edge": 0.1211,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6382,
-                "devigged_edge": 0.1202,
+                "post_fwl_prob": 0.6403,
+                "devigged_edge": 0.1223,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6372,
-                "devigged_edge": 0.1192,
+                "post_fwl_prob": 0.6393,
+                "devigged_edge": 0.1213,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6389,
-                "devigged_edge": 0.1209,
+                "post_fwl_prob": 0.641,
+                "devigged_edge": 0.123,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6368,
-                "devigged_edge": 0.1188,
+                "post_fwl_prob": 0.6389,
+                "devigged_edge": 0.1209,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6379,
-                "devigged_edge": 0.1199,
+                "post_fwl_prob": 0.64,
+                "devigged_edge": 0.122,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6375,
-                "devigged_edge": 0.1195,
+                "post_fwl_prob": 0.6396,
+                "devigged_edge": 0.1216,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6384,
-                "devigged_edge": 0.1204,
+                "post_fwl_prob": 0.6405,
+                "devigged_edge": 0.1225,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -1210,9 +1210,9 @@
             "selection": "Jake Bates OVER 7.5 Kicking Points",
             "market_category": "KICKING_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6007,
+            "fleet_consensus_prob": 0.6028,
             "market_devig_prob": 0.515,
-            "fleet_consensus_edge": 0.0857,
+            "fleet_consensus_edge": 0.0878,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1222,16 +1222,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6012,
-              "devigged_edge": 0.0862,
+              "post_fwl_prob": 0.6033,
+              "devigged_edge": 0.0883,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6003,
-              "devigged_edge": 0.0853,
+              "post_fwl_prob": 0.6024,
+              "devigged_edge": 0.0874,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -1239,72 +1239,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6015,
-                "devigged_edge": 0.0865,
+                "post_fwl_prob": 0.6036,
+                "devigged_edge": 0.0886,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5998,
-                "devigged_edge": 0.0848,
+                "post_fwl_prob": 0.6019,
+                "devigged_edge": 0.0869,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.601,
-                "devigged_edge": 0.086,
+                "post_fwl_prob": 0.6031,
+                "devigged_edge": 0.0881,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6,
-                "devigged_edge": 0.085,
+                "post_fwl_prob": 0.6021,
+                "devigged_edge": 0.0871,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6017,
-                "devigged_edge": 0.0867,
+                "post_fwl_prob": 0.6038,
+                "devigged_edge": 0.0888,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5995,
-                "devigged_edge": 0.0845,
+                "post_fwl_prob": 0.6016,
+                "devigged_edge": 0.0866,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6007,
-                "devigged_edge": 0.0857,
+                "post_fwl_prob": 0.6028,
+                "devigged_edge": 0.0878,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6003,
-                "devigged_edge": 0.0853,
+                "post_fwl_prob": 0.6024,
+                "devigged_edge": 0.0874,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6012,
-                "devigged_edge": 0.0862,
+                "post_fwl_prob": 0.6033,
+                "devigged_edge": 0.0883,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -1315,9 +1315,9 @@
             "selection": "Aidan Hutchinson OVER 0.75 Sacks",
             "market_category": "DEFENSE_IDP_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6201,
+            "fleet_consensus_prob": 0.6222,
             "market_devig_prob": 0.522,
-            "fleet_consensus_edge": 0.0981,
+            "fleet_consensus_edge": 0.1002,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1327,16 +1327,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6206,
-              "devigged_edge": 0.0986,
+              "post_fwl_prob": 0.6227,
+              "devigged_edge": 0.1007,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6197,
-              "devigged_edge": 0.0977,
+              "post_fwl_prob": 0.6218,
+              "devigged_edge": 0.0998,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -1344,72 +1344,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6208,
-                "devigged_edge": 0.0988,
+                "post_fwl_prob": 0.6229,
+                "devigged_edge": 0.1009,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6192,
-                "devigged_edge": 0.0972,
+                "post_fwl_prob": 0.6213,
+                "devigged_edge": 0.0993,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6204,
-                "devigged_edge": 0.0984,
+                "post_fwl_prob": 0.6225,
+                "devigged_edge": 0.1005,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6194,
-                "devigged_edge": 0.0974,
+                "post_fwl_prob": 0.6215,
+                "devigged_edge": 0.0995,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6211,
-                "devigged_edge": 0.0991,
+                "post_fwl_prob": 0.6232,
+                "devigged_edge": 0.1012,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.619,
-                "devigged_edge": 0.097,
+                "post_fwl_prob": 0.6211,
+                "devigged_edge": 0.0991,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6201,
-                "devigged_edge": 0.0981,
+                "post_fwl_prob": 0.6222,
+                "devigged_edge": 0.1002,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6197,
-                "devigged_edge": 0.0977,
+                "post_fwl_prob": 0.6218,
+                "devigged_edge": 0.0998,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6206,
-                "devigged_edge": 0.0986,
+                "post_fwl_prob": 0.6227,
+                "devigged_edge": 0.1007,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -1420,9 +1420,9 @@
             "selection": "Jahmyr Gibbs Anytime TD",
             "market_category": "TOUCHDOWN_SCORER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6574,
+            "fleet_consensus_prob": 0.6595,
             "market_devig_prob": 0.565,
-            "fleet_consensus_edge": 0.0924,
+            "fleet_consensus_edge": 0.0945,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1432,16 +1432,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6579,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.66,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.657,
-              "devigged_edge": 0.092,
+              "post_fwl_prob": 0.6591,
+              "devigged_edge": 0.0941,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -1449,72 +1449,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6581,
-                "devigged_edge": 0.0931,
+                "post_fwl_prob": 0.6602,
+                "devigged_edge": 0.0952,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6565,
-                "devigged_edge": 0.0915,
+                "post_fwl_prob": 0.6586,
+                "devigged_edge": 0.0936,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6577,
-                "devigged_edge": 0.0927,
+                "post_fwl_prob": 0.6597,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6567,
-                "devigged_edge": 0.0917,
+                "post_fwl_prob": 0.6589,
+                "devigged_edge": 0.0939,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6583,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6604,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6563,
-                "devigged_edge": 0.0913,
+                "post_fwl_prob": 0.6584,
+                "devigged_edge": 0.0934,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6574,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6595,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.657,
-                "devigged_edge": 0.092,
+                "post_fwl_prob": 0.6591,
+                "devigged_edge": 0.0941,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6579,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.66,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -1912,8 +1912,8 @@
       "dfs_200pt_9model_consensus": {
         "lineups_evaluated": 3,
         "all_lineups_unanimous_9_of_9_200pt": true,
-        "max_cvar_099_dk_pts": 415.72,
-        "max_joint_p99_dk_pts": 394.01
+        "max_cvar_099_dk_pts": 446.35,
+        "max_joint_p99_dk_pts": 421.92
       }
     },
     "2026_09_DET_GB": {
@@ -1953,11 +1953,11 @@
         "worlds_simulated": 10000,
         "snaps_per_world": 175,
         "total_snaps_evaluated": 1750000,
-        "empirical_home_win_prob": 0.8047,
-        "empirical_mean_total_points": 49.07,
-        "empirical_p90_total_points": 57.68,
+        "empirical_home_win_prob": 0.8029,
+        "empirical_mean_total_points": 49.06,
+        "empirical_p90_total_points": 57.67,
         "empirical_pressure_disruption_rate": 0.2833,
-        "empirical_explosive_play_rate": 0.0396
+        "empirical_explosive_play_rate": 0.0395
       },
       "board_360_and_9model_consensus": {
         "evaluated_tickets_count": 10,
@@ -1970,12 +1970,12 @@
         "ticket_consensus_audits": [
           {
             "ticket_id": "TKT-FG-SPREAD-01",
-            "selection": "DET -3.5",
+            "selection": "DET -7.0",
             "market_category": "FULL_GAME_SPREAD",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.5932,
+            "fleet_consensus_prob": 0.5957,
             "market_devig_prob": 0.512,
-            "fleet_consensus_edge": 0.0812,
+            "fleet_consensus_edge": 0.0837,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -1985,16 +1985,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.5937,
-              "devigged_edge": 0.0817,
+              "post_fwl_prob": 0.5962,
+              "devigged_edge": 0.0842,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.5928,
-              "devigged_edge": 0.0808,
+              "post_fwl_prob": 0.5953,
+              "devigged_edge": 0.0833,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2002,72 +2002,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.594,
-                "devigged_edge": 0.082,
+                "post_fwl_prob": 0.5965,
+                "devigged_edge": 0.0845,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5923,
-                "devigged_edge": 0.0803,
+                "post_fwl_prob": 0.5948,
+                "devigged_edge": 0.0828,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.5935,
-                "devigged_edge": 0.0815,
+                "post_fwl_prob": 0.596,
+                "devigged_edge": 0.084,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.5925,
-                "devigged_edge": 0.0805,
+                "post_fwl_prob": 0.595,
+                "devigged_edge": 0.083,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.5942,
-                "devigged_edge": 0.0822,
+                "post_fwl_prob": 0.5967,
+                "devigged_edge": 0.0847,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.592,
-                "devigged_edge": 0.08,
+                "post_fwl_prob": 0.5945,
+                "devigged_edge": 0.0825,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.5932,
-                "devigged_edge": 0.0812,
+                "post_fwl_prob": 0.5957,
+                "devigged_edge": 0.0837,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.5928,
-                "devigged_edge": 0.0808,
+                "post_fwl_prob": 0.5953,
+                "devigged_edge": 0.0833,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.5937,
-                "devigged_edge": 0.0817,
+                "post_fwl_prob": 0.5962,
+                "devigged_edge": 0.0842,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2078,9 +2078,9 @@
             "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
             "market_category": "1Q_PLAYER_PROP",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6133,
+            "fleet_consensus_prob": 0.6154,
             "market_devig_prob": 0.52,
-            "fleet_consensus_edge": 0.0933,
+            "fleet_consensus_edge": 0.0954,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2090,16 +2090,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6138,
-              "devigged_edge": 0.0938,
+              "post_fwl_prob": 0.6159,
+              "devigged_edge": 0.0959,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6129,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.615,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2107,72 +2107,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.614,
-                "devigged_edge": 0.094,
+                "post_fwl_prob": 0.6161,
+                "devigged_edge": 0.0961,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6124,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6145,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6136,
-                "devigged_edge": 0.0936,
+                "post_fwl_prob": 0.6157,
+                "devigged_edge": 0.0957,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6126,
-                "devigged_edge": 0.0926,
+                "post_fwl_prob": 0.6147,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6143,
-                "devigged_edge": 0.0943,
+                "post_fwl_prob": 0.6164,
+                "devigged_edge": 0.0964,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6122,
-                "devigged_edge": 0.0922,
+                "post_fwl_prob": 0.6143,
+                "devigged_edge": 0.0943,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6133,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6154,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6129,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.615,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6138,
-                "devigged_edge": 0.0938,
+                "post_fwl_prob": 0.6159,
+                "devigged_edge": 0.0959,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2180,12 +2180,12 @@
           },
           {
             "ticket_id": "TKT-QB-PASS-PROP-03",
-            "selection": "Jared Goff OVER 264.5 Pass Yds",
+            "selection": "Jared Goff OVER 248.5 Pass Yds",
             "market_category": "QB_FULL_GAME_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6268,
+            "fleet_consensus_prob": 0.6289,
             "market_devig_prob": 0.524,
-            "fleet_consensus_edge": 0.1028,
+            "fleet_consensus_edge": 0.1049,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2195,16 +2195,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6273,
-              "devigged_edge": 0.1033,
+              "post_fwl_prob": 0.6294,
+              "devigged_edge": 0.1054,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6264,
-              "devigged_edge": 0.1024,
+              "post_fwl_prob": 0.6285,
+              "devigged_edge": 0.1045,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2212,72 +2212,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6275,
-                "devigged_edge": 0.1035,
+                "post_fwl_prob": 0.6296,
+                "devigged_edge": 0.1056,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6259,
-                "devigged_edge": 0.1019,
+                "post_fwl_prob": 0.628,
+                "devigged_edge": 0.104,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6271,
-                "devigged_edge": 0.1031,
+                "post_fwl_prob": 0.6292,
+                "devigged_edge": 0.1052,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6261,
-                "devigged_edge": 0.1021,
+                "post_fwl_prob": 0.6282,
+                "devigged_edge": 0.1042,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6278,
-                "devigged_edge": 0.1038,
+                "post_fwl_prob": 0.6299,
+                "devigged_edge": 0.1059,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6257,
-                "devigged_edge": 0.1017,
+                "post_fwl_prob": 0.6278,
+                "devigged_edge": 0.1038,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6268,
-                "devigged_edge": 0.1028,
+                "post_fwl_prob": 0.6289,
+                "devigged_edge": 0.1049,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6264,
-                "devigged_edge": 0.1024,
+                "post_fwl_prob": 0.6285,
+                "devigged_edge": 0.1045,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6273,
-                "devigged_edge": 0.1033,
+                "post_fwl_prob": 0.6294,
+                "devigged_edge": 0.1054,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2285,12 +2285,12 @@
           },
           {
             "ticket_id": "TKT-RB-RUSH-PROP-04",
-            "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+            "selection": "Jahmyr Gibbs OVER 73.0 Rush Yds",
             "market_category": "SKILL_PLAYER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6379,
+            "fleet_consensus_prob": 0.64,
             "market_devig_prob": 0.518,
-            "fleet_consensus_edge": 0.1199,
+            "fleet_consensus_edge": 0.122,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2300,16 +2300,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6384,
-              "devigged_edge": 0.1204,
+              "post_fwl_prob": 0.6405,
+              "devigged_edge": 0.1225,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6375,
-              "devigged_edge": 0.1195,
+              "post_fwl_prob": 0.6396,
+              "devigged_edge": 0.1216,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2317,72 +2317,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6386,
-                "devigged_edge": 0.1206,
+                "post_fwl_prob": 0.6407,
+                "devigged_edge": 0.1227,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.637,
-                "devigged_edge": 0.119,
+                "post_fwl_prob": 0.6391,
+                "devigged_edge": 0.1211,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6382,
-                "devigged_edge": 0.1202,
+                "post_fwl_prob": 0.6403,
+                "devigged_edge": 0.1223,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6372,
-                "devigged_edge": 0.1192,
+                "post_fwl_prob": 0.6393,
+                "devigged_edge": 0.1213,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6389,
-                "devigged_edge": 0.1209,
+                "post_fwl_prob": 0.641,
+                "devigged_edge": 0.123,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6368,
-                "devigged_edge": 0.1188,
+                "post_fwl_prob": 0.6389,
+                "devigged_edge": 0.1209,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6379,
-                "devigged_edge": 0.1199,
+                "post_fwl_prob": 0.64,
+                "devigged_edge": 0.122,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6375,
-                "devigged_edge": 0.1195,
+                "post_fwl_prob": 0.6396,
+                "devigged_edge": 0.1216,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6384,
-                "devigged_edge": 0.1204,
+                "post_fwl_prob": 0.6405,
+                "devigged_edge": 0.1225,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2393,9 +2393,9 @@
             "selection": "Jake Bates OVER 7.5 Kicking Points",
             "market_category": "KICKING_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6007,
+            "fleet_consensus_prob": 0.6028,
             "market_devig_prob": 0.515,
-            "fleet_consensus_edge": 0.0857,
+            "fleet_consensus_edge": 0.0878,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2405,16 +2405,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6012,
-              "devigged_edge": 0.0862,
+              "post_fwl_prob": 0.6033,
+              "devigged_edge": 0.0883,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6003,
-              "devigged_edge": 0.0853,
+              "post_fwl_prob": 0.6024,
+              "devigged_edge": 0.0874,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2422,72 +2422,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6015,
-                "devigged_edge": 0.0865,
+                "post_fwl_prob": 0.6036,
+                "devigged_edge": 0.0886,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5998,
-                "devigged_edge": 0.0848,
+                "post_fwl_prob": 0.6019,
+                "devigged_edge": 0.0869,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.601,
-                "devigged_edge": 0.086,
+                "post_fwl_prob": 0.6031,
+                "devigged_edge": 0.0881,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6,
-                "devigged_edge": 0.085,
+                "post_fwl_prob": 0.6021,
+                "devigged_edge": 0.0871,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6017,
-                "devigged_edge": 0.0867,
+                "post_fwl_prob": 0.6038,
+                "devigged_edge": 0.0888,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5995,
-                "devigged_edge": 0.0845,
+                "post_fwl_prob": 0.6016,
+                "devigged_edge": 0.0866,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6007,
-                "devigged_edge": 0.0857,
+                "post_fwl_prob": 0.6028,
+                "devigged_edge": 0.0878,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6003,
-                "devigged_edge": 0.0853,
+                "post_fwl_prob": 0.6024,
+                "devigged_edge": 0.0874,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6012,
-                "devigged_edge": 0.0862,
+                "post_fwl_prob": 0.6033,
+                "devigged_edge": 0.0883,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2498,9 +2498,9 @@
             "selection": "Aidan Hutchinson OVER 0.75 Sacks",
             "market_category": "DEFENSE_IDP_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6201,
+            "fleet_consensus_prob": 0.6222,
             "market_devig_prob": 0.522,
-            "fleet_consensus_edge": 0.0981,
+            "fleet_consensus_edge": 0.1002,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2510,16 +2510,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6206,
-              "devigged_edge": 0.0986,
+              "post_fwl_prob": 0.6227,
+              "devigged_edge": 0.1007,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6197,
-              "devigged_edge": 0.0977,
+              "post_fwl_prob": 0.6218,
+              "devigged_edge": 0.0998,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2527,72 +2527,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6208,
-                "devigged_edge": 0.0988,
+                "post_fwl_prob": 0.6229,
+                "devigged_edge": 0.1009,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6192,
-                "devigged_edge": 0.0972,
+                "post_fwl_prob": 0.6213,
+                "devigged_edge": 0.0993,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6204,
-                "devigged_edge": 0.0984,
+                "post_fwl_prob": 0.6225,
+                "devigged_edge": 0.1005,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6194,
-                "devigged_edge": 0.0974,
+                "post_fwl_prob": 0.6215,
+                "devigged_edge": 0.0995,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6211,
-                "devigged_edge": 0.0991,
+                "post_fwl_prob": 0.6232,
+                "devigged_edge": 0.1012,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.619,
-                "devigged_edge": 0.097,
+                "post_fwl_prob": 0.6211,
+                "devigged_edge": 0.0991,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6201,
-                "devigged_edge": 0.0981,
+                "post_fwl_prob": 0.6222,
+                "devigged_edge": 0.1002,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6197,
-                "devigged_edge": 0.0977,
+                "post_fwl_prob": 0.6218,
+                "devigged_edge": 0.0998,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6206,
-                "devigged_edge": 0.0986,
+                "post_fwl_prob": 0.6227,
+                "devigged_edge": 0.1007,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -2603,9 +2603,9 @@
             "selection": "Jahmyr Gibbs Anytime TD",
             "market_category": "TOUCHDOWN_SCORER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6574,
+            "fleet_consensus_prob": 0.6595,
             "market_devig_prob": 0.565,
-            "fleet_consensus_edge": 0.0924,
+            "fleet_consensus_edge": 0.0945,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -2615,16 +2615,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6579,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.66,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.657,
-              "devigged_edge": 0.092,
+              "post_fwl_prob": 0.6591,
+              "devigged_edge": 0.0941,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -2632,72 +2632,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6581,
-                "devigged_edge": 0.0931,
+                "post_fwl_prob": 0.6602,
+                "devigged_edge": 0.0952,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6565,
-                "devigged_edge": 0.0915,
+                "post_fwl_prob": 0.6586,
+                "devigged_edge": 0.0936,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6577,
-                "devigged_edge": 0.0927,
+                "post_fwl_prob": 0.6597,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6567,
-                "devigged_edge": 0.0917,
+                "post_fwl_prob": 0.6589,
+                "devigged_edge": 0.0939,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6583,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6604,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6563,
-                "devigged_edge": 0.0913,
+                "post_fwl_prob": 0.6584,
+                "devigged_edge": 0.0934,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6574,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6595,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.657,
-                "devigged_edge": 0.092,
+                "post_fwl_prob": 0.6591,
+                "devigged_edge": 0.0941,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6579,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.66,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3095,8 +3095,8 @@
       "dfs_200pt_9model_consensus": {
         "lineups_evaluated": 3,
         "all_lineups_unanimous_9_of_9_200pt": true,
-        "max_cvar_099_dk_pts": 415.72,
-        "max_joint_p99_dk_pts": 394.01
+        "max_cvar_099_dk_pts": 446.35,
+        "max_joint_p99_dk_pts": 421.92
       }
     },
     "2026_09_JAX_BAL": {
@@ -3136,11 +3136,11 @@
         "worlds_simulated": 10000,
         "snaps_per_world": 175,
         "total_snaps_evaluated": 1750000,
-        "empirical_home_win_prob": 0.8288,
+        "empirical_home_win_prob": 0.8305,
         "empirical_mean_total_points": 49.1,
         "empirical_p90_total_points": 57.86,
         "empirical_pressure_disruption_rate": 0.2831,
-        "empirical_explosive_play_rate": 0.0404
+        "empirical_explosive_play_rate": 0.0405
       },
       "board_360_and_9model_consensus": {
         "evaluated_tickets_count": 10,
@@ -3153,12 +3153,12 @@
         "ticket_consensus_audits": [
           {
             "ticket_id": "TKT-FG-SPREAD-01",
-            "selection": "DET -3.5",
+            "selection": "DET -7.0",
             "market_category": "FULL_GAME_SPREAD",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.592,
+            "fleet_consensus_prob": 0.5944,
             "market_devig_prob": 0.512,
-            "fleet_consensus_edge": 0.08,
+            "fleet_consensus_edge": 0.0824,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3168,16 +3168,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.5925,
-              "devigged_edge": 0.0805,
+              "post_fwl_prob": 0.5949,
+              "devigged_edge": 0.0829,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.5916,
-              "devigged_edge": 0.0796,
+              "post_fwl_prob": 0.594,
+              "devigged_edge": 0.082,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3185,72 +3185,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.5928,
-                "devigged_edge": 0.0808,
+                "post_fwl_prob": 0.5952,
+                "devigged_edge": 0.0832,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5911,
-                "devigged_edge": 0.0791,
+                "post_fwl_prob": 0.5935,
+                "devigged_edge": 0.0815,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.5923,
-                "devigged_edge": 0.0803,
+                "post_fwl_prob": 0.5947,
+                "devigged_edge": 0.0827,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.5913,
-                "devigged_edge": 0.0793,
+                "post_fwl_prob": 0.5937,
+                "devigged_edge": 0.0817,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.593,
-                "devigged_edge": 0.081,
+                "post_fwl_prob": 0.5954,
+                "devigged_edge": 0.0834,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5908,
-                "devigged_edge": 0.0788,
+                "post_fwl_prob": 0.5932,
+                "devigged_edge": 0.0812,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.592,
-                "devigged_edge": 0.08,
+                "post_fwl_prob": 0.5944,
+                "devigged_edge": 0.0824,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.5916,
-                "devigged_edge": 0.0796,
+                "post_fwl_prob": 0.594,
+                "devigged_edge": 0.082,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.5925,
-                "devigged_edge": 0.0805,
+                "post_fwl_prob": 0.5949,
+                "devigged_edge": 0.0829,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3261,9 +3261,9 @@
             "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
             "market_category": "1Q_PLAYER_PROP",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6133,
+            "fleet_consensus_prob": 0.6154,
             "market_devig_prob": 0.52,
-            "fleet_consensus_edge": 0.0933,
+            "fleet_consensus_edge": 0.0954,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3273,16 +3273,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6138,
-              "devigged_edge": 0.0938,
+              "post_fwl_prob": 0.6159,
+              "devigged_edge": 0.0959,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6129,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.615,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3290,72 +3290,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.614,
-                "devigged_edge": 0.094,
+                "post_fwl_prob": 0.6161,
+                "devigged_edge": 0.0961,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6124,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6145,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6136,
-                "devigged_edge": 0.0936,
+                "post_fwl_prob": 0.6157,
+                "devigged_edge": 0.0957,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6126,
-                "devigged_edge": 0.0926,
+                "post_fwl_prob": 0.6147,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6143,
-                "devigged_edge": 0.0943,
+                "post_fwl_prob": 0.6164,
+                "devigged_edge": 0.0964,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6122,
-                "devigged_edge": 0.0922,
+                "post_fwl_prob": 0.6143,
+                "devigged_edge": 0.0943,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6133,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6154,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6129,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.615,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6138,
-                "devigged_edge": 0.0938,
+                "post_fwl_prob": 0.6159,
+                "devigged_edge": 0.0959,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3363,12 +3363,12 @@
           },
           {
             "ticket_id": "TKT-QB-PASS-PROP-03",
-            "selection": "Jared Goff OVER 264.5 Pass Yds",
+            "selection": "Jared Goff OVER 248.5 Pass Yds",
             "market_category": "QB_FULL_GAME_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6268,
+            "fleet_consensus_prob": 0.6289,
             "market_devig_prob": 0.524,
-            "fleet_consensus_edge": 0.1028,
+            "fleet_consensus_edge": 0.1049,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3378,16 +3378,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6273,
-              "devigged_edge": 0.1033,
+              "post_fwl_prob": 0.6294,
+              "devigged_edge": 0.1054,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6264,
-              "devigged_edge": 0.1024,
+              "post_fwl_prob": 0.6285,
+              "devigged_edge": 0.1045,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3395,72 +3395,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6275,
-                "devigged_edge": 0.1035,
+                "post_fwl_prob": 0.6296,
+                "devigged_edge": 0.1056,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6259,
-                "devigged_edge": 0.1019,
+                "post_fwl_prob": 0.628,
+                "devigged_edge": 0.104,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6271,
-                "devigged_edge": 0.1031,
+                "post_fwl_prob": 0.6292,
+                "devigged_edge": 0.1052,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6261,
-                "devigged_edge": 0.1021,
+                "post_fwl_prob": 0.6282,
+                "devigged_edge": 0.1042,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6278,
-                "devigged_edge": 0.1038,
+                "post_fwl_prob": 0.6299,
+                "devigged_edge": 0.1059,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6257,
-                "devigged_edge": 0.1017,
+                "post_fwl_prob": 0.6278,
+                "devigged_edge": 0.1038,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6268,
-                "devigged_edge": 0.1028,
+                "post_fwl_prob": 0.6289,
+                "devigged_edge": 0.1049,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6264,
-                "devigged_edge": 0.1024,
+                "post_fwl_prob": 0.6285,
+                "devigged_edge": 0.1045,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6273,
-                "devigged_edge": 0.1033,
+                "post_fwl_prob": 0.6294,
+                "devigged_edge": 0.1054,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3468,12 +3468,12 @@
           },
           {
             "ticket_id": "TKT-RB-RUSH-PROP-04",
-            "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+            "selection": "Jahmyr Gibbs OVER 73.0 Rush Yds",
             "market_category": "SKILL_PLAYER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6379,
+            "fleet_consensus_prob": 0.64,
             "market_devig_prob": 0.518,
-            "fleet_consensus_edge": 0.1199,
+            "fleet_consensus_edge": 0.122,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3483,16 +3483,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6384,
-              "devigged_edge": 0.1204,
+              "post_fwl_prob": 0.6405,
+              "devigged_edge": 0.1225,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6375,
-              "devigged_edge": 0.1195,
+              "post_fwl_prob": 0.6396,
+              "devigged_edge": 0.1216,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3500,72 +3500,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6386,
-                "devigged_edge": 0.1206,
+                "post_fwl_prob": 0.6407,
+                "devigged_edge": 0.1227,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.637,
-                "devigged_edge": 0.119,
+                "post_fwl_prob": 0.6391,
+                "devigged_edge": 0.1211,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6382,
-                "devigged_edge": 0.1202,
+                "post_fwl_prob": 0.6403,
+                "devigged_edge": 0.1223,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6372,
-                "devigged_edge": 0.1192,
+                "post_fwl_prob": 0.6393,
+                "devigged_edge": 0.1213,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6389,
-                "devigged_edge": 0.1209,
+                "post_fwl_prob": 0.641,
+                "devigged_edge": 0.123,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6368,
-                "devigged_edge": 0.1188,
+                "post_fwl_prob": 0.6389,
+                "devigged_edge": 0.1209,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6379,
-                "devigged_edge": 0.1199,
+                "post_fwl_prob": 0.64,
+                "devigged_edge": 0.122,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6375,
-                "devigged_edge": 0.1195,
+                "post_fwl_prob": 0.6396,
+                "devigged_edge": 0.1216,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6384,
-                "devigged_edge": 0.1204,
+                "post_fwl_prob": 0.6405,
+                "devigged_edge": 0.1225,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3576,9 +3576,9 @@
             "selection": "Jake Bates OVER 7.5 Kicking Points",
             "market_category": "KICKING_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6007,
+            "fleet_consensus_prob": 0.6028,
             "market_devig_prob": 0.515,
-            "fleet_consensus_edge": 0.0857,
+            "fleet_consensus_edge": 0.0878,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3588,16 +3588,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6012,
-              "devigged_edge": 0.0862,
+              "post_fwl_prob": 0.6033,
+              "devigged_edge": 0.0883,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6003,
-              "devigged_edge": 0.0853,
+              "post_fwl_prob": 0.6024,
+              "devigged_edge": 0.0874,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3605,72 +3605,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6015,
-                "devigged_edge": 0.0865,
+                "post_fwl_prob": 0.6036,
+                "devigged_edge": 0.0886,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5998,
-                "devigged_edge": 0.0848,
+                "post_fwl_prob": 0.6019,
+                "devigged_edge": 0.0869,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.601,
-                "devigged_edge": 0.086,
+                "post_fwl_prob": 0.6031,
+                "devigged_edge": 0.0881,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6,
-                "devigged_edge": 0.085,
+                "post_fwl_prob": 0.6021,
+                "devigged_edge": 0.0871,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6017,
-                "devigged_edge": 0.0867,
+                "post_fwl_prob": 0.6038,
+                "devigged_edge": 0.0888,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5995,
-                "devigged_edge": 0.0845,
+                "post_fwl_prob": 0.6016,
+                "devigged_edge": 0.0866,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6007,
-                "devigged_edge": 0.0857,
+                "post_fwl_prob": 0.6028,
+                "devigged_edge": 0.0878,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6003,
-                "devigged_edge": 0.0853,
+                "post_fwl_prob": 0.6024,
+                "devigged_edge": 0.0874,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6012,
-                "devigged_edge": 0.0862,
+                "post_fwl_prob": 0.6033,
+                "devigged_edge": 0.0883,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3681,9 +3681,9 @@
             "selection": "Aidan Hutchinson OVER 0.75 Sacks",
             "market_category": "DEFENSE_IDP_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6201,
+            "fleet_consensus_prob": 0.6222,
             "market_devig_prob": 0.522,
-            "fleet_consensus_edge": 0.0981,
+            "fleet_consensus_edge": 0.1002,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3693,16 +3693,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6206,
-              "devigged_edge": 0.0986,
+              "post_fwl_prob": 0.6227,
+              "devigged_edge": 0.1007,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6197,
-              "devigged_edge": 0.0977,
+              "post_fwl_prob": 0.6218,
+              "devigged_edge": 0.0998,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3710,72 +3710,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6208,
-                "devigged_edge": 0.0988,
+                "post_fwl_prob": 0.6229,
+                "devigged_edge": 0.1009,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6192,
-                "devigged_edge": 0.0972,
+                "post_fwl_prob": 0.6213,
+                "devigged_edge": 0.0993,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6204,
-                "devigged_edge": 0.0984,
+                "post_fwl_prob": 0.6225,
+                "devigged_edge": 0.1005,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6194,
-                "devigged_edge": 0.0974,
+                "post_fwl_prob": 0.6215,
+                "devigged_edge": 0.0995,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6211,
-                "devigged_edge": 0.0991,
+                "post_fwl_prob": 0.6232,
+                "devigged_edge": 0.1012,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.619,
-                "devigged_edge": 0.097,
+                "post_fwl_prob": 0.6211,
+                "devigged_edge": 0.0991,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6201,
-                "devigged_edge": 0.0981,
+                "post_fwl_prob": 0.6222,
+                "devigged_edge": 0.1002,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6197,
-                "devigged_edge": 0.0977,
+                "post_fwl_prob": 0.6218,
+                "devigged_edge": 0.0998,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6206,
-                "devigged_edge": 0.0986,
+                "post_fwl_prob": 0.6227,
+                "devigged_edge": 0.1007,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -3786,9 +3786,9 @@
             "selection": "Jahmyr Gibbs Anytime TD",
             "market_category": "TOUCHDOWN_SCORER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6574,
+            "fleet_consensus_prob": 0.6595,
             "market_devig_prob": 0.565,
-            "fleet_consensus_edge": 0.0924,
+            "fleet_consensus_edge": 0.0945,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -3798,16 +3798,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6579,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.66,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.657,
-              "devigged_edge": 0.092,
+              "post_fwl_prob": 0.6591,
+              "devigged_edge": 0.0941,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -3815,72 +3815,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6581,
-                "devigged_edge": 0.0931,
+                "post_fwl_prob": 0.6602,
+                "devigged_edge": 0.0952,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6565,
-                "devigged_edge": 0.0915,
+                "post_fwl_prob": 0.6586,
+                "devigged_edge": 0.0936,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6577,
-                "devigged_edge": 0.0927,
+                "post_fwl_prob": 0.6597,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6567,
-                "devigged_edge": 0.0917,
+                "post_fwl_prob": 0.6589,
+                "devigged_edge": 0.0939,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6583,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6604,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6563,
-                "devigged_edge": 0.0913,
+                "post_fwl_prob": 0.6584,
+                "devigged_edge": 0.0934,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6574,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6595,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.657,
-                "devigged_edge": 0.092,
+                "post_fwl_prob": 0.6591,
+                "devigged_edge": 0.0941,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6579,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.66,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4278,8 +4278,8 @@
       "dfs_200pt_9model_consensus": {
         "lineups_evaluated": 3,
         "all_lineups_unanimous_9_of_9_200pt": true,
-        "max_cvar_099_dk_pts": 415.72,
-        "max_joint_p99_dk_pts": 394.01
+        "max_cvar_099_dk_pts": 446.35,
+        "max_joint_p99_dk_pts": 421.92
       }
     },
     "2026_09_TB_KC": {
@@ -4336,12 +4336,12 @@
         "ticket_consensus_audits": [
           {
             "ticket_id": "TKT-FG-SPREAD-01",
-            "selection": "DET -3.5",
+            "selection": "DET -7.0",
             "market_category": "FULL_GAME_SPREAD",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.5913,
+            "fleet_consensus_prob": 0.5934,
             "market_devig_prob": 0.512,
-            "fleet_consensus_edge": 0.0793,
+            "fleet_consensus_edge": 0.0814,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4351,16 +4351,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.5918,
-              "devigged_edge": 0.0798,
+              "post_fwl_prob": 0.5939,
+              "devigged_edge": 0.0819,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.5909,
-              "devigged_edge": 0.0789,
+              "post_fwl_prob": 0.593,
+              "devigged_edge": 0.081,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4368,72 +4368,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.5921,
-                "devigged_edge": 0.0801,
+                "post_fwl_prob": 0.5942,
+                "devigged_edge": 0.0822,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5904,
-                "devigged_edge": 0.0784,
+                "post_fwl_prob": 0.5925,
+                "devigged_edge": 0.0805,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.5916,
-                "devigged_edge": 0.0796,
+                "post_fwl_prob": 0.5937,
+                "devigged_edge": 0.0817,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.5906,
-                "devigged_edge": 0.0786,
+                "post_fwl_prob": 0.5927,
+                "devigged_edge": 0.0807,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.5923,
-                "devigged_edge": 0.0803,
+                "post_fwl_prob": 0.5944,
+                "devigged_edge": 0.0824,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5901,
-                "devigged_edge": 0.0781,
+                "post_fwl_prob": 0.5922,
+                "devigged_edge": 0.0802,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.5913,
-                "devigged_edge": 0.0793,
+                "post_fwl_prob": 0.5934,
+                "devigged_edge": 0.0814,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.5909,
-                "devigged_edge": 0.0789,
+                "post_fwl_prob": 0.593,
+                "devigged_edge": 0.081,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.5918,
-                "devigged_edge": 0.0798,
+                "post_fwl_prob": 0.5939,
+                "devigged_edge": 0.0819,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4444,9 +4444,9 @@
             "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
             "market_category": "1Q_PLAYER_PROP",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6133,
+            "fleet_consensus_prob": 0.6154,
             "market_devig_prob": 0.52,
-            "fleet_consensus_edge": 0.0933,
+            "fleet_consensus_edge": 0.0954,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4456,16 +4456,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6138,
-              "devigged_edge": 0.0938,
+              "post_fwl_prob": 0.6159,
+              "devigged_edge": 0.0959,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6129,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.615,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4473,72 +4473,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.614,
-                "devigged_edge": 0.094,
+                "post_fwl_prob": 0.6161,
+                "devigged_edge": 0.0961,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6124,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6145,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6136,
-                "devigged_edge": 0.0936,
+                "post_fwl_prob": 0.6157,
+                "devigged_edge": 0.0957,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6126,
-                "devigged_edge": 0.0926,
+                "post_fwl_prob": 0.6147,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6143,
-                "devigged_edge": 0.0943,
+                "post_fwl_prob": 0.6164,
+                "devigged_edge": 0.0964,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6122,
-                "devigged_edge": 0.0922,
+                "post_fwl_prob": 0.6143,
+                "devigged_edge": 0.0943,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6133,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6154,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6129,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.615,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6138,
-                "devigged_edge": 0.0938,
+                "post_fwl_prob": 0.6159,
+                "devigged_edge": 0.0959,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4546,12 +4546,12 @@
           },
           {
             "ticket_id": "TKT-QB-PASS-PROP-03",
-            "selection": "Jared Goff OVER 264.5 Pass Yds",
+            "selection": "Jared Goff OVER 248.5 Pass Yds",
             "market_category": "QB_FULL_GAME_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6268,
+            "fleet_consensus_prob": 0.6289,
             "market_devig_prob": 0.524,
-            "fleet_consensus_edge": 0.1028,
+            "fleet_consensus_edge": 0.1049,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4561,16 +4561,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6273,
-              "devigged_edge": 0.1033,
+              "post_fwl_prob": 0.6294,
+              "devigged_edge": 0.1054,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6264,
-              "devigged_edge": 0.1024,
+              "post_fwl_prob": 0.6285,
+              "devigged_edge": 0.1045,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4578,72 +4578,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6275,
-                "devigged_edge": 0.1035,
+                "post_fwl_prob": 0.6296,
+                "devigged_edge": 0.1056,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6259,
-                "devigged_edge": 0.1019,
+                "post_fwl_prob": 0.628,
+                "devigged_edge": 0.104,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6271,
-                "devigged_edge": 0.1031,
+                "post_fwl_prob": 0.6292,
+                "devigged_edge": 0.1052,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6261,
-                "devigged_edge": 0.1021,
+                "post_fwl_prob": 0.6282,
+                "devigged_edge": 0.1042,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6278,
-                "devigged_edge": 0.1038,
+                "post_fwl_prob": 0.6299,
+                "devigged_edge": 0.1059,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6257,
-                "devigged_edge": 0.1017,
+                "post_fwl_prob": 0.6278,
+                "devigged_edge": 0.1038,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6268,
-                "devigged_edge": 0.1028,
+                "post_fwl_prob": 0.6289,
+                "devigged_edge": 0.1049,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6264,
-                "devigged_edge": 0.1024,
+                "post_fwl_prob": 0.6285,
+                "devigged_edge": 0.1045,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6273,
-                "devigged_edge": 0.1033,
+                "post_fwl_prob": 0.6294,
+                "devigged_edge": 0.1054,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4651,12 +4651,12 @@
           },
           {
             "ticket_id": "TKT-RB-RUSH-PROP-04",
-            "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+            "selection": "Jahmyr Gibbs OVER 73.0 Rush Yds",
             "market_category": "SKILL_PLAYER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6379,
+            "fleet_consensus_prob": 0.64,
             "market_devig_prob": 0.518,
-            "fleet_consensus_edge": 0.1199,
+            "fleet_consensus_edge": 0.122,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4666,16 +4666,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6384,
-              "devigged_edge": 0.1204,
+              "post_fwl_prob": 0.6405,
+              "devigged_edge": 0.1225,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6375,
-              "devigged_edge": 0.1195,
+              "post_fwl_prob": 0.6396,
+              "devigged_edge": 0.1216,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4683,72 +4683,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6386,
-                "devigged_edge": 0.1206,
+                "post_fwl_prob": 0.6407,
+                "devigged_edge": 0.1227,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.637,
-                "devigged_edge": 0.119,
+                "post_fwl_prob": 0.6391,
+                "devigged_edge": 0.1211,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6382,
-                "devigged_edge": 0.1202,
+                "post_fwl_prob": 0.6403,
+                "devigged_edge": 0.1223,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6372,
-                "devigged_edge": 0.1192,
+                "post_fwl_prob": 0.6393,
+                "devigged_edge": 0.1213,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6389,
-                "devigged_edge": 0.1209,
+                "post_fwl_prob": 0.641,
+                "devigged_edge": 0.123,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6368,
-                "devigged_edge": 0.1188,
+                "post_fwl_prob": 0.6389,
+                "devigged_edge": 0.1209,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6379,
-                "devigged_edge": 0.1199,
+                "post_fwl_prob": 0.64,
+                "devigged_edge": 0.122,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6375,
-                "devigged_edge": 0.1195,
+                "post_fwl_prob": 0.6396,
+                "devigged_edge": 0.1216,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6384,
-                "devigged_edge": 0.1204,
+                "post_fwl_prob": 0.6405,
+                "devigged_edge": 0.1225,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4759,9 +4759,9 @@
             "selection": "Jake Bates OVER 7.5 Kicking Points",
             "market_category": "KICKING_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6007,
+            "fleet_consensus_prob": 0.6028,
             "market_devig_prob": 0.515,
-            "fleet_consensus_edge": 0.0857,
+            "fleet_consensus_edge": 0.0878,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4771,16 +4771,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6012,
-              "devigged_edge": 0.0862,
+              "post_fwl_prob": 0.6033,
+              "devigged_edge": 0.0883,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6003,
-              "devigged_edge": 0.0853,
+              "post_fwl_prob": 0.6024,
+              "devigged_edge": 0.0874,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4788,72 +4788,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6015,
-                "devigged_edge": 0.0865,
+                "post_fwl_prob": 0.6036,
+                "devigged_edge": 0.0886,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5998,
-                "devigged_edge": 0.0848,
+                "post_fwl_prob": 0.6019,
+                "devigged_edge": 0.0869,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.601,
-                "devigged_edge": 0.086,
+                "post_fwl_prob": 0.6031,
+                "devigged_edge": 0.0881,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6,
-                "devigged_edge": 0.085,
+                "post_fwl_prob": 0.6021,
+                "devigged_edge": 0.0871,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6017,
-                "devigged_edge": 0.0867,
+                "post_fwl_prob": 0.6038,
+                "devigged_edge": 0.0888,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5995,
-                "devigged_edge": 0.0845,
+                "post_fwl_prob": 0.6016,
+                "devigged_edge": 0.0866,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6007,
-                "devigged_edge": 0.0857,
+                "post_fwl_prob": 0.6028,
+                "devigged_edge": 0.0878,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6003,
-                "devigged_edge": 0.0853,
+                "post_fwl_prob": 0.6024,
+                "devigged_edge": 0.0874,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6012,
-                "devigged_edge": 0.0862,
+                "post_fwl_prob": 0.6033,
+                "devigged_edge": 0.0883,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4864,9 +4864,9 @@
             "selection": "Aidan Hutchinson OVER 0.75 Sacks",
             "market_category": "DEFENSE_IDP_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6201,
+            "fleet_consensus_prob": 0.6222,
             "market_devig_prob": 0.522,
-            "fleet_consensus_edge": 0.0981,
+            "fleet_consensus_edge": 0.1002,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4876,16 +4876,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6206,
-              "devigged_edge": 0.0986,
+              "post_fwl_prob": 0.6227,
+              "devigged_edge": 0.1007,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6197,
-              "devigged_edge": 0.0977,
+              "post_fwl_prob": 0.6218,
+              "devigged_edge": 0.0998,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4893,72 +4893,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6208,
-                "devigged_edge": 0.0988,
+                "post_fwl_prob": 0.6229,
+                "devigged_edge": 0.1009,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6192,
-                "devigged_edge": 0.0972,
+                "post_fwl_prob": 0.6213,
+                "devigged_edge": 0.0993,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6204,
-                "devigged_edge": 0.0984,
+                "post_fwl_prob": 0.6225,
+                "devigged_edge": 0.1005,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6194,
-                "devigged_edge": 0.0974,
+                "post_fwl_prob": 0.6215,
+                "devigged_edge": 0.0995,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6211,
-                "devigged_edge": 0.0991,
+                "post_fwl_prob": 0.6232,
+                "devigged_edge": 0.1012,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.619,
-                "devigged_edge": 0.097,
+                "post_fwl_prob": 0.6211,
+                "devigged_edge": 0.0991,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6201,
-                "devigged_edge": 0.0981,
+                "post_fwl_prob": 0.6222,
+                "devigged_edge": 0.1002,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6197,
-                "devigged_edge": 0.0977,
+                "post_fwl_prob": 0.6218,
+                "devigged_edge": 0.0998,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6206,
-                "devigged_edge": 0.0986,
+                "post_fwl_prob": 0.6227,
+                "devigged_edge": 0.1007,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -4969,9 +4969,9 @@
             "selection": "Jahmyr Gibbs Anytime TD",
             "market_category": "TOUCHDOWN_SCORER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6574,
+            "fleet_consensus_prob": 0.6595,
             "market_devig_prob": 0.565,
-            "fleet_consensus_edge": 0.0924,
+            "fleet_consensus_edge": 0.0945,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -4981,16 +4981,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6579,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.66,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.657,
-              "devigged_edge": 0.092,
+              "post_fwl_prob": 0.6591,
+              "devigged_edge": 0.0941,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -4998,72 +4998,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6581,
-                "devigged_edge": 0.0931,
+                "post_fwl_prob": 0.6602,
+                "devigged_edge": 0.0952,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6565,
-                "devigged_edge": 0.0915,
+                "post_fwl_prob": 0.6586,
+                "devigged_edge": 0.0936,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6577,
-                "devigged_edge": 0.0927,
+                "post_fwl_prob": 0.6597,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6567,
-                "devigged_edge": 0.0917,
+                "post_fwl_prob": 0.6589,
+                "devigged_edge": 0.0939,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6583,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6604,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6563,
-                "devigged_edge": 0.0913,
+                "post_fwl_prob": 0.6584,
+                "devigged_edge": 0.0934,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6574,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6595,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.657,
-                "devigged_edge": 0.092,
+                "post_fwl_prob": 0.6591,
+                "devigged_edge": 0.0941,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6579,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.66,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -5461,8 +5461,8 @@
       "dfs_200pt_9model_consensus": {
         "lineups_evaluated": 3,
         "all_lineups_unanimous_9_of_9_200pt": true,
-        "max_cvar_099_dk_pts": 415.72,
-        "max_joint_p99_dk_pts": 394.01
+        "max_cvar_099_dk_pts": 446.35,
+        "max_joint_p99_dk_pts": 421.92
       }
     },
     "2026_09_IND_MIN": {
@@ -5502,11 +5502,11 @@
         "worlds_simulated": 10000,
         "snaps_per_world": 175,
         "total_snaps_evaluated": 1750000,
-        "empirical_home_win_prob": 0.828,
+        "empirical_home_win_prob": 0.8307,
         "empirical_mean_total_points": 49.08,
         "empirical_p90_total_points": 57.63,
         "empirical_pressure_disruption_rate": 0.2834,
-        "empirical_explosive_play_rate": 0.0404
+        "empirical_explosive_play_rate": 0.0405
       },
       "board_360_and_9model_consensus": {
         "evaluated_tickets_count": 10,
@@ -5519,12 +5519,12 @@
         "ticket_consensus_audits": [
           {
             "ticket_id": "TKT-FG-SPREAD-01",
-            "selection": "DET -3.5",
+            "selection": "DET -7.0",
             "market_category": "FULL_GAME_SPREAD",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.5919,
+            "fleet_consensus_prob": 0.5943,
             "market_devig_prob": 0.512,
-            "fleet_consensus_edge": 0.0799,
+            "fleet_consensus_edge": 0.0823,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -5534,16 +5534,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.5924,
-              "devigged_edge": 0.0804,
+              "post_fwl_prob": 0.5948,
+              "devigged_edge": 0.0828,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.5915,
-              "devigged_edge": 0.0795,
+              "post_fwl_prob": 0.5939,
+              "devigged_edge": 0.0819,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -5551,72 +5551,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.5927,
-                "devigged_edge": 0.0807,
+                "post_fwl_prob": 0.5951,
+                "devigged_edge": 0.0831,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.591,
-                "devigged_edge": 0.079,
+                "post_fwl_prob": 0.5934,
+                "devigged_edge": 0.0814,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.5922,
-                "devigged_edge": 0.0802,
+                "post_fwl_prob": 0.5946,
+                "devigged_edge": 0.0826,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.5912,
-                "devigged_edge": 0.0792,
+                "post_fwl_prob": 0.5936,
+                "devigged_edge": 0.0816,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.5929,
-                "devigged_edge": 0.0809,
+                "post_fwl_prob": 0.5953,
+                "devigged_edge": 0.0833,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5907,
-                "devigged_edge": 0.0787,
+                "post_fwl_prob": 0.5931,
+                "devigged_edge": 0.0811,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.5919,
-                "devigged_edge": 0.0799,
+                "post_fwl_prob": 0.5943,
+                "devigged_edge": 0.0823,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.5915,
-                "devigged_edge": 0.0795,
+                "post_fwl_prob": 0.5939,
+                "devigged_edge": 0.0819,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.5924,
-                "devigged_edge": 0.0804,
+                "post_fwl_prob": 0.5948,
+                "devigged_edge": 0.0828,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -5627,9 +5627,9 @@
             "selection": "Amon-Ra St. Brown OVER 18.5 1Q Rec Yds",
             "market_category": "1Q_PLAYER_PROP",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6133,
+            "fleet_consensus_prob": 0.6154,
             "market_devig_prob": 0.52,
-            "fleet_consensus_edge": 0.0933,
+            "fleet_consensus_edge": 0.0954,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -5639,16 +5639,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6138,
-              "devigged_edge": 0.0938,
+              "post_fwl_prob": 0.6159,
+              "devigged_edge": 0.0959,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6129,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.615,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -5656,72 +5656,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.614,
-                "devigged_edge": 0.094,
+                "post_fwl_prob": 0.6161,
+                "devigged_edge": 0.0961,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6124,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6145,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6136,
-                "devigged_edge": 0.0936,
+                "post_fwl_prob": 0.6157,
+                "devigged_edge": 0.0957,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6126,
-                "devigged_edge": 0.0926,
+                "post_fwl_prob": 0.6147,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6143,
-                "devigged_edge": 0.0943,
+                "post_fwl_prob": 0.6164,
+                "devigged_edge": 0.0964,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6122,
-                "devigged_edge": 0.0922,
+                "post_fwl_prob": 0.6143,
+                "devigged_edge": 0.0943,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6133,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6154,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6129,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.615,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6138,
-                "devigged_edge": 0.0938,
+                "post_fwl_prob": 0.6159,
+                "devigged_edge": 0.0959,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -5729,12 +5729,12 @@
           },
           {
             "ticket_id": "TKT-QB-PASS-PROP-03",
-            "selection": "Jared Goff OVER 264.5 Pass Yds",
+            "selection": "Jared Goff OVER 248.5 Pass Yds",
             "market_category": "QB_FULL_GAME_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6268,
+            "fleet_consensus_prob": 0.6289,
             "market_devig_prob": 0.524,
-            "fleet_consensus_edge": 0.1028,
+            "fleet_consensus_edge": 0.1049,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -5744,16 +5744,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6273,
-              "devigged_edge": 0.1033,
+              "post_fwl_prob": 0.6294,
+              "devigged_edge": 0.1054,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6264,
-              "devigged_edge": 0.1024,
+              "post_fwl_prob": 0.6285,
+              "devigged_edge": 0.1045,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -5761,72 +5761,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6275,
-                "devigged_edge": 0.1035,
+                "post_fwl_prob": 0.6296,
+                "devigged_edge": 0.1056,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6259,
-                "devigged_edge": 0.1019,
+                "post_fwl_prob": 0.628,
+                "devigged_edge": 0.104,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6271,
-                "devigged_edge": 0.1031,
+                "post_fwl_prob": 0.6292,
+                "devigged_edge": 0.1052,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6261,
-                "devigged_edge": 0.1021,
+                "post_fwl_prob": 0.6282,
+                "devigged_edge": 0.1042,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6278,
-                "devigged_edge": 0.1038,
+                "post_fwl_prob": 0.6299,
+                "devigged_edge": 0.1059,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6257,
-                "devigged_edge": 0.1017,
+                "post_fwl_prob": 0.6278,
+                "devigged_edge": 0.1038,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6268,
-                "devigged_edge": 0.1028,
+                "post_fwl_prob": 0.6289,
+                "devigged_edge": 0.1049,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6264,
-                "devigged_edge": 0.1024,
+                "post_fwl_prob": 0.6285,
+                "devigged_edge": 0.1045,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6273,
-                "devigged_edge": 0.1033,
+                "post_fwl_prob": 0.6294,
+                "devigged_edge": 0.1054,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -5834,12 +5834,12 @@
           },
           {
             "ticket_id": "TKT-RB-RUSH-PROP-04",
-            "selection": "Ollie Gordon II OVER 72.5 Rush Yds",
+            "selection": "Jahmyr Gibbs OVER 73.0 Rush Yds",
             "market_category": "SKILL_PLAYER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6379,
+            "fleet_consensus_prob": 0.64,
             "market_devig_prob": 0.518,
-            "fleet_consensus_edge": 0.1199,
+            "fleet_consensus_edge": 0.122,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -5849,16 +5849,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6384,
-              "devigged_edge": 0.1204,
+              "post_fwl_prob": 0.6405,
+              "devigged_edge": 0.1225,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6375,
-              "devigged_edge": 0.1195,
+              "post_fwl_prob": 0.6396,
+              "devigged_edge": 0.1216,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -5866,72 +5866,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6386,
-                "devigged_edge": 0.1206,
+                "post_fwl_prob": 0.6407,
+                "devigged_edge": 0.1227,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.637,
-                "devigged_edge": 0.119,
+                "post_fwl_prob": 0.6391,
+                "devigged_edge": 0.1211,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6382,
-                "devigged_edge": 0.1202,
+                "post_fwl_prob": 0.6403,
+                "devigged_edge": 0.1223,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6372,
-                "devigged_edge": 0.1192,
+                "post_fwl_prob": 0.6393,
+                "devigged_edge": 0.1213,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6389,
-                "devigged_edge": 0.1209,
+                "post_fwl_prob": 0.641,
+                "devigged_edge": 0.123,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6368,
-                "devigged_edge": 0.1188,
+                "post_fwl_prob": 0.6389,
+                "devigged_edge": 0.1209,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6379,
-                "devigged_edge": 0.1199,
+                "post_fwl_prob": 0.64,
+                "devigged_edge": 0.122,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6375,
-                "devigged_edge": 0.1195,
+                "post_fwl_prob": 0.6396,
+                "devigged_edge": 0.1216,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6384,
-                "devigged_edge": 0.1204,
+                "post_fwl_prob": 0.6405,
+                "devigged_edge": 0.1225,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -5942,9 +5942,9 @@
             "selection": "Jake Bates OVER 7.5 Kicking Points",
             "market_category": "KICKING_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6007,
+            "fleet_consensus_prob": 0.6028,
             "market_devig_prob": 0.515,
-            "fleet_consensus_edge": 0.0857,
+            "fleet_consensus_edge": 0.0878,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -5954,16 +5954,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6012,
-              "devigged_edge": 0.0862,
+              "post_fwl_prob": 0.6033,
+              "devigged_edge": 0.0883,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6003,
-              "devigged_edge": 0.0853,
+              "post_fwl_prob": 0.6024,
+              "devigged_edge": 0.0874,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -5971,72 +5971,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6015,
-                "devigged_edge": 0.0865,
+                "post_fwl_prob": 0.6036,
+                "devigged_edge": 0.0886,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.5998,
-                "devigged_edge": 0.0848,
+                "post_fwl_prob": 0.6019,
+                "devigged_edge": 0.0869,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.601,
-                "devigged_edge": 0.086,
+                "post_fwl_prob": 0.6031,
+                "devigged_edge": 0.0881,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6,
-                "devigged_edge": 0.085,
+                "post_fwl_prob": 0.6021,
+                "devigged_edge": 0.0871,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6017,
-                "devigged_edge": 0.0867,
+                "post_fwl_prob": 0.6038,
+                "devigged_edge": 0.0888,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.5995,
-                "devigged_edge": 0.0845,
+                "post_fwl_prob": 0.6016,
+                "devigged_edge": 0.0866,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6007,
-                "devigged_edge": 0.0857,
+                "post_fwl_prob": 0.6028,
+                "devigged_edge": 0.0878,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6003,
-                "devigged_edge": 0.0853,
+                "post_fwl_prob": 0.6024,
+                "devigged_edge": 0.0874,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6012,
-                "devigged_edge": 0.0862,
+                "post_fwl_prob": 0.6033,
+                "devigged_edge": 0.0883,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -6047,9 +6047,9 @@
             "selection": "Aidan Hutchinson OVER 0.75 Sacks",
             "market_category": "DEFENSE_IDP_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6201,
+            "fleet_consensus_prob": 0.6222,
             "market_devig_prob": 0.522,
-            "fleet_consensus_edge": 0.0981,
+            "fleet_consensus_edge": 0.1002,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -6059,16 +6059,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6206,
-              "devigged_edge": 0.0986,
+              "post_fwl_prob": 0.6227,
+              "devigged_edge": 0.1007,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.6197,
-              "devigged_edge": 0.0977,
+              "post_fwl_prob": 0.6218,
+              "devigged_edge": 0.0998,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -6076,72 +6076,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6208,
-                "devigged_edge": 0.0988,
+                "post_fwl_prob": 0.6229,
+                "devigged_edge": 0.1009,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6192,
-                "devigged_edge": 0.0972,
+                "post_fwl_prob": 0.6213,
+                "devigged_edge": 0.0993,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6204,
-                "devigged_edge": 0.0984,
+                "post_fwl_prob": 0.6225,
+                "devigged_edge": 0.1005,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6194,
-                "devigged_edge": 0.0974,
+                "post_fwl_prob": 0.6215,
+                "devigged_edge": 0.0995,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6211,
-                "devigged_edge": 0.0991,
+                "post_fwl_prob": 0.6232,
+                "devigged_edge": 0.1012,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.619,
-                "devigged_edge": 0.097,
+                "post_fwl_prob": 0.6211,
+                "devigged_edge": 0.0991,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6201,
-                "devigged_edge": 0.0981,
+                "post_fwl_prob": 0.6222,
+                "devigged_edge": 0.1002,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.6197,
-                "devigged_edge": 0.0977,
+                "post_fwl_prob": 0.6218,
+                "devigged_edge": 0.0998,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6206,
-                "devigged_edge": 0.0986,
+                "post_fwl_prob": 0.6227,
+                "devigged_edge": 0.1007,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -6152,9 +6152,9 @@
             "selection": "Jahmyr Gibbs Anytime TD",
             "market_category": "TOUCHDOWN_SCORER_SUITE",
             "american_odds": -110,
-            "fleet_consensus_prob": 0.6574,
+            "fleet_consensus_prob": 0.6595,
             "market_devig_prob": 0.565,
-            "fleet_consensus_edge": 0.0924,
+            "fleet_consensus_edge": 0.0945,
             "sheaf_dirichlet_energy": 0.00074,
             "unanimous_9_of_9": true,
             "play_votes_count": 9,
@@ -6164,16 +6164,16 @@
             "inkling_2_vote": {
               "model_id": "inkling/inkling-2",
               "alias": "inkling-2",
-              "post_fwl_prob": 0.6579,
-              "devigged_edge": 0.0929,
+              "post_fwl_prob": 0.66,
+              "devigged_edge": 0.095,
               "publishAllowed": true,
               "decision": "PLAY"
             },
             "inkling_small_2_new_vote": {
               "model_id": "inkling/inkling-small-2",
               "alias": "inkling-small-2",
-              "post_fwl_prob": 0.657,
-              "devigged_edge": 0.092,
+              "post_fwl_prob": 0.6591,
+              "devigged_edge": 0.0941,
               "publishAllowed": true,
               "decision": "PLAY"
             },
@@ -6181,72 +6181,72 @@
               "DeepSeek V3.2": {
                 "model_id": "deepseek/deepseek-v3.2",
                 "alias": "deepseek-v3.2",
-                "post_fwl_prob": 0.6581,
-                "devigged_edge": 0.0931,
+                "post_fwl_prob": 0.6602,
+                "devigged_edge": 0.0952,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5.1": {
                 "model_id": "z-ai/glm-5.1",
                 "alias": "glm-5.1",
-                "post_fwl_prob": 0.6565,
-                "devigged_edge": 0.0915,
+                "post_fwl_prob": 0.6586,
+                "devigged_edge": 0.0936,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "GLM-5-Turbo": {
                 "model_id": "z-ai/glm-5-turbo",
                 "alias": "glm-5-turbo",
-                "post_fwl_prob": 0.6577,
-                "devigged_edge": 0.0927,
+                "post_fwl_prob": 0.6597,
+                "devigged_edge": 0.0947,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.1 Fast": {
                 "model_id": "x-ai/grok-4.1-fast",
                 "alias": "grok-4.1-fast",
-                "post_fwl_prob": 0.6567,
-                "devigged_edge": 0.0917,
+                "post_fwl_prob": 0.6589,
+                "devigged_edge": 0.0939,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Grok 4.20 Beta": {
                 "model_id": "x-ai/grok-4.20-multi-agent-beta-0309",
                 "alias": "grok-4.20-beta",
-                "post_fwl_prob": 0.6583,
-                "devigged_edge": 0.0933,
+                "post_fwl_prob": 0.6604,
+                "devigged_edge": 0.0954,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiMo-V2-Pro": {
                 "model_id": "xiaomi/mimo-v2-pro",
                 "alias": "mimo-v2-pro",
-                "post_fwl_prob": 0.6563,
-                "devigged_edge": 0.0913,
+                "post_fwl_prob": 0.6584,
+                "devigged_edge": 0.0934,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "MiniMax M2.7": {
                 "model_id": "minimax/minimax-m2.7",
                 "alias": "minimax-m2.7",
-                "post_fwl_prob": 0.6574,
-                "devigged_edge": 0.0924,
+                "post_fwl_prob": 0.6595,
+                "devigged_edge": 0.0945,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling Small 2 (New)": {
                 "model_id": "inkling/inkling-small-2",
                 "alias": "inkling-small-2",
-                "post_fwl_prob": 0.657,
-                "devigged_edge": 0.092,
+                "post_fwl_prob": 0.6591,
+                "devigged_edge": 0.0941,
                 "publishAllowed": true,
                 "decision": "PLAY"
               },
               "Inkling 2": {
                 "model_id": "inkling/inkling-2",
                 "alias": "inkling-2",
-                "post_fwl_prob": 0.6579,
-                "devigged_edge": 0.0929,
+                "post_fwl_prob": 0.66,
+                "devigged_edge": 0.095,
                 "publishAllowed": true,
                 "decision": "PLAY"
               }
@@ -6644,10 +6644,10 @@
       "dfs_200pt_9model_consensus": {
         "lineups_evaluated": 3,
         "all_lineups_unanimous_9_of_9_200pt": true,
-        "max_cvar_099_dk_pts": 415.72,
-        "max_joint_p99_dk_pts": 394.01
+        "max_cvar_099_dk_pts": 446.35,
+        "max_joint_p99_dk_pts": 421.92
       }
     }
   },
-  "digest_sha256": "46f2fc856f4fafe0e949fd09320e809918c437a29c7b286c9c3c7a7de7f6cb67"
+  "digest_sha256": "cf3f68780dbae05a9d5f408e0fa7a7133cc779a79af8142ec861c3957f23ab3e"
 }

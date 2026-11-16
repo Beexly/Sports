@@ -5979,3 +5979,20 @@ export type {
   SweepFamily,
   MorningSweepBundle,
 } from "./nfl/morning-sweep-2026-11-14-signals.js";
+
+export {
+  buildGseMlEndpoints,
+  buildTdaFeatureEndpoint,
+  fetchEtkfWinProbability,
+  fetchGseMlEnsembleOutcomes,
+  fetchTdaPersistenceFeatures,
+  type EtkfObservationWire,
+  type EtkfPredictionSuccess,
+  type EtkfRequestWire,
+  type FetchGseMlEnsembleParams,
+  type GseMlCallFailure,
+  type GseMlServiceEndpointsConfig,
+  type TdaFeatureSuccess,
+  type TdaPoint,
+  type TdaRequestWire,
+} from "./ensemble/gse-ml-endpoints.js";

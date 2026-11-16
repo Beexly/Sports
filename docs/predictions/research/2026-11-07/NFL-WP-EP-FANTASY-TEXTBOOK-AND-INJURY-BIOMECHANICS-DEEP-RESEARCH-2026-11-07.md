@@ -1,9 +1,9 @@
 # NFL Win Probability, Pathwise Calibration, Expected Points, 29-Chapter Fantasy Textbook, Rulebooks & 38-Study Sports Medicine Corpus
 
-- **Generated At (UTC)**: `2026-11-08T08:43:42.031067+00:00`
+- **Generated At (UTC)**: `2026-11-16T04:12:09.049538+00:00`
 - **Production Engine Module**: `intelligence/nfl_analytics_and_injury_biomechanics/nfl_wp_ep_fantasy_textbook_and_injury_rtp_engine.py`
 - **Manifest JSON**: `docs/predictions/research/2026-11-07/nfl-wp-ep-fantasy-textbook-and-injury-biomechanics-corpus.json`
-- **Cryptographic SHA-256**: `ef9efb86fc4fd93766441a9d023c3c98971f7b0841b58ec5b16fe4f4352cec23`
+- **Cryptographic SHA-256**: `007b907ff5568b0b2828ed3e05549f486de99464c08b314768051c86f82770b7`
 
 ## 1. Suite 1 — NFL Win Probability, Pathwise Calibration & Expected Points (`25` Models)
 - **Blown Lead Paradox Pathwise Stopping-Time Calibration (`arXiv:2602.10784v1`, Pipping, Gamón, Wyner)**:

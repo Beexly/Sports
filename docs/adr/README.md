@@ -16,6 +16,8 @@ This directory contains formal MADR-format Architecture Decision Records (ADRs) 
 | [0008](0008-zero-leak-sinkhorn-vacated-volume-conservation-and-qb-kneeldown-physics.md) | Zero-Leak Sinkhorn Vacated Volume Conservation & QB Kneeldown Physics | Accepted | 2026-11-15 |
 | [0009](0009-empirical-covariance-dirichlet-field-and-2te-lateswap-dfs-architecture.md) | Empirical Covariance, Dirichlet Field & 2-TE Late-Swap DFS Architecture | Accepted | 2026-11-15 |
 | [0010](0010-three-noon-content-ready-locks-t90m-adjustments-and-autonomy-kernel.md) | Three-Noon Content-Ready Locks, T-90m Adjustments & Autonomy Kernel | Accepted | 2026-11-15 |
+| [0011](0011-cage-governed-enforce-publication-and-unified-entitlements.md) | CAGE Pre-Publication Policy Enforcement & Unified Pack Entitlements | Accepted | 2026-11-15 |
+| [0012](0012-grounded-stage1-langextract-magika-and-polyglot-osv-security.md) | Source-Grounded Stage-1 Ingestion, LocalStack Receipts & Polyglot OSV Security | Accepted | 2026-11-15 |
 
 ## ADR Lifecycle Rules
 

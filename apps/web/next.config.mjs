@@ -1,3 +1,4 @@
+import { statfsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -176,11 +177,23 @@ const nextConfig = {
       "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
-  webpack: (config, { isServer, nextRuntime }) => {
+  webpack: (config, { dev, isServer, nextRuntime }) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
-      "@": path.resolve(process.cwd()),
+      "@": path.resolve(here),
     };
+
+    if (dev) {
+      try {
+        const fsStats = statfsSync(here);
+        const freeBytes = Number(fsStats.bavail) * Number(fsStats.bsize);
+        if (Number.isFinite(freeBytes) && freeBytes < 10 * 1024 * 1024 * 1024) {
+          config.cache = false;
+        }
+      } catch {
+        // Ignore statfs errors on unsupported filesystems; keep default cache.
+      }
+    }
 
     // Client and Edge builds cannot import node:* builtins (e.g. from
     // @sports/prediction-engine barrels or shared server/edge helpers). Shim
@@ -226,6 +239,7 @@ const nextConfig = {
       { source: "/login", destination: "/auth/signin", permanent: false },
       { source: "/checkout", destination: "/pricing", permanent: false },
       { source: "/subscribe", destination: "/pricing", permanent: false },
+      { source: "/dfs", destination: "/fantasy/dfs", permanent: true },
       // C-329: the ten legacy player-lab aliases live here so they are REAL HTTP
       // redirects. They already had `redirect()` stubs in app/players/<view>/page.tsx,
       // but `app/players/loading.tsx` exists — the segment needs it for the hub's own

@@ -1,6 +1,6 @@
 {
-  "status": "PASS",
-  "executed_at_utc": "2026-11-08T09:48:33.709385+00:00",
+  "status": "FAIL",
+  "executed_at_utc": "2026-11-16T04:09:15.504622+00:00",
   "game_id_verified": "2024_10_CIN_BAL",
   "corpus_and_sources_ingested": {
     "ai_agents_in_depth_pdf": {
@@ -179,28 +179,28 @@
         {
           "contract_slot": "LINEUP_1_Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
           "winning_bidder_agent": "SolverAgent::Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
-          "bid_utility_score": 402.02,
-          "cvar_099_dk_pts": 415.72,
-          "joint_p99_dk_pts": 394.01,
-          "salary_used": 49900,
+          "bid_utility_score": 427.71,
+          "cvar_099_dk_pts": 445.3,
+          "joint_p99_dk_pts": 419.36,
+          "salary_used": 49800,
           "award_status": "AWARDED"
         },
         {
           "contract_slot": "LINEUP_2_Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
           "winning_bidder_agent": "SolverAgent::Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
-          "bid_utility_score": 390.15,
-          "cvar_099_dk_pts": 410.14,
-          "joint_p99_dk_pts": 387.99,
-          "salary_used": 49900,
+          "bid_utility_score": 472.21,
+          "cvar_099_dk_pts": 446.35,
+          "joint_p99_dk_pts": 421.92,
+          "salary_used": 49700,
           "award_status": "AWARDED"
         },
         {
           "contract_slot": "LINEUP_3_Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
           "winning_bidder_agent": "SolverAgent::Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
-          "bid_utility_score": 308.74,
-          "cvar_099_dk_pts": 376.1,
-          "joint_p99_dk_pts": 356.2,
-          "salary_used": 49800,
+          "bid_utility_score": 332.85,
+          "cvar_099_dk_pts": 419.36,
+          "joint_p99_dk_pts": 394.41,
+          "salary_used": 49900,
           "award_status": "AWARDED"
         }
       ]
@@ -344,115 +344,115 @@
     "l26_market_entered_last_weight_le_0_08": true,
     "heavy_juice_minus_300_trap_blocked": true,
     "pass_discipline_verified": true,
-    "wave1_total_slate_players_projected": 225,
-    "wave1_curated_dfs_pool_size": 119,
-    "wave1_rejected_traps_count": 106,
+    "wave1_total_slate_players_projected": 219,
+    "wave1_curated_dfs_pool_size": 115,
+    "wave1_rejected_traps_count": 104,
     "wave2_total_lineup_world_evaluations": 6200000,
     "all_3_lineups_clear_200pt_championship_target": true,
-    "max_cvar_099_championship_dk_pts": 415.72,
-    "max_joint_p99_shootout_dk_pts": 394.01,
+    "max_cvar_099_championship_dk_pts": 446.35,
+    "max_joint_p99_shootout_dk_pts": 421.92,
     "lineups": [
       {
         "lineup_id": 1,
         "archetype": "Lineup 1 \u2014 Flagship Cash & Single-Entry Core (EQ-DFS-04 Robust Floor)",
-        "total_salary": 49900,
-        "salary_cap_remaining": 100,
+        "total_salary": 49800,
+        "salary_cap_remaining": 200,
         "valid_dk_9_slot_roster": true,
-        "qb_team": "HOU",
+        "qb_team": "DAL",
         "stacked_pass_catchers_count": 2,
         "opposing_bring_backs_count": 1,
-        "mean_projection_dk_pts": 182.43,
-        "joint_p90_ceiling_dk_pts": 283.74,
-        "joint_p99_shootout_dk_pts": 394.01,
-        "cvar_099_championship_dk_pts": 415.72,
+        "mean_projection_dk_pts": 197.52,
+        "joint_p90_ceiling_dk_pts": 302.34,
+        "joint_p99_shootout_dk_pts": 419.36,
+        "cvar_099_championship_dk_pts": 445.3,
         "clears_200pt_dk_championship_target": true,
         "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.1388,
-          "sim_top_1pct_finish_rate": 0.3071,
-          "sim_200pt_exceedance_prob": 0.3115,
-          "sim_contest_roi_pct": 385.2,
-          "submodular_world_coverage_marginal_gain": 0.3071
+          "sim_first_place_win_rate": 0.1364,
+          "sim_top_1pct_finish_rate": 0.3594,
+          "sim_200pt_exceedance_prob": 0.422,
+          "sim_contest_roi_pct": 402.73,
+          "submodular_world_coverage_marginal_gain": 0.3594
         },
         "roster": [
           {
-            "player": "Jaxon Smith-Njigba",
+            "player": "Puka Nacua",
             "position": "WR",
-            "team": "SEA",
-            "opponent": "ARI",
-            "salary": 9300,
-            "gse_dk_projection": 29.09,
+            "team": "LAR",
+            "opponent": "WAS",
+            "salary": 8800,
+            "gse_dk_projection": 43.3,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.8499
+            "markowitz_sharpe_ratio": 2.1216
           },
           {
-            "player": "Nico Collins",
+            "player": "CeeDee Lamb",
             "position": "WR",
-            "team": "HOU",
-            "opponent": "LAC",
-            "salary": 7200,
-            "gse_dk_projection": 19.62,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.523
-          },
-          {
-            "player": "Josh Jacobs",
-            "position": "RB",
-            "team": "GB",
-            "opponent": "NE",
-            "salary": 6800,
-            "gse_dk_projection": 26.19,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.8033
-          },
-          {
-            "player": "C.J. Stroud",
-            "position": "QB",
-            "team": "HOU",
-            "opponent": "LAC",
-            "salary": 5900,
-            "gse_dk_projection": 26.36,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.0588
-          },
-          {
-            "player": "Ollie Gordon II",
-            "position": "RB",
-            "team": "MIA",
-            "opponent": "DET",
-            "salary": 5600,
-            "gse_dk_projection": 23.82,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.7287
-          },
-          {
-            "player": "Ladd McConkey",
-            "position": "WR",
-            "team": "LAC",
-            "opponent": "HOU",
-            "salary": 5500,
-            "gse_dk_projection": 15.3,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.2921
-          },
-          {
-            "player": "Malik Davis",
-            "position": "RB",
             "team": "DAL",
             "opponent": "IND",
-            "salary": 4000,
-            "gse_dk_projection": 16.95,
+            "salary": 8300,
+            "gse_dk_projection": 35.89,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.4379
+            "markowitz_sharpe_ratio": 2.001
           },
           {
-            "player": "Dalton Schultz",
-            "position": "TE",
-            "team": "HOU",
-            "opponent": "LAC",
-            "salary": 3200,
-            "gse_dk_projection": 13.9,
+            "player": "Malik Nabers",
+            "position": "WR",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 7300,
+            "gse_dk_projection": 31.21,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.6035
+            "markowitz_sharpe_ratio": 1.9024
+          },
+          {
+            "player": "Dak Prescott",
+            "position": "QB",
+            "team": "DAL",
+            "opponent": "IND",
+            "salary": 6500,
+            "gse_dk_projection": 27.42,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.1083
+          },
+          {
+            "player": "Saquon Barkley",
+            "position": "RB",
+            "team": "PHI",
+            "opponent": "NYG",
+            "salary": 6200,
+            "gse_dk_projection": 17.82,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.4827
+          },
+          {
+            "player": "Jonah Coleman",
+            "position": "RB",
+            "team": "DEN",
+            "opponent": "CAR",
+            "salary": 5300,
+            "gse_dk_projection": 16.4,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.408
+          },
+          {
+            "player": "Will Mallory",
+            "position": "TE",
+            "team": "IND",
+            "opponent": "DAL",
+            "salary": 2500,
+            "gse_dk_projection": 5.61,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.2
+          },
+          {
+            "player": "James Mitchell",
+            "position": "TE",
+            "team": "DAL",
+            "opponent": "IND",
+            "salary": 2500,
+            "gse_dk_projection": 8.67,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.2328
           },
           {
             "player": "Packers",
@@ -469,137 +469,23 @@
       {
         "lineup_id": 2,
         "archetype": "Lineup 2 \u2014 Primary GPP Game Stack (EQ-DFS-01/05 Upper-Tail P90 + Covariance)",
-        "total_salary": 49900,
-        "salary_cap_remaining": 100,
+        "total_salary": 49700,
+        "salary_cap_remaining": 300,
         "valid_dk_9_slot_roster": true,
-        "qb_team": "DET",
-        "stacked_pass_catchers_count": 2,
-        "opposing_bring_backs_count": 2,
-        "mean_projection_dk_pts": 179.75,
-        "joint_p90_ceiling_dk_pts": 279.73,
-        "joint_p99_shootout_dk_pts": 387.99,
-        "cvar_099_championship_dk_pts": 410.14,
-        "clears_200pt_dk_championship_target": true,
-        "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.1279,
-          "sim_top_1pct_finish_rate": 0.2871,
-          "sim_200pt_exceedance_prob": 0.2976,
-          "sim_contest_roi_pct": 348.95,
-          "submodular_world_coverage_marginal_gain": 0.2268
-        },
-        "roster": [
-          {
-            "player": "Amon-Ra St. Brown",
-            "position": "WR",
-            "team": "DET",
-            "opponent": "MIA",
-            "salary": 8100,
-            "gse_dk_projection": 21.83,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.6168
-          },
-          {
-            "player": "Malik Nabers",
-            "position": "WR",
-            "team": "NYG",
-            "opponent": "PHI",
-            "salary": 7300,
-            "gse_dk_projection": 22.41,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.6393
-          },
-          {
-            "player": "Jared Goff",
-            "position": "QB",
-            "team": "DET",
-            "opponent": "MIA",
-            "salary": 6600,
-            "gse_dk_projection": 28.37,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.1504
-          },
-          {
-            "player": "Rhamondre Stevenson",
-            "position": "RB",
-            "team": "NE",
-            "opponent": "GB",
-            "salary": 6100,
-            "gse_dk_projection": 23.45,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.716
-          },
-          {
-            "player": "Ollie Gordon II",
-            "position": "RB",
-            "team": "MIA",
-            "opponent": "DET",
-            "salary": 5600,
-            "gse_dk_projection": 23.82,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.7287
-          },
-          {
-            "player": "Stefon Diggs",
-            "position": "WR",
-            "team": "WAS",
-            "opponent": "LAR",
-            "salary": 5600,
-            "gse_dk_projection": 17.12,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.3984
-          },
-          {
-            "player": "Sam LaPorta",
-            "position": "TE",
-            "team": "DET",
-            "opponent": "MIA",
-            "salary": 5100,
-            "gse_dk_projection": 18.93,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.8297
-          },
-          {
-            "player": "Greg Dulcich",
-            "position": "TE",
-            "team": "MIA",
-            "opponent": "DET",
-            "salary": 3100,
-            "gse_dk_projection": 13.52,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.5823
-          },
-          {
-            "player": "Chargers",
-            "position": "DST",
-            "team": "LAC",
-            "opponent": "HOU",
-            "salary": 2400,
-            "gse_dk_projection": 10.3,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.5643
-          }
-        ]
-      },
-      {
-        "lineup_id": 3,
-        "archetype": "Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
-        "total_salary": 49800,
-        "salary_cap_remaining": 200,
-        "valid_dk_9_slot_roster": true,
-        "qb_team": "LAR",
+        "qb_team": "NYG",
         "stacked_pass_catchers_count": 2,
         "opposing_bring_backs_count": 1,
-        "mean_projection_dk_pts": 165.5,
-        "joint_p90_ceiling_dk_pts": 257.32,
-        "joint_p99_shootout_dk_pts": 356.2,
-        "cvar_099_championship_dk_pts": 376.1,
+        "mean_projection_dk_pts": 197.05,
+        "joint_p90_ceiling_dk_pts": 304.15,
+        "joint_p99_shootout_dk_pts": 421.92,
+        "cvar_099_championship_dk_pts": 446.35,
         "clears_200pt_dk_championship_target": true,
         "wave2_lineup_vs_field_simulation": {
-          "sim_first_place_win_rate": 0.0453,
-          "sim_top_1pct_finish_rate": 0.1353,
-          "sim_200pt_exceedance_prob": 0.1566,
-          "sim_contest_roi_pct": 74.14,
-          "submodular_world_coverage_marginal_gain": 0.0831
+          "sim_first_place_win_rate": 0.2061,
+          "sim_top_1pct_finish_rate": 0.4514,
+          "sim_200pt_exceedance_prob": 0.484,
+          "sim_contest_roi_pct": 618.38,
+          "submodular_world_coverage_marginal_gain": 0.1972
         },
         "roster": [
           {
@@ -608,79 +494,69 @@
             "team": "LAR",
             "opponent": "WAS",
             "salary": 8800,
-            "gse_dk_projection": 25.52,
+            "gse_dk_projection": 43.3,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.7472
+            "markowitz_sharpe_ratio": 2.1216
           },
           {
-            "player": "Josh Jacobs",
+            "player": "CeeDee Lamb",
+            "position": "WR",
+            "team": "DAL",
+            "opponent": "IND",
+            "salary": 8300,
+            "gse_dk_projection": 35.89,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 2.001
+          },
+          {
+            "player": "Malik Nabers",
+            "position": "WR",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 7300,
+            "gse_dk_projection": 31.21,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.9024
+          },
+          {
+            "player": "Saquon Barkley",
             "position": "RB",
-            "team": "GB",
-            "opponent": "NE",
-            "salary": 6800,
-            "gse_dk_projection": 26.19,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.8033
-          },
-          {
-            "player": "Matthew Stafford",
-            "position": "QB",
-            "team": "LAR",
-            "opponent": "WAS",
+            "team": "PHI",
+            "opponent": "NYG",
             "salary": 6200,
-            "gse_dk_projection": 22.12,
+            "gse_dk_projection": 17.82,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 0.8296
+            "markowitz_sharpe_ratio": 1.4827
           },
           {
-            "player": "Rhamondre Stevenson",
+            "player": "Woody Marks",
             "position": "RB",
-            "team": "NE",
-            "opponent": "GB",
-            "salary": 6100,
-            "gse_dk_projection": 23.45,
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 5700,
+            "gse_dk_projection": 17.22,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.716
+            "markowitz_sharpe_ratio": 1.4521
           },
           {
-            "player": "Ashton Jeanty",
-            "position": "RB",
-            "team": "LV",
-            "opponent": "SF",
-            "salary": 5900,
-            "gse_dk_projection": 19.15,
+            "player": "J.J. McCarthy",
+            "position": "QB",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 4800,
+            "gse_dk_projection": 16.77,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.546
+            "markowitz_sharpe_ratio": 0.4415
           },
           {
-            "player": "Stefon Diggs",
-            "position": "WR",
-            "team": "WAS",
-            "opponent": "LAR",
-            "salary": 5600,
-            "gse_dk_projection": 17.12,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.3984
-          },
-          {
-            "player": "Adonai Mitchell",
-            "position": "WR",
-            "team": "NYJ",
-            "opponent": "KC",
-            "salary": 4500,
-            "gse_dk_projection": 12.72,
-            "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.112
-          },
-          {
-            "player": "Colby Parkinson",
+            "player": "Dalton Schultz",
             "position": "TE",
-            "team": "LAR",
-            "opponent": "WAS",
-            "salary": 3000,
-            "gse_dk_projection": 8.03,
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 3200,
+            "gse_dk_projection": 13.9,
             "rtp_fantasy_multiplier": 1.0,
-            "markowitz_sharpe_ratio": 1.1719
+            "markowitz_sharpe_ratio": 1.6035
           },
           {
             "player": "Saints",
@@ -691,10 +567,134 @@
             "gse_dk_projection": 11.2,
             "rtp_fantasy_multiplier": 1.0,
             "markowitz_sharpe_ratio": 1.6233
+          },
+          {
+            "player": "Theo Johnson",
+            "position": "TE",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 2500,
+            "gse_dk_projection": 9.74,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.3253
+          }
+        ]
+      },
+      {
+        "lineup_id": 3,
+        "archetype": "Lineup 3 \u2014 Contrarian Leverage & Late-Swap GPP Stack (EQ-DFS-02/03/07)",
+        "total_salary": 49900,
+        "salary_cap_remaining": 100,
+        "valid_dk_9_slot_roster": true,
+        "qb_team": "ARI",
+        "stacked_pass_catchers_count": 1,
+        "opposing_bring_backs_count": 1,
+        "mean_projection_dk_pts": 188.55,
+        "joint_p90_ceiling_dk_pts": 284.79,
+        "joint_p99_shootout_dk_pts": 394.41,
+        "cvar_099_championship_dk_pts": 419.36,
+        "clears_200pt_dk_championship_target": true,
+        "wave2_lineup_vs_field_simulation": {
+          "sim_first_place_win_rate": 0.0277,
+          "sim_top_1pct_finish_rate": 0.136,
+          "sim_200pt_exceedance_prob": 0.2132,
+          "sim_contest_roi_pct": 30.45,
+          "submodular_world_coverage_marginal_gain": 0.0648
+        },
+        "roster": [
+          {
+            "player": "Jaxon Smith-Njigba",
+            "position": "WR",
+            "team": "SEA",
+            "opponent": "ARI",
+            "salary": 9300,
+            "gse_dk_projection": 35.4,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.9916
+          },
+          {
+            "player": "Puka Nacua",
+            "position": "WR",
+            "team": "LAR",
+            "opponent": "WAS",
+            "salary": 8800,
+            "gse_dk_projection": 43.3,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 2.1216
+          },
+          {
+            "player": "Michael Wilson",
+            "position": "WR",
+            "team": "ARI",
+            "opponent": "SEA",
+            "salary": 6700,
+            "gse_dk_projection": 24.23,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.7048
+          },
+          {
+            "player": "Woody Marks",
+            "position": "RB",
+            "team": "HOU",
+            "opponent": "LAC",
+            "salary": 5700,
+            "gse_dk_projection": 17.22,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.4521
+          },
+          {
+            "player": "Jonah Coleman",
+            "position": "RB",
+            "team": "DEN",
+            "opponent": "CAR",
+            "salary": 5300,
+            "gse_dk_projection": 16.4,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.408
+          },
+          {
+            "player": "DeMario Douglas",
+            "position": "WR",
+            "team": "NE",
+            "opponent": "GB",
+            "salary": 4800,
+            "gse_dk_projection": 18.31,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.4605
+          },
+          {
+            "player": "Gardner Minshew II",
+            "position": "QB",
+            "team": "ARI",
+            "opponent": "SEA",
+            "salary": 4500,
+            "gse_dk_projection": 13.86,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.2
+          },
+          {
+            "player": "Theo Johnson",
+            "position": "TE",
+            "team": "NYG",
+            "opponent": "PHI",
+            "salary": 2500,
+            "gse_dk_projection": 9.74,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.3253
+          },
+          {
+            "player": "Colts",
+            "position": "DST",
+            "team": "IND",
+            "opponent": "DAL",
+            "salary": 2300,
+            "gse_dk_projection": 10.09,
+            "rtp_fantasy_multiplier": 1.0,
+            "markowitz_sharpe_ratio": 1.5497
           }
         ]
       }
     ]
   },
-  "digest_sha256": "34ff9e971f8a402d1ae3d277db4f19182d1cc361887d6ef080197a5fcbb1353b"
+  "digest_sha256": "fcd7119a5148af008c328ed2bc1bcd03784ab817aafa8029bc2bd07ae8a97051"
 }

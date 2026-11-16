@@ -1,0 +1,145 @@
+{
+  "seal_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "generated_at": "2026-11-15T18:00:00Z",
+  "counts": {
+    "evaluated": 14,
+    "publish": 0,
+    "abstain": 4,
+    "pass": 10
+  },
+  "main": [
+    {
+      "matchup": "PIT@CIN",
+      "category": "PASS",
+      "selection": "PIT @ CIN Side & Total PASS",
+      "decision": "PASS",
+      "publishAllowed": false,
+      "model_p": 0.52,
+      "market_p": 0.50,
+      "edge": 0.0,
+      "model_median": 52.0,
+      "rationale": "CIN -3.5 and 49.5 align with two-sided market equilibrium; pass discipline holds pending late inactives.",
+      "confidence_display": "52/100",
+      "market_line": -3.5
+    },
+    {
+      "matchup": "LAC@BAL",
+      "category": "PASS",
+      "selection": "LAC @ BAL Side & Total PASS",
+      "decision": "PASS",
+      "publishAllowed": false,
+      "model_p": 0.54,
+      "market_p": 0.51,
+      "edge": 0.0,
+      "model_median": 54.0,
+      "rationale": "BAL -4.5 and 38.5 remain held pending Monday T-90m official inactives confirmation.",
+      "confidence_display": "54/100",
+      "market_line": -4.5
+    }
+  ],
+  "props": [],
+  "passes": [
+    {
+      "matchup": "PIT@CIN",
+      "category": "QB_RUSH",
+      "selection": "Aaron Rodgers Over 0.5 Rushing Yards (PASS)",
+      "decision": "PASS",
+      "publishAllowed": false,
+      "model_p": 0.49,
+      "market_p": 0.51,
+      "edge": -0.02,
+      "model_median": 0.0,
+      "rationale": "Held under pocket-quarterback scramble and victory kneeldown calibration discipline.",
+      "confidence_display": "50/100",
+      "market_line": 0.5
+    },
+    {
+      "matchup": "LAC@BAL",
+      "category": "QB_RUSH",
+      "selection": "Justin Herbert Under 21.5 Rushing Yards (PASS)",
+      "decision": "PASS",
+      "publishAllowed": false,
+      "model_p": 0.54,
+      "market_p": 0.52,
+      "edge": 0.0,
+      "model_median": 17.4,
+      "rationale": "Projects near efficient two-sided market pricing; bankroll freeze holds until walk-forward check clears.",
+      "confidence_display": "54/100",
+      "market_line": 21.5
+    }
+  ],
+  "watch": {
+    "one_q": [
+      {
+        "matchup": "LAC@BAL",
+        "category": "1Q_SCRIPT",
+        "selection": "1Q Under 7.5 Total Watch",
+        "decision": "ABSTAIN",
+        "publishAllowed": false,
+        "model_p": 0.55,
+        "market_p": 0.5238,
+        "edge": 0.0262,
+        "model_median": 6.5,
+        "rationale": "Script watch only; play activates strictly at -105 or better after Monday T-90m check.",
+        "confidence_display": "55/100",
+        "market_line": 7.5,
+        "trigger_odds": -105,
+        "fair_odds": -122
+      }
+    ],
+    "kicking": [
+      {
+        "matchup": "PIT@CIN",
+        "category": "KICKING",
+        "selection": "PIT Team FGM Over 1.5 Watch",
+        "decision": "ABSTAIN",
+        "publishAllowed": false,
+        "model_p": 0.56,
+        "market_p": 0.5238,
+        "edge": 0.0362,
+        "model_median": 1.8,
+        "rationale": "Red-zone defense stall profile warrants trigger-price monitoring.",
+        "confidence_display": "56/100",
+        "market_line": 1.5,
+        "trigger_odds": 110,
+        "fair_odds": -127
+      }
+    ],
+    "idp": [
+      {
+        "matchup": "PIT@CIN",
+        "category": "IDP_SACKS",
+        "selection": "T.J. Watt Over 0.25 Sacks Watch",
+        "decision": "ABSTAIN",
+        "publishAllowed": false,
+        "model_p": 0.58,
+        "market_p": 0.55,
+        "edge": 0.03,
+        "model_median": 0.7,
+        "rationale": "Edge pressure matchup monitored pending final offensive tackle actives.",
+        "confidence_display": "58/100",
+        "market_line": 0.25,
+        "trigger_odds": -115,
+        "fair_odds": -138
+      }
+    ],
+    "atd": [
+      {
+        "matchup": "LAC@BAL",
+        "category": "ANYTIME_TD",
+        "selection": "Derrick Henry Anytime TD Watch",
+        "decision": "ABSTAIN",
+        "publishAllowed": false,
+        "model_p": 0.57,
+        "market_p": 0.55,
+        "edge": 0.02,
+        "model_median": 0.85,
+        "rationale": "Goal-line carry share watchlist; awaiting +100 or better Monday closing price.",
+        "confidence_display": "57/100",
+        "market_line": 0.5,
+        "trigger_odds": 100,
+        "fair_odds": -133
+      }
+    ]
+  }
+}

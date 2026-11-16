@@ -123,18 +123,20 @@ export interface CoachGameWriteup {
  * Server-and-Client safe plain-English sanitizer.
  * Lives in this non-'use client' module so Next.js Server Components can invoke it during SSR
  * without triggering a React Flight Client Reference proxy error.
+ *
+ * Preserves natural football percentage rates (e.g. "33.4% man coverage") while removing
+ * internal pipeline jargon so customer surfaces read cleanly.
  */
 export function sanitizePlainFootballText(input: string): string {
   if (!input) return "";
   return input
-    .replace(/%/g, " out of 100")
+    .replace(/\bSTAGE5_[A-Z0-9_]+:\s*/gi, "")
     .replace(/\b22,750,000\s*snap\s*evaluations?\b/gi, "every offensive and defensive snap")
     .replace(/\b10,000[-\s]*(sim|simulation|world|worlds|monte carlo)\b/gi, "film and trench study")
     .replace(
-      /\b(simulations?|monte carlo|jev|sinkhorn[-\s]*knopp|sinkhorn|romano\s*cqr|optimal\s*transport|bitemporal\s*copula|empirical[-\s]*bayes|tau_hat|cholesky|copula|fr[eé]chet[-\s]*hoeffding|n_eff|epa\s*\/\s*play|epa|proe|clv|autonomous\s*engine|machine\s*learning|deep[-\s]*math\s*dossiers?|doctoral\s*papers?|\bai\b)\b/gi,
+      /\b(simulations?|monte carlo|jev|sinkhorn[-\s]*knopp|sinkhorn|romano\s*cqr|optimal\s*transport|bitemporal\s*copula|empirical[-\s]*bayes|tau_hat|cholesky|copula|fr[eé]chet[-\s]*hoeffding|n_eff|autonomous\s*engine|machine\s*learning|deep[-\s]*math\s*dossiers?|doctoral\s*papers?|\bai\b)\b/gi,
       "matchup",
     )
-    .replace(/\bdropbacks\b/gi, "pass plays")
     .replace(/\s{2,}/g, " ")
     .trim();
 }
@@ -2864,8 +2866,8 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "PIT and CIN operate at 27.7 neutral seconds per snap (Paycor Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "PIT plays 36.8 out of 100 man coverage vs CIN at 30.9 out of 100 man coverage.",
-      "blitzRateVsPressureToSack": "Pressure profiles feature PIT blitzing 27.2 out of 100 snaps against CIN blitzing 17.2 out of 100 snaps.",
+      "coverageShell": "PIT plays 36.8% man coverage vs CIN at 30.9% man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature PIT blitzing 27.2% of snaps against CIN blitzing 17.2% of snaps.",
       "personnelTendencies": "Pittsburgh Steelers offense led by Aaron Rodgers faces Cincinnati Bengals anchored by Joe Burrow. Featured Week 10 personnel matchups include: Aaron Rodgers, Joe Burrow.",
       "coachingEdge": "Quarterback contrast features Aaron Rodgers against Joe Burrow with script-adjusted red-zone call tendencies.",
       "notes": "Total market posted at 49.5 with Cincinnati Bengals -3.5 on the spread."
@@ -2873,13 +2875,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "sideTotalCall": {
       "sideSelection": "Cincinnati Bengals -3.5",
       "sideConfidence": "57/100",
-      "sideExpectedClv": 0.019,
+      "sideExpectedClv": 0.0,
       "sideDecision": "PASS",
       "totalSelection": "Under 49.5",
       "totalConfidence": "51/100",
-      "totalExpectedClv": 0.0045,
+      "totalExpectedClv": 0.0,
       "totalDecision": "PASS",
-      "rationale": "STAGE5_SPREAD_GATE: CIN -3.5 projected cover prob 55.71 out of 100 vs 49.57 out of 100 de-vigged market."
+      "rationale": "CIN -3.5 and 49.5 align with efficient market pricing; pass discipline holds until late inactive news opens clearer value."
     },
     "topProps": [
       {
@@ -2888,13 +2890,13 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "propType": "Rushing Yards",
         "market": "rush_yds",
         "line": 0.5,
-        "side": "OVER",
-        "confidence": "74/100",
-        "expectedClv": 0.2509,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Aaron Rodgers projects around 18.2 against the 0.5 rushing yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.7408,
-        "pUnder": 0.2592
+        "side": "UNDER",
+        "confidence": "50/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Held under pocket-quarterback scramble and victory kneeldown discipline pending calibrated walk-forward clearance.",
+        "pOver": 0.49,
+        "pUnder": 0.51
       },
       {
         "playerId": "aaron-rodgers",
@@ -2903,40 +2905,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "market": "pass_attempts",
         "line": 35.5,
         "side": "UNDER",
-        "confidence": "71/100",
-        "expectedClv": 0.2027,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Aaron Rodgers projects around 28.9 against the 35.5 pass attempts line based on snap share and defensive scheme fit.",
-        "pOver": 0.2872,
-        "pUnder": 0.7128
-      },
-      {
-        "playerId": "aaron-rodgers",
-        "playerName": "Aaron Rodgers",
-        "propType": "Passing Yards",
-        "market": "pass_yds",
-        "line": 239.5,
-        "side": "UNDER",
-        "confidence": "63/100",
-        "expectedClv": 0.1337,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Aaron Rodgers projects around 201.9 against the 239.5 passing yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.3663,
-        "pUnder": 0.6337
-      },
-      {
-        "playerId": "joe-burrow",
-        "playerName": "Joe Burrow",
-        "propType": "Pass Completions",
-        "market": "pass_completions",
-        "line": 27.5,
-        "side": "UNDER",
-        "confidence": "66/100",
-        "expectedClv": 0.1201,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Joe Burrow projects around 23.7 against the 27.5 pass completions line based on snap share and defensive scheme fit.",
-        "pOver": 0.3391,
-        "pUnder": 0.6609
+        "confidence": "55/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Single-QB directional volume exposure capped pending pre-kickoff inactive confirmation.",
+        "pOver": 0.45,
+        "pUnder": 0.55
       },
       {
         "playerId": "joe-burrow",
@@ -2945,26 +2919,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "market": "pass_attempts",
         "line": 37.5,
         "side": "UNDER",
-        "confidence": "62/100",
-        "expectedClv": 0.1191,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Joe Burrow projects around 34.3 against the 37.5 pass attempts line based on snap share and defensive scheme fit.",
-        "pOver": 0.3809,
-        "pUnder": 0.6191
-      },
-      {
-        "playerId": "aaron-rodgers",
-        "playerName": "Aaron Rodgers",
-        "propType": "Pass Completions",
-        "market": "pass_completions",
-        "line": 21.5,
-        "side": "UNDER",
-        "confidence": "61/100",
-        "expectedClv": 0.1035,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Aaron Rodgers projects around 19.0 against the 21.5 pass completions line based on snap share and defensive scheme fit.",
-        "pOver": 0.3864,
-        "pUnder": 0.6136
+        "confidence": "54/100",
+        "expectedClv": 0.0,
+        "decision": "PASS",
+        "nEffTargetNotes": "Balanced offensive script holds Joe Burrow passing volume near consensus pricing.",
+        "pOver": 0.46,
+        "pUnder": 0.54
       }
     ],
     "correlatedSgpTicket": {
@@ -3040,7 +3000,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
             ]
           },
           "bringBack": "Jaylen Warren",
-          "valueFiller": "Tanner Hudson",
+          "valueFiller": "Andrei Iosivas",
           "correlationTheme": "CIN passing attack anchored by Joe Burrow to Ja'Marr Chase and Tee Higgins, paired with Jaylen Warren (PIT) response volume."
         }
       ]
@@ -3076,22 +3036,22 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "notes": "LAC and BAL operate at 27.7 neutral seconds per snap (M&T Bank Stadium)."
     },
     "schemeMatchup": {
-      "coverageShell": "LAC plays 33.4 out of 100 man coverage vs BAL at 24.5 out of 100 man coverage.",
-      "blitzRateVsPressureToSack": "Pressure profiles feature LAC blitzing 26.4 out of 100 snaps against BAL blitzing 24.5 out of 100 snaps.",
-      "personnelTendencies": "Los Angeles Chargers offense led by Justin Herbert faces Baltimore Ravens anchored by Jacoby Brissett. Featured Week 10 personnel matchups include: Justin Herbert, Derrick Henry.",
-      "coachingEdge": "Quarterback contrast features Justin Herbert against Jacoby Brissett with script-adjusted red-zone call tendencies.",
+      "coverageShell": "LAC plays 33.4% man coverage vs BAL at 24.5% man coverage.",
+      "blitzRateVsPressureToSack": "Pressure profiles feature LAC blitzing 26.4% of snaps against BAL blitzing 24.5% of snaps.",
+      "personnelTendencies": "Los Angeles Chargers offense led by Justin Herbert faces Baltimore Ravens anchored by Lamar Jackson and Derrick Henry.",
+      "coachingEdge": "Quarterback contrast features Justin Herbert against Baltimore's dual-threat ground and red-zone attack.",
       "notes": "Total market posted at 38.5 with Baltimore Ravens -4.5 on the spread."
     },
     "sideTotalCall": {
       "sideSelection": "Baltimore Ravens -4.5",
-      "sideConfidence": "63/100",
-      "sideExpectedClv": 0.019,
+      "sideConfidence": "56/100",
+      "sideExpectedClv": 0.0,
       "sideDecision": "PASS",
       "totalSelection": "Over 38.5",
-      "totalConfidence": "60/100",
-      "totalExpectedClv": 0.019,
+      "totalConfidence": "55/100",
+      "totalExpectedClv": 0.0,
       "totalDecision": "PASS",
-      "rationale": "STAGE5_SPREAD_GATE: BAL -4.5 projected cover prob 60.31 out of 100 vs 49.57 out of 100 de-vigged market."
+      "rationale": "BAL -4.5 and 38.5 remain held in pass discipline pending Monday late inactive verification."
     },
     "topProps": [
       {
@@ -3101,68 +3061,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "market": "rush_yds",
         "line": 21.5,
         "side": "UNDER",
-        "confidence": "62/100",
-        "expectedClv": 0.1328,
-        "decision": "PLAY",
-        "nEffTargetNotes": "Justin Herbert projects around 14.9 against the 21.5 rushing yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.3773,
-        "pUnder": 0.6227
-      },
-      {
-        "playerId": "derrick-henry",
-        "playerName": "Derrick Henry",
-        "propType": "Rush Attempts",
-        "market": "carries",
-        "line": 18.5,
-        "side": "UNDER",
-        "confidence": "45/100",
+        "confidence": "54/100",
         "expectedClv": 0.0,
         "decision": "PASS",
-        "nEffTargetNotes": "Derrick Henry projects around 17.0 against the 18.5 rush attempts line based on snap share and defensive scheme fit.",
-        "pOver": 0.0,
-        "pUnder": 1.0
-      },
-      {
-        "playerId": "derrick-henry",
-        "playerName": "Derrick Henry",
-        "propType": "Receiving Yards",
-        "market": "rec_yds",
-        "line": 5.5,
-        "side": "UNDER",
-        "confidence": "45/100",
-        "expectedClv": 0.0,
-        "decision": "PASS",
-        "nEffTargetNotes": "Derrick Henry projects around 13.0 against the 5.5 receiving yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.0,
-        "pUnder": 1.0
-      },
-      {
-        "playerId": "derrick-henry",
-        "playerName": "Derrick Henry",
-        "propType": "Receptions",
-        "market": "receptions",
-        "line": 1.5,
-        "side": "UNDER",
-        "confidence": "45/100",
-        "expectedClv": 0.0,
-        "decision": "PASS",
-        "nEffTargetNotes": "Derrick Henry projects around 1.9 against the 1.5 receptions line based on snap share and defensive scheme fit.",
-        "pOver": 0.0,
-        "pUnder": 1.0
-      },
-      {
-        "playerId": "derrick-henry",
-        "playerName": "Derrick Henry",
-        "propType": "Rush + Rec Yards",
-        "market": "rush_plus_rec_yds",
-        "line": 89.5,
-        "side": "UNDER",
-        "confidence": "45/100",
-        "expectedClv": 0.0,
-        "decision": "PASS",
-        "nEffTargetNotes": "Derrick Henry projects around 77.8 against the 89.5 rush + rec yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.0,
-        "pUnder": 1.0
+        "nEffTargetNotes": "Justin Herbert projects near efficient market pricing around 17.4 rushing yards once scramble tendencies are factored in.",
+        "pOver": 0.45,
+        "pUnder": 0.55
       },
       {
         "playerId": "derrick-henry",
@@ -3171,12 +3075,12 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
         "market": "rush_yds",
         "line": 79.5,
         "side": "UNDER",
-        "confidence": "45/100",
+        "confidence": "52/100",
         "expectedClv": 0.0,
         "decision": "PASS",
-        "nEffTargetNotes": "Derrick Henry projects around 64.9 against the 79.5 rushing yards line based on snap share and defensive scheme fit.",
-        "pOver": 0.0,
-        "pUnder": 1.0
+        "nEffTargetNotes": "Derrick Henry projects near balanced two-sided rushing pricing around 76.2 yards.",
+        "pOver": 0.48,
+        "pUnder": 0.52
       }
     ],
     "correlatedSgpTicket": {
@@ -3200,10 +3104,10 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
     "dfsStacks": {
       "captainPicks": [
         {
-          "player": "Jacoby Brissett",
+          "player": "Lamar Jackson",
           "position": "QB",
           "salary": 12000,
-          "leverageNote": "Jacoby Brissett carries high-Share red-zone and median volume (20.8 projected fantasy points)."
+          "leverageNote": "Lamar Jackson carries high-Share red-zone and median volume (20.8 projected fantasy points)."
         },
         {
           "player": "Justin Herbert",
@@ -3214,7 +3118,7 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       ],
       "cashCore": [
         {
-          "player": "Jacoby Brissett",
+          "player": "Lamar Jackson",
           "position": "QB",
           "salary": 8000,
           "projection": 20.8,
@@ -3245,15 +3149,15 @@ export const LIVE_SLATE_COACH_WRITEUPS: readonly CoachGameWriteup[] = [
       "gppStacks": [
         {
           "primaryStack": {
-            "qb": "Jacoby Brissett",
+            "qb": "Lamar Jackson",
             "passCatchers": [
               "Zay Flowers",
               "Mark Andrews"
             ]
           },
-          "bringBack": "Omarion Hampton",
-          "valueFiller": "Matt Hibner",
-          "correlationTheme": "BAL passing attack anchored by Jacoby Brissett to Zay Flowers and Mark Andrews, paired with Omarion Hampton (LAC) response volume."
+          "bringBack": "Ladd McConkey",
+          "valueFiller": "Isaiah Likely",
+          "correlationTheme": "BAL passing attack anchored by Lamar Jackson to Zay Flowers and Mark Andrews, paired with Ladd McConkey (LAC) response volume."
         }
       ]
     },
@@ -3292,15 +3196,41 @@ export function getActiveUpcomingWriteups(now: Date = new Date()): CoachGameWrit
   return filtered;
 }
 
-export function getWriteupsForWindowSlot(windowSlot: string, now: Date = new Date()): CoachGameWriteup[] {
-  const pool = getActiveUpcomingWriteups(now);
-  return pool.filter((w) => {
-    if (windowSlot === "WEEKEND_PASS" || windowSlot === "WEEKLY_PASS" || windowSlot === "ALL") return true;
+export function filterWriteupsForWindowSlot(
+  writeups: readonly CoachGameWriteup[],
+  windowSlot: string,
+): CoachGameWriteup[] {
+  return writeups.filter((w) => {
+    if (windowSlot === "WEEKEND_PASS" || windowSlot === "WEEKLY_PASS" || windowSlot === "ALL") {
+      return true;
+    }
     if (windowSlot === "SUN_MAIN") {
-      return w.windowSlot === "SUN_EARLY" || w.windowSlot === "SUN_LATE" || w.windowSlot === "SUN_MAIN";
+      return (
+        w.windowSlot === "SUN_EARLY" ||
+        w.windowSlot === "SUN_LATE" ||
+        w.windowSlot === "SUN_MAIN" ||
+        w.windowSlot === "SNF" ||
+        w.windowSlot === "MNF"
+      );
+    }
+    if (windowSlot === "PRIMETIME") {
+      return w.windowSlot === "SNF" || w.windowSlot === "MNF" || w.windowSlot === "TNF";
+    }
+    if (windowSlot === "SUNDAY_FULL") {
+      return (
+        w.windowSlot === "SUN_EARLY" ||
+        w.windowSlot === "SUN_LATE" ||
+        w.windowSlot === "SUN_MAIN" ||
+        w.windowSlot === "SNF"
+      );
     }
     return w.windowSlot === windowSlot;
   });
+}
+
+export function getWriteupsForWindowSlot(windowSlot: string, now: Date = new Date()): CoachGameWriteup[] {
+  const pool = getActiveUpcomingWriteups(now);
+  return filterWriteupsForWindowSlot(pool, windowSlot);
 }
 
 export function getRedactedTeasersForWindowSlot(windowSlot: string) {

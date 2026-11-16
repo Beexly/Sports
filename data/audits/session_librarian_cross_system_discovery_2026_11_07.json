@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-11-14T02:56:32.508244+00:00",
+  "generated_at_utc": "2026-11-16T04:08:21.995112+00:00",
   "skill": "session-librarian",
   "mutation_safety_status": "READ_ONLY_DISCOVERY_AND_PLAN_ONLY_ZERO_MUTATIONS",
   "cross_system_checklist_8_of_8": {
@@ -9,94 +9,94 @@
       "sessions_discovered": 20,
       "recent_sessions": [
         {
-          "id": "local-fc2a46d7e6144c2b600e28486b64a02a7e7c6d6e1a98a252cc7140e078ca1acb",
-          "title": "Hermes paste export WP-8 analysis",
+          "id": "local-ee392f03de40139443c7440fdb9f622cbf2db485afe8fede73da55eb3fe086c0",
+          "title": null,
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 21:34:36",
+          "last_active": "2026-11-15 22:07:52"
+        },
+        {
+          "id": "local-b7f9eddb46993920ca663d5b64d9d0e479677d76253022cbb3577e7e182db403",
+          "title": null,
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 16:07:05",
+          "last_active": "2026-11-15 17:27:47"
+        },
+        {
+          "id": "local-0e35e826c8908bb71401370dadcfbed7c0ec9e055f5de928b83ff93e0d5ed3e5",
+          "title": "cadence-v4.0-sun-1335 \u00b7 Nov 15 13:44",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 13:35:05",
+          "last_active": "2026-11-15 13:44:24"
+        },
+        {
+          "id": "local-c1acfd8c75b3143243d7e9e86a0e633dffff263dd8db6de9af14a1aef250021d",
+          "title": "takeover-build-loop \u00b7 Nov 15 12:06",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 11:02:05",
+          "last_active": "2026-11-15 12:05:16"
+        },
+        {
+          "id": "local-36642d73d9e15c2ff46d22d24b2f07dfb857e35a93652cc355ea63e7c0f71c60",
+          "title": "cadence-v4.0-sun-1030 \u00b7 Nov 15 10:54",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 10:30:05",
+          "last_active": "2026-11-15 10:54:29"
+        },
+        {
+          "id": "local-5be0db90b0f14e6e3f9c3230274cbdceeb16b6af3daf18684f2959c815ef327a",
+          "title": "Fetch latest main and prepare worktree",
           "model": "qwen4-max-preview",
           "billing_provider": "custom",
           "source": "local",
-          "started": "2026-11-13 10:21:34",
-          "last_active": "2026-11-13 20:56:10"
+          "started": "2026-11-15 00:32:09",
+          "last_active": "2026-11-15 09:41:08"
         },
         {
-          "id": "local-aeea6ecb26f91c402f46ecf70d3612ba25d061b8f62a8e2edb18e7d02dc29de6",
+          "id": "local-2827332d2da37e6fe3f33f210a43170898b68a15b549d0af3b0a32c66e71565d",
+          "title": "morning-standup-brief \u00b7 Nov 15 09:09",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 09:08:05",
+          "last_active": "2026-11-15 09:08:39"
+        },
+        {
+          "id": "local-987c489f2a1bc0cb43e057913c002f83b983e4d6400b9b1d844bca6c414edfc8",
+          "title": "takeover-build-loop \u00b7 Nov 15 07:00",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "billing_provider": "openrouter",
+          "source": "cron",
+          "started": "2026-11-15 04:31:04",
+          "last_active": "2026-11-15 07:00:18"
+        },
+        {
+          "id": "local-f9ae876c423ad9e80a666d7407edc5ca8da01bf90a091e9238c1c622f12f5a00",
+          "title": "Placeholder response",
+          "model": "qwen4-max-preview",
+          "billing_provider": "custom",
+          "source": "local",
+          "started": "2026-11-15 00:10:31",
+          "last_active": "2026-11-15 00:26:12"
+        },
+        {
+          "id": "local-edfb092d41104222c9a065c1bfdf0a8835cbc4d130f4b87db14181cfc5cc1eda",
           "title": null,
           "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": null,
-          "source": "cron",
-          "started": "2026-11-13 20:55:49",
-          "last_active": "2026-11-13 20:56:00"
-        },
-        {
-          "id": "local-db8a7e4a2e3300fc760e47f7ccb4adcd06909030141c147d78a409fce54c2e4b",
-          "title": "takeover-build-loop \u00b7 Nov 13 16:54",
-          "model": "deepseek/deepseek-v4.1-flash",
           "billing_provider": "openrouter",
           "source": "cron",
-          "started": "2026-11-13 15:25:51",
-          "last_active": "2026-11-13 16:54:05"
-        },
-        {
-          "id": "local-761fa151d5d8e1ebe260214ae70cbd6dbd6351f892e7d62af60a87073bf0ec5f",
-          "title": "cadence-v3.0-fri-1630 \u00b7 Nov 13 16:44",
-          "model": "deepseek/deepseek-v4.1-flash",
-          "billing_provider": "openrouter",
-          "source": "cron",
-          "started": "2026-11-13 16:30:46",
-          "last_active": "2026-11-13 16:44:17"
-        },
-        {
-          "id": "20261113_151044_d93e1d",
-          "title": "Subagent: Extract up to 3 Tier-A books from the Foundry\u2026 #29",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 15:10:44",
-          "last_active": "2026-11-13 15:29:14"
-        },
-        {
-          "id": "20261113_151643_7a77fb",
-          "title": "Subagent: Extract up to 3 Tier-A books from the Foundry\u2026 #31",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 15:16:43",
-          "last_active": "2026-11-13 15:28:58"
-        },
-        {
-          "id": "20261113_144813_b8273b",
-          "title": "Subagent: Extract up to 3 Tier-A books from the Foundry\u2026 #26",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 14:48:13",
-          "last_active": "2026-11-13 15:28:45"
-        },
-        {
-          "id": "20261113_141629_716a8a",
-          "title": "Subagent: Continue the Foundry compiler loop: fill\u2026",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 14:16:29",
-          "last_active": "2026-11-13 15:28:23"
-        },
-        {
-          "id": "20261113_151045_b8211a",
-          "title": "Subagent: Extract up to 3 Tier-A books from the Foundry\u2026 #30",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 15:10:45",
-          "last_active": "2026-11-13 15:28:22"
-        },
-        {
-          "id": "20261113_144148_6a27cb",
-          "title": "Subagent: Extract up to 3 Tier-A books from the Foundry\u2026 #24",
-          "model": "qwen4-max-preview",
-          "billing_provider": "aliyun-tokenplan",
-          "source": "subagent",
-          "started": "2026-11-13 14:41:49",
-          "last_active": "2026-11-13 15:15:28"
+          "started": "2026-11-14 22:26:46",
+          "last_active": "2026-11-15 00:26:10"
         }
       ]
     },
@@ -123,13 +123,13 @@
       ]
     },
     "4_docs_7_buckets": {
-      "dfs": 124,
-      "predictions": 340,
-      "props": 36,
+      "dfs": 131,
+      "predictions": 352,
+      "props": 37,
       "fantasy": 29,
-      "engine": 2373,
-      "data-sources": 575,
-      "arxiv-program": 1588
+      "engine": 2387,
+      "data-sources": 579,
+      "arxiv-program": 1589
     },
     "5_downloads_dk_exports": [
       "DKSalaries (1).csv",
@@ -140,31 +140,45 @@
       "DKSalaries.csv"
     ],
     "6_git_recent_commits": [
-      "c7b897c75 Merge remote-tracking branch 'origin/main' into audit/friday-week10-readiness-2026-11-13",
-      "b68fee7e7 docs(handoff): C6 \u2014 first pass at the 89 vitest failures (44 files -> 38)",
-      "5c03fbf5f fix(web): mark brand-bearing page titles absolute, anchor #main-content, two cockpit contracts",
-      "22708478f test(docs): scope the retired-price scan to live guidance, not dated records",
-      "6856deae4 fix(web): drop the duplicated site-wide CSP from apps/web/vercel.json",
-      "f09b31a70 docs(adr): bring the six 0001-0006 ADRs onto the MADR header contract",
-      "fd36727f7 fix(week10): SF@DAL roof-CLOSED indoor environment replaces outdoor placeholder; reseal + slate refresh",
-      "ed07a8fb5 fix(week10): HOU@CLE QB1 honors Stage-0 live-starter resolution (Watson, not DFS-backup Sanders)",
-      "55dec570d data(stage0): Motif-verified wk10 transactions (Garrett->LAR, Verse->CLE, Simmons->CHI, McDuffie->LAR; Parsons OUT confirmed)",
-      "374eafe97 Nov 13 09:08 CT morning analytics sweep (window through 2121257179655369148): Lane A 142 counted (sfdata 23/23, Nov 10 segment 17, Magic transparency closed), Lane B 50 (Gridiron 21, Statyx rows 32-50 closed), Lane C PFF 35 + Dhanani/Bills carry-forwards closed. 64 CSVs under docs/research/2026-11-13/full-tables/.",
-      "3fe106c7c docs(handoff,bus): CI gate unblocked - type check green, tests run for the first time in days",
-      "a821d7819 fix(ci): add toolregistry + yt-dlp, the last two collection blockers",
-      "e9a3f4a8a fix(types): narrow activeStage so the funnel tabpanel type-checks",
-      "71586d387 fix(ci): install pyyaml + statsmodels so the epistemic gate can collect",
-      "ff1ff746b fix(types): clear the TS2532 wall that has kept the CI type gate red"
+      "648991cff feat(pregame-dfs): unify Stage-0 truth, 3-noon cadence, 360 boards, and  Showdown DFS optimizer",
+      "0edd941a7 chore(ledger): mark AUTON-WEEK10-DUAL-LOCK-25 DONE with Lock 1 and Lock 2 SHAs",
+      "2ce2d3ede feat(week10): Lock 2 official 10:32 AM CST Noon inactives, vacated-volume DFS conservation, and Owner Writeup",
+      "9334fa500 feat(week10): Lock 1 pre-inactives 12-game 10k-world dossiers, 4 DK slates, and web storefront sync",
+      "2264336ff docs(ops): record AUTON-ETHOS-WEEK10-LAUNCH-24 Week 10 launch readiness in ledger and handoff",
+      "0e9f1615d feat(week10): finalize IDP tackle calibration, 13/13 connected dossiers, 5 DK DFS packets & Sunday launch readiness",
+      "e98513369 Merge remote-tracking branch 'origin/main' into feat/ethos-overnight-week10-sunday-launch-2026-11-15",
+      "1bffc292e fix(seo): the site-wide JSON-LD was still publishing the pre-Nov-13 record to Google",
+      "22776bc03 fix(web): derive the public record on every crawlable manifest, and stop exempting the superseded snapshot",
+      "d17dd83a9 docs(ledger): record corpus-grounding-live CI sports_test guard",
+      "de59717ea test(prediction-engine): skip live Neon HNSW suite against ephemeral CI sports_test Postgres",
+      "ce17626fe docs(ledger): record origin/main 4b793c509 merge and optional mongodb typecheck fix",
+      "74eded412 fix(web): make optional mongodb dynamic import non-literal for clean CI typecheck",
+      "acd87422d Merge remote-tracking branch 'origin/main' into feat/autonomous-workflows-and-corpus-wiring-2026-11-13",
+      "4b793c509 fix(lint): drop the unused catch binding on the public package-unlock endpoint"
     ],
     "7_cron_registry_jobs_count": 17,
     "8_working_tree_verified": true
   },
   "proposed_organization_plan_table": [
     {
-      "session_id": "local-aeea6ecb26f91c402f46ecf70d3612ba25d061b8f62a8e2edb18e7d02dc29de6",
+      "session_id": "local-ee392f03de40139443c7440fdb9f622cbf2db485afe8fede73da55eb3fe086c0",
       "current_title": "<untitled>",
       "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
-      "proposed_new_title": "gse-week9-session-local-ae",
+      "proposed_new_title": "gse-week9-session-local-ee",
+      "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
+    },
+    {
+      "session_id": "local-b7f9eddb46993920ca663d5b64d9d0e479677d76253022cbb3577e7e182db403",
+      "current_title": "<untitled>",
+      "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
+      "proposed_new_title": "gse-week9-session-local-b7",
+      "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
+    },
+    {
+      "session_id": "local-edfb092d41104222c9a065c1bfdf0a8835cbc4d130f4b87db14181cfc5cc1eda",
+      "current_title": "<untitled>",
+      "proposed_action": "RENAME_CANDIDATE (awaiting user confirmation)",
+      "proposed_new_title": "gse-week9-session-local-ed",
       "reason": "Generic/empty session title reduces `/resume <title>` prefix discoverability."
     }
   ],
