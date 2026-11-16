@@ -618,9 +618,40 @@ const LOCK_SURNAME_TABLE_DATA =
 const LOCK_SURNAME_PARENTHETICAL_AND_SLUG =
   /\(\s*Lock\s+\d+(?:\.\d+)?|(?<=[a-z0-9])-lock(?=[-.])/g;
 
+// THREE MORE DIGEST SHAPES, added 2026-11-16 (CI red on `7305b780f`, the
+// 2026-11-15 morning analytics sweep digest appended to AGENTS.md). The sweep
+// transcribed a QB chart and an EPA comparison in shapes the forms above do not
+// cover, and every pull request went red on four tests in three files:
+//   1) a weeks parenthetical right after the surname — "Lock (Weeks 1, 2, 9: …)"
+//   2) a signed EPA comparison value — "As printed: Lock +0.400 EPA/dropback"
+//   3) a chart title naming the passer — "the hawkblogger Lock chart"
+// CASE-SENSITIVE by design (no `i` flag), like the table-data constant above:
+// the digests render the surname with a capital L, while the slang claim forms
+// are lowercase and keep hitting. Each alternative is anchored to the shape the
+// chart copy takes (a "Weeks" parenthetical, a signed EPA figure, the word
+// "chart"), not to the surname alone, so bare "Lock 2.77" with no table context
+// still fails (the lockDigestExempt gating test pins that), as do "my lock of
+// the day", "bills/lock/chiefs" and "the total is a Lock 2.5u".
+const LOCK_SURNAME_DIGEST_SHAPES =
+  /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b/g;
+
 /** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
 export function isVerbatimSocialDigestLine(line: string): boolean {
   return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+}
+
+/**
+ * A line of a ROOT MEMORY DOC's social digest, identified by the two markers a
+ * transcription of somebody else's post always carries: the @handle it quotes
+ * AND that post's numeric ID. Brand-positioning copy quoted on such a line is
+ * the THIRD PARTY's framing, not this platform's — the same rule
+ * `scripts/guardrails/trust-gate.mjs` already applies (`attributedQuote`)
+ * before it fails a build. Tightened here to demand the post ID: a bare
+ * @handle on a doc line is not enough, so the platform's own unattributed
+ * "AI-powered" copy in README/CLAUDE.md/AGENTS.md still fails.
+ */
+export function isAttributedThirdPartyDigestLine(line: string): boolean {
+  return /@\w+/.test(line) && /\bID\s+\d{6,}/.test(line);
 }
 
 /**
@@ -633,6 +664,14 @@ export function isVerbatimSocialDigestLine(line: string): boolean {
  */
 export interface ScanBannedPhrasesOptions {
   readonly lockDigestExempt?: boolean;
+  /**
+   * Skip brand-positioning-vocab hits on lines that carry BOTH an @handle and
+   * that post's numeric ID inside a root memory doc — third-party positioning
+   * copy transcribed from somebody else's post. Mirrors
+   * `scripts/guardrails/trust-gate.mjs`'s `attributedQuote` rule. Only enable
+   * for root memory docs; GSE's own unattributed positioning copy still hits.
+   */
+  readonly positioningDigestExempt?: boolean;
 }
 
 export function scanForBannedPhrases(
@@ -642,6 +681,7 @@ export function scanForBannedPhrases(
   const hits: BannedPhraseHit[] = [];
   const lines = input.split(/\r?\n/);
   const lockDigestExempt = options.lockDigestExempt === true;
+  const positioningDigestExempt = options.positioningDigestExempt === true;
 
   for (const claim of getBannedClaims()) {
     const phrase = claim.copy;
@@ -669,6 +709,7 @@ export function scanForBannedPhrases(
         subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
         subject = subject.replace(LOCK_SURNAME_TABLE_DATA, " ");
         subject = subject.replace(LOCK_SURNAME_PARENTHETICAL_AND_SLUG, " ");
+        subject = subject.replace(LOCK_SURNAME_DIGEST_SHAPES, " ");
       }
       if (pattern.test(subject)) {
         hits.push({
@@ -686,6 +727,7 @@ export function scanForBannedPhrases(
     if (CLAIM_COVERED_POSITIONING_PHRASES.has(rawPhrase.toLowerCase())) continue;
     const pattern = buildPositioningRegex([rawPhrase]);
     lines.forEach((line, idx) => {
+      if (positioningDigestExempt && isAttributedThirdPartyDigestLine(line)) return;
       if (pattern.test(normalizeForScan(line))) {
         hits.push({
           phrase: rawPhrase,
