@@ -7,10 +7,10 @@ The standing record of everything Nova produces, how it is received, and how she
 - Production voice: Zephyr + Nov 7, 2026 adjusted style text (Garrett's B1 pick, 2026-11-07 15:04 CT; VOICE-LOCK.md governs)
 - Standing spec: NOVA-CHARACTER-SPEC-2026-11-07.md
 - Canonical dossier: Beexly/Sports branch motif/nova-dossier-2026-11-07, docs/research/2026-11-07/nova-dossier/
-- Pieces produced to date: 21 ledger entries (15 in the Nov 6–7 tracking era + 6 pre-tracking video pieces appended by the 2026-11-08 weekly review; Oct 27–28 audition/stills archive is documented in the bible, not individually ledgered — see 2026-11-08 review, Discrepancy 3)
+- Pieces produced to date: 21 ledger entries (15 in the Nov 6–7 tracking era + 6 pre-tracking video pieces appended by the 2026-11-08 weekly review; Oct 27–28 audition/stills archive is documented in the bible, not individually ledgered — see 2026-11-08 review, Discrepancy 3) — unchanged at the 2026-11-15 review (0 new pieces Nov 9–15)
 - Public posts to date: 0 (nothing posts without Garrett's approval of the specific piece)
-- Last weekly review: 2026-11-08 — tracking/reviews/2026-11-08-review.md (period Nov 6–8: 0 new pieces Nov 8, 0 posts, drift verdict PARTIAL/FAIL — see Drift table)
-- Higgsfield balance at last production entry: 218 credits (after Take 6, 2026-11-07)
+- Last weekly review: 2026-11-15 — tracking/reviews/2026-11-15-review.md (period Nov 9–15: 0 new pieces, 0 posts, drift N/A — no new material; 2026-11-08 PARTIAL/FAIL verdict stands as last graded verdict)
+- Higgsfield balance at last production entry: 218 credits (after Take 6, 2026-11-07) — Plus subscription cancelled 2026-11-13; access + the 218 credits stay live until Dec 6, 2026, then end (added by the weekly review)
 
 ## Production Log
 
@@ -48,6 +48,7 @@ Public results only, from real posts. Nothing enters this table without a post U
 |---|---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — | No public Nova posts yet (2026-11-07) |
 | — | — | — | not retrieved | not retrieved | not retrieved | not retrieved | Weekly review 2026-11-08: still no public Nova posts; week's records searched, no Nova post URLs found — no metrics exist to retrieve, none estimated (added by the weekly review) |
+| — | — | — | not retrieved | not retrieved | not retrieved | not retrieved | Weekly review 2026-11-15: still no public Nova posts; records for Nov 9–15 searched, no Nova post URLs found — no metrics exist to retrieve, none estimated (added by the weekly review) |
 
 ## Decisions & Changes Log
 
@@ -70,12 +71,14 @@ Filled by the weekly review: her recent output checked against the spec and the 
 | Check date | Window reviewed | Identity hold | Voice hold | Speech-habit hold | Flags |
 |---|---|---|---|---|---|
 | 2026-11-08 | 2026-11-06 to 2026-11-08 (Takes 1–6 + Take 7 script; no Nov 8 pieces) | PARTIAL / FAIL — same woman broadly, but plum streak + beauty mark absent in every frame-verified take (Takes 4–6); tattoos not visible for verification; wardrobe FAIL Take 5 (Patriots + Nike logos), PASS Takes 4 and 6; nose-ring and fringe calls unstable across red-team methods | FAIL early Nov 7 (Callirrhoe + retired style, morning drift), PASS after correction — Takes 4–6 used Zephyr + Nov 7 adjusted style per VOICE-LOCK latest section, B1 picked by Garrett 15:04 CT | FAIL — "Let's eat" (banned) in presenter-1, report-1, report-2 (all HELD, never post); Script B repeated verbatim across Takes 4–6, killed as a reusable line 17:13 CT (takes are production tests, will not post with that line); Take 7 fresh line passed form (short units, one "uh", no banned phrase) but was STOPPED as funnel copy | Persistent: streak + beauty mark never landed; skin poreless/waxy in both red teams (85% AI-detection, methods differ); Take 6 regressions: chest-up framing, lapel mic returned, setting drifted to grass field. Full detail: tracking/reviews/2026-11-08-review.md |
+| 2026-11-15 | 2026-11-09 to 2026-11-15 (no new pieces — production idle since Take 6, 2026-11-07 17:11 CT) | N/A — NO NEW MATERIAL (no new generations to check against the master; 2026-11-08 findings stand unretested) (added by the weekly review) | N/A — NO NEW MATERIAL (no new generations; production voice remains Zephyr + Nov 7 adjusted style per VOICE-LOCK latest section) (added by the weekly review) | N/A — NO NEW MATERIAL (no new scripts; "Let's eat" remains only in the three HELD early takes, never posted; Script B remains killed) (added by the weekly review) | No new drift — no production. Resource flag: Higgsfield Plus cancelled 2026-11-13; 218 credits + access end Dec 6, 2026. Full detail: tracking/reviews/2026-11-15-review.md |
 
 ## Review History
 
 | Review | Period | Report |
 |---|---|---|
 | 2026-11-08 | Weekly review, 2026-11-06 to 2026-11-08 | tracking/reviews/2026-11-08-review.md — 21 ledger entries (6 pre-tracking appended), 0 public posts, metrics not retrieved (no posts exist), drift PARTIAL/FAIL, improvements: wardrobe/hand/signage/mic/voice-drift corrected in-day; regressions: Take 6 framing/mic/setting |
+| 2026-11-15 | Weekly review, 2026-11-09 to 2026-11-15 | tracking/reviews/2026-11-15-review.md — 0 new pieces, 0 public posts, metrics not retrieved (no posts exist), drift N/A (no new material; 2026-11-08 verdict stands), no discrepancies; resource change: Higgsfield Plus cancelled 2026-11-13, 218 credits + access end Dec 6, 2026 (added by the weekly review) |
 | — | — | First weekly review pending (cron: nova-growth-review-weekly) — superseded by the 2026-11-08 row above, left untouched per protocol |
 | 2026-11-07 | Take 4 red team — nvidia/nemotron-3.5-super-vl-120b-a12b | tracking/reviews/2026-11-07-take4-redteam-nemotron-vl.md |
 | 2026-11-07 | Take 5 red team (video input) — nvidia/nemotron-3.5-super-vl-120b-a12b | tracking/reviews/2026-11-07-take5-redteam-nemotron-vl-video.md |
