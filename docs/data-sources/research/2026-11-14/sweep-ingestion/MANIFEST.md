@@ -236,3 +236,19 @@ f897381) and the remote size read back at 1,952,453 bytes, matching the
 local file byte-for-byte. The Oracle record (item_key DfwXBcUND-Q)
 carries verdict CLOSED in the feed itself, with the status correction
 appended to its summary, per the ruling above.
+
+## 2026-11-15 PM delta (X For You lane; X analytics PM pending)
+
+X For You PM delta: `delta-2026-11-15-x-pm.jsonl`, 155 records
+(53 dossier posts across 20 dossiers, 38 inventoried with verified
+status IDs, 64 NO-ID slug-keyed feed-inventory rows; 3 NO-ID rows
+skipped on slug collisions, 20 ads and 1 trading-skip excluded) from
+~/workspace/x-for-you-sweep/reports/2026-11-15-PM.md. Motif-verified:
+every line parses, 16-key schema exact, 0 collisions against base plus
+prior deltas, no em/en dashes, 170,478 bytes. Appended to
+x-for-you-feed.jsonl (now 5,764 records, 4,159,791 bytes).
+
+Running feed total: 10,752 records (10,597 through 2026-11-15 IG PM +
+155 X For You PM). X analytics PM delta for 2026-11-15 converts when
+that run completes. Poster numbers in the deltas are claims as printed,
+not verified facts.
