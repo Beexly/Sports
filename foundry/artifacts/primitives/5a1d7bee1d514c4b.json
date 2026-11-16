@@ -1,0 +1,720 @@
+{
+ "book_id": "5a1d7bee1d514c4b",
+ "source_status": "COMPLETE",
+ "source_note": "National Institute for Health and Care Excellence (NICE), Rehabilitation after traumatic injury, NICE guideline NG211, published 18 January 2022, ISBN 978-1-4731-4398-2. The local file is the complete 134-page PDF rendering of the guideline as published at nice.org.uk/guidance/ng211 (title page carries the 2022 publication date; the PDF footer shows a 2024 NICE copyright line), 669,211 bytes, sha256 5a1d7bee1d514c4b106c45e5ad73d1d0564bb4e6c46bebb11667a9db784e6d82. The extracted text is clean, complete and machine-readable (6,393 lines), covering recommendations 1.1 to 1.17, terms used in the guideline, research recommendations, the full rationale and impact sections and the Context. The guideline contains no equations: its primitives are definitions, rules, thresholds, timed checkpoints and programme structures, so latex is empty throughout and every primitive carries the no_equation_domain marker. The catalog title matches the work; no correction is needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work, delivered for sync-cloud reconciliation.",
+ "motif_lane": true,
+ "primitives": [
+  {
+   "primitive_id": "severity_complexity_decoupling",
+   "name": "Injury severity does not necessarily correlate with rehabilitation-need complexity; assess impact individually and holistically",
+   "verbatim_quote": "Be aware that the severity of a person's traumatic injury does not necessarily correlate with the complexity of their rehabilitation needs, so assess the impact of the injury using a person-centred, individualised and holistic approach at all stages of their care pathway.",
+   "page": "Section 1.1, recommendation 1.1.1 (guideline p.9; text lines 374-377)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rehabilitation need is a function of the person, their context and their pre-existing conditions, not of the lesion alone",
+    "Assessment is repeated across the pathway, not fixed at admission"
+   ],
+   "breakdown_regime": "A severity grade still matters for acute care triage and prognosis; the decoupling applies to rehabilitation planning, where two people with identical injuries can need very different programmes. The guideline gives no quantitative mapping from injury pattern to need, so complexity must be assessed case by case. no_equation_domain",
+   "domain": "rehabilitation needs assessment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets the engine's core injury-modelling rule: expected recovery workload and time away cannot be read off a headline injury grade. Availability and return projections must condition on individual context features (role demands, prior function, comorbidity, support) in addition to the injury label, because the source treats severity and need as separate variables.",
+    "source_operator": "severity_complexity_decoupling",
+    "telemetry": "Injury type and grade, pre-injury performance baseline, age, comorbidity flags, position or role physical demands, prior injury history"
+   }
+  },
+  {
+   "primitive_id": "complex_rehabilitation_needs_definition",
+   "name": "Complex rehabilitation needs: multiple needs from traumatic injury requiring coordinated input from 2 or more allied health professional disciplines",
+   "verbatim_quote": "Complex rehabilitation needs cover multiple needs due to traumatic injury or injuries (polytrauma), and will involve coordinated multidisciplinary input from 2 or more allied health professional disciplines.",
+   "page": "Terms used in this guideline: Complex rehabilitation needs (guideline p.80; text lines 3868-3870)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Complexity is counted in distinct professional disciplines involved, not in injury count alone",
+    "The needs arise from the traumatic injury or injuries, including polytrauma"
+   ],
+   "breakdown_regime": "The threshold of 2 disciplines is an administrative boundary for an NHS pathway, not a measured biological cut point; a single-discipline case can still be severe, and a multi-discipline case can be routine. It classifies service configuration, not prognosis. no_equation_domain",
+   "domain": "clinical definition / rehabilitation systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the engine a countable complexity feature: the number of distinct specialist domains a recovery case touches (medical, physio, psychology, nutrition, occupational function). Cases crossing the multi-domain threshold get a different, wider uncertainty treatment in return projections than single-domain cases.",
+    "source_operator": "complex_rehabilitation_needs_definition",
+    "telemetry": "Count of distinct specialist services involved in a case, referral records, multidisciplinary review notes"
+   }
+  },
+  {
+   "primitive_id": "traumatic_injury_definition",
+   "name": "Traumatic injury: any musculoskeletal, visceral, nerve, soft tissue, spinal or limb injury, including polytrauma, that requires hospital admission at the time of injury",
+   "verbatim_quote": "This includes multiple, major and severe injuries, sometimes referred to as polytrauma, and any musculoskeletal, visceral, nerve, soft tissue, spinal or limb injury that requires admission to hospital at the time of injury.",
+   "page": "Terms used in this guideline: Traumatic injury (guideline p.83; text lines 3998-4000)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The event class is defined by tissue damage plus a care threshold (admission), not by mechanism alone",
+    "Minor injuries count when they cross the admission threshold"
+   ],
+   "breakdown_regime": "Admission thresholds vary by health system and era, so the class boundary is partly institutional; injuries managed entirely in the community fall outside the definition even when functionally similar. The definition also does not grade severity. no_equation_domain",
+   "domain": "clinical definition / neurotrauma",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Defines the exposure class for the engine's injury corpus: an incident enters the dataset when tissue damage is significant enough to force a care episode, which keeps trivial knocks and unmanaged minor injuries from diluting recovery-time statistics.",
+    "source_operator": "traumatic_injury_definition",
+    "telemetry": "Injury reports with admission or missed-participation flags, injury site and tissue type, polytrauma indicators"
+   }
+  },
+  {
+   "primitive_id": "start_when_ready_engagement_gate",
+   "name": "Rehabilitation starts when the person is ready and able to engage and participate, not on a fixed post-injury timer",
+   "verbatim_quote": "Start rehabilitation when the person is ready and able to engage and participate (see also recommendation 1.2.5).",
+   "page": "Section 1.1, recommendation 1.1.4 (guideline p.10; text lines 414-415)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Engagement capacity is a real, assessable state (pain, cognition, delirium, communication access)",
+    "For people who lack capacity, a best-interests decision process substitutes for direct engagement"
+   ],
+   "breakdown_regime": "Readiness is a clinical judgement without a numeric scale in the guideline, so start times vary between teams; delay also carries harm (deconditioning, loss of movement), so the gate is a balance, not a pure wait. It does not apply to time-critical acute treatment. no_equation_domain",
+   "domain": "rehabilitation timing / engagement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a gating variable in return-to-play reasoning: a rehab or training block is scheduled when the subject can actually engage with it, so projected timelines carry a readiness state (pain controlled, cognition clear, support in place) that can delay the nominal protocol start without changing the protocol itself.",
+    "source_operator": "start_when_ready_engagement_gate",
+    "telemetry": "Pain scores, sleep and delirium flags, session attendance and completion rates, reported readiness in training logs"
+   }
+  },
+  {
+   "primitive_id": "england_trauma_burden",
+   "name": "England burden: 45,000 very severe or major trauma cases per year, plus a further 500,000 less severe trauma cases in the guideline population",
+   "verbatim_quote": "In England, 45,000 people are affected by very severe or major trauma every year. A further 500,000 people (included in the population for this guideline) experience less severe trauma, and a proportion of those will need hospital admission",
+   "page": "Context (guideline p.131; text lines 6270-6272)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Figures are England-only annual incidence as stated by NICE in 2022",
+    "The 500,000 are the wider guideline population, of whom only a proportion need admission"
+   ],
+   "breakdown_regime": "The numbers are population context, not rates per exposure; they are not broken down by sport, age band or mechanism in this passage, and they age with the guideline. They cannot be converted into an individual risk without exposure denominators. no_equation_domain",
+   "domain": "epidemiology / population burden",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supplies base-rate discipline for the institute: severe outcomes are a small numerator over a very large exposed population, so any recovery or risk model must be calibrated against population incidence rather than against the memorable severe cases that dominate case series and media coverage.",
+    "source_operator": "england_trauma_burden",
+    "telemetry": "National trauma registry counts, hospital admission statistics, participation and exposure counts for rate denominators"
+   }
+  },
+  {
+   "primitive_id": "malnutrition_screening_stamp_must",
+   "name": "Screen malnutrition risk with a validated tool: STAMP for children and young people under 16, MUST for adults",
+   "verbatim_quote": "Assess the person's risk of malnutrition using, for example, the Screening Tool for the Assessment of Malnutrition in Paediatrics (STAMP) score in children and young people under 16 years and, for example, the Malnutrition Universal Screening Tool (MUST) score for adults",
+   "page": "Section 1.1, recommendation 1.1.11 (guideline p.11; text lines 462-465)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nutritional state materially affects healing and rehabilitation capacity after trauma",
+    "Screening is repeated: intake and weight are monitored throughout the hospital stay (recommendation 1.1.12)"
+   ],
+   "breakdown_regime": "Screening scores are triage instruments, not diagnoses; they trigger dietitian review rather than prescribe intake. Tool choice is age-banded, so adolescents near the boundary need judgement, and scores do not capture sport-specific energy availability problems. no_equation_domain",
+   "domain": "nutrition / screening",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the engine a named, validated screening step in the health layer: recovery projections should check a nutrition-risk flag (screened with an age-appropriate validated tool) before assuming standard healing rates, because under-fuelling silently stretches tissue-healing timelines.",
+    "source_operator": "malnutrition_screening_stamp_must",
+    "telemetry": "Body mass trend, dietary intake records, screening scores, dietitian referral flags"
+   }
+  },
+  {
+   "primitive_id": "holistic_mdt_assessment",
+   "name": "The multidisciplinary team completes one personalised, holistic needs assessment covering physical, cognitive and psychological functioning, in partnership with the person",
+   "verbatim_quote": "The multidisciplinary team should complete a personalised and holistic rehabilitation needs assessment in partnership with the person and their family members or carers (as appropriate), which should include:",
+   "page": "Section 1.2, recommendation 1.2.1 (guideline p.12; text lines 515-517)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No single profession sees the whole need profile; the assessment is a team product",
+    "The person and family are partners in the assessment, not just subjects of it"
+   ],
+   "breakdown_regime": "A single holistic assessment can still miss evolving needs, which is why the guideline pairs it with regular reassessment; team composition varies with injury type, age and setting, so coverage of the three functioning domains is uneven in practice. no_equation_domain",
+   "domain": "rehabilitation needs assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defines the engine's assessment shape for any complex case: one integrated evaluation spanning physical, cognitive and psychological state, assembled from multiple specialist views, rather than separate siloed checks whose interactions (for example mood suppressing training engagement) are never computed.",
+    "source_operator": "holistic_mdt_assessment",
+    "telemetry": "Physical testing results, cognitive screening results, psychological screening results, assessor identities and dates"
+   }
+  },
+  {
+   "primitive_id": "hidden_head_injury_screening",
+   "name": "Always consider mechanism of injury for possible head injury; traumatic brain injury symptoms can be subtle and may need regular screening",
+   "verbatim_quote": "Always think about the mechanism of injury and whether the person may have had a head injury. Be aware that the symptoms of traumatic brain injury can be subtle and regular screening may be necessary.",
+   "page": "Section 1.2, recommendation 1.2.3 (guideline p.13; text lines 548-550)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mechanism of injury carries information about occult brain injury even when the presenting injury is elsewhere",
+    "A single negative early screen does not close the question"
+   ],
+   "breakdown_regime": "Screening is not diagnosis: positive or ambiguous screens route to specialist traumatic brain injury assessment, and this guideline explicitly does not cover TBI rehabilitation itself. Subtle presentations can still be missed when attention is captured by more visible injuries. no_equation_domain",
+   "domain": "neurotrauma / screening",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Installs an occult-injury check in the health layer: when a mechanism could transmit force to the head, the engine flags possible unrecorded brain injury and widens uncertainty on availability and cognitive readiness until repeat screening clears it, instead of treating the recorded injury list as complete.",
+    "source_operator": "hidden_head_injury_screening",
+    "telemetry": "Mechanism-of-injury descriptions, head-impact indicators, symptom checklists over time, specialist referral outcomes"
+   }
+  },
+  {
+   "primitive_id": "engagement_optimisation_measures",
+   "name": "Before assessing needs, optimise the person's ability to engage: pain management, infection and delirium resolution, psychological wellbeing, sensory and communication aids, interpreters, withdrawal management, restarted long-term medication",
+   "verbatim_quote": "The multidisciplinary team should assess the person's rehabilitation needs as soon as possible after the traumatic injury, when measures are being taken to optimise their ability to engage in the assessment process.",
+   "page": "Section 1.2, recommendation 1.2.5 (guideline p.14; text lines 593-595)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Measured functioning is state-dependent: untreated pain, confusion or missing glasses corrupt the baseline",
+    "The listed measures are prerequisites for a valid assessment, not optional comforts"
+   ],
+   "breakdown_regime": "Some blockers cannot be fully resolved (established dementia, severe brain injury), so assessment proceeds on a best-interests basis with known measurement error; the guideline does not quantify how much each blocker distorts results. no_equation_domain",
+   "domain": "assessment validity / engagement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a measurement-validity rule: baseline testing done while pain, illness, poor sleep or missing equipment suppress performance is biased downward, so the engine should tag baselines collected under such conditions and discount them when setting expected recovery trajectories.",
+    "source_operator": "engagement_optimisation_measures",
+    "telemetry": "Pain and medication status at test time, sleep records, illness flags, equipment availability, test session notes"
+   }
+  },
+  {
+   "primitive_id": "validated_complexity_tools_referral",
+   "name": "Use validated complexity tools (rehabilitation complexity scale, patient categorisation tool, complex needs checklist, post-ICU presentation screen) to decide early referral to specialist rehabilitation units",
+   "verbatim_quote": "Use validated tools (for example, the rehabilitation complexity scale [RCS], patient categorisation tool [PCAT], complex needs checklist [CNC] or post-ICU presentation screen [PICUPS]), in the rehabilitation needs assessment to determine the need for early referral to specialist rehabilitation units.",
+   "page": "Section 1.2, recommendation 1.2.11 (guideline p.15; text lines 677-680)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Complexity is measurable with standardised instruments rather than left to unaided impression",
+    "The tools drive a routing decision (specialist unit or not), and routing is revisited on reassessment"
+   ],
+   "breakdown_regime": "The instruments score service need, not recovery probability; thresholds are service conventions, and the guideline names the tools as examples, leaving local choice open. Scores from different tools are not interchangeable. no_equation_domain",
+   "domain": "complexity measurement / triage",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Names the pattern the engine should copy for case complexity: a small set of validated, named instruments producing a score that routes the case to a level of support, with the score recomputed as the case evolves instead of a one-off label fixed at intake.",
+    "source_operator": "validated_complexity_tools_referral",
+    "telemetry": "Complexity scores per case over time, instrument used, routing decisions and their outcomes"
+   }
+  },
+  {
+   "primitive_id": "cognitive_problems_without_brain_injury",
+   "name": "Cognitive problems are common after traumatic injury even with no brain injury, because of psychological shock and trauma",
+   "verbatim_quote": "Be aware that even if there has been no brain injury, problems with cognitive functioning are common after a traumatic injury because of the psychological shock and trauma.",
+   "page": "Section 1.2, recommendation 1.2.16 (guideline p.18; text lines 827-829)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cognitive symptoms after trauma are not proof of structural brain injury",
+    "Alternative causes (delirium, dementia, medication, hypoxia) must be investigated before attribution (recommendation 1.2.18)"
+   ],
+   "breakdown_regime": "The guideline states the phenomenon without an incidence figure, and the same symptoms can signal delirium or occult brain injury, so the reassurance has a hard boundary: persistent, worsening or recurrent problems trigger further assessment (recommendation 1.12.3). no_equation_domain",
+   "domain": "cognitive rehabilitation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Corrects an attribution error the engine could make: post-injury cognitive or concentration problems in an athlete do not automatically imply head injury. The reasoning layer should hold a non-brain-injury branch (shock, pain, medication, sleep loss) for cognitive symptoms and require differential evidence before classifying a case as brain injury.",
+    "source_operator": "cognitive_problems_without_brain_injury",
+    "telemetry": "Cognitive symptom reports, head-impact exposure records, medication lists, sleep data, delirium screening results"
+   }
+  },
+  {
+   "primitive_id": "psychological_risk_factor_screen",
+   "name": "Screen psychological and psychosocial risk factors at assessment: prior mental health problems, self-harm history, abuse, substance use, injury circumstances, and social support deficits",
+   "verbatim_quote": "As part of the rehabilitation needs assessment after a traumatic injury, the multidisciplinary team should ask about psychological and psychosocial risk factors, for example:",
+   "page": "Section 1.2, recommendation 1.2.21 (guideline p.20; text lines 916-918)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Past psychological state and social context predict rehabilitation difficulty independently of physical injury",
+    "Risk factors inform goals and the plan, and can trigger practitioner psychologist referral"
+   ],
+   "breakdown_regime": "Screening identifies risk, not diagnosis; disclosure depends on trust and timing, and risk factors are static history while psychological state itself fluctuates, which is why the guideline adds repeated checks during rehabilitation (recommendation 1.13.6). no_equation_domain",
+   "domain": "psychological assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the health layer a structured psychosocial feature set for recovery modelling: prior mental health, substance use, social isolation and support access are recorded at intake as modifiers of expected adherence and recovery speed, rather than discovered after a programme stalls.",
+    "source_operator": "psychological_risk_factor_screen",
+    "telemetry": "Intake psychosocial questionnaires, support-network indicators, prior mental health service contact, adherence history"
+   }
+  },
+  {
+   "primitive_id": "strengths_based_approach",
+   "name": "Strengths-based approach: build on the person's strengths, personal, social and community, rather than on their deficits",
+   "verbatim_quote": "Strengths-based (or asset-based) approaches focus on the person's strengths (including personal strengths, and social and community networks) and not on their deficits.",
+   "page": "Terms used in this guideline: Strengths-based approach (guideline p.83; text lines 3974-3975)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Remaining abilities and networks are active resources for recovery, not just background",
+    "The approach is holistic and multidisciplinary and aims at wellbeing, per the guideline definition"
+   ],
+   "breakdown_regime": "Strengths framing does not remove deficits that need treatment; applied naively it can under-record impairment and distort baselines. It is a stance for goal setting, not a measurement method. no_equation_domain",
+   "domain": "goal setting / rehabilitation philosophy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a modelling stance for return projections: forecast from what the athlete can still do and what support surrounds them, using preserved capacities as the substrate of the plan, instead of modelling the case purely as a list of lost functions to be restored in sequence.",
+    "source_operator": "strengths_based_approach",
+    "telemetry": "Preserved-capacity test results, support network mapping, athlete-stated priorities and valued activities"
+   }
+  },
+  {
+   "primitive_id": "goal_small_steps_decomposition",
+   "name": "Decompose long-term rehabilitation goals into agreed small steps so progress is monitorable in a way that is meaningful and motivational",
+   "verbatim_quote": "When setting long-term rehabilitation goals, agree small steps so that progress can be monitored in a way that is meaningful and motivational for the person.",
+   "page": "Section 1.3, recommendation 1.3.2 (guideline p.22; text lines 1008-1009)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Long-horizon goals fail as feedback signals unless intermediate states are defined",
+    "Steps are agreed with the person, and goals stay flexible because setbacks occur (recommendation 1.3.1)"
+   ],
+   "breakdown_regime": "Step granularity is a judgement call: steps too large give late warning of stalls, steps too small create measurement noise and administrative burden. The guideline sets no standard step size or review interval. no_equation_domain",
+   "domain": "goal setting / progress monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Supplies the engine's milestone method for long recoveries: any long projected absence is decomposed into dated intermediate checkpoints with observable criteria, so a stall is detected at the first missed checkpoint rather than at the final return date.",
+    "source_operator": "goal_small_steps_decomposition",
+    "telemetry": "Milestone definitions, checkpoint dates, pass or fail observations per checkpoint, plan revision history"
+   }
+  },
+  {
+   "primitive_id": "plan_single_living_document",
+   "name": "The rehabilitation plan is a single, evolving document shared between the person, family or carers, and healthcare professionals, updated as goals and needs change",
+   "verbatim_quote": "This should be a single document that can be shared between people undergoing rehabilitation, families or carers, and healthcare professionals. It should be an evolving document, detailing a person's rehabilitation journey and any changes in goals and needs.",
+   "page": "Rationale and impact: Developing a rehabilitation plan and making referrals (guideline p.92; text lines 4383-4386)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One shared artefact prevents divergent versions of the plan across settings",
+    "Where full access is inappropriate, a summarised patient-held version carries the key components (recommendation 1.4.3)"
+   ],
+   "breakdown_regime": "A single document is a coordination device, not a guarantee of coordination: it fails when updates lag or when receiving services cannot access it. Confidentiality limits what some parties may see, hence the summarised patient-held variant. no_equation_domain",
+   "domain": "care coordination / information systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a data-architecture rule for the engine: one canonical, versioned case record per athlete that every layer reads and updates, with changes logged, instead of separate per-specialist notes whose contradictions surface only at decision time.",
+    "source_operator": "plan_single_living_document",
+    "telemetry": "Case record versions, update timestamps and authors, access logs across services"
+   }
+  },
+  {
+   "primitive_id": "programme_dose_tailoring",
+   "name": "Tailor programme start time, frequency, intensity and duration to the person; a short intensive block at an important time point can beat weekly sessions spread over a long period",
+   "verbatim_quote": "Tailor the start time, frequency, intensity and duration of the rehabilitation programme to have the most beneficial effect on the person's recovery (for example, a short period of intensive rehabilitation at an important time point might be better than weekly sessions over a long period).",
+   "page": "Section 1.5, recommendation 1.5.2 (guideline p.27; text lines 1261-1264)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dose is a four-dimensional choice (start, frequency, intensity, duration), not a single volume number",
+    "Timing relative to recovery stage can matter more than total volume"
+   ],
+   "breakdown_regime": "The guideline offers no dose-response curve; the committee recorded no evidence on timing or intensity, so tailoring rests on clinical judgement and can drift into habit. Tissue healing constraints (bone, soft tissue, weight-bearing status) bound how far intensity can be pushed. no_equation_domain",
+   "domain": "rehabilitation programme design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the load-management layer a scheduling principle: distribute a fixed rehabilitation or training dose unevenly, concentrating work at high-leverage windows (for example immediately after a capacity milestone) rather than spreading it uniformly, and treat start time as a decision variable equal in rank to volume.",
+    "source_operator": "programme_dose_tailoring",
+    "telemetry": "Session timestamps, intensity and duration logs, milestone dates, outcome response per scheduling pattern"
+   }
+  },
+  {
+   "primitive_id": "intensive_rehabilitation_block",
+   "name": "Post-acute intensive rehabilitation block (for example 3 weeks, inpatient, outpatient or residential) for complex cases where it is likely to significantly change function",
+   "verbatim_quote": "In the post-acute period, consider an intensive (for example, 3 weeks) inpatient or outpatient (including residential) rehabilitation programme for adults, young people and children with complex injuries and rehabilitation needs if such an intervention is likely to have a significant impact on change in function",
+   "page": "Section 1.5, recommendation 1.5.3 (guideline p.27; text lines 1280-1283)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intensive blocks are rationed to cases with high expected functional gain, for example return to work, education or independent living",
+    "Preparation (education materials) and planned breaks are part of the block design (recommendation 1.5.4)"
+   ],
+   "breakdown_regime": "Effectiveness and cost effectiveness of intensive rehabilitation are explicitly open research questions in this guideline (research recommendations 1 and 2); the 3-week figure is an example from economic modelling, not a measured optimum. Eligibility judgement can vary. no_equation_domain",
+   "domain": "rehabilitation programme design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a periodisation pattern: for the hardest recovery cases, a bounded intensive block with preparation before and consolidation after is a distinct intervention shape from continuous moderate work, and the engine should represent block-versus-continuous as an explicit plan choice with expected-gain justification.",
+    "source_operator": "intensive_rehabilitation_block",
+    "telemetry": "Programme type per case, block duration and setting, pre and post function measures, return-to-activity outcomes"
+   }
+  },
+  {
+   "primitive_id": "self_management_flexibility",
+   "name": "Self-management programmes work partly through scheduling flexibility: people value performing exercises at times most suitable to them",
+   "verbatim_quote": "Evidence showed that self-management programmes are appreciated because they give people the flexibility to perform exercises at times most suitable for them.",
+   "page": "Rationale and impact: Guided self-managed rehabilitation (guideline p.95; text lines 4540-4541)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Autonomy over timing is itself an adherence mechanism, separate from exercise content",
+    "Self-management stays guided: regular professional reviews check progress and answer queries (recommendation 1.5.6)"
+   ],
+   "breakdown_regime": "The supporting evidence is qualitative; self-management was not found in the quantitative literature, and a research recommendation asks whether adding self-management materials improves outcomes. Unsuitable for people who cannot self-direct without support (children, vulnerable adults need added scaffolding). no_equation_domain",
+   "domain": "self-management / adherence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Identifies a causal lever for the engine's adherence modelling: when a prescribed programme lets the subject choose session timing, completion rises independent of content. Adherence forecasts should therefore include a scheduling-autonomy feature, and plan design can trade supervision for flexibility deliberately.",
+    "source_operator": "self_management_flexibility",
+    "telemetry": "Self-scheduled versus fixed session completion rates, review attendance, self-reported barriers"
+   }
+  },
+  {
+   "primitive_id": "proms_croms_progress_monitoring",
+   "name": "Monitor progress with patient-reported and clinician-reported outcome measures (PROMs and CROMs), with parent and child reported measures for children and young people",
+   "verbatim_quote": "Monitor the person's progress after starting rehabilitation. Use tools such as patient-reported outcome measures (PROMs) and clinician-reported outcome measures (CROMs) for adults; parent- and child-reported measures for children and young people; and consider using tools that involve family members and carers.",
+   "page": "Section 1.5, recommendation 1.5.10 (guideline p.30; text lines 1428-1432)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subjective report and clinician measurement are complementary channels; neither alone is sufficient",
+    "Tool choice follows the person's goals and injury type, so the guideline names no single instrument"
+   ],
+   "breakdown_regime": "Reported measures carry bias (mood, expectation, recall) and clinician measures carry observer bias; without a fixed instrument, longitudinal comparability depends on local consistency. Monitoring only helps if results trigger plan updates, which the guideline assumes rather than enforces. no_equation_domain",
+   "domain": "progress monitoring / outcome measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Specifies the engine's monitoring loop for any recovery case: pair self-reported state with independently measured state on a schedule, because each channel catches stalls the other misses, and feed discrepancies between the two channels into the reasoning layer as a signal in their own right.",
+    "source_operator": "proms_croms_progress_monitoring",
+    "telemetry": "Self-report scores, clinician test results, measurement dates, discrepancy flags between channels"
+   }
+  },
+  {
+   "primitive_id": "coordinator_within_72_hours",
+   "name": "Assign a named rehabilitation coordinator or key worker as soon as possible and within 72 hours of admission",
+   "verbatim_quote": "Assign a named rehabilitation coordinator or key worker to oversee the person's care as soon as possible and within 72 hours of admission.",
+   "page": "Section 1.7, recommendation 1.7.2 (guideline p.33; text lines 1581-1582)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coordination needs a named accountable human, not a team mailbox",
+    "The 72-hour bound matches the time limit for starting a trauma prescription for major trauma patients, per the rationale"
+   ],
+   "breakdown_regime": "A named coordinator adds a single point of failure and workload concentration; the role holder may change along the pathway, so the invariant is the named role, not the same person. In low-complexity cases the overhead may exceed the benefit. no_equation_domain",
+   "domain": "care coordination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transfers as an ownership rule in the engine's case management: every complex case gets one named owner inside a fixed time bound from intake, accountable for the plan's coherence across specialists, because unowned cases stall at handover boundaries.",
+    "source_operator": "coordinator_within_72_hours",
+    "telemetry": "Time from intake to named owner, owner identity per case stage, handover counts per case"
+   }
+  },
+  {
+   "primitive_id": "unique_identifier_information_exchange",
+   "name": "Exchange all clinical information about the pathway under a unique identifier, preferably the NHS number",
+   "verbatim_quote": "Use a unique identifier, preferably the NHS number if this is known, when exchanging clinical information about the person's assessment, rehabilitation plan, onward referral, transition between services, discharge to community services, and all aspects of their care pathway.",
+   "page": "Section 1.7, recommendation 1.7.6 (guideline p.34; text lines 1607-1610)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Records from different services can only be joined reliably through a shared key",
+    "The identifier travels with every artefact: assessment, plan, referral, transition, discharge"
+   ],
+   "breakdown_regime": "The rule fails where the identifier is unknown or recorded inconsistently, and it solves linkage, not content quality: joined records can still be wrong. Privacy and consent constraints govern what may be shared under the key. no_equation_domain",
+   "domain": "health informatics / record linkage",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "States the engine's record-linkage primitive directly: every observation about a case, from whatever source, is filed under one stable case identifier so that assessment, intervention and outcome data join into a single longitudinal record instead of fragmenting across sources.",
+    "source_operator": "unique_identifier_information_exchange",
+    "telemetry": "Identifier coverage across data sources, duplicate or split record rates, join success rates"
+   }
+  },
+  {
+   "primitive_id": "single_point_of_contact_after_discharge",
+   "name": "At discharge, give the person a single point of contact at the hospital for a limited period (for example 3 months), then hand over to an agreed key contact",
+   "verbatim_quote": "At discharge from hospital, provide people and their family or carers (as appropriate) with a single point of contact at the hospital for information, help and advice for a limited time period (for example, 3 months).",
+   "page": "Section 1.8, recommendation 1.8.21 (guideline p.40; text lines 1917-1919)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The transition window is when support drops fastest and questions peak",
+    "The contact is time-limited by design, to force transfer of care to the community setting (rationale)"
+   ],
+   "breakdown_regime": "The 3-month figure is an example chosen to cover the transition, not a measured optimum; complex or long-term cases need a key worker beyond the window (recommendation 1.8.23). A contact who can only signpost, not act, limits the value. no_equation_domain",
+   "domain": "care coordination / discharge",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a transition-support pattern: after any major state change (return to full training, return to competition), keep one known contact channel open for a bounded window, then formally close it and transfer ownership, rather than letting support fade ambiguously.",
+    "source_operator": "single_point_of_contact_after_discharge",
+    "telemetry": "Contact logs after transitions, time to ownership transfer, unresolved query counts"
+   }
+  },
+  {
+   "primitive_id": "whole_pathway_commissioning",
+   "name": "Design rehabilitation services as whole care pathways, from acute treatment and inpatient rehabilitation through to community provision, specialised and non-specialised",
+   "verbatim_quote": "When planning, commissioning and coordinating the delivery of rehabilitation and related services (for example, social care and the voluntary sector), commissioners and providers should design services with whole care pathways in mind, from acute treatment and inpatient rehabilitation through to community provision, including specialised and non-specialised elements.",
+   "page": "Section 1.10, recommendation 1.10.1 (guideline p.44; text lines 2114-2118)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Optimising one segment in isolation degrades the pathway at its joins",
+    "One body must hold overall designated commissioning responsibility locally (recommendation 1.10.3)"
+   ],
+   "breakdown_regime": "Whole-pathway design is an organisational aspiration that depends on collaboration between separate commissioning bodies; where budgets and accountability stay fragmented, pathway thinking fails at funding boundaries. It also does not specify pathway content for any single injury. no_equation_domain",
+   "domain": "service commissioning / systems design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as an architecture rule for the reasoning engine itself: design the full pipeline from signal intake to published judgement as one pathway with owned joins, because segment-local optimisation (a better model here, a faster feed there) degrades end-to-end output at the interfaces.",
+    "source_operator": "whole_pathway_commissioning",
+    "telemetry": "End-to-end latency and error rates per pipeline stage, interface failure counts, ownership map of stages"
+   }
+  },
+  {
+   "primitive_id": "exercise_dose_clinical_judgement",
+   "name": "Exercise frequency and dose are set by clinical judgement per individual; dose choice is vital to success and has no universal prescription",
+   "verbatim_quote": "Use clinical judgement and expertise to determine the frequency and dose of the prescribed exercises because this is vital to the success of the interventions, and will differ depending on the individual needs and goals.",
+   "page": "Section 1.11, recommendation 1.11.5 (guideline p.48; text lines 2294-2296)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The evidence base was conflicting on frequency and intensity because exercises, injuries and populations vary too widely for one rule",
+    "Dose interacts with analgesia: pain must be managed so rehabilitation can proceed (recommendation 1.11.2)"
+   ],
+   "breakdown_regime": "Judgement-based dosing is unauditable without recorded rationale, and two clinicians can dose the same case differently; the guideline accepts this variance rather than resolving it. Under-dosing wastes the early window, over-dosing risks tissue damage. no_equation_domain",
+   "domain": "physical rehabilitation / exercise prescription",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Marks a boundary the engine must respect in load prescription: where dose-response evidence is genuinely conflicting, the system should present dose as a judgement with recorded reasoning and observed response, and learn from outcomes, instead of emitting a false-precision universal dose.",
+    "source_operator": "exercise_dose_clinical_judgement",
+    "telemetry": "Prescribed dose versus completed dose, clinician rationale notes, response per dose level across cases"
+   }
+  },
+  {
+   "primitive_id": "weight_bearing_status_documented_early",
+   "name": "The surgical team defines and documents weight-bearing status at the earliest opportunity, with reasons, limits and duration, and informs the rehabilitation team",
+   "verbatim_quote": "The surgical team should define and document the person's weight-bearing status at the earliest opportunity after a traumatic injury, and inform the rehabilitation multidisciplinary team",
+   "page": "Section 1.11, recommendation 1.11.10 (guideline p.49; text lines 2345-2347)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Weight-bearing status is a constraint set by the team that knows the surgical construct, not by the rehabilitation team",
+    "Early definition minimises harmful bed rest, which damages muscle function, skin integrity, postural reflexes and respiratory function (rationale)"
+   ],
+   "breakdown_regime": "Status changes as healing progresses, so an early documented status decays in validity and must be revisited; conservative defaults can unnecessarily prolong non-weight-bearing if review lags. The guideline sets no review interval. no_equation_domain",
+   "domain": "physical rehabilitation / load constraints",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the load layer a constraint-propagation rule: the binding load limit for a recovering athlete is an explicit, documented, dated decision by the responsible specialist, with reasons and limits, and every downstream training plan inherits it until that specialist revises it.",
+    "source_operator": "weight_bearing_status_documented_early",
+    "telemetry": "Load restriction records with dates and authors, revision history, training loads actually performed versus permitted"
+   }
+  },
+  {
+   "primitive_id": "aerobic_programme_universal",
+   "name": "Start a tailored aerobic and strengthening programme as soon as possible after injury, covering reconditioning, fitness, strength, balance, proprioception and vestibular function, regardless of age, stage or injury combination",
+   "verbatim_quote": "As soon as possible after a traumatic injury, start a tailored exercise programme to help with reconditioning, fitness, strengthening, balance, proprioception and vestibular function, irrespective of the person's age, stage of rehabilitation or combination of injuries.",
+   "page": "Section 1.11, recommendation 1.11.13 (guideline p.50; text lines 2383-2386)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "General conditioning decays fast after injury and gates all later specific work",
+    "Where lower limb mobility is limited, upper body aerobic training or seated exercise substitutes (recommendation 1.11.15)"
+   ],
+   "breakdown_regime": "As soon as possible is bounded by surgical restrictions, pain and medical stability; the programme components are general because the evidence did not identify which specific exercises are best. Tailoring to the person's interests is required for adherence, which competes with standardisation. no_equation_domain",
+   "domain": "physical rehabilitation / conditioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets the engine's conditioning invariant: general aerobic and strength work starts immediately and runs in parallel with injury-specific rehabilitation, adapted around the injury, so projected returns are never gated on total conditioning rebuild at the end of the process.",
+    "source_operator": "aerobic_programme_universal",
+    "telemetry": "Conditioning session logs parallel to rehab logs, aerobic capacity measures over recovery, substitution modes used"
+   }
+  },
+  {
+   "primitive_id": "no_withhold_aerobic_older_people",
+   "name": "Do not withhold aerobic exercise programmes from older people after traumatic injury",
+   "verbatim_quote": "Do not withhold aerobic exercise programmes from older people after a traumatic injury.",
+   "page": "Section 1.11, recommendation 1.11.17 (guideline p.51; text lines 2419-2420)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Age alone is not a contraindication; the committee noted fitness work optimises respiratory function, endurance and mobility in older people",
+    "The rule corrects an observed practice pattern of not offering aerobic programmes to frail older people"
+   ],
+   "breakdown_regime": "The veto targets blanket age-based exclusion, not individual contraindications: specific cardiac or surgical risks still modify or delay a programme for a specific person. It is a floor against rationing, not a dosing rule. no_equation_domain",
+   "domain": "physical rehabilitation / equity constraint",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transfers as an anti-bias veto in the reasoning layer: a demographic attribute (age) may inform dose and monitoring but may never by itself remove an intervention class from consideration; exclusions must cite case-specific evidence, so the engine can audit any recommendation that silently drops an option by category.",
+    "source_operator": "no_withhold_aerobic_older_people",
+    "telemetry": "Intervention offer rates by age band, documented reasons for exclusions, audit flags on category-based exclusions"
+   }
+  },
+  {
+   "primitive_id": "acute_stress_response_window",
+   "name": "Acute stress response after traumatic injury is common and normally temporary: symptoms can last 4 to 6 weeks",
+   "verbatim_quote": "Reassure people that short-term psychological problems in the form of an acute stress response are common after a traumatic injury. Symptoms can last for 4 to 6 weeks and may include:",
+   "page": "Section 1.13, recommendation 1.13.1 (guideline p.58; text lines 2792-2794)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early psychological symptoms are an expected response, not yet a disorder",
+    "Anxiety, depression and PTSD can still occur or recur at any time afterwards (recommendation 1.13.2), so the window does not close surveillance"
+   ],
+   "breakdown_regime": "The 4 to 6 week window is a population norm, not an individual deadline: symptoms persisting beyond it, or severe symptoms inside it, need assessment and treatment in their own right. Reassurance must not become dismissal. no_equation_domain",
+   "domain": "psychological rehabilitation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the health layer a time-boxed expectation for post-injury psychological symptoms: treat early distress as normal inside a roughly 4 to 6 week window, escalate when it persists beyond the window or intensifies, and keep surveillance open indefinitely because later onset is documented.",
+    "source_operator": "acute_stress_response_window",
+    "telemetry": "Symptom reports over time since injury, screening scores at milestones, referral and treatment records"
+   }
+  },
+  {
+   "primitive_id": "suicide_risk_check_at_transitions",
+   "name": "Ask about self-harm and suicide regularly in psychological assessment, particularly at milestones such as hospital discharge and changes of setting",
+   "verbatim_quote": "Ask about thoughts of self-harm and suicide regularly, as part of psychological assessment, and particularly at key milestones such as hospital discharge and changes of setting.",
+   "page": "Section 1.13, recommendation 1.13.5 (guideline p.59; text lines 2846-2848)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Risk is state-dependent and spikes when support structures change",
+    "Transitions are predictable in advance, so checks can be scheduled rather than improvised"
+   ],
+   "breakdown_regime": "Scheduled checks can miss acute crises between milestones; asking is a screening act that only helps if positive answers trigger a staffed response pathway. Disclosure also depends on trust, which transitions themselves disrupt. no_equation_domain",
+   "domain": "psychological safety / risk monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a monitoring-placement rule: put explicit wellbeing checks at predictable stress points (major setbacks, deselection, long-term injury milestones, contract or season transitions) rather than distributing them uniformly, because risk concentrates where support and identity structures change.",
+    "source_operator": "suicide_risk_check_at_transitions",
+    "telemetry": "Wellbeing check records at defined milestones, escalation outcomes, timing of crises relative to transitions"
+   }
+  },
+  {
+   "primitive_id": "amputation_as_goal_serving_option",
+   "name": "For some complex limb-threatening injuries, amputation may be the option that best delivers the person's most important rehabilitation goals",
+   "verbatim_quote": "Recognise that, for some people who have had a complex limb-threatening injury, amputation may be the option that best delivers the person's most important rehabilitation goals.",
+   "page": "Section 1.14, recommendation 1.14.1 (guideline p.61; text lines 2914-2916)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The decision criterion is the person's own goals, assessed with limb reconstruction and prosthetics specialists early (recommendation 1.14.2)",
+    "Psychological support is offered before the decision, not only after it (recommendation 1.14.4)"
+   ],
+   "breakdown_regime": "The guideline gives no comparative outcome table for reconstruction versus amputation; the judgement is individual and time-pressured, and a pre-amputation assessment is only possible if time permits before surgery (recommendation 1.14.3). The option framing can distress if introduced without support. no_equation_domain",
+   "domain": "limb injury / decision making",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Transfers as a decision principle for irreversible trade-offs in the reasoning layer: when a valued component is threatened, evaluate the radical option (removal, shutdown, replacement) against the person's actual goals rather than treating preservation as automatically correct, and bring the specialist who lives with the consequences into the decision early.",
+    "source_operator": "amputation_as_goal_serving_option",
+    "telemetry": "Decision records for irreversible interventions, options considered, goal criteria used, long-term satisfaction outcomes"
+   }
+  },
+  {
+   "primitive_id": "no_waiting_for_prosthetics",
+   "name": "Do not wait for prosthetics to be fitted before starting rehabilitation after limb loss or amputation",
+   "verbatim_quote": "Do not wait for prosthetics to be fitted before starting rehabilitation after limb loss or amputation.",
+   "page": "Section 1.14, recommendation 1.14.17 (guideline p.65; text lines 3135-3136)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Range of movement and strength work protects function during the fitting interval; wheelchairs are provided as early as possible in parallel (recommendation 1.14.18)",
+    "The committee explicitly overruled evidence suggesting waiting, on experience grounds"
+   ],
+   "breakdown_regime": "Early therapy still respects wound state: mobility with early walking aids starts after surgery when the wound has settled (recommendation 1.14.16). The rule removes equipment as a gate, not clinical readiness as a gate. no_equation_domain",
+   "domain": "limb loss / programme sequencing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "States a sequencing veto the engine can apply to any recovery plan: a missing device, test or resource may not idle the whole programme; work that does not depend on it proceeds in parallel, and the plan records what is genuinely blocked versus merely waiting by habit.",
+    "source_operator": "no_waiting_for_prosthetics",
+    "telemetry": "Programme start dates versus equipment delivery dates, activity logs during waiting intervals, blocked-item registers"
+   }
+  },
+  {
+   "primitive_id": "asia_chart_baseline_assessment",
+   "name": "After spinal cord injury, a suitably skilled clinician completes an ASIA chart assessment as soon as possible and repeats it as clinically indicated, creating the reference baseline",
+   "verbatim_quote": "A healthcare professional with appropriate clinical skills should complete an assessment using an American Spinal Injury Association (ASIA) chart as soon as possible after a spinal cord injury, and repeat this as clinically indicated.",
+   "page": "Section 1.15, recommendation 1.15.3 (guideline p.69; text lines 3326-3328)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A standardised instrument, applied early, anchors all later change measurement",
+    "Referral to the national spinal injuries database happens within 24 hours of diagnosis (recommendation 1.15.1)"
+   ],
+   "breakdown_regime": "ASIA charts are difficult to administer reliably and need trained assessors (rationale); a baseline taken during spinal shock or sedation can misstate the eventual level, so early scores are reference points, not verdicts. The instrument is specific to spinal cord injury. no_equation_domain",
+   "domain": "spinal cord injury / standardised assessment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Defines the engine's baseline discipline for severe cases: one named standardised instrument, applied by a qualified assessor at the earliest valid moment and repeated on indication, so that every later claim about progress or decline is a difference from a fixed reference rather than a fresh impression.",
+    "source_operator": "asia_chart_baseline_assessment",
+    "telemetry": "Baseline instrument scores with assessor and timestamp, repeat scores, inter-rater notes"
+   }
+  },
+  {
+   "primitive_id": "spasticity_treatment_stop_rule",
+   "name": "Stop oral medications and targeted muscle injections for spasticity if there is no benefit at the maximum tolerated dose",
+   "verbatim_quote": "Stop oral medications and targeted muscle injections for spasticity if there is no benefit at the maximum tolerated dose.",
+   "page": "Section 1.15, recommendation 1.15.30 (guideline p.74; text lines 3568-3569)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Treatment continues only while benefit is demonstrable; dose escalation has a defined ceiling",
+    "Failed initial treatment routes to a specialist spasticity multidisciplinary team rather than indefinite continuation (recommendation 1.15.31)"
+   ],
+   "breakdown_regime": "Benefit judgement is clinical and can be confounded by fluctuating tone and concurrent therapy; stopping some medicines needs special precautions, as the guideline itself notes. The rule governs spasticity drugs after spinal cord injury, not all long-term medication. no_equation_domain",
+   "domain": "spinal cord injury / treatment governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gives the engine an explicit stopping rule, the rarest element in intervention protocols: an intervention that shows no benefit at its maximum tolerated intensity is terminated and the case escalates, instead of continuing by inertia. Any signal or treatment the engine maintains should carry the same pre-declared kill condition.",
+    "source_operator": "spasticity_treatment_stop_rule",
+    "telemetry": "Intervention dose histories, benefit measures at ceiling dose, stop and escalation decisions"
+   }
+  },
+  {
+   "primitive_id": "nerve_recovery_six_week_checkpoint",
+   "name": "Escalation checkpoint after nerve injury: nerve conduction studies or specialist opinion when there are no signs of nerve recovery 6 weeks after the injury, or recovery is not as expected",
+   "verbatim_quote": "there are no signs of nerve recovery 6 weeks after the injury",
+   "page": "Section 1.16, recommendation 1.16.6 (guideline p.78; text lines 3736-3736)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nerve recovery is monitored regularly and the programme is reviewed against observed signs (recommendation 1.16.5)",
+    "Poor prognosis after therapy and conduction studies routes to a specialist peripheral nerve injury service (recommendation 1.16.7)"
+   ],
+   "breakdown_regime": "Six weeks is a checkpoint, not a prognosis: some nerves recover later, and conduction studies inform rather than settle the outlook. The checkpoint applies when early surgical intervention was not needed; surgically managed cases follow their own pathway. no_equation_domain",
+   "domain": "nerve injury / escalation timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Supplies a timed-escalation pattern for slow biological processes: define in advance the observation window after which absence of expected recovery signs triggers a deeper diagnostic step, so slow cases are neither abandoned early nor watched indefinitely without escalation.",
+    "source_operator": "nerve_recovery_six_week_checkpoint",
+    "telemetry": "Recovery sign observations over time, checkpoint dates, diagnostic study results, specialist referral outcomes"
+   }
+  },
+  {
+   "primitive_id": "population_defined_by_complexity_not_severity",
+   "name": "The guideline population is defined by complexity of rehabilitation need, not by injury severity score, taking existing conditions and circumstances into account",
+   "verbatim_quote": "The defined population in this guideline has not been based on the severity of the injury (sometimes measured using an injury severity score) but on the complexity of the rehabilitation need, taking into account existing conditions and circumstances that will impact rehabilitation.",
+   "page": "Context (guideline p.132; text lines 6299-6302)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "People below major trauma thresholds (injury severity score under 9) previously had a less clear rehabilitation pathway, per the Context section",
+    "Complexity includes vocational, psychological, equipment and ongoing-surgery needs, per the Context list"
+   ],
+   "breakdown_regime": "Complexity is harder to operationalise than a severity score, which is why the guideline leans on validated tools and team assessment; boundary cases will be classified inconsistently between services. The definition is a policy choice for one health system, not a biological law. no_equation_domain",
+   "domain": "population definition / triage policy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Restates the severity-complexity decoupling as a cohort rule the institute can reuse: define any study or service population by the complexity of what members need, measured directly, rather than by a convenient severity proxy that systematically excludes low-score, high-need cases.",
+    "source_operator": "population_defined_by_complexity_not_severity",
+    "telemetry": "Cohort inclusion records, severity scores versus assessed complexity per case, exclusion audits"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "trace_01_pathway_architecture",
+   "think": "NG211 is a national clinical guideline, not a trial and not a textbook: it is the distilled output of a NICE committee working from commissioned evidence reviews, health economic modelling and expert consensus, and its authority comes from that process rather than from any single experiment. Reading it as a reasoning artefact, its deepest move is the refusal to let injury severity stand in for rehabilitation need. The guideline states the decoupling twice, once as a clinical warning in recommendation 1.1.1 and once as a population definition in the Context, and then builds an entire pathway on top of it: because need cannot be read off the lesion, the system must measure it directly, with a holistic multidisciplinary assessment, validated complexity instruments and repeated reassessment as the case evolves. That single decision explains the architecture of the other 900-plus recommendations. A pathway defined by measured need needs a measurement loop, so the guideline specifies baselines (holistic assessment, pre-injury function elicitation, the ASIA chart after spinal cord injury), monitoring (patient-reported and clinician-reported outcome measures, regular psychological review, nerve recovery surveillance) and adjustment rules (goals decomposed into small monitorable steps, plans held in one evolving document, dose tailored rather than prescribed). It also needs an ownership structure, because measured need crosses organisational boundaries: a named coordinator within 72 hours, a unique identifier joining every record, a single point of contact after discharge, and commissioning designed around whole pathways rather than segments. The injury-specific chapters then read as modules plugged into this chassis: weight-bearing status as an explicit constraint propagated from surgeon to rehabilitation team, prosthetics demoted from gate to parallel track, spasticity treatment carrying a pre-declared stopping rule, nerve recovery carrying a six-week escalation checkpoint. For a reasoning engine, the transferable content is therefore mostly structural: gate programme starts on engagement readiness rather than calendars, treat dose as a four-dimensional decision (start, frequency, intensity, duration) with timing able to beat volume, pair subjective and objective monitoring channels, place wellbeing checks at transitions where risk concentrates, and veto category-based exclusions such as withholding aerobic training from older people. The guideline is equally instructive about its own limits. It repeatedly concedes absent evidence: no dose-response curve for exercise, conflicting evidence on programme frequency, intensive rehabilitation and self-management effectiveness left as open research recommendations, and several recommendations resting on committee experience rather than studies, including the instruction not to wait for prosthetics, which the committee adopted against the located evidence. Its numbers are institutional as much as biological: 72 hours, 24 hours, 3 months and 6 weeks are operational commitments inside the English NHS, and the population counts (45,000 major trauma, 500,000 less severe) are England-specific context, not universal rates. The guideline also deliberately excludes traumatic brain injury rehabilitation, acute care and end-of-life care, so its chassis must not be mistaken for a complete trauma system. What survives those limits is a disciplined pattern for managing any complex recovery: define the case by need, measure early with named instruments, assign one owner, keep one living plan, monitor through two channels, escalate on pre-declared checkpoints, and stop what is not working at its ceiling. That pattern, more than any single recommendation, is what this extraction preserves.The assessment machinery deserves close reading because it is where the guideline spends its rigour. The holistic assessment is not a form but a structured elicitation: pre-injury function and valued activities, nutrition and its change since injury, continence, pain pattern, sleep, skin, medicines, dental state, substance use, and the psychological risk history, each owned by a named discipline inside one team product. Baseline elicitation matters because every later judgement of progress is a difference from that baseline, and the guideline knows baselines corrupt easily: assessment waits for pain control, delirium resolution and communication aids precisely so the recorded starting point is the person's function and not their untreated symptoms. The plan that follows is deliberately a single evolving document rather than a stack of discipline notes, and goals inside it are decomposed into small agreed steps, which converts a months-long recovery into a sequence of checkable states. The discharge machinery is equally deliberate. Transition is treated as the pathway's highest-risk operation: a transfer summary or updated prescription travels with the person, a named hospital contact remains open for a bounded window of about three months, community teams receive the plan, and the handover of responsibility is explicit rather than assumed. Inside the injury modules, the same discipline repeats at smaller scale. Spinal cord injury gets a standardised baseline instrument, a 24-hour database referral, bladder, bowel, skin and spasticity protocols, and a hard stop rule for treatments that fail at ceiling dose. Peripheral nerve injury gets surveillance with a six-week escalation trigger. Limb loss gets the counterintuitive ruling that rehabilitation starts before prosthetics exist, because the committee judged waiting to be the larger harm. The economics are present but honest: the intensive rehabilitation recommendation leans on cost-effectiveness modelling rather than trial outcomes, and the guideline lists its own unanswered questions as formal research recommendations, which is the correct way for a consensus document to mark the edge of its knowledge. Operationally, then, what an engine should extract from NG211 is not any single threshold but the checkpoint table as a whole: 72 hours to a named coordinator, 24 hours to specialist database referral, reassessment at every transition, psychological checks at milestones, a six-week nerve checkpoint, a 4 to 6 week expected window for acute stress, and a three-month supported transition after discharge. Those numbers are the guideline's theory of where pathways fail: at starts, at joins, and at the moments nobody owns.",
+   "retrocausal_genealogy": "The guideline exists because survival improved faster than recovery services. England's major trauma networks, introduced from 2012, raised survival after severe injury, and the Context section traces the consequence: a growing population living with disability whose rehabilitation was uneven, with people below major trauma thresholds left without a clear pathway. Earlier NICE guidance on major trauma service delivery, spinal injury assessment, head injury and critical illness rehabilitation supplied modules this guideline cross-references rather than repeats. Military rehabilitation practice, with its early intensive model, and the rehabilitation prescription tradition in major trauma centres feed the coordinator and prescription structures. NG211 generalises that lineage from major trauma alone to everyone admitted with traumatic injury whose needs are complex.",
+   "theory_of_mind": "The committee writes for a multidisciplinary professional reader inside a publicly funded system, and its model of that reader's failure mode is fragmentation: each specialist optimising their own segment while the person's pathway stalls at the joins. Hence the relentless coordination machinery, named owners, unique identifiers, single documents and discharge contacts. Its model of the patient is a person with a prior life: pre-injury function, valued activities, family, work and psychological history are treated as inputs to the plan, not as background colour. It distrusts two shortcuts in its readers: severity scores as proxies for need, and category rules such as age as proxies for eligibility. It also expects readers to under-ask about suicide, cognition and malnutrition unless prompted, so it prompts explicitly and repeatedly.",
+   "cross_layer_veto": "Several recommendations function as vetoes over other layers of the pathway. Engagement readiness vetoes scheduling: pain, delirium, infection or missing communication aids block assessment and programme starts regardless of protocol timers. The severity score is vetoed as a population definition and as a triage shortcut, which blocks any downstream layer that sorts purely by injury grade. Age-based rationing is vetoed for aerobic training. The spasticity stop rule vetoes therapeutic inertia, forcing escalation to a specialist team when maximum tolerated dose yields no benefit. The prosthetics rule vetoes equipment-gated starts. And the whole-pathway commissioning rule vetoes segment-local optimisation: a service design that improves one stage while breaking a handover is non-compliant by definition, whatever its internal metrics say."
+  }
+ ],
+ "universal_lens": "NG211 is a worked example of need-based system design: a complex human recovery process organised by measuring what each case actually requires instead of inferring it from a severity label. Its transferable grammar is small and reusable anywhere: gate starts on readiness, not calendars; hold one living plan under one identifier with one named owner; monitor through paired subjective and objective channels; decompose long goals into monitorable steps; pre-declare escalation checkpoints and stopping rules; and veto exclusions based on category rather than evidence. Any domain that moves people through long, multi-specialist recovery or development pathways, from elite sport to chronic disease management to education, can instantiate the same chassis.",
+ "gsi_mapping": "For the institute, NG211 supplies a reference architecture for rehabilitation science: a population defined by complexity of need, named validated instruments for complexity and outcome measurement (rehabilitation complexity scale, patient categorisation tool, complex needs checklist, post-ICU presentation screen, PROMs and CROMs, ASIA chart), and a set of explicit open questions the guideline itself flags as research recommendations, including the effectiveness and cost effectiveness of intensive rehabilitation and of guided self-management. It also contributes population context (45,000 major trauma and 500,000 less severe trauma cases per year in England) against which incidence and service studies can be framed, and a worked example of how consensus guidelines mark the boundary between evidence and committee judgement.",
+ "gse_mapping": "For the engine, NG211 strengthens the health and recovery layers of player reasoning. Its severity-complexity decoupling is the standing rule that return timelines are modelled from individual need and context, never from injury grade alone. Its checkpoints translate into monitoring design: readiness gates before load blocks, documented load constraints propagated from the responsible specialist, conditioning work running in parallel from the earliest safe point, paired self-reported and measured progress channels, timed escalation when expected recovery signs are absent, explicit stopping rules for interventions that show no benefit at ceiling, and wellbeing checks placed at transitions. The guideline contains no gambling-related content and none is introduced here; its value is recovery science and pathway design."
+}

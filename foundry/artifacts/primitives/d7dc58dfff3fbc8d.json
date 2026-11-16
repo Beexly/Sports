@@ -1,0 +1,745 @@
+{
+  "book_id": "d7dc58dfff3fbc8d",
+  "source_status": "COMPLETE",
+  "source_note": "VA/DoD Clinical Practice Guideline for the Management and Rehabilitation of Post-Acute Mild Traumatic Brain Injury, Version 3.0, June 2021. Authored by the Management and Rehabilitation of Post-Acute Mild Traumatic Brain Injury Work Group (champions David X. Cifu and Blessen C. Eapen for the Department of Veterans Affairs; Thomas J. Bayuk and Katharine C. Stout for the Department of Defense), with systematic review support from The Lewin Group and ECRI. Update of the 2016 VA/DoD concussion-mTBI guideline; evidence reviewed through April 28, 2020. The local file is the complete 128-page guideline PDF (1,944,545 bytes; sha256 d7dc58dfff3fbc8df2c2f444618b61f8c4916059697eb1853c1e8b4feb4d1659), born-digital with clean extracted text; catalog identity and year verified against the document cover (Version 3.0, June 2021). Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "primitives": [
+    {
+      "primitive_id": "tbi_event_definition",
+      "name": "TBI is an event diagnosis: a traumatically induced structural injury and/or physiological disruption of brain function from an external force, confirmed by at least one immediate clinical sign",
+      "verbatim_quote": "A traumatic brain injury (TBI) is defined as a traumatically induced structural injury and/or physiological disruption of brain function as a result of an external force.",
+      "page": "Section II (Background), p. 6 of 128; text line 215",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "An external force event occurred: head struck by an object, head striking an object, acceleration or deceleration without direct head trauma, penetrating foreign body, or blast forces",
+        "At least one listed sign (any period of loss of or decreased consciousness, post-traumatic amnesia, alteration in mental state at the time of injury, neurological deficit, or intracranial lesion) manifested immediately following the event",
+        "Exposure to a force alone does not establish the diagnosis; not all individuals exposed to an external force sustain a TBI"
+      ],
+      "breakdown_regime": "The definition is event-bound: it classifies the injury event, not later symptoms, so it cannot by itself attribute symptoms appearing weeks later to the injury. no_equation_domain",
+      "domain": "neurotrauma_classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine needs the same event-versus-state separation for player health: an injury event (a documented play, collision, or removal from a game) is a different object from the player's current availability state, and only the event plus an immediate observed sign (left the game, entered evaluation, did not return) opens a health case. Later performance dips are never retroactively promoted into injury events.",
+        "source_operator": "tbi_event_definition",
+        "telemetry": "timestamped in-game injury events, removal and return records, official injury report entries"
+      }
+    },
+    {
+      "primitive_id": "severity_classification_highest_wins",
+      "name": "TBI severity is graded mild, moderate, or severe from five criteria (structural imaging, loss of consciousness, alteration of consciousness, post-traumatic amnesia, Glasgow Coma Scale), and the highest category any single criterion reaches sets the grade",
+      "verbatim_quote": "If a patient meets criteria in more than one category of severity, the higher severity level is assigned.",
+      "page": "Table 1 and Sidebar 2, pp. 7 and 20 of 128; text line 276",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Criterion bands: mild is imaging normal, loss of consciousness 0 to 30 minutes, alteration of consciousness up to 24 hours, post-traumatic amnesia 0 to 1 day, Glasgow Coma Scale 13 to 15; severe is loss of consciousness over 24 hours, amnesia over 7 days, Glasgow Coma Scale under 9",
+        "Criteria are assessed on the best available information in the first 24 hours",
+        "A 2015 DoD memorandum recommends against using Glasgow Coma Scale scores alone to diagnose TBI, so no single criterion is treated as sufficient"
+      ],
+      "breakdown_regime": "A worst-criterion rule is conservative by design: it over-grades mixed presentations and says nothing about recovery trajectory, which varies widely inside the mild band. no_equation_domain",
+      "domain": "neurotrauma_classification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Worst-signal-wins is the correct aggregation rule for availability risk: when any independent health signal (a missed practice, a limited-participation tag, a reported setback) reaches the most severe band, the player's projected availability takes that band rather than an average of the signals. Averaging hides the one signal that ends a week.",
+        "source_operator": "severity_classification_highest_wins",
+        "telemetry": "practice participation levels, injury report designations, team and beat reports per player per day"
+      }
+    },
+    {
+      "primitive_id": "post_injury_period_construct",
+      "name": "The post-injury timeline is partitioned into acute (0 to 7 days), post-acute (1 to 12 weeks), and chronic (over 12 weeks), and the guideline's management rules are indexed to that partition",
+      "verbatim_quote": "Post-acute period refers to 1 – 12 weeks post-injury",
+      "page": "Section II.A (Terminology Conventions), p. 8 of 128; text line 308",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The partition is a Work Group consensus construct; the guideline states plainly that there is no standard terminology for the periods following mTBI",
+        "This guideline's scope is the post-acute window; the first 7 days are governed by acute-care guidance"
+      ],
+      "breakdown_regime": "Fixed day cutoffs misclassify fast and slow recoverers at the boundaries; the partition organizes care but does not predict an individual's course. no_equation_domain",
+      "domain": "neurotrauma_classification",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Recovery modeling needs explicit phase partitions with phase-specific rules: the meaning of a missed practice differs on day 3, day 20, and day 90 after an injury, so the engine should index its availability rules to time-since-injury phases instead of applying one flat discount at all horizons.",
+        "source_operator": "post_injury_period_construct",
+        "telemetry": "days since documented injury event, phase-tagged practice and game availability records"
+      }
+    },
+    {
+      "primitive_id": "terminology_transient_framing",
+      "name": "Clinician language is a treatment variable: say concussion or history of mTBI and never brain damage, because damage language reinforces misattribution of symptoms and insecurity about recovery",
+      "verbatim_quote": "Providers should avoid using the terms “brain damage” or “brain injury” which may inadvertently reinforce misattribution of symptoms or insecurities about recovery.",
+      "page": "Section II.A (Terminology Conventions), p. 8 of 128; text line 313",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Patient expectations about recovery measurably influence symptom reporting and persistence",
+        "The condition is usually transient, so permanent-damage framing is also factually wrong for most patients",
+        "The discouragement of the phrase patients with mTBI follows the same logic: the case definition covers only the immediate injury period, not ongoing symptoms"
+      ],
+      "breakdown_regime": "Framing effects are real but bounded: careful language does not treat structural injury, and the guideline pairs it with validation of symptoms rather than dismissal. no_equation_domain",
+      "domain": "clinical_communication",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Labels steer downstream reasoning in any analytic system: the engine's health layer should carry status labels that encode expected transience (in protocol, expected back by a stated week) rather than open-ended damage labels, because the label a signal carries changes how every later layer weighs it.",
+        "source_operator": "terminology_transient_framing",
+        "telemetry": "status label taxonomy in injury data feeds, expected-return fields in team reports"
+      }
+    },
+    {
+      "primitive_id": "grade_four_domain_strength",
+      "name": "Recommendation strength (Strong or Weak, for or against) is computed from four domains: confidence in the quality of the evidence, balance of desirable and undesirable outcomes, patient values and preferences, and other implications such as resource use, equity, acceptability, feasibility, and subgroup considerations",
+      "verbatim_quote": "Using these four domains, the Work Group determined the relative strength of each recommendation (Strong or Weak).",
+      "page": "Section VI.A, pp. 11-12 of 128; text line 495",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Per the GRADE approach, recommendations must be evidence-based and cannot be made on expert opinion alone",
+        "Strength is distinct from clinical importance: a Weak recommendation is still evidence-based and still important to care",
+        "The general text is fixed by the grade: Strong for reads We recommend, Weak for reads We suggest, Weak against reads We suggest against, Strong against reads We recommend against"
+      ],
+      "breakdown_regime": "The four-domain judgment is structured but remains a judgment; two panels can weight values and feasibility differently on identical evidence. no_equation_domain",
+      "domain": "evidence_synthesis_methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "This is a ready-made confidence calculus for engine outputs: any internal recommendation (trust a signal, promote a feature, publish a projection) should carry a strength grade derived from evidence quality, benefit-harm balance, preference variance, and cost or feasibility, instead of a bare binary. Weak grades stay usable but visibly weak.",
+        "source_operator": "grade_four_domain_strength",
+        "telemetry": "per-signal evidence grades, backtest quality scores, and cost or latency budgets in the engine pipeline"
+      }
+    },
+    {
+      "primitive_id": "lowest_critical_outcome_rule",
+      "name": "When evidence quality differs across the critical outcomes of a question, the lowest quality among those critical outcomes determines the overall quality rating behind the recommendation",
+      "verbatim_quote": "Per GRADE, if the quality of evidence differs across the relevant critical outcomes, the lowest quality of evidence for any of the critical outcomes determines the overall quality of the evidence for a recommendation.",
+      "page": "Section VI.A, p. 12 of 128 (restated in Appendix A.C, p. 60)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Outcomes are pre-classified as critical, important, or of limited importance before grading",
+        "Only critical outcomes enter the minimum; important outcomes inform the decision but do not set the grade"
+      ],
+      "breakdown_regime": "A minimum rule is deliberately pessimistic: one weak critical outcome caps an otherwise strong evidence base, which can understate interventions whose weakest outcome is rarely decisive. no_equation_domain",
+      "domain": "evidence_synthesis_methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weakest-link grading transfers directly to multi-input projections: when a projection rests on several critical inputs (health, usage, matchup), its stated confidence should be capped by the worst-graded critical input rather than averaged upward by the strong ones.",
+        "source_operator": "lowest_critical_outcome_rule",
+        "telemetry": "input-level confidence grades attached to each projection component"
+      }
+    },
+    {
+      "primitive_id": "insufficient_evidence_statement_policy",
+      "name": "When evidence is absent, inconclusive, or conflicting, the guideline issues an explicit insufficient-evidence statement for interventions in common practice instead of staying silent or inventing a direction",
+      "verbatim_quote": "In some instances, there is insufficient evidence on which to base a recommendation for or against a particular therapy, preventive measure, or other intervention.",
+      "page": "Section VI.A, p. 12 of 128; text line 503",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Silence is ambiguous: a reader cannot distinguish an unreviewed intervention from a reviewed-and-rejected one",
+        "An explicit statement is most warranted when the intervention is in common practice or carries other risks of continued use, such as high opportunity cost or misallocation of resources"
+      ],
+      "breakdown_regime": "Insufficient evidence is not evidence of no effect; the statement expires as soon as adequate trials appear, and reading it as a negative result is a category error. no_equation_domain",
+      "domain": "evidence_synthesis_methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine needs a first-class insufficient-evidence state for signals: a signal with no adequate validation history should be carried as explicitly ungraded and visible in the reasoning trace, instead of being silently dropped or silently trusted. That visible state is what later data collection then targets.",
+        "source_operator": "insufficient_evidence_statement_policy",
+        "telemetry": "signal registry with a validation status field per signal family"
+      }
+    },
+    {
+      "primitive_id": "picots_key_question_framework",
+      "name": "The evidence review is driven by 12 prioritized key questions, each specified in the PICOTS frame: population, intervention, comparison, outcome, timing, and setting",
+      "verbatim_quote": "The KQs followed the population, intervention, comparison, outcome, timing, and setting (PICOTS) framework, as established by the Agency for Healthcare Research and Quality (AHRQ) (see Table A-1).",
+      "page": "Appendix A.A, p. 50 of 128",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Resource constraints forced prioritization: the Work Group drafted the questions and selected the 12 highest priority for the systematic review",
+        "Each outcome was rated on a 1 to 9 scale (7 to 9 critical for decision making, 4 to 6 important but not critical, 1 to 3 of limited importance); critical and important outcomes entered the review, and only critical outcomes set evidence quality"
+      ],
+      "breakdown_regime": "A fixed question list freezes the inquiry: evidence on unasked questions, however strong, never enters the guideline until the next update cycle. no_equation_domain",
+      "domain": "evidence_synthesis_methods",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Structured question specification is the discipline the engine's research intake needs: every candidate signal should arrive as a PICOTS-like spec (which players, which exposure or intervention, compared to what, which outcome, over what horizon, in which setting) so that validation studies are comparable instead of anecdotal.",
+        "source_operator": "picots_key_question_framework",
+        "telemetry": "research intake forms and validation protocols in the engine signal registry"
+      }
+    },
+    {
+      "primitive_id": "evidence_inclusion_85_percent_rule",
+      "name": "Evidence admissibility is rule-bound and fixed in advance: English-language full studies published March 1, 2015 to April 28, 2020, at least 20 patients, and samples in which at least 85 percent of patients had mTBI with identifiable data; the screening funnel ran 5,095 citations down to 49 included studies in 50 publications",
+      "verbatim_quote": "Each study must have enrolled a patient population in which at least 85% of patients had mTBI, with identifiable data for the population of interest",
+      "page": "Appendix A.B, pp. 56-59 of 128; text line 2780",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Only drugs with FDA approval for marketing in the United States were eligible",
+        "Systematic reviews had to have searched MEDLINE or EMBASE, performed a risk-of-bias assessment, and rated evidence quality with a recognizable system",
+        "Design eligibility varied by question type: randomized trials only for the treatment questions, with observational and prognostic designs admitted for diagnosis, mechanism, timing, and decline questions"
+      ],
+      "breakdown_regime": "Hard admissibility cutoffs trade recall for precision: real effects visible only in mixed-severity or small samples are excluded by construction, and the 2015 window discards older work except where a recommendation is explicitly carried forward. no_equation_domain",
+      "domain": "evidence_synthesis_methods",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Training and validation data need the same admissibility discipline: minimum sample sizes, a purity threshold for the target population (for example, snaps actually played at the position being modeled), and a declared evidence window, all fixed before results are seen, so evaluations cannot be quietly re-scoped to flatter a signal.",
+        "source_operator": "evidence_inclusion_85_percent_rule",
+        "telemetry": "dataset manifests recording sample sizes, population filters, and date windows per validation run"
+      }
+    },
+    {
+      "primitive_id": "stepped_care_model",
+      "name": "Care is organized as patient-centered stepped care with a whole health orientation: manage at the lowest complexity level that fits, and escalate to specialty services as a seamless extension of the same team rather than a departure from it",
+      "verbatim_quote": "A “stepped care” approach preserves the patient-centered nature of care as the patient moves through levels of increasing complexity of needs, to include involvement of specialty services.",
+      "page": "Section VII.A, pp. 15-16 of 128; text line 684",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Most post-acute mTBI presentations can be managed in primary care",
+        "Escalation is need-driven, and regardless of setting every patient should have access to individualized evidence-based care"
+      ],
+      "breakdown_regime": "Stepped care fails when the first step is under-resourced or escalation queues are long; the model presumes specialty capacity exists behind the primary layer. no_equation_domain",
+      "domain": "care_delivery_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Escalation architecture transfers to the reasoning engine: cheap broad methods handle the routine majority of cases, and expensive deep analysis is reserved for cases whose signals conflict or whose stakes are high, with escalation preserving the full case context instead of restarting the analysis.",
+        "source_operator": "stepped_care_model",
+        "telemetry": "case complexity scores and escalation triggers in the analysis pipeline"
+      }
+    },
+    {
+      "primitive_id": "algorithm_decision_tree",
+      "name": "The care pathway is an explicit decision tree: Module A for initial presentation more than 7 days post-injury and Module B for symptoms persisting beyond 7 days, with sidebars carrying definitions and a red-flag list that bypasses the tree to immediate referral",
+      "verbatim_quote": "This CPG's algorithm is designed to facilitate understanding of the clinical pathway and decision-making process used in managing patients with symptoms attributed to mTBI.",
+      "page": "Section VIII, pp. 17-21 of 128; text line 724",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Decision points are yes-or-no questions with stated criteria; rounded rectangles are clinical states, hexagons are decisions, rectangles are actions, ovals are links",
+        "Immediate-referral indicators (declining consciousness or alertness, focal neurological symptoms, pupillary asymmetry, seizures, repeated vomiting, worsening headache, double vision, slurred speech, marked behavior change) override routine sequencing",
+        "Early intervention and case management are built into the pathway as sidebars, not afterthoughts"
+      ],
+      "breakdown_regime": "A two-module tree cannot represent multi-morbidity loops; patients cycling between modules depend on clinician judgment the diagram does not encode. no_equation_domain",
+      "domain": "care_delivery_systems",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine's weekly pipeline should be an explicit tree of the same kind: an intake module for new health and usage facts, a persistence module for unresolved cases, and hard red-flag bypasses (a starter ruled out, a late scratch) that skip routine processing and force immediate re-projection.",
+        "source_operator": "algorithm_decision_tree",
+        "telemetry": "pipeline state per game and player, late-breaking status changes with timestamps"
+      }
+    },
+    {
+      "primitive_id": "symptom_nonspecificity",
+      "name": "Post-mTBI symptoms are nonspecific: the same symptoms occur in people with no history of mTBI, so a symptom list alone cannot attribute cause to the injury",
+      "verbatim_quote": "Symptoms attributed to mTBI are nonspecific, and many of these symptoms are present in people without a history of mTBI.",
+      "page": "Section IX.A discussion (Recommendation 1), p. 25 of 128; text line 1197",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Base rates of headache, fatigue, sleep disturbance, and concentration problems are substantial in uninjured populations",
+        "Attribution requires the injury event record and its timing, not the symptom inventory alone",
+        "Symptoms span physical, cognitive, and behavioral or emotional domains (Sidebar 3), which multiplies the attribution problem"
+      ],
+      "breakdown_regime": "Nonspecificity cuts both ways: it blocks over-attribution to mTBI, but it can also mask genuine injury effects inside noisy symptom reports. no_equation_domain",
+      "domain": "clinical_reasoning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Base-rate discipline is the engine's core defense against narrative attribution: a player's weak game or a team's scoring dip has a substantial base rate with no injury explanation at all, so the health layer must demand event evidence and timing before letting an injury story explain a performance signal.",
+        "source_operator": "symptom_nonspecificity",
+        "telemetry": "base-rate tables for performance variation in uninjured players, joined to injury event logs"
+      }
+    },
+    {
+      "primitive_id": "misattribution_lifelong_patient_harm",
+      "name": "Misattribution is iatrogenic: presuming every symptom belongs to the mTBI can manufacture a lifelong patient, driving repeated low-value evaluations, medication interactions, radiation exposure, and negative illness expectations",
+      "verbatim_quote": "This misattribution may lead to the patient being considered a lifelong patient with symptoms attributed to mTBI and, as a result, subjected to repeated evaluations that are unlikely to be helpful and may be potentially harmful (e.g., needless repeated exposure to radiation).",
+      "page": "Section IX.A discussion (Recommendation 1), p. 25 of 128; text lines 1203-1207",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Expectations shape symptom persistence; labeling and repeated testing can entrench the sick role",
+        "Harms are concrete: radiation from repeat imaging, side effects of unnecessary medications, interactions across multiple prescribers, stigma, and time lost from work and family",
+        "The guideline pairs the warning with active validation: patients should be encouraged to discuss all symptoms so they feel heard"
+      ],
+      "breakdown_regime": "The warning against over-attribution must not become under-investigation: new focal or progressive signs still demand workup, which is why the guideline pairs this principle with the 30-day new-symptom rule. no_equation_domain",
+      "domain": "clinical_reasoning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Analytic systems have the same failure mode: once a convenient cause is attached to a signal (a slump blamed on an injury, a loss blamed on one matchup), every later observation gets read through it and the system stops testing alternatives. The reasoning layer should carry attribution as a revisable hypothesis with named rivals, never as a settled label.",
+        "source_operator": "misattribution_lifelong_patient_harm",
+        "telemetry": "attribution notes with rival explanations maintained in game and player case files"
+      }
+    },
+    {
+      "primitive_id": "standardized_instrument_battery",
+      "name": "Assessment runs on named validated instruments rather than impression: the NSI and RPCQ track post-concussion symptoms, while C-SSRS, PHQ-2 or PHQ-9, GAD-2 or GAD-7, AUDIT-C, and PCL-5 screen the co-occurring conditions",
+      "verbatim_quote": "Typical screening instruments for co-occurring mental health diagnoses or symptoms include the Columbia Suicide Severity Rating Scale (C-SSRS), Patient Health Questionnaire (PHQ-2 or PHQ-9), the Generalized Anxiety Disorder Scale (GAD-2 or GAD-7), Alcohol Use Disorders Identification Test-Concise (AUDIT-C), and the PTSD Checklist (PCL-5).",
+      "page": "Appendix G.D, p. 98 of 128; text line 5113 (the NSI and RPCQ are specified in Sidebar 3, p. 20)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Screening instruments identify who needs fuller assessment; they do not diagnose",
+        "The NSI and RPCQ are embedded in the VA electronic health record as the standard symptom-monitoring tools",
+        "A footnoted caution in Sidebar 3 notes some of these measures may not have been validated for post-concussive symptom assessment"
+      ],
+      "breakdown_regime": "Self-report instruments inherit expectation and context effects; scores move with mood, sleep, and pain, so a score change is not proof of a brain-state change. no_equation_domain",
+      "domain": "clinical_assessment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fixed instrument batteries beat ad hoc observation in any monitoring system: the engine should track player health and workload through the same named measures every week (participation level, snap share, target share, reported status) so that changes are comparable across time instead of reconstructed from shifting narratives.",
+        "source_operator": "standardized_instrument_battery",
+        "telemetry": "weekly structured participation and usage records per player"
+      }
+    },
+    {
+      "primitive_id": "primary_care_symptom_focused",
+      "name": "Recommendation 1 (Weak for): the majority of patients with symptoms attributed to mTBI should be evaluated and managed in primary care with a symptom-focused approach, not routed to specialty care by default",
+      "verbatim_quote": "We suggest a primary care (as opposed to specialty care), symptom-focused approach in the evaluation and management of the majority of patients with symptoms attributed to mild traumatic brain injury.",
+      "page": "Section IX.A, Recommendation 1, p. 25 of 128; text lines 1185-1188",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Primary care provides longitudinal same-team follow-up on a regular schedule rather than as-needed visits, which the evidence links to more improvement and less disability",
+        "Specialty consultation remains available when clinically indicated but is to be used prudently, not as the default destination"
+      ],
+      "breakdown_regime": "Confidence in the supporting evidence was very low, and the underlying studies were conducted in moderate and severe TBI populations; the recommendation leans on harm avoidance (mislabeling, cascade testing, cost) as much as on demonstrated superiority. no_equation_domain",
+      "domain": "care_delivery_systems",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Default-to-generalist routing: the engine's first pass over any game or player should be the broad, cheap, symptom-focused pass (what changed, in which domain, since when), and specialist depth should be invoked by specific findings rather than applied uniformly to everything.",
+        "source_operator": "primary_care_symptom_focused",
+        "telemetry": "triage flags generated by the weekly first-pass review"
+      }
+    },
+    {
+      "primitive_id": "specialized_programs_unproven",
+      "name": "Recommendation 2 (Neither for nor against): specialized interdisciplinary treatment programs have no demonstrated advantage on morbidity, functional ability, or return to work for persistent post-mTBI symptoms; the single qualifying trial found telephone counseling and cognitive behavioral therapy indistinguishable",
+      "verbatim_quote": "There is insufficient evidence to recommend for or against specialized treatment programs to improve morbidity, function, and return to work in patients with persistent symptoms attributed to mild traumatic brain injury.",
+      "page": "Section IX.A, Recommendation 2, p. 26 of 128; text lines 1246-1248",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scheenen et al. 2017 was the only study meeting inclusion criteria for this key question, and it compared telephone counseling against CBT, not against interdisciplinary care directly",
+        "Individualized interdisciplinary plans may still benefit selected chronic multi-morbid patients; the statement is about programs as a class, not about every referral"
+      ],
+      "breakdown_regime": "One low-quality trial cannot prove equivalence; the honest reading is absence of demonstrated benefit, with time, travel, copay, and stigma costs counted against routine referral. no_equation_domain",
+      "domain": "rehabilitation_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Complexity is not evidence: an elaborate multi-component intervention, or model stack, earns no presumption of superiority over a simple one until a head-to-head comparison shows it, and the comparison metric must be the outcome that matters rather than process richness.",
+        "source_operator": "specialized_programs_unproven",
+        "telemetry": "head-to-head evaluation results of complex versus simple pipelines on identical cases"
+      }
+    },
+    {
+      "primitive_id": "new_symptoms_30_day_rule",
+      "name": "Recommendation 3 (Weak for): symptoms arising more than 30 days after mTBI are unlikely to be caused by the injury, so clinicians should pursue a symptom-specific differential diagnosis instead of an mTBI workup",
+      "verbatim_quote": "For patients with new symptoms that develop more than 30 days after mild traumatic brain injury, we suggest a symptom-specific evaluation for non-mild traumatic brain injury etiologies.",
+      "page": "Section IX.B, Recommendation 3, pp. 26-27 of 128; text lines 1270-1272",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The expected course is full recovery within weeks to months without residual deficits",
+        "The supporting evidence was carried forward from the 2009 guideline without re-review in 2016 or 2021; confidence in the evidence is very low",
+        "The differential named in the guideline includes benign paroxysmal positional vertigo, labyrinthitis, medication side effects, acute stress, depression, PTSD, migraine, sleep apnea, and life stressors"
+      ],
+      "breakdown_regime": "A timing heuristic, not a law: late-emerging symptoms occasionally do trace to the injury through co-occurring conditions, so the rule redirects the workup rather than closing the case. no_equation_domain",
+      "domain": "clinical_reasoning",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Staleness decay for causal claims: the engine should decay the explanatory weight of an old injury event as time passes, and when a new performance signal appears long after the event, the default hypothesis should switch to current causes (role change, scheme, opponent, a new injury), with the old event demoted to background.",
+        "source_operator": "new_symptoms_30_day_rule",
+        "telemetry": "days since injury event joined to performance deviation onset dates"
+      }
+    },
+    {
+      "primitive_id": "no_definitive_objective_test",
+      "name": "mTBI remains a clinical diagnosis: despite intensive biomarker and imaging research, the heterogeneity of the condition means no definitive objective test exists to establish the diagnosis or direct care",
+      "verbatim_quote": "However, because of the significant clinical and pathophysiologic heterogeneity of mTBI, no definitive objective test exists.",
+      "page": "Section IX.B, Recommendation 4 discussion, p. 27 of 128; text lines 1321-1323",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Diagnosis rests on the VA/DoD event criteria and clinical history",
+        "Advanced imaging (diffusion tensor imaging, PET, SPECT, functional MRI) remains research-grade for this purpose, with inconsistent findings across studies",
+        "The statement is indexed to the April 2020 evidence cutoff and the Work Group's inclusion rules"
+      ],
+      "breakdown_regime": "Absence of a definitive test is a statement about the 2021 evidence base, not a permanent property of the condition; any single validated assay would retire this primitive. no_equation_domain",
+      "domain": "clinical_assessment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Some target states have no direct meter, and player readiness after injury is one of them: the engine should represent such states as structured clinical-style judgments over multiple weak indicators, with the uncertainty carried explicitly, instead of pretending a single metric (one practice tag, one beat quote) is a definitive test.",
+        "source_operator": "no_definitive_objective_test",
+        "telemetry": "multi-indicator readiness panels maintained per injured player"
+      }
+    },
+    {
+      "primitive_id": "biomarker_poor_clinical_utility",
+      "name": "Recommendation 4 (Weak against) covers objective tests including serum biomarkers: S100B measured 3 to 6 hours post-injury showed no association with persistent symptoms at 3 months or return to work at 6 months, and the wider panel (S100B, exosomal tau, phosphorylated tau, plasma tau, amyloid beta 42, GFAP, UCH-L1, neuron-specific enolase, AMPAR peptide, cytokines) is not supported for establishing a diagnosis or directing care",
+      "verbatim_quote": "An SR by Mercier et al. (2018) assessed the predictive value of the serum protein S100β collected 3 – 6 hours after mTBI and found no significant association with persistent post-concussion symptoms (≥3 months) or return to work at six months.",
+      "page": "Section IX.B, Recommendation 4 discussion, p. 28 of 128; text lines 1348-1350",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Mercier et al. 2018 systematic review is the anchor for S100B; the remaining markers rest on small cross-sectional studies, many in moderate and severe TBI samples",
+        "Acute-period biomarker evidence does not transfer to the post-acute period this guideline governs"
+      ],
+      "breakdown_regime": "Null predictive results in heterogeneous samples do not exclude utility in narrow subgroups or acute windows; the recommendation is scoped to routine post-acute clinical use. no_equation_domain",
+      "domain": "clinical_assessment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A measurable signal is not a useful signal: candidate engine features should be required to show prospective association with the actual target outcome at the actual decision horizon, the way S100B was tested against 3-month symptoms and 6-month return to work, and dropped when the association is absent, however biological or sophisticated the feature sounds.",
+        "source_operator": "biomarker_poor_clinical_utility",
+        "telemetry": "prospective feature-outcome association results at fixed decision horizons"
+      }
+    },
+    {
+      "primitive_id": "computerized_batteries_against",
+      "name": "Recommendation 5 (Weak against): computerized post-concussive screening batteries (ANAM, NCAT, ImPACT) should not be used for routine diagnosis and care in the post-acute period",
+      "verbatim_quote": "We suggest against using computerized post-concussive screening batteries a for routine diagnosis and care of patients with symptoms attributed to mild traumatic brain injury.",
+      "page": "Section IX.B, Recommendation 5, pp. 28-29 of 128; text lines 1387-1389",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No studies in the 2009, 2016, or 2020 reviews evaluated these batteries in the post-acute period against the outcomes of interest",
+        "Harms counted include the resource cost of widespread baseline testing programs and the negative illness expectations abnormal or borderline results can create",
+        "The examples are named in the guideline's own footnote and discussion (ANAM, NCAT, and ImPACT, the Immediate Post-Concussion Assessment and Cognitive Testing); the quote preserves the footnote marker printed after the word batteries in the guideline text"
+      ],
+      "breakdown_regime": "The recommendation targets routine post-acute use; it does not dispute the sports community's separate baseline and acute protocols, which answer different questions. no_equation_domain",
+      "domain": "clinical_assessment",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Widely marketed turnkey scores deserve the same suspicion in the engine: a packaged metric with institutional momentum (a composite grade, a single-number rating) should not enter routine decision flow until it demonstrates value in the exact window and role where the engine would use it.",
+        "source_operator": "computerized_batteries_against",
+        "telemetry": "validation results for third-party composite metrics at the engine's decision points"
+      }
+    },
+    {
+      "primitive_id": "early_comprehensive_testing_against",
+      "name": "Recommendation 6 (Weak against): comprehensive neuropsychological testing should not be performed in the first 30 days after mTBI; early deficits in memory, attention, working memory, and processing speed usually resolve in hours to weeks, and self-reported cognitive symptoms stop correlating with formal test results beyond 7 to 30 days",
+      "verbatim_quote": "We suggest against performing comprehensive neuropsychological/cognitive testing during the first 30 days following mild traumatic brain injury.",
+      "page": "Section IX.B, Recommendation 6, p. 29 of 128; text lines 1390-1392",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Testing retains a role later in care for selected patients with persistent symptoms",
+        "Normal results delivered to a symptomatic patient can backfire, convincing the patient that more testing is needed and eroding trust in the provider",
+        "Brief bedside cognitive assessment for diagnostic confirmation is a different act from comprehensive neuropsychological testing"
+      ],
+      "breakdown_regime": "The 30-day boundary is a policy line drawn over a gradual resolution curve; individual slow recoverers may warrant earlier specialist input on clinical grounds. no_equation_domain",
+      "domain": "clinical_assessment",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Measurement timing is part of measurement validity: the engine should not run its heaviest evaluations inside the noise window right after a disruptive event (an injury, a trade, a scheme change), because early readings mostly capture transient disruption and then get quoted as if they were stable traits.",
+        "source_operator": "early_comprehensive_testing_against",
+        "telemetry": "event timestamps joined to evaluation windows in player assessment records"
+      }
+    },
+    {
+      "primitive_id": "neurocognitive_decline_unproven",
+      "name": "Recommendations 7 and 8 (Neither for nor against): current evidence, one systematic review and six prognostic studies with large inconsistencies, cannot establish whether single or repeated mTBI increases the risk of future neurocognitive decline, nor whether demographic, injury, or management factors modify that risk",
+      "verbatim_quote": "When counseling patients about the long-term effects of mild traumatic brain injury, there is insufficient evidence to state that single or repeated mild traumatic brain injury increases their risk of future neurocognitive decline.",
+      "page": "Section IX.C, Recommendations 7-8, p. 30 of 128; text lines 1470-1473",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The largest prognostic study linked two or more TBIs to higher neurocognitive disorder risk but did not separate severity levels and relied on diagnostic codes rather than blinded testing",
+        "Counseling must acknowledge the patient's concern honestly while stating the evidence gap plainly"
+      ],
+      "breakdown_regime": "This is the guideline's most consequential open question; public and media framing runs far ahead of the evidence, and the statement should be expected to change as longitudinal cohorts mature. no_equation_domain",
+      "domain": "prognosis_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Long-horizon cumulative-exposure questions (repeat injuries, workload accumulation) usually outrun the available data: the engine should label such projections as unestablished, present the strongest single study with its design flaws attached, and refuse to let narrative pressure convert them into settled inputs.",
+        "source_operator": "neurocognitive_decline_unproven",
+        "telemetry": "longitudinal exposure and outcome registries with study-design quality tags"
+      }
+    },
+    {
+      "primitive_id": "mechanism_of_injury_null",
+      "name": "Recommendation 9 (Weak against): do not adjust prognosis or treatment strategy by mechanism of injury; the blast versus non-blast comparisons show no difference in outcomes or treatment response",
+      "verbatim_quote": "We suggest against adjusting outcome prognosis and treatment strategy based on mechanism of injury.",
+      "page": "Section IX.D, Recommendation 9, p. 32 of 128; text lines 1550-1551",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nathan et al. 2016 and Janak et al. 2017 are the direct comparisons; both are observational, with sampling bias, misclassification of mechanism, and weak confound control",
+        "Mechanism still matters for safety triage in special cases, for example referral after domestic or interpersonal violence, without changing the mTBI treatment itself"
+      ],
+      "breakdown_regime": "Null results from two observational studies cannot exclude mechanism effects in specific subpopulations; the recommendation is a resource-allocation rule (do not build mechanism-specific care plans) more than a biological claim. no_equation_domain",
+      "domain": "prognosis_evidence",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A vivid causal story is not a modeling dimension: the engine should not split its health or performance models by how an injury looked (contact versus non-contact, one dramatic play versus gradual accumulation) unless split-sample results show the split predicts outcomes better than the pooled model.",
+        "source_operator": "mechanism_of_injury_null",
+        "telemetry": "pooled versus mechanism-split model comparisons on held-out cases"
+      }
+    },
+    {
+      "primitive_id": "secondary_injury_cascade",
+      "name": "Primary injury is only the first term: secondary processes driven by hypoxia and hypotension trigger inflammatory cytokine release, an excitotoxic cascade, cerebral edema, and apoptotic signaling, and in mTBI the metabolic and network disturbance matters more than structural damage",
+      "verbatim_quote": "The result of this secondary process is the release of inflammatory cytokines, initiation of an excitotoxic cascade, development of cerebral edema, and apoptotic signaling.",
+      "page": "Appendix H (Mechanism of Injury), p. 109 of 128; text lines 5630-5633",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Blast injury adds a distinct shock-wave profile: primary shock wave, negative pressure phase, supersonic blast wind, and dissipating elevated pressure, producing spalling, shearing, and volumetric stress on tissue",
+        "Outcome modifiers named by the guideline include genetic profile, prior TBI, sleep deprivation, stress hormones, hydration, and nutrition",
+        "The mild spectrum's limited extent of secondary processes is part of what distinguishes mTBI from moderate and severe injury"
+      ],
+      "breakdown_regime": "Cascade detail is extrapolated largely from moderate and severe TBI physiology; within the mild spectrum the extent of each process is limited and partly conjectural. no_equation_domain",
+      "domain": "pathophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Downstream cascade thinking: the first observable effect of an event (a starter ruled out) is rarely the whole effect, so the engine should trace second-order consequences (replacement workload, scheme simplification, teammates' usage shifts) as modeled knock-on terms rather than treating the event as a single swap.",
+        "source_operator": "secondary_injury_cascade",
+        "telemetry": "lineup change logs with downstream usage redistribution after injury events"
+      }
+    },
+    {
+      "primitive_id": "cognitive_rehabilitation_short_trial",
+      "name": "Recommendation 10 (Weak for): persistent memory, attention, or executive function problems that remain after sleep, pain, behavioral health, headache, and disequilibrium are managed earn a short trial of clinician-directed cognitive rehabilitation, with continuation decided by observed response",
+      "verbatim_quote": "We suggest that patients with symptoms attributed to mild traumatic brain injury who present with memory, attention, or executive function problems despite appropriate management of other contributing factors (e.g., sleep, pain, behavioral health, headache, disequilibrium) should be referred for a short trial of clinician-directed cognitive rehabilitation services.",
+      "page": "Section IX.E.a, Recommendation 10, p. 33 of 128; text line 1600",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Contributing factors are treated first; cognitive rehabilitation is not the first move",
+        "Interventions that do not produce improvement, or that continue past a plateau, are to be stopped, because they can foster negative expectations and a sick role",
+        "Appendix G operationalizes the short trial as roughly 4 to 6 sessions to judge whether benefit is occurring"
+      ],
+      "breakdown_regime": "Evidence confidence is very low, with blinding, selection, and attrition problems across the trials; the short-trial design is the guideline's hedge against that uncertainty. no_equation_domain",
+      "domain": "rehabilitation_evidence",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Time-boxed trials with response-based continuation are the right adoption pattern for engine interventions too: deploy a new signal or adjustment for a fixed short window, predefine the response that earns continuation, and stop on plateau instead of letting an unproven component become permanent infrastructure.",
+        "source_operator": "cognitive_rehabilitation_short_trial",
+        "telemetry": "trial windows with pre-registered continuation criteria per engine change"
+      }
+    },
+    {
+      "primitive_id": "self_administered_training_against",
+      "name": "Recommendation 11 (Weak against): self-administered computer brain training should not be used for cognitive rehabilitation after mTBI; it was less effective than clinician-directed care and was associated with worse cognitive and neurobehavioral outcomes, while computer tools inside clinician-directed programs did help",
+      "verbatim_quote": "We suggest against the use of self-administered computer training programs for the cognitive rehabilitation of patients with symptoms attributed to mTBI.",
+      "page": "Section IX.E.a, Recommendation 11, p. 34 of 128; text lines 1646-1647",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The active ingredient appears to be clinician direction and integration into a comprehensive program, not the computer tasks themselves",
+        "Confidence in the evidence for this recommendation was moderate, the highest confidence grade in the guideline",
+        "A Cochrane review of cognitive rehabilitation for attention problems found similar positive results across conditions, reinforcing that direction and program design carry the effect"
+      ],
+      "breakdown_regime": "The verdict is about self-administration as the treatment, not about software: the same class of tool performed well when embedded in clinician-directed rehabilitation. no_equation_domain",
+      "domain": "rehabilitation_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Automation without a directing intelligence degrades outcomes in the engine as well: unsupervised self-training loops (a model retraining on its own outputs, an auto-tuned parameter drifting without review) should be presumed harmful until shown otherwise, while the same automation inside a directed, evaluated program is a different and acceptable object.",
+        "source_operator": "self_administered_training_against",
+        "telemetry": "change logs distinguishing directed versus autonomous adjustments, with outcome tracking for each"
+      }
+    },
+    {
+      "primitive_id": "self_efficacy_strongest_predictor",
+      "name": "Self-efficacy is the most potent predictor of cognitive rehabilitation response (Belanger et al. 2020), ahead of the specific techniques used, so alliance, realistic positive expectations, and early achievable wins are active ingredients of treatment",
+      "verbatim_quote": "In 2020, Belanger et al. reported “self-efficacy” (i.e., one’s personal perception of one’s abilities and capabilities) as the most potent predictor of cognitive rehabilitation response in a study of Service Members and Veterans following mTBI.",
+      "page": "Appendix G.J, p. 104 of 128; text lines 5426-5428",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The finding comes from a study of Service Members and Veterans after mTBI reported in the guideline's symptom-management appendix",
+        "Self-efficacy is treated as modifiable through treatment design: validation of symptoms, goal attainment scaling, and early achievable wins",
+        "The same appendix warns that excessive activity limitation damages self-efficacy and quality of life, recommending a stepwise return to optimal activity levels"
+      ],
+      "breakdown_regime": "A single study's predictor ranking may not transport to civilian or older populations, and self-efficacy may partly proxy for overall severity and social support. no_equation_domain",
+      "domain": "rehabilitation_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Operator belief is a performance variable in any human-machine system: an analyst who trusts a workflow uses it fully and catches its errors, so engine tooling should be designed for early visible wins and honest expectation setting, and adoption metrics should be read as part of system performance rather than as soft context.",
+        "source_operator": "self_efficacy_strongest_predictor",
+        "telemetry": "operator usage and override rates for engine tools, time to first successful use"
+      }
+    },
+    {
+      "primitive_id": "behavioral_health_parity",
+      "name": "Recommendation 12 (Weak for): co-occurring PTSD, substance use disorders, and mood disorders in patients with mTBI are evaluated and managed exactly as in patients without mTBI, under the existing condition-specific VA/DoD guidelines; there are no FDA-approved medications for post-mTBI psychiatric symptoms",
+      "verbatim_quote": "We suggest that patients with symptoms attributed to mild traumatic brain injury who present with behavioral health conditions, including posttraumatic stress disorder, substance use disorders, and mood disorders, be evaluated and managed the same whether they have had mild traumatic brain injury or not, according to the relevant existing VA/DoD clinical practice guidelines.",
+      "page": "Section IX.E.b, Recommendation 12, p. 35 of 128 (also the recommendations table, p. 23)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Integrated-treatment evidence supports parity: SMART-CPT produced no advantage over standard cognitive processing therapy at six months in Veterans with mTBI and PTSD, with both groups improving",
+        "Sertraline versus placebo showed no consistent advantage across two systematic reviews of the same three trials",
+        "Sleep and cognitive symptoms can still modify how standard therapies are delivered, which is handled through the guideline's other pathways"
+      ],
+      "breakdown_regime": "Parity is a default, not a denial of interaction; the recommendation routes complexity into delivery adjustments rather than into separate condition models. no_equation_domain",
+      "domain": "behavioral_health",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Do not fork the model for a labeled subpopulation without evidence the fork helps: players returning from injury should be run through the standard projection machinery with their current measured inputs rather than through a special injury-discount model, until a head-to-head test shows the special model wins.",
+        "source_operator": "behavioral_health_parity",
+        "telemetry": "standard versus special-case model comparisons for returning-from-injury players"
+      }
+    },
+    {
+      "primitive_id": "vestibular_rehabilitation_trial",
+      "name": "Recommendation 13 (Weak for): persistent dizziness and imbalance after mTBI earns a trial of specific vestibular rehabilitation and proprioceptive exercise aimed at named deficits (gaze stabilization and vestibular-ocular reflex adaptation, motion sensitivity, functional balance and gait, cervicogenic dysfunction, sensory integration), with goal-based reassessment and no prolonged course without improvement",
+      "verbatim_quote": "We suggest that patients with persistent symptoms of dizziness and imbalance attributed to mild traumatic brain injury be offered a trial of specific vestibular rehabilitation and proprioceptive therapeutic exercise.",
+      "page": "Section IX.E.c, Recommendation 13, p. 37 of 128; text lines 1792-1795",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Direct mTBI evidence is two small randomized trials with high bias risk; support is borrowed from vestibular-disorder populations where rehabilitation efficacy is established",
+        "Therapy transiently provokes symptoms to a moderate level by design, which patients must be told in advance",
+        "For benign paroxysmal positional vertigo the guideline is specific: Dix-Hallpike and supine roll testing, no imaging and no vestibular suppressants, positional treatments delivered by trained professionals"
+      ],
+      "breakdown_regime": "Effect sizes in the mTBI-specific trials are imprecise; benefit is expected mainly where a detailed vestibular evaluation identifies a targetable deficit. no_equation_domain",
+      "domain": "rehabilitation_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Intervene on named, measured deficits rather than global complaints: the engine's correction process should likewise attach adjustments to specific diagnosed failure modes (a mispriced role, a stale health input) with reassessment dates, instead of global nudges applied everywhere and never rechecked.",
+        "source_operator": "vestibular_rehabilitation_trial",
+        "telemetry": "deficit-tagged adjustment records with scheduled reassessment outcomes"
+      }
+    },
+    {
+      "primitive_id": "vestibular_suppressants_delay_compensation",
+      "name": "Vestibular suppressants are a recovery antagonist after concussion: they can delay or distort the central compensation the system depends on, so use should be brief (optimally under a week), reserved for symptoms severe enough to limit function, with meclizine preferred and benzodiazepines discouraged",
+      "verbatim_quote": "Initiating vestibular suppressants for dizziness may delay central compensation or promote counterproductive compensation;(96, 97) and, while vestibular suppressants may be helpful during the acute period of several vestibular disorders, they are not recommended after concussion.(98)",
+      "page": "Appendix G.F, p. 101 of 128; text line 5235",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Central compensation is the recovery mechanism that vestibular rehabilitation depends on",
+        "Suppressant risks include effects on arousal, cognition, and memory, plus addictive potential for some agents",
+        "The guideline allows that suppressants may help during the acute period of several vestibular disorders; the veto is specific to post-concussion management"
+      ],
+      "breakdown_regime": "The recommendation constrains duration and indication rather than banning the drug class outright; acute severe vertigo remains a legitimate short-use case. no_equation_domain",
+      "domain": "pharmacology_safety",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Beware interventions that relieve the visible symptom by disabling the adaptation mechanism: in the engine, the analog is overriding or smoothing away an uncomfortable signal (injury uncertainty, a cold streak) in a way that stops the system from recalibrating, leaving it less accurate when the override ends.",
+        "source_operator": "vestibular_suppressants_delay_compensation",
+        "telemetry": "override and smoothing logs with post-override accuracy measurements"
+      }
+    },
+    {
+      "primitive_id": "hbot_strong_against",
+      "name": "Recommendation 18 (Strong against, the guideline's only strong grade): hyperbaric oxygen therapy should not be used for post-mTBI symptoms; sham-controlled trials show no symptom benefit, worse quality of life at two and three years, seizure risk, and no FDA approval, and the guideline formally closes the question to further research",
+      "verbatim_quote": "We recommend against the use of hyperbaric oxygen therapy for the treatment of patients with symptoms attributed to mild traumatic brain injury.",
+      "page": "Section IX.F.b, Recommendation 18, p. 43 of 128; text lines 2085-2086",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The evidence base is a systematic review of five randomized trials plus one long-term follow-up trial with quality-of-life endpoints",
+        "Harms include disappointment and loss of trust when marketed emerging treatments fail, plus financial burden because the service is not covered",
+        "The guideline states the research question verbatim: no further research is needed on hyperbaric oxygen therapy for patients with symptoms attributed to mTBI"
+      ],
+      "breakdown_regime": "A strong grade on low-confidence evidence is the GRADE exception case: clear harm signals plus zero demonstrated benefit justify a finality the evidence volume alone would not. no_equation_domain",
+      "domain": "intervention_safety",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine needs a closed-question state distinct from insufficient evidence: when an intervention or signal has been tested against a sham or baseline and shows harm or durable null results, it should be retired with prejudice rather than left in the maybe pile consuming evaluation budget forever.",
+        "source_operator": "hbot_strong_against",
+        "telemetry": "retired signal registry with the closing evidence attached"
+      }
+    },
+    {
+      "primitive_id": "rtms_against",
+      "name": "Recommendation 19 (Weak against): repetitive transcranial magnetic stimulation should not be used for post-mTBI symptoms; three small sham-controlled trials (30 or fewer patients each) found no difference in post-concussion symptoms, headache, or quality of life, with an FDA-identified seizure risk in a population where seizure concern is elevated",
+      "verbatim_quote": "We suggest against the use of repetitive transcranial magnetic stimulation for the treatment of patients with symptoms attributed to mild traumatic brain injury.",
+      "page": "Section IX.F.c, Recommendation 19, p. 44 of 128; text lines 2123-2124",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All three trials excluded patients with a history of seizures, so the harm estimate for the real population is understated",
+        "One trial's headache improvement used a non-validated composite measure and did not survive as a benefit claim",
+        "The guideline's research priorities ask who, if anyone, responds to rTMS, leaving a narrow subgroup question open"
+      ],
+      "breakdown_regime": "Very low confidence and tiny samples leave room for responder subgroups; the grade governs routine use, not future research. no_equation_domain",
+      "domain": "intervention_safety",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Small-sample positive fragments do not rescue a null program: when the engine tests a signal in a handful of cases and finds one flattering sub-result on a nonstandard metric, the correct grade remains against routine use, with the subgroup question logged as research rather than adopted as practice.",
+        "source_operator": "rtms_against",
+        "telemetry": "trial registries recording sample sizes, exclusion rules, and metric validity per test"
+      }
+    },
+    {
+      "primitive_id": "cih_insufficient_evidence_cluster",
+      "name": "Recommendation 17 (Neither for nor against): nine complementary and integrative health interventions (acupuncture, tai chi, meditation, mindfulness-based therapies, yoga, massage, chiropractic therapy, cranial electrotherapy stimulation, sensory deprivation) share one insufficient-evidence verdict; the only trials found were one small acupuncture randomized trial with mixed results and one tai chi trial with no effect",
+      "verbatim_quote": "There is insufficient evidence to recommend for or against the use of any of the following interventions for the treatment of patients with symptoms attributed to mild traumatic brain injury:",
+      "page": "Section IX.F.a, Recommendation 17, p. 40 of 128; text lines 1973-1975",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Patient demand is real: focus group participants reported responding best to complementary and integrative therapies, which is why the class was reviewed at all",
+        "Harms and burdens were judged balanced overall, except chiropractic therapy and cranial electrotherapy stimulation, where harms may slightly outweigh benefits",
+        "Most of these interventions carry few serious harms and may help patients cope even where symptom benefit is unproven"
+      ],
+      "breakdown_regime": "A shared verdict hides per-item differences: acupuncture and tai chi have trial data (mixed and null), while seven of the nine have no qualifying studies at all. no_equation_domain",
+      "domain": "intervention_evidence",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Class-level verdicts are efficient but lossy: when the engine grades a family of related signals together, it should still record per-member evidence states underneath the family verdict, because the next evaluation cycle needs to know which members were tested and which were merely untested.",
+        "source_operator": "cih_insufficient_evidence_cluster",
+        "telemetry": "per-member evidence states nested under family-level signal grades"
+      }
+    },
+    {
+      "primitive_id": "medication_safety_exclusions",
+      "name": "Post-brain-injury prescribing carries explicit exclusion rules: avoid agents that lower the seizure threshold (bupropion, traditional antipsychotics) or cause confusion (lithium, benzodiazepines, anticholinergics), give full therapeutic trials before discontinuing because under-treatment is common, and limit quantities of high-suicide-risk medications because suicide rates after TBI are elevated",
+      "verbatim_quote": "Avoid medications that lower the seizure threshold (e.g., bupropion, traditional antipsychotic medications) or those that can cause confusion (e.g., lithium, benzodiazepines, anticholinergic agents).",
+      "page": "Appendix G.C, p. 98 of 128; text lines 5094-5096",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No FDA-approved pharmaceutical agents exist for post-concussive neurological or behavioral symptoms, so prescribing is symptom-based",
+        "Patients with mTBI may be more sensitive to side effects, so toxicity and drug interactions need active monitoring",
+        "The same appendix requires caution with tricyclic antidepressants in patients with seizure risk and attention to renal dosing"
+      ],
+      "breakdown_regime": "The exclusion list is class-based and cannot anticipate every agent or combination; it constrains, but does not replace, individualized pharmacologic judgment. no_equation_domain",
+      "domain": "pharmacology_safety",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Hard exclusion lists belong in the engine's action layer: certain moves (projecting a player with no participation data, letting one stale report override three current ones) should be blocked by rule regardless of how attractive the output looks, because their failure modes are known in advance.",
+        "source_operator": "medication_safety_exclusions",
+        "telemetry": "blocked-action logs from the projection pipeline"
+      }
+    },
+    {
+      "primitive_id": "symptom_cluster_coupling",
+      "name": "Post-mTBI symptoms form a coupled cluster (headache, sleep disturbance, cognition, mood, pain): improving one symptom can improve others, so management is integrated and interdisciplinary rather than symptom-by-symptom in isolation",
+      "verbatim_quote": "It is clinically reasonable to expect that alleviating and improving one symptom may lead to an improvement in other symptoms and symptom clusters.",
+      "page": "Appendix G.B, p. 97 of 128; text lines 5057-5060",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Co-occurring mental health conditions may or may not be caused by the mTBI and still require comprehensive management",
+        "Physical, psychological, and sleep conditions are documented contributors to cognitive symptoms after mTBI, and chronic pain affects roughly 40 to 50 percent of this population",
+        "Post-traumatic headache alone affects an estimated 25 to 78 percent of people who sustain an mTBI"
+      ],
+      "breakdown_regime": "Coupling is asserted as clinically reasonable rather than measured; the guideline offers no coupling coefficients, so the size and direction of cross-symptom effects in an individual remain judgment calls. no_equation_domain",
+      "domain": "clinical_reasoning",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Correlated state variables must be modeled as a cluster, not as independent line items: a player's health, workload, and role interact the same way, so the engine should expect an event or intervention in one to move the others, and should check for the knock-on movement instead of being surprised by it.",
+        "source_operator": "symptom_cluster_coupling",
+        "telemetry": "joint time series of health status, workload, and role metrics per player"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "d7dc58dfff3fbc8d-t1",
+      "think": "This document is a clinical practice guideline, not a research paper, and that changes what extraction means here. Its content is not a set of discoveries but a set of governed decisions: nineteen recommendations for managing adults whose symptoms are attributed to mild traumatic brain injury in the window from one to twelve weeks after injury, each recommendation carrying a strength grade, an evidence confidence rating, and a rationale that shows its work. The primitive layer of this book is therefore the decision machinery itself, plus the small set of clinical facts the machinery rests on. The machinery is GRADE operated end to end. Twelve key questions are specified in the PICOTS frame before any evidence is touched. A systematic review with pre-registered admissibility rules (English language, a 2015 to 2020 window, at least twenty patients, at least eighty five percent of each sample with mTBI) funnels 5,095 citations down to 49 included studies in 50 publications. Each outcome is classified as critical, important, or limited before grading, and the overall quality for a recommendation is set by the lowest-quality critical outcome, never by an average. Strength then comes from four domains: confidence in the evidence, the balance of benefits and harms, patient values and preferences gathered through a focus group, and other implications such as resource use, equity, acceptability, and feasibility. The result is a four-point verdict vocabulary (Strong for, Weak for, Neither, Weak against, Strong against) that stays meaningful even when the underlying evidence is weak, which it usually is: nearly every confidence rating in this guideline is low or very low, and the document says so on the face of each recommendation. The clinical core is mostly negative, and the negatives are the load-bearing content. mTBI is an event diagnosis, graded by the worst of five criteria. Symptoms attributed to it are nonspecific and common in uninjured people, so attribution is the central clinical error, and the guideline names its harm precisely: the lifelong patient, manufactured by repeated testing, radiation, medication interactions, and negative illness expectations. The care model follows from that: symptom-focused primary care for the majority, stepped escalation, new symptoms after thirty days redirected to a symptom-specific differential, and a series of vetoes on seductive technology, no routine biomarker panels, no computerized screening batteries in the post-acute window, no comprehensive neuropsychological testing in the first thirty days, no mechanism-based prognostic adjustment. The interventions that survive are modest and structured: a short, response-contingent trial of clinician-directed cognitive rehabilitation once contributing factors are managed, a trial of vestibular rehabilitation for named deficits, parity treatment of co-occurring behavioral health conditions, and explicit medication safety exclusions. The single strong grade in the book is a prohibition, hyperbaric oxygen therapy, and the guideline closes that research question outright. Read as a design document, this is a complete specification for acting under weak evidence without lying about it. It distinguishes four states that most analytic systems conflate: supported, opposed, insufficient evidence, and closed. It grades confidence by the weakest critical input. It time-boxes adoption into short trials with continuation criteria. It treats labels and language as interventions with side effects. It decays the causal weight of an old event and forces rival explanations when timing stops fitting. Those are the operators this extraction carries into the engine's health and confidence layers. The limits are real and are recorded with the primitives. The population is military and veteran, heavily male, and the evidence window closes in April 2020, so newer biomarker and imaging work is absent by construction. Several key recommendations rest on one or two small trials or on evidence carried forward from 2009. The period partitions and the thirty-day rule are consensus constructs, not measured constants. The guideline knows all of this and prints it; an extraction that hid it would misrepresent the book. The document also governs its own evolution, which is part of its content. Every recommendation is stamped with a categorization (new-added, new-replaced, not changed, amended, or deleted) relative to the 2016 edition, and Appendix B prints the full change table, so a reader can audit what moved and why. A surveillance review process watches the literature between editions and triggers an update when potentially practice-changing evidence appears, which is how this edition came to exist. Appendix K then converts the current gaps into an explicit research agenda, naming the questions the next cycle must answer, from phenotyping and imaging-outcome relationships to who, if anyone, responds to repetitive transcranial magnetic stimulation. The guideline is therefore not a static verdict but one state of a versioned evidence system, and its insufficient-evidence statements are best read as work orders addressed to that system. Its treatment of patient values deserves the same weight as its statistics. The fourth GRADE domain is populated by an actual focus group of patients with mTBI symptoms, and their reports changed the document: the complementary-therapy review exists because participants said they responded best to those therapies, and the emphasis on validation, alliance, and expectation-setting runs through the clinical sections because patients described dismissal as a harm. The Work Group also states its own limits in print, in a dedicated scope section: recommendations are not standards of care, are not performance measures, and do not override clinician judgment or patient preference. A system that publishes its confidence, its change history, its open questions, and its limits in the same artifact as its conclusions is modeling the exact discipline this extraction is meant to transfer.",
+      "retrocausal_genealogy": "The document is the third iteration of a single institutional lineage. The VA/DoD Evidence-Based Practice Work Group was chartered in 2004, and its first concussion guideline appeared in 2009, followed by the 2016 concussion-mTBI guideline, which this 2021 version updates after a surveillance review found potentially practice-changing evidence. Several recommendations are explicitly carried forward from 2009, including the thirty-day rule, because no new evidence displaced them. The methods descend from the GRADE working group's rating framework, the National Academy of Medicine's standards for trustworthy guidelines, the AHRQ PICOTS question format, and NICE's injury categorization scheme. The systematic review itself was executed by The Lewin Group with ECRI. Provenance matters here because the guideline's authority is procedural: it is the current output of a standing, versioned evidence process, not a one-off expert consensus.",
+      "theory_of_mind": "The Work Group writes for a specific reader: a busy primary care clinician, inside VA or DoD or in community practice, seeing veterans and service members whose symptoms may have many causes. The document assumes that reader needs decision support rather than standards, so it supplies an algorithm, plain-language recommendation stems fixed by grade, and appendices that answer operational questions. It also models the patient carefully: someone who may arrive with media-shaped fears about dementia and chronic traumatic encephalopathy, who needs symptoms validated rather than dismissed, and whose expectations about recovery are themselves a treatment variable. The authorship is deliberately multidisciplinary, including patient focus group input in the values domain, because the failure mode the book fights is a fragmented system that tests and refers instead of treating.",
+      "cross_layer_veto": "Several primitives veto habits that other layers of a reasoning system are prone to. The objective-test vetoes (Recommendations 4, 5, and 6) forbid any layer from collapsing a clinical judgment into a single packaged score, however official the score looks. The mechanism null (Recommendation 9) vetoes splitting models by vivid causal stories without split-sample proof. The misattribution analysis vetoes single-cause labeling anywhere it appears: once a cause is attached to a signal, rival explanations must stay alive. The GRADE minimum rule vetoes confidence averaging, so a strong layer cannot launder a weak critical input. The hyperbaric oxygen closure vetoes resurrecting retired options on enthusiasm alone. And the suppressant analysis vetoes a subtler move: relieving a symptom by disabling the very adaptation process that produces recovery, a pattern any self-correcting system must learn to detect in itself."
+    }
+  ],
+  "universal_lens": "This guideline is a reusable template for governing any expert system that must act under weak evidence. Its core moves generalize: define the event separately from the state it produces; grade every decision by the weakest of its critical inputs; keep an explicit insufficient-evidence state instead of forcing binary verdicts; reserve a separate closed state for options tested and found harmful; adopt new interventions only as short trials with continuation criteria; decay the explanatory weight of old events; and treat naming and labeling as interventions with side effects of their own. Any institution that makes repeated judgments under uncertainty can lift this skeleton whole.",
+  "gsi_mapping": "For the Institute, the transferable asset is the evidence-governance stack. GRADE's four-domain strength calculus is a ready standard for grading research claims before they are taught or published. PICOTS is a clean intake format for study questions. The recommendation lifecycle used here (each item marked new-added, new-replaced, not changed, amended, or deleted between editions) is a proven versioning scheme for doctrine documents. The closed-question concept, exercised once for hyperbaric oxygen, gives the Institute a principled way to retire research lines permanently instead of letting them consume attention indefinitely. The admissibility rules (minimum samples, population purity, declared windows) translate directly into literature-review protocols.",
+  "gse_mapping": "For the engine, this guideline lands in the health layer and the confidence layer. Health layer: the event-versus-state definition, worst-signal-wins availability grading, phase partitions indexed to time since injury, and the thirty-day staleness decay for causal attribution all become standing rules for player health cases. Confidence layer: weakest-critical-input grading caps projection confidence, and the insufficient-evidence state becomes a visible status in reasoning traces. Process layer: parity by default instead of special-case models for returning players, short trials with continuation criteria for new signals, hard exclusion lists for known-bad moves, and the anti-misattribution rule that keeps rival explanations attached to every narrative the engine tells about a player.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01"
+}
