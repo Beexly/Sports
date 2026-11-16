@@ -35,3 +35,9 @@ Authoritative reviewer baseline for `/code-review` (Standards axis), vertical-sl
   - Zero em-dashes in customer-facing copy where `em-dash-scan.mjs` applies (`-` or colons instead).
   - Never leak paid picks, sides, totals, props, or SGP legs on free preview surfaces or social drafts.
   - Never reference retracted legacy records (`62-23-1`, `47-19-1`, `31-11`, `14-6`, `16-5`); source verified counts strictly from `@/lib/ledger/public-record`.
+
+## 5. Native C#, C++ (`googletest`), and Angular Component Hierarchy (`csharpguide.md`, `cppguide.md`, `angular.dev`)
+
+- **C# (Unity / XR Telemetry):** `PascalCase` public types and methods, `camelCase` locals, zero per-frame allocations inside `Update()` / physics loops.
+- **C++ & GoogleTest (`cppguide.md`, `googletest`):** Explicit RAII ownership (`std::unique_ptr`), spans with bounds checks instead of raw pointer arithmetic, and deterministic `TEST_F` + `EXPECT_NEAR` tolerances for numeric kernels.
+- **Angular Style Guide (`angular.dev`):** Single-responsibility standalone components, explicit change-detection boundaries, and strict separation between presentation templates and state stores.

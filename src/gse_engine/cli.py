@@ -9,6 +9,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from gse_engine.cloud.polyglot_cloud_and_ci_adapters import (
+    CiE2eRunnerSpec,
+    ServerlessEventFanoutSpec,
+    build_e2e_ci_and_remote_harness_plan,
+    build_polyglot_gcp_client_envelope,
+    validate_serverless_and_event_fanout_spec,
+)
 from gse_engine.compute.lineup_doctor_bridge import quick_doctor_selftest
 from gse_engine.compute.skfolio_allocator import (
     CandidateBetTicket,
@@ -357,6 +364,32 @@ def _build_commands() -> dict[str, Any]:
             }
         )
 
+    def cloud_ci_check() -> str:
+        """Runs polyglot GCP SDK, serverless Zero-AWS-Spend, and CI E2E contracts."""
+        sl_ok, sl_errs = validate_serverless_and_event_fanout_spec(
+            ServerlessEventFanoutSpec(
+                service_name="gse-receipt-fanout",
+                storage_backend="cloudflare-r2",
+                idempotency_key="cli-check",
+                min_instances=0,
+                live_aws_action=False,
+                paid_resource_required=False,
+            )
+        )
+        sdk = build_polyglot_gcp_client_envelope("python")
+        ci_ok, ci_errs = build_e2e_ci_and_remote_harness_plan(
+            [CiE2eRunnerSpec("github-actions", "npx leapwork run", True, True)]
+        )
+        return json.dumps(
+            {
+                "serverless_ok": sl_ok,
+                "serverless_errors": list(sl_errs),
+                "sdk_ok": sdk.ok,
+                "ci_ok": ci_ok,
+                "ci_errors": list(ci_errs),
+            }
+        )
+
     return {
         "lock": lock,
         "adjust": adjust,
@@ -373,6 +406,7 @@ def _build_commands() -> dict[str, Any]:
         "extract-triples": extract_triples,
         "arize-link": arize_link,
         "route-skill": route_skill,
+        "cloud-ci-check": cloud_ci_check,
     }
 
 
@@ -423,7 +457,7 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
         print(fn(checkpoint_dir=ns.checkpoint_dir))
     elif cmd == "memory-stats":
         print(fn(db_path=ns.db_path))
-    elif cmd in {"eval-skills", "org-status", "portfolio-kelly"}:
+    elif cmd in {"eval-skills", "org-status", "portfolio-kelly", "cloud-ci-check"}:
         print(fn())
     elif cmd == "compact-context":
         print(fn(max_tokens=ns.max_tokens))
