@@ -1,0 +1,749 @@
+{
+ "book_id": "0a0895010800e59f",
+ "source_status": "COMPLETE",
+ "source_note": "Traumatic Brain Injury: Recent Advances and Challenges, edited by Ioannis Mavroudis and Alin Ciobica, first published in London, United Kingdom, 2025 by IntechOpen (INTECHOPEN LIMITED), DOI 10.5772/intechopen.110973; Print ISBN 978-0-85466-944-8, Online ISBN 978-0-85466-943-1, eBook ISBN 978-0-85466-945-5. Ten chapters by 27 named contributors; individual chapters distributed under Creative Commons Attribution 3.0, most chapters copyright 2024, the volume copyright 2025. The local file is the publisher's PDF of the full edited volume, 3,513,199 bytes, sha256 over (str(size) encoded + full file bytes) = 0a0895010800e59f04c26647e0afbcc45ee6e0a461d2512f8e5eea26d2b7e1da, book_id 0a0895010800e59f. Extracted text quality is good and complete across all ten chapters; minor extraction artifacts occur (occasional lost hyphens such as irondependent and antiinflammatory, one split word mito chondrial, Greek letters flattened in a few places), and every verbatim quote in this artifact was proven contiguous in the extracted text under gatekeeper normalization. Catalog title and editors match the PDF title page; no corrections needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "four_baskets_of_symptoms",
+   "name": "Concussion and PCS symptomatology is organized into four baskets: cognitive decline, physical symptoms, social and emotional issues, and sleep disturbances",
+   "verbatim_quote": "Cognitive decline is one of the four baskets of symptoms used to diagnose concussion and post-concussion syndrome symptoms. The other three baskets of symptoms include physical symptoms, social and emotional issues, and sleep disturbances.",
+   "page": "Chapter 1, Abstract, p. 3",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Symptom reports can be sorted into the four baskets without overlap dominating the picture",
+    "The basket structure applies across concussion severities, not only hospitalized cases"
+   ],
+   "breakdown_regime": "The baskets are a clinical organizing device from one practitioner's caseload, not a validated diagnostic instrument; basket boundaries blur when psychiatric comorbidity drives the presentation",
+   "domain": "clinical symptomatology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fixed symptom taxonomy lets the engine score an athlete's post-impact state as a four-channel vector instead of a single injured flag, so cognitive, physical, emotional, and sleep channels can decay on different clocks after a head impact",
+    "source_operator": "four_baskets_of_symptoms",
+    "telemetry": "Player symptom checklists, sleep tracker output, practice participation notes, and staff observations coded to the four channels"
+   }
+  },
+  {
+   "primitive_id": "four_interlocking_architectures",
+   "name": "Untreated TBI progresses through four interlocking architectures the brain constructs in response to trauma, from shock trauma through electrical and chemical imbalance and allostatic load to a perfect storm state",
+   "verbatim_quote": "The author tracks this case using a model developed for understanding and working with traumatic brain injury (TBI) patients: the four interlocking architectures the brain develops in response to being traumatized.",
+   "page": "Chapter 1, Abstract and section 1, pp. 3-4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The staged architecture sequence generalizes from the author's case series to other brain insults such as stroke and seizure",
+    "Later architectures presuppose the earlier ones rather than replacing them"
+   ],
+   "breakdown_regime": "Single-author framework without controlled validation; stage boundaries are clinical judgment, and the model does not supply transition rates or measurable stage criteria",
+   "domain": "disease progression model",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The architecture sequence is a staged state machine for impairment progression: an engine can hold an athlete in a latent post-impact stage whose risk rises over years if untreated, instead of assuming recovery completes when visible symptoms clear",
+    "source_operator": "four_interlocking_architectures",
+    "telemetry": "Longitudinal symptom records, repeat cognitive testing, and time since impact as the stage clock"
+   }
+  },
+  {
+   "primitive_id": "oxidative_stress_imbalance",
+   "name": "Oxidative stress after TBI is an imbalance between free radicals and antioxidants that damages and kills cells and tissue",
+   "verbatim_quote": "Oxidative stress is caused by an imbalance of free radicals and antioxidants in the brain that leads to cell and tissue damage and death.",
+   "page": "Chapter 1, section 3, p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Free radical production and antioxidant capacity can be treated as two opposing rates whose difference drives damage",
+    "The brain's high oxygen demand makes it disproportionately vulnerable to the imbalance"
+   ],
+   "breakdown_regime": "The definition is qualitative; it gives no threshold ratio at which damage begins, and antioxidant supplementation does not reliably reverse established injury",
+   "domain": "redox pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Damage as the integral of a production-minus-clearance imbalance is the same shape as accumulated training load minus recovery: the engine can model post-impact neural stress as a balance variable that only normalizes when clearance exceeds production for a sustained window",
+    "source_operator": "oxidative_stress_imbalance",
+    "telemetry": "Inflammatory marker panels where available, sleep and recovery scores, and days since impact as the clearance clock"
+   }
+  },
+  {
+   "primitive_id": "glutamate_excitotoxicity",
+   "name": "Prolonged overactivation of glutamate receptors starts a cascading neurotoxic process that destroys neuronal function and kills neurons",
+   "verbatim_quote": "Glutamate excitotoxicity refers to the toxic actions of excitatory neurotransmitters, primarily glutamate. Exacerbated and prolonged activation of glutamate receptors in the brain begins a cascading process of neurotoxicity, leading to the loss of neuronal functioning and cell death",
+   "page": "Chapter 1, section 3, pp. 6-7",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Excitatory neurotransmitter release after injury exceeds reuptake capacity",
+    "Receptor overactivation, not glutamate presence alone, is the toxic step"
+   ],
+   "breakdown_regime": "Excitotoxicity is one cascade among several running in parallel; blocking glutamate receptors alone has repeatedly failed to rescue outcomes in clinical translation",
+   "domain": "excitotoxicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A self-amplifying cascade triggered by an initial insult maps to second-impact risk: while the excitotoxic window is open, a smaller second stimulus produces outsized damage, so the engine should apply a vulnerability multiplier that decays with time since the first impact",
+    "source_operator": "glutamate_excitotoxicity",
+    "telemetry": "Time since impact, repeat impact exposure counts, and acute symptom severity scores"
+   }
+  },
+  {
+   "primitive_id": "autoregulation_failure_hyperperfusion",
+   "name": "Hyper-perfusion injury occurs when cerebral autoregulation, the mechanism holding brain pressure constant across blood flow changes, fails after trauma",
+   "verbatim_quote": "Hyper-perfusion becomes an issue when the normal mechanisms the brain utilizes for autoregulation (to maintain a constant state of pressure in the brain even when there are changes in blood flow to and within the brain) fail.",
+   "page": "Chapter 1, section 3, p. 7",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A healthy brain holds perfusion pressure near constant across a range of systemic pressures",
+    "Trauma can disable that feedback loop, after which flow swings pass straight through to tissue"
+   ],
+   "breakdown_regime": "Autoregulation failure is usually discussed for carotid stenosis reperfusion; its weight inside ordinary concussion progression is the author's inference, not settled evidence",
+   "domain": "cerebrovascular physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A failed feedback controller is a regime change, not a bigger disturbance: the engine should treat loss of regulation as a state switch after which ordinary inputs (exertion, blood pressure swings) produce unbuffered outputs, rather than scaling the same response curve",
+    "source_operator": "autoregulation_failure_hyperperfusion",
+    "telemetry": "Exertional symptom provocation tests, blood pressure variability, and graded exercise tolerance after impact"
+   }
+  },
+  {
+   "primitive_id": "tbi_cdc_definition",
+   "name": "TBI is an abnormality in normal brain function caused by a blow, jolt, or shock to the head, or by a penetrating head injury",
+   "verbatim_quote": "Centers for Disease Control and Prevention (CDC) [2] asserts that TBI is an abnormality in the way the brain normally functions and can be brought on by a blow, jolt, or shock to the head as well as penetrating head injuries.",
+   "page": "Chapter 2, section 1, p. 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Functional disturbance, not visible structural damage, is the defining criterion",
+    "The definition covers indirect mechanisms such as oxygen deprivation sequelae"
+   ],
+   "breakdown_regime": "A functional definition cannot by itself separate TBI from other causes of the same symptoms, which is why severity scales and imaging still gate real decisions",
+   "domain": "definitions and epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defining the condition by disturbed function rather than by a visible lesion tells the engine to key on measured performance change (reaction time, balance, cognition) instead of waiting for a structural diagnosis before downgrading a player",
+    "source_operator": "tbi_cdc_definition",
+    "telemetry": "Baseline versus post-impact cognitive and balance test deltas, symptom reports, and removal-from-play records"
+   }
+  },
+  {
+   "primitive_id": "primary_vs_secondary_injury",
+   "name": "TBI damage splits into primary injury from the mechanical forces of the initial insult and secondary injury, the additional tissue and cellular damage that unfolds afterward",
+   "verbatim_quote": "there are two types of damage to the neuronal tissues linked to TBI: (i) primary injury, which is directly brought on by mechanical forces during the initial insult, and (ii) secondary injury, which is defined as additional tissue and cellular damages that occur after the primary insult.",
+   "page": "Chapter 2, section 3.1, p. 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The primary insult is fixed at the moment of impact and cannot be treated, only prevented",
+    "Secondary injury is time-extended and is the only part management can modify"
+   ],
+   "breakdown_regime": "The split is a modeling convenience; in diffuse injury the two phases overlap and some secondary processes begin within minutes",
+   "domain": "injury taxonomy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine should never score a head impact as a single instantaneous deduction: expected impairment is the impact term plus a secondary term that grows over the following hours to days and is the only term that rest, removal, and treatment can shrink",
+    "source_operator": "primary_vs_secondary_injury",
+    "telemetry": "Impact magnitude proxies, symptom trajectories over the first 72 hours, and intervention timing"
+   }
+  },
+  {
+   "primitive_id": "diffuse_axonal_injury_burden",
+   "name": "About 70 percent of TBI cases involve diffuse axonal injury, shearing and stretching damage to axons from acceleration and deceleration forces",
+   "verbatim_quote": "Schmidt et al. [18] write that about 70% of cases of traumatic brain injury (TBI) are caused by diffuse axonal damage (DAI).",
+   "page": "Chapter 2, section 3.1, p. 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 70 percent figure is cited from Schmidt et al. and reflects the studied moderate to severe population",
+    "Rotational and tensile loading, not contact alone, produces the diffuse pattern"
+   ],
+   "breakdown_regime": "The share varies with case mix and detection method; conventional imaging under-detects DAI, so the true fraction in mild cases is uncertain",
+   "domain": "neuropathology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Because the dominant lesion is distributed network damage rather than a focal defect, the engine should expect diffuse, multi-domain performance loss after rotational impacts instead of a single localized deficit tied to impact site",
+    "source_operator": "diffuse_axonal_injury_burden",
+    "telemetry": "Impact direction and rotational proxies from video or sensors, plus multi-domain test batteries rather than single scores"
+   }
+  },
+  {
+   "primitive_id": "gcs_severity_bands",
+   "name": "Severity is banded by post-resuscitation Glasgow Coma Scale: severe TBI is a GCS of 3 to 8, with mild TBI at the top of the 3 to 15 aggregate scale",
+   "verbatim_quote": "Severe TBI (sTBI) has traditionally been defined as that presenting with head trauma and brain injury with a post-resuscitation GCS score between 3 and 8",
+   "page": "Chapter 2, section 1, p. 14",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eye, verbal, and motor responses are scored and aggregated into one ordinal scale",
+    "The post-resuscitation score, not the scene score, carries the prognostic weight"
+   ],
+   "breakdown_regime": "The same GCS score can hide very different structural injuries and outcomes; sedation, intoxication, and intubation corrupt the verbal component",
+   "domain": "severity classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A coarse ordinal banding of a continuous underlying state is a warning for engine design: players inside one availability band are not interchangeable, and small score moves near a band edge should not flip a projection discontinuously",
+    "source_operator": "gcs_severity_bands",
+    "telemetry": "Any ordinal readiness grade the engine consumes, audited for within-band variance before use"
+   }
+  },
+  {
+   "primitive_id": "blast_injury_four_patterns",
+   "name": "Blast injury decomposes into four patterns: primary shock wave damage, secondary penetrating fragments, tertiary displacement impact, and quaternary effects such as burns and toxic exposure",
+   "verbatim_quote": "the effects of blast injury can be further classified into four patterns: (i) primary (shock wave causing internal damage), (ii) secondary (penetrating), (iii) tertiary (physical injury by blast wave), and, finally, (iv) quaternary (other than the first three classes).",
+   "page": "Chapter 2, section 2, p. 15",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One event can deliver several of the four patterns simultaneously",
+    "The primary pattern acts through pressure transmission without any object striking the head"
+   ],
+   "breakdown_regime": "The taxonomy comes from military blast medicine; its quaternary bucket is a residual category, and pattern attribution in an individual casualty is often impossible",
+   "domain": "injury mechanisms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Decomposing one event into independent damage channels that sum is the correct accounting for collision exposure too: a single play can deliver linear impact, rotational load, and repeat sub-threshold hits whose effects the engine must book separately before summing",
+    "source_operator": "blast_injury_four_patterns",
+    "telemetry": "Per-play impact counts, impact type classification from film, and cumulative exposure ledgers"
+   }
+  },
+  {
+   "primitive_id": "hypotension_hypoxia_mortality",
+   "name": "Preventing hypoxia and hypotension is the principal objective of early TBI care because even a moment of hypotension is linked to a two-fold increase in mortality",
+   "verbatim_quote": "The principal objectives of therapy are to prevent hypoxia and hypotension, as even a moment of hypotension has been linked to a two-fold increase in mortality and a heightened risk of morbidity [33].",
+   "page": "Chapter 2, section 7.1, p. 25",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Secondary insults act multiplicatively on an already injured brain rather than adding independent risk",
+    "The cited doubling comes from the Chesnut et al. secondary injury literature"
+   ],
+   "breakdown_regime": "The two-fold figure is from older cohort data; modern resuscitation may have narrowed it, and brief dips caught on monitors are not all equivalent",
+   "domain": "acute management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A transient excursion outside a safe physiological band can dominate total harm, which maps to availability modeling: one game played through an unmanaged concussion can outweigh a season of ordinary load, so the engine should price threshold breaches, not just average exposure",
+    "source_operator": "hypotension_hypoxia_mortality",
+    "telemetry": "Return-to-play timing relative to symptom resolution, and any documented play-while-symptomatic episodes"
+   }
+  },
+  {
+   "primitive_id": "pediatric_hypotension_formula",
+   "name": "Pediatric hypotension is defined by a systolic blood pressure below the fifth percentile for age, calculated as 70 mmHg plus twice the age in years",
+   "verbatim_quote": "Hypotension is defined by the pediatric guidelines as an SBP that is lower than the fifth percentile for the age. The calculation for this is [70 mmHg + (age × 2)].",
+   "page": "Chapter 2, Table 3 (prehospital protocols), p. 26",
+   "latex": "\\mathrm{SBP}_{\\min} = 70 + 2 \\times \\mathrm{age}",
+   "symbol_and_unit_ledger": {
+    "SBP_min": "minimum acceptable systolic blood pressure, mmHg",
+    "age": "patient age, years",
+    "70": "intercept constant, mmHg",
+    "2": "slope, mmHg per year of age"
+   },
+   "assumptions": [
+    "The fifth percentile systolic threshold is linear in age across the pediatric range covered by the protocol",
+    "Age is measured in years and the result is a pressure in mmHg"
+   ],
+   "breakdown_regime": "A linear rule is an approximation of percentile curves and breaks down at the youngest ages and in children with chronic hypertension or shock from other causes",
+   "domain": "clinical thresholds",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An age-indexed threshold is the template for age-indexed baselines generally: the engine should compare a young player's cognitive and physical baselines against age-matched norms, not roster-wide averages, before calling a post-impact change abnormal",
+    "source_operator": "pediatric_hypotension_formula",
+    "telemetry": "Player age, age-matched normative test distributions, and individual baseline history"
+   }
+  },
+  {
+   "primitive_id": "cpp_target_range",
+   "name": "The recommended cerebral perfusion pressure target for survival and favorable outcomes after TBI is 60 to 70 mmHg",
+   "verbatim_quote": "Recommended mmHg level is between 60 and 70 mmHg, which is the recommended target CPP value for survival and favorable outcomes.",
+   "page": "Chapter 2, section 7.4, p. 27",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A target band, not a single value, is the operative goal",
+    "The chapter notes the optimal lower edge, 60 or 70, may depend on the patient's autoregulatory state"
+   ],
+   "breakdown_regime": "CPP targets are population guidance for severe TBI in intensive care; they do not transfer to mild injury or to non-monitored settings",
+   "domain": "neurocritical care targets",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Managing to a band with an uncertain optimal edge is the right shape for workload management too: the engine should hold player load inside a tolerated band and treat the band edges as fuzzy, with breach cost rising outside rather than a cliff at one number",
+    "source_operator": "cpp_target_range",
+    "telemetry": "Rolling workload measures, recovery markers, and the width of the tolerated band per player"
+   }
+  },
+  {
+   "primitive_id": "icp_treatment_threshold_22",
+   "name": "Brain Trauma Foundation guidance: treating intracranial pressure above 22 mmHg can lower mortality in severe TBI",
+   "verbatim_quote": "BTF guidelines recommend that treating an ICP with more than 22 mmHg can lower mortality, and ICP monitoring is recommended at level IIB.",
+   "page": "Chapter 2, section 7.7, p. 27",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 22 mmHg line is a treatment trigger, not a definition of injury",
+    "The recommendation grade is IIB, reflecting moderate quality evidence"
+   ],
+   "breakdown_regime": "Threshold-based treatment can overshoot: aggressive ICP lowering has its own harms, and the number says nothing about pressure duration or waveform",
+   "domain": "neurocritical care targets",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A single monitored variable with an action threshold is the pattern for any engine alert: define the trigger value in advance, act on crossing it, and record that the evidence grade behind the trigger is moderate rather than certain",
+    "source_operator": "icp_treatment_threshold_22",
+    "telemetry": "Any continuously tracked player metric the engine alerts on, with its trigger value and evidence grade stored beside it"
+   }
+  },
+  {
+   "primitive_id": "monro_kellie_volume_constraint",
+   "name": "Under the Monro-Kellie doctrine the intracranial compartment holds fixed volumes of brain tissue, blood, and cerebrospinal fluid, so any added volume must be compensated or pressure rises",
+   "verbatim_quote": "According to the Monroe Kellie theory, cerebral tissue, cerebral blood, and CSF all have fixed volumes inside the intracranial compartment.",
+   "page": "Chapter 2, section 7.7, p. 28",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The skull is a rigid box in adults, so total intracranial volume is constant",
+    "Compensation works by displacing venous blood and CSF into the spinal canal until that reserve is exhausted"
+   ],
+   "breakdown_regime": "The doctrine fails in infants with open fontanelles, after decompressive craniectomy, and whenever compliance changes are driven by tissue properties rather than volume alone",
+   "domain": "intracranial physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fixed-capacity container with compensatory displacement is the model for roster and cap constrained systems: adding load in one compartment silently displaces another until the reserve is gone, after which small additions produce outsized pressure effects",
+    "source_operator": "monro_kellie_volume_constraint",
+    "telemetry": "Compartment shares over time and the remaining compensatory reserve before the pressure knee"
+   }
+  },
+  {
+   "primitive_id": "mtbi_operational_definition",
+   "name": "mTBI is defined by a 30-minute post-trauma GCS of 13 to 15 plus at least one of: loss of consciousness under 30 minutes, impaired mental state under 24 hours, confusion or disorientation at the accident, or a transient neurological deficit",
+   "verbatim_quote": "Accordingly, mTBI is defined by a 30-minute post-trauma GCS score between 13 and 15, in addition to one or more of the following: <30 minute loss of consciousness; <24 hour impaired mental state; confusion or disorientation at the time of the accident; and transient neurological deficit.",
+   "page": "Chapter 4, section 1.2, p. 55",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The definition is operational: timed windows and observed signs, not imaging findings",
+    "A normal scan does not remove a case that meets the clinical criteria"
+   ],
+   "breakdown_regime": "The chapter itself notes 38 competing definitions in the literature, so this operationalization is one convention among many and boundary cases shift with the convention chosen",
+   "domain": "definitions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An operational definition with explicit time windows is what an engine needs for an availability event: define a concussion event by observable criteria and durations so historical cases can be coded consistently instead of by narrative impression",
+    "source_operator": "mtbi_operational_definition",
+    "telemetry": "Documented loss of consciousness duration, confusion reports, and removal evaluations coded to fixed windows"
+   }
+  },
+  {
+   "primitive_id": "concussion_energy_mismatch",
+   "name": "Concussion creates an energy mismatch: the injured brain cannot deliver energy to tissue while energy demand to restore damaged function is at its highest",
+   "verbatim_quote": "The incapacity to deliver energy to the brain tissues after a concussion, combined with high energy requirements to restore damaged functions, results in an energy mismatch [47].",
+   "page": "Chapter 4, section 5, p. 58",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Membrane disruption and ion pump activation raise energy demand at the same time supply falls",
+    "The mismatch is transient in a single concussion but compounds with repetition"
+   ],
+   "breakdown_regime": "The cascade is largely characterized in animal models; the duration of the mismatch window in humans is inferred, not directly measured",
+   "domain": "neurometabolic cascade",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Supply-demand mismatch with a recovery window is the core of repeat-impact vulnerability: the engine should model post-concussion metabolic debt explicitly, so a second impact during the window is priced as hitting a system already in deficit",
+    "source_operator": "concussion_energy_mismatch",
+    "telemetry": "Days since impact, exertion levels during the window, and symptom provocation on graded exercise"
+   }
+  },
+  {
+   "primitive_id": "fda_uchl1_gfap_blood_test",
+   "name": "In 2018 the FDA approved the first serum TBI marker test, built on the brain proteins UCH-L1 and GFAP",
+   "verbatim_quote": "In 2018, the first serum TBI marker test was approved by the US Food and Drug Administration [53].",
+   "page": "Chapter 4, section 5, p. 58",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The test detects ubiquitin carboxy-terminal hydrolase-L1 and glial fibrillary acid protein released from injured brain tissue",
+    "Its approved role is triage for CT imaging decisions, not standalone diagnosis"
+   ],
+   "breakdown_regime": "A blood marker answers whether brain proteins leaked, not how the patient functions; it does not grade symptoms or clear anyone to play",
+   "domain": "fluid biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An objective leakage marker that complements subjective symptom reports maps to the engine's evidence hierarchy: prefer instrumented or laboratory signals over self-report when the two disagree, because self-report is biased by the desire to keep playing",
+    "source_operator": "fda_uchl1_gfap_blood_test",
+    "telemetry": "Any objective test results in the record, symptom self-reports, and documented disagreements between them"
+   }
+  },
+  {
+   "primitive_id": "scat5_sideline_assessment",
+   "name": "The Sideline Concussion Assessment Tool 5 is the standardized sideline instrument for evaluating suspected concussion in athletes over 13",
+   "verbatim_quote": "In athletes aged above 13 years, the Sideline Concussion Assessment Tool 5 (SCAT5) can be particularly useful.",
+   "page": "Chapter 4, section 6.1, p. 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The tool standardizes symptom, cognitive, and balance checks at the point of injury",
+    "Age-appropriate variants exist: Child SCAT5 covers ages 5 to 12"
+   ],
+   "breakdown_regime": "A sideline screen is not a diagnosis; scores normalize in some genuinely injured athletes and the tool loses sensitivity hours after the event",
+   "domain": "sideline assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standardized point-of-event assessment with age variants is the template for any engine-side evaluation protocol: same instrument, same order, every time, so scores are comparable across players and seasons",
+    "source_operator": "scat5_sideline_assessment",
+    "telemetry": "Standardized evaluation records with instrument version and player age recorded"
+   }
+  },
+  {
+   "primitive_id": "ct_cannot_diagnose_concussion",
+   "name": "Routine CT and MRI cannot diagnose concussion; imaging serves to rule out more serious injury, while advanced sequences such as diffusion tensor imaging may detect the microstructural damage",
+   "verbatim_quote": "Brain concussion cannot be diagnosed with a routine computed tomogram (CT) scan or magnetic resonance imaging (MRI) scan.",
+   "page": "Chapter 4, section 6.3, p. 61",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Concussion is a functional and microstructural disturbance below routine imaging resolution",
+    "A negative routine scan is the expected result in concussion, not evidence of no injury"
+   ],
+   "breakdown_regime": "Advanced imaging findings remain research tools without validated individual level cutoffs, so the negative result problem is reduced, not solved",
+   "domain": "neuroimaging limits",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A negative test with known insensitivity must not reset the engine's estimate to zero: absence of imaging evidence after a credible impact mechanism should leave the impairment prior largely intact",
+    "source_operator": "ct_cannot_diagnose_concussion",
+    "telemetry": "Impact mechanism severity, imaging performed and its modality, and functional test results kept as separate evidence lines"
+   }
+  },
+  {
+   "primitive_id": "pcs_prevalence_and_persistence",
+   "name": "Post-concussion syndrome follows mild brain injury with a reported prevalence of 29 to 90 percent, and is called persistent when symptoms continue beyond six months",
+   "verbatim_quote": "Post-concussion syndrome (PCS) occurs after mild brain injuries, with a prevalence of 29-90% among head injury patients.",
+   "page": "Chapter 5, section 1, p. 74",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wide range reflects competing diagnostic criteria, DSM-IV versus ICD-10, applied to the same populations",
+    "Diagnosis requires a TBI history plus a cluster of symptoms such as headache, dizziness, and insomnia"
+   ],
+   "breakdown_regime": "A prevalence range spanning 29 to 90 percent signals definitional instability; any single point estimate imported from this literature carries that instability with it",
+   "domain": "post-concussion syndrome",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a base rate is definition-sensitive across a threefold range, the engine must carry the range, not a point: projections for post-impact symptom persistence should be reported as an interval keyed to which diagnostic convention is assumed",
+    "source_operator": "pcs_prevalence_and_persistence",
+    "telemetry": "Symptom duration distributions in the engine's own historical data, coded under a stated convention"
+   }
+  },
+  {
+   "primitive_id": "dai_calpain_cytoskeleton",
+   "name": "DAI progresses when axonal membrane disruption triggers calcium influx, neurofilament compaction, and microtubule disassembly, driven by calcium dysregulation and calpain activation breaking down the cytoskeleton",
+   "verbatim_quote": "Key in the progression of DAI is the disruption of axonal membranes, precipitating calcium influx, neurofilament compaction, and microtubule disassembly-processes primarily driven by calcium dysregulation and calpain activation, which breaks down essential cytoskeletal elements [36-39].",
+   "page": "Chapter 5, section 4.1, p. 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The initial mechanical injury opens the membrane; the biochemical cascade does the later destruction",
+    "Calpain mediated proteolysis is a named, druggable step in the chain"
+   ],
+   "breakdown_regime": "Most mechanistic detail comes from animal and post-mortem work; the human in-vivo timeline of the cascade is extrapolated",
+   "domain": "neuropathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A delayed proteolytic cascade means damage keeps accruing after the visible event ends: the engine's impairment curve after axonal injury should rise before it falls, peaking later than the impact timestamp",
+    "source_operator": "dai_calpain_cytoskeleton",
+    "telemetry": "Serial functional testing in the days after impact to locate the impairment peak empirically"
+   }
+  },
+  {
+   "primitive_id": "nfl_nine_month_persistence",
+   "name": "Serum neurofilament light stayed elevated in American football players nine months after injury, evidence that axonal injury outlasts symptom recovery",
+   "verbatim_quote": "A study involving 19 American football athletes and an equal number of swim athletes highlighted the NFL increased levels in the football players, which notably did not normalize even nine months following the injury [113].",
+   "page": "Chapter 5, section 9.1, p. 80",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "NFL here is neurofilament light polypeptide, a structural axonal protein, not the league",
+    "Swim athletes serve as a non-contact control group for the comparison"
+   ],
+   "breakdown_regime": "Small samples (19 per group) and a single cohort; elevation persistence may reflect ongoing subconcussive exposure rather than one index injury",
+   "domain": "fluid biomarkers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Biological recovery running months behind clinical recovery is the central calibration fact for return-to-play modeling: the engine should keep a residual impairment term active long after the player is cleared and symptom free",
+    "source_operator": "nfl_nine_month_persistence",
+    "telemetry": "Clearance dates versus biomarker or performance normalization dates in longitudinal player records"
+   }
+  },
+  {
+   "primitive_id": "salivary_biomarker_route",
+   "name": "Saliva is a viable non-invasive diagnostic fluid for TBI biomarkers including microRNAs, S100B, and neurofilament light, with cost-effective collection, transport, and processing",
+   "verbatim_quote": "The utility of saliva in molecular diagnostics is particularly appealing due to its non-invasive, cost-effective collection, transportation, and processing advantages.",
+   "page": "Chapter 5, section 9.3, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Saliva carries serum constituents that migrate from local vasculature into gingival fluid",
+    "Repeat sampling is practical because collection needs minimal training and causes minimal discomfort"
+   ],
+   "breakdown_regime": "How central nervous system molecules reach saliva is not fully established, and salivary levels are not yet validated against clinical outcomes at individual level",
+   "domain": "fluid biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lowering the cost of measurement raises sampling frequency, and frequency is what turns a biomarker from a snapshot into a trajectory: the engine should prefer cheap repeatable measures for tracking recovery curves over rare expensive ones",
+    "source_operator": "salivary_biomarker_route",
+    "telemetry": "Sampling cadence per measure, cost per sample, and the trajectory resolution each cadence buys"
+   }
+  },
+  {
+   "primitive_id": "pcs_no_definitive_test",
+   "name": "There are currently no definitive imaging or laboratory tests for post-concussion syndrome; diagnosis rests on history, symptomatology, and exclusion of overlapping conditions",
+   "verbatim_quote": "Currently, there are no definitive imaging or laboratory tests for PCS.",
+   "page": "Chapter 5, section 10.2, p. 83",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conventional CT and standard MRI fail to detect the subtle changes associated with PCS",
+    "Advanced imaging and fluid biomarkers are promising but not specific and not routinely available"
+   ],
+   "breakdown_regime": "Absence of a definitive test is a statement about current practice, not about the condition's reality; it invites both under-diagnosis and over-attribution",
+   "domain": "diagnostic limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where no gold standard exists, the engine must reason from converging weak evidence and say so: combine history, symptom pattern, and exclusion of alternatives into a graded confidence rather than a binary label",
+    "source_operator": "pcs_no_definitive_test",
+    "telemetry": "Evidence lines per case with individual reliabilities, and the exclusion checklist actually performed"
+   }
+  },
+  {
+   "primitive_id": "ferroptosis_irondependent_death",
+   "name": "Ferroptosis is a regulated cell death mode defined by iron-dependent lipid peroxidation, identified when the iron chelator deferoxamine blocked a death pattern distinct from apoptosis, necrosis, and autophagy",
+   "verbatim_quote": "Ferroptosis is a newly discovered mode of cell death characterized by irondependent lipid peroxidation.",
+   "page": "Chapter 6, section 1, p. 99",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Iron accumulation is a necessary condition, not a bystander",
+    "The death program is regulated and therefore interruptible at named steps"
+   ],
+   "breakdown_regime": "The definition was established in tumor cell lines; how completely it describes neuronal death after trauma in humans is still being established",
+   "domain": "ferroptosis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A death program with necessary inputs and interruptible steps is a causal chain the engine can reason over: post-impact secondary damage should be modeled as a chain with checkpoints (iron load, antioxidant capacity, lipid substrate) rather than as unexplained decay",
+    "source_operator": "ferroptosis_irondependent_death",
+    "telemetry": "Checkpoint variables per injury case: hemorrhage presence, antioxidant status proxies, and time since injury"
+   }
+  },
+  {
+   "primitive_id": "fenton_reaction_ros_source",
+   "name": "The Fenton reaction, ferrous iron reacting with hydrogen peroxide, is the main source of the reactive oxygen species that drive ferroptotic damage",
+   "verbatim_quote": "These reactions are the main source of reactive oxygen species (ROS), known as the Fenton reaction [9], which ultimately leads to cell death.",
+   "page": "Chapter 6, section 1, p. 99",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fe2+ plus peroxide yields hydroxyl and lipid alkoxy radicals",
+    "Neuronal membranes rich in polyunsaturated fatty acids are prime substrates for the resulting peroxidation"
+   ],
+   "breakdown_regime": "Radical production in vivo is compartmentalized; bulk iron measures do not locate the reaction, and scavenging after the fact has a narrow window",
+   "domain": "redox chemistry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Damage rate governed by the product of two concentrations (available iron times peroxide) is a multiplicative interaction term: the engine should expect harm to spike when two moderate risk factors coincide, not add their separate effects",
+    "source_operator": "fenton_reaction_ros_source",
+    "telemetry": "Paired factor levels per case so interaction terms can be estimated instead of main effects only"
+   }
+  },
+  {
+   "primitive_id": "gsh_gpx4_defense_axis",
+   "name": "The GSH-GPX4 system is the cell's main anti-ferroptosis defense: glutathione powered GPX4 converts lipid peroxides to harmless lipid alcohols in cytoplasm and mitochondria",
+   "verbatim_quote": "By utilizing GSH as a reducing cofactor, lipid peroxidases are ultimately converted to lipid alcohols by cytoplasmic and mito chondrial glutathione peroxidase GPX4 [37].",
+   "page": "Chapter 6, section 3.2.1, p. 101",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cystine import through System Xc- feeds cysteine into glutathione synthesis upstream of GPX4",
+    "Defense capacity is therefore a supply chain: antiporter, synthesis enzymes, NADPH, then GPX4"
+   ],
+   "breakdown_regime": "GPX4 is not the only defense; FSP1-CoQ10, GCH1-BH4, and mitochondrial DHODH pathways run in parallel, so GPX4 status alone does not settle vulnerability",
+   "domain": "ferroptosis regulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A defense modeled as a supply chain fails at its weakest link, so the engine should score protective capacity by the minimum over the chain's stages rather than by any single strong component",
+    "source_operator": "gsh_gpx4_defense_axis",
+    "telemetry": "Stage-wise capacity proxies for any protective process the engine models, combined by minimum rather than average"
+   }
+  },
+  {
+   "primitive_id": "ferrostatin1_bbb_edema",
+   "name": "The ferroptosis inhibitor Ferrostatin-1 reduced IL-1b and TNF-a levels and blood-brain barrier destruction in TBI models, thereby reducing brain edema",
+   "verbatim_quote": "Recent studies have shown that ferroptosis is also involved in TBI, and ferroptosis inhibitor Ferrostatin-1 can mitigate the levels of IL-1b and TNF-a levels as well as the destruction of BBB, thereby reducing brain edema [78].",
+   "page": "Chapter 6, section 4.2.1, p. 105",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The edema benefit is attributed to ferroptosis blockade in barrier endothelium, supported by GPX4 overexpression experiments",
+    "Evidence is from animal TBI models, with intraventricular administration in key studies"
+   ],
+   "breakdown_regime": "No human dosing, route, or safety data exist for Ferrostatin-1; animal edema endpoints do not guarantee functional benefit",
+   "domain": "ferroptosis therapeutics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Blocking one named step in a damage chain and measuring a downstream clinical endpoint (edema) is the evidentiary pattern the engine should demand before crediting any intervention claim: mechanism, intervention, measured endpoint, in that order",
+    "source_operator": "ferrostatin1_bbb_edema",
+    "telemetry": "Intervention records that carry all three elements versus claims that skip the measured endpoint"
+   }
+  },
+  {
+   "primitive_id": "deferoxamine_iron_chelation",
+   "name": "Deferoxamine chelation removes excess deposited iron and in trials facilitated hematoma and edema absorption after TBI while reducing neuronal degeneration, myelin injury, and inflammation",
+   "verbatim_quote": "Clinical trials have demonstrated that DFO can facilitate hematoma and edema absorption following TBI, while also reducing neuronal degeneration, myelin injury, and inflammation after experimental cerebral hemorrhage.",
+   "page": "Chapter 6, section 5, p. 110",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "DFO binds pathological iron deposits and the complex is excreted through the kidney",
+    "It removes roughly 10 to 15 percent of iron from saturated transferrin and does not strip hemoglobin"
+   ],
+   "breakdown_regime": "Chelators are blunt instruments: systemic iron removal carries toxicity, and the chapter notes cardiotoxic concerns and unsettled long term prognosis for chelation strategies",
+   "domain": "ferroptosis therapeutics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Removing the accumulated substrate of a damage process, rather than blocking its symptoms, maps to load management that removes the exposure itself: the engine should distinguish interventions that cut the input from those that only mask the output signal",
+    "source_operator": "deferoxamine_iron_chelation",
+    "telemetry": "Exposure ledgers showing whether an intervention changed the input variable or only the reported outcome"
+   }
+  },
+  {
+   "primitive_id": "microglia_m1_m2_polarization",
+   "name": "Activated microglia split into M1 phenotypes that release inflammatory mediators tied to cell death and M2 phenotypes that release neurotrophic and anti-inflammatory factors and repair tissue",
+   "verbatim_quote": "M1 microglia demonstrate pro-inflammatory properties through the release of inflammatory mediators associated with cell death. Conversely, M2 phenotype assumes a reparative and protective function by releasing neurotrophic factors and other antiinflammatory agents.",
+   "page": "Chapter 7, section 2, p. 126",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phenotype, not mere activation, determines whether microglia harm or help",
+    "Phenotype conversion inside a time window is itself a therapeutic target"
+   ],
+   "breakdown_regime": "The M1/M2 binary is a simplification of a spectrum; real microglial states mix markers of both, and timing of any conversion matters as much as direction",
+   "domain": "neuroinflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The same agent class switching between damage and repair modes by state is a warning against fixed sign coefficients: the engine should let a factor's effect sign depend on phase, the way inflammation is harmful early and reparative later",
+    "source_operator": "microglia_m1_m2_polarization",
+    "telemetry": "Phase stamped observations so effect signs can be estimated per phase instead of pooled"
+   }
+  },
+  {
+   "primitive_id": "hydrogen_microglial_polarization",
+   "name": "Molecular hydrogen is neuroprotective in TBI models partly by suppressing M1 microglial upregulation and pro-inflammatory cytokines while promoting M2 polarization",
+   "verbatim_quote": "Researches have found that molecular hydrogen exhibits neuroprotective effects by inhibiting the upregulation of M1 microglia and pro-inflammatory cytokines and promoting microglial M2 polarization, thereby demonstrating its neuroprotective properties [45-48].",
+   "page": "Chapter 7, section 4, p. 128",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The proposed route runs through AMPK activation and histone acetylation changes that bias microglial state",
+    "Effect size is reported as concentration dependent, with high concentration inhalation outperforming low"
+   ],
+   "breakdown_regime": "Key mechanistic links include the authors' own unpublished data; hydrogen's clinical evidence base in TBI remains preliminary and mostly preclinical",
+   "domain": "molecular hydrogen therapy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An intervention whose value is shifting a population between two states, rather than adding or removing a substance, maps to roster state management: the engine should track the distribution of player states (fatigued, recovered, vulnerable) and value actions by how they move the distribution",
+    "source_operator": "hydrogen_microglial_polarization",
+    "telemetry": "State distribution snapshots before and after interventions such as rest weeks or load reductions"
+   }
+  },
+  {
+   "primitive_id": "bladder_compliance_definition",
+   "name": "Bladder compliance is the change in volume per change in pressure during filling; a compliant bladder stores urine at near constant low pressure as volume rises",
+   "verbatim_quote": "During filling, the bladder maintains a constant pressure despite the increasing volume, which is referred to as its compliance (change in V/change in P).",
+   "page": "Chapter 9, section 2.1.1, p. 150",
+   "latex": "C = \\frac{\\Delta V}{\\Delta P}",
+   "symbol_and_unit_ledger": {
+    "C": "bladder compliance, mL per cmH2O",
+    "Delta V": "change in bladder volume during filling, mL",
+    "Delta P": "change in detrusor pressure during filling, cmH2O"
+   },
+   "assumptions": [
+    "Compliance is defined over the filling phase, with the bladder spending about 99 percent of its time storing",
+    "Loss of compliance lets pressure overcome the ureters or the sphincter, causing reflux or incontinence"
+   ],
+   "breakdown_regime": "A single ratio hides a nonlinear pressure volume curve; compliance measured over different fill ranges is not directly comparable",
+   "domain": "urodynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compliance as volume absorbed per unit pressure rise is the general signature of a healthy buffer: the engine can score any buffered system, including a player's workload tolerance, by how much input it absorbs before its internal pressure metric starts climbing",
+    "source_operator": "bladder_compliance_definition",
+    "telemetry": "Input volume and internal stress readings across the filling range, not just at capacity"
+   }
+  },
+  {
+   "primitive_id": "detrusor_sphincter_dyssynergia",
+   "name": "In suprasacral spinal cord injury the detrusor and external sphincter lose coordination and contract simultaneously, detrusor sphincter dyssynergia, driving high intravesical pressures that endanger the upper tracts",
+   "verbatim_quote": "The normally coordinated detrusor contraction and sphincter relaxation also becomes disconnected. This leads to simultaneous contraction of both muscles called detrusor sphincter dyssynergia [4].",
+   "page": "Chapter 9, section 3, p. 152",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sacral reflex arc stays intact while its pontine coordination is cut",
+    "The pathology is a timing failure between two healthy muscles, not muscle weakness"
+   ],
+   "breakdown_regime": "Lesion level predicts the pattern only loosely; urodynamics, not anatomy, settles the individual case, as the chapter stresses",
+   "domain": "neuro-urology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Two components that are individually functional but destructively out of phase is a distinct failure class: the engine should test for coordination failures between systems (for example offense and defense units peaking in different weeks) separately from component quality",
+    "source_operator": "detrusor_sphincter_dyssynergia",
+    "telemetry": "Phase alignment measures between coupled units, alongside each unit's standalone rating"
+   }
+  },
+  {
+   "primitive_id": "asia_impairment_scale",
+   "name": "Spinal cord injury severity is classified by the ASIA Impairment Scale from A (complete, no motor or sensory function in sacral segments S4-S5) through E (normal), based on motor and sensory function below the lesion",
+   "verbatim_quote": "The classification of spinal cord injuries is established by the American Spinal Injury Association (ASIA) based on motor and sensory functions.",
+   "page": "Chapter 10, section 2, p. 168",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sacral sparing is the discriminating test between complete and incomplete injury",
+    "Classification cannot be finalized until the spinal shock period ends"
+   ],
+   "breakdown_regime": "The scale grades impairment, not prognosis; two patients with the same grade can have very different recovery trajectories",
+   "domain": "rehabilitation classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A five grade ordinal scale anchored on one discriminating test is a model for engine severity grades: pick the single observation that best separates complete from partial loss and anchor the grading on it, instead of averaging many weak signs",
+    "source_operator": "asia_impairment_scale",
+    "telemetry": "The discriminating observation per injury type, recorded explicitly in each case file"
+   }
+  },
+  {
+   "primitive_id": "tbi_chronic_disease_process",
+   "name": "Against the insurance view of TBI as a single event that heals with brief rest, the medicolegal chapters argue head trauma begins a neurodegenerative disease process with long term mortality and multi-system consequences",
+   "verbatim_quote": "I have observed repeatedly that trauma to the head (at all levels) can be the beginning of a neurodegenerative disease process in the brain over time.",
+   "page": "Chapter 8, section 1, p. 138",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The claim rests on the author's eight years of workers compensation and personal injury casework plus cited authorities such as Masel and McKee",
+    "Consequences listed span seizures, sleep disorders, neurodegeneration, neuroendocrine and psychiatric disease, and systemic metabolic dysregulation"
+   ],
+   "breakdown_regime": "This is advocacy from the plaintiff side of litigation; the universal form of the claim (no observed exceptions) exceeds what cohort evidence supports and is contested by defense experts in the same proceedings",
+   "domain": "medicolegal framing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Framing an injury as a chronic process rather than a closed event changes the accounting horizon: the engine should keep retired and departed players' head impact histories on the books as open processes with long tails, not closed transactions at return to play",
+    "source_operator": "tbi_chronic_disease_process",
+    "telemetry": "Career impact histories retained after clearance, with long horizon outcome tracking where available"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "0a0895010800e59f-t1",
+   "think": "This edited volume is a clinical survey of traumatic brain injury that moves from mechanism to management to rehabilitation, and its value for a reasoning engine is the way it organizes a messy, multi-timescale problem into named stages, named mechanisms, and named decision thresholds. The first organizing device is temporal. Every chapter returns to the split between a primary injury fixed at the moment of impact and a secondary injury that unfolds over minutes, hours, months, and in the Reynolds chapters years. That split disciplines everything else: what can be prevented, what can be treated, and what can only be compensated for. The concussion chapter adds the metabolic version of the same idea, an energy mismatch in which demand for repair peaks exactly when supply fails, and the ferroptosis chapter adds the chemical version, an iron driven peroxidation cascade with named checkpoints and named defenses. Read together, the book argues that the observable event is the smallest part of the damage, and that the trajectory after the event is where outcomes are decided. The second organizing device is measurement under uncertainty. The Glasgow Coma Scale bands a continuous state into ordinal grades and the authors are candid that one score hides many outcomes. Routine CT and MRI cannot see concussion at all. Post-concussion syndrome has no definitive test, a prevalence range from 29 to 90 percent that is really a confession about competing definitions, and a biomarker literature (GFAP, UCH-L1, S100B, neurofilament light, tau, salivary microRNAs) that is promising precisely because self-report and imaging both fail. The neurofilament finding that axonal markers stay elevated nine months after symptoms clear is the book's sharpest measurement lesson: biological recovery and clinical recovery run on different clocks, and any system that clears a case when symptoms stop is systematically early. The third device is threshold based action. Treat intracranial pressure above 22 mmHg. Hold cerebral perfusion pressure between 60 and 70. Transfuse at 7 g per dl rather than 10. Phenytoin works for seven days and not beyond. Pediatric hypotension is a formula, 70 plus twice the age. These are not descriptions of nature; they are decision rules with evidence grades attached, and the chapters are unusually honest that several are IIB grade, approximations, or population averages that bend at the edges. The rehabilitation chapters extend the same logic to coordination failures. Detrusor sphincter dyssynergia is two healthy muscles firing at the wrong time relative to each other, and bladder compliance is a ratio that summarizes how much volume a buffer absorbs before pressure climbs. The ASIA scale grades spinal cord injury on one discriminating observation, sacral sparing. Where the book breaks is equally instructive. The four architectures model and the chronic disease framing come from single author casework and litigation adjacent observation; they organize experience powerfully but supply no transition rates, no falsifiable stage criteria, and no controlled comparisons. The ferroptosis and molecular hydrogen chapters rest mostly on animal models and, in places, the authors' own unpublished data. Prevalence figures swing wildly with definitions. A reasoning engine should therefore import this book's structures (staged progression, cascade checkpoints, threshold rules with evidence grades, dual recovery clocks, coordination failure as its own class) while discounting its specific magnitudes until they are re-estimated on the engine's own data. The structures are the durable content; the numbers are placeholders wearing the clothes of a literature that has not finished measuring. The ferroptosis chapter is the volume's most complete worked example of cascade reasoning, and it rewards close reading. Iron enters the story as a double edged necessity: required for myelin synthesis, neurotransmitter production, and mitochondrial energy, yet catastrophic in excess because ferrous iron plus peroxide yields the hydroxyl radicals of the Fenton reaction, and neuronal membranes are rich in exactly the polyunsaturated fatty acids those radicals attack. Against that production line the chapter sets a layered defense: cystine import through System Xc- feeding glutathione synthesis feeding GPX4, with FSP1-CoQ10, GCH1-BH4, and DHODH pathways running in parallel for when GPX4 is low. Injury breaks the balance from both sides at once, since hemorrhage and barrier failure pour iron in while hepcidin, released during inflammation, blocks its export. Every therapeutic agent in the chapter's long table is then legible as an intervention at a named point: chelate the iron with deferoxamine, trap the radicals with Ferrostatin-1 or Liproxstatin-1, inhibit the lipoxygenases with baicalein, raise GPX4 through polydatin or prokineticin-2, or tune the whole redox state with melatonin. The molecular hydrogen chapter attempts the same architecture one level up, at the level of cell state rather than chemistry: microglia polarized toward damage or repair, histone acetylation as the memory mechanism that locks states in, and hydrogen proposed as a state shifting agent working through AMPK and HDAC5. Whether or not hydrogen survives clinical testing, the argumentative shape is the same, and it is the shape a reasoning engine should demand from any proposed mechanism: substrates, rates, checkpoints, defenses, and the specific point where a claimed intervention bites. The volume also contains its own internal tensions, and they are part of the extraction. The concussion chapter counts 38 definitions of its subject in the literature and 41 classification systems, then proceeds with one operational definition anyway, which is the only workable move and also an admission that every downstream number inherits the choice. The diagnosis chapter reports both that the Glasgow Coma Scale has high inter-rater reliability and that other authors challenge it as having limited prognostic value, and it presents FOUR and Simplified Motor Score as improvements that nobody uses. The medicolegal chapter argues from casework that no exceptions exist to the chronic disease pattern, a claim whose strength is rhetorical rather than epidemiological, sitting in the same volume as epidemiology chapters whose confidence intervals are wide and whose prevalence estimates triple depending on criteria. A careful reader holds both: the clinical pattern recognition of experienced practitioners is real evidence, and it is evidence of a different and weaker kind than the cohort data, to be weighted differently and never averaged into a single confident number. That discipline, separating the kind of evidence from the strength of the claim, is the final thing this book teaches, mostly by making the reader practice it across ten chapters that do not agree with each other as much as their shared binding suggests.",
+   "retrocausal_genealogy": "The volume's lineage runs from the Hippocratic Corpus naming concussion and Razi separating it from other head injuries, through Teasdale and Jennett's 1974 Glasgow Coma Scale, the secondary injury work of Chesnut and others in the 1990s, the Brain Trauma Foundation guideline tradition, Giza and Hovda's neurometabolic cascade, and Stockwell's 2012 naming of ferroptosis, up to the 2018 FDA approval of the first serum TBI marker test. Reynolds' four architectures descend from his own 2023 monograph on listening to the brain, and the medicolegal chapter extends Masel's argument that TBI is a chronic disease process rather than an event.",
+   "theory_of_mind": "The editors and chapter authors write as clinicians for clinicians, researchers, and policymakers, and they assume a reader who must act before the evidence is complete. Their model of the domain is that TBI is common, under-recognized, mechanistically layered, and chronically consequential, and that the recurring professional failure is premature closure: discharging the normal scan, trusting the symptom report, treating the injury as a finished event. Mavroudis' own research identity in mild TBI, biomarkers, and neurodegeneration shapes the volume's emphasis on objective measurement, while the rehabilitation authors assume management is a lifelong, multidisciplinary tailoring problem rather than a single intervention.",
+   "cross_layer_veto": "This work vetoes any reasoning layer that treats a head impact as a closed, single timestamp event with a binary recovered state. It vetoes clearing a case on symptom resolution alone, because biomarker evidence shows axonal injury persisting months longer. It vetoes reading a normal routine scan as evidence of no injury, and it vetoes importing its own clinical magnitudes (prevalence ranges, threshold values, the universal chronic disease claim) as settled constants, because the text itself exposes their definitional instability, animal model origins, and in places advocacy context. Layers that model progression, dual clocks, and graded evidence survive the veto; layers that book the event and move on do not."
+  }
+ ],
+ "universal_lens": "The volume is a template for reasoning about any insult to a complex system whose damage is mostly secondary and time extended: separate the fixed primary event from the modifiable cascade, name the cascade's checkpoints and defenses, expect measurement to lag reality, distrust any single test that claims to close the case, attach evidence grades to action thresholds, and treat coordination failure between healthy parts as its own class of breakdown. Applied anywhere, the method converts a dramatic event into a managed process with clocks, bands, and checkpoints.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this work a clinical curriculum for head impact literacy: the primary and secondary injury split, the neurometabolic energy mismatch and its vulnerability window, the four symptom baskets as an intake taxonomy, the biomarker landscape from GFAP and UCH-L1 to salivary microRNAs, the nine month neurofilament persistence finding as the canonical proof that biological recovery outlasts symptom recovery, and the medicolegal chronic disease framing presented with its advocacy context labeled. It also takes the rehabilitation chapters' lesson that long tail management is multidisciplinary and individualized, as teaching material for athlete health education.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes structural machinery, not clinical numbers: impairment after impact modeled as an impact term plus a growing secondary term; a vulnerability multiplier during the metabolic mismatch window; dual recovery clocks that keep a residual impairment term active after clearance; definition sensitive base rates carried as intervals; threshold rules stored with their evidence grades; protective capacity scored by the weakest link of a supply chain; multiplicative interaction terms for coincident risk factors; and coordination failure between units tested as its own class. Every magnitude imported from this literature is flagged for re-estimation on the engine's own player data before it can move a projection."
+}

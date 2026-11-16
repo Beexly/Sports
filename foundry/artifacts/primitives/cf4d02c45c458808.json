@@ -1,0 +1,764 @@
+{
+  "book_id": "cf4d02c45c458808",
+  "source_status": "COMPLETE",
+  "source_note": "Wellness, Fitness, Body Composition, Training and Performance Monitoring to Improve Athletes Life Quality, edited by Rafael Oliveira and Joao Paulo Brito (Sport Sciences School of Rio Maior, Polytechnic Institute of Santarem, Portugal), MDPI, Basel, 2023; a reprint of the Special Issue of the International Journal of Environmental Research and Public Health (ISSN 1660-4601), ISBN 978-3-0365-9394-4 (PDF), containing ten articles originally published 2021-2022. Catalog correction: the local filename shortens the title to 'Wellness, Fitness, Performance and Monitoring of Athletes'; the title above is the book's own title page title, and the task slug follows the catalog form. Local file: Oliveira-Brito-Eds-2023-Wellness-Fitness-Performance-Monitoring-Athletes-MDPI.pdf, 6693033 bytes, sha256 over (str(size) + file bytes) = cf4d02c45c458808246567d7fffa81d75aee33a9d9b46e81d212b488d295b360. Text quality: clean born-digital extraction; body pages are single-column and quote-safe, while each article's first page interleaves a citation sidebar with the abstract, so all verbatim quotes were taken from body pages and the preface. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "monitoring_integration_frame",
+      "name": "Monitoring design frame: pair every load measure with wellness, health, fitness, and body composition variables and analyze their relationships",
+      "verbatim_quote": "the analysis of relationships between well-being/wellness (e.g., sleep quality, stress, muscle soreness, fatigue, and mood), exercise training programs, and usual training/match external and internal measures such as total distance, distances at different threshold speeds, accelerometry-based variables (e.g., acceleration, deceleration, and player load), session-rated perceived exertion, heart rate, and others.",
+      "page": "Preface, book p. ix (text lines 200-218)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Load measures alone are treated as incomplete knowledge of the athlete",
+        "Relationships between state variables and load variables are the object of study, not either side alone"
+      ],
+      "breakdown_regime": "It is an editorial design frame for a special issue, not a tested model; it prescribes what to measure, not the functional form linking the measures",
+      "domain": "monitoring design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine ingests load and state as paired channels by construction: every load feature is stored alongside the wellness, sleep, soreness, and body-state observations of the same athlete-day, so reasoning operates on coupled vectors rather than isolated metrics.",
+        "source_operator": "monitoring_integration_frame",
+        "telemetry": "Paired per-athlete per-day records: external load (distance, speed bands, player load), internal load (sRPE, heart rate), and wellness items (sleep, stress, soreness, fatigue, mood)"
+      }
+    },
+    {
+      "primitive_id": "session_rpe_definition",
+      "name": "Session-RPE (s-RPE): internal load defined as RPE multiplied by session duration; a valid, reliable, sensitive questionnaire-based measure",
+      "verbatim_quote": "One of the most frequently used variables to access internal load is RPE or the session-RPE (s-RPE, multiplication of RPE by session duration). This measure is a valid, reliable, and sensitive approach to quantify and qualify the internal load while using a simple questionnaire [15].",
+      "page": "Article 1, book pp. 1-10, Section 1 Introduction (text lines 330-345)",
+      "latex": "sRPE = RPE × t_{session}",
+      "symbol_and_unit_ledger": {
+        "RPE": "rating of perceived exertion on the Foster-modified CR10 scale, dimensionless 0-10",
+        "t_{session}": "session duration, minutes",
+        "sRPE": "session internal load, arbitrary units (AU)"
+      },
+      "assumptions": [
+        "Athletes are familiarized with the scale before data collection",
+        "One global RPE value is taken to represent the whole session"
+      ],
+      "breakdown_regime": "A single end-of-session rating compresses within-session variation; the measure is psychologically filtered and can dissociate from physiological change, as Article 1 itself reports",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes per-athlete internal load for every session and match from two raw inputs (perceived exertion, minutes), producing the base time series from which monotony, strain, and workload-ratio features are derived.",
+        "source_operator": "session_rpe_definition",
+        "telemetry": "Post-session RPE reports and session or match durations per athlete"
+      }
+    },
+    {
+      "primitive_id": "srpe_collection_protocol",
+      "name": "s-RPE collection protocol: RPE rated 30 minutes after the session ends, answered individually, then multiplied by training duration",
+      "verbatim_quote": "Specifically, thirty minutes after the end of each training session, players rated their RPE value using an app on a tablet. The scores provided by the players were then multiplied by the training duration to obtain the s-RPE [16,37].",
+      "page": "Article 2, book pp. 11-23, Section 2.3 (text lines 1085-1095)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The 30-minute delay is part of the measurement, separating the rating from the final drill",
+        "Individual, non-shared answers are required to avoid non-valid scores"
+      ],
+      "breakdown_regime": "Deviating from the timing or letting athletes see each other's answers breaks comparability with the validation literature",
+      "domain": "measurement protocol",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats collection timing and response privacy as data-quality metadata: an RPE value carries its delay and collection mode, and out-of-protocol values are down-weighted rather than silently pooled.",
+        "source_operator": "srpe_collection_protocol",
+        "telemetry": "Timestamps of session end and RPE submission; collection channel (individual app entry vs group report)"
+      }
+    },
+    {
+      "primitive_id": "training_monotony",
+      "name": "Training monotony (TM): mean daily training load over seven days divided by the standard deviation of daily load over the same seven days",
+      "verbatim_quote": "Through s-RPE, the following variables were calculated: (i) TM (mean of training load during the seven days of the week divided by the standard deviation of the training load of the seven days) [25,35];",
+      "page": "Article 2, book pp. 11-23, Section 2.5 (text lines 1096-1105)",
+      "latex": "TM = \\frac{\\overline{L}_{7d}}{SD(L_{7d})}",
+      "symbol_and_unit_ledger": {
+        "L_{7d}": "daily training load values across the seven days of the week, AU (s-RPE)",
+        "\\overline{L}_{7d}": "mean of the seven daily loads, AU",
+        "SD(L_{7d})": "standard deviation of the seven daily loads, AU",
+        "TM": "training monotony, dimensionless"
+      },
+      "assumptions": [
+        "Load is aggregated per calendar day across the week",
+        "Seven daily values exist or rest days enter as zero load"
+      ],
+      "breakdown_regime": "With near-constant daily loads the denominator collapses and TM explodes; with many rest days the index reflects scheduling, not physiology",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes monotony per athlete per week as a schedule-shape feature: high monotony flags uniform loading, which the load-management literature links to maladaptation risk, and it feeds the strain computation.",
+        "source_operator": "training_monotony",
+        "telemetry": "Daily s-RPE load series per athlete over rolling seven-day windows"
+      }
+    },
+    {
+      "primitive_id": "training_strain",
+      "name": "Training strain (TS): sum of the training loads of all sessions in a week multiplied by training monotony",
+      "verbatim_quote": "(ii) TS (sum of the training loads for all training sessions during a week multiplied by training monotony) [25,35];",
+      "page": "Article 2, book pp. 11-23, Section 2.5 (text lines 1105-1110)",
+      "latex": "TS = \\left(\\sum_{sessions \\in week} L\\right) × TM",
+      "symbol_and_unit_ledger": {
+        "L": "session training load, AU (s-RPE)",
+        "TM": "training monotony of the same week, dimensionless",
+        "TS": "training strain, AU"
+      },
+      "assumptions": [
+        "Strain is defined only jointly with monotony; the same weekly total yields higher strain when loading is uniform",
+        "All sessions in the week are captured"
+      ],
+      "breakdown_regime": "Inherits every failure of monotony; a missing session log understates both the sum and the index",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine uses strain as the weekly dose variable that combines volume and uniformity, and Article 2 notes it can be reduced by shortening training duration, giving the engine an actionable lever variable rather than a passive statistic.",
+        "source_operator": "training_strain",
+        "telemetry": "Weekly session load sums and weekly monotony per athlete"
+      }
+    },
+    {
+      "primitive_id": "acute_chronic_workload_ratio",
+      "name": "Acute to chronic workload ratio (ACWR): the 1-week rolling workload divided by the rolling 4-week average workload",
+      "verbatim_quote": "Finally, (iii) ACWR (dividing the acute workload, i.e., the 1-week rolling workload data, by the chronic workload, i.e., the rolling 4-week average workload data)",
+      "page": "Article 2, book pp. 11-23, Section 2.5 (text lines 1110-1113)",
+      "latex": "ACWR = \\frac{L_{acute}}{L_{chronic}} = \\frac{\\text{1-week rolling workload}}{\\text{rolling 4-week average workload}}",
+      "symbol_and_unit_ledger": {
+        "L_{acute}": "workload of the most recent week, AU (s-RPE)",
+        "L_{chronic}": "rolling average workload of the last 4 weeks, AU (s-RPE)",
+        "ACWR": "workload ratio, dimensionless"
+      },
+      "assumptions": [
+        "The coupled rolling-average form is used, so the acute week is inside the chronic average",
+        "Four weeks of history exist before the ratio is meaningful"
+      ],
+      "breakdown_regime": "Early-season values are unstable, and the ratio inherits the noise of the single acute week; it is a spike detector, not a dose measure",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes ACWR per athlete as a spike feature on the load series; Article 2 supplies a documented downstream coupling, since an in-season ACWR spike preceded a peak in perceived stress in the studied squad.",
+        "source_operator": "acute_chronic_workload_ratio",
+        "telemetry": "Rolling one-week and four-week s-RPE workload aggregates per athlete"
+      }
+    },
+    {
+      "primitive_id": "hooper_index_wellness",
+      "name": "Hooper Index: pre-training wellness score over four categories (fatigue, stress, muscle soreness, sleep quality), each rated 1 to 7",
+      "verbatim_quote": "This index includes four categories: fatigue, stress, muscle soreness (scale of 1–7, in which 1 is very, very low and 7 is very, very high), and the quality of sleep of the night that preceded the evaluation (scale of 1–7, in which 1 is very, very bad and 7 is very, very good) [27].",
+      "page": "Article 2, book pp. 11-23, Section 2.4 (text lines 1096-1102)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Scores are collected approximately 30 minutes before each training session",
+        "Sleep quality refers to the night immediately before the evaluation, while the other three items rate current state"
+      ],
+      "breakdown_regime": "Four ordinal self-report items cannot resolve which system is impaired; scores are vulnerable to reporting habits and squad culture",
+      "domain": "wellness monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine stores the four Hooper items as a readiness observation vector with fixed scales and a fixed pre-session sampling time, enabling per-athlete baselines and deviation detection instead of raw squad comparisons.",
+        "source_operator": "hooper_index_wellness",
+        "telemetry": "Daily pre-session questionnaire responses (fatigue, stress, soreness, sleep) per athlete"
+      }
+    },
+    {
+      "primitive_id": "acwr_spike_stress_peak",
+      "name": "Empirical coupling: an in-season spike in s-RPE-based ACWR may induce a nearby subsequent peak of perceived stress",
+      "verbatim_quote": "To conclude, the in-season spike in ACWR calculated through s-RPE may induce women soccer players into experiencing a nearby subsequent peak of perceived stress.",
+      "page": "Article 2, book pp. 11-23, Section 5 Conclusions (text lines 1660-1666)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Observed over a 10-week in-season window in one professional women's team with three sessions and one match per week",
+        "Stress is the Hooper Index self-report item"
+      ],
+      "breakdown_regime": "Single-team observational finding; the lag is described as nearby, not estimated as a fixed number of days, and causality is not established",
+      "domain": "load-wellness coupling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine encodes this as a lagged cross-channel relation: a workload-ratio spike raises the prior for a stress elevation in the following days, so readiness forecasts condition on recent ACWR, not only on current questionnaire values.",
+        "source_operator": "acwr_spike_stress_peak",
+        "telemetry": "ACWR time series aligned with subsequent Hooper stress scores per athlete"
+      }
+    },
+    {
+      "primitive_id": "stress_srpe_interference",
+      "name": "Empirical interference: the higher the players' reported stress, the lower the observed s-RPE, indicating mutual interference of stress on assimilation of training load",
+      "verbatim_quote": "Finally, the higher the players’ reported stress, the lower the observed s-RPE, thus possibly indicating a mutual interference of experienced stress levels on the assimilation of training loads by women professional soccer players.",
+      "page": "Article 2, book pp. 11-23, Section 5 Conclusions (text lines 1666-1672)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Stress and s-RPE were measured in the same athletes across the same 10-week period",
+        "The association reported in the abstract is -0.516, p < 0.05"
+      ],
+      "breakdown_regime": "The direction of the effect is ambiguous: stress may blunt perceived exertion, or athletes under stress may genuinely absorb less load; either reading forbids treating s-RPE as a pure dose measure when stress is high",
+      "domain": "load-wellness coupling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine applies a measurement-distortion rule: when the stress channel is elevated, s-RPE readings are flagged as downward-biased estimates of true dose, and load features are interpreted jointly with stress rather than alone.",
+        "source_operator": "stress_srpe_interference",
+        "telemetry": "Paired stress scores and s-RPE values per athlete-session"
+      }
+    },
+    {
+      "primitive_id": "position_status_independence",
+      "name": "Empirical null: in-season variations of internal load and perceived wellness over 10 weeks were independent of playing position and player status in outfield players",
+      "verbatim_quote": "Importantly, any in-season variations across a 10-week period concerning internal load and perceived wellness seems independent of position and status in outfield players, although some caution should be taken into consideration.",
+      "page": "Article 2, book pp. 11-23, Section 5 Conclusions (text lines 1666-1670)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Goalkeepers are outside the claim; the sample is outfield players of one team",
+        "The authors themselves attach a caution to the null"
+      ],
+      "breakdown_regime": "A null in one small squad does not generalize; position effects may exist at other levels or with larger samples",
+      "domain": "load-wellness coupling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine does not stratify baseline load or wellness expectations by position or starter status by default for outfield players; stratification must be earned from the engine's own data rather than assumed from role labels.",
+        "source_operator": "position_status_independence",
+        "telemetry": "Load and wellness series tagged by position and playing status"
+      }
+    },
+    {
+      "primitive_id": "phase_angle_cellular_integrity",
+      "name": "Phase angle (PhA) improvement as an indicator of good health, cellular integrity and functionality, and hydration level",
+      "verbatim_quote": "An improvement in PhA can be an indicator of good health and cellular integrity and functionality regarding the level of hydration [34].",
+      "page": "Article 1, book pp. 1-10, Section 4 Discussion (text lines 618-626)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "PhA is measured by bioelectrical impedance at 50 kHz",
+        "Interpretation is directional and within-athlete: improvement signals integrity, and a high PhA is consistent with large quantities of intact cell membranes and body cell mass"
+      ],
+      "breakdown_regime": "PhA also falls with muscle injury and membrane disruption, so it is a nonspecific integrity signal, not a diagnosis; absolute values vary by population reference",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine ingests phase angle as a slow-moving body-state feature: rising PhA supports availability and adaptation inferences, falling PhA vetoes them, with the change scored against the athlete's own baseline.",
+        "source_operator": "phase_angle_cellular_integrity",
+        "telemetry": "Periodic BIA measurements at 50 kHz per athlete across the season"
+      }
+    },
+    {
+      "primitive_id": "icw_strength_power_predictor",
+      "name": "Intracellular water (ICW) is a good predictor of strength and power in athletes",
+      "verbatim_quote": "For example, some studies have shown that ICW is a good predictor of strength and power in athletes",
+      "page": "Article 1, book pp. 1-10, Section 1 Introduction (text lines 305-312)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cited from prior studies referenced by the article, not measured de novo in this paper",
+        "ICW is obtained from multifrequency bioelectrical impedance"
+      ],
+      "breakdown_regime": "Prediction is associative; ICW tracks cell mass and glycogen-associated water, so it proxies muscle quantity rather than causing strength",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine uses ICW as a body-state covariate when projecting strength and power outputs: athletes gaining ICW are modeled as gaining functional cell mass, complementing the direct strength indexing from fat-free mass in Article 9.",
+        "source_operator": "icw_strength_power_predictor",
+        "telemetry": "Multifrequency BIA water-compartment estimates (ICW in litres) per athlete"
+      }
+    },
+    {
+      "primitive_id": "ecw_icw_ratio_fluid_distribution",
+      "name": "ECW/ICW ratio as an indicator of fluid distribution in athletes; the studied squad averaged 0.60, 0.59, 0.59 across the season against 0.7 plus or minus 0.1 reported for women athletes",
+      "verbatim_quote": "Furthermore, the ECW/ICW ratio has been used as an indicator of fluid distribution in athletes",
+      "page": "Article 1, book pp. 1-10, Section 4 Discussion (text lines 630-640)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Lower ECW/ICW values have been associated with improved performance in the cited literature",
+        "Ratio is computed from impedance-derived compartment estimates"
+      ],
+      "breakdown_regime": "The ratio compresses two noisy estimates into one number; compartment estimation error propagates directly into it",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine tracks the ECW/ICW ratio as a fluid-distribution feature: a rising ratio flags extracellular expansion relative to cell mass, a state inconsistent with the performance-associated profile reported in the volume.",
+        "source_operator": "ecw_icw_ratio_fluid_distribution",
+        "telemetry": "BIA-derived ECW and ICW estimates per athlete per assessment"
+      }
+    },
+    {
+      "primitive_id": "inseason_bodycomp_adaptation_pattern",
+      "name": "In-season body composition pattern: improvements concentrated in the early high-load phase (A1 to A2), then maintenance through the second phase (A2 to A3) under controlled nutrition",
+      "verbatim_quote": "The higher training load resulted in body composition improvements in this early phase (between A1 and A2) that were followed by an adaptation in the second phase of the study (between A2 and A3), causing a maintenance of the body composition variables (considering that nutritional intake was controlled).",
+      "page": "Article 1, book pp. 1-10, Section 4 Discussion (text lines 638-646)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Nutritional intake was monitored and showed no differences between assessments",
+        "Athletes completed at least 80 percent of 57 training sessions and 13 matches"
+      ],
+      "breakdown_regime": "The pattern is one team's trajectory; without nutrition control the same load pattern need not produce it",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine models body-state change as phase-dependent: early-season load produces measurable composition change, later load maintains it, so identical loads at different season phases carry different expected body-state deltas.",
+        "source_operator": "inseason_bodycomp_adaptation_pattern",
+        "telemetry": "Repeated body composition assessments timestamped against season phase and load history"
+      }
+    },
+    {
+      "primitive_id": "rpe_physiology_dissociation",
+      "name": "Dissociation limit: no interaction between s-RPE and any body composition variable; RPE can be dissociated from the physiological process through psychological mechanisms",
+      "verbatim_quote": "Through the analysis conducted in the present study, no interaction was observed between s-RPE and any body composition variables",
+      "page": "Article 1, book pp. 1-10, Section 4 Discussion (text lines 650-658)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The test is an interaction analysis within one team's season data",
+        "The authors note RPE was collected 30 minutes after sessions and integrates the whole session"
+      ],
+      "breakdown_regime": "The null interaction vetoes using perceived load as a surrogate for physiological adaptation; it does not show RPE is useless, only that it measures a different channel",
+      "domain": "measurement validity",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine enforces channel separation: perceived-load features are never used as proxies for body-state or adaptation outcomes; adaptation inferences require body-state channels (impedance, DXA, performance tests) of their own.",
+        "source_operator": "rpe_physiology_dissociation",
+        "telemetry": "Joint series of s-RPE and body composition assessments per athlete"
+      }
+    },
+    {
+      "primitive_id": "tqr_recovery_scale",
+      "name": "Total Quality Recovery (TQR) scale, 6 to 20, used to measure psychophysiological recovery, answered 24 hours after each match",
+      "verbatim_quote": "The TQR scale (6–20) was used to provide a means to measure psychophysiological recovery [17]. The athletes answered the question “How do you feel about your recovery?” using the TQR scale, 24 h after each match.",
+      "page": "Article 3, book pp. 24-32, Section 2.3 (text lines 2045-2050)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Athletes are familiarized with the scale before use",
+        "The 24-hour post-match timing is part of the instrument"
+      ],
+      "breakdown_regime": "A single global recovery item cannot localize the deficit (sleep, soreness, mood); Article 4 uses the same 6 to 20 TQR before sessions, so timing conventions differ across studies and must be recorded",
+      "domain": "recovery monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine stores TQR as the post-event recovery observation with its scale bounds and sampling lag, forming the recovery half of the stress-recovery balance that load features alone cannot express.",
+        "source_operator": "tqr_recovery_scale",
+        "telemetry": "TQR responses collected 24 hours after matches or before sessions per athlete"
+      }
+    },
+    {
+      "primitive_id": "workload_rpe_match",
+      "name": "Workload-RPE for matches: each player's playing time in minutes multiplied by the match RPE (Foster method)",
+      "verbatim_quote": "The workload-RPE was determined by multiplying each players’ playing time (minutes) in each match by the RPE, as described by Foster [18].",
+      "page": "Article 3, book pp. 24-32, Section 2.4 (text lines 2052-2060)",
+      "latex": "Workload\\text{-}RPE = t_{played} × RPE",
+      "symbol_and_unit_ledger": {
+        "t_{played}": "player's playing time in the match, minutes",
+        "RPE": "match rating of perceived exertion on the modified Borg CR10 scale, 0-10, collected 30 minutes after the match",
+        "Workload-RPE": "match internal load, arbitrary units (AU)"
+      },
+      "assumptions": [
+        "RPE is answered to the question 'How was your match today?' 30 minutes after the end",
+        "Substitutes and starters are scored by the same product, so exposure differences enter through minutes"
+      ],
+      "breakdown_regime": "Two players with equal products (long easy match vs short intense match) are treated as equally loaded; the product cannot separate intensity from exposure",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes match load per player as minutes times RPE, which makes substitution patterns directly visible in the load ledger: reducing a player's minutes mechanically reduces recorded load, as Article 3 demonstrates.",
+        "source_operator": "workload_rpe_match",
+        "telemetry": "Match minutes and post-match RPE per player per match"
+      }
+    },
+    {
+      "primitive_id": "substitution_load_recovery_tradeoff",
+      "name": "Substitution finding: using more substitutions did not change team physical or technical performance, but decreased time played and internal load per player, with positive consequences for recovery status",
+      "verbatim_quote": "The number of substitutions used during the matches did not influence the physical and technical performance of elite women soccer players. However, increasing the number of substitutions decreases the time played and the internal load",
+      "page": "Article 3, book pp. 24-32, Section 5 Conclusions (text lines 2310-2318)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Comparison is between matches with up to 3 substitutions and matches with 4 to 5, across 38 Brazilian Championship matches, 2019 to 2020",
+        "Physical and technical parameters came from GPS and Instat event data"
+      ],
+      "breakdown_regime": "Observational comparison across seasons and a rule change; squad rotation quality is a confound the design cannot remove",
+      "domain": "match management",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine models substitution count as a load-distribution control: spreading minutes lowers individual workload-RPE and raises next-day recovery scores at no measured team output cost, a tradeoff curve usable in availability reasoning.",
+        "source_operator": "substitution_load_recovery_tradeoff",
+        "telemetry": "Substitutions used per match, per-player minutes, workload-RPE, and 24-hour TQR"
+      }
+    },
+    {
+      "primitive_id": "akubat_trimp",
+      "name": "Akubat TRIMP: training impulse as training duration multiplied by 0.2053 times e raised to 3.5179 times the heart rate ratio (Banister form)",
+      "verbatim_quote": "Akubat TRIMP = Training duration × 0.2053e3.5179x , among which the HRratio is the same in Banisters TRIMP [1], e = Napierian logarithms, 3.5179 is the e exponent, and x = HRratio [37].",
+      "page": "Article 4, book pp. 33-43, Section 2.5.2 (text lines 2666-2672)",
+      "latex": "TRIMP = t × 0.2053 \\, e^{3.5179 x}",
+      "symbol_and_unit_ledger": {
+        "t": "training duration, minutes",
+        "x": "heart rate ratio (HRratio), the same fractional heart rate reserve quantity used in Banister's TRIMP, dimensionless",
+        "e": "Euler's number (Napierian logarithm base)",
+        "TRIMP": "training impulse, arbitrary units"
+      },
+      "assumptions": [
+        "Maximum heart rate was obtained from the Yo-Yo intermittent recovery test level 1",
+        "Heart rate recorded by a 1 Hz telemetry band"
+      ],
+      "breakdown_regime": "The exponential weighting is a population calibration; individual lactate and heart rate kinetics differ, and heart rate lags and drifts in heat, dehydration, and intermittent play",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes a physiology-channel load from heart rate telemetry with exponential intensity weighting, complementing the perception-channel s-RPE so the two channels can be cross-checked for divergence.",
+        "source_operator": "akubat_trimp",
+        "telemetry": "Heart rate time series or session mean heart rate ratio, session duration, and tested HRmax per athlete"
+      }
+    },
+    {
+      "primitive_id": "salivary_sampling_schedule",
+      "name": "Salivary biomarker sampling schedule around match day: one day before (MD minus 1), 60 minutes before kick-off, 30 minutes post-match, and 48 hours post-match (MD plus 2)",
+      "verbatim_quote": "samples were obtained one day before each match (MD − 1), 60-min before kick-off on match-day, 30-min post-match and 48-h post-match (two days (MD + 2)).",
+      "page": "Article 5, book pp. 44-56, Section 2.1 (text lines 3266-3270)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Players were fasted and abstained from food and caffeine for at least 2 hours before collection, except on match day",
+        "The schedule anchors every sample to match events rather than to clock time alone"
+      ],
+      "breakdown_regime": "Kick-off times varied (2.00 p.m., 4.30 p.m., 7.00 p.m. in the studied matches), so event-anchored samples are not clock-matched across matches",
+      "domain": "biomarker monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine adopts the four-point match-week observation grammar for any slow biomarker: baseline the day before, anticipatory sample before the event, response sample after, and recovery sample at 48 hours, each stored with its anchor.",
+        "source_operator": "salivary_sampling_schedule",
+        "telemetry": "Saliva collection timestamps relative to kick-off; s-IgA and s-Cort concentrations per player"
+      }
+    },
+    {
+      "primitive_id": "circadian_control_sampling",
+      "name": "Circadian control for biomarkers: all salivary samples collected at the same time of day (09.30 to 10.30 a.m.) to minimize residual exercise effects and circadian variation",
+      "verbatim_quote": "all salivary samples were collected at the same time of day for all participants (09.30–10.30 a.m.) to minimize the residual effect of exercise and circadian variations.",
+      "page": "Article 5, book pp. 44-56, Section 2.1 (text lines 3272-3276)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Applies to non-match-day samples; match-day samples are anchored 60 minutes before kick-off instead",
+        "Morning collection was prior to breakfast"
+      ],
+      "breakdown_regime": "Event-anchored match-day sampling reintroduces clock-time variance that the protocol can only partially control",
+      "domain": "biomarker monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine records sampling clock time as a confound field for every biomarker observation and refuses to compare values collected at materially different times of day without a circadian caveat.",
+        "source_operator": "circadian_control_sampling",
+        "telemetry": "Collection timestamps and fasting state per saliva sample"
+      }
+    },
+    {
+      "primitive_id": "siga_anticipatory_psychological_modulation",
+      "name": "s-IgA is psychologically modulated before competition: lower concentration 60 minutes before kick-off than the day before, linked to the perceived importance of the match and coping strategy",
+      "verbatim_quote": "This result suggests that players’ perceived importance of the match affect s-IgA concentration, highlighting therefore, the role of psychological factors in modulating the mucosal immunity in team-sport athletes.",
+      "page": "Article 5, book pp. 44-56, Section 4 Discussion (text lines 3848-3854)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Interpretation draws on cited work showing lower pre-match s-IgA before a final than before a regular-season match, and on active versus passive coping experiments",
+        "The present study measured the pre-kick-off dip directly (90 percent CI difference 15.7 to 71.3 micrograms per mL versus MD minus 1)"
+      ],
+      "breakdown_regime": "A pre-match biomarker value cannot be read as a training-load response; appraisal of the event moves it first, so baselines must come from non-match days",
+      "domain": "biomarker monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats pre-event biomarker deviations as appraisal signals, not load signals: the anticipatory sample is compared with the day-before baseline, and the gap is attributed to psychological state unless load data say otherwise.",
+        "source_operator": "siga_anticipatory_psychological_modulation",
+        "telemetry": "Paired MD minus 1 and 60-minute pre-match s-IgA values; match importance context"
+      }
+    },
+    {
+      "primitive_id": "salivary_plus_load_monitoring",
+      "name": "Combined monitoring claim: salivary monitoring combined with physical match load is a useful tool to monitor individual mucosal immunity and hormonal responses to match-play and recovery",
+      "verbatim_quote": "the use of salivary monitoring in combination with physical match load may be a useful tool to monitor individual mucosal immunity and hormonal responses to elite soccer match-play and the subsequent recovery periods.",
+      "page": "Article 5, book pp. 44-56, Section 5 Conclusions (text lines 4040-4046)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Mixed model regressions linked longer playing time, total distance, and high-intensity accelerations to smaller s-IgA and s-Cort swings between time points",
+        "No significant differences were observed between starters and non-starters at any time point"
+      ],
+      "breakdown_regime": "Six-week, single-team observation; the tool claim is about monitoring usefulness, not about validated injury or illness prediction thresholds",
+      "domain": "biomarker monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine fuses biomarker deltas with optical-tracking match load per player: the same biomarker change is interpreted differently depending on minutes, distance, and acceleration load, following the paper's regression structure.",
+        "source_operator": "salivary_plus_load_monitoring",
+        "telemetry": "s-IgA and s-Cort at four match-anchored points plus per-player match load (minutes, distance, high-intensity actions)"
+      }
+    },
+    {
+      "primitive_id": "icc_sem_reliability_classification",
+      "name": "Reliability method: ICC(2,k) with classification bands weak below 0.4, moderate 0.40 to 0.59, good 0.60 to 0.74, excellent 0.75 to 1.00, reported with the standard error of measurement",
+      "verbatim_quote": "For both within- and between-session reliability, the intraclass correlation coefficient 2,k (ICC2,k ) and the standard error of the measurement (SEM) were used [21]. The ICC2,k values were classified as weak (<0.4), moderate (0.40–0.59), good (0.60–0.74), or excellent (0.75–1.00) [34].",
+      "page": "Article 6, book pp. 57-66, Section 2 Methods (text lines 4660-4666)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Within-session reliability used the first two versus last two bouts of a day; between-session used mean bout values across two days",
+        "SEM expresses error in the units of the measured variable"
+      ],
+      "breakdown_regime": "ICC is inflated by between-athlete heterogeneity; a high ICC in a diverse squad can hide absolute error that the SEM reveals",
+      "domain": "statistical validation",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine adopts ICC plus SEM as the acceptance test for any repeated measurement feed: a metric enters the reasoning layer only with a reliability class and an error magnitude attached, per athlete group and protocol.",
+        "source_operator": "icc_sem_reliability_classification",
+        "telemetry": "Repeated measurements of the same quantity per athlete under a fixed protocol"
+      }
+    },
+    {
+      "primitive_id": "ssg_offside_null_effect",
+      "name": "Small-sided games finding: adding the offside rule to a three vs three SSG did not influence physiological responses, and heart rate demand showed moderate to excellent reliability in both formats",
+      "verbatim_quote": "Using the offside rule in a three vs. three SSG did not influence the physiological responses of young soccer athletes.",
+      "page": "Article 6, book pp. 57-66, Section 5 Conclusions (text lines 4852-4858)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Twenty-four U-17 athletes; demand measured as percentage mean and peak heart rate",
+        "Within-session ICC values were classified good or excellent (above 0.60) except mean heart rate percentage on day 2, classified moderate"
+      ],
+      "breakdown_regime": "A rule constraint can change tactical behavior without changing heart rate demand; the null is specific to physiological demand, not to learning or tactical value",
+      "domain": "training design",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine separates constraint effects by channel: a training-design change is credited with a physiological effect only if the physiological channel moves, however much the tactical channel changes; format choice can therefore be optimized on other criteria.",
+        "source_operator": "ssg_offside_null_effect",
+        "telemetry": "Heart rate demand (mean and peak percentages) per SSG format and rule variant"
+      }
+    },
+    {
+      "primitive_id": "intended_vs_perceived_load",
+      "name": "Coach intended load and athlete perceived load formulas: intended RPE times intended duration versus realized RPE times realized duration, both in arbitrary units",
+      "verbatim_quote": "Coach’s intended training load (AU) = intended RPE × intended duration. Athlete’s perceived training load (AU) = RPE × duration.",
+      "page": "Article 7, book pp. 67-78, Section 2.3 (text lines 5196-5205)",
+      "latex": "L_{intended} = RPE_{intended} × t_{intended}, \\qquad L_{perceived} = RPE × t",
+      "symbol_and_unit_ledger": {
+        "RPE_{intended}": "coach's planned rating of perceived exertion for the session (modified Borg CR10, 0-10), not shared with athletes",
+        "t_{intended}": "planned session duration, minutes",
+        "RPE": "athlete's realized rating of perceived exertion, collected about 30 minutes after the session",
+        "t": "realized session duration, minutes",
+        "L": "training load, arbitrary units (AU)"
+      },
+      "assumptions": [
+        "Coach records intention before the period and does not share intended RPE with athletes",
+        "Athletes log modality, duration, and RPE per session in an athlete management platform"
+      ],
+      "breakdown_regime": "The product form means duration mismatch and intensity mismatch are indistinguishable in the load number alone; the components must be compared separately, as the paper does",
+      "domain": "internal load quantification",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine stores planned and realized load as separate series and computes their mismatch per athlete and per component (duration gap versus intensity gap), rather than scoring only executed load.",
+        "source_operator": "intended_vs_perceived_load",
+        "telemetry": "Coach session plans (intended RPE, intended duration) and athlete session logs (RPE, duration)"
+      }
+    },
+    {
+      "primitive_id": "restq_sport_monitoring",
+      "name": "RESTQ-Sport: questionnaire administered before and after a training block to define perceptions and sources of recovery and stress",
+      "verbatim_quote": "The RESTQ-sport was filled out within three days before the start and the end of the four-week monitoring period using the Smartabase athlete management platform (version 6.11.6).",
+      "page": "Article 7, book pp. 67-78, Section 2.4 (text lines 5212-5215)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Block-level instrument: it brackets a four-week preparatory phase rather than sampling daily",
+        "Subscales separate stress sources from recovery resources"
+      ],
+      "breakdown_regime": "Pre-post block measurement cannot resolve within-block dynamics; it detects accumulated state change only",
+      "domain": "wellness monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine uses block-level stress and recovery inventories as slow state variables bracketing training blocks, complementing daily one-item scales that cannot attribute sources.",
+        "source_operator": "restq_sport_monitoring",
+        "telemetry": "RESTQ-Sport subscale scores at block boundaries per athlete"
+      }
+    },
+    {
+      "primitive_id": "mismatch_recovery_relation",
+      "name": "Mismatch finding: the coach-athlete load mismatch is related to changes in recovery scales; approaching or exceeding intended RPE improved perceived success, and approaching intended duration improved physical recovery and self-regulation",
+      "verbatim_quote": "A (mis)match between the coach and the speed skater is related to changes in recovery scales.",
+      "page": "Article 7, book pp. 67-78, Section 5 Conclusions (text lines 5642-5652)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Group-level mismatch was mainly a duration shortfall (intended 52:37 h versus perceived 45:16 h over four weeks) with no group mismatch in RPE or load",
+        "Individual mismatch varied widely in both directions, which the authors stress over the group mean"
+      ],
+      "breakdown_regime": "Junior speed skaters in one preparatory block; the recovery relations are correlational and subscale-specific",
+      "domain": "load-wellness coupling",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine reasons per athlete about plan adherence: deviation from intended load is a signed, individual feature linked to recovery-state changes, and squad-average adherence is explicitly not used as a readiness signal.",
+        "source_operator": "mismatch_recovery_relation",
+        "telemetry": "Per-athlete intended versus perceived load components aligned with RESTQ-Sport change scores"
+      }
+    },
+    {
+      "primitive_id": "psqi_structure_scoring",
+      "name": "Pittsburgh Sleep Quality Index: nine questions covering seven dimensions, each scored 0 to 3, maximum total 21; higher score means poorer sleep quality; scores at or below 5 signify favorable sleep quality",
+      "verbatim_quote": "The PSQI scale has nine questions covering seven dimensions: sleep quality, sleep latency, sleep time, habitual sleep efficiency, sleep disorders, sleep medication use, and daytime dysfunction. Each dimension is worth 0–3 points; the maximum number of points is 21. A higher PSQI score indicates poorer sleep quality. Typical scores are less than or equal to 5, signifying favorable sleep quality.",
+      "page": "Article 8, book pp. 79-93, Section 2.7 (text lines 6255-6264)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The scale references sleep during the previous month, so it is a monthly, not nightly, instrument",
+        "The Chinese version used here reported Cronbach's alpha 0.8332 and accuracy 88.5 percent against clinical assessment"
+      ],
+      "breakdown_regime": "A month-window global score cannot detect single bad nights before key sessions; it screens habitual sleep quality only",
+      "domain": "sleep monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine ingests PSQI as a monthly sleep-quality state with a hard interpretive threshold at 5, kept distinct from nightly sleep items in the Hooper Index, which operate on a different timescale and scale direction.",
+        "source_operator": "psqi_structure_scoring",
+        "telemetry": "Monthly PSQI global and component scores per athlete"
+      }
+    },
+    {
+      "primitive_id": "ess_daytime_sleepiness",
+      "name": "Epworth Sleepiness Scale: questionnaire assessing the degree of daytime sleepiness from self-assessed probability of dozing in eight situations, each scored 0 to 3",
+      "verbatim_quote": "The Epworth Sleepiness Scale (ESS) is a questionnaire scale used to assess the degree of daytime sleepiness of participants [23].",
+      "page": "Article 8, book pp. 79-93, Section 2.8 (text lines 6266-6272)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Situations are everyday low-stimulation settings such as sitting and reading or watching television",
+        "It measures habitual sleep propensity, not momentary alertness"
+      ],
+      "breakdown_regime": "Self-assessed dozing probability is a trait-like estimate; it does not measure sleep need or last night's sleep directly",
+      "domain": "sleep monitoring",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine pairs ESS with PSQI as the daytime-function half of the sleep state: quality of night sleep and propensity to doze are separate features that can disagree and must not be merged into one sleep score.",
+        "source_operator": "ess_daytime_sleepiness",
+        "telemetry": "ESS total scores per athlete at assessment points across the training period"
+      }
+    },
+    {
+      "primitive_id": "ffm_1rm_indexing",
+      "name": "Fat-free mass indexes maximal strength: upper-limb FFM explained 1RM variance in arm curl, bench press, and seated row with R2 of 0.69, 0.84, and 0.75 when controlled by appendicular mass index",
+      "verbatim_quote": "For AC, BP, and SR, the explained variances from UL-FFM (Figure 1A–C) were higher when controlled by API (R2 = 0.69, 0.84, and 0.75, respectively, (strong), p < 0.01).",
+      "page": "Article 9, book pp. 94-103, Section 3 Results (text lines 7342-7348)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Thirty well-trained young adult males; FFM by DXA, regional (upper limb, lower limb) and whole-body",
+        "Lower-limb relations were weaker and improved with thigh area (knee extension R2 = 0.56) or appendicular mass index (leg curl 0.64, leg press 45 degrees 0.49)"
+      ],
+      "breakdown_regime": "Cross-sectional indexing in one trained male sample; relations are exercise-specific and do not transfer across limbs or exercises without re-estimation",
+      "domain": "body composition and strength",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine can project strength capacity from body composition where direct testing is missing: regional fat-free mass supplies an indexed estimate of 1RM with a stated explained variance per exercise, flagged as an estimate, not a test result.",
+        "source_operator": "ffm_1rm_indexing",
+        "telemetry": "DXA regional and whole-body fat-free mass; appendicular mass index; thigh area; 1RM test results where available"
+      }
+    },
+    {
+      "primitive_id": "press_cross_validation",
+      "name": "PRESS cross-validation of prediction models: recalculated R2p equals 1 minus PRESS over total sum of squares, and SEEp from PRESS over n, where PRESS sums squared leave-one-out residuals",
+      "verbatim_quote": "From the PRESS statistic, a modified form of R2 adjusted (R2 p ) and standard error of the estimate (SEEp ) were recalculated, R2 p = 1 – (PRESS/SSTotal ) and SEE = (PRESS/n) /2 , in which PRESS is the sum of the squares of eliminated residuals:",
+      "page": "Article 9, book pp. 94-103, Section 2 Methods (text lines 7260-7267)",
+      "latex": "PRESS = \\sum_{i=1}^{n} (y_i - \\hat{y}_{i,-i})^2, \\qquad R^2_p = 1 - \\frac{PRESS}{SS_{Total}}, \\qquad SEE_p = \\sqrt{\\frac{PRESS}{n}}",
+      "symbol_and_unit_ledger": {
+        "y_i": "observed value for case i (for example observed 1RM, kg)",
+        "\\hat{y}_{i,-i}": "value predicted for case i by the model fitted without case i (leave-one-out prediction)",
+        "PRESS": "predicted residual error sum of squares, squared units of y",
+        "SS_{Total}": "total sum of squares of y",
+        "n": "number of cases",
+        "R^2_p": "cross-validated explained variance, dimensionless",
+        "SEE_p": "cross-validated standard error of the estimate, units of y"
+      },
+      "assumptions": [
+        "Cross-validation was accepted when R2p stayed within a 0.1 ratio of the adjusted R2 (shrinkage check)",
+        "The method avoids non-realistic statistical power from reusing the actual sample for both fit and evaluation"
+      ],
+      "breakdown_regime": "Leave-one-out PRESS is still internal validation; it does not test transport to a new team, sex, or training population",
+      "domain": "statistical validation",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine adopts PRESS-style shrinkage as its reporting standard for any fitted relation: in-sample fit is never published to the reasoning layer without the cross-validated R2p and SEEp beside it, and relations whose shrinkage exceeds the tolerance are marked unstable.",
+        "source_operator": "press_cross_validation",
+        "telemetry": "Model fits with per-case observed and leave-one-out predicted values"
+      }
+    },
+    {
+      "primitive_id": "bia_raw_variables",
+      "name": "Raw BIA variables: impedance ratio (Z at high frequencies over Z at low frequencies) and phase angle at 50 kHz are directly measured by the analyzer and serve as markers of body cell mass and the ECW/TBW ratio",
+      "verbatim_quote": "Raw BIA variables, such as the impedance ratio (IR), which is the ratio between Z at high frequencies and Z at low frequencies, and PhA at 50 kHz, are those that are directly measured by an analyzer.",
+      "page": "Article 10, book pp. 104-116, Section 1 Introduction (text lines 7728-7736)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Measurements here were taken at 5, 50, 100, and 250 kHz, whole body and segmentally (upper and lower limbs)",
+        "Raw variables are preferred because predictive equations for FFM and FM have not been definitively validated"
+      ],
+      "breakdown_regime": "Raw variables are unitless electrical descriptors; their physiological reading (cell mass, water distribution) is itself an interpretation layer",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine stores raw impedance variables as first-class observations and derived compartment estimates as second-class: reasoning prefers the directly measured phase angle and impedance ratio, with estimates carrying their equation provenance.",
+        "source_operator": "bia_raw_variables",
+        "telemetry": "Multifrequency BIA raw outputs (Z, R, Xc, PhA, IR) per athlete, whole body and segmental"
+      }
+    },
+    {
+      "primitive_id": "bia_index_ffm_predictor",
+      "name": "Bioimpedance index at 50 kHz: height squared divided by impedance at 50 kHz, commonly considered a logical predictor of fat-free mass and total body water",
+      "verbatim_quote": "the bioimpedance index at 50 kHz (BI index = height2 /Z at 50 kHz) is commonly considered as a logical predictor of FFM and TBW [5,6].",
+      "page": "Article 10, book pp. 104-116, Section 1 Introduction (text lines 7724-7728)",
+      "latex": "BI = \\frac{h^2}{Z_{50\\,kHz}}",
+      "symbol_and_unit_ledger": {
+        "h": "body height, cm (squared in the index)",
+        "Z_{50\\,kHz}": "whole-body impedance at 50 kHz, ohms",
+        "BI": "bioimpedance index, cm squared per ohm"
+      },
+      "assumptions": [
+        "Height is treated as the conductor length proxy in the impedance model of the body as a cylinder",
+        "Used as a predictor inside regression equations for FFM and TBW, not as a direct measure"
+      ],
+      "breakdown_regime": "The cylinder model fails for atypical body shapes and segment proportions; segmental measurement partially addresses this",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine computes the bioimpedance index as the normalized electrical volume feature feeding any FFM or TBW estimate, keeping the raw index available when an equation's validity for the population is in doubt.",
+        "source_operator": "bia_index_ffm_predictor",
+        "telemetry": "Height and 50 kHz impedance per athlete"
+      }
+    },
+    {
+      "primitive_id": "bia_error_bound",
+      "name": "BIA accuracy bound: the BIA method has an error of 4 to 8 percent compared to criterion methods, potentially larger in athletes",
+      "verbatim_quote": "the BIA method has an error of 4–8% compared to criterion methods",
+      "page": "Article 10, book pp. 104-116, Section 1 Introduction (text lines 7712-7720)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Error is stated for BIA-derived body composition estimates against criterion methods",
+        "Athlete-specific predictive equations exist but have not been definitively validated"
+      ],
+      "breakdown_regime": "Group-level estimates may still be informative even when individual estimates carry this error; the bound vetoes precise individual claims, not all use",
+      "domain": "body composition",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine attaches a 4 to 8 percent error envelope to every impedance-derived composition value and blocks any downstream inference that requires finer resolution than the envelope allows.",
+        "source_operator": "bia_error_bound",
+        "telemetry": "BIA-derived FFM, FM, and water estimates with method metadata per athlete"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "cf4d02c45c458808-t1",
+      "think": "This volume is a reprint of a journal special issue: ten peer-reviewed articles from the International Journal of Environmental Research and Public Health, edited by Rafael Oliveira and Joao Paulo Brito, under the title Wellness, Fitness, Body Composition, Training and Performance Monitoring to Improve Athletes Life Quality. It is not a textbook with a single argument. It is a snapshot of how applied sport science actually measures an athlete: as a set of coupled state variables that must be observed repeatedly, cheaply, and with known error, so that training can be adjusted before performance or health breaks down. Five of the ten papers study soccer, and two of those study professional women players in the same Portuguese league environment, which gives the collection an unusual coherence: the same monitoring stack appears again and again, applied to different questions. The machinery has four layers. The first layer quantifies the training stimulus itself. Internal load is captured by perception and by physiology: the session-RPE, defined as the rating of perceived exertion multiplied by session duration and collected about thirty minutes after the session ends; the heart-rate-based training impulse in the Akubat form, an exponential weighting of the heart rate ratio multiplied by duration; and, in the youth academy paper, GPS at 18 Hz paired with 1 Hz heart rate telemetry so that external and internal load can be read against each other. The second layer turns daily loads into weekly structure. Training monotony divides the mean daily load by its standard deviation across seven days, training strain multiplies the weekly load sum by monotony, and the acute to chronic workload ratio divides the most recent week by the rolling four-week average. These are the volume's real equations: simple, auditable transforms that convert a load time series into statements about variation, accumulation, and spikes. The third layer measures the athlete's response state with questionnaires. The Hooper Index scores fatigue, stress, muscle soreness, and sleep quality on one-to-seven scales before training. The total quality recovery scale scores perceived recovery from 6 to 20, twenty-four hours after a match or before the next session. The RESTQ-Sport inventories stress and recovery sources across a training block, the Pittsburgh Sleep Quality Index compresses nine questions into seven component scores and a global score out of 21 with a favorable cutoff at five, and the Epworth scale scores daytime sleepiness. The fourth layer measures the body and its fluids. Bioelectrical impedance contributes raw variables: resistance, reactance, phase angle at 50 kHz, and the impedance ratio between high and low frequencies, which the pole dancer paper insists on interpreting directly rather than only through prediction equations, because those equations carry a four to eight percent error against criterion methods. DXA contributes fat-free mass, which the strength paper shows can index one-repetition maximum performance with explained variance up to 0.84 for bench press, validated by PRESS cross-validation rather than by in-sample fit alone. Salivary immunoglobulin A and cortisol add a biomarker layer with a strict sampling grammar around match day: the day before, sixty minutes before kickoff, thirty minutes after the match, and forty-eight hours after. What holds the layers together is timing and coupling. Every instrument has a collection protocol: RPE thirty minutes after, Hooper thirty minutes before, saliva at fixed clock times to control circadian variation, recovery scores at twenty-four hours. The findings are mostly about couplings between layers rather than about any single variable. A spike in the acute to chronic workload ratio precedes a peak in perceived stress. Higher reported stress accompanies lower session-RPE, which the authors read as stress interfering with the assimilation of training load. Fatigue and soreness rise together and, counterintuitively, alongside better reported sleep. Adding substitutions lowers per-player internal load and raises recovery scores without changing team physical output. Coach-intended and athlete-perceived load diverge at group level mainly through duration, while the individual mismatch varies widely in both directions and tracks changes in recovery scales. For a reasoning engine, the transferable content is a discipline of state estimation. Readiness is treated as a latent state observed through noisy channels with different latencies: perception is immediate but psychologically filtered, questionnaires are structured but coarse, impedance is direct but hydration-sensitive, biomarkers are physiological but slow and stress-reactive even before the match begins. The volume repeatedly shows that no channel may stand in for the others. Session-RPE dissociated entirely from body composition change in the first paper. Phase angle and intracellular water moved with fat-free mass while perceived exertion did not. Group means concealed individual mismatches large enough to matter. The correct architecture is therefore multi-channel fusion with explicit error bounds and per-athlete baselines, plus the validation habits of the strength paper: report shrunken, cross-validated accuracy, never in-sample correlation alone. The limits are equally instructive. Samples are small and local: seventeen to sixty athletes, single teams, single academies, four to ten weeks. Several papers are cross-sectional. The impedance equations are unvalidated for the exact populations measured. The workload indexes inherit every weakness of the RPE scale that feeds them, including its sensitivity to stress and context. The collection also standardizes vocabulary: internal versus external load, acute versus chronic windows, raw versus derived variables, and block-level versus daily instruments are kept terminologically separate throughout, which is part of its value as a reference. Nothing here is a law of nature; it is a set of measurement practices with documented behavior in specific squads. Used that way, as calibrated instruments with known failure modes rather than as truths, the collection is a compact operating manual for monitoring any system whose load, recovery, and composition must be tracked over time.",
+      "retrocausal_genealogy": "The instruments carry long lineages. Borg's perceived exertion scales from the 1970s became, through Foster's work in 1998 and 2001, the session-RPE method that three papers here use as their load backbone, and Banister's training impulse underlies the Akubat TRIMP variant. Hooper's wellness questionnaire, the Kentta and Hassmen recovery scale, Buysse's 1989 Pittsburgh Sleep Quality Index, and Kellmann's RESTQ-Sport supply the self-report layer. Impedance analysis descends from Lukaski and Kyle, with phase angle reference values from Barbosa-Silva and colleagues. The special issue format itself descends from journal reprint culture: a set of 2021 to 2022 articles, re-edited in 2023 as a standalone volume aimed at practitioners who would never assemble the issue themselves.",
+      "theory_of_mind": "The editors write for coaches, physicians, nutritionists, and exercise physiologists who must decide tomorrow's session with imperfect information. Their model of the reader is a practitioner surrounded by single-study detail who needs comparable methods and reference values, especially for women athletes, whom the preface notes are understudied relative to men. Their model of the domain is that an athlete is a psychophysiological system whose quality of life, not only output, is the endpoint worth optimizing. Hence the insistence on pairing every load measure with a wellness, health, fitness, or body composition measure: a number without a state variable beside it is treated as incomplete knowledge, and monitoring exists to close that gap.",
+      "cross_layer_veto": "Several findings act as vetoes on single-signal reasoning. The dissociation between session-RPE and body composition change vetoes any inference from perceived load to physiological adaptation. The negative association between stress and session-RPE vetoes reading a low load score as an easy session when stress is high. The four to eight percent impedance error vetoes precise individual body composition claims from field devices. The anticipatory drop in salivary IgA before kickoff vetoes interpreting a pre-match biomarker as a pure training response, since psychological appraisal moves it first. The wide individual spread around the group-level coach and athlete load match vetoes squad-average readiness decisions. Each veto is a reminder that one channel can disqualify an interpretation without replacing it."
+    }
+  ],
+  "universal_lens": "Read abstractly, the volume is a template for monitoring any loaded system over time. Quantify the input with a cheap proxy and a physiological channel. Compress the input history into variation, accumulation, and spike statistics. Sample the system's self-reported state on fixed scales at fixed times. Measure composition with direct raw variables before trusting derived estimates, and publish the error of every estimate. Validate predictive relations out of sample. Expect channels to disagree, and treat disagreement as information about which channel is being distorted. The athlete disappears; what remains is a general architecture for load, recovery, and composition accounting in any domain where work is dosed and adaptation is the goal.",
+  "gsi_mapping": "For the Galaxy Sports Institute, the volume is a methods curriculum. It supplies teachable, citable protocols: session-RPE collection thirty minutes after sessions, Hooper Index screening before training, weekly monotony, strain, and acute to chronic ratio computation, total quality recovery scoring, sleep screening with the Pittsburgh index and its cutoff of five, and impedance assessment that reports raw phase angle and impedance ratio alongside any estimated compartments. It also supplies an evidentiary standard: reliability reported as ICC with classification bands and standard error of measurement, prediction validated by PRESS shrinkage, and limitations stated in numbers. These protocols transfer directly to educational material on athlete monitoring, load management, and research literacy for practitioners.",
+  "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the volume contributes state variables and transforms for player availability and performance modeling. Session-RPE and TRIMP provide per-athlete internal load series; monotony, strain, and the acute to chronic workload ratio convert those series into fatigue-risk features, with the workload spike to stress coupling as a documented lagged relation. Hooper Index items, recovery scores, sleep quality, and daytime sleepiness provide readiness observations with known scales and timing. Phase angle, intracellular water, and the extracellular to intracellular ratio provide body-state features tied to cellular integrity and fluid distribution, carrying an explicit four to eight percent measurement error. Salivary markers define match-week observation windows. Every feature arrives with a protocol, a scale, and a failure mode, which is the form the engine can ingest."
+}

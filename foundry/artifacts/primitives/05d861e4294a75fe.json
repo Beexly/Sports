@@ -1,0 +1,720 @@
+{
+ "book_id": "05d861e4294a75fe",
+ "source_status": "COMPLETE",
+ "source_note": "Frontiers in Neurology Research Topic e-book: 'Towards Translating Research to Clinical Practice: Novel Strategies for Discovery and Validation of Biomarkers for Brain Injury'. Topic Editors: Stefania Mondello, Ronald L. Hayes, Andras Buki, Frank C. Tortella and Kevin K. Wang. Frontiers Media SA, February 2015. ISSN 1664-8714; ISBN 978-2-88919-391-2; DOI 10.3389/978-2-88919-391-2. The local catalog short title 'Biomarkers for Brain Injury' (Mondello & Hayes) refers to this same compilation of 19 articles. Local file: PDF, 14,509,050 bytes, sha256 05d861e4294a75fe71d237acf1a89ecd11c351609ed78db6b990e262fe836898 (book_id is the first 16 hex chars, verified against the expected value). Extracted text is complete (11,677 lines) but the two- and three-column page layouts are interleaved line-by-line in many body passages; every verbatim quote in this artifact was therefore chosen from a passage proven contiguous in the extracted text file under the fleet normalization, and several quotes are necessarily mid-sentence fragments of longer sentences. The work contains no formal equations; all primitives carry latex as an empty string and substantive breakdown regimes. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "tbi_heterogeneity_molecular_phenotypes",
+   "name": "Clinical TBI heterogeneity is underlain by molecular phenotypes more complex and interactive than the classical unidimensional characterization assumes",
+   "verbatim_quote": "It is now apparent that the heterogeneity of clinical TBI is underlain by molecular phenotypes more complex and interactive than initially conceived",
+   "page": "Editorial introduction, e-book pp. 2-3; text lines 100-150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injury phenotype varies between patients even at equal clinical severity grades",
+    "Molecular measurements can in principle resolve phenotypes that examination and imaging cannot"
+   ],
+   "breakdown_regime": "A heterogeneity claim without a validated phenotyping assay does not change management; the volume itself records that no biomarker had completed clinical validation at the time of writing. no_equation_domain",
+   "domain": "tbi_phenotyping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any latent-state classification problem where surface observables under-resolve the true state maps onto this primitive: the engine should model sub-phenotypes of a condition rather than one average condition, and should expect interaction effects between sub-phenotypes.",
+    "source_operator": "tbi_heterogeneity_molecular_phenotypes",
+    "telemetry": "stratified outcome data by measured molecular or contextual sub-phenotype"
+   }
+  },
+  {
+   "primitive_id": "multidimensional_panel_integration",
+   "name": "The way forward is a multidimensional approach integrating a panel of pathobiologically diverse biomarkers with clinical variables and imaging-based assessments",
+   "verbatim_quote": "Finally, suggestions are provided for the way forward, with an emphasis on need for a multidimensional approach that integrate a panel of pathobiologically diverse biomarkers with clinical variables and imaging-based assessments to improve diagnosis and classification of TBI and to develop best clinical practice guidelines.",
+   "page": "Editorial introduction, e-book p. 3; text lines 140-150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No single marker covers the diverse pathobiology of brain injury",
+    "Clinical variables and imaging carry information orthogonal to biofluid markers"
+   ],
+   "breakdown_regime": "Panel integration multiplies assay cost and false-positive risk; each added marker needs its own validation, and the volume warns that added value over existing predictors was not yet shown in multivariable analyses. no_equation_domain",
+   "domain": "diagnostic_panels",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the volume's master design rule and it transfers directly to ensemble reasoning: combine diverse, weakly correlated evidence channels (molecular panel, structured clinical variables, imaging) instead of searching for one decisive signal, and let the combination, not any channel, carry the classification.",
+    "source_operator": "multidimensional_panel_integration",
+    "telemetry": "multi-channel feature vectors with per-channel provenance and missingness flags"
+   }
+  },
+  {
+   "primitive_id": "ideal_biomarker_brain_specificity",
+   "name": "Ideal TBI biomarkers are brain-only proteins that leak across the blood-brain barrier into blood or CSF during or after injury, with levels proportional to impact and extent of damage",
+   "verbatim_quote": "are proteins that are only present in the brain, leaked out",
+   "page": "Guingab-Cagmat et al., Definitions section, e-book p. 10; text lines 463-530",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The marker is absent from peripheral tissues, so a peripheral measurement implies brain origin",
+    "Release is proportional to impact and to the extent of brain damage, per the same passage"
+   ],
+   "breakdown_regime": "Few real proteins meet the brain-only criterion; S100B fails it through extracranial sources, and blood-brain barrier permeability varies between patients, breaking strict proportionality. no_equation_domain",
+   "domain": "biomarker_criteria",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Source exclusivity is the general attribution principle: a signal is diagnostic of a hidden compartment only if it is generated exclusively inside that compartment and crosses a boundary in proportion to the internal event. The engine should score candidate signals by source exclusivity before trusting them as state evidence.",
+    "source_operator": "ideal_biomarker_brain_specificity",
+    "telemetry": "tissue-of-origin annotations and boundary-crossing rates for each candidate signal"
+   }
+  },
+  {
+   "primitive_id": "fdr_decoy_database_validation",
+   "name": "False detection rate, estimated by searching a decoy database of randomized or scrambled sequences, measures the false positive proteins in a proteomic identification",
+   "verbatim_quote": "False detection rate (FDR) measures the false positive proteins",
+   "page": "Guingab-Cagmat et al., False Detection Rate section, e-book p. 14; text lines 690-730",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decoy matches are not expected to be significant, so their count estimates the false matches in the real search",
+    "The same search parameters are applied to decoy and target databases"
+   ],
+   "breakdown_regime": "FDR controls the expected share of false identifications, not the truth of any single identification; concatenated and separate decoy searches give different estimates, and small protein lists make the estimate coarse. no_equation_domain",
+   "domain": "proteomics_validation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A null-model calibration kernel: run the identical detection pipeline against a scrambled null corpus and use the null hit rate to price the false-discovery content of the real hit list. Any pattern-mining layer in the engine inherits this requirement before its finds are treated as evidence.",
+    "source_operator": "fdr_decoy_database_validation",
+    "telemetry": "hit counts on real versus decoy corpora under identical pipeline settings"
+   }
+  },
+  {
+   "primitive_id": "gfap_cns_exclusivity",
+   "name": "GFAP is found only in the astroglial cytoskeleton and is not found outside the central nervous system, so serum GFAP signals glial injury even under polytrauma",
+   "verbatim_quote": "et al., 1971), GFAP is found only in astroglial cytoskeleton.",
+   "page": "Guingab-Cagmat et al., Glial Fibrillary Acidic Protein section, e-book p. 16; text lines 876-905",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GFAP expression is restricted to astroglia, unlike S100B which has extracranial sources",
+    "Astroglial damage upregulates GFAP and releases it into blood after injury"
+   ],
+   "breakdown_regime": "Specificity does not by itself give sensitivity or timing: GFAP elevation lags and persists on its own kinetic schedule, and assay availability was still a validation bottleneck at the time of writing. no_equation_domain",
+   "domain": "glial_markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A compartment-exclusive structural protein is the cleanest kind of leaked-state signal: presence in the periphery is near-proof of damage to the source compartment. The engine should maintain a short list of such exclusive markers per hidden system and weight them above promiscuous signals.",
+    "source_operator": "gfap_cns_exclusivity",
+    "telemetry": "serum concentrations of compartment-exclusive structural proteins over time"
+   }
+  },
+  {
+   "primitive_id": "sbdp_protease_fingerprint",
+   "name": "Calpain and caspase-3 cleave alphaII-spectrin into distinct breakdown products (SBDP150 and SBDP145 from calpain, SBDP120 from caspase-3), so the product pattern fingerprints necrotic versus apoptotic cell death",
+   "verbatim_quote": "Upon activation in TBI, calpain cleaves the protein to breakdown",
+   "page": "Guingab-Cagmat et al., Spectrin Breakdown Products section, e-book p. 16; text lines 850-876",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "AlphaII-spectrin is concentrated in axons and presynaptic terminals",
+    "Calpain marks necrotic death and caspase-3 marks apoptotic death, and each leaves a characteristic fragment size"
+   ],
+   "breakdown_regime": "Fragment patterns overlap in mixed injury and change over time; the same passage notes distinct temporal release patterns for SBDP145 and SBDP120, so a single time point can misread the dominant death mechanism. no_equation_domain",
+   "domain": "axonal_markers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mechanism fingerprinting from degradation products: the shape of the debris identifies which process produced it. The engine can apply the same kernel wherever an observed residue is process-specific, inferring the generating mechanism rather than merely the amount of damage.",
+    "source_operator": "sbdp_protease_fingerprint",
+    "telemetry": "relative abundances of process-specific breakdown products at matched time points"
+   }
+  },
+  {
+   "primitive_id": "uchl1_neuronal_abundance_marker",
+   "name": "UCH-L1 is a neuronal cysteine protease of about 25 kDa comprising roughly 2 percent of total soluble brain protein, making it an abundant neuron-specific leakage marker",
+   "verbatim_quote": "relatively small, around 25 kDa and comprises ∼2% of the total",
+   "page": "Guingab-Cagmat et al., Ubiquitin Carboxy-Terminal Hydrolase L1 section, e-book p. 16; text lines 843-862",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "High fractional abundance in brain soluble protein gives a strong signal on release",
+    "Predominant neuronal expression gives the marker its cell-type attribution"
+   ],
+   "breakdown_regime": "Abundance in brain does not guarantee early or durable blood levels; the cited clinical work is in severe TBI, and extension to mild injury was unproven in this volume. no_equation_domain",
+   "domain": "neuronal_markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Abundance times exclusivity sets the ceiling on a leakage marker's signal-to-noise: a protein that is both common inside the compartment and absent outside it yields the strongest peripheral evidence. The engine can rank candidate state signals by this product before deployment.",
+    "source_operator": "uchl1_neuronal_abundance_marker",
+    "telemetry": "compartment abundance fractions and peripheral baseline levels per candidate marker"
+   }
+  },
+  {
+   "primitive_id": "s100b_extracranial_nonspecificity",
+   "name": "S100B is not specific to the brain: it appears in adipocytes, epidermal cells, chondrocytes, melanoma cells, and Langerhans cells, and rises after peripheral trauma and hemorrhagic shock without brain injury",
+   "verbatim_quote": "First, S100ß is not specific to the brain, showing",
+   "page": "Guingab-Cagmat et al., S100 section, e-book pp. 16-17; text lines 888-925",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "S100B is mainly astrocytic but the protein family is expressed in several non-nervous cell types",
+    "General trauma without brain injury can raise serum S100B"
+   ],
+   "breakdown_regime": "Because of the extracranial sources, S100B cannot be used as a single biomarker for TBI; the volume points to ratios against GFAP as a partial corrective. no_equation_domain",
+   "domain": "glial_markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The promiscuous-marker failure mode: a sensitive signal with multiple generating sources cannot attribute an event to one source. The engine must attach a source-confound list to every signal and discount signals whose confounders are active in the current context.",
+    "source_operator": "s100b_extracranial_nonspecificity",
+    "telemetry": "activity levels of known alternative sources for each promiscuous signal"
+   }
+  },
+  {
+   "primitive_id": "s100b_short_half_life",
+   "name": "S100B is not influenced by hemolysis and has a biological half-life of 2 hours, so its measurement window after injury is short",
+   "verbatim_quote": "is not influenced by hemolysis and has a biological half-life of 2 h.",
+   "page": "Guingab-Cagmat et al., S100 section, e-book p. 16; text lines 888-900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Clearance and half-life set the final measurable blood concentration of any released marker",
+    "Most mild TBI victims are not evaluated soon after injury, per the same discussion"
+   ],
+   "breakdown_regime": "A 2 hour half-life makes late sampling read as absence of injury; the marker's value collapses outside its kinetic window even though the underlying injury persists. no_equation_domain",
+   "domain": "biomarker_kinetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every leaked signal has a decay kernel: observed level equals release history convolved with clearance. The engine should never interpret a level without the elapsed-time and half-life terms, and should treat a late negative as uninformative rather than as evidence of no event.",
+    "source_operator": "s100b_short_half_life",
+    "telemetry": "time since event, marker half-life, and serial levels where available"
+   }
+  },
+  {
+   "primitive_id": "csf_blood_concentration_gradient",
+   "name": "Adult CSF volume (125-150 mL) is about 30- to 40-fold less than blood volume (4.5-5 L), which is why brain biomarker concentrations are far higher in CSF than in blood",
+   "verbatim_quote": "of an adult human (CSF 125-150 mL) is about 30- to 40-fold",
+   "page": "Guingab-Cagmat et al., Biomarker Applications section, e-book p. 15; text lines 793-815",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Released proteins reach blood via the compromised blood-brain barrier or by CSF filtration",
+    "Dilution into the much larger blood volume lowers peripheral concentration by orders of magnitude"
+   ],
+   "breakdown_regime": "The gradient makes CSF the sensitive compartment but CSF sampling is invasive; blood assays must overcome the dilution with sensitivity, which is exactly where mild TBI detection was failing. no_equation_domain",
+   "domain": "biomarker_kinetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Compartment dilution law: the detectability of a leaked signal scales with the volume ratio between the source compartment and the sampling compartment. The engine should model expected signal attenuation whenever evidence crosses from a small latent compartment into a large observed one.",
+    "source_operator": "csf_blood_concentration_gradient",
+    "telemetry": "compartment volumes and measured concentrations in each accessible fluid"
+   }
+  },
+  {
+   "primitive_id": "gfap_uchl1_ratio_index",
+   "name": "The ratio of GFAP to UCH-L1 concentrations has been explored as a composite index in severe TBI, pairing a glial marker with a neuronal marker",
+   "verbatim_quote": "the ratio of GFAP and UCHL1 concentrations to assess patients",
+   "page": "Guingab-Cagmat et al., Biomarker Applications section, e-book p. 15; text lines 800-812",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "GFAP reports glial injury and UCH-L1 reports neuronal injury, so their ratio separates injury type",
+    "A ratio can cancel shared nuisance variation such as sampling time and dilution"
+   ],
+   "breakdown_regime": "A ratio inherits both markers' failure modes and loses absolute magnitude information; the related glial-neuronal ratio work was still exploratory in severe TBI only. no_equation_domain",
+   "domain": "diagnostic_panels",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Paired-marker ratio kernel: dividing a signal from compartment A by a signal from compartment B converts two noisy levels into one type-discriminating index that is robust to shared nuisance factors. The engine can use the same construction whenever two exclusive markers from rival sub-states are available.",
+    "source_operator": "gfap_uchl1_ratio_index",
+    "telemetry": "paired concentrations of compartment-exclusive markers from the same draw"
+   }
+  },
+  {
+   "primitive_id": "mrm_targeted_proteomics_validation",
+   "name": "Targeted proteomics by multiple reaction monitoring is a promising route to validate candidate biomarkers without the antibody bottleneck of immunoassay development",
+   "verbatim_quote": "reaction monitoring (MRM) is a promising technique that could",
+   "page": "Guingab-Cagmat et al., Conclusion, e-book p. 17; text lines 928-950",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Discovery proteomics generates long candidate lists faster than immunoassays can be built",
+    "High assay cost and antibody availability bottleneck the clinical validation pipeline, per the same passage"
+   ],
+   "breakdown_regime": "MRM still requires detectable abundance; the conclusion notes that identifying low-abundance markers, as in mild TBI, remained an unsolved fundamental problem. no_equation_domain",
+   "domain": "proteomics_validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Discovery-versus-validation asymmetry: cheap wide-net discovery always outruns expensive confirmation, so the pipeline needs a mid-cost targeted confirmation tier. The engine should route candidate findings through a targeted re-measurement stage before promotion to trusted evidence.",
+    "source_operator": "mrm_targeted_proteomics_validation",
+    "telemetry": "candidate counts at discovery, targeted-confirmation pass rates, and per-assay cost"
+   }
+  },
+  {
+   "primitive_id": "neuroinflammation_dual_role",
+   "name": "Neuroinflammation is both damaging and reparative: it contributes to secondary brain damage but also facilitates neurorepair",
+   "verbatim_quote": "well accepted that neuroinflammation is responsible of beneficial and detrimental effects, contributing to secondary brain damage but also facilitating neurorepair.",
+   "page": "Woodcock and Morganti-Kossmann, Abstract, e-book p. 21; text lines 1237-1280",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same mediators that mark immune activation participate in both injury and repair cascades",
+    "Effects intersect with oxidative stress, excitotoxicity, angiogenesis, scarring, and neurogenesis"
+   ],
+   "breakdown_regime": "Because the sign of the effect flips with phase and context, a cytokine level alone cannot be read as good or bad; the review states that the validity of cytokines as biomarkers is not broadly accepted. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sign-ambiguous process primitive: some processes are protective in one phase and destructive in another, so their measured level has no fixed valence. The engine must condition interpretation of such signals on phase and context instead of assigning them a permanent direction.",
+    "source_operator": "neuroinflammation_dual_role",
+    "telemetry": "process level together with phase indicators and downstream outcome markers"
+   }
+  },
+  {
+   "primitive_id": "glial_activation_prolonged_months",
+   "name": "Glial cell activation after TBI is a prolonged effect lasting several months, while the humoral immune response is concentrated in the acute phase",
+   "verbatim_quote": "the activation of glial cells seems to be a rather prolonged effect lasting for several months.",
+   "page": "Woodcock and Morganti-Kossmann, Abstract, e-book p. 21; text lines 1237-1280",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cellular and humoral arms of the post-traumatic immune response run on different clocks",
+    "Findings are demonstrated in rodent models and in human brain"
+   ],
+   "breakdown_regime": "Duration claims rest heavily on animal models; human temporal profiles are sparser, and rodent-versus-human timing differences are flagged in the review itself. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two-clock response kernel: a fast humoral component and a slow cellular component superimpose after an event. Any engine tracking post-event state should decompose signals into fast and slow components with different decay horizons instead of fitting one response curve.",
+    "source_operator": "glial_activation_prolonged_months",
+    "telemetry": "serial measurements spanning acute and chronic windows for both arms"
+   }
+  },
+  {
+   "primitive_id": "il1beta_early_rise",
+   "name": "IL-1beta expression is detectable as early as 1 hour after trauma and peaks within the first day, marking it as an early neuroinflammation signal",
+   "verbatim_quote": "expression is detectable as early as 1 h after trauma",
+   "page": "Woodcock and Morganti-Kossmann, Interleukin-1 laboratory evidence, e-book p. 23; text lines 1470-1500",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Basal IL-1beta levels in brain are very low, so an early rise is attributable to the injury",
+    "Peak mRNA expression occurs between 12 and 24 hours after injury in the cited models"
+   ],
+   "breakdown_regime": "Human IL-1beta is barely detectable in serum and CSF and proved difficult to measure after TBI; correlations with outcome conflict between studies. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Early-rise marker primitive: a near-zero baseline plus a fast post-event rise gives a signal whose main value is timing information about the event. The engine can use such markers to timestamp and stage an unfolding process, not to grade its eventual severity.",
+    "source_operator": "il1beta_early_rise",
+    "telemetry": "baseline and first-hours levels of fast-rising mediators"
+   }
+  },
+  {
+   "primitive_id": "tnf_dual_role_knockout_evidence",
+   "name": "TNF behaves as both a pro- and anti-inflammatory cytokine: blocking it looked beneficial in early studies, yet TNF and TNF-receptor knockout mice show increased mortality and impaired long-term recovery",
+   "verbatim_quote": "dual role of TNF as both a pro- and anti-inflammatory cytokine",
+   "page": "Woodcock and Morganti-Kossmann, Tumor Necrosis Factor section, e-book p. 23; text lines 1540-1570",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "TNF is produced by microglia and astrocytes after injury",
+    "Knockout evidence tests necessity, complementing pharmacological inhibition studies"
+   ],
+   "breakdown_regime": "The contradiction is unresolved in the review: timing, dose, and model differences could each explain it, so neither blanket inhibition nor blanket preservation is licensed. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Intervention-evidence asymmetry: removing a component entirely (knockout) and dampening it pharmacologically are different experiments and can give opposite answers. The engine should keep necessity evidence and modulation evidence in separate ledgers when judging whether to suppress a process.",
+    "source_operator": "tnf_dual_role_knockout_evidence",
+    "telemetry": "genetic ablation outcomes alongside dose-response inhibition outcomes"
+   }
+  },
+  {
+   "primitive_id": "microglia_inflammation_propagation",
+   "name": "Microglia are a key player in propagating inflammation from the injury core to neighboring normal brain areas",
+   "verbatim_quote": "Among the repertoire of immune cells involved, microglia is a key player",
+   "page": "Hernandez-Ontiveros et al., Abstract, e-book p. 39; text lines 2488-2545",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Inflammatory cytokines and chemokines spread to normal brain areas juxtaposed to the core impacted tissue",
+    "Microglia are resident immune cells positioned throughout the parenchyma"
+   ],
+   "breakdown_regime": "Propagation is described qualitatively; the review also warns that animal experiment design flaws (randomization, blinding, sample size) can manufacture false-positive mechanistic claims. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resident-amplifier propagation: a distributed resident cell population converts a local insult into a spreading field effect. The engine should expect damage estimates based only on the primary impact zone to understate the affected region whenever such amplifiers exist.",
+    "source_operator": "microglia_inflammation_propagation",
+    "telemetry": "spatial extent of glial activation relative to the primary lesion boundary"
+   }
+  },
+  {
+   "primitive_id": "microglia_m1_m2_polarization",
+   "name": "Microglia and macrophages polarize into M1 (classical, pro-inflammatory) and M2 (alternative, anti-inflammatory) subtypes with distinct cytokine profiles",
+   "verbatim_quote": "are able to polarize into two major subtypes, categorized as M1",
+   "page": "Hernandez-Ontiveros et al., Immune Response and Microglia section, e-book p. 40; text lines 2560-2620",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "M1 is marked by high IFN-gamma, TNF-alpha, IL-1, IL-12 and low IL-10; M2 shows the reverse pattern with high IL-10 and TGF-beta",
+    "Polarizing factors reinforce maintenance of the adopted phenotype in a cycle"
+   ],
+   "breakdown_regime": "The M1/M2 scheme is a simplification of a spectrum; real post-injury populations are mixed, and phenotype markers overlap with peripheral macrophage markers such as CD68 and CD45. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Polarization-state kernel: an amplifier population settles into one of two self-reinforcing modes with opposite effects, so the state variable is the mode mixture, not the population size. The engine should track mode shares for any bistable mediator population it models.",
+    "source_operator": "microglia_m1_m2_polarization",
+    "telemetry": "mode-specific cytokine ratios such as IL-12 to IL-10 in the sampled compartment"
+   }
+  },
+  {
+   "primitive_id": "chronic_microglial_activation_years",
+   "name": "Microglial activation persists long after injury: at least 1 year in primate thalamus after cortical lesion, and 17 years after TBI in human postmortem subcortical areas",
+   "verbatim_quote": "their activated state for at least 1 year, especially in the thalamic",
+   "page": "Hernandez-Ontiveros et al., Immune Response and Microglia section, e-book p. 41; text lines 2590-2615",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Postmortem and primate lesion studies sample the chronic phase directly",
+    "Persistent activation links acute injury to later neurodegenerative risk such as Alzheimer's disease"
+   ],
+   "breakdown_regime": "Postmortem series are small and cross-sectional; persistence in sampled regions does not prove the activation is still causing harm rather than marking scar or repair. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Long-tail state persistence: some post-event processes remain measurably active for years, so a model that closes the book on an event after the acute window will miss a live state variable. The engine should keep chronic low-grade process terms in long-horizon forecasts.",
+    "source_operator": "chronic_microglial_activation_years",
+    "telemetry": "late-timepoint activation markers in follow-up and postmortem series"
+   }
+  },
+  {
+   "primitive_id": "single_to_panel_marker_shift",
+   "name": "mTBI biomarker research has shifted from identifying single markers to multiple-marker panels, aided by high-throughput technologies",
+   "verbatim_quote": "and a change in focus from the identification of single to multiple markers has given",
+   "page": "Di Battista et al., Abstract, e-book p. 49; text lines 3055-3110",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Single markers showed modest success and poor specificity in mTBI",
+    "High-throughput platforms make panel measurement practical"
+   ],
+   "breakdown_regime": "Panels raise overfitting risk in small cohorts, and the review notes there were still no clinically accepted peripheral blood biomarkers for mTBI. no_equation_domain",
+   "domain": "diagnostic_panels",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Weak-signal aggregation kernel: when every individual signal is too weak or too confounded to classify alone, the unit of evidence becomes the panel pattern. The engine should budget validation effort at panel level rather than demanding single-signal proof.",
+    "source_operator": "single_to_panel_marker_shift",
+    "telemetry": "joint distributions of candidate markers in cases versus controls"
+   }
+  },
+  {
+   "primitive_id": "acrm_mtbi_diagnostic_criteria",
+   "name": "The ACRM definition bounds mild TBI: loss of consciousness of approximately 30 minutes or less, an initial Glasgow Coma Scale score of 13-15, and post-traumatic amnesia not greater than 24 hours",
+   "verbatim_quote": "approximately 30 min or less after 30 min, an initial Glasgow",
+   "page": "Di Battista et al., mTBI Definition and Terminology section, e-book p. 49; text lines 3130-3170",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The definition is endorsed by the CDC and the WHO, per the same passage",
+    "Severity is bounded by clinical course variables rather than by imaging findings"
+   ],
+   "breakdown_regime": "Competing definitions and the mTBI-versus-concussion terminology dispute persist; criteria based on reported symptoms are confounded by polytrauma, alcohol, and drugs. no_equation_domain",
+   "domain": "clinical_criteria",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold-definition primitive: a category is operationally defined by cut points on continuous course variables (duration of unconsciousness, amnesia, coma score). The engine should store such definitions as explicit threshold sets so borderline cases are flagged rather than silently absorbed.",
+    "source_operator": "acrm_mtbi_diagnostic_criteria",
+    "telemetry": "the defining course variables with their measured values and distances to thresholds"
+   }
+  },
+  {
+   "primitive_id": "mbp_delayed_blood_entry",
+   "name": "Myelin basic protein has high brain specificity as an axonal damage marker but enters the bloodstream late, 24-72 hours post-injury",
+   "verbatim_quote": "(MBP) measures axonal damage, and unlike s100B and NSE, has",
+   "page": "Di Battista et al., Biomarkers of mTBI Diagnosis section, e-book p. 50; text lines 3160-3200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "MBP is a structural myelin protein, giving it brain specificity",
+    "Its release and barrier-crossing kinetics delay peripheral appearance by one to three days"
+   ],
+   "breakdown_regime": "The delay makes MBP useless for acute triage decisions even though it is specific; an early negative MBP is expected and carries no ruling-out power. no_equation_domain",
+   "domain": "biomarker_kinetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Delayed-marker kernel: specificity and timeliness trade off; a marker can be the most attributable signal and still arrive after the decision it was meant to inform. The engine should tag each signal with its informative window and exclude late signals from early decisions by construction.",
+    "source_operator": "mbp_delayed_blood_entry",
+    "telemetry": "marker-specific appearance windows relative to decision deadlines"
+   }
+  },
+  {
+   "primitive_id": "nse_hemolysis_confounder",
+   "name": "Neuron-specific enolase was assumed brain-specific but is released into serum by hemolysis, limiting its accuracy as a brain injury predictor",
+   "verbatim_quote": "but was found be released into the serum as a result of hemolysis",
+   "page": "Di Battista et al., Biomarkers of mTBI Diagnosis section, e-book p. 50; text lines 3160-3195",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "NSE is a neuronal glycolytic enzyme elevated in CSF and serum after TBI",
+    "Blood samples in trauma care are frequently hemolyzed, activating the confound"
+   ],
+   "breakdown_regime": "The confound is sample-quality dependent, so NSE values are only interpretable alongside a hemolysis index; studies not reporting one cannot be compared cleanly. no_equation_domain",
+   "domain": "neuronal_markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pre-analytic confound primitive: the measurement pipeline itself can manufacture the signal (here, lysed red cells releasing the analyte). The engine should require a sample-quality covariate before admitting any measurement whose analyte also lives in the collection apparatus.",
+    "source_operator": "nse_hemolysis_confounder",
+    "telemetry": "hemolysis indices or equivalent sample-quality flags attached to each measurement"
+   }
+  },
+  {
+   "primitive_id": "pediatric_csf_biomediator_program",
+   "name": "In pediatric TBI, CSF bio-mediator studies explore the components of the secondary injury cascades to identify therapeutic targets, complementing structural-protein studies for diagnosis and prognosis",
+   "verbatim_quote": "after traumatic brain injury (TBI) to explore the components of the secondary injury",
+   "page": "Kochanek et al., Abstract and Introduction, e-book p. 55; text lines 3534-3600",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Children with severe TBI often have CSF access through diversion, making serial CSF sampling feasible",
+    "Age-related differences in brain biology mandate pediatric-specific development and testing"
+   ],
+   "breakdown_regime": "CSF access exists mainly in severe cases, biasing the bio-mediator picture toward the severe end; extrapolation to mild pediatric injury is unproven. no_equation_domain",
+   "domain": "pediatric_biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Population-specific calibration primitive: mediator baselines and secondary-injury mechanisms differ by developmental stage, so adult-derived marker behavior cannot be imported into pediatric reasoning without re-derivation. The engine should key marker models to population strata by default.",
+    "source_operator": "pediatric_csf_biomediator_program",
+    "telemetry": "age-stratified mediator levels in cases and matched controls"
+   }
+  },
+  {
+   "primitive_id": "s100b_age_dependent_baseline",
+   "name": "S100B shows age-dependent normal values, with high levels during infancy, mandating age-matched controls when it is used as a pediatric biomarker",
+   "verbatim_quote": "most well recognized in this regard is S100B which exhibits high",
+   "page": "Kochanek et al., Introduction, e-book p. 55; text lines 3580-3610",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Developmental increases in S100B are variable in magnitude between children",
+    "Serum S100B is constitutively low in adults, which does not hold in infants"
+   ],
+   "breakdown_regime": "Without age-matched reference ranges, infant S100B elevation cannot be attributed to injury; the developmental decline over the first months of life must be modeled, not assumed away. no_equation_domain",
+   "domain": "pediatric_biomarkers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Baseline-drift kernel: when the null level of a signal drifts systematically with a covariate (here age), every threshold must be a function of that covariate. The engine should represent reference ranges as covariate-indexed surfaces rather than constants.",
+    "source_operator": "s100b_age_dependent_baseline",
+    "telemetry": "reference distributions of the marker across the covariate in uninjured subjects"
+   }
+  },
+  {
+   "primitive_id": "aht_silent_injury_detection",
+   "name": "Brain injury biomarkers can detect clinically silent brain injury in abusive head trauma, a setting where history is unreliable and examination can be normal",
+   "verbatim_quote": "(TBI) such as in detection of clinically silent brain injury in",
+   "page": "Kochanek et al., Introduction, e-book p. 55; text lines 3600-3615",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Abusive head trauma can occur without external signs or a truthful history",
+    "A blood or CSF marker provides evidence independent of the caregiver's account"
+   ],
+   "breakdown_regime": "Detection performance in this specific use was still being established; a positive marker supports but does not by itself prove mechanism or timing of injury. no_equation_domain",
+   "domain": "pediatric_biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Silent-event detection primitive: where the event of interest is deliberately or structurally unreported, an objective residue signal is the only channel. The engine should treat absence of reports as no evidence and lean entirely on residue signals in such domains.",
+    "source_operator": "aht_silent_injury_detection",
+    "telemetry": "marker levels in screened asymptomatic at-risk subjects versus confirmed cases"
+   }
+  },
+  {
+   "primitive_id": "tau_csf_isf_outcome_association",
+   "name": "Elevated CSF and interstitial fluid tau levels have been observed following severe TBI and suggested to correlate with clinical outcome",
+   "verbatim_quote": "Elevated CSF and ISF tau protein levels have been observed following severe TBI and",
+   "page": "Tsitsopoulos and Marklund, Abstract, e-book p. 64; text lines 4120-4190",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tau is an axonal protein, so its appearance in CSF and interstitial fluid reports axonal injury",
+    "Cerebral microdialysis samples interstitial fluid directly at the injury site"
+   ],
+   "breakdown_regime": "The review concludes the clinical value of tau and amyloid-beta as biomarkers remains uncertain because of heterogeneous models, cohorts, and analytical techniques. no_equation_domain",
+   "domain": "axonal_markers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Direct-compartment sampling primitive: microdialysis reads the interstitial fluid at the site, trading invasiveness for proximity and kinetic fidelity. The engine should prefer proximal-compartment measurements for mechanism questions and peripheral ones for screening questions.",
+    "source_operator": "tau_csf_isf_outcome_association",
+    "telemetry": "paired interstitial, CSF, and blood levels of the same analyte over time"
+   }
+  },
+  {
+   "primitive_id": "app_axonal_transport_disruption",
+   "name": "Amyloid precursor protein accumulates in injured axons mainly due to TBI-induced disruption of axonal transport, seeding later amyloid-beta production",
+   "verbatim_quote": "(APP) accumulates mainly due to a TBI-induced disruption",
+   "page": "Tsitsopoulos and Marklund, Introduction, e-book p. 64; text lines 4170-4210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Axonal transport failure concentrates APP at injury sites",
+    "Beta- and gamma-secretase cleavage of accumulated APP can generate amyloid-beta peptides"
+   ],
+   "breakdown_regime": "Rodent TBI models have not robustly reproduced the Alzheimer hallmarks of plaques and tangles, so the accumulation-to-degeneration chain is not firmly established. no_equation_domain",
+   "domain": "axonal_markers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transport-blockade accumulation kernel: when a flow system fails, cargo piles up at the blockage and downstream chemistry changes. The engine can detect analogous pile-up signatures wherever a transported substrate accumulates at a disruption point.",
+    "source_operator": "app_axonal_transport_disruption",
+    "telemetry": "spatial concentration profiles of transported proteins around lesion sites"
+   }
+  },
+  {
+   "primitive_id": "blast_waveform_triad",
+   "name": "Blast injury is characterized by three physical parameters: blast overpressure, blast duration, and blast impulse",
+   "verbatim_quote": "by blast overpressure, blast duration, and blast impulse.",
+   "page": "Kobeissy et al., Abstract, e-book p. 81; text lines 5208-5270",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The primary blast wave is a supersonic pressure wave with a sub-millisecond to millisecond rise",
+    "Victims at a distance typically sustain the milder form, mild blast TBI"
+   ],
+   "breakdown_regime": "Physical dose parameters do not map one-to-one onto brain injury: transmission through skull and vasculature is contested, and systemic, cerebral, and psychiatric responses overlap. no_equation_domain",
+   "domain": "blast_injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dose-vector primitive: an exposure is a vector (peak, duration, impulse), not a scalar. The engine should refuse single-number exposure summaries when the generating physics is multi-parameter, because equal peaks with different durations are different events.",
+    "source_operator": "blast_waveform_triad",
+    "telemetry": "peak overpressure, positive-phase duration, and impulse recorded per exposure"
+   }
+  },
+  {
+   "primitive_id": "cte_autopsy_only_diagnosis",
+   "name": "CTE diagnosis remains autopsy-based, which prevents monitoring and tracking of the disease in life and blocks therapeutic protocol development",
+   "verbatim_quote": "presentation and underlying pathophysiology of CTE, the diagnosis of CTE remains",
+   "page": "Turner et al., Abstract, e-book p. 100; text lines 6529-6590",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No established biomarker or imaging modality existed for diagnostic or prognostic use in CTE at the time of writing",
+    "Clinical presentation is described retrospectively in autopsy-confirmed cases"
+   ],
+   "breakdown_regime": "Autopsy-only ascertainment biases the case series toward severe or symptomatic ends of the spectrum, so prevalence and natural history estimates built on it are unstable. no_equation_domain",
+   "domain": "chronic_traumatic_encephalopathy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unobservable-in-life state primitive: when the ground-truth label is only available posthumously, all in-life classification is provisional and validation cohorts are selection-biased. The engine should carry such labels as latent with explicit ascertainment warnings.",
+    "source_operator": "cte_autopsy_only_diagnosis",
+    "telemetry": "autopsy-confirmed case counts versus in-life suspected case counts"
+   }
+  },
+  {
+   "primitive_id": "cord_il6_hie_signal",
+   "name": "Umbilical cord IL-6 was 376-fold higher in infants without infection who developed hypoxic-ischemic encephalopathy than in normal infants, and 5.5-fold higher than in asphyxiated newborns without HIE",
+   "verbatim_quote": "and was found by Chiesa et al. (2003) to be 376-fold higher in",
+   "page": "Douglas-Escobar and Weiss, Biomarkers of HIE section, e-book p. 123; text lines 8030-8060",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The comparison excluded infected infants, removing a major inflammatory confound",
+    "Maternal serum IL-6 did not correlate with neonatal HIE risk, localizing the signal to the infant"
+   ],
+   "breakdown_regime": "Fold-change magnitudes come from a single cited cohort; IL-6 is a non-organ-specific inflammatory mediator, so specificity for brain injury depends on the exclusion criteria holding. no_equation_domain",
+   "domain": "neonatal_biomarkers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fold-change discrimination kernel: a marker earns screening value from the ratio between affected and control distributions, especially against the hardest control group (exposed but unaffected). The engine should score candidate discriminators against the nearest-miss control class, not against healthy controls alone.",
+    "source_operator": "cord_il6_hie_signal",
+    "telemetry": "marker distributions in affected, exposed-unaffected, and healthy groups"
+   }
+  },
+  {
+   "primitive_id": "activin_a_ivh_prediction",
+   "name": "Activin A above 0.8 mcg/L predicted intraventricular hemorrhage in premature infants with 100 percent sensitivity and 93 percent specificity (positive predictive value 79 percent)",
+   "verbatim_quote": "with 100% sensitivity of 100%, and 93% specificity (with positive",
+   "page": "Douglas-Escobar and Weiss, Biomarkers of Intraventricular Hemorrhage section, e-book p. 128; text lines 8370-8400",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Activin A is released after neuronal injury and measurable in the perinatal window",
+    "The reference standard was head ultrasound diagnosis of IVH"
+   ],
+   "breakdown_regime": "The authors state activin A should be validated in larger premature cohorts and correlated with term-corrected MRI, a more sensitive standard than ultrasound; the perfect sensitivity is a small-cohort figure. no_equation_domain",
+   "domain": "neonatal_biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold-performance primitive: a biomarker claim is a triple of cut point, sensitivity, and specificity against a named reference standard. The engine should store all three plus the standard's own sensitivity, since a perfect score against a weak standard is a weak claim.",
+    "source_operator": "activin_a_ivh_prediction",
+    "telemetry": "cut point, sensitivity, specificity, and reference-standard identity per marker study"
+   }
+  },
+  {
+   "primitive_id": "phvd_shunt_prediction_markers",
+   "name": "CSF concentrations of TGF-beta1, MMP-9, and PAI-1 could discriminate premature infants who will require a shunt after post-hemorrhagic ventricular dilation",
+   "verbatim_quote": "The concentrations of TGF-β1, MMP-9, and PAI-1 in cerebrospinal fluid could be used to discriminate patients that will require shunt after PHVD.",
+   "page": "Douglas-Escobar and Weiss, Abstract, e-book p. 127; text lines 8313-8360",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "These mediators index the fibrotic and inflammatory processes that obstruct CSF flow after hemorrhage",
+    "Discrimination is prospective: the clinical question is which infants will progress to shunt dependence"
+   ],
+   "breakdown_regime": "Stated as a potential use in a review abstract; prospective validation cohorts are still required before the panel can drive surgical planning. no_equation_domain",
+   "domain": "neonatal_biomarkers",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Progression-panel kernel: markers of the mechanism that causes a downstream complication (here fibrosis after hemorrhage) predict the complication better than markers of the initial event. The engine should, for each feared sequela, prefer mechanism-of-sequela signals over severity-of-insult signals.",
+    "source_operator": "phvd_shunt_prediction_markers",
+    "telemetry": "mechanism-mediator levels measured before the complication declares itself"
+   }
+  },
+  {
+   "primitive_id": "s100b_vasospasm_negative_result",
+   "name": "Neither serum nor CSF S100B can be used as a predictor of cerebral vasospasm in patients suffering from subarachnoid hemorrhage (18 Fisher grade 3-4 patients, 28 percent developing vasospasm)",
+   "verbatim_quote": "Conclusion: Neither serum nor CSF S100B can be used as predictor of cerebral vasospasm in patients suffering from SAH.",
+   "page": "Amiri et al., Abstract and Results, e-book p. 134; text lines 8783-8900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "S100B tracks cerebral damage and outcome after SAH, which motivated testing it against vasospasm",
+    "Vasospasm was diagnosed by clinical suspicion confirmed with CT angiography"
+   ],
+   "breakdown_regime": "The study is small (18 patients, 5 vasospasm cases) and the authors note statistical significance could not be reached; the negative result bounds, but does not abolish, any weak predictive effect. no_equation_domain",
+   "domain": "sah_biomarkers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Indication-boundary primitive: a marker validated for outcome after an event does not transfer to predicting a specific complication of that event. The engine should scope every marker's license to the exact question it was validated on and treat cross-question use as unvalidated.",
+    "source_operator": "s100b_vasospasm_negative_result",
+    "telemetry": "per-indication validation records, not per-marker global verdicts"
+   }
+  },
+  {
+   "primitive_id": "inflammation_kinetics_severity_discrimination",
+   "name": "Severe and mild brain injury induce qualitatively similar inflammatory responses, but severe injury inflammation persists at least 21 days while mild injury returns to near baseline within 10 days, so severity is read from kinetics, not from the mediator set",
+   "verbatim_quote": "whereas the response to mild brain injury returns to near baseline values within 10 days",
+   "page": "Lagraoui et al., Abstract, e-book p. 150; text lines 9589-9660",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Controlled cortical impact models severe injury and craniotomy models mild injury in the mouse",
+    "The effector molecule sets overlap highly between the two severities"
+   ],
+   "breakdown_regime": "Craniotomy is itself an intervention, so the mild arm is not a pure concussion model; translation of the 10 and 21 day constants to human kinetics is not established. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Kinetic-discrimination kernel: when two states produce the same signal set, discriminate them by signal duration and decay shape rather than by signal identity or peak. The engine should include time-to-baseline as a first-class feature whenever response sets overlap.",
+    "source_operator": "inflammation_kinetics_severity_discrimination",
+    "telemetry": "longitudinal signal series with fitted return-to-baseline times"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "05d861e4294a75fe-t1",
+   "think": "This volume is a 19-article Frontiers Research Topic compilation, edited by Mondello, Hayes, Buki, Tortella, and Wang, and its unity is a pipeline argument rather than a single experiment. The pipeline runs in three stages. First, discover candidate proteins with mass spectrometry proteomics: separate the protein mixture, digest it, resolve peptides by liquid chromatography, identify them against databases with search engines such as Sequest and Mascot, and control the false discovery rate by searching decoy databases of scrambled sequences. Second, interpret the resulting data flood with bioinformatics and systems biology, converting lists of hundreds of changed proteins into pathways and interaction networks, as in the penetrating ballistic injury study that found 321 upregulated and 65 downregulated proteins and sorted them by ontology and pathway membership. Third, validate the survivors as clinical biomarkers across very different settings: severe traumatic brain injury in intensive care, mild injury on the battlefield and the sports field, pediatric injury and abusive head trauma, neonatal hypoxic-ischemic encephalopathy, premature intraventricular hemorrhage, subarachnoid hemorrhage, blast injury, chronic traumatic encephalopathy, and Parkinsonian disorders. Read as one work, its load-bearing machinery is a set of linked ideas about leaked signals. The injured brain releases structural proteins into cerebrospinal fluid and blood: GFAP from astroglia, UCH-L1 from neurons, spectrin breakdown products from axons, S100B, neuron-specific enolase, myelin basic protein, tau, and amyloid peptides. Each candidate is then judged by four properties that recur in article after article. Source exclusivity: GFAP is not found outside the central nervous system, while S100B leaks from adipocytes, chondrocytes, and melanocytes and rises after peripheral trauma and hemorrhagic shock, which is why S100B cannot stand alone. Kinetics: IL-1beta rises within an hour, S100B clears with a half-life of about two hours, myelin basic protein does not reach blood for one to three days, glial activation runs for months, and microglial activation is documented seventeen years after injury in human postmortem tissue. Compartment behavior: cerebrospinal fluid concentrations dwarf blood concentrations because the adult CSF volume of 125 to 150 milliliters is some thirty to forty fold smaller than the blood volume, so the peripheral signal is a diluted shadow of the central one. Confounding: hemolysis manufactures NSE signal in the collection tube, infancy raises the normal S100B baseline, and polytrauma, alcohol, and sedation corrupt the clinical criteria that biomarkers are meant to replace. Mechanism also leaves fingerprints in the debris: calpain and caspase-3 cut alphaII-spectrin into different fragments, SBDP150 and SBDP145 versus SBDP120, so the fragment pattern reports whether necrotic or apoptotic death dominated, and the fragments follow different temporal release patterns. Because single markers keep failing on specificity or timing, the field's center of gravity moves to panels, to ratios such as GFAP against UCH-L1 that pair a glial with a neuronal signal, and to integration of marker panels with clinical variables and imaging, which the editors name as the way forward. Severity itself turns out to be kinetic information: Lagraoui's mouse study shows severe controlled cortical impact and mild craniotomy injury induce qualitatively the same inflammatory gene program, differing in duration, twenty-one days against a return to baseline within ten, so the discriminating feature is how long the response lasts rather than which mediators appear. For a reasoning engine, the transferable content is a discipline of hidden-state inference from leaked signals: exclusivity licenses attribution, half-life licenses timing, dilution licenses sensitivity expectations, ratios cancel shared nuisance variation, decoy corpora price false discovery, and every marker's license is scoped to the single question it was validated on, a scope the negative S100B vasospasm trial enforces by counterexample. The volume is also candid about its own limits, which is part of its value. Maas warns that the added prognostic value of biomarkers over existing predictors had not yet been shown in multivariable analyses. The proteomics review admits that, despite the long candidate lists, there were no clinically validated biomarkers to diagnose TBI, and that antibody availability bottlenecks validation. The tau and amyloid review concludes that clinical value remains uncertain given heterogeneous animal models, cohorts, and assays. Where the work breaks as a source: it is a 2012 to 2014 snapshot, many of its numbers are single small-cohort results quoted inside reviews, perfect sensitivities appear in cohorts of a few dozen infants, rodent kinetics do not transfer numerically to humans, and the chronic traumatic encephalopathy chapter rests on autopsy-ascertained cases with the selection bias that implies. Its primitives should therefore be ingested as a framework with era-stamped confidence levels, not as settled clinical fact, and each quantitative claim should carry its cohort and its reference standard with it. The setting-specific chapters each contribute a distinct constraint that generalizes. The battlefield chapter shows a measurement problem created by environment: incidence itself is unknown because diagnosis depends on self-report and subjective screening tools whose sensitivity decays within twelve hours, so the demand is for an objective test that works in austere conditions, is portable, and is not confounded by sleep deprivation, stress, or polytrauma. The neonatal chapters show biomarkers earning their keep at a decision point: therapeutic hypothermia must start within hours, its trials show a number needed to treat of one in nine, and markers such as cord IL-6, urinary S100B, activin A, and cord erythropoietin are valued precisely because they can stratify infants at birth, before imaging or examination can. The chronic traumatic encephalopathy chapter shows the opposite pole, a disease whose label exists only at autopsy, where the absence of any in-life test corrupts prevalence estimates and blocks treatment trials entirely. The Parkinsonian chapter, although outside trauma, contributes the volume's most explicit methodology: a biomarker must satisfy validity, performance, and generalizability, and neurofilament light chain earns its place as a process marker of axonal degeneration rather than a disease marker. The discovery chapters contribute the data-engineering caution that high-throughput instruments produce spectra faster than meaning, that peptide identification is probabilistic, and that a candidate list is the beginning of the pipeline rather than its output, with targeted methods such as multiple reaction monitoring proposed to close the validation gap without waiting for antibodies. Taken together, the compilation argues that measurement infrastructure, not therapeutic ingenuity, was the binding constraint on brain injury medicine in its era, and that claim is itself a primitive worth keeping: when a field's trials keep failing, inspect the phenotyping layer before inventing another intervention.",
+   "retrocausal_genealogy": "The lineage runs from Vaagenes's creatine kinase brain-band work in the 1980s, which he called a chemical biopsy of the brain, through the 1990s single-marker era of S100B and NSE, into the 2000s proteomics turn: two-dimensional electrophoresis, ICAT and iTRAQ tagging, shotgun and then targeted mass spectrometry, with decoy-database false discovery control borrowed from genomics-era bioinformatics. Parallel threads converge in this volume: military medicine's need for a battlefield blood test after Iraq and Afghanistan, neonatal neuroprotection after therapeutic hypothermia created a decision that biomarkers could inform, and the systems biology move from protein lists to interaction networks.",
+   "theory_of_mind": "The editors and authors write for a translational reader who is assumed to be frustrated: more than 200 clinical trials and no approved therapy, a disease called the most complex in the most complex organ, and a clinic still grading injury with a coma scale and a CT scan. Their model of the reader is a scientist-clinician who believes the failure is a measurement failure, that unmeasured heterogeneity sank the trials, and that objective molecular phenotyping is the missing infrastructure. They argue by accumulation across settings rather than by one decisive study, expecting the reader to accept convergent plausibility while remaining alert to validation gaps.",
+   "cross_layer_veto": "This volume vetoes several tempting moves in any reasoning layer built on it. It vetoes single-marker certainty: S100B's extracranial sources, NSE's hemolysis artifact, and MBP's late arrival each disqualify solo use. It vetoes timeless interpretation: a level read without time-since-injury and half-life is meaningless. It vetoes cross-question transfer: S100B predicts outcome after hemorrhage yet fails for vasospasm, and adult baselines fail in infants. It also vetoes complacency about validation: promising discrimination in small cohorts, and even perfect sensitivity figures, are explicitly flagged by the authors themselves as pending larger confirmatory studies."
+  }
+ ],
+ "universal_lens": "Read generally, this volume is a manual for inferring the state of an inaccessible compartment from the molecules it leaks. Its recurring template: find a substance made only inside the compartment, measure how fast it appears and decays outside, correct for dilution and for rival sources that fake the signal, combine several such substances into a panel, and scope every conclusion to the one question the measurement was validated on. That template applies to any sealed system, biological or mechanical, whose interior can only be observed through effluent.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume supplies the measurement-integrity curriculum behind any biomarker or performance-testing program: define the marker by source exclusivity, publish its kinetic window, index baselines to age and population, log sample-quality confounds such as hemolysis, and teach negative results, like the S100B vasospasm failure, as first-class knowledge. It also grounds concussion-education content: why no single sideline blood number settles a return decision, why timing of sampling changes meaning, and why chronic glial and microglial activation reframes head impact as a long-horizon exposure rather than a single event.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the volume contributes inference machinery, not picks: latent-state estimation from leaked signals with explicit exclusivity, half-life, and dilution terms; panel and ratio construction to cancel shared nuisance variation; kinetic discrimination when rival states emit identical signal sets; decoy-corpus false-discovery control for any mined pattern; and per-question licensing of evidence so a signal validated for one use is never silently spent on another. Its injury-biology content also sharpens the engine's player-health state variables: inflammatory phase, axonal injury markers, and chronic activation horizons after head impacts."
+}
