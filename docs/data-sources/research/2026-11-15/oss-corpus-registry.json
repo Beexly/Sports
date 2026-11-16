@@ -56,9 +56,9 @@
       "id": 7,
       "url": "https://github.com/google/ffn",
       "category": "volumetric-segmentation-research",
-      "gse_target_surface": "gse-ml-service vision/tracking evaluation queue",
+      "gse_target_surface": "src/gse_engine/ingestion/vision_and_geofence.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 8,
@@ -80,25 +80,25 @@
       "id": 10,
       "url": "https://github.com/google/gvisor",
       "category": "container-sandbox-isolation",
-      "gse_target_surface": "untamed python model execution hardening",
+      "gse_target_surface": "src/gse_engine/storage/cache_and_sandbox_governor.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 11,
       "url": "https://github.com/google/open-location-code-swift",
       "category": "geospatial-swift-sdk",
-      "gse_target_surface": "apps/mobile stadium weather geofencing",
+      "gse_target_surface": "src/gse_engine/ingestion/vision_and_geofence.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 12,
       "url": "https://github.com/google/XNNPACK",
       "category": "simd-inference-kernels",
-      "gse_target_surface": "gse-ml-service & mobile on-device inference",
+      "gse_target_surface": "src/gse_engine/compute/neural_calibration_and_attention.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 13,
@@ -280,9 +280,9 @@
       "id": 35,
       "url": "https://github.com/google/leveldb",
       "category": "embedded-kv-storage",
-      "gse_target_surface": "high-speed local snap cache evaluation queue",
+      "gse_target_surface": "src/gse_engine/storage/cache_and_sandbox_governor.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 36,
@@ -304,7 +304,7 @@
       "id": 38,
       "url": "https://github.com/google/flatbuffers",
       "category": "zero-copy-serialization",
-      "gse_target_surface": "src/gse_engine/storage/trajectory_checkpoint.py (mmap binary tensors)",
+      "gse_target_surface": "src/gse_engine/storage/trajectory_checkpoint.py & cache_and_sandbox_governor.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
       "status": "WIRED_V3"
     },
@@ -496,9 +496,9 @@
       "id": 62,
       "url": "https://github.com/google-labs-code/stitch-skills",
       "category": "design-to-code-agent-skills",
-      "gse_target_surface": "docs/agents/domain.md & UI design-to-code workflow",
+      "gse_target_surface": "src/gse_engine/governance/teammate_routines.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 63,
@@ -512,9 +512,9 @@
       "id": 64,
       "url": "https://github.com/ggml-org/ggml",
       "category": "quantized-tensor-inference",
-      "gse_target_surface": "local GGUF quantized workhorse inference alongside XNNPACK",
+      "gse_target_surface": "src/gse_engine/compute/neural_calibration_and_attention.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 65,
@@ -528,17 +528,17 @@
       "id": 66,
       "url": "https://github.com/milind-soni/OpenMausBot",
       "category": "contact-roster-agent-sandbox",
-      "gse_target_surface": "cockpit multi-agent contact roster session patterns",
+      "gse_target_surface": "src/gse_engine/governance/teammate_routines.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 67,
       "url": "https://github.com/HKUDS/DeepTutor",
       "category": "trace-forest-pedagogical-rag",
-      "gse_target_surface": "/research educational film-study & Trace Forest concepts",
+      "gse_target_surface": "apps/web/lib/offline-and-pedagogy/slate-sync-and-trace-forest.ts",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 68,
@@ -576,9 +576,9 @@
       "id": 72,
       "url": "https://github.com/elie222/rakazo",
       "category": "persistent-teammate-routines",
-      "gse_target_surface": "Beexly/agent-bus persistent routine & memory patterns",
+      "gse_target_surface": "src/gse_engine/governance/teammate_routines.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 73,
@@ -600,9 +600,9 @@
       "id": 75,
       "url": "https://github.com/hoodiehq/hoodie",
       "category": "offline-first-client-sync",
-      "gse_target_surface": "apps/mobile & apps/web offline SealedSlatePacket cache",
+      "gse_target_surface": "apps/web/lib/offline-and-pedagogy/slate-sync-and-trace-forest.ts",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 76,
@@ -616,41 +616,41 @@
       "id": 77,
       "url": "https://github.com/docmost/docmost",
       "category": "collaborative-wiki-knowledge-base",
-      "gse_target_surface": "internal engineering wiki & runbook patterns",
+      "gse_target_surface": "apps/web/lib/offline-and-pedagogy/slate-sync-and-trace-forest.ts",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 78,
       "url": "https://github.com/freeCodeCamp/freeCodeCamp",
       "category": "deterministic-challenge-curriculum",
-      "gse_target_surface": "MIND-FIRST deterministic assertion & onboarding corpus (submitted 2x)",
+      "gse_target_surface": "apps/web/lib/offline-and-pedagogy/slate-sync-and-trace-forest.ts (submitted 2x)",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 79,
       "url": "https://github.com/tensorflow/tensorflow",
       "category": "deep-learning-and-probability-calibration",
-      "gse_target_surface": "TFLite / XNNPACK model export & calibration layers",
+      "gse_target_surface": "src/gse_engine/compute/neural_calibration_and_attention.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 80,
       "url": "https://github.com/anomalyco/opencode",
       "category": "terminal-coding-agent",
-      "gse_target_surface": "LSP-integrated coding harness & multi-provider patterns",
+      "gse_target_surface": "src/gse_engine/governance/teammate_routines.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 81,
       "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
       "category": "llm-agent-reference-patterns",
-      "gse_target_surface": "multi-agent, MCP & hybrid RAG pattern reference",
+      "gse_target_surface": "src/gse_engine/governance/teammate_routines.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 82,
@@ -664,25 +664,25 @@
       "id": 83,
       "url": "https://github.com/opencv/opencv",
       "category": "computer-vision-broadcast-homography",
-      "gse_target_surface": "All-22 pre-snap motion & player tracking queue",
+      "gse_target_surface": "src/gse_engine/ingestion/vision_and_geofence.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "UNTESTED_QUEUED_FOR_EVALUATION"
+      "status": "WIRED_V3"
     },
     {
       "id": 84,
       "url": "https://github.com/facebookresearch/xformers",
       "category": "memory-efficient-transformer-attention",
-      "gse_target_surface": "175-snap trajectory transformer memory optimization",
+      "gse_target_surface": "src/gse_engine/compute/neural_calibration_and_attention.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 85,
       "url": "https://github.com/sohutv/cachecloud",
       "category": "cache-telemetry-and-governance",
-      "gse_target_surface": "in-process cache hit-rate & eviction hygiene monitoring",
+      "gse_target_surface": "src/gse_engine/storage/cache_and_sandbox_governor.py",
       "license_posture": "ingest_and_learn_non_commercial_or_permissive",
-      "status": "PHASE_3_ADAPTER"
+      "status": "WIRED_V3"
     },
     {
       "id": 86,
