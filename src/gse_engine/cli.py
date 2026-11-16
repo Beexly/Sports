@@ -26,6 +26,11 @@ from gse_engine.memory.billion_context import ContextTurn, LsmContextKernel
 from gse_engine.models import SlateWindowConfig
 from gse_engine.observability.arize_tracing import evaluate_walk_forward_calibration
 from gse_engine.observability.skill_evaluator import SkillSpec, evaluate_skill_catalog
+from gse_engine.observability.skill_registry_router import (
+    CapabilityDomain,
+    build_arize_deep_link,
+    route_gse_capability_domain,
+)
 from gse_engine.storage.trajectory_checkpoint import TrajectoryCheckpointer
 from gse_engine.workflows.slate_window import resolve_lock_version
 
@@ -311,6 +316,47 @@ def _build_commands() -> dict[str, Any]:
             }
         )
 
+    def arize_link(
+        org_id: str = "T3JnYW5pemF0aW9uOjE6Z3Nl",
+        space_id: str = "U3BhY2U6MTpnc2U=",
+        project_id: str = "UHJvamVjdDoxOmdzZQ==",
+        trace_id: str | None = None,
+        span_id: str | None = None,
+    ) -> str:
+        """Generates a validated base64 Arize AX deep link for projects, traces, or spans."""
+        url = build_arize_deep_link(
+            org_id,
+            space_id,
+            project_id,
+            trace_id=trace_id,
+            span_id=span_id,
+        )
+        return json.dumps({"url": url})
+
+    def route_skill(domain: str = "accelerated_simulation") -> str:
+        """Routes a GSE domain task to paired NVIDIA Hermes & Agent Platform specs."""
+        valid: set[str] = {
+            "cv_biomechanics",
+            "accelerated_simulation",
+            "multi_agent_wave",
+            "dossier_copy",
+            "corpus_tree_search",
+        }
+        chosen: CapabilityDomain = (
+            domain if domain in valid else "accelerated_simulation"  # type: ignore[assignment]
+        )
+        verdict = route_gse_capability_domain(chosen)
+        return json.dumps(
+            {
+                "domain": verdict.domain,
+                "nvidia_skill": verdict.nvidia_skill,
+                "hermes_plugin": verdict.hermes_plugin,
+                "wiring_score": verdict.wiring_score,
+                "attribution_header": verdict.attribution_header,
+                "dgx_invariants_ok": verdict.dgx_invariants_ok,
+            }
+        )
+
     return {
         "lock": lock,
         "adjust": adjust,
@@ -325,6 +371,8 @@ def _build_commands() -> dict[str, Any]:
         "org-status": org_status,
         "portfolio-kelly": portfolio_kelly,
         "extract-triples": extract_triples,
+        "arize-link": arize_link,
+        "route-skill": route_skill,
     }
 
 
@@ -344,6 +392,12 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
     parser.add_argument("--db-path", type=str, default=":memory:")
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--text", type=str, default=None)
+    parser.add_argument("--domain", type=str, default="accelerated_simulation")
+    parser.add_argument("--org-id", type=str, default="T3JnYW5pemF0aW9uOjE6Z3Nl")
+    parser.add_argument("--space-id", type=str, default="U3BhY2U6MTpnc2U=")
+    parser.add_argument("--project-id", type=str, default="UHJvamVjdDoxOmdzZQ==")
+    parser.add_argument("--trace-id", type=str, default=None)
+    parser.add_argument("--span-id", type=str, default=None)
     ns = parser.parse_args(argv)
 
     cmd = ns.command
@@ -375,6 +429,18 @@ def _run_argparse_fallback(commands: dict[str, Any], argv: list[str]) -> None:
         print(fn(max_tokens=ns.max_tokens))
     elif cmd == "extract-triples":
         print(fn(text=ns.text))
+    elif cmd == "arize-link":
+        print(
+            fn(
+                org_id=ns.org_id,
+                space_id=ns.space_id,
+                project_id=ns.project_id,
+                trace_id=ns.trace_id,
+                span_id=ns.span_id,
+            )
+        )
+    elif cmd == "route-skill":
+        print(fn(domain=ns.domain))
 
 
 def main() -> None:
