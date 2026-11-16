@@ -9,7 +9,7 @@ records fail-closed refusal metadata for the 2 download-bait stub PDFs, emitting
   3. docs/engine/research/2026-11-13/corpus_compilation/priority_10books_2281p_chapter_and_equation_digest.json
   4. brain/feeds/2026-11-13/priority_downloads_full_2281p_trainer_feed.jsonl
 
-Single-writer safety: NEVER writes `brain/mind.jsonl`, NEVER mutates `C:\\Users\\Garrett\\Sports`,
+Single-writer safety: NEVER writes `brain/mind.jsonl`, NEVER mutates the repository root,
 and NEVER fabricates quotes from stub PDFs.
 """
 
@@ -32,7 +32,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-OCR_VENV_PYTHON = Path(r"C:\Users\Garrett\ocr-venv\Scripts\python.exe")
+OCR_VENV_PYTHON = Path.home() / "ocr-venv" / "Scripts" / "python.exe"
 
 DEFAULT_RULEBOOK_OUT = (
     REPO_ROOT
@@ -70,70 +70,70 @@ DEFAULT_TRAINER_FEED_OUT = (
 PRIORITY_PDF_CATALOG: Tuple[Dict[str, str], ...] = (
     {
         "key": "nfl_rulebook_2026",
-        "path": r"C:\Users\Garrett\Downloads\ops-2026-NFL-Rulebook-FINAL.pdf",
+        "path": str(Path.home() / "Downloads" / "ops-2026-NFL-Rulebook-FINAL.pdf"),
         "title": "2026 Official Playing Rules of the National Football League",
         "domain": "football",
         "situational_family": "qbSkillScript",
     },
     {
         "key": "usa_today_draft_2026",
-        "path": r"C:\Users\Garrett\Downloads\_OceanofPDF.com_USA_Today_Special_Edition_-_NFL_Draft_Guide_2026_-_USA_Today_Special_Edition.pdf",
+        "path": str(Path.home() / "Downloads" / "_OceanofPDF.com_USA_Today_Special_Edition_-_NFL_Draft_Guide_2026_-_USA_Today_Special_Edition.pdf"),
         "title": "USA Today Sports NFL Draft Guide 2026",
         "domain": "football",
         "situational_family": "coveragePersonnel",
     },
     {
         "key": "severini_analytic_methods_3e",
-        "path": r"C:\Users\Garrett\Downloads\_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini (1).pdf",
+        "path": str(Path.home() / "Downloads" / "_OceanofPDF.com_Analytic_Methods_in_Sports_3rd_Ed_-_Thomas_A_Severini (1).pdf"),
         "title": "Analytic Methods in Sports (3rd Ed.) - Thomas A. Severini",
         "domain": "math",
         "situational_family": "marketMicrostructure",
     },
     {
         "key": "carroll_hidden_game",
-        "path": r"C:\Users\Garrett\Downloads\_OceanofPDF.com_The_Hidden_Game_of_Football_-_Bob_Carroll (1).pdf",
+        "path": str(Path.home() / "Downloads" / "_OceanofPDF.com_The_Hidden_Game_of_Football_-_Bob_Carroll (1).pdf"),
         "title": "The Hidden Game of Football - Bob Carroll, Pete Palmer & John Thorn",
         "domain": "football",
         "situational_family": "qbSkillScript",
     },
     {
         "key": "usa_football_progression_fdm",
-        "path": r"C:\Users\Garrett\Downloads\Player_Progression_Guide_Template__331225796__Full_Book-20190725135347 (1).pdf",
+        "path": str(Path.home() / "Downloads" / "Player_Progression_Guide_Template__331225796__Full_Book-20190725135347 (1).pdf"),
         "title": "USA Football Player Progression Guide (Football Development Model)",
         "domain": "football",
         "situational_family": "coveragePersonnel",
     },
     {
         "key": "football_coaching_guide",
-        "path": r"C:\Users\Garrett\Downloads\Football+Coaching+Guide.pdf",
+        "path": str(Path.home() / "Downloads" / "Football+Coaching+Guide.pdf"),
         "title": "Football Coaching Guide",
         "domain": "football",
         "situational_family": "coveragePersonnel",
     },
     {
         "key": "cain_mental_game",
-        "path": r"C:\Users\Garrett\Downloads\Chapter-1-Mental-Game-of-Football.pdf",
+        "path": str(Path.home() / "Downloads" / "Chapter-1-Mental-Game-of-Football.pdf"),
         "title": "The Mental Game of Football - Brian Cain & Sean McDonnell",
         "domain": "psych",
         "situational_family": "restFatigue",
     },
     {
         "key": "nesti_psychology_in_football",
-        "path": r"C:\Users\Garrett\Downloads\preview-9781135284923_A25776191.pdf",
+        "path": str(Path.home() / "Downloads" / "preview-9781135284923_A25776191.pdf"),
         "title": "Psychology in Football: Working with Elite and Professional Players - Mark Nesti",
         "domain": "psych",
         "situational_family": "restFatigue",
     },
     {
         "key": "dr_bgr_sports_psychology",
-        "path": r"C:\Users\Garrett\Downloads\Dr-BGR-ISBN-53-Sports-Psychology.pdf",
+        "path": str(Path.home() / "Downloads" / "Dr-BGR-ISBN-53-Sports-Psychology.pdf"),
         "title": "Sports Psychology (Dr-BGR ISBN-53)",
         "domain": "psych",
         "situational_family": "restFatigue",
     },
     {
         "key": "mack_mind_gym",
-        "path": r"C:\Users\Garrett\Downloads\mind-gym-pdf-1.pdf",
+        "path": str(Path.home() / "Downloads" / "mind-gym-pdf-1.pdf"),
         "title": "Mind Gym: An Athlete's Guide to Inner Excellence - Gary Mack",
         "domain": "psych",
         "situational_family": "restFatigue",
@@ -143,13 +143,13 @@ PRIORITY_PDF_CATALOG: Tuple[Dict[str, str], ...] = (
 STUB_PDF_CATALOG: Tuple[Dict[str, str], ...] = (
     {
         "key": "match_quarters_stub",
-        "path": r"C:\Users\Garrett\Downloads\(PDF)FULL DOWNLOAD Match Quarters_ A Modern Guidebook to Split-Field Coverages.pdf",
+        "path": str(Path.home() / "Downloads" / "(PDF)FULL DOWNLOAD Match Quarters_ A Modern Guidebook to Split-Field Coverages.pdf"),
         "title": "Match Quarters: A Modern Guidebook to Split-Field Coverages (Download Stub)",
         "book_id": "527e4d714a574106",
     },
     {
         "key": "split_field_coverages_stub",
-        "path": r"C:\Users\Garrett\Downloads\(_PDF_EPUB)-&gt;DOWNLOAD Split Field Coverages_ Understanding Split Field Coverages.pdf",
+        "path": str(Path.home() / "Downloads" / "(_PDF_EPUB)-&gt;DOWNLOAD Split Field Coverages_ Understanding Split Field Coverages.pdf"),
         "title": "Split Field Coverages: Understanding Split Field Coverages (Download Stub)",
         "book_id": "c3eb423c8b9f92fc",
     },
@@ -244,7 +244,7 @@ def extract_full_pdf_payloads(pdf_paths: Sequence[Path]) -> Dict[str, Dict[str, 
 
     if not OCR_VENV_PYTHON.exists():
         raise RuntimeError(
-            "PyMuPDF missing in current Python and C:\\Users\\Garrett\\ocr-venv missing"
+            "PyMuPDF missing in current Python and ocr-venv missing"
         )
 
     with tempfile.TemporaryDirectory(prefix="gse_harvester_") as tmpd:

@@ -9,7 +9,7 @@ metrics STRICTLY on the newly wired 6-family Foundry corpus situational priors
 HARD INVARIANTS:
   - Leaves `generate-signal-slate.ts` confidence completely untouched.
   - Leaves `CALIBRATION_ADJUSTMENTS_ENABLED` and public publishing gates fail-closed.
-  - Opens `C:\\Users\\Garrett\\Sports\\foundry\\foundry.db` strictly read-only (`?mode=ro`).
+  - Opens `foundry/foundry.db` strictly read-only (`?mode=ro`).
   - Asserts `slate_hold_status = "WEEK10_HELD_FOR_CORPUS_COMPLETION"` whenever `PENDING > 0`.
 """
 from __future__ import annotations
@@ -23,8 +23,8 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SHARED_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
-DEFAULT_SHARED_PRIMITIVES_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives")
+SHARED_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
+DEFAULT_SHARED_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
 DEFAULT_WT_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
 
 

@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
 RLVR_VETO_SATURATED_CONFIDENCE = "RLVR_VETO_SATURATED_CONFIDENCE"
 RLVR_VETO_OVERFIT_ELEPHANT = "RLVR_VETO_OVERFIT_ELEPHANT"
 RLVR_VETO_VANISHING_CREDIT = "RLVR_VETO_VANISHING_CREDIT"
@@ -233,7 +235,7 @@ def resolve_week10_csv_entity_row(
     }
 
 
-def open_foundry_db_readonly(db_path: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")) -> sqlite3.Connection:
+def open_foundry_db_readonly(db_path: Path | str = REPO_ROOT / "foundry" / "foundry.db") -> sqlite3.Connection:
     """Open SQLite strictly via `file:...?mode=ro` URI to avoid WAL lock contention with Hermes."""
     resolved = Path(db_path).resolve()
     if not resolved.is_file():
@@ -244,7 +246,7 @@ def open_foundry_db_readonly(db_path: Path | str = Path(r"C:\Users\Garrett\Sport
 
 
 def load_all_sovereign_primitives(
-    primitives_dir: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\primitives"),
+    primitives_dir: Path | str = REPO_ROOT / "foundry" / "artifacts" / "primitives",
 ) -> Dict[str, Any]:
     """Validate and inventory 100% of Foundry sovereign primitive JSON artifacts."""
     pdir = Path(primitives_dir)
@@ -683,7 +685,7 @@ def build_reference_answer_for_rlvr_scenario(verifier_code: str, ground_truth: A
 
 
 def load_and_verify_all_rlvr_vetoes(
-    rlvr_dir: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\rlvr_vetoes"),
+    rlvr_dir: Path | str = REPO_ROOT / "foundry" / "artifacts" / "rlvr_vetoes",
 ) -> Dict[str, Any]:
     """Glob `*.jsonl` (mixed `batch-*` + `rlvr_batch-*`), compile every verifier, and run all 3 self-tests."""
     rdir = Path(rlvr_dir)
@@ -754,8 +756,8 @@ def remap_motif_csv_season_stats(row: Dict[str, Any], *, week: int = 10) -> Dict
 
 
 def audit_gcp_week10_crucibles(
-    gcp_sync_dir: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\gcp_sync"),
-    handoff_path: Path | str = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\week10_crucible\AUDITOR2_HANDOFF.md"),
+    gcp_sync_dir: Path | str = REPO_ROOT / "foundry" / "artifacts" / "gcp_sync",
+    handoff_path: Path | str = REPO_ROOT / "foundry" / "artifacts" / "week10_crucible" / "AUDITOR2_HANDOFF.md",
 ) -> Dict[str, Any]:
     """Audit unpacked GCP Week 10 crucibles and AUDITOR2_HANDOFF.md for Munich NE@DET & KC@ATL roof defects."""
     gdir = Path(gcp_sync_dir)

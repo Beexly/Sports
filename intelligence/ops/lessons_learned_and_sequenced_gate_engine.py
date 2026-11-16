@@ -304,7 +304,7 @@ def _gate_006(root: Path) -> tuple[bool, str]:
 
 
 def _gate_007(_root: Path) -> tuple[bool, str]:
-    unpacker = Path(r"C:\Users\Garrett\Sports\foundry\unpack_gcp_4branches.py")
+    unpacker = _root / "foundry" / "unpack_gcp_4branches.py"
     if not unpacker.is_file():
         return True, "Host foundry unpacker not mounted on runner (skipped safely)"
     txt = unpacker.read_text(encoding="utf-8")

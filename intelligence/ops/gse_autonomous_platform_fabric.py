@@ -9,7 +9,7 @@ Unifies scheduled internal execution across all governed surfaces:
   -  8 War Room signal watchers
   - 14 Governed workflows (WORKFLOW_REGISTRY)
   - Google Jules REST API telemetry & session continuity (`evaluate_jules_live_api_sources_and_sessions`)
-  - Read-only Foundry `corpus_queue` monitor (`C:\\Users\\Garrett\\Sports\\foundry\\foundry.db`, mode=ro)
+  - Read-only Foundry `corpus_queue` monitor (`foundry/foundry.db`, mode=ro)
 
 Enforces MIND-FIRST sequencing:
   - While `PENDING > 0` Tier-A items remain or corpus calibration receipt is unverified,
@@ -41,7 +41,7 @@ from intelligence.ops.openai_ecosystem_jules_and_opendots_engine import (
     evaluate_jules_live_api_sources_and_sessions,
 )
 
-SHARED_MAIN_REPO_ENV_LOCAL = Path(r"C:\Users\Garrett\Sports\.env.local")
+SHARED_MAIN_REPO_ENV_LOCAL = REPO_ROOT / ".env.local"
 
 
 def _load_secret_any(name: str) -> str:
@@ -68,7 +68,7 @@ def _load_secret_any(name: str) -> str:
                     return found
     return ""
 
-DEFAULT_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
+DEFAULT_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
 DEFAULT_CORPUS_RECEIPT = (
     REPO_ROOT
     / "docs"
