@@ -7,6 +7,7 @@ import {
   getBannedPhraseList,
   INTERNAL_VOCABULARY,
   scanForBannedPhrases,
+  isAttributedThirdPartyDigestLine,
 } from "@/lib/trust-claims";
 
 describe("Trust Claim Registry — shape", () => {
@@ -196,6 +197,67 @@ describe("Banned-phrase scanner", () => {
     expect(isLock("the total is a Lock 2.5u")).toBe(true);
     // A bare leaderboard surname with no parenthetical and no digest flag still hits.
     expect(isLock("leaderboard: Allen 2.9, Purdy 2.8, Lock 2.77.")).toBe(true);
+  });
+
+  // 2026-11-16 (CI red on 7305b780f, the 2026-11-15 morning analytics sweep
+  // digest in AGENTS.md): three more chart-transcription shapes. Each is a
+  // sentence from that digest verbatim, and each must pass while the slang the
+  // ban exists for keeps failing on the same surname.
+  it("exempts the 2026-11-15 chart-transcription surname shapes (weeks parenthetical, signed EPA, chart title)", () => {
+    const isLock = (text: string) =>
+      scanForBannedPhrases(text).some((h) => h.claimId === "banned.lock");
+
+    // "Lock (Weeks 1, 2, 9: 5 TD, 0 INT, 2 sacks)" — a QB's week splits.
+    expect(
+      isLock(
+        "filtered to no interceptions in those 3 (11 of 37) — Lock (Weeks 1, 2, 9: 5 TD, 0 INT, 2 sacks) and Purdy (Weeks 2-4: 8 TD, 0 INT, 0 sacks).",
+      ),
+    ).toBe(false);
+    // "Lock +0.400 EPA/dropback" — a signed comparison value in a dropback table.
+    expect(
+      isLock("As printed: Lock +0.400 EPA/dropback in 2026 (80 dropbacks) vs -0.055 in 2019-25 (1,075)."),
+    ).toBe(false);
+    // "the hawkblogger Lock chart" — a chart titled with the passer's surname.
+    expect(
+      isLock("nflverse / nflreadpy footers on Gridiron cards and the hawkblogger Lock chart; NFL MCP at nflmcp.com."),
+    ).toBe(false);
+
+    // The same surname in the claim shapes, and the lowercase forms, still hit.
+    expect(isLock("Take the Lock (Weeks 1-3) parlay at 2.5u")).toBe(true);
+    expect(isLock("Lock +0.400 means we lock this in")).toBe(true);
+    expect(isLock("check the lock chart, it's a lock")).toBe(true);
+  });
+
+  it("treats only an @handle + post-ID line as an attributed third-party digest", () => {
+    // The real AGENTS.md pown-definition line: a third party's descriptor.
+    expect(
+      isAttributedThirdPartyDigestLine(
+        '- Projected ownership ("pown") definition (@rufusjonz, ID 2121809076099133893, Nov 14; no external source beyond the definition as printed).',
+      ),
+    ).toBe(true);
+    // An @handle alone, or an ID alone, is not a transcription of a post.
+    expect(isAttributedThirdPartyDigestLine("Follow @galaxysportsedge for updates.")).toBe(false);
+    expect(isAttributedThirdPartyDigestLine("Ticket ID 1234567 was closed.")).toBe(false);
+
+    // The option only bites on such a line: the same third-party descriptor in
+    // GSE's own unattributed voice still fails, so this is attribution-gated.
+    const thirdParty =
+      '- Projected ownership ("pown") definition (@rufusjonz, ID 2121809076099133893, Nov 14): an average of 4 sites — 3 commercial + 1 free AI-driven @TwoGunFF.';
+    expect(
+      scanForBannedPhrases(thirdParty, { positioningDigestExempt: true }).some((h) =>
+        h.claimId.includes("positioning"),
+      ),
+    ).toBe(false);
+    expect(
+      scanForBannedPhrases(thirdParty, { positioningDigestExempt: false }).some((h) =>
+        h.claimId.includes("positioning"),
+      ),
+    ).toBe(true);
+    expect(
+      scanForBannedPhrases("Our AI-driven engine picks winners.", {
+        positioningDigestExempt: true,
+      }).some((h) => h.claimId.includes("positioning")),
+    ).toBe(true);
   });
 
   // Tripwire (2026-09-02 automated review): the "AI picks" family only

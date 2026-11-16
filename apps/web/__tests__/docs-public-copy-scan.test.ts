@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { scanForBannedPhrases } from "@/lib/trust-claims";
+import { scanForBannedPhrases, isAttributedThirdPartyDigestLine } from "@/lib/trust-claims";
 import { FORBIDDEN_PHRASES, buildPositioningRegex } from "@/lib/positioning-vocab";
 
 /**
@@ -117,12 +117,16 @@ interface PositioningHit {
  * (buildPositioningRegex) — so "AI-powered", "AI powered", and "ai driven"
  * are all caught the same way they are in apps/web/app and apps/web/components.
  */
-function scanForPositioningVocab(text: string): PositioningHit[] {
+function scanForPositioningVocab(
+  text: string,
+  isExemptLine?: (line: string) => boolean,
+): PositioningHit[] {
   const hits: PositioningHit[] = [];
   const lines = text.split(/\r?\n/);
   for (const phrase of FORBIDDEN_PHRASES) {
     const pattern = buildPositioningRegex([phrase]);
     lines.forEach((line, idx) => {
+      if (isExemptLine?.(line)) return;
       if (pattern.test(line)) {
         hits.push({ phrase, line: idx + 1, snippet: line.trim() });
       }
@@ -143,6 +147,7 @@ describe("Docs — public-copy banned-phrase scan", () => {
       const stripped = stripCode(text);
       const hits = scanForBannedPhrases(stripped, {
         lockDigestExempt: MEMORY_DOCS.has(doc),
+        positioningDigestExempt: MEMORY_DOCS.has(doc),
       });
       if (hits.length > 0) {
         const summary = hits
@@ -161,7 +166,16 @@ describe("Docs — public-copy banned-phrase scan", () => {
       const text = readDoc(doc);
       if (text === "") return;
       const stripped = stripCode(text);
-      const hits = scanForPositioningVocab(stripped);
+      // Lock-step with scripts/guardrails/trust-gate.mjs's `attributedQuote`
+      // rule: on a root memory doc, positioning copy that a social-digest line
+      // quotes from a THIRD PARTY (the @handle AND that post's numeric ID are
+      // both present) is that party's framing, not this platform's. GSE's own
+      // unattributed positioning copy in the same docs still fails, and the
+      // exemption never applies outside MEMORY_DOCS.
+      const hits = scanForPositioningVocab(
+        stripped,
+        MEMORY_DOCS.has(doc) ? isAttributedThirdPartyDigestLine : undefined,
+      );
       if (hits.length > 0) {
         const summary = hits
           .map((h) => `  line ${h.line}: "${h.phrase}" — ${h.snippet}`)

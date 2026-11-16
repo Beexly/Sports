@@ -67,6 +67,33 @@ test("server-side lock (a mutex) is engineering prose, not a pick", () => {
   assert.equal(r.code, 0, r.out);
 });
 
+// 2026-11-16 (this gate red on 7305b780f, the 2026-11-15 morning analytics
+// sweep digest appended to AGENTS.md): three more chart-transcription shapes.
+// Each body below is a sentence from that digest, and each must pass while the
+// slang shapes on the same surname keep failing.
+test("chart transcriptions of the QB named Lock are data, not picks", () => {
+  const bodies = [
+    "filtered to no interceptions in those 3 (11 of 37) — Lock (Weeks 1, 2, 9: 5 TD, 0 INT, 2 sacks) and Purdy (Weeks 2-4: 8 TD, 0 INT, 0 sacks).\n",
+    "As printed: Lock +0.400 EPA/dropback in 2026 (80 dropbacks) vs -0.055 in 2019-25 (1,075).\n",
+    "nflverse / nflreadpy footers on Gridiron cards and the hawkblogger Lock chart; NFL MCP at nflmcp.com.\n",
+  ];
+  for (const body of bodies) {
+    const r = scan(clean(body));
+    assert.equal(r.code, 0, `${body}\n${r.out}`);
+  }
+  // The same surname in a claim shape still fails, so the exemption is a shape,
+  // not a surname pass.
+  for (const body of [
+    "Take the Lock (Weeks 1-3) parlay at 2.5u\n",
+    "Lock +0.400 means we lock this in\n",
+    "check the lock chart, it's a lock\n",
+  ]) {
+    const r = scan(clean(body));
+    assert.equal(r.code, 1, `expected refusal for: ${body}\n${r.out}`);
+    assert.match(r.out, /banned\.lock/);
+  }
+});
+
 test("the surname abbreviation (D.Lock) is exempt in both spellings", () => {
   for (const body of ["D.Lock 22.92%, T.Shough 23.33%.\n", "D. Lock 30.8/26.9.\n"]) {
     assert.equal(scan(clean(body)).code, 0, body);

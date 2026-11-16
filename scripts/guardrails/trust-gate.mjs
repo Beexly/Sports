@@ -502,6 +502,25 @@ const LOCK_PROPER_NOUN_SAFE_CONTEXT =
 const LOCK_STAT_TABLE_SAFE_CONTEXT =
   /\bLock\s+\d+\.\d+|\bLock\s+\d+\s+vs\b|\/\s?Lock\s?\/|\bLock\s+\d+\s+dropbacks\b|\bLock\s+\d+%|\bhawkblogger-lock-darnold-[a-z0-9-]+\.csv\b|\bLock\s+with\s+\d+\s+of\s+the\s+\d+\s+highest\s+Seahawks\b|\bLock\s+EPA\/play\s+\d+\.\d+/gi;
 
+// THREE MORE DIGEST SHAPES, added 2026-11-16 (this gate red on `7305b780f`,
+// the 2026-11-15 morning analytics sweep digest appended to AGENTS.md). That
+// sweep transcribed a QB chart and an EPA comparison in shapes the constants
+// above do not cover, and CI failed on all three of its lock hits in four
+// tests across guardrails.test.ts, docs-public-copy-scan.test.ts and
+// calibration-cockpit.test.ts:
+//   1) a weeks parenthetical right after the surname -- "Lock (Weeks 1, 2, 9: ...)"
+//   2) a signed EPA comparison value -- "As printed: Lock +0.400 EPA/dropback"
+//   3) a chart title naming the passer -- "the hawkblogger Lock chart"
+// Deliberately NOT part of LOCK_PROPER_NOUN_SAFE_CONTEXT, which carries /gi:
+// these shapes are CASE-SENSITIVE like LOCK_STAT_TABLE_SAFE_CONTEXT, because
+// the digest renders the surname with a capital L while the slang claim forms
+// are lowercase. Each alternative is anchored to the chart-copy shape (a
+// "Weeks" parenthetical, a signed EPA figure, the word "chart"), never to the
+// surname alone -- so "my lock of the day", "bills/lock/chiefs", "the total is
+// a Lock 2.5u" and a bare "Lock 2.77" on a non-digest line all still fail.
+const LOCK_SURNAME_DIGEST_SHAPES =
+  /\bLock\s+\(Weeks?\s+\d+(?:\s*[-,]\s*\d+)*\s*:|\bLock\s+[+-]\d+\.\d+\s+EPA\b|\bLock\s+chart\b|\bLock's\b/g;
+
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in
 // packages/data-ingestion/src/dk-pick6-intake.ts. It is third-party data
@@ -703,7 +722,8 @@ function scanText(text, relPath) {
             .replace(LOCK_EXTENSION_SAFE_CONTEXT, " ")
             .replace(LOCK_IDENTIFIER_SAFE_CONTEXT, " ")
             .replace(LOCK_CONCURRENCY_PROSE_SAFE_CONTEXT, " ")
-            .replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+            .replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ")
+            .replace(LOCK_SURNAME_DIGEST_SHAPES, " ");
           // The QUOTED-LEADERBOARD forms are applied ONLY in the root memory
           // docs, for the reason in the constant's comment: they are quoted
           // data, and applying them tree-wide let a marketing surface say
