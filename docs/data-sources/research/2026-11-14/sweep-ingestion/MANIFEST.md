@@ -252,3 +252,33 @@ Running feed total: 10,752 records (10,597 through 2026-11-15 IG PM +
 155 X For You PM). X analytics PM delta for 2026-11-15 converts when
 that run completes. Poster numbers in the deltas are claims as printed,
 not verified facts.
+
+## 2026-11-16 AM deltas (IG For You + X For You lanes)
+
+IG For You AM delta: `delta-2026-11-16-ig-am.jsonl`, 45 records
+(20 dossiered posts plus inventoried items with codes; 2 duplicates
+skipped against the feed, 9 slug-keyed) from
+~/workspace/ig-for-you-sweep/reports/2026-11-16-AM.md. The run's own
+gap audit records 9 NOCODE feed positions lost when the browser tab
+failed mid-run; those items are not in the feed. Motif-verified: every
+line parses, 16-key schema exact, 0 collisions against the feed, no
+em/en dashes, 38,492 bytes. Appended to ig-for-you-feed.jsonl (now
+2,809 records, 1,990,945 bytes).
+
+X For You AM delta: `delta-2026-11-16-x-am.jsonl`, 151 records
+(48 dossier posts with verified status IDs across 20 dossiers, plus
+inventoried items; 74 NO-ID slug-keyed, 1 NO-ID row skipped on a slug
+collision, 0 duplicates) from
+~/workspace/x-for-you-sweep/reports/2026-11-16-AM.md. The report's gap
+audit records 77 organic feed rows inventoried without status IDs (the
+known feed-route loss). Motif-verified: every line parses, 16-key
+schema exact, 0 collisions against the feed, no em/en dashes, 159,214
+bytes. Appended to x-for-you-feed.jsonl (now 5,915 records, 4,319,005
+bytes).
+
+Running feed total: 10,948 records. Still pending: 2026-11-15 X
+analytics PM delta and the 2026-11-16 analytics AM section (the Nov 16
+AM analytics run returned Lane A only; lanes B and C were still
+pending at filing, so no section was staged for that date yet). The
+Nov 15 analytics section plus its 44 CSVs did land on Sports main
+(commit 7305b78, per the analytics worker's Nov 16 report).
