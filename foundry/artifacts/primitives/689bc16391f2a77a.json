@@ -1,0 +1,743 @@
+{
+ "book_id": "689bc16391f2a77a",
+ "source_status": "COMPLETE",
+ "source_note": "Wil M. P. van der Aalst and Josep Carmona (Eds.), Process Mining Handbook, Lecture Notes in Business Information Processing 448, Springer, 2022, open access (CC BY 4.0), ISBN 978-3-031-08847-6, DOI 10.1007/978-3-031-08848-3. Local file is the publisher PDF of the full handbook (17 chapters, book pp. 3-502 plus author index). File size 23933329 bytes; sha256 over (str(size) encoded + full file bytes) = 689bc16391f2a77a5099da795c46b8fb6eee6c1c45320902464318297fd2df98; book_id is the first 16 hex chars and matches the expected value. Extracted text is clean and complete (23144 lines, about 217k words); mathematical glyphs for angle brackets and some temporal operators are partially lost in extraction, so verbatim quotes were chosen from passages whose text survives intact and were each proven as contiguous substrings of the extracted text file. Catalog record (vanderAalst-Carmona-2022, books-c-systems) is accurate; no title correction needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "process_mining_systematic_event_data_use",
+   "name": "Process mining defined: improving operational processes through the systematic use of event data, confronting observed behavior with process models",
+   "verbatim_quote": "process mining aims to improve operational processes through the systematic use of event data",
+   "page": "Ch. 1 (van der Aalst), Sect. 1, book pp. 3-4; text lines 293-296",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An operational process exists that repeatedly executes activities to deliver products or services",
+    "The information systems supporting the process record events that can be extracted"
+   ],
+   "breakdown_regime": "Fails when no event data is recorded or events cannot be correlated into cases; the definition gives no method, only the aim, so it cannot by itself adjudicate between competing analyses of the same log",
+   "domain": "process mining foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats every observed sequence of plays, snaps, and game events as event data about an underlying operational process (a team's game plan execution), and confronts that observed behavior with an explicit model of how the process should run, exactly the confrontation this definition prescribes",
+    "source_operator": "process_mining_systematic_event_data_use",
+    "telemetry": "Play-by-play event streams with case identifiers (drives, possessions), timestamps, and actor attributes"
+   }
+  },
+  {
+   "primitive_id": "six_types_of_process_mining",
+   "name": "Six types of process mining: discovery, conformance checking, performance analysis, comparative process mining, predictive process mining, action-oriented process mining",
+   "verbatim_quote": "We informally described six common types of process mining: (1) process discovery, (2) conformance checking, (3) performance analysis, (4) comparative process mining, (5) predictive process mining, and (6) action-oriented process mining.",
+   "page": "Ch. 1, Sect. 5 (conclusion), book p. 32; text lines 1738-1741",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Event data and, for types 2-6, a process model or a comparison baseline are available",
+    "The six types are informal and overlapping, not a partition"
+   ],
+   "breakdown_regime": "The taxonomy is descriptive; it does not say which type answers a given question, and real projects blend types, so treating the six as exclusive modes misclassifies hybrid work",
+   "domain": "process mining foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The six types map onto the engine's own pipeline stages: discover opponent tendencies from event data, check conformance of executed plays against the called plan, analyze performance timing, compare across teams or weeks, predict the future of an ongoing drive or game, and trigger in-game adjustments",
+    "source_operator": "six_types_of_process_mining",
+    "telemetry": "Discovered tendency models, conformance diagnostics, per-phase timing statistics, week-over-week comparisons, live win-probability and remaining-time predictions"
+   }
+  },
+  {
+   "primitive_id": "event_record_structure",
+   "name": "An event is represented by a case identifier, an activity name, a timestamp, and optional attributes such as resource, location, and cost",
+   "verbatim_quote": "Events are often represented by a case identifier, an activity name, a timestamp, and optional attributes such as resource, location, cost, etc.",
+   "page": "Ch. 1, Sect. 3, book p. 6; text lines 441-444",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single case notion exists that groups events into process instances",
+    "Timestamps are recorded with enough resolution to order events within a case"
+   ],
+   "breakdown_regime": "Breaks when events belong to several cases at once (the object-centric problem) or when timestamps are missing, swapped, or too coarse to order events, which silently corrupts every downstream ordering-based analysis",
+   "domain": "event data",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Each snap in the engine's data is stored exactly in this shape: drive or possession as case identifier, play type as activity, game clock as timestamp, and player, formation, field position, and personnel as optional attributes",
+    "source_operator": "event_record_structure",
+    "telemetry": "Play-by-play feeds carrying game clock, down, distance, yard line, personnel grouping, and player identifiers"
+   }
+  },
+  {
+   "primitive_id": "event_log_multiset_of_traces",
+   "name": "An event log is a multiset of traces; L(sigma) counts how often trace sigma appears in log L",
+   "verbatim_quote": "Note that L(σ) is the number of times trace σ appears in event log L.",
+   "page": "Ch. 2 (Foundations of Process Discovery), Sect. 1, Definition 1, book p. 38; text lines 1995-2000",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each trace is a finite sequence of activities over a fixed activity universe",
+    "Repeated identical traces are meaningful multiplicities, not duplicates to be deduplicated away"
+   ],
+   "breakdown_regime": "The simplified log discards timestamps, resources, and data attributes; any question needing those perspectives (timing, workload, decision data) cannot be answered from the multiset-of-traces view alone",
+   "domain": "event data",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A team's season of drives is a multiset of traces: identical play sequences recur with multiplicities, and those multiplicities are the empirical frequencies the engine reasons over, rather than a set of unique sequences",
+    "source_operator": "event_log_multiset_of_traces",
+    "telemetry": "Drive-level play sequences grouped by team, opponent, and game state, with occurrence counts"
+   }
+  },
+  {
+   "primitive_id": "directly_follows_graph",
+   "name": "Directly-Follows Graph: nodes are activities (plus start and end), and the arc multiset F counts how often one activity is directly followed by another within a case",
+   "verbatim_quote": "F ((a1 , a2 )) indicates how often activity a1 is directly followed by activity a2",
+   "page": "Ch. 2, Sect. 2.1, Definition 4, book pp. 41-42; text lines 2148-2160",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only adjacency within the same case is counted; adjacency across case boundaries is excluded",
+    "Start and end are modeled with artificial start and end nodes"
+   ],
+   "breakdown_regime": "A DFG cannot express concurrency: if a and b occur in both orders it draws a loop, suggesting repetitions the data does not support, so DFGs systematically underfit and turn into spaghetti diagrams on real logs; cycles also make the trace language infinite",
+   "domain": "process discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The directly-follows counts are the engine's first-order tendency table: how often a run on first down is followed by a pass on second down, per team and situation, with start and end arcs giving opening-play and drive-ending distributions",
+    "source_operator": "directly_follows_graph",
+    "telemetry": "Adjacent play pairs within drives, with counts, plus drive-start and drive-end play distributions"
+   }
+  },
+  {
+   "primitive_id": "pareto_distribution_of_variants",
+   "name": "Empirical law: process variants follow a Pareto distribution, e.g., 80 percent of cases are described by only 20 percent of the variants, and the long tail holds most performance and compliance problems",
+   "verbatim_quote": "Note that most processes have a Pareto distribution, e.g., 80% of the cases can be described by only 20% of the process variants.",
+   "page": "Ch. 1, Sect. 4, book pp. 6-7; text lines 478-484",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Variants are counted over a representative observation window",
+    "The 80/20 split is an empirical regularity, not a theorem; the chapter notes logs where 95 percent of cases fit under 5 percent of variants"
+   ],
+   "breakdown_regime": "Discarding the tail because it is infrequent throws away the cases that consume most resources through rework and exception handling; any model or policy fitted only to the head variants is blind to where failures concentrate",
+   "domain": "process discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Play-calling and game scripts show the same skew: a small set of drive shapes covers most possessions, while the rare shapes (backed-up, two-minute, goal-line stands) decide outcomes and carry the largest error costs, so the engine budgets model capacity for the tail instead of only the modal drive",
+    "source_operator": "pareto_distribution_of_variants",
+    "telemetry": "Variant frequency distribution over drive shapes and play sequences, with outcome and cost statistics per variant"
+   }
+  },
+  {
+   "primitive_id": "conformance_checking_model_vs_log",
+   "name": "Conformance checking relates events in the event log to activities in the process model and compares modeled behavior with observed behavior to find commonalities and discrepancies",
+   "verbatim_quote": "Conformance checking relates events in the event log to activities in the process model and compares both. The goal is to find commonalities and discrepancies between the modeled behavior and the observed behavior.",
+   "page": "Ch. 1, Sect. 4, book p. 6; text lines 472-476",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A process model exists, either discovered (descriptive) or hand-made (normative)",
+    "Events can be related to model activities through a shared activity vocabulary"
+   ],
+   "breakdown_regime": "Interpretation flips with model provenance: against a normative model, deviations are undesired behavior such as fraud or inefficiency; against a discovered model, the same deviations are merely exceptional behavior, so a conformance score without provenance invites the wrong response",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine compares the plays a team actually ran against the game plan model for that opponent: deviations against a normative plan flag execution or discipline problems, deviations against a discovered tendency model flag surprises the opponent produced",
+    "source_operator": "conformance_checking_model_vs_log",
+    "telemetry": "Called-play plans versus executed plays per drive, with deviation locations and severities"
+   }
+  },
+  {
+   "primitive_id": "four_quality_dimensions",
+   "name": "Consensus: a discovered model is evaluated on four competing quality dimensions, replay fitness (recall), precision, generalization, and simplicity",
+   "verbatim_quote": "In spite of these problems, there is consensus in the process mining community that there are the following four quality dimensions to evaluate a process model M in the context of an event log L with observed behavior [1].",
+   "page": "Ch. 2, Sect. 3, book p. 52; text lines 2730-2742",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Evaluation happens without negative examples; real logs contain only positive traces",
+    "The four dimensions trade off against each other and cannot all be maximized at once"
+   ],
+   "breakdown_regime": "There is no consensus operationalization for precision and generalization comparable to fitness, so single-number model rankings hide which dimension was sacrificed; splitting one log into train and test parts does not fix this, because the model is given and the whole log is the evidence",
+   "domain": "process discovery evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every tendency or projection model in the engine is scored on the same four axes: how much observed behavior it replays, how little unobserved behavior it allows, how well it covers unseen games, and how simple it stays, with the trade-off reported instead of a single blended score",
+    "source_operator": "four_quality_dimensions",
+    "telemetry": "Per-model fitness, precision, generalization (held-out game coverage), and complexity counts on each weekly refit"
+   }
+  },
+  {
+   "primitive_id": "positive_examples_only",
+   "name": "Discovery learns from positive examples only: an event log contains no traces that are impossible, so absence of a trace is not evidence of impossibility",
+   "verbatim_quote": "In real applications, we never witness traces that are impossible. The event log only contains positive examples.",
+   "page": "Ch. 2, Sect. 3, book p. 51; text lines 2677-2678",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The log is a sample of behavior, likely incomplete, drawn from a much larger behavior space",
+    "Concurrency multiplies possible traces factorially and loops make them infinite, so full coverage is unattainable"
+   ],
+   "breakdown_regime": "Any method that treats unobserved as forbidden overfits: it would rule out every loop repetition count not yet seen and every interleaving of concurrent activities not yet sampled",
+   "domain": "process discovery evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never treats an unobserved play sequence as impossible for an opponent; unseen sequences get probability mass through generalization rather than a hard zero, which is the same positive-only learning stance",
+    "source_operator": "positive_examples_only",
+    "telemetry": "Coverage statistics: share of possible sequences observed per team, and smoothing mass assigned to unobserved sequences"
+   }
+  },
+  {
+   "primitive_id": "concept_drift_second_order_dynamics",
+   "name": "Concept drift: the process itself changes over time in unforeseen ways, introducing second-order dynamics on top of the dynamics the model already describes",
+   "verbatim_quote": "Since process models already describe dynamic behavior, concept drift introduces second-order dynamics.",
+   "page": "Ch. 2, Sect. 3, book p. 51; text lines 2681-2686",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Trace likelihoods can rise or fall over time and variants can emerge or disappear",
+    "The observation window choice (past week versus past year) changes what the discovered process even is"
+   ],
+   "breakdown_regime": "If the process is not in steady state, a single discovered model averages regimes that never coexisted; drift detection complicates discovery because the target moves while it is being estimated",
+   "domain": "process discovery evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Team tendencies drift across a season through injuries, trades, and scheme changes; the engine therefore weights recent games, detects tendency shifts, and versions its models by regime instead of fitting one static model to the whole season",
+    "source_operator": "concept_drift_second_order_dynamics",
+    "telemetry": "Rolling tendency estimates per team with change-point flags on play-mix, tempo, and personnel usage"
+   }
+  },
+  {
+   "primitive_id": "alpha_algorithm",
+   "name": "The Alpha algorithm: the first discovery technique able to discover concurrent models (Petri nets) from event logs, built entirely from the log footprint of ordering relations",
+   "verbatim_quote": "In the remainder of this section, we present the first process discovery technique able to discover concurrent models (e.g., Petri nets) from event logs: the Alpha algorithm [9].",
+   "page": "Ch. 2, Sect. 5.2, book pp. 63-64; text lines 3337-3342",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The footprint relations (directly-follows, causality, parallel, choice) are computed from a filtered log in one pass",
+    "The log is complete enough that ordering relations reflect the true process structure"
+   ],
+   "breakdown_regime": "Noise and incompleteness corrupt the footprint directly: an activity that can directly follow itself can never be placed, short loops and invisible or duplicate activities break the construction, and naive place enumeration is exponential in the number of activities",
+   "domain": "process discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The footprint idea is the engine's concurrency test: two plays or concepts that appear in both orders across drives are parallel options in a play-caller's menu, while a strict one-way ordering marks a genuine sequence constraint",
+    "source_operator": "alpha_algorithm",
+    "telemetry": "Pairwise ordering-relation tables per team: directly-follows, both-orders (parallel), and never-adjacent (choice) counts"
+   }
+  },
+  {
+   "primitive_id": "process_trees_sound_by_construction",
+   "name": "Process trees: hierarchical block-structured models over sequence, choice, parallel, and loop operators that are sound by construction",
+   "verbatim_quote": "The main reason for using process trees is that they have a hierarchical structure and are sound by construction.",
+   "page": "Ch. 2, Sect. 4.2, book pp. 56-57; text lines 2930-2934",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Behavior can be decomposed hierarchically into sequence, exclusive choice, parallel, and redo-loop blocks with activity leaves and a silent activity",
+    "Soundness means no deadlocks or livelocks and the final marking is always reachable"
+   ],
+   "breakdown_regime": "The block structure is a representational bias: models needing non-local synchronization or long-term dependencies between branches cannot be expressed as process trees at all, so the guarantee is bought with expressiveness",
+   "domain": "process modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Drive scripts decompose the same way: a sequence of situations, each a choice among play families, with parallel constraints from personnel and clock, and loop structure in repeated two-minute or four-minute sequences; representing game plans as trees keeps every generated plan executable by construction",
+    "source_operator": "process_trees_sound_by_construction",
+    "telemetry": "Hierarchical decompositions of drive scripts with operator types per node and leaf play frequencies"
+   }
+  },
+  {
+   "primitive_id": "inductive_miner_fitness_guarantee",
+   "name": "Inductive Miner guarantee: the basic inductive mining algorithm guarantees perfect replay fitness, i.e., 100 percent recall, formally var(L) subset of lang(disc IM(L))",
+   "verbatim_quote": "The basic inductive mining algorithm has strong guarantees. For example, disc IM (L) guarantees perfect replay fitness (i.e., 100% recall).",
+   "page": "Ch. 2, Sect. 6, book p. 71; text lines 3696-3700",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The log is filtered in advance to remove infrequent behavior, or an infrequent-aware variant is used",
+    "Recursive partitioning into sublogs terminates with directly-follows-based cuts or fallthroughs"
+   ],
+   "breakdown_regime": "Perfect fitness is guaranteed by construction, not earned from data, so it says nothing about precision; the basic algorithm can also become intractable on huge logs because sublogs are created repeatedly, and single-pass scalable variants provide fewer formal guarantees",
+   "domain": "process discovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine uses the same divide-and-conquer kernel for tendency models: recursively split a team's drives by situation until each block is homogeneous, with the guarantee that the resulting model replays every observed drive, then control precision separately",
+    "source_operator": "inductive_miner_fitness_guarantee",
+    "telemetry": "Recursive situation splits with per-block drive counts and a replay check that every observed drive is accepted"
+   }
+  },
+  {
+   "primitive_id": "split_miner_deadlock_free_not_sound",
+   "name": "Split Miner limitation: it guarantees deadlock-free BPMN models but not soundness (proper completion); tokens can be left behind when the end event is reached",
+   "verbatim_quote": "While SM guarantees to discover deadlock-free process models [3], it does not guarantee that such process models respect the soundness property of proper completion",
+   "page": "Ch. 3 (Advanced Process Discovery Techniques), Sect. 4.7, book pp. 91-92; text lines 4778-4784",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Split Miner assumes there is always some infrequent behavior in real-life logs to filter out",
+    "Its filtering step is designed to balance fitness, precision, and simplicity of the output model"
+   ],
+   "breakdown_regime": "Dropping block-structuredness buys accuracy but loses the soundness guarantee; a discovered model can complete improperly, so downstream simulation or execution on the model can silently strand tokens (cases) mid-process",
+   "domain": "process discovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A tendency model that never deadlocks can still be improper: it may predict a drive outcome while leaving predicted intermediate states unresolved, so the engine checks proper completion (every predicted path resolves all open state) in addition to deadlock freedom",
+    "source_operator": "split_miner_deadlock_free_not_sound",
+    "telemetry": "Model validation reports: deadlock checks plus leftover-state checks on every predicted path"
+   }
+  },
+  {
+   "primitive_id": "declarative_constraint_models",
+   "name": "Declarative models specify a collection of constraints that any process instance should adhere to, instead of prescribing the next possible steps like imperative models",
+   "verbatim_quote": "Unlike an imperative model, a declarative model does not specify what the next possible steps are, instead it provides a collection of constraints that any process instance in the end should adhere to.",
+   "page": "Ch. 3, Sect. 5 (Log Skeletons), book p. 92; text lines 4796-4799",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The behavior space is easier to characterize by prohibitions and obligations than by an explicit flow",
+    "Constraints are evaluated over complete traces (or monitored prefixes) rather than generating steps"
+   ],
+   "breakdown_regime": "Constraint sets are hard to eyeball for consistency and coverage: nothing in the representation shows which behavior is typical, and an over-constrained set can silently forbid the mainstream behavior it was mined from",
+   "domain": "declarative process modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rule-based signals in the engine are declarative in this sense: situational constraints (for example, a team never passes on third-and-one from its own territory) are stored as constraints over game traces and checked against observed games, rather than as a flowchart of the offense",
+    "source_operator": "declarative_constraint_models",
+    "telemetry": "Constraint libraries per team with satisfaction and violation counts per game"
+   }
+  },
+  {
+   "primitive_id": "ltlf_syntax",
+   "name": "LTLf syntax: formulae are built from activity propositions with negation, conjunction, next, until, yesterday, and since operators, interpreted over finite traces",
+   "verbatim_quote": "LTLf has the same syntax of LTL [80], but is interpreted on finite traces.",
+   "page": "Ch. 4 (Declarative Process Specifications), Sect. 3.1, book pp. 113-114; text lines 5944-5958",
+   "latex": "\\varphi ::= a \\mid (\\neg \\varphi) \\mid (\\varphi_1 \\land \\varphi_2) \\mid (\\bigcirc \\varphi) \\mid (\\varphi_1 \\mathbin{\\mathrm{U}} \\varphi_2) \\mid (\\bullet \\varphi) \\mid (\\varphi_1 \\mathbin{\\mathrm{S}} \\varphi_2)",
+   "symbol_and_unit_ledger": {
+    "\\varphi": "an LTLf formula (dimensionless logical object)",
+    "a": "an activity proposition from the finite alphabet of activities",
+    "\\bigcirc": "next operator: the formula holds at the following instant",
+    "\\bullet": "yesterday (past) operator: the formula held at the previous instant",
+    "\\mathrm{U}": "until: binary temporal operator over trace instants",
+    "\\mathrm{S}": "since: past-time counterpart of until"
+   },
+   "assumptions": [
+    "A finite trace is a sequence of activities with exactly one activity per instant",
+    "Formulae are evaluated at an instant of a finite trace, not over infinite executions"
+   ],
+   "breakdown_regime": "Finite-trace semantics differ from infinite LTL: the next operator is weak at the last instant, so a formula like not-next-phi is not equivalent to next-not-phi; importing infinite-trace intuitions silently changes what constraints mean",
+   "domain": "declarative process modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's situational rules compile to finite-trace temporal formulae over play sequences: a rule about what must happen after a turnover, or what may never happen before halftime, is an LTLf formula evaluated on the finite trace of a game or drive",
+    "source_operator": "ltlf_syntax",
+    "telemetry": "Play-sequence traces per game with per-instant activity labels for formula evaluation"
+   }
+  },
+  {
+   "primitive_id": "declare_response_template",
+   "name": "Declare Response template semantics: Response(a,b) is the LTLf formula always(a implies eventually b); every occurrence of a obliges a later occurrence of b",
+   "verbatim_quote": "whenever x occurs, then y is expected to occur at some later instant",
+   "page": "Ch. 4, Sect. 4.1, book pp. 118-119; text lines 6145-6158",
+   "latex": "\\phi_{\\mathrm{Response}(a,b)} = \\square \\, (a \\rightarrow \\Diamond \\, b)",
+   "symbol_and_unit_ledger": {
+    "\\phi_{\\mathrm{Response}(a,b)}": "the LTLf formula of the grounded Response constraint (dimensionless)",
+    "a": "activation activity (source event)",
+    "b": "target activity (obliged later event)",
+    "\\square": "always: at every instant of the trace",
+    "\\Diamond": "eventually: at some current or later instant"
+   },
+   "assumptions": [
+    "The trace is finite and complete when satisfaction is judged",
+    "Grounding replaces the template variables with concrete activities"
+   ],
+   "breakdown_regime": "Vacuous satisfaction: a trace with no occurrence of a satisfies Response(a,b) while never exercising it, so satisfaction rates alone overstate how well a process honors the constraint; activation-aware measures are needed",
+   "domain": "declarative process modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Response is the engine's obligation kernel for sequenced tendencies: after a specific event (a strip sack, a deep completion), a target event class is expected later in the game (a conservative series, a prevent shell), and violations of the obligation are flagged as regime breaks",
+    "source_operator": "declare_response_template",
+    "telemetry": "Activation counts, fulfillment counts, and pending obligations per game trace"
+   }
+  },
+  {
+   "primitive_id": "activation_target_pairs",
+   "name": "Activation-target semantics: the activation of a constraint is a triggering condition that, once true, expects the target condition to be satisfied; unactivated constraints enforce nothing",
+   "verbatim_quote": "Intuitively, the activation of a constraint is a triggering condition that, once made true, expects that the target condition is satisfied by the process execution.",
+   "page": "Ch. 4, Sect. 4.1, book p. 119; text lines 6228-6230",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Activation and target are themselves LTLf formulae supplied with the template",
+    "Whenever the activation holds at an instant, the constraint formula must behave equivalently to its target"
+   ],
+   "breakdown_regime": "The plain LTLf formula does not expose its activation and target (equivalent reformulations hide them), so tooling that only stores the formula cannot report pending or fulfilled obligations, only final satisfaction",
+   "domain": "declarative process modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine scores situational rules by activations, not by raw satisfaction: a rule counts only in games where its trigger actually fired, and its hit rate is fulfillments over activations, which removes vacuous credit",
+    "source_operator": "activation_target_pairs",
+    "telemetry": "Per-rule activation counts, fulfillment counts, violation counts, and vacuous-satisfaction counts"
+   }
+  },
+  {
+   "primitive_id": "rule_based_fitness",
+   "name": "Rule-based fitness: the fraction of rules derived from the model that are satisfied by all traces of the log",
+   "verbatim_quote": "By assessing to what extent the traces of a log satisfy the rules derived from a process model, rule-based conformance checking focuses on the fitness dimension, i.e., the ability of the model to explain the recorded behaviour.",
+   "page": "Ch. 5 (Conformance Checking: Foundations), Sect. 2.2, book pp. 163-164; text lines 8343-8348",
+   "latex": "\\mathrm{fitness}(L, M) = \\frac{|\\{ r \\in R_M \\mid r \\text{ is satisfied by all } t \\in L \\}|}{|R_M|}",
+   "symbol_and_unit_ledger": {
+    "\\mathrm{fitness}(L, M)": "rule-based fitness of log L against model M (dimensionless, in [0,1])",
+    "L": "the event log, a set or multiset of traces",
+    "M": "the process model from which rules are derived",
+    "R_M": "the predefined set of rules derived from model M",
+    "r": "a single rule, e.g., an exclusiveness rule between two activities",
+    "t": "a trace in the log"
+   },
+   "assumptions": [
+    "A predefined rule set R_M is derived from the model before checking",
+    "A rule counts as satisfied only if every trace in the log satisfies it"
+   ],
+   "breakdown_regime": "Fitness depends on the chosen rule set, which is a stated limitation: change the rules and the same log-model pair gets a different fitness; the dimension of precision is not targeted by rule checking at all",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine computes the same ratio for plan conformance: the share of plan-derived rules (formation tells, personnel rules, sequence rules) that no observed drive violates, reported per opponent and per week",
+    "source_operator": "rule_based_fitness",
+    "telemetry": "Rule library derived from each game plan with per-rule violation counts across drives"
+   }
+  },
+  {
+   "primitive_id": "token_replay_fitness",
+   "name": "Token-replay fitness: replaying traces on a Petri net, fitness averages the missing-token ratio and the remaining-token ratio against consumed and produced tokens",
+   "verbatim_quote": "In essence, token replay postulates that each trace in the event log corresponds to a valid execution sequence of the process model.",
+   "page": "Ch. 5, Sect. 2.3, book p. 165 (Eq. 4); text lines 8380-8384 and 8440-8446",
+   "latex": "\\mathrm{fitness}(L, M) = \\frac{1}{2} \\left( 1 - \\frac{\\sum_{t \\in L} \\mathrm{missing}(t, M)}{\\sum_{t \\in L} \\mathrm{consumed}(t, M)} \\right) + \\frac{1}{2} \\left( 1 - \\frac{\\sum_{t \\in L} \\mathrm{remaining}(t, M)}{\\sum_{t \\in L} \\mathrm{produced}(t, M)} \\right)",
+   "symbol_and_unit_ledger": {
+    "\\mathrm{fitness}(L, M)": "token-replay fitness (dimensionless, in [0,1])",
+    "\\mathrm{missing}(t, M)": "tokens that had to be created to replay trace t (count of tokens)",
+    "\\mathrm{remaining}(t, M)": "tokens left unconsumed after replaying trace t (count of tokens)",
+    "\\mathrm{consumed}(t, M)": "tokens consumed during replay of trace t (count of tokens)",
+    "\\mathrm{produced}(t, M)": "tokens produced during replay of trace t (count of tokens)",
+    "t": "a trace of the event log L",
+    "M": "the Petri-net process model"
+   },
+   "assumptions": [
+    "The model is a Petri net (or BPMN read through token semantics) and traces replay task by task in event order",
+    "A trace is fitting exactly when its replay yields no missing and no remaining tokens"
+   ],
+   "breakdown_regime": "Token replay is efficient but diagnostically weak: forced token creation lets replay continue past deviations and can mask or misplace them, and precision estimates built on token replay degrade significantly when traces are not fitting",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine replays drives against the expected game-state machine the same way: missing tokens are state the drive needed but the model did not have (an unmodeled situation), remaining tokens are model state the drive never used, and the two ratios grade plan coverage per game",
+    "source_operator": "token_replay_fitness",
+    "telemetry": "Replay ledgers per drive: forced-state insertions, unused model states, consumed and produced state counts"
+   }
+  },
+  {
+   "primitive_id": "alignments",
+   "name": "Alignment: a two-row correspondence between a trace and a model execution sequence, built from synchronous moves, model moves, and log moves",
+   "verbatim_quote": "An alignment connects a trace of the event log with an execution sequence of the process model.",
+   "page": "Ch. 5, Sect. 2.4, book pp. 165-166; text lines 8449-8452",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both rows use a skip symbol so deviations appear as explicit moves instead of breaking the correspondence",
+    "A synchronous move pairs an event with the model task of the same activity; a model move is a skipped model task; a log move is an unexplained event"
+   ],
+   "breakdown_regime": "An alignment is only as meaningful as its cost model; with uniform costs it minimizes deviation count, which can prefer many small deviations over one severe one, and non-optimal alignments can misattribute the cause of a deviation",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine aligns each drive to the closest drive the game plan allows: synchronous plays are as-planned, model moves are planned plays that never happened (a check or audible removed them), and log moves are plays the plan cannot explain, which are exactly the plays film review needs to see",
+    "source_operator": "alignments",
+    "telemetry": "Per-drive alignment tables with move types and the plays involved in each deviation"
+   }
+  },
+  {
+   "primitive_id": "alignment_based_fitness",
+   "name": "Alignment-based fitness: one minus the cost of optimal alignments normalized by the worst-case alignment cost (empty execution plus shortest model execution)",
+   "verbatim_quote": "Remarkably, alignments provide a simple means to quantify fitness.",
+   "page": "Ch. 5, Sect. 2.4, book p. 167 (Eq. 5); text lines 8513-8535",
+   "latex": "\\mathrm{fitness}(L, M) = 1 - \\frac{\\sum_{t \\in L} \\mathrm{cost}(t, M)}{\\sum_{t \\in L} \\mathrm{cost}(t, \\langle \\rangle) + |L| \\times \\min_{x \\in M} \\mathrm{cost}(\\langle \\rangle, x)}",
+   "symbol_and_unit_ledger": {
+    "\\mathrm{fitness}(L, M)": "alignment-based fitness (dimensionless, in [0,1])",
+    "\\mathrm{cost}(t, M)": "cost of an optimal alignment of trace t with model M (sum of move costs, dimensionless)",
+    "\\mathrm{cost}(t, \\langle \\rangle)": "cost of aligning trace t with the empty execution sequence (all log moves)",
+    "\\min_{x \\in M} \\mathrm{cost}(\\langle \\rangle, x)": "cost of the shortest model execution aligned with the empty trace (all model moves)",
+    "|L|": "number of traces in the log (count)",
+    "t": "a trace of the log",
+    "M": "the process model"
+   },
+   "assumptions": [
+    "Move costs are assigned per move type; uniform cost one for log and model moves and zero for synchronous moves recovers deviation-count optimality",
+    "The worst case uses the shortest execution sequence from the initial to a final state"
+   ],
+   "breakdown_regime": "Raw aggregated alignment cost is not normalized and misleads across logs of different lengths; the normalized ratio inherits the cost assignment, so fitness values are comparable only under the same cost function",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Plan-fitness for a game is computed with this normalization: total deviation cost of the optimal drive alignments divided by the worst case (every play unexplained plus the shortest complete planned drive), giving a 0-to-1 score comparable across games of different lengths",
+    "source_operator": "alignment_based_fitness",
+    "telemetry": "Optimal alignment costs per drive, worst-case alignment costs, and the chosen move-cost table"
+   }
+  },
+  {
+   "primitive_id": "escaping_edges_precision",
+   "name": "Alignment-based precision via escaping edges: precision is the ratio of activities actually observed after each visited model state to the activities the model enables in that state",
+   "verbatim_quote": "Then, the ratio of both numbers captures the amount of 'escaping edges' that represent modelled behaviour that has not been recorded.",
+   "page": "Ch. 5, Sect. 2.4, book pp. 167-168 (Eq. 6); text lines 8560-8572",
+   "latex": "\\mathrm{precision}(L, M) = \\frac{\\sum_{t \\in L, \\, e \\in t} \\mathrm{enabled}_L(e)}{\\sum_{t \\in L, \\, e \\in t} \\mathrm{enabled}_M(e)}",
+   "symbol_and_unit_ledger": {
+    "\\mathrm{precision}(L, M)": "escaping-edges precision (dimensionless, in [0,1])",
+    "\\mathrm{enabled}_L(e)": "number of distinct activities observed directly after the prefix ending at event e (count)",
+    "\\mathrm{enabled}_M(e)": "number of tasks the model enables in the state right before event e (count)",
+    "e": "an event of trace t",
+    "t": "a trace of the log L",
+    "M": "the process model"
+   },
+   "assumptions": [
+    "The log fits the model (non-fitting traces are excluded from the assessment)",
+    "The model is deterministic, so the state before each event is uniquely characterized"
+   ],
+   "breakdown_regime": "The determinism and fitness assumptions fail on most real models: with duplicate labels or non-fitting traces the pre-event state is not unique, and the enabled counts, hence the precision value, become ill-defined",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine measures tendency-model precision the same way: at each game state a drive actually visited, compare how many next plays the model allowed against how many distinct next plays were ever observed from that state across the league; the gap is unobserved model freedom",
+    "source_operator": "escaping_edges_precision",
+    "telemetry": "Per-state enabled-play counts from the model and observed next-play counts from game data"
+   }
+  },
+  {
+   "primitive_id": "alignment_computation_complexity",
+   "name": "Computing optimal alignments is as hard as reachability in Petri nets (undecidable in general); the standard technique is A-star search on the synchronous product net",
+   "verbatim_quote": "Computing an optimal alignment for an arbitrary combination of a process model and an event log is a far from trivial task.",
+   "page": "Ch. 5, Sect. 2.4, book p. 169; text lines 8579-8590",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The synchronous product combines the process model with a Petri-net representation of the trace, with costs on transitions",
+    "A-star expands a minimal portion of the reachability graph guided by those costs"
+   ],
+   "breakdown_regime": "Large synchronous products force decomposition, SAT encodings (limited to safe nets), job-shop scheduling encodings, or sub-optimal alignments; the closing chapter notes alignment cost grows exponentially in model size and trace length",
+   "domain": "conformance checking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Drive-to-plan alignment in the engine is budgeted like this result says it must be: exact optimal alignment only for short drives and compact plan models, decomposition or bounded search for full games, with sub-optimal alignments labeled as such",
+    "source_operator": "alignment_computation_complexity",
+    "telemetry": "Alignment runtimes, search-space sizes, and optimality flags per computed alignment"
+   }
+  },
+  {
+   "primitive_id": "event_data_quality_dimensions",
+   "name": "Four broad data quality dimensions for event logs: missing data, incorrect data, imprecise data, and irrelevant data; incorrect and imprecise activity labels and timestamps are the most consequential",
+   "verbatim_quote": "In [10], four broad data quality dimensions are identified for event logs: missing data, incorrect data, imprecise data and irrelevant data.",
+   "page": "Ch. 6 (Foundations of Process Event Data), Sect. 5.1, book p. 205; text lines 10144-10148",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Quality is judged relative to the analysis being performed, not absolutely",
+    "Process mining needs detailed correlated event data in raw form to capture true behavior, unlike aggregated data mining inputs"
+   ],
+   "breakdown_regime": "Bad quality data leads to incorrect analysis results, and the field still lacks a comprehensive framework for it; the manifesto scale runs from one to five stars and most real-life logs sit between the extremes with many issues",
+   "domain": "event data",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Incoming play-by-play is audited on the same four dimensions before it reaches the engine: missing plays, incorrect labels (wrong play type or player), imprecise timestamps (clock granularity), and irrelevant rows (timeouts, penalties without plays), with per-feed quality scores",
+    "source_operator": "event_data_quality_dimensions",
+    "telemetry": "Per-feed counts of missing, incorrect, imprecise, and irrelevant events, and a star rating per data source"
+   }
+  },
+  {
+   "primitive_id": "xes_event_stream_standard",
+   "name": "XES (eXtensible Event Stream): the IEEE standard format for storing and exchanging event data, structuring a log as traces of events with extensible typed attributes",
+   "verbatim_quote": "XES is supported by most of the open-source process mining tools and many of the leading commercial tools.",
+   "page": "Ch. 1, Sect. 3.5, book pp. 21-22; text lines 1208-1214",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A document contains one log of traces, each trace a sequential list of events for one case",
+    "Semantics for attributes come from named extensions (for example, the Time extension defines the timestamp attribute), since no fixed attribute set is mandatory"
+   ],
+   "breakdown_regime": "XES presumes the flat single-case log; object-centric data must be flattened before XES export, importing the deficiency, convergence, and divergence problems into every downstream analysis",
+   "domain": "event data standards",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's event store follows the XES shape even when stored as tables: one log per competition, traces per drive, events per play, with named attribute extensions for situation, personnel, and tracking data so feeds remain interchangeable",
+    "source_operator": "xes_event_stream_standard",
+    "telemetry": "Schema registry of event attributes and extensions used by each ingested feed"
+   }
+  },
+  {
+   "primitive_id": "object_centric_event_logs",
+   "name": "Object-Centric Event Logs (OCEL): events may refer to any number of objects of different types rather than precisely one case, removing the single-case assumption of flat logs",
+   "verbatim_quote": "Object-Centric Event Logs (OCEL) aim to overcome this limitation [22].",
+   "page": "Ch. 1, Sect. 3.4, book pp. 17-18; text lines 1030-1033",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Real systems (ERP, CRM) scatter events over many tables whose objects stand in one-to-many and many-to-many relations",
+    "Any OCEL can be flattened to a conventional log per object type, so existing techniques still apply per view"
+   ],
+   "breakdown_regime": "Object-centric techniques are younger and less standardized than flat-log techniques, and each flattened view must be interpreted with care; OCEL removes the case assumption but not the need to choose analysis viewpoints",
+   "domain": "event data standards",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A play involves many objects at once (ball carrier, blockers, defenders, the ball, the sticks); the engine stores events object-centrically so the same play can be read from the quarterback's, the runner's, or the defense's perspective without duplicating or dropping it",
+    "source_operator": "object_centric_event_logs",
+    "telemetry": "Event-to-object link tables: per play, the set of players, units, and field objects involved, by type"
+   }
+  },
+  {
+   "primitive_id": "flattening_convergence",
+   "name": "Flattening an object-centric log onto one case notion causes deficiency (events vanish), convergence (events are replicated), and divergence (unrelated events appear causally related)",
+   "verbatim_quote": "Convergence: Events referring to multiple objects of the selected type are replicated, possibly leading to unintentional duplication",
+   "page": "Ch. 1, Sect. 3.4, book pp. 19-20; text lines 1148-1156",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Flattening selects one object type as the case notion and projects every event onto the objects of that type it references",
+    "Events referencing no object of the chosen type disappear (deficiency); events referencing several are copied once per object (convergence)"
+   ],
+   "breakdown_regime": "Convergence inflates frequencies and misleads diagnostics (one shared event counted three times), while divergence interleaves events of different objects through a coarse shared object and fabricates loops that never occur for any single object",
+   "domain": "event data standards",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reading a game only through the quarterback flattens it: plays he was not part of vanish, plays involving several tracked players are double-counted in player totals, and unrelated drives interleave through the shared team object; the engine tracks which view each statistic came from and its flattening risk",
+    "source_operator": "flattening_convergence",
+    "telemetry": "Per-view replication factors, dropped-event counts, and cross-object interleaving rates"
+   }
+  },
+  {
+   "primitive_id": "process_extension_vs_improvement",
+   "name": "Process enhancement has two types: process extension, which adds data, resource, and time perspectives to raise precision, and process improvement, which reshapes the model toward reality and better-performing behavior",
+   "verbatim_quote": "The literature proposes two types of process enhancement [25]: process extension and process improvement.",
+   "page": "Ch. 8 (Foundations of Process Enhancement), Sect. 1, book p. 244; text lines 11788-11794",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Enhancement starts from an existing model, mined or hand-designed, rather than from data alone",
+    "Events carry attributes for the added perspectives (data values, resources, timestamps)"
+   ],
+   "breakdown_regime": "Extension raises precision only if the added perspective attributes are trustworthy; improvement that disallows observed-but-poor executions encodes a performance judgment that can be wrong for rare contexts where those executions are correct",
+   "domain": "process enhancement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine enhances its tendency models in both modes: extension adds down-distance, field position, personnel, and clock perspectives to a base play-sequence model, and improvement prunes model branches that historically produce poor outcomes even though they were observed",
+    "source_operator": "process_extension_vs_improvement",
+    "telemetry": "Perspective coverage per model (which attributes are attached) and outcome statistics per model branch"
+   }
+  },
+  {
+   "primitive_id": "bottleneck_waiting_vs_service_time",
+   "name": "Bottleneck analysis decomposes time into waiting time (actual start minus the earliest moment the instance could have started) and service time (the duration of the activity instance execution)",
+   "verbatim_quote": "The presence or absence of bottlenecks can be related to (i) waiting time, namely the difference between the timestamp of the actual start of an activity instance and the earliest moment in which the instance could have started",
+   "page": "Ch. 8, Sect. 1.4, book p. 253; text lines 12222-12226",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Activity instances have observable enablement, start, and completion timestamps, or a model-aligned replay that reconstructs them",
+    "Delays from lack of resources show up as waiting time rather than service time"
+   ],
+   "breakdown_regime": "Most logs record only completion timestamps, so waiting time must be estimated (for example, by replay with start and complete transitions split); setting the estimate to zero by assumption erases exactly the bottleneck signal being looked for",
+   "domain": "process enhancement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Tempo analysis uses the same decomposition: a drive's elapsed time splits into waiting (time between plays, huddle and substitution delay) and service (play execution time), separating a team's deliberate pace from its execution speed",
+    "source_operator": "bottleneck_waiting_vs_service_time",
+    "telemetry": "Per-play inter-play intervals, play durations, and per-drive waiting versus service totals"
+   }
+  },
+  {
+   "primitive_id": "event_knowledge_graphs",
+   "name": "Event Knowledge Graphs: because classical process mining partitions event data by a unique case identifier into independent sequences, behavior over multiple entities is instead modeled as a network of events in a typed graph",
+   "verbatim_quote": "Classical process mining relies on the notion of a unique case identifier, which is used to partition event data into independent sequences of events.",
+   "page": "Ch. 9 (Event Knowledge Graphs), Abstract and Sect. 4, book pp. 274 and 285-286; text lines 13094-13100",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Events, entities, correlations between events and entities, and directly-follows relations per entity are modeled as labeled property graph nodes and relationships",
+    "Multiple local directly-follows relations (one per entity) replace the single global trace order"
+   ],
+   "breakdown_regime": "Graph construction and querying are heavier than flat-log analysis, and results depend on which entity correlations were extracted; a wrong correlation edge fabricates behavioral relations just as a wrong case notion does in flat logs",
+   "domain": "multi-dimensional process mining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's multi-entity view is an event knowledge graph: plays are event nodes, players and units are entity nodes, and per-entity directly-follows edges let it ask how a single defender's sequence of plays evolved inside a game without flattening to one case notion",
+    "source_operator": "event_knowledge_graphs",
+    "telemetry": "Graph extracts: event nodes, entity nodes, correlation edges, and per-entity directly-follows edges per game"
+   }
+  },
+  {
+   "primitive_id": "predictive_process_monitoring",
+   "name": "Predictive Process Monitoring: predicting the future of an ongoing, uncompleted process execution (outcome, completion time, future activities) from a model learned on historical complete traces",
+   "verbatim_quote": "Predictive Process Monitoring [29] is a branch of process mining that aims at predicting the future of an ongoing (uncompleted) process execution.",
+   "page": "Ch. 10 (Predictive Process Monitoring), Sect. 1, book p. 321; text lines 15036-15039",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Historical complete executions exist to train on, and ongoing cases are prefixes of the same process",
+    "Approaches have a training phase on complete traces and a runtime phase that queries the model for an ongoing case"
+   ],
+   "breakdown_regime": "Predictions inherit encoding choices (how traces are turned into feature vectors) and drift: a model trained on last season's complete games degrades as the process changes, and reactive monitoring that only detects violations after they occur cannot support prevention",
+   "domain": "predictive process monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Live win probability and drive-outcome prediction are this exact task: the ongoing game is an uncompleted trace, completed historical games are the training set, and predictions (outcome, remaining time, next plays) are issued at runtime to support decisions before the outcome is fixed",
+    "source_operator": "predictive_process_monitoring",
+    "telemetry": "Live game prefixes, predicted outcome distributions, remaining-time estimates, and next-play distributions with calibration tracking"
+   }
+  },
+  {
+   "primitive_id": "streaming_process_mining",
+   "name": "Streaming process mining: techniques that process a stream of events as they happen, rather than a finite stored event log, to remove the delay between event occurrence and distilled information",
+   "verbatim_quote": "Streaming process mining refers to the set of techniques and tools which have the goal of processing a stream of data (as opposed to a finite event log).",
+   "page": "Ch. 11 (Streaming Process Mining), Abstract, book p. 349; text lines 16229-16233",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Events arrive as an unbounded sequence in real time and storing everything for later batch processing is infeasible or too slow",
+    "Discovery and conformance techniques must work incrementally, and concept drift forces old observations to be replaced by new ones"
+   ],
+   "breakdown_regime": "Bounded memory forces approximation: frequency counts, models, and conformance states are estimates over windows, so streaming results are not directly comparable to exact batch results on the full log",
+   "domain": "streaming process mining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In-game engine updates are streaming process mining: each play updates tendency counts and conformance states incrementally within the game, with windowed forgetting so early-season behavior does not dominate late-season reads",
+    "source_operator": "streaming_process_mining",
+    "telemetry": "Incremental per-play updates to tendency tables, window sizes, and drift-driven replacement events"
+   }
+  },
+  {
+   "primitive_id": "fact_responsible_process_mining",
+   "name": "Responsible process mining is structured by the FACT principles: fairness, accuracy, confidentiality, and transparency challenges instantiated for event log data and process mining tasks",
+   "verbatim_quote": "We follow the definitions of the FACT principles brought forward in [3,5] and illustrated in Fig. 2 to structure the discussion of process mining related challenges.",
+   "page": "Ch. 12 (Responsible Process Mining), Sect. 1.2, book pp. 375-376; text lines 17498-17501",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Process mining results are highly dependent on the quality of the event data and the biases it contains",
+    "Sequential ordering of events, grouping into cases, and resource attribution create confidentiality and fairness risks beyond generic data science"
+   ],
+   "breakdown_regime": "Fairness has many mutually incompatible formal definitions and the suitable one depends on context; no method provides fairness in every sense, and interpretable models do not by themselves remove bias inherited from the log",
+   "domain": "responsible process mining",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The institute applies the FACT checklist to its own models: fairness across teams and player groups in evaluation data, accuracy audits of published projections, confidentiality of internal tracking data, and transparency of how each published number was produced",
+    "source_operator": "fact_responsible_process_mining",
+    "telemetry": "Audit logs: per-group accuracy breakdowns, data-access records, and provenance notes attached to published outputs"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "689bc16391f2a77a-t1",
+   "think": "This handbook is the field-defining tutorial volume for process mining, edited by Wil van der Aalst and Josep Carmona as LNBIP 448 (Springer, 2022, open access), and its architecture is itself the first lesson: the discipline is a pipeline that starts with event data and ends with action. The opening chapter fixes the vocabulary. An event carries a case identifier, an activity name, a timestamp, and optional attributes. A collection of such events for one process is an event log, formalized in the discovery chapter as a multiset of traces, where each trace is one case's sequence of activities and multiplicities matter. Everything else in the book is machinery for confronting that data with models. The confrontation takes six named forms: discovery, conformance checking, performance analysis, comparative mining, predictive mining, and action-oriented mining, and the closing chapter insists the first five only earn their keep when they feed the sixth.\nDiscovery is presented as a learning problem with a structural handicap: the log contains only positive examples, is likely incomplete, and may contain noise, while concurrency makes the space of possible traces factorial and loops make it infinite. The baseline learner, the Directly-Follows Graph, counts adjacent activity pairs and is honest about its limits: it cannot express concurrency, so interleavings collapse into loops and real logs render as spaghetti. The Alpha algorithm was the first learner to recover concurrency, reading a footprint of ordering relations and constructing Petri net places from maximal candidate sets, but it consumes the footprint uncritically and breaks on noise, short loops, and duplicate or invisible activities. Process trees answer with representational bias: restrict the hypothesis space to hierarchical compositions of sequence, choice, parallelism, and loop, and every model is sound by construction, at the price of never expressing non-local synchronization. The Inductive Miner exploits that bias with recursive cuts and carries the strongest guarantee in the book, perfect replay fitness by construction, while the Split Miner deliberately leaves the block-structured world to chase precision and simplicity in BPMN, and pays for it by guaranteeing only deadlock freedom, not proper completion. Hovering over all of this is the evaluation tetrad the field agreed on: fitness, precision, generalization, simplicity, four dimensions in permanent tension, with no negative examples available to settle them empirically.\nConformance checking is where the book's mathematics concentrates. Rule-based checking reduces fitness to the fraction of model-derived rules no trace violates, which is transparent but hostage to the chosen rule set. Token replay grades traces by the tokens that must be invented (missing) and the tokens left over (remaining) when a trace is forced through a Petri net; it is fast and crude. Alignments are the mature answer: pair the trace with the closest model execution as a sequence of synchronous, model, and log moves, choose the alignment of minimal cost, and both fitness and precision become ratios with explicit worst-case normalizations. The escaping-edges precision measure counts, at each visited state, how much of what the model enables was ever seen. The cost of this exactness is stated plainly: optimal alignment is as hard as Petri net reachability, undecidable in general, attacked in practice with A-star search over the synchronous product net, decomposition, or SAT encodings, and its cost grows exponentially in model size and trace length. The declarative chapters supply the dual view: instead of flows, Declare constraints over LTLf formulae, with template semantics such as Response(a,b) as always(a implies eventually b), and the subtle machinery of activations and targets that separates genuine obligations from vacuous satisfaction.\nThe data chapters quietly determine whether any of the above can be trusted. Event data quality is organized into missing, incorrect, imprecise, and irrelevant data. XES standardizes the flat log; OCEL removes the single-case assumption by letting events reference many objects, and flattening an OCEL back onto one case notion provably manufactures deficiency, convergence, and divergence. Event Knowledge Graphs generalize further, replacing the global trace order with per-entity directly-follows relations in a labeled property graph. Enhancement then splits into extension (add data, resource, and time perspectives, with bottleneck analysis decomposing time into waiting and service components) and improvement (reshape the model toward better behavior). Predictive monitoring reframes the whole apparatus forward in time: learn from complete traces, predict the outcome, remaining time, or suffix of a running case. Streaming removes the stored log entirely and forces incremental, windowed, drift-aware versions of the same tasks. The responsible mining chapter closes the loop with the FACT principles, reminding the reader that fairness, accuracy, confidentiality, and transparency are properties of the pipeline, not afterthoughts.\nFor a reasoning engine, the transfer is direct. Any domain that records sequences of events under a case notion (games as cases, plays as activities, drives as traces) inherits this entire stack: tendency discovery with stated guarantees, conformance of executed behavior against planned behavior with cost-weighted deviations, quality scored on four axes instead of one, object-centric storage to avoid flattening artifacts, and prediction over running cases. The book's deepest lesson is disciplinary rather than technical: every number it defines wears its assumptions on its sleeve, and every technique names the regime in which it breaks.\nA final structural observation matters for anyone importing this machinery. The handbook repeatedly separates what a technique guarantees by construction from what it merely achieves on a given log. Fitness of 100 percent from the Inductive Miner is a theorem about the algorithm, not evidence about the process. Soundness of a process tree is a property of the representation, not of the world. Precision from escaping edges is a statement conditional on determinism and fitting traces. Keeping those epistemic categories apart is what lets the pipeline compose: each stage hands the next a claim whose strength is known, and the reasoning layer above can weight it accordingly instead of treating every output as equally factual.",
+   "retrocausal_genealogy": "The lineage runs from Petri nets in 1962, the first formalism to capture concurrency systematically, through workflow management and the workflow nets of the 1990s, where soundness was defined. Process mining research started in the late 1990s at Eindhoven; the Alpha algorithm and the ProM platform (first released in 2004 with 29 plug-ins, later over 1500) made discovery concrete. The Process Mining Manifesto of the IEEE Task Force, the XES standard (defined in 2010, an IEEE standard in 2016), and the 2011 textbook by van der Aalst consolidated the field. Alignments arrived from Adriano and van der Aalst's work on cost-based conformance, the Inductive Miner from Leemans and colleagues, Declare from the Italian school around Pesic, Montali, and Di Ciccio building on LTL pattern catalogues, and OCEL and Event Knowledge Graphs from the Aachen and Eindhoven groups after 2019. This 2022 handbook is the community's own consolidation of that twenty-year arc into a tutorial canon, with each chapter written by the researchers who built the technique it teaches.",
+   "theory_of_mind": "The editors assume the reader's world is an organization whose real processes have drifted away from its documented ones, and that event data, however messy, is a more honest witness than interviews or flowcharts. Their model of the problem is confrontational: truth lives in the tension between observed behavior and modeled behavior, and neither side is privileged, since a discovered model is descriptive while a hand-made model is normative, which flips the meaning of every deviation. They also assume improvement is the point: analysis that does not terminate in redesigned processes, better control, or automation is unfinished. The practitioner chapters add a working assumption the formal chapters understate, namely that extraction and cleaning consume most of the effort (the overview cites figures around 80 percent of project time), so a technique's value is discounted by the data engineering it demands. Finally, the authors believe in explicit models: mainstream machine learning cannot be applied to event data directly, and a process model tightly connected to the data must be discovered before the right predictive questions can even be posed.",
+   "cross_layer_veto": "Several results in this book veto habits that other layers of an analysis stack encourage. The positive-examples-only result vetoes any rule that treats an unobserved sequence as impossible. The flattening results veto statistics computed on a single-case projection of object-centric data without a replication audit. The four-dimension consensus vetoes single-score model selection: a model that wins on fitness alone may be an underfitting flower model or an overfitting enumeration. The Split Miner limitation vetoes trusting a deadlock-free model for simulation without a proper-completion check. The alignment complexity results veto demands for exact conformance on large models in real time. And the vacuous-satisfaction analysis vetoes satisfaction-rate reporting for declarative rules: only activation-conditioned rates count as evidence."
+  }
+ ],
+ "universal_lens": "Any system that leaves timestamped traces of cases moving through activities can be read three ways at once: as behavior to be discovered into an explicit model, as evidence to be checked against a model that claims authority, and as a prefix whose future can be predicted. The handbook supplies the general grammar for all three readings: represent events honestly (object-centric when one case notion lies), learn models whose guarantees and blind spots are named, score them on fitness, precision, generalization, and simplicity simultaneously, and measure deviation with cost-weighted alignments rather than binary match or mismatch. The same grammar applies to hospital pathways, supply chains, software execution logs, and games.",
+ "gsi_mapping": "The Institute takes the handbook as its reference architecture for turning recorded behavior into knowledge. Specifically: the event and log formalisms as the data contract for any behavioral dataset it curates; the four quality dimensions as the standing evaluation rubric for every model it publishes or teaches; OCEL and Event Knowledge graphs as the storage doctrine when entities interact; the FACT principles as the audit checklist for student and client work; and the discovery-to-action pipeline (discover, check, analyze, predict, act) as the template for structuring research programs, with each stage's assumptions and breakdown regimes taught alongside its formulas.",
+ "gse_mapping": "The engine takes working machinery, not metaphors. Tendency modeling inherits the discovery stack: directly-follows counts as the baseline, tree-structured recursive decomposition where guarantees matter, and four-axis quality reporting on every refit. Plan conformance inherits alignments with severity-weighted move costs and worst-case normalization, so a game grades comparably against any opponent's plan. Live prediction inherits the predictive monitoring frame (train on complete games, predict running games) and streaming updates with drift-aware forgetting across the season. Object-centric event storage prevents the flattening errors the book proves, and activation-conditioned scoring replaces raw satisfaction rates for every situational rule the engine maintains."
+}
