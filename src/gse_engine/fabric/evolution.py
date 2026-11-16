@@ -391,3 +391,46 @@ class HybridMutator:
                 "critique_regime": critique.dominant_failure_regime,
             },
         )
+
+
+def compute_shapley_sobol_4block_attribution(
+    coalition_values_v: Sequence[float],
+    *,
+    y_proj: float,
+    y_actual: float,
+    block_names: tuple[str, str, str, str] = ("usage", "script", "scheme", "luck"),
+) -> dict[str, object]:
+    """Compute exact 16-coalition Shapley-Sobol counterfactual attribution with zero luck grad."""
+    if len(coalition_values_v) != 16:
+        raise ValueError(f"Expected 2^4=16 coalition values, got {len(coalition_values_v)}.")
+    v = [float(val) for val in coalition_values_v]
+    total_err = float(y_actual) - float(y_proj)
+    scale = (
+        total_err / (v[15] - v[0])
+        if abs(v[15] - v[0]) > 1e-12 and abs((v[15] - v[0]) - total_err) > 1e-6
+        else 1.0
+    )
+
+    deltas: dict[str, float] = {}
+    comb3 = {0: 1.0, 1: 3.0, 2: 3.0, 3: 1.0}
+    for k in range(4):
+        bit_k = 1 << k
+        phi_k = 0.0
+        for s_mask in range(16):
+            if s_mask & bit_k:
+                continue
+            s_size = s_mask.bit_count()
+            marginal = (v[s_mask | bit_k] - v[s_mask]) * scale
+            phi_k += 0.25 * (marginal / comb3[s_size])
+        deltas[block_names[k]] = phi_k
+
+    delta_luck = deltas["luck"]
+    y_struct_target = float(y_actual) - delta_luck
+    sum_deltas = sum(deltas.values())
+    return {
+        "deltas": deltas,
+        "luck_learning_weight": 0.0,
+        "structural_target": y_struct_target,
+        "efficiency_residual": abs(sum_deltas - (v[15] - v[0]) * scale),
+        "r_tilde_critic": deltas["usage"] + deltas["script"] + deltas["scheme"],
+    }

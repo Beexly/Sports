@@ -3369,6 +3369,7 @@ def compile_stage1_to_stage2_simulation_priors(
         "situational_279_pillar": unified_corpus_priors["situational_279_pillar"],
         "contextual_coaching_pillar": unified_corpus_priors["contextual_coaching_pillar"],
         "gsi_and_compound_fabric_pillar": unified_corpus_priors["gsi_and_compound_fabric_pillar"],
+        "v4_unified_kernels_pillar": unified_corpus_priors["v4_unified_kernels_pillar"],
         "nvidia_hermes_capability_routes": unified_corpus_priors["nvidia_hermes_capability_routes"],
         "all_corpus_pillars_verification": unified_corpus_priors["all_corpus_pillars_verification"],
         "fg_make_prob_delta": fg_make_prob_delta,
@@ -3742,6 +3743,8 @@ def run_stage2_jev_spine_and_10k_world_simulation(
             "sinkhorn_mass_moved": sim_branch_a["sinkhorn_mass_moved"],
             "biomech_kinetic_overlay": sim_branch_a.get("biomech_kinetic_overlay", {}),
             "fourth_down_wp_gap_mean": sim_branch_a["fourth_down_wp_gap_mean"],
+            "entropic_tilting": sim_branch_a.get("entropic_tilting", {}),
+            "rulebook_2026_diagnostics": sim_branch_a.get("rulebook_2026_diagnostics", {}),
         },
         "branch_b_tuten_active_limited_contingency": {
             "n_sims": n_sims,
@@ -3753,6 +3756,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
             "jax_win_prob": round(float(np.mean(sim_branch_b["vectors"]["away_score"] > sim_branch_b["vectors"]["home_score"])), 4),
             "bal_cover_plus_7_5_prob": round(float(np.mean((sim_branch_b["vectors"]["home_score"] - sim_branch_b["vectors"]["away_score"]) > -posted_home_spread)), 4),
             "over_41_5_prob": round(float(np.mean(sim_branch_b["vectors"]["total_pts_out"] > posted_total)), 4),
+            "entropic_tilting": sim_branch_b.get("entropic_tilting", {}),
         },
     }
     stage2_receipt["stage2_receipt_sha256"] = _sha256_obj(stage2_receipt)
@@ -3875,12 +3879,34 @@ def run_stage3_and_4_conserved_post_sim_projections(
             else:
                 qb_pass_mult = 1.0
                 mkt_qb_mult = 1.0
-            pbp_pass_adj = pbp_pass_base * qb_pass_mult
 
             tm_ftn = pbp_ftn_32_map.get(tm_code) or {}
             tm_pass_rate = float(tm_ftn.get("pass_rate") or 0.57)
             pass_lean = float(np.clip(tm_pass_rate / 0.57, 0.84, 1.20))
             rush_lean = float(np.clip((1.0 - tm_pass_rate) / 0.43, 0.80, 1.24))
+
+            # K12 Empirical Bayes 160-dropback shrinkage for QB2 backup archetype shifts
+            if qb_tier_side == "QB2_BACKUP":
+                from gse_engine.compute.qb_physics import compute_qb2_backup_topology_shift
+
+                qb2_pbp = (athletes.get(qb_starter_nm) or {}).get("pbp_2026") or {}
+                qb2_tgts = max(1.0, float(qb2_pbp.get("targets") or 1.0))
+                qb2_adot = float(qb2_pbp.get("air_yds") or 0.0) / qb2_tgts
+                qb2_shift_info = compute_qb2_backup_topology_shift(
+                    qb1_vector=(0.10, 8.1, 2.75, 0.064, (tm_pass_rate - 0.57) * 100.0),
+                    qb2_empirical_vector=(
+                        float(qb2_pbp.get("pass_epa_per_dropback") or -0.08),
+                        qb2_adot if qb2_adot > 1.0 else 6.6,
+                        2.95,
+                        0.085,
+                        -4.0,
+                    ),
+                    qb2_career_dropbacks_n=int(qb_att_lg),
+                )
+                w_qb2_val = float(qb2_shift_info["w_qb2"])
+                qb_pass_mult = float(np.clip(qb_pass_mult * (0.98 + 0.04 * w_qb2_val), 0.54, 0.96))
+
+            pbp_pass_adj = pbp_pass_base * qb_pass_mult
             mkt_pass_implied = (214.0 + 4.8 * (mkt_team_pts - 21.5)) * pass_lean * mkt_qb_mult
             mkt_rush_implied = (112.0 + 3.4 * (mkt_team_pts - 21.5)) * rush_lean
 
@@ -4225,13 +4251,59 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 max_residual_depth=0.03,
             )
 
-        # Apply corpus Books/IG/X/Coaching player multipliers (damped when anchored to live DK prop line)
+        # Apply K04 12-cell Kantorovich inline-blocking role conservation + corpus multipliers
         # and solve exact Boyd & Vandenberghe VMLS KKT simplex conservation for Week 10+
         if not is_jax_bal_s34 and int(week) >= 10:
+            from gse_engine.compute.volume_conservation import (
+                reallocate_12cell_kantorovich_vmls_roles,
+            )
+
+            active_rec_keys = [k for k in rec_weights if k != "OTHER_TEAM_REC"]
+            k04_rec_input = dict(rec_weights)
+            if len(active_rec_keys) >= 2:
+                raw_sum = sum(rec_weights[k] for k in active_rec_keys) or 1.0
+                r0_list: list[float] = []
+                profs_k04: list[tuple[float, float, float, float, float, float, float]] = []
+                u_caps_k04: list[float] = []
+                for k_name in active_rec_keys:
+                    inf_k = athletes.get(k_name) or {}
+                    pos_k = str(inf_k.get("position") or "WR").upper()
+                    base_share = rec_weights[k_name] / raw_sum
+                    # Inline TEs commit partial snaps to pass-protection; liberate excess aerial band
+                    r0_val = base_share * (0.76 if pos_k == "TE" else 0.96)
+                    r0_list.append(r0_val)
+                    if pos_k == "TE":
+                        profs_k04.append((0.08, 0.22, 0.66, 0.04, 7.5, 0.55, 0.24))
+                        u_caps_k04.append(0.04)
+                    elif pos_k == "RB":
+                        profs_k04.append((0.04, 0.12, 0.06, 0.78, 3.5, 0.35, 0.18))
+                        u_caps_k04.append(0.06)
+                    else:
+                        profs_k04.append((0.62, 0.32, 0.04, 0.02, 12.0, 0.05, 0.08))
+                        u_caps_k04.append(0.18)
+                vac_tot = max(0.0, 1.0 - sum(r0_list))
+                vac_12 = [0.0, 0.30 * vac_tot, 0.25 * vac_tot, 0.0, 0.25 * vac_tot, 0.20 * vac_tot, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+                k04_res = reallocate_12cell_kantorovich_vmls_roles(
+                    vacated_band_shares_v=vac_12,
+                    active_player_profiles=profs_k04,
+                    base_shares_r0=r0_list,
+                    max_share_add_u=u_caps_k04,
+                    has_liquid_two_sided_prop=[False] * len(active_rec_keys),
+                    ol_distress=1.0,
+                )
+                other_share = float(rec_weights.get("OTHER_TEAM_REC", 0.0)) / (sum(rec_weights.values()) or 1.0)
+                active_scale = max(0.0, 1.0 - other_share)
+                k04_rec_input = {
+                    k_name: float(sh_val) * active_scale
+                    for k_name, sh_val in zip(active_rec_keys, k04_res["r_new"], strict=True)
+                }
+                if "OTHER_TEAM_REC" in rec_weights:
+                    k04_rec_input["OTHER_TEAM_REC"] = other_share
+
             corpus_player_mults = dict(load_bearing.get("player_target_and_carry_multipliers") or {})
             rec_damped_mults: dict[str, float] = {}
             rush_damped_mults: dict[str, float] = {}
-            for k in rec_weights:
+            for k in k04_rec_input:
                 raw_m = float(corpus_player_mults.get(k, 1.0))
                 has_rec_prop = bool(((athletes.get(k) or {}).get("core_lines") or {}).get("Total Receiving Yards (incl. overtime)"))
                 rec_damped_mults[k] = 1.0 + 0.25 * (raw_m - 1.0) if has_rec_prop else raw_m
@@ -4239,7 +4311,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 raw_m = float(corpus_player_mults.get(k, 1.0))
                 has_rush_prop = bool(((athletes.get(k) or {}).get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)"))
                 rush_damped_mults[k] = 1.0 + 0.25 * (raw_m - 1.0) if has_rush_prop else raw_m
-            rec_shares_norm = apply_vmls_kkt_and_corpus_shares(rec_weights, rec_damped_mults)
+            rec_shares_norm = apply_vmls_kkt_and_corpus_shares(k04_rec_input, rec_damped_mults)
             rush_shares_norm = apply_vmls_kkt_and_corpus_shares(rush_weights, rush_damped_mults)
             tk_sum = sum(tackle_weights.values()) or 1.0
             return (

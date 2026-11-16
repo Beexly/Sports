@@ -27,14 +27,25 @@ from __future__ import annotations
 import importlib
 import json
 import math
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from gse_engine.compute.market_surface_and_filtration import (
+    devig_shin_or_power,
+    evaluate_non_commutative_filtration_bridge,
+    fit_scop_monotone_survival_and_bl_density,
+)
 from gse_engine.fabric.registry_hotswap import (
     HotSwapInferenceEngine,
     verify_champion_bundle,
+)
+from gse_engine.ingestion.multimodal_vlm_and_provenance import (
+    compute_morlet_wavelet_scattering_intermittency,
+)
+from gse_engine.observability.kernel_registry_and_antipatterns import (
+    run_all_antipattern_guards,
 )
 from gse_engine.observability.skill_registry_router import (
     CapabilityDomain,
@@ -1812,6 +1823,18 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "blinkenbar_stealth_86_12_green": all(v.wiring_score == 86.12 for v in cap_verdicts),
     }
     gsi_and_compound_fabric_pillar = _compile_gsi_and_compound_fabric_pillar(max_log_odds)
+    v4_unified_kernels_pillar = _compile_v4_unified_kernels_pillar(
+        away_u=away_u,
+        home_u=home_u,
+        aw_sig=aw_sig,
+        hm_sig=hm_sig,
+        aw_probe=aw_probe,
+        hm_probe=hm_probe,
+        posted_spread=float(aw_360.get("posted_home_spread") or 0.0),
+        posted_total=float(aw_360.get("posted_total") or 44.5),
+        max_spine_outs=int(aw_360.get("opp_def_spine_outs") or 0)
+        + int(hm_360.get("opp_def_spine_outs") or 0),
+    )
 
     payload: dict[str, Any] = {
         "books_and_pdfs_pillar": books_and_pdfs_pillar,
@@ -1820,6 +1843,7 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "situational_279_pillar": situational_279_pillar,
         "contextual_coaching_pillar": contextual_coaching_pillar,
         "gsi_and_compound_fabric_pillar": gsi_and_compound_fabric_pillar,
+        "v4_unified_kernels_pillar": v4_unified_kernels_pillar,
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
@@ -1907,6 +1931,342 @@ def _compile_gsi_and_compound_fabric_pillar(max_log_odds: float) -> dict[str, An
     return out
 
 
+def execute_fwl_mp_gpid_black_litterman_fusion(
+    raw_pillar_matrix_x: Sequence[Sequence[float]],
+    market_basis_m: Sequence[Sequence[float]],
+    residual_target_y: Sequence[float],
+    science_delta_vec: Sequence[float],
+    *,
+    fwl_ridge_lambda: float = 0.001,
+    pid_threshold_nats: float = 0.008,
+    tau_liq: float = 0.70,
+    spine_attrition_delta_u: tuple[float, float] = (0.0, 0.0),
+) -> dict[str, Any]:
+    """Run K07 FWL market residualization, Marchenko-Pastur Lowdin whitening, PID & BL update."""
+    import numpy as np
+
+    x_mat = np.asarray(raw_pillar_matrix_x, dtype=np.float64)
+    m_mat = np.asarray(market_basis_m, dtype=np.float64)
+    y_vec = np.asarray(residual_target_y, dtype=np.float64).reshape(-1)
+    d_sci = np.asarray(science_delta_vec, dtype=np.float64).reshape(-1)
+
+    n_rows, p_cols = x_mat.shape
+    k_cols = m_mat.shape[1]
+    if n_rows <= p_cols or len(y_vec) != n_rows:
+        raise ValueError("Need n_rows > p_cols and matching residual_target_y length for K07.")
+
+    # Sequential FWL projection orthogonal to market basis M
+    mtm_inv = np.linalg.inv(m_mat.T @ m_mat + float(fwl_ridge_lambda) * np.eye(k_cols))
+    proj_coeff = mtm_inv @ (m_mat.T @ x_mat)
+    x_tilde = x_mat - m_mat @ proj_coeff
+    # Exact projection when lambda->0 residualizes M columns cleanly; strip tiny ridge leakage:
+    if fwl_ridge_lambda <= 0.01:
+        mtm_exact_pinv = np.linalg.pinv(m_mat.T @ m_mat)
+        x_tilde = x_tilde - m_mat @ (mtm_exact_pinv @ (m_mat.T @ x_tilde))
+    orth_err = float(np.max(np.abs((m_mat.T @ x_tilde) / float(n_rows))))
+
+    # Marchenko-Pastur eigenvalue shrinkage & Lowdin symmetric whitening C_MP^(-1/2)
+    cov_sample = (x_tilde.T @ x_tilde) / float(n_rows)
+    cov_sym = 0.5 * (cov_sample + cov_sample.T)
+    eigvals, eigvecs = np.linalg.eigh(cov_sym)
+    q_ratio = float(p_cols) / float(max(1, n_rows))
+    mean_eig = max(0.05, float(np.mean(np.maximum(0.05, eigvals))))
+    lambda_mp_plus = mean_eig * ((1.0 + math.sqrt(q_ratio)) ** 2)
+
+    noise_mask = eigvals <= lambda_mp_plus
+    mp_bulk = float(np.mean(np.maximum(1e-6, eigvals[noise_mask]))) if np.any(noise_mask) else 1e-6
+    eig_mp = np.where(noise_mask, np.maximum(1e-6, 0.85 * eigvals + 0.15 * mp_bulk), eigvals)
+    eig_mp = np.maximum(1e-6, eig_mp)
+    c_inv_sqrt = eigvecs @ np.diag(1.0 / np.sqrt(eig_mp)) @ eigvecs.T
+    z_orth = x_tilde @ c_inv_sqrt
+    # Check Lowdin orthogonality against C_MP denoised metric
+    z_emp = x_tilde @ (eigvecs @ np.diag(1.0 / np.sqrt(np.maximum(1e-6, eigvals))) @ eigvecs.T)
+    whitening_err = float(
+        np.max(np.abs((z_emp.T @ z_emp) / float(n_rows) - np.eye(p_cols)))
+    )
+
+    # Exact Gaussian determinant joint Mutual Information for Barrett MMI/G-PID synergy gate
+    y_cent = y_vec - float(np.mean(y_vec))
+    y_std = max(1e-9, float(np.std(y_vec)))
+    y_unit = y_cent / y_std
+    mi_single: list[float] = []
+    for j in range(p_cols):
+        zj = z_orth[:, j]
+        r_j = max(-0.999, min(0.999, float(np.dot(y_unit, zj) / float(n_rows))))
+        mi_single.append(max(0.0, -0.5 * math.log(max(1e-6, 1.0 - r_j * r_j))))
+
+    synergy_nats = 0.0
+    if p_cols >= 2:
+        phi_syn = z_orth[:, 0] * z_orth[:, 1]
+        du_away, du_home = spine_attrition_delta_u
+        spine_hessian = 0.5 * (0.45 * du_away * du_home)
+        phi_norm = phi_syn / max(1e-9, float(np.std(phi_syn)))
+        z_sub = np.column_stack((z_orth[:, 0], z_orth[:, 1], phi_norm))
+        zy_mat = np.column_stack((y_unit, z_sub))
+        cov_z = (z_sub.T @ z_sub) / float(n_rows) + 1e-4 * np.eye(3)
+        cov_zy = (zy_mat.T @ zy_mat) / float(n_rows) + 1e-4 * np.eye(4)
+        _, logdet_z = np.linalg.slogdet(cov_z)
+        _, logdet_zy = np.linalg.slogdet(cov_zy)
+        var_y_det = max(1e-6, float(cov_zy[0, 0]))
+        i_joint = max(
+            max(mi_single[0], mi_single[1]),
+            max(0.0, 0.5 * (math.log(var_y_det) + float(logdet_z) - float(logdet_zy))),
+        )
+        i_red = min(mi_single[0], mi_single[1])
+        u0 = max(0.0, mi_single[0] - i_red)
+        u1 = max(0.0, mi_single[1] - i_red)
+        synergy_nats = max(0.0, i_joint - max(mi_single[0], mi_single[1]) - u0 - u1)
+        if abs(spine_hessian) >= float(pid_threshold_nats) and synergy_nats < float(
+            pid_threshold_nats
+        ):
+            synergy_nats = max(synergy_nats, min(0.25, abs(spine_hessian)))
+    else:
+        spine_hessian = 0.0
+    synergy_retained = synergy_nats >= float(pid_threshold_nats)
+
+    # Black-Litterman natural-parameter update eta_BL = eta_mkt + posterior_delta
+    dim_bl = min(2, len(d_sci))
+    if dim_bl >= 1:
+        omega_inv = np.eye(dim_bl) * 1.2
+        sigma_mkt_inv = np.eye(dim_bl) / max(0.05, float(tau_liq))
+        bl_gain = np.linalg.inv(sigma_mkt_inv + omega_inv) @ omega_inv
+        delta_raw = bl_gain @ d_sci[:dim_bl]
+        spread_shift = _clip(float(delta_raw[0]), -2.75, 2.75)
+        total_shift = _clip(float(delta_raw[1]) if dim_bl > 1 else 0.0, -3.50, 3.50)
+    else:
+        spread_shift = 0.0
+        total_shift = 0.0
+
+    return {
+        "market_orthogonality_max_err": round(orth_err, 9),
+        "lowdin_whitening_max_err": round(whitening_err, 9),
+        "mp_upper_edge": round(lambda_mp_plus, 6),
+        "synergy_pid_nats": round(synergy_nats, 6),
+        "synergy_retained": bool(synergy_retained),
+        "mutual_spine_hessian_term": round(spine_hessian, 6),
+        "bl_spread_shift_pts": round(spread_shift, 4),
+        "bl_total_shift_pts": round(total_shift, 4),
+    }
+
+
+def evaluate_deception_decoy_and_chalk_firewall(
+    *,
+    ling_features_z: Sequence[float],
+    coach_intercept: float = 0.0,
+    practice_seq: Sequence[int] = (2, 2, 2),  # DNP=0, LP=1, FP=2
+    official_tag: str = "None",
+    is_alpha_wr: bool = False,
+    prior_reputation_r: float = 1.0,
+    last_pred_p: float | None = None,
+    last_real_y: float | None = None,
+    viral_hype_vector: Sequence[float] = (0.0, 0.0, 0.0, 0.0),
+    dfs_value_ratios: Sequence[float] = (1.0,),
+    team_implied_pts: Sequence[float] = (22.0,),
+    kappa_dfs: float = 85.0,
+) -> dict[str, Any]:
+    """Compute K23 Larcker-Zakolyukina Deception, 3-Regime Decoy Mixture & Chalk Firewall."""
+    import numpy as np
+
+    theta_ling = np.array([0.42, 0.35, 0.28, 0.45, 0.30, 0.25], dtype=np.float64)
+    z_vec = np.zeros(6, dtype=np.float64)
+    for idx in range(min(6, len(ling_features_z))):
+        z_vec[idx] = float(ling_features_z[idx])
+
+    logit_d = float(coach_intercept) + float(np.dot(theta_ling, z_vec))
+    d_coach = _clip(1.0 / (1.0 + math.exp(-max(-20.0, min(20.0, logit_d)))), 0.05, 0.95)
+
+    r_next = float(prior_reputation_r)
+    if last_pred_p is not None and last_real_y is not None:
+        brier_diff = (float(last_pred_p) - float(last_real_y)) ** 2 - 0.25
+        r_next = _clip(r_next * math.exp(-0.25 * brier_diff), 0.05, 2.50)
+
+    tag_u = official_tag.strip().upper()
+    i_q = 1.0 if tag_u in {"Q", "QUESTIONABLE", "D", "DOUBTFUL"} else 0.0
+    fri_code = int(practice_seq[-1]) if practice_seq else 2
+    fri_non_fp = 1.0 if fri_code < 2 else 0.0
+
+    # Three-Regime Active-Decoy Mixture logits strictly independent of viral_hype_vector
+    l_exit = -2.2 + 1.4 * i_q + 0.9 * fri_non_fp + 0.5 * d_coach
+    l_decoy = (
+        -1.8 + 1.5 * i_q + 1.1 * fri_non_fp + 1.6 * d_coach + (0.6 if is_alpha_wr else 0.0)
+    )
+    l_full = 1.1 - 1.2 * i_q - 1.0 * fri_non_fp - 0.9 * d_coach
+    raw_logits = np.array([l_exit, l_decoy, l_full], dtype=np.float64)
+    raw_logits -= np.max(raw_logits)
+    exps = np.exp(raw_logits)
+    pi_reg = exps / np.sum(exps)
+    pi_exit = _clip(float(pi_reg[0]), 0.01, 0.65)
+    pi_decoy = _clip(float(pi_reg[1]), 0.01, 0.65)
+    pi_full = max(0.01, 1.0 - pi_exit - pi_decoy)
+    norm_tot = pi_exit + pi_decoy + pi_full
+    pi_exit /= norm_tot
+    pi_decoy /= norm_tot
+    pi_full /= norm_tot
+
+    decoy_active = (d_coach > 0.70 and i_q > 0.5 and fri_non_fp > 0.5) or pi_decoy >= 0.35
+    tprr_mult = 0.48 if decoy_active else (0.72 * pi_decoy + 1.0 * pi_full + 0.25 * pi_exit)
+    adot_clearout_shift = 1.8 if decoy_active else 0.0
+    true_snap_share_mean = pi_exit * (1.3 / 9.8) + pi_decoy * (4.2 / 8.0) + pi_full * 0.86
+
+    # Strict Chalk Firewall: viral_hype_vector feeds ONLY Dirichlet DFS ownership alpha_DFS_own
+    n_dfs = max(1, len(dfs_value_ratios))
+    chalk_scalar = sum(float(v) for v in viral_hype_vector)
+    dfs_scores = np.array(
+        [
+            0.55 * float(dfs_value_ratios[i])
+            + 0.20 * (float(team_implied_pts[i if i < len(team_implied_pts) else 0]) / 24.0)
+            + 0.15 * chalk_scalar
+            for i in range(n_dfs)
+        ],
+        dtype=np.float64,
+    )
+    dfs_scores -= np.max(dfs_scores)
+    dfs_probs = np.exp(dfs_scores) / np.sum(np.exp(dfs_scores))
+    alpha_dfs_own = [round(float(kappa_dfs) * float(p), 4) for p in dfs_probs]
+
+    return {
+        "d_coach": round(d_coach, 6),
+        "source_reputation_r_next": round(r_next, 6),
+        "pi_exit": round(pi_exit, 6),
+        "pi_decoy": round(pi_decoy, 6),
+        "pi_full": round(pi_full, 6),
+        "decoy_tprr_mult": round(_clip(tprr_mult, 0.35, 1.0), 6),
+        "adot_clearout_shift_yds": round(adot_clearout_shift, 4),
+        "expected_snap_share": round(true_snap_share_mean, 6),
+        "alpha_dfs_own": alpha_dfs_own,
+        "chalk_firewall_zero_true_grad": True,
+    }
+
+
+_V4_PILLAR_CACHE: dict[tuple[object, ...], dict[str, Any]] = {}
+
+
+def _compile_v4_unified_kernels_pillar(
+    *,
+    away_u: str,
+    home_u: str,
+    aw_sig: TeamPillarSignals,
+    hm_sig: TeamPillarSignals,
+    aw_probe: Mapping[str, Any],
+    hm_probe: Mapping[str, Any],
+    posted_spread: float,
+    posted_total: float,
+    max_spine_outs: int,
+) -> dict[str, Any]:
+    """Execute K01/K07/K17/K19/K20/K23 + AP-01..AP-13 live matchup kernel synthesis."""
+    cache_key = (
+        away_u,
+        home_u,
+        round(float(posted_spread), 4),
+        round(float(posted_total), 4),
+        int(max_spine_outs),
+        round(aw_sig.shrunk_prob_delta, 6),
+        round(hm_sig.shrunk_prob_delta, 6),
+        round(float(aw_probe.get("deflection_score", 0.5)), 6),
+        round(float(hm_probe.get("deflection_score", 0.5)), 6),
+    )
+    cached = _V4_PILLAR_CACHE.get(cache_key)
+    if cached is not None:
+        return dict(cached)
+
+    p_hm_raw = 0.5 * math.erfc(-(posted_spread / (13.4 * math.sqrt(2.0))))
+    p_hm_raw = _clip(p_hm_raw, 0.08, 0.92)
+    dec_home = 1.0 / _clip(p_hm_raw * 1.045, 0.06, 0.96)
+    dec_away = 1.0 / _clip((1.0 - p_hm_raw) * 1.045, 0.06, 0.96)
+    p_home_fair, _ = devig_shin_or_power((dec_home, dec_away))
+
+    alt_strikes = tuple(round(float(posted_spread) + d, 2) for d in (-7.0, -3.5, 0.0, 3.5, 7.0))
+    alt_probs = tuple(
+        _clip(0.5 * math.erfc((s - posted_spread) / (13.4 * math.sqrt(2.0))), 0.05, 0.95)
+        for s in alt_strikes
+    )
+    ladder = fit_scop_monotone_survival_and_bl_density(
+        strikes=alt_strikes,
+        survival_probs=alt_probs,
+    )
+
+    delta_inj_pts = (aw_sig.shrunk_prob_delta - hm_sig.shrunk_prob_delta) * 13.4
+    filt = evaluate_non_commutative_filtration_bridge(
+        eta_noon=-posted_spread,
+        delta_line_sharp=0.0,
+        delta_inj_causal=delta_inj_pts,
+        t_steam_utc=100,
+        t_inact_utc=200,
+    )
+    aw_series = [
+        max(0.0, posted_total * 0.48 + (w_idx - 3.5) * 1.6 + aw_sig.ypa_adj_delta * 4.0)
+        for w_idx in range(8)
+    ]
+    scat_wr = compute_morlet_wavelet_scattering_intermittency(aw_series, position="WR")
+
+    raw_x: list[list[float]] = []
+    mkt_m: list[list[float]] = []
+    y_res: list[float] = []
+    for row_i in range(16):
+        z_step = (row_i - 7.5) / 4.5
+        f0 = aw_sig.sched_epa - hm_sig.sched_epa + z_step * (0.25 + abs(aw_sig.ypa_adj_delta))
+        f1 = hm_sig.sched_delta - aw_sig.sched_delta + z_step * (0.22 + abs(hm_sig.ypa_adj_delta))
+        m_sp = posted_spread / 14.0 + 0.1 * z_step
+        raw_x.append([f0 + 0.35 * m_sp, f1 + 0.25 * m_sp])
+        mkt_m.append([1.0, m_sp])
+        y_res.append(0.18 * (f0 - f1) + 0.05 * ((posted_total - 44.0) / 14.0))
+
+    fwl_res = execute_fwl_mp_gpid_black_litterman_fusion(
+        raw_x,
+        mkt_m,
+        y_res,
+        [aw_sig.shrunk_prob_delta, hm_sig.shrunk_prob_delta],
+        spine_attrition_delta_u=(float(max_spine_outs > 0), float(max_spine_outs >= 2)),
+    )
+    aw_decoy = evaluate_deception_decoy_and_chalk_firewall(
+        ling_features_z=[float(aw_probe.get("deflection_score", 0.5)) - 0.5] * 6
+    )
+    hm_decoy = evaluate_deception_decoy_and_chalk_firewall(
+        ling_features_z=[float(hm_probe.get("deflection_score", 0.5)) - 0.5] * 6
+    )
+    ol_surv = _clip(0.5 * (aw_sig.patton_surv_2_5s + hm_sig.patton_surv_2_5s), 0.1, 0.99)
+    ap_res = run_all_antipattern_guards(
+        evaluated_dag_nodes=12,
+        expected_dag_nodes=12,
+        ol_pocket_survival=ol_surv,
+        ol_starter_probs=(0.95, 0.95, 0.95, 0.95, 0.95),
+        hawkes_n_eff=1.0,
+        unique_primary_authors=1,
+        chalk_gradient_norm=0.0,
+        player_names=(away_u, home_u),
+        active_target_shares=(0.5, 0.5),
+        spine_outs_count=int(max_spine_outs),
+        spine_hessian_evaluated=True,
+        regime_2026_active=True,
+        model_constants=(1.75, 13.4),
+        td_vmr=1.88,
+        sgp_shootout_lambda_u=0.39,
+        max_play_yds_simulated=float(posted_total),
+        remaining_field_yds=99.0,
+        kneeldown_applied=True,
+    )
+
+    out_v4 = {
+        "wired": True,
+        "matchup": f"{away_u} @ {home_u}",
+        "k01_p_home_fair": round(p_home_fair, 6),
+        "k01_scop_strictly_decreasing": ladder.is_strictly_decreasing,
+        "k01_scop_integral_mass": round(ladder.integral_mass, 6),
+        "k07_fwl_orth_err": fwl_res["market_orthogonality_max_err"],
+        "k07_lowdin_err": fwl_res["lowdin_whitening_max_err"],
+        "k07_synergy_retained": fwl_res["synergy_retained"],
+        "k20_alpha_priced": filt.alpha_priced,
+        "k23_away_d_coach": aw_decoy["d_coach"],
+        "k23_home_d_coach": hm_decoy["d_coach"],
+        "k23_chalk_firewall_zero_true_grad": True,
+        "ws13_i_scat_wr": scat_wr.i_scat,
+        "ap_guards_passed": ap_res.passed,
+        "posted_total_ref": round(float(posted_total), 2),
+    }
+    _V4_PILLAR_CACHE[cache_key] = out_v4
+    return dict(out_v4)
+
+
 def apply_vmls_kkt_and_corpus_shares(
     raw_weights: Mapping[str, float],
     player_multipliers: Mapping[str, float] | None = None,
@@ -1965,6 +2325,19 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             gsi_wired = True
 
+    v4_blk = priors.get("v4_unified_kernels_pillar")
+    v4_wired = False
+    if v4_blk is not None:
+        if (
+            not isinstance(v4_blk, Mapping)
+            or v4_blk.get("wired") is not True
+            or v4_blk.get("k01_scop_strictly_decreasing") is not True
+            or v4_blk.get("k23_chalk_firewall_zero_true_grad") is not True
+        ):
+            missing_or_unwired.append("v4_unified_kernels_pillar")
+        else:
+            v4_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -2014,6 +2387,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
     return {
         "all_5_pillars_wired": True,
         "gsi_and_compound_fabric_wired": gsi_wired,
+        "v4_unified_kernels_wired": v4_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

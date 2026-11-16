@@ -109,3 +109,70 @@ class SequentialEProcessGate:
     def can_promote(self) -> bool:
         """Return True iff W_t >= 1 / alpha and zero mathematical invariants failed."""
         return self.invariant_failures == 0 and self.wealth >= self.promotion_threshold
+
+
+class MultiplicityAgrapaOnsGate:
+    """Waudby-Smith & Ramdas (2024) aGRAPA / ONS Anytime-Valid Multiplicity Promoter (K25)."""
+
+    def __init__(
+        self,
+        *,
+        mode: str = "agrapa",
+        active_candidates_m: int = 5,
+        alpha: float = 0.05,
+        max_bet: float = 0.50,
+    ) -> None:
+        """Initialize multiplicity-adjusted betting martingale at W_0 = 1.0."""
+        self.mode = mode.lower()
+        self.active_candidates_m = max(1, int(active_candidates_m))
+        self.alpha = float(alpha)
+        self.max_bet = max(0.05, min(0.50, float(max_bet)))
+        self.wealth = 1.0
+        self.step_count = 0
+        self.sum_x = 0.0
+        self.sum_x_sq = 0.0
+        self._ons_lam = 0.08
+        self._ons_grad_sq_sum = 0.0
+
+    @property
+    def multiplicity_threshold(self) -> float:
+        """Ville multiplicity threshold (20.0 * M_active at alpha=0.05)."""
+        return (1.0 / self.alpha) * float(self.active_candidates_m)
+
+    def next_betting_fraction(self) -> float:
+        """Return F_{t-1}-measurable aGRAPA or ONS betting fraction in [0.0, 0.50]."""
+        t = self.step_count + 1
+        if self.step_count < 2:
+            return 0.08
+        if self.mode == "ons":
+            return max(0.0, min(self.max_bet, self._ons_lam))
+        n = float(self.step_count)
+        mu_hat = self.sum_x / n
+        var_hat = max(1e-6, (self.sum_x_sq / n) - (mu_hat * mu_hat))
+        if mu_hat <= 0.0:
+            return 0.0
+        lam = mu_hat / (var_hat + (mu_hat * mu_hat) + (0.25 / float(t)))
+        return max(0.0, min(self.max_bet, lam))
+
+    def step(self, crps_diff: float, *, crps_scale: float = 2.50) -> float:
+        """Advance martingale wealth W_t = W_{t-1} * (1 + lambda_t * X_t) cleanly."""
+        x_t = max(-1.0, min(1.0, float(crps_diff) / max(1e-6, float(crps_scale))))
+        lam_t = self.next_betting_fraction()
+        self.wealth *= max(1e-12, 1.0 + lam_t * x_t)
+        self.step_count += 1
+        self.sum_x += x_t
+        self.sum_x_sq += x_t * x_t
+
+        # Update F_t-measurable ONS state for t + 1
+        z_t = x_t / max(1e-6, 1.0 + self._ons_lam * x_t)
+        self._ons_grad_sq_sum += z_t * z_t
+        coeff = 2.0 / (2.0 - math.log(3.0))
+        self._ons_lam = max(
+            0.0,
+            min(self.max_bet, self._ons_lam + coeff * (z_t / (1.0 + self._ons_grad_sq_sum))),
+        )
+        return self.wealth
+
+    def can_promote(self, *, mondrian_ece: float) -> bool:
+        """Require W_t >= 20 * M_active AND Mondrian slice ECE <= 0.025."""
+        return self.wealth >= self.multiplicity_threshold and float(mondrian_ece) <= 0.025

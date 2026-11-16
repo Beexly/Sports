@@ -4,6 +4,7 @@ export {
   PHILOX_M1,
   PHILOX_W0,
   PHILOX_W1,
+  burleyOwenScrambleU32,
   campaignKeyFromSeed,
   drawNormalPairBoxMuller,
   drawRawQuad,
@@ -11,7 +12,10 @@ export {
   encodeUtf8Bytes,
   fnv1a32Utf8,
   generatePhilox4x32WgslShader,
+  owenScrambledSobolMatrix,
+  owenScrambledSobolRawU32,
   philox4x32_10,
+  reverseBits32,
   sampleCategoricalMarkovStep,
   umul32Hi,
   umul32Lo,
@@ -27,7 +31,11 @@ export {
 } from "./invariants";
 export type { InvariantVerdict } from "./invariants";
 
-export { SequentialEProcessGate, boundedScoreTransform } from "./e-process";
+export {
+  MultiplicityAgrapaOnsGate,
+  SequentialEProcessGate,
+  boundedScoreTransform,
+} from "./e-process";
 export type { EProcessObservation } from "./e-process";
 
 export {

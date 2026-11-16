@@ -9,6 +9,7 @@ from gse_engine.fabric.coordinator import (
 )
 from gse_engine.fabric.e_process import (
     EProcessObservation,
+    MultiplicityAgrapaOnsGate,
     SequentialEProcessGate,
     bounded_score_transform,
 )
@@ -21,6 +22,7 @@ from gse_engine.fabric.evolution import (
     DiagnosticResidualPayload,
     HybridMutator,
     MultiIslandMapElitesArchive,
+    compute_shapley_sobol_4block_attribution,
 )
 from gse_engine.fabric.foundry_compound_miner import sweep_foundry_and_corpus_primitives
 from gse_engine.fabric.invariants import (
@@ -34,13 +36,17 @@ from gse_engine.fabric.invariants import (
     verify_sinkhorn_marginals,
 )
 from gse_engine.fabric.philox import (
+    burley_owen_scramble_u32,
     campaign_key_from_seed,
     draw_normal_pair_box_muller,
     draw_raw_quad,
     draw_uniform_quad,
     fnv1a_32_utf8,
     generate_philox4x32_wgsl_shader,
+    owen_scrambled_sobol_matrix,
+    owen_scrambled_sobol_raw_u32,
     philox4x32_10,
+    reverse_bits32,
     sample_categorical_markov_step,
     uniform01_from_u32,
 )
@@ -76,17 +82,20 @@ __all__ = [
     "InvariantVerdict",
     "MicrotaskSliceRecord",
     "MultiIslandMapElitesArchive",
+    "MultiplicityAgrapaOnsGate",
     "HybridMutator",
     "OpportunisticWorkerDaemon",
     "SequentialEProcessGate",
     "SubmissionReceipt",
     "WorkerNodeRecord",
     "bounded_score_transform",
+    "burley_owen_scramble_u32",
     "campaign_key_from_seed",
     "check_canary_parity",
     "clayton_survival_joint",
     "compute_bundle_sha256",
     "compute_result_digest",
+    "compute_shapley_sobol_4block_attribution",
     "default_champion_bundle",
     "draw_normal_pair_box_muller",
     "draw_raw_quad",
@@ -95,7 +104,10 @@ __all__ = [
     "fnv1a_32_utf8",
     "generate_philox4x32_wgsl_shader",
     "generate_postgres_ddl_and_claim_sql",
+    "owen_scrambled_sobol_matrix",
+    "owen_scrambled_sobol_raw_u32",
     "philox4x32_10",
+    "reverse_bits32",
     "run_evolutionary_campaign",
     "sample_categorical_markov_step",
     "sweep_foundry_and_corpus_primitives",

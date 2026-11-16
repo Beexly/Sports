@@ -216,3 +216,144 @@ def anchor_team_priors_to_market_stack(
     target_pass = round(min(330.0, max(125.0, raw_pass)), 2)
     target_rush = round(min(185.0, max(65.0, raw_rush)), 2)
     return round(mkt_pts, 2), target_pass, target_rush
+
+
+def reallocate_12cell_kantorovich_vmls_roles(
+    *,
+    vacated_band_shares_v: Sequence[float],
+    active_player_profiles: Sequence[Sequence[float]],
+    base_shares_r0: Sequence[float],
+    max_share_add_u: Sequence[float],
+    has_liquid_two_sided_prop: Sequence[bool] | None = None,
+    ol_distress: float = 0.0,
+    entropic_eps: float = 0.04,
+    max_iter: int = 80,
+) -> dict[str, object]:
+    """Solve K04 12-cell capacity-bounded Kantorovich-VMLS entropic Sinkhorn reallocation.
+
+    Masks zero-vacated bands (`I_pos = {i : v_i > 1e-12}`) to eliminate log(0) NaNs,
+    applies exact cost C_ik = 0.35*(1 - cos_sim) + 0.30*(|d_i - d_k|/20) + 0.15*blk*I_OL
+    + 0.20*Delta_P_brk, relaxes box capacities u_k proportional when sum(u_k) < sum(v_i),
+    applies 0.25x damping to boarded-prop players, and returns a zero-orphan conserved
+    target simplex (`abs(sum - 1.0) < 1e-12`).
+    """
+    import math
+
+    import numpy as np
+
+    # 12 canonical alignment x aDOT cells: 4 alignments [Wide, Slot, Inline, Back] x 3 [5, 14, 24]
+    alignments = ((1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))
+    adot_centers = (5.0, 14.5, 24.0)
+    cell_aln: list[tuple[float, ...]] = []
+    cell_adot: list[float] = []
+    for aln in alignments:
+        for d_c in adot_centers:
+            cell_aln.append(tuple(float(v) for v in aln))
+            cell_adot.append(d_c)
+
+    v_arr = np.maximum(0.0, np.asarray(vacated_band_shares_v, dtype=np.float64).reshape(-1))
+    if len(v_arr) != 12:
+        raise ValueError(f"vacated_band_shares_v must have length 12, got {len(v_arr)}.")
+    r0 = np.maximum(0.0, np.asarray(base_shares_r0, dtype=np.float64).reshape(-1))
+    u_cap = np.maximum(1e-6, np.asarray(max_share_add_u, dtype=np.float64).reshape(-1))
+    k_act = len(r0)
+    if k_act == 0 or len(u_cap) != k_act or len(active_player_profiles) != k_act:
+        raise ValueError("active_player_profiles, base_shares_r0, and max_share_add_u must match.")
+
+    prop_flags = (
+        [bool(f) for f in has_liquid_two_sided_prop]
+        if has_liquid_two_sided_prop is not None
+        else [False] * k_act
+    )
+    if len(prop_flags) != k_act:
+        raise ValueError("has_liquid_two_sided_prop length must match active players.")
+
+    # Build 12 x K transport cost matrix
+    cost = np.zeros((12, k_act), dtype=np.float64)
+    ol_flag = 1.0 if float(ol_distress) > 0.5 else 0.0
+    for i in range(12):
+        ai = np.asarray(cell_aln[i], dtype=np.float64)
+        ni = max(1e-9, float(np.linalg.norm(ai)))
+        for k in range(k_act):
+            prof = active_player_profiles[k]
+            ak = np.asarray(
+                [float(prof[0]), float(prof[1]), float(prof[2]), float(prof[3])],
+                dtype=np.float64,
+            )
+            nk = max(1e-9, float(np.linalg.norm(ak)))
+            cos_sim = max(0.0, min(1.0, float(np.dot(ai, ak) / (ni * nk))))
+            d_k = float(prof[4]) if len(prof) > 4 else 10.0
+            rho_blk = float(prof[5]) if len(prof) > 5 else 0.0
+            dp_brk = float(prof[6]) if len(prof) > 6 else 0.0
+            c_ik = (
+                0.35 * (1.0 - cos_sim)
+                + 0.30 * (abs(cell_adot[i] - d_k) / 20.0)
+                + 0.15 * rho_blk * ol_flag
+                + 0.20 * dp_brk
+            )
+            cost[i, k] = max(0.0, min(2.0, c_ik))
+
+    i_pos = [i for i in range(12) if float(v_arr[i]) > 1e-12]
+    p_star = np.zeros((12, k_act), dtype=np.float64)
+    if i_pos:
+        vac_tot = float(np.sum(v_arr[i_pos]))
+        cap_sum = float(np.sum(u_cap))
+        u_eff = u_cap.copy()
+        if cap_sum < vac_tot and cap_sum > 0.0:
+            u_eff = u_cap * ((vac_tot * 1.001) / cap_sum)
+
+        eps = max(1e-3, float(entropic_eps))
+        phi = np.zeros(len(i_pos), dtype=np.float64)
+        psi = np.zeros(k_act, dtype=np.float64)
+        c_sub = cost[i_pos, :]
+        log_v = np.log(v_arr[i_pos])
+        log_u = np.log(np.maximum(1e-12, u_eff))
+
+        for _ in range(max_iter):
+            # Log-sum-exp update for phi_i
+            m_row = (psi[None, :] - c_sub) / eps
+            row_max = np.max(m_row, axis=1)
+            lse_row = row_max + np.log(np.sum(np.exp(m_row - row_max[:, None]), axis=1))
+            phi_new = eps * log_v - eps * lse_row
+
+            # Box-bounded update for psi_k <= 0
+            m_col = (phi_new[:, None] - c_sub) / eps
+            col_max = np.max(m_col, axis=0)
+            lse_col = col_max + np.log(np.sum(np.exp(m_col - col_max[None, :]), axis=0))
+            psi_new = np.minimum(0.0, eps * log_u - eps * lse_col)
+
+            if float(np.max(np.abs(phi_new - phi))) < 1e-9 and float(
+                np.max(np.abs(psi_new - psi))
+            ) < 1e-9:
+                phi, psi = phi_new, psi_new
+                break
+            phi, psi = phi_new, psi_new
+
+        log_p_sub = (phi[:, None] + psi[None, :] - c_sub) / eps
+        p_sub = np.exp(np.clip(log_p_sub, -60.0, 20.0))
+        # Exact row conservation scaling on I_pos
+        row_s = np.maximum(1e-15, np.sum(p_sub, axis=1, keepdims=True))
+        p_sub = p_sub * (v_arr[i_pos][:, None] / row_s)
+        for local_i, global_i in enumerate(i_pos):
+            p_star[global_i, :] = p_sub[local_i, :]
+
+    delta_r = np.sum(p_star, axis=0)
+    damped_delta = np.array(
+        [(0.25 if prop_flags[k] else 1.0) * float(delta_r[k]) for k in range(k_act)],
+        dtype=np.float64,
+    )
+    raw_new = r0 + damped_delta
+    tot = float(np.sum(raw_new)) or 1.0
+    r_new = raw_new / tot
+
+    if not math.isfinite(float(np.sum(p_star))) or not math.isfinite(float(np.sum(r_new))):
+        raise RuntimeError("Non-finite Sinkhorn-VMLS transport plan detected.")
+
+    return {
+        "r_new": [float(v) for v in r_new],
+        "p_ik_star": [[float(x) for x in row] for row in p_star],
+        "vacated_total": round(float(np.sum(v_arr)), 8),
+        "simplex_error": abs(float(np.sum(r_new)) - 1.0),
+        "orphan_bucket_share": 0.0,
+        "all_finite": bool(np.all(np.isfinite(p_star)) and np.all(np.isfinite(r_new))),
+    }

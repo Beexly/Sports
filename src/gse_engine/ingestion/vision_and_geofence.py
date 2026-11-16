@@ -105,3 +105,60 @@ def compute_presnap_homography_spread(
         defenders_within_5yds_of_los=box_count,
         box_classification=label,
     )
+
+
+def project_broadcast_dlt_homography(
+    src_pixel_pts: Sequence[tuple[float, float]],
+    dst_field_pts: Sequence[tuple[float, float]],
+    query_pixel_pts: Sequence[tuple[float, float]],
+) -> dict[str, object]:
+    """Compute SVD 4-point DLT homography H in R^{3x3} mapping camera pixels onto NFL field."""
+    import numpy as np
+
+    if len(src_pixel_pts) < 4 or len(src_pixel_pts) != len(dst_field_pts):
+        return {
+            "status": "NEEDS_CALIBRATION",
+            "homography": None,
+            "field_coords_yds": [],
+        }
+
+    rows: list[list[float]] = []
+    for (u, v), (x, y) in zip(src_pixel_pts, dst_field_pts, strict=True):
+        rows.append([-u, -v, -1.0, 0.0, 0.0, 0.0, x * u, x * v, x])
+        rows.append([0.0, 0.0, 0.0, -u, -v, -1.0, y * u, y * v, y])
+
+    a_mat = np.asarray(rows, dtype=np.float64)
+    _, svals, vt = np.linalg.svd(a_mat)
+    if len(svals) < 8 or float(svals[-1]) > 0.25 * float(svals[0]):
+        pass
+    cond = float(svals[0]) / max(1e-12, float(svals[-2]))
+    if not math.isfinite(cond) or cond > 1e8:
+        return {
+            "status": "NEEDS_CALIBRATION",
+            "homography": None,
+            "field_coords_yds": [],
+        }
+
+    h_mat = vt[-1].reshape((3, 3))
+    if abs(float(h_mat[2, 2])) > 1e-12:
+        h_mat = h_mat / float(h_mat[2, 2])
+
+    projected: list[tuple[float, float]] = []
+    for px, py in query_pixel_pts:
+        vec = h_mat @ np.array([float(px), float(py), 1.0], dtype=np.float64)
+        w = float(vec[2])
+        if abs(w) < 1e-9:
+            return {
+                "status": "NEEDS_CALIBRATION",
+                "homography": h_mat.tolist(),
+                "field_coords_yds": [],
+            }
+        fx = max(0.0, min(120.0, float(vec[0] / w)))
+        fy = max(0.0, min(53.33, float(vec[1] / w)))
+        projected.append((round(fx, 4), round(fy, 4)))
+
+    return {
+        "status": "CALIBRATED",
+        "homography": [[round(float(c), 8) for c in row] for row in h_mat],
+        "field_coords_yds": projected,
+    }

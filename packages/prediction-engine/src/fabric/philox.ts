@@ -179,6 +179,121 @@ export function sampleCategoricalMarkovStep(probs: readonly number[], u01: numbe
   return probs.length - 1;
 }
 
+const SOBOL_POLY_TABLE: readonly (readonly [number, number, readonly number[]])[] = [
+  [1, 0, [1]],
+  [2, 1, [1, 3]],
+  [3, 1, [1, 3, 1]],
+  [3, 2, [1, 1, 1]],
+  [4, 1, [1, 1, 3, 3]],
+  [4, 4, [1, 3, 5, 13]],
+  [5, 2, [1, 1, 5, 5, 17]],
+  [5, 4, [1, 1, 5, 5, 5]],
+  [5, 7, [1, 1, 7, 11, 19]],
+  [5, 11, [1, 1, 5, 1, 1]],
+  [5, 13, [1, 1, 1, 3, 11]],
+  [5, 14, [1, 3, 5, 5, 31]],
+  [6, 1, [1, 3, 3, 9, 7, 49]],
+  [6, 13, [1, 1, 1, 15, 21, 21]],
+  [6, 16, [1, 3, 1, 13, 27, 49]],
+];
+
+export function reverseBits32(x: number): number {
+  let u = x >>> 0;
+  u = (((u >>> 1) & 0x55555555) | ((u & 0x55555555) << 1)) >>> 0;
+  u = (((u >>> 2) & 0x33333333) | ((u & 0x33333333) << 2)) >>> 0;
+  u = (((u >>> 4) & 0x0f0f0f0f) | ((u & 0x0f0f0f0f) << 4)) >>> 0;
+  u = (((u >>> 8) & 0x00ff00ff) | ((u & 0x00ff00ff) << 8)) >>> 0;
+  return (((u >>> 16) | (u << 16)) >>> 0);
+}
+
+export function burleyOwenScrambleU32(val: number, seedU32: number): number {
+  let x = reverseBits32(val);
+  x = (x + (seedU32 >>> 0)) >>> 0;
+  x = (x ^ Math.imul(x, 0x6c50b47c)) >>> 0;
+  x = (x ^ Math.imul(x, 0xb82f1e52)) >>> 0;
+  x = (x ^ Math.imul(x, 0xc7afe638)) >>> 0;
+  x = (x ^ Math.imul(x, 0x8d22f6e6)) >>> 0;
+  return reverseBits32(x);
+}
+
+function buildSobolDirections(dim: number): number[][] {
+  const nDims = Math.max(1, Math.min(16, Math.trunc(dim)));
+  const dirs: number[][] = [];
+  const v0: number[] = [];
+  for (let b = 0; b < 32; b += 1) {
+    v0.push((1 << (31 - b)) >>> 0);
+  }
+  dirs.push(v0);
+
+  for (let d = 1; d < nDims; d += 1) {
+    const [s, a, mInit] = SOBOL_POLY_TABLE[d - 1]!;
+    const v = new Array<number>(32).fill(0);
+    for (let b = 0; b < s; b += 1) {
+      v[b] = (mInit[b]! << (31 - b)) >>> 0;
+    }
+    for (let b = s; b < 32; b += 1) {
+      let val = (v[b - s]! ^ (v[b - s]! >>> s)) >>> 0;
+      for (let k = 1; k < s; k += 1) {
+        if ((a >>> (s - 1 - k)) & 1) {
+          val = (val ^ v[b - k]!) >>> 0;
+        }
+      }
+      v[b] = val >>> 0;
+    }
+    dirs.push(v);
+  }
+  return dirs;
+}
+
+export function owenScrambledSobolRawU32(
+  numPaths: number,
+  dim: number,
+  campaignSeed: number | bigint,
+  taskId: string | number,
+): number[][] {
+  const nP = Math.max(1, Math.trunc(numPaths));
+  const nD = Math.max(1, Math.min(16, Math.trunc(dim)));
+  const dirs = buildSobolDirections(nD);
+  const dimSeeds: number[] = [];
+  for (let dIdx = 0; dIdx < nD; dIdx += 1) {
+    const [w0] = drawRawQuad(campaignSeed, taskId, 0x50b01000 + dIdx, 0, 7);
+    dimSeeds.push(w0 >>> 0);
+  }
+
+  const out: number[][] = [];
+  for (let i = 0; i < nP; i += 1) {
+    const g = (i ^ (i >>> 1)) >>> 0;
+    const row: number[] = [];
+    for (let d = 0; d < nD; d += 1) {
+      let rawV = 0;
+      const vCol = dirs[d]!;
+      let tmp = g;
+      let b = 0;
+      while (tmp !== 0) {
+        if (tmp & 1) {
+          rawV = (rawV ^ vCol[b]!) >>> 0;
+        }
+        tmp >>>= 1;
+        b += 1;
+      }
+      row.push(burleyOwenScrambleU32(rawV, dimSeeds[d]!));
+    }
+    out.push(row);
+  }
+  return out;
+}
+
+export function owenScrambledSobolMatrix(
+  numPaths: number,
+  dim: number,
+  campaignSeed: number | bigint,
+  taskId: string | number,
+): number[][] {
+  return owenScrambledSobolRawU32(numPaths, dim, campaignSeed, taskId).map((row) =>
+    row.map((w) => uniform01FromU32(w)),
+  );
+}
+
 export function generatePhilox4x32WgslShader(workgroupSize = 64): string {
   const wg = Math.max(1, Math.min(256, Math.trunc(workgroupSize)));
   return `// GSE Philox-4x32-10 WebGPU Compute Kernel (bit-exact with Python & TypeScript)

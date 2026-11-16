@@ -145,6 +145,126 @@ def sample_categorical_markov_step(probs: Sequence[float], u01: float) -> int:
     return len(probs) - 1
 
 
+# Bratley-Fox / Joe-Kuo (2008) primitive polynomials & odd m_j for dimensions 1..15 (dim 0 is VdC)
+_SOBOL_POLY_TABLE: tuple[tuple[int, int, tuple[int, ...]], ...] = (
+    (1, 0, (1,)),
+    (2, 1, (1, 3)),
+    (3, 1, (1, 3, 1)),
+    (3, 2, (1, 1, 1)),
+    (4, 1, (1, 1, 3, 3)),
+    (4, 4, (1, 3, 5, 13)),
+    (5, 2, (1, 1, 5, 5, 17)),
+    (5, 4, (1, 1, 5, 5, 5)),
+    (5, 7, (1, 1, 7, 11, 19)),
+    (5, 11, (1, 1, 5, 1, 1)),
+    (5, 13, (1, 1, 1, 3, 11)),
+    (5, 14, (1, 3, 5, 5, 31)),
+    (6, 1, (1, 3, 3, 9, 7, 49)),
+    (6, 13, (1, 1, 1, 15, 21, 21)),
+    (6, 16, (1, 3, 1, 13, 27, 49)),
+)
+
+
+def reverse_bits32(x: int) -> int:
+    """Bit-exact 32-bit unsigned bit reversal matching TypeScript implementation."""
+    u = int(x) & U32_MASK
+    u = ((u >> 1) & 0x55555555) | ((u & 0x55555555) << 1)
+    u = ((u >> 2) & 0x33333333) | ((u & 0x33333333) << 2)
+    u = ((u >> 4) & 0x0F0F0F0F) | ((u & 0x0F0F0F0F) << 4)
+    u = ((u >> 8) & 0x00FF00FF) | ((u & 0x00FF00FF) << 8)
+    return (((u >> 16) | (u << 16)) & U32_MASK)
+
+
+def burley_owen_scramble_u32(val: int, seed_u32: int) -> int:
+    """Burley (2020) JCGT prefix-preserving nested Owen scramble on uint32."""
+    x = reverse_bits32(val)
+    x = (x + (int(seed_u32) & U32_MASK)) & U32_MASK
+    x = (x ^ ((x * 0x6C50B47C) & U32_MASK)) & U32_MASK
+    x = (x ^ ((x * 0xB82F1E52) & U32_MASK)) & U32_MASK
+    x = (x ^ ((x * 0xC7AFE638) & U32_MASK)) & U32_MASK
+    x = (x ^ ((x * 0x8D22F6E6) & U32_MASK)) & U32_MASK
+    return reverse_bits32(x)
+
+
+def _sobol_direction_numbers(dim: int) -> list[list[int]]:
+    """Build 32-bit Sobol direction numbers for dims `0..dim-1`."""
+    n_dims = max(1, min(16, int(dim)))
+    dirs: list[list[int]] = [[(1 << (31 - b)) & U32_MASK for b in range(32)]]
+    for d in range(1, n_dims):
+        s, a, m_init = _SOBOL_POLY_TABLE[d - 1]
+        v = [0] * 32
+        for b in range(s):
+            v[b] = (m_init[b] << (31 - b)) & U32_MASK
+        for b in range(s, 32):
+            val = v[b - s] ^ ((v[b - s] >> s) & U32_MASK)
+            for k in range(1, s):
+                if (a >> (s - 1 - k)) & 1:
+                    val ^= v[b - k]
+            v[b] = val & U32_MASK
+        dirs.append(v)
+    return dirs
+
+
+def owen_scrambled_sobol_raw_u32(
+    *,
+    num_paths: int,
+    dim: int,
+    campaign_seed: int,
+    task_id: str | int,
+) -> list[list[int]]:
+    """Generate bit-exact `num_paths x dim` Owen-scrambled Sobol uint32 matrix (K03)."""
+    n_p = max(1, int(num_paths))
+    n_d = max(1, min(16, int(dim)))
+    dirs = _sobol_direction_numbers(n_d)
+
+    # Derive 1 uint32 seed per dimension from Philox-4x32-10
+    dim_seeds: list[int] = []
+    for d_idx in range(n_d):
+        q = draw_raw_quad(
+            campaign_seed=campaign_seed,
+            task_id=task_id,
+            path_index=0x50B01000 + d_idx,
+            step_index=0,
+            substream=7,
+        )
+        dim_seeds.append(q[0])
+
+    out: list[list[int]] = []
+    for i in range(n_p):
+        g = i ^ (i >> 1)
+        row: list[int] = []
+        for d in range(n_d):
+            raw_v = 0
+            v_col = dirs[d]
+            tmp = g
+            b = 0
+            while tmp:
+                if tmp & 1:
+                    raw_v ^= v_col[b]
+                tmp >>= 1
+                b += 1
+            row.append(burley_owen_scramble_u32(raw_v, dim_seeds[d]))
+        out.append(row)
+    return out
+
+
+def owen_scrambled_sobol_matrix(
+    *,
+    num_paths: int,
+    dim: int,
+    campaign_seed: int,
+    task_id: str | int,
+) -> list[list[float]]:
+    """Convert Owen-scrambled Sobol uint32 matrix into open-interval `(0, 1)` floats."""
+    raw = owen_scrambled_sobol_raw_u32(
+        num_paths=num_paths,
+        dim=dim,
+        campaign_seed=campaign_seed,
+        task_id=task_id,
+    )
+    return [[uniform01_from_u32(w) for w in row] for row in raw]
+
+
 def generate_philox4x32_wgsl_shader(workgroup_size: int = 64) -> str:
     """Emit a self-contained WebGPU WGSL compute shader matching CPU Philox-4x32-10."""
     wg = max(1, min(256, int(workgroup_size)))

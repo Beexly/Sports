@@ -5,6 +5,10 @@ from __future__ import annotations
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 
+from gse_engine.compute.market_surface_and_filtration import (
+    NonCommutativeFiltrationResult,
+    evaluate_non_commutative_filtration_bridge,
+)
 from gse_engine.models import SlateWindowConfig
 
 try:
@@ -66,6 +70,26 @@ def resolve_lock_version(cfg: SlateWindowConfig) -> str:
             return "v3.5"
         return "v3.0"
     return "v2.5" if cfg.window_slot == "TNF" else "v4.0"
+
+
+def compute_t90m_filtration_delta(
+    *,
+    eta_noon: float,
+    delta_line_sharp: float,
+    delta_inj_causal: float,
+    t_steam_utc: int,
+    t_inact_utc: int,
+    dt_exec_min: float = 0.0,
+) -> NonCommutativeFiltrationResult:
+    """Delegate T-90m martingale update to K20 non-commutative [U_inj, U_steam] filtration."""
+    return evaluate_non_commutative_filtration_bridge(
+        eta_noon=eta_noon,
+        delta_line_sharp=delta_line_sharp,
+        delta_inj_causal=delta_inj_causal,
+        t_steam_utc=t_steam_utc,
+        t_inact_utc=t_inact_utc,
+        dt_exec_min=dt_exec_min,
+    )
 
 
 @_workflow_defn

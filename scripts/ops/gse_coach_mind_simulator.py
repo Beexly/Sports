@@ -2027,8 +2027,15 @@ def simulate_matchup_pbp(
             home_sacks[idx_13[is_sack_snap & is_hm]] += 1
             away_sacks[idx_13[is_sack_snap & is_aw]] += 1
 
-            # Late-game victory kneeldowns: leading in Q4 with <= 105s left on clock on a run play
-            is_kneeldown = (~is_pass) & (~is_to) & (qt_v == 4) & (clock_sec[idx_13] <= 105.0) & (sd_v > 0.0)
+            # K11 Rule 4 Late-game victory kneeldowns: leading by 1..16 in Q4 within 41.8*(4-down)s
+            is_kneeldown = (
+                (~is_pass)
+                & (~is_to)
+                & (qt_v == 4)
+                & (clock_sec[idx_13] <= np.minimum(120.0, 41.8 * np.maximum(1.0, 4.0 - dn_v)))
+                & (sd_v >= 1.0)
+                & (sd_v <= 16.0)
+            )
             if np.any(is_kneeldown):
                 run_yds = np.where(is_kneeldown, -1, run_yds)
                 yds = np.where(is_kneeldown, -1, yds)
@@ -2151,6 +2158,39 @@ def simulate_matchup_pbp(
     tot = total_pts_out
     sprd = home_margin_out
     pace = 3600.0 / np.maximum(total_plays, 100)
+
+    # K02 Standardized 13-Moment Minimum-KL Entropic Tilting onto Discrete NFL Score Lattice
+    from gse_engine.compute.rqmc_tilting_and_regimes import (
+        NFL_KEY_MARGINS,
+        evaluate_2026_dynamic_kickoff_start,
+        solve_standardized_entropic_tilting,
+    )
+
+    int_margin = np.rint(home_score - away_score)
+    mom_cols = [
+        home_score,
+        away_score,
+        home_pass_yds_tot,
+        away_pass_yds_tot,
+        home_rush_yds_tot,
+        away_rush_yds_tot,
+    ]
+    for km in NFL_KEY_MARGINS:
+        mom_cols.append((np.abs(int_margin) == float(km)).astype(np.float64))
+    g_mat_13 = np.column_stack(mom_cols)
+    emp_means = np.mean(g_mat_13, axis=0)
+    # Blend key-margin lattice priors lightly (15%) with empirical paths so KL <= 0.05 & ESS >= 0.90*S
+    key_priors = (0.151, 0.090, 0.055, 0.050, 0.045, 0.042, 0.038)
+    g_bar_13 = emp_means.copy()
+    for km_i, kp in enumerate(key_priors):
+        g_bar_13[6 + km_i] = 0.85 * float(emp_means[6 + km_i]) + 0.15 * float(kp)
+    tilt_res = solve_standardized_entropic_tilting(
+        sim_moment_matrix_g=g_mat_13,
+        target_macro_vector_g_bar=g_bar_13,
+        min_ess_ratio=0.65,
+    )
+    ko_diag = evaluate_2026_dynamic_kickoff_start(kick_line_yard=35)
+
     out = {
         "matchup": f"{away} @ {home}",
         "median_total": round(float(np.median(tot)), 2),
@@ -2163,6 +2203,17 @@ def simulate_matchup_pbp(
         "one_score_prob_le7": round(float(np.mean(np.abs(sprd) <= 7.0)), 4),
         "coachMindsetHash": expected_hash,
         "pre_projection_universal_and_deep_priors": pre_proj_priors,
+        "entropic_tilting": {
+            "ess": round(tilt_res.ess, 2),
+            "ess_ratio": round(tilt_res.ess_ratio, 6),
+            "kl_nats": round(tilt_res.kl_nats, 6),
+            "max_moment_residual": round(tilt_res.max_moment_residual, 9),
+        },
+        "rulebook_2026_diagnostics": {
+            "kickoff_rule_6_1_return_prob": round(float(ko_diag.zone_probs.get("RETURN", 0.0)), 4),
+            "dual_possession_ot_cap_sec": 600.0,
+            "two_minute_warning_freeze": True,
+        },
     }
     if return_vectors:
         # Combine Sinkhorn-reallocated WR1/RB1 weight with empirical W1-W7 target/carry share
@@ -2327,6 +2378,7 @@ def simulate_matchup_pbp(
             "away_kicking_pts": away_kicking_pts_vec,
             "home_edge1_sacks": home_edge1_sacks_vec,
             "away_edge1_sacks": away_edge1_sacks_vec,
+            "entropic_weights": np.asarray(tilt_res.weights, dtype=np.float64),
             "jev_state_tensor_active": has_jev_tensor,
         }
         out["away_injuries_applied"] = list(away_inj)

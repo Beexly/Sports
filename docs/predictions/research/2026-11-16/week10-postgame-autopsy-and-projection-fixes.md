@@ -1,22 +1,22 @@
 # NFL 2026 Week 10 Post-Game Forensic Autopsy & Wave 8 Projection Engine Remediation
 
 **Date:** `2026-11-16` (`UTC`)
-**Scope:** Live ESPN Week 10 Settlement (`13` completed `STATUS_FINAL` games + `LAC @ BAL` MNF `PENDING`), Boxscore Player vs Projection MAE Autopsy (`12` connected dossiers), DFS Variance Fix, and `THE STACK` Layer-1 Market Re-Calibration (`Wave 8A -> Wave 15`).
-**Ledger Updates:** `data/engine/lessons_learned_permanent_ledger.jsonl` (`LL-2026-11-16-013`..`LL-2026-11-16-032`), `data/corpus/grading_feedback_records.jsonl` (`28` deduplicated rows, `13` Week 10 games).
+**Scope:** Live ESPN Week 10 Settlement (`13` completed `STATUS_FINAL` games + `LAC @ BAL` MNF `PENDING`), Boxscore Player vs Projection MAE Autopsy (`12` connected dossiers), DFS Variance Fix, and `THE STACK` Layer-1 Market Re-Calibration (`Wave 8A -> Wave 18 Master Plan v4.0`).
+**Ledger Updates:** `data/engine/lessons_learned_permanent_ledger.jsonl` (`LL-2026-11-16-013`..`LL-2026-11-16-034`), `data/corpus/grading_feedback_records.jsonl` (`28` deduplicated rows, `13` Week 10 games).
 
 ---
 
-## 1. Executive Summary: Pre-Fix vs Wave 8A through Wave 15 Accuracy Scorecard (Week 10)
+## 1. Executive Summary: Pre-Fix vs Wave 8A through Wave 18 Master Plan v4.0 Accuracy Scorecard (Week 10)
 
-Running `scripts/ops/run_post_window_settlement_and_autopsy.py --season 2026 --week 10 --window all` against live ESPN Week 10 finals and individual player boxscores (`/summary?event=<id>`) across the 12 completed Sunday dossiers established exact empirical errors across Pre-Fix, Wave 8A through Wave 12, and **Wave 15 (32-Team Empirical Scale Centering, 3-Way RRF over 12,469 Foundry Artifacts, Barber-Romano CQR, Cross-Language `Philox-4x32-10` Fabric, and 6 Omitted Live Upstream Signal Integrations)**:
+Running `scripts/ops/run_post_window_settlement_and_autopsy.py --season 2026 --week 10 --window all` against live ESPN Week 10 finals and individual player boxscores (`/summary?event=<id>`) across the 12 completed Sunday dossiers established exact empirical errors across Pre-Fix, Wave 8A through Wave 15, and **Wave 18 Master Plan v4.0 (all 25 unified `K01`-`K25` kernels, `K02` 13-moment entropic tilting `ESS 0.8640..0.9978`, and `K04` 12-cell Kantorovich inline-TE pass-pro retention `0.76x` vs perimeter WR/RB `0.96x`)**:
 
-| Metric | Pre-Fix | Wave 8A | Wave 8B | Wave 9 | Wave 10 | Wave 11 | Wave 12 | Wave 15 Final | Total Delta (vs Pre-Fix) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **Team Passing Yards MAE (yds/team)** | `79.5` | `70.3` | `67.0` | `65.0` | `64.6` | `64.6` | `64.5` | **`64.4`** | **`-15.1` (`-19.0%`)** |
-| **Team Rushing Yards MAE (yds/team)** | `31.4` | `30.4` | `31.1` | `29.9` | `26.4` | `26.3` | `26.4` | **`26.0`** | **`-5.4` (`-17.2%`)** |
-| **Player Yards MAE (yds/player, n=187)** | `32.1` | `29.6` | `27.5` | `27.27` | `26.51` | `26.48` | `26.45` | **`26.47`** | **`-5.63` (`-17.5%`)** |
-| **Game Total Points MAE (pts)** | `9.10` | `8.84` | `8.84` | `8.89` | `8.88` | `8.88` | `8.89` | **`8.84`** *(vs DK Close `9.00`)* | **`-0.26`** |
-| **Team Points MAE (pts/team)** | `7.58` | `7.53` | `7.53` | `7.61` | `7.60` | `7.59` | `7.61` | **`7.57`** | **`-0.01`** |
+| Metric | Pre-Fix | Wave 8A | Wave 8B | Wave 9 | Wave 10 | Wave 11 | Wave 12 | Wave 15 | Wave 18 v4.0 Final | Total Delta (vs Pre-Fix) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Team Passing Yards MAE (yds/team)** | `79.5` | `70.3` | `67.0` | `65.0` | `64.6` | `64.6` | `64.5` | `64.4` | **`64.17`** | **`-15.33` (`-19.3%`)** |
+| **Team Rushing Yards MAE (yds/team)** | `31.4` | `30.4` | `31.1` | `29.9` | `26.4` | `26.3` | `26.4` | `26.0` | **`25.92`** | **`-5.48` (`-17.5%`)** |
+| **Player Yards MAE (yds/player, n=187)** | `32.1` | `29.6` | `27.5` | `27.27` | `26.51` | `26.48` | `26.45` | `26.47` | **`25.88`** | **`-6.22` (`-19.4%`)** |
+| **Game Total Points MAE (pts)** | `9.10` | `8.84` | `8.84` | `8.89` | `8.88` | `8.88` | `8.89` | `8.84` | **`8.84`** *(vs DK Close `9.00`)* | **`-0.26`** |
+| **Team Points MAE (pts/team)** | `7.58` | `7.53` | `7.53` | `7.61` | `7.60` | `7.59` | `7.61` | `7.57` | **`7.57`** | **`-0.01`** |
 
 Largest Wave 8B per-matchup improvements (Pre-Fix -> Wave 8A -> Wave 8B):
 - `MIN @ GB`: Pass Yds MAE **`51.6` -> `31.3` -> `21.2`** (`-30.4` yds), Player MAE **`20.3` -> `19.1` -> `16.9`**
@@ -69,3 +69,4 @@ Largest Wave 8B per-matchup improvements (Pre-Fix -> Wave 8A -> Wave 8B):
 6. **`scripts/dfs/build_weekly_dfs_packets.py` & `scripts/dfs/build_week10_all_slates_dfs_packets.py`:** Sub-Gaussian RSS tail aggregation for DFS `P25`/`P90`, removed duplicate `opp_f7_outs` rush inflation, and synced `_player_kickoff_rank` to Week 10 windows.
 7. **`src/gse_engine/compute/corpus_situational_integrator.py` (Wave 9):** Unified all 5 Books/PDFs/IG/X/Situational pillars (`manifest_877_pdfs.json`, `live_books_and_pdfs_executable_engine`, `wave8_hidden_game_eager_and_sports_quant_engine`, `openai_math_721_manuscript_and_lean_engine`, `hybrid_rrf_corpus_and_arxiv_retriever`, `x_sweep_production_signals` 5 PBP mechanisms, `STATRANKINGS_FUNNEL_REPORT`, `PATTON_STATRANKINGS_DEF_STUFF_RATE_TOP10`, `full_repo_279_family_situational_reasoning_matrix`, `coach_speak_emotional_deflection_probe`, `drive_dire_situations`, `script_elasticity`) behind fail-closed gate `assert_all_books_pdfs_ig_x_situational_wired` plus `apply_vmls_kkt_and_corpus_shares` simplex projection.
 8. **`scripts/ops/gse_coach_mind_simulator.py` & `scripts/ops/gse_connected_game_workflow.py` (Wave 9):** Fixed healthy starter `QB1_STARTER` vs injured `QB1` tier collision, normalized ISO-8601 UTC timestamps on replay kickoff bounds, wired Stage-2 LUTs (`ypa_adj_lut`, `rush_ypc_adj_lut`, `rz_td_delta_lut`, `q4_fat_lut`, `off_epa_adj`/`def_epa_adj`, `sack_prob_adj`, `pace_sec_adj`) into the 175-snap simulator, and reconciled Stage 3/4 boxscore shares via VMLS KKT (`Pass MAE 67.0 -> 65.0`, `Rush MAE 31.1 -> 29.9`, `Player MAE 27.5 -> 27.27`).
+9. **Master Plan v4.0 (`K01`-`K25` + `K02` Entropic Tilting + `K04` 12-Cell Kantorovich Role Reallocation, Wave 18):** Integrated all `25` unified kernels in-place (`data/engine/k01_to_k25_kernel_cards_v4.yaml`), forwarded `entropic_tilting` (`ess_ratio = 0.864009..0.997805` across all `13/13` Week 10 dossiers), `v4_unified_kernels_pillar`, and `rulebook_2026_diagnostics` into `stage2_receipt`, wired real `pbp_2026` `qb1_proe` into `K12` (`qb_physics.py`), and replaced ad-hoc TE heuristics with `K04` `reallocate_12cell_kantorovich_vmls_roles` (`0.76x` inline-TE pass-pro retention vs `0.96x` WR/RB under `ol_distress = 1.0`), cutting `n = 187` Player MAE from `26.47` to **`25.8765`** (`Pass MAE 64.1737`, `Rush MAE 25.9242`, `Total MAE 8.8442`, `Team Points MAE 7.5683`).

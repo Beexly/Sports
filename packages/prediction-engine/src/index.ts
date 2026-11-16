@@ -5986,6 +5986,7 @@ export {
   fetchEtkfWinProbability,
   fetchGseMlEnsembleOutcomes,
   fetchTdaPersistenceFeatures,
+  type EtkfDmaBusReadoutOptional,
   type EtkfObservationWire,
   type EtkfPredictionSuccess,
   type EtkfRequestWire,
@@ -5998,6 +5999,14 @@ export {
 } from "./ensemble/gse-ml-endpoints.js";
 
 export {
+  evaluateFiveRegimeRVineSgp,
+  frechetHoeffdingNBounds,
+  highamNearestCorrelation,
+  jointThreeLegExceedance,
+} from "./nfl/sgp-copula.js";
+
+export {
+  burleyOwenScrambleU32,
   INV_2_POW_32,
   PHILOX_M0,
   PHILOX_M1,
@@ -6010,7 +6019,10 @@ export {
   encodeUtf8Bytes,
   fnv1a32Utf8,
   generatePhilox4x32WgslShader,
+  owenScrambledSobolMatrix,
+  owenScrambledSobolRawU32,
   philox4x32_10,
+  reverseBits32,
   sampleCategoricalMarkovStep,
   umul32Hi,
   umul32Lo,
@@ -6019,6 +6031,7 @@ export {
   verifyMarkovRowStochastic,
   verifyProperScoringAndConformal,
   verifySinkhornMarginals,
+  MultiplicityAgrapaOnsGate,
   SequentialEProcessGate,
   boundedScoreTransform,
   HotSwapInferenceEngine,

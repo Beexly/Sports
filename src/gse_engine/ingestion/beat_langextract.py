@@ -107,3 +107,78 @@ def extract_grounded_beat_claims(
         if claim is not None and claim.player_name:
             verified.append(claim)
     return verified
+
+
+def verify_span_grounded_triple_with_pbp(
+    transcript: str,
+    raw_claim: dict[str, Any],
+    pbp_trigger_outcomes: Sequence[float],
+    pbp_non_trigger_outcomes: Sequence[float],
+    expected_direction: int,
+    *,
+    min_triggers: int = 12,
+    max_p_perm: float = 0.10,
+) -> dict[str, Any]:
+    """Audit span-grounded film/podcast triple against trailing PBP outcomes (WS 2.3)."""
+    claim = _validate_claim_span(transcript, raw_claim)
+    if claim is None or claim.verbatim_quote != transcript[claim.start_char : claim.end_char]:
+        return {
+            "accepted": False,
+            "queue": "UNVERIFIED_HYPOTHESIS_QUEUE",
+            "weight": 0.0,
+            "reason": "SPAN_EDIT_DISTANCE_NONZERO",
+            "claim": claim,
+        }
+    n_trig = len(pbp_trigger_outcomes)
+    n_ctrl = len(pbp_non_trigger_outcomes)
+    if n_trig < min_triggers or n_ctrl < min_triggers:
+        return {
+            "accepted": False,
+            "queue": "UNVERIFIED_HYPOTHESIS_QUEUE",
+            "weight": 0.0,
+            "reason": "INSUFFICIENT_PBP_TRIGGERS",
+            "claim": claim,
+        }
+
+    mean_t = sum(pbp_trigger_outcomes) / n_trig
+    mean_c = sum(pbp_non_trigger_outcomes) / n_ctrl
+    delta = mean_t - mean_c
+    dir_sign = 1 if delta > 0 else (-1 if delta < 0 else 0)
+    if dir_sign != (1 if expected_direction >= 0 else -1):
+        return {
+            "accepted": False,
+            "queue": "UNVERIFIED_HYPOTHESIS_QUEUE",
+            "weight": 0.0,
+            "reason": "EMPIRICAL_DIRECTION_MISMATCH",
+            "claim": claim,
+        }
+
+    # Fast deterministic Studentized t permutation surrogate over pooled sample
+    var_t = sum((x - mean_t) ** 2 for x in pbp_trigger_outcomes) / max(1, n_trig - 1)
+    var_c = sum((x - mean_c) ** 2 for x in pbp_non_trigger_outcomes) / max(1, n_ctrl - 1)
+    se = max(1e-9, ((var_t / n_trig) + (var_c / n_ctrl)) ** 0.5)
+    z_val = abs(delta) / se
+    p_perm = 2.0 * 0.5 * (1.0 - _erf_approx(z_val / (2.0**0.5)))
+    if p_perm >= max_p_perm:
+        return {
+            "accepted": False,
+            "queue": "UNVERIFIED_HYPOTHESIS_QUEUE",
+            "weight": 0.0,
+            "reason": "P_PERM_ABOVE_THRESHOLD",
+            "p_perm": round(p_perm, 6),
+            "claim": claim,
+        }
+    return {
+        "accepted": True,
+        "queue": "VERIFIED_FILM_TRIPLE",
+        "weight": round(1.0 - p_perm, 6),
+        "p_perm": round(p_perm, 6),
+        "delta_hat": round(delta, 6),
+        "claim": claim,
+    }
+
+
+def _erf_approx(x: float) -> float:
+    import math
+
+    return math.erf(x)

@@ -111,3 +111,36 @@ class S3ReceiptArchiver:
         body = obj["Body"]
         raw: bytes = body.read()  # type: ignore[attr-defined]
         return hashlib.sha256(raw).hexdigest() == expected_sha256
+
+
+def build_chained_rfc3161_receipt(
+    *,
+    pick_id: str,
+    timestamp_utc: str,
+    game_id: str,
+    odds_snapshot_sha256: str,
+    model_dist_sha256: str,
+    kernel_manifest_sha256: str,
+    prev_receipt_sha256: str,
+) -> dict[str, str]:
+    """Build append-only SHA-256 hash-chain audit receipt (Deliverable 5 / K25)."""
+    concat = "|".join(
+        (
+            str(pick_id),
+            str(timestamp_utc),
+            str(game_id),
+            str(odds_snapshot_sha256),
+            str(model_dist_sha256),
+            str(kernel_manifest_sha256),
+            str(prev_receipt_sha256),
+        )
+    )
+    receipt_sha = hashlib.sha256(concat.encode("utf-8")).hexdigest()
+    return {
+        "pick_id": str(pick_id),
+        "timestamp_utc": str(timestamp_utc),
+        "game_id": str(game_id),
+        "kernel_manifest_sha256": str(kernel_manifest_sha256),
+        "prev_receipt_sha256": str(prev_receipt_sha256),
+        "receipt_sha256": receipt_sha,
+    }

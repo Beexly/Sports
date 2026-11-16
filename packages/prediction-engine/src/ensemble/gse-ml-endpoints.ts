@@ -52,6 +52,13 @@ export interface EtkfRequestWire {
   readonly inflation?: number | null;
 }
 
+export interface EtkfDmaBusReadoutOptional {
+  readonly dma_regime_weights?: readonly [number, number, number];
+  readonly state_vector_dim?: 312;
+  readonly ensemble_size_k?: 64;
+  readonly split_brain_gap?: number;
+}
+
 export interface EtkfPredictionSuccess {
   readonly ok: true;
   readonly probability: number;
@@ -59,6 +66,7 @@ export interface EtkfPredictionSuccess {
   readonly marginSpread: number;
   readonly observationsAssimilated: number;
   readonly calibration: string;
+  readonly dmaBusOptional?: EtkfDmaBusReadoutOptional;
 }
 
 export type TdaPoint = readonly [number, number];
@@ -303,6 +311,25 @@ export async function fetchEtkfWinProbability(params: {
     return { ok: false, reason: "malformed_response", detail: "invalid ETKF probability field" };
   }
 
+  const rawBus = res.body["dma_bus"];
+  let dmaBusOptional: EtkfDmaBusReadoutOptional | undefined;
+  if (typeof rawBus === "object" && rawBus !== null && !Array.isArray(rawBus)) {
+    const bRec = rawBus as Record<string, unknown>;
+    const rw = bRec["dma_regime_weights"];
+    const regimeWeights =
+      Array.isArray(rw) && rw.length === 3 && rw.every((v) => typeof v === "number" && Number.isFinite(v))
+        ? ([Number(rw[0]), Number(rw[1]), Number(rw[2])] as const)
+        : undefined;
+    dmaBusOptional = {
+      ...(regimeWeights !== undefined ? { dma_regime_weights: regimeWeights } : {}),
+      ...(bRec["state_vector_dim"] === 312 ? { state_vector_dim: 312 } : {}),
+      ...(bRec["ensemble_size_k"] === 64 ? { ensemble_size_k: 64 } : {}),
+      ...(typeof bRec["split_brain_gap"] === "number" && Number.isFinite(bRec["split_brain_gap"])
+        ? { split_brain_gap: Number(bRec["split_brain_gap"]) }
+        : {}),
+    };
+  }
+
   breaker.recordOutcome(endpoint.name, "success", params.nowMs);
   return {
     ok: true,
@@ -315,6 +342,7 @@ export async function fetchEtkfWinProbability(params: {
         : 0,
     calibration:
       typeof res.body["calibration"] === "string" ? res.body["calibration"] : "uncalibrated",
+    ...(dmaBusOptional !== undefined ? { dmaBusOptional } : {}),
   };
 }
 

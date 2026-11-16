@@ -6,6 +6,8 @@ import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from gse_engine.gates.conjunction import compute_baker_mchale_conformal_kelly
+
 
 @dataclass(frozen=True, slots=True)
 class CandidateBetTicket:
@@ -159,4 +161,28 @@ def allocate_skfolio_kelly_portfolio(
         total_rd_weight=total_rd,
         total_live_stake=total_live,
         calibration_adjustments_enabled=calibration_adjustments_enabled,
+    )
+
+
+def evaluate_ticket_conformal_kelly(
+    *,
+    prob_hat: float,
+    prob_epistemic_var: float,
+    ta_cqr_lower: float,
+    ta_cqr_upper: float,
+    decimal_odds: float,
+    fair_market_prob: float,
+    is_sgp: bool = False,
+    real_money_stake_cleared: bool = False,
+) -> dict[str, object]:
+    """Delegate single-ticket K21 Humility Lock + Baker-McHale Conformal Kelly sizing."""
+    return compute_baker_mchale_conformal_kelly(
+        prob_hat=prob_hat,
+        prob_epistemic_var=prob_epistemic_var,
+        ta_cqr_lower=ta_cqr_lower,
+        ta_cqr_upper=ta_cqr_upper,
+        decimal_odds=decimal_odds,
+        fair_market_prob=fair_market_prob,
+        is_sgp=is_sgp,
+        real_money_stake_cleared=real_money_stake_cleared,
     )

@@ -116,3 +116,70 @@ export class SequentialEProcessGate {
     return this.invariantFailures === 0 && this.wealth >= this.promotionThreshold;
   }
 }
+
+/**
+ * K25 Waudby-Smith & Ramdas (2024) Predictable aGRAPA / ONS Multiplicity E-Process Gate.
+ */
+export class MultiplicityAgrapaOnsGate {
+  public readonly mode: "agrapa" | "ons";
+  public readonly activeCandidatesM: number;
+  public readonly alpha: number;
+  public readonly maxBet: number;
+  public wealth = 1.0;
+  public stepCount = 0;
+
+  private sumX = 0;
+  private sumXSq = 0;
+  private onsLam = 0.08;
+  private onsGradSqSum = 0;
+
+  constructor(options?: {
+    mode?: "agrapa" | "ons";
+    activeCandidatesM?: number;
+    alpha?: number;
+    maxBet?: number;
+  }) {
+    this.mode = options?.mode ?? "agrapa";
+    this.activeCandidatesM = Math.max(1, Math.trunc(options?.activeCandidatesM ?? 5));
+    this.alpha = options?.alpha ?? 0.05;
+    this.maxBet = Math.max(0.05, Math.min(0.5, options?.maxBet ?? 0.5));
+  }
+
+  public get multiplicityThreshold(): number {
+    return (1.0 / this.alpha) * this.activeCandidatesM;
+  }
+
+  public nextBettingFraction(): number {
+    const t = this.stepCount + 1;
+    if (this.stepCount < 2) return 0.08;
+    if (this.mode === "ons") return Math.max(0, Math.min(this.maxBet, this.onsLam));
+    const n = this.stepCount;
+    const muHat = this.sumX / n;
+    const varHat = Math.max(1e-6, this.sumXSq / n - muHat * muHat);
+    if (muHat <= 0) return 0;
+    const lam = muHat / (varHat + muHat * muHat + 0.25 / t);
+    return Math.max(0, Math.min(this.maxBet, lam));
+  }
+
+  public step(crpsDiff: number, crpsScale = 2.5): number {
+    const xT = Math.max(-1, Math.min(1, crpsDiff / Math.max(1e-6, crpsScale)));
+    const lamT = this.nextBettingFraction();
+    this.wealth *= Math.max(1e-12, 1.0 + lamT * xT);
+    this.stepCount += 1;
+    this.sumX += xT;
+    this.sumXSq += xT * xT;
+
+    const zT = xT / Math.max(1e-6, 1.0 + this.onsLam * xT);
+    this.onsGradSqSum += zT * zT;
+    const coeff = 2.0 / (2.0 - Math.log(3.0));
+    this.onsLam = Math.max(
+      0,
+      Math.min(this.maxBet, this.onsLam + coeff * (zT / (1.0 + this.onsGradSqSum))),
+    );
+    return this.wealth;
+  }
+
+  public canPromote(mondrianEce: number): boolean {
+    return this.wealth >= this.multiplicityThreshold && mondrianEce <= 0.025;
+  }
+}

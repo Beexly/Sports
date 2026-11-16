@@ -21,7 +21,7 @@ from typing import Any
 import psutil  # type: ignore[import-untyped]
 
 from gse_engine.fabric.coordinator import BrokerlessMicrotaskCoordinator, RuntimeKind
-from gse_engine.fabric.e_process import SequentialEProcessGate
+from gse_engine.fabric.e_process import MultiplicityAgrapaOnsGate, SequentialEProcessGate
 from gse_engine.fabric.evolution import (
     ISLAND_DEFAULT_PARAMS,
     ISLAND_NAMES,
@@ -30,6 +30,7 @@ from gse_engine.fabric.evolution import (
     DiagnosticResidualPayload,
     HybridMutator,
     MultiIslandMapElitesArchive,
+    compute_shapley_sobol_4block_attribution,
 )
 from gse_engine.fabric.foundry_compound_miner import sweep_foundry_and_corpus_primitives
 from gse_engine.fabric.philox import (
@@ -193,6 +194,38 @@ def execute_deterministic_microtask_kernel(
             "family_lifts": dict(summary["family_lifts"]),
             "crps": 0.18,
             "conformal_quantiles": [0.0, 0.01, 0.02],
+        }
+
+    if t_kind == "SHAPLEY_ATTRIBUTION":
+        raw_coal = payload.get("coalition_values")
+        if not isinstance(raw_coal, (list, tuple)) or len(raw_coal) != 16:
+            raise ValueError("SHAPLEY_ATTRIBUTION requires a 16-element coalition_values payload.")
+        coal = [float(x) for x in raw_coal]
+        y_proj = float(payload.get("y_proj", coal[0]))
+        y_act = float(payload.get("y_actual", coal[15]))
+        attr = compute_shapley_sobol_4block_attribution(
+            coal,
+            y_proj=y_proj,
+            y_actual=y_act,
+        )
+        crps_val = _crps_empirical(coal, y_act)
+        res_sorted = sorted(c - y_proj for c in coal)
+        quantiles = [
+            round(res_sorted[2], 6),
+            round(res_sorted[8], 6),
+            round(res_sorted[13], 6),
+        ]
+        gate = MultiplicityAgrapaOnsGate(mode="agrapa", active_candidates_m=5)
+        crps_diff = float(payload.get("crps_diff", max(0.0, 0.25 - crps_val)))
+        wealth_after = gate.step(crps_diff)
+        return {
+            "task_type": t_kind,
+            "shapley_deltas": attr["deltas"],
+            "luck_learning_weight": attr["luck_learning_weight"],
+            "efficiency_residual": attr["efficiency_residual"],
+            "agrapa_wealth": round(wealth_after, 6),
+            "crps": round(crps_val, 6),
+            "conformal_quantiles": quantiles,
         }
 
     # CRPS_WALK_FORWARD default

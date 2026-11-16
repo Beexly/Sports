@@ -880,6 +880,38 @@ def build_sample_week9_dfs_slate_pool() -> pd.DataFrame:
     )
 
 
+def solve_k22_milp_lineup(
+    *,
+    mode: str,
+    names: Sequence[str],
+    positions: Sequence[str],
+    teams: Sequence[str],
+    salaries: Sequence[int],
+    mean_projections: Sequence[float],
+    scenario_pts_matrix: Sequence[Sequence[float]],
+    dirichlet_field_own: Sequence[float] | None = None,
+    zero_floor_probs: Sequence[float] | None = None,
+    is_late_kickoff: Sequence[bool] | None = None,
+    prior_lineup_matrix: Sequence[Sequence[int]] | None = None,
+) -> Dict[str, Any]:
+    """Delegate K22 Cash DRO+CVaR or GPP DPP+ROV_FLEX MILP solver cleanly."""
+    from gse_engine.compute.dfs_optimizer import solve_k22_dro_cash_or_dpp_gpp_milp
+
+    return solve_k22_dro_cash_or_dpp_gpp_milp(
+        mode=mode,
+        names=names,
+        positions=positions,
+        teams=teams,
+        salaries=salaries,
+        mean_projections=mean_projections,
+        scenario_pts_matrix=scenario_pts_matrix,
+        dirichlet_field_own=dirichlet_field_own,
+        zero_floor_probs=zero_floor_probs,
+        is_late_kickoff=is_late_kickoff,
+        prior_lineup_matrix=prior_lineup_matrix,
+    )
+
+
 if __name__ == "__main__":
     pool_df = build_sample_week9_dfs_slate_pool()
     portfolio = optimize_dfs_portfolio(pool_df, num_lineups=3, max_overlap=6, salary_cap=50000.0)
