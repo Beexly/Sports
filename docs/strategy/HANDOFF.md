@@ -3,6 +3,22 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-16 (Hermes autonomous cycle — the sequenced 7-gate pipeline fail-closed on every window it actually ran)
+
+- **What changed**:
+  - `scripts/ops/run_permanent_sequenced_weekly_pipeline.py`: Gate 4 (`Gate_4_Conformal_Calibration_And_RLVR_Bridge`) fail-closed on every scheduled window that executed the 7-gate job (`0 15 * * 2`, `0 21 * * 3,4,5`, `35 16 * * 0`, `40 19 * * 0`, `50 23 * * 0,1,4`). The workflow only ever looked green on the windows where the 7-gate job was skipped (e.g. the `15 2 * * 1,2,5` halftime slot), which is why the failure read as flaky.
+  - Two defects, both in that one file. (1) The RLVR bridge *smoke ticket* carried no bitemporal cutoffs, so veto 6 (`RLVR_VETO_BITEMPORAL_LEAK`) fired on every evaluation and `bridge_smoke_approved` was always `False` -> `g4_ok` always `False`. Added a non-leaking `feature_max_timestamp_utc` / `as_of_utc` pair (`2026-11-13T00:00:00Z` <= `2026-11-13T12:00:00Z`). (2) The RLVR veto directory and the Gate 1 foundry read-only DB were addressed by hardcoded Windows host paths (`C:\Users\Garrett\...`); on any other host the directory is absent, so `rlvr_count` stayed `0` and the veto verification silently passed without loading a single scenario. Both paths now derive from `repo_root`.
+- **What was proven**:
+  - Real run, not a read of the assertion: `python scripts/ops/run_permanent_sequenced_weekly_pipeline.py --week auto --mode t85m-lock --skip-js-guards` -> `PASS | week=10 | mode=t85m-lock | gates=7/7`. Receipt `data/engine/sequenced_run_week10/week10_sequenced_pipeline_receipt.json` records Gate_4 `{calibration_heads_present: True, rlvr_scenarios_verified: 18, rlvr_all_passed: True, bridge_smoke_approved: True}` (was `rlvr_scenarios_verified: 0`, `bridge_smoke_approved: False`), and Gate_1 `foundry_db_readonly_ok: True`.
+  - The 6 committed veto batch files (`foundry/artifacts/rlvr_vetoes/*.jsonl`, 18 scenarios) load and self-verify `all_passed: True` from the repo path, so the check is real wherever the repo is checked out.
+- **What was not proven**:
+  - The fix is verified locally on the dev box only. The CI run on the next scheduled 7-gate window is the real confirmation; the panel of gate payloads is the thing to re-read there.
+  - Separately named, not fixed: the nightly `Overnight Corpus & Mind Shift Consolidation` job also fails every night on two content assertions in `tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py` — the MNF writeup names `Minnesota Vikings +3.5` where the test pins `Buffalo Bills -3.5`, and an inactive player (`Tyreek Hill`) still surfaces in `canonical_looped_funnel_projections`. Both are honest-data defects, not snapshot drift.
+- **What the next role must do**:
+  - Confirm the 7-gate job goes green (or that a red one is a genuine gate verdict) on the next `50 23 * * 0,1,4` / `40 19 * * 0` window, then re-read the Gate_4 payload rather than the run colour.
+  - Chase the two `test_unified_5000eq_mnf_projections_and_storefront.py` failures in the overnight job: the MNF side-selection copy and the inactive-player leak into the looped funnel projections.
+  - The `Epistemic Calibration & Sanity Gate` (`epistemic_gate.yml`) remains red on main (`73 failed, 1079 passed` on `407b0288`); it is not a merge blocker (main has no branch protection) and its failures are a mix of dev-box session audits that need the `GSE_SESSION_AUDIT_REPLAY=1` gating already applied in #1283, real invariants (`zero_hardcoded_local_host_paths_in_intelligence_py`, 22 `intelligence/**.py` files still hardcode `C:\Users\Garrett`), and time-bound preflight-roster-age checks.
+
 ## 2026-11-15 (Morning Pre-Munich Launch) -- Week 10 Connected 13/13 Dossiers, IDP Tackle Calibration & 5-Slate DraftKings DFS Readiness (`AUTON-ETHOS-WEEK10-LAUNCH-24`)
 
 - **What changed**:
