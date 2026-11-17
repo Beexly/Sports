@@ -1,0 +1,724 @@
+{
+ "book_id": "1eeec19323dd2eb8",
+ "source_status": "COMPLETE",
+ "source_note": "William James, The Principles of Psychology, Vol. 1 (New York: Henry Holt and Company; copyright 1890; the local printing carries an 1899 title page). Local file: a 39,313,111-byte scanned PDF from a North Dakota State University library copy, sha256 1eeec19323dd2eb8cee51b4c084eb216f6ce17428fee48a0ddae4a97ea9dfb89, book_id = first 16 hex of sha256(str(size) + bytes). Extracted text: 30,520 lines, about 286,613 words; body text is clean letterpress OCR with occasional garbled display type in chapter heads and some footnote noise; every quoted passage was verified as a contiguous substring of the extracted text within a single page. Volume 1 contains Chapters I-XVI, ending with Memory. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "no_mental_modification_without_bodily_change",
+   "name": "General law: no mental modification occurs without an accompanying or following bodily change",
+   "verbatim_quote": "it will be safe to lay down the general law that no mental modification ever occurs which is not accompanied or followed by a bodily change",
+   "page": "Chapter I (The Scope of Psychology), printed p. 5; extracted text lines 576-580",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mental states are conditioned a parte ante by bodily processes and lead to bodily processes a parte post",
+    "The law is stated as a safe general rule for psychology, not as a metaphysical identity claim"
+   ],
+   "breakdown_regime": "Stated without a mechanism for the coupling; James treats the correlation as a working postulate of the science and leaves the mode of connection unexplained",
+   "domain": "foundations of psychology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every internal state transition in the reasoning engine must be paired with an observable trace or downstream effect; a claimed signal that leaves no trace anywhere in the system is not admitted as a state change, mirroring James's rule that a mental modification is always accompanied or followed by a bodily one",
+    "source_operator": "no_mental_modification_without_bodily_change",
+    "telemetry": "engine state-transition logs, downstream output diffs, latency and activation records"
+   }
+  },
+  {
+   "primitive_id": "teleological_criterion_of_mind",
+   "name": "The mark of mentality is the pursuance of future ends with choice of means",
+   "verbatim_quote": "The pursuance of future ends and the choice of means for their attainment are thus the mark and criterion of the presence. of mentality in a phenomenon.",
+   "page": "Chapter I (The Scope of Psychology), printed pp. 7-8; extracted text lines 695-698",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Behavior is the observable evidence available for inferring mentality",
+    "The test is applied by an observer; it discriminates intelligent from mechanical performance by whether the end stays fixed while means vary"
+   ],
+   "breakdown_regime": "Outward teleology alone can be produced by blind mechanism (growth, digestion, reflexes), so the criterion over-attributes mind unless supplemented by evidence that the end is represented in advance",
+   "domain": "philosophy of mind",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An agent or signal counts as goal-directed in the engine only when it holds a target fixed while varying its route under changed conditions; fixed stimulus-response chains are classified as mechanical no matter how appropriate their output looks",
+    "source_operator": "teleological_criterion_of_mind",
+    "telemetry": "behavioral traces under perturbed conditions, goal-completion records, route-variation logs"
+   }
+  },
+  {
+   "primitive_id": "spinal_cord_defence_centres",
+   "name": "The frog's spinal cord is a machine converting skin irritations into coordinated defensive movements",
+   "verbatim_quote": "The spinal cord of the frog thus contains arrangements of cells and fibres fitted to convert skin irritations into movements of defence.",
+   "page": "Chapter II (The Functions of the Brain), printed p. 15; extracted text lines 985-988",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Vivisection and ablation reveal what each centre does when higher centres are removed",
+    "The frog is used as a didactic first approximation, to be corrected by work on higher animals"
+   ],
+   "breakdown_regime": "The simple scheme overstates the independence of the centres; later experiments on birds, dogs, and man soften the contrasts, and segmental independence is only partial",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Low-level reflex pipelines in the engine (fixed input-to-action converters) run without deliberation and are evaluated as machines: correct local conversion, no representation of ends; deliberative layers sit above them exactly as hemispheres sit above the cord",
+    "source_operator": "spinal_cord_defence_centres",
+    "telemetry": "reflex-pathway trigger logs, ablation and lesion test results, latency measurements"
+   }
+  },
+  {
+   "primitive_id": "all_nervous_centres_intelligent_action",
+   "name": "All nervous centres share one essential function: intelligent action, feeling, preference, and ends",
+   "verbatim_quote": "All nervous centres have then in the first instance one essential function, that of 'intelligent' action. They feel, prefer one thing to another, and have 'ends.'",
+   "page": "Chapter II (The Functions of the Brain), printed p. 79; extracted text lines 3682-3685",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Consciousness is assumed to accompany centres in graded degree rather than appearing only at the top",
+    "Preference among sensations plus memory of them is sufficient to generate ends and, by association, will"
+   ],
+   "breakdown_regime": "The attribution of feeling to the spinal cord is speculative and rests on analogy; James presents it as the safest shadowy view, not a demonstrated fact",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats every processing tier, down to the simplest reflex converter, as carrying a preference ordering over its inputs; higher tiers differ by the complexity of what can be preferred and remembered, not by a categorical jump from mechanism to mind",
+    "source_operator": "all_nervous_centres_intelligent_action",
+    "telemetry": "per-tier preference rankings, choice frequencies, memory-retention measures per tier"
+   }
+  },
+  {
+   "primitive_id": "cortical_association_inhibits_instinct",
+   "name": "A cortical memory image, recalled by association, inhibits an instinctive tendency and substitutes a learned response (the baby and the candle)",
+   "verbatim_quote": "the burn will leave an image in another part of the cortex, which, being recalled by association, will inhibit the touching tendency the next time the candle is perceived, and excite the tendency to withdraw",
+   "page": "Chapter II (The Functions of the Brain), printed p. 80; extracted text lines 3717-3721",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The whole transaction can be re-described as entirely cortical, without the Meynert scheme's dubious anatomy",
+    "The recalled image and the motor tendency occupy different cortical loci coupled by association"
+   ],
+   "breakdown_regime": "The anatomy is schematic; James concedes the gaps in knowledge are enormous and offers the scheme as the safest available view rather than established localization",
+   "domain": "learning and inhibition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Learned veto in the engine works by this exact circuit: a stored trace of a bad outcome, reactivated by a resembling present cue, inhibits the prepotent response and excites the alternative; no central judge is required, only an associated image with inhibitory coupling",
+    "source_operator": "cortical_association_inhibits_instinct",
+    "telemetry": "veto firing records, cue-to-outcome association tables, inhibition latency"
+   }
+  },
+  {
+   "primitive_id": "summation_of_stimuli",
+   "name": "Summation of stimuli: individually inadequate stimuli jointly excite a centre to effective discharge",
+   "verbatim_quote": "The law is this, that a stimulus which would be inadequate by itself to excite a nerve-centre to effective discharge may, by acting with one or more other stimuli (equally ineffectual by themselves alone) bring the discharge about.",
+   "page": "Chapter III (On Some General Conditions of Brain-Activity), printed p. 82; extracted text lines 3803-3807",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Submaximal excitations persist briefly as latent excitement or heightened irritability",
+    "Effects add across modalities and across time within a short window"
+   ],
+   "breakdown_regime": "Summation decays with interval length and has limits; very rapid reiteration can produce tetanus-like saturation rather than graded increase, and the locus (cord vs cortex) varies by case",
+   "domain": "neurophysiology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Weak signals in the engine are accumulated, not thresholded one by one: several sub-threshold cues arriving close together in time or across channels sum toward a discharge decision, and the residue of each cue temporarily raises the sensitivity of the pathway it touched",
+    "source_operator": "summation_of_stimuli",
+    "telemetry": "cue arrival timestamps, per-pathway residual activation levels, joint-trigger event logs"
+   }
+  },
+  {
+   "primitive_id": "expectant_attention_reaction_time",
+   "name": "Expectant attention is the partial pre-stimulation of the discharge pathway; the measured reaction is then a reflex, not a psychic act",
+   "verbatim_quote": "'Expectant attention' is but the subjective name for what objectively is a partial stimulation of a certain pathway, the pathway from the 'centre' for the signal to that for the discharge.",
+   "page": "Chapter III (On Some General Conditions of Brain-Activity), printed p. 91; extracted text lines 4204-4207",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Preparation raises the pathway to heightened irritability before the signal arrives",
+    "The signal then acts as a spark on a laid train, so reaction-time measures conduction and discharge, not deliberation"
+   ],
+   "breakdown_regime": "If attention lapses or the signal is unexpected, an express perception and volition intervene and the time becomes disproportionately long (a second or more), so the reflex model fails outside prepared conditions",
+   "domain": "attention and measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prepared pathways answer faster than unprepared ones by a mechanism the engine can copy directly: pre-activate the expected route so the arriving signal only has to trigger discharge; measured response latency then diagnoses preparation state rather than reasoning depth",
+    "source_operator": "expectant_attention_reaction_time",
+    "telemetry": "response latency distributions split by prepared vs unprepared trials, false-start rates to wrong signals"
+   }
+  },
+  {
+   "primitive_id": "habit_plasticity_definition",
+   "name": "Plasticity: a structure weak enough to yield to an influence, but strong enough not to yield all at once",
+   "verbatim_quote": "Plasticity, then, in the wide sense of the word, means the possession of a structure weak enough to yield to an influence, but strong enough not to yield all at once.",
+   "page": "Chapter IV (Habit), printed p. 105; extracted text lines 4773-4776",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Organic matter, especially nervous tissue, possesses this plasticity in extraordinary degree",
+    "Each relatively stable phase of equilibrium in such a structure is a new set of habits"
+   ],
+   "breakdown_regime": "Plasticity is a dispositional definition, not a mechanism; it names the property that habit-formation requires without specifying the molecular changes, which James admits cannot yet be described minutely",
+   "domain": "habit and learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any learnable substrate in the engine must satisfy James's two-sided condition: plastic enough that experience rewrites it, stable enough that one exposure does not rewrite it completely; learning-rate and retention settings are tuned to sit between those two failure modes",
+    "source_operator": "habit_plasticity_definition",
+    "telemetry": "per-update weight change magnitudes, retention curves after single vs repeated exposures"
+   }
+  },
+  {
+   "primitive_id": "habit_paths_deepen_with_use",
+   "name": "A traversed nerve path is scooped out and made more permeable with each passage of current",
+   "verbatim_quote": "A path once traversed by a nerve-current might be expected to follow the law of most of the paths we know, and to be scooped out and made more permeable than before",
+   "page": "Chapter IV (Habit), printed p. 107; extracted text lines 4905-4908",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Currents entering through the sensory nerve-roots are the only impressions that can reach the cord and hemispheres",
+    "Deepening is monotone with repetition in the simple scheme"
+   ],
+   "breakdown_regime": "The scheme does not explain forgetting, interference between paths, or why some single experiences fix permanently while many repetitions of others do not",
+   "domain": "habit and learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Use-dependent strengthening: every traversal of an engine pathway raises its future conductance, so frequency of co-use is the primitive variable from which habits, associations, and memories are all built in this system",
+    "source_operator": "habit_paths_deepen_with_use",
+    "telemetry": "traversal counts per pathway, conductance deltas per traversal, decay measurements"
+   }
+  },
+  {
+   "primitive_id": "habit_concatenated_discharges",
+   "name": "Complex habits are concatenated reflex discharges, each contraction's sensation triggering the next link",
+   "verbatim_quote": "The most complex habits, as we shall presently see more fully, are, from the same point of view, nothing but concatenated discharges in the nerve-centres, due to the presence there of systems of reflex paths, so organized as to wake each other up successively",
+   "page": "Chapter IV (Habit), printed p. 107; extracted text lines 4896-4901",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each link's muscular contraction produces the impression that stimulates the next link",
+    "A final impression inhibits the process and closes the chain"
+   ],
+   "breakdown_regime": "The chain model underplays parallel and preparatory activity; James's own diagram and later chapters require central initiation and inhibition, not a purely peripheral relay",
+   "domain": "habit and skill",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Skilled routines in the engine are compiled chains: each completed step emits the cue that fires the next, so execution needs no central controller per step, and a broken link is diagnosed by finding which step's output cue failed to appear",
+    "source_operator": "habit_concatenated_discharges",
+    "telemetry": "step-completion event streams, chain interruption points, per-link latency"
+   }
+  },
+  {
+   "primitive_id": "habit_simplifies_movements",
+   "name": "Habit simplifies the movements required, makes them more accurate, and diminishes fatigue",
+   "verbatim_quote": "The first result of it is that habit simplifies the movements required to achieve a given result, makes them more accurate and diminishes fatigue.",
+   "page": "Chapter IV (Habit), printed p. 112; extracted text lines 5106-5108",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Repetition confines an originally diffuse impulse to the few muscles actually needed",
+    "The slighter the stimulus required, the more confined its effect"
+   ],
+   "breakdown_regime": "Simplification is a tendency, not a guarantee: the same mechanism fixes bad habits and makes the wrong movement automatic when the wrong movement is the one repeated",
+   "domain": "habit and skill",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Practice in the engine is measured by James's three outputs: fewer operations per result, lower error rate, lower cost per execution; a routine that is merely faster but not simpler and more accurate has not yet become habit in this sense",
+    "source_operator": "habit_simplifies_movements",
+    "telemetry": "operations-per-task counts, error rates over practice, compute cost per execution over time"
+   }
+  },
+  {
+   "primitive_id": "habit_maxim_no_exception",
+   "name": "Second maxim of habit formation: never suffer an exception until the new habit is securely rooted",
+   "verbatim_quote": "The second maxim is: Never suffer an exception to occur till the new habit is securely rooted in your life.",
+   "page": "Chapter IV (Habit), printed p. 123; extracted text lines 5571-5573",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each lapse undoes more than many successful repetitions build, like dropping a ball of string one is winding",
+    "Continuity of training is what makes the nervous system act infallibly right"
+   ],
+   "breakdown_regime": "The maxim is a practical rule from Bain's moral psychology, not a measured dose-response law; James elsewhere warns against giving the will so stiff a task as to insure defeat at the outset",
+   "domain": "habit formation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Consistency weighting in engine training: an exception during early consolidation costs more than an equivalent success earns, so early training runs are protected from contradictory examples until the pattern is rooted, after which variation can be admitted",
+    "source_operator": "habit_maxim_no_exception",
+    "telemetry": "exception events during consolidation windows, post-exception recovery time, streak lengths"
+   }
+  },
+  {
+   "primitive_id": "consciousness_selecting_agency",
+   "name": "Consciousness is at all times primarily a selecting agency, emphasizing one item and suppressing the rest",
+   "verbatim_quote": "Now the study of the phenomena of consciousness which we shall make throughout the rest of this book will show us that consciousness is at all times primarily a selecting agency.",
+   "page": "Chapter V (The Automaton-Theory), printed p. 139; extracted text lines 6236-6240",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The item emphasized is always connected with some interest felt to be paramount at the time",
+    "Selection operates from the lowest sphere of sense to the highest of intellection"
+   ],
+   "breakdown_regime": "Selection is a description of what consciousness does, offered against the automaton-theory; it does not by itself prove causal efficacy, which James argues separately from the distribution of consciousness",
+   "domain": "consciousness and selection",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's deliberative layer is a selecting agency in James's exact sense: at every step it accentuates one candidate continuation and suppresses the rest, with the accent set by the currently paramount interest; selection, not generation, is its primary operation",
+    "source_operator": "consciousness_selecting_agency",
+    "telemetry": "candidate suppression rates, accentuation choices per step, interest-weight snapshots"
+   }
+  },
+  {
+   "primitive_id": "consciousness_loading_the_dice",
+   "name": "Consciousness increases efficiency by loading the dice: constant pressure for the owner's permanent interests, constant inhibition of straying",
+   "verbatim_quote": "Loading its dice would mean bringing a more or less constant pressure to bear in favor of those of its performances which make for the most permanent interests of the brain's owner; it would mean a constant inhibition of the tendencies to stray aside.",
+   "page": "Chapter V (The Automaton-Theory), printed pp. 140-141; extracted text lines 6308-6312",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The high brain alone is an unstable, hair-trigger system whose performances would otherwise be hit-or-miss",
+    "The interests in whose favor pressure is exerted are created by consciousness itself"
+   ],
+   "breakdown_regime": "The argument is an inference to efficacy from apparent design, which James presents as plausible induction, not proof; a purely mechanical loading (e.g., by habit) can mimic part of the effect",
+   "domain": "consciousness and control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A high-capacity but unstable reasoner needs a standing bias term: the engine applies constant pressure toward outcomes serving the system's permanent interests and constant inhibition of stray continuations, which is functionally what turns an erratic generator into a reliable agent",
+    "source_operator": "consciousness_loading_the_dice",
+    "telemetry": "bias-term magnitudes, stray-suppression rates, outcome distributions with and without the standing bias"
+   }
+  },
+  {
+   "primitive_id": "mind_stuff_compounding_refuted",
+   "name": "Refutation of mind-stuff: feelings do not compound into a higher consciousness (the twelve men and the sentence)",
+   "verbatim_quote": "Take a sentence of a dozen words, and take twelve men and tell to each one word. Then stand the men in a row or jam them in a bunch, and let each think of his word as intently as he will; nowhere will there be a consciousness of the whole sentence.",
+   "page": "Chapter VI (The Mind-Stuff Theory), printed p. 160; extracted text lines 7186-7190",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A whole is conscious only where its parts are represented in one and the same reality",
+    "Proximity or aggregation of separate minds does not create an additional compound mind"
+   ],
+   "breakdown_regime": "The argument rules out self-compounding of elementary feelings but leaves standing both the soul hypothesis and a single integral brain process corresponding to the whole feeling, between which James does not here decide",
+   "domain": "philosophy of mind",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Aggregation veto for the engine: summing or concatenating separate module outputs never by itself creates a unified judgment; a combined state exists only where the components are jointly represented in one integrating process, so ensemble scores are not treated as beliefs",
+    "source_operator": "mind_stuff_compounding_refuted",
+    "telemetry": "integration-point audits, ensemble-vs-integrated output comparisons, representation overlap measures"
+   }
+  },
+  {
+   "primitive_id": "psychologists_fallacy",
+   "name": "The psychologist's fallacy: confusing one's own standpoint with that of the mental fact under report",
+   "verbatim_quote": "The great snare of the psychologist is the confusion of his own standpoint with that of the mental fact about which he is making his report.",
+   "page": "Chapter VII (The Methods and Snares of Psychology), printed p. 196; extracted text lines 8716-8719",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The psychologist knows the object of a thought from outside, plus the thought itself, plus its relations; the thought knows only its object",
+    "Language abets the fallacy because thoughts are named after their objects"
+   ],
+   "breakdown_regime": "The fallacy is a standing risk, not an eliminable error; James says no psychologist has kept himself from falling into it at all times",
+   "domain": "methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Observer-standpoint discipline for the engine's self-reports: an evaluation must not foist the evaluator's knowledge (labels, outcomes, relations visible only from outside) into the account of what a component state contained; reports are audited for exactly this substitution",
+    "source_operator": "psychologists_fallacy",
+    "telemetry": "report audits comparing component-visible inputs against evaluator-visible context, leakage checks"
+   }
+  },
+  {
+   "primitive_id": "knowledge_acquaintance_vs_about",
+   "name": "Two kinds of knowledge: acquaintance (bare presence, through feelings) and knowledge-about (relations, through thoughts)",
+   "verbatim_quote": "There are two kinds of knowledge broadly and practically distinguishable: we may call them respectively knowledge of acquaintance and knowledge-about.",
+   "page": "Chapter VIII (The Relations of Minds to Other Things), printed p. 221; extracted text lines 9716-9719",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acquaintance cannot be imparted to one who has not made it himself; it can only be occasioned",
+    "The two kinds are relative terms in practice: the same thought is knowledge-about against a simpler one, acquaintance against a more articulate one"
+   ],
+   "breakdown_regime": "The distinction is broad and practical, not a sharp boundary; in any speaking mind some knowledge-about attaches to everything",
+   "domain": "epistemology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps two stores distinct: acquaintance-type traces (raw impressions, unanalyzed, non-transferable except by re-exposure) and knowledge-about (articulated relations that can be transmitted, queried, and reasoned over); confusing a stored impression with articulated knowledge is a category error the schema forbids",
+    "source_operator": "knowledge_acquaintance_vs_about",
+    "telemetry": "store-type tags on records, relation counts per record, transfer success rates"
+   }
+  },
+  {
+   "primitive_id": "stream_of_thought_continuity",
+   "name": "Consciousness does not appear to itself chopped up in bits; it flows, a stream, not a chain or train",
+   "verbatim_quote": "Consciousness, then, does not appear to itself chopped up in bits. Such words as 'chain' or 'train' do not describe it fitly as it presents itself in the first instance. It is nothing jointed; it flows.",
+   "page": "Chapter IX (The Stream of Thought), printed p. 239; extracted text lines 10450-10454",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Objects thought of may be discrete without the thoughts of them being discrete",
+    "A transition between thoughts is itself a part of consciousness, as a joint in bamboo is part of the wood"
+   ],
+   "breakdown_regime": "The claim is introspective and first-personal; sudden contrasts and shocks feel like breaks, and James must argue (via the thunder-upon-silence case) that the feeling of contrast is itself continuous with what precedes it",
+   "domain": "consciousness",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine models its own processing as a continuous stream with transitions as first-class states, not as a sequence of discrete independent calls; the state between two focal contents is itself recorded and can carry information, exactly as the transition between two thoughts does for James",
+    "source_operator": "stream_of_thought_continuity",
+    "telemetry": "transition-state records, inter-step state persistence measures, discontinuity audits"
+   }
+  },
+  {
+   "primitive_id": "substantive_and_transitive_parts",
+   "name": "The stream alternates flights and perchings: transitive parts (relations, transitions) lead between substantive parts (resting images and concepts)",
+   "verbatim_quote": "Let us call the resting-places the ' substantive parts,' and the places of flight the 'transitive parts, of the stream of thought.",
+   "page": "Chapter IX (The Stream of Thought), printed p. 243; extracted text lines 10629-10631",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Substantive parts can be held before the mind and contemplated without changing; transitive parts cannot be arrested without being annihilated",
+    "The main use of the transitive parts is to lead from one substantive conclusion to another"
+   ],
+   "breakdown_regime": "Introspective access to transitive parts is systematically unreliable (the snowflake caught in the warm hand), so their inventory rests on inference from the structure of the stream rather than direct inspection",
+   "domain": "consciousness",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine traces must log the flights, not only the perchings: the relational moves between stable conclusions are separate, perishable records that vanish if only final states are stored, and reconstructing a run from its substantive states alone systematically loses them",
+    "source_operator": "substantive_and_transitive_parts",
+    "telemetry": "trace completeness audits, ratio of transition records to state records, reconstruction error from states-only logs"
+   }
+  },
+  {
+   "primitive_id": "fringe_psychic_overtone",
+   "name": "The fringe: a faint brain-process makes thought aware of relations and objects only dimly perceived, as psychic overtone or suffusion",
+   "verbatim_quote": "Let us use the words psychic overtone, suffusion, or fringe, to designate the influence of a faint brain-process upon our thought, as it makes it aware of relations and objects but dimly perceived.",
+   "page": "Chapter IX (The Stream of Thought), printed p. 258; extracted text lines 11285-11288",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Waxing and waning brain-processes blend with and suffuse the process at its culminating point",
+    "The difference between acquaintance and knowledge-about reduces largely to absence or presence of fringes"
+   ],
+   "breakdown_regime": "The fringe is defined by its function and is hard to delimit; James must correct readers (e.g., Maguire) who take it as a glue between sensations rather than part of the object cognized",
+   "domain": "consciousness",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Peripheral activation is retained as a low-resolution halo around every focal item in the engine: not strong enough to report as content, strong enough to bias what feels related, familiar, or impending; dropping the halo collapses knowledge-about back to bare acquaintance",
+    "source_operator": "fringe_psychic_overtone",
+    "telemetry": "halo activation vectors, familiarity and affinity judgments with and without halo, fringe-driven retrieval rates"
+   }
+  },
+  {
+   "primitive_id": "social_self_multiplicity",
+   "name": "A man has as many social selves as there are individuals who recognize him and carry an image of him",
+   "verbatim_quote": "Properly speaking, a man has as many social selves as there are individuals who recognize him and carry an image of him in their mind.",
+   "page": "Chapter X (The Consciousness of Self), printed p. 294; extracted text lines 12822-12825",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The social self is the recognition one gets from one's mates; to wound one of its images is to wound him",
+    "Individuals fall into classes, so practically there are as many social selves as distinct groups about whose opinion he cares"
+   ],
+   "breakdown_regime": "The multiplication is of images in other minds; James treats the resulting division as practically real but notes it may be harmonious division of labor rather than discordant splitting",
+   "domain": "self and identity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An agent's standing is not one variable but one per audience: the engine tracks recognition state separately for each observer or group that carries an image of the system, since an injury or credit in one image does not propagate automatically to the others",
+    "source_operator": "social_self_multiplicity",
+    "telemetry": "per-audience standing records, divergence measures between audience images, group-level reputation histories"
+   }
+  },
+  {
+   "primitive_id": "passing_thought_is_thinker",
+   "name": "The passing Thought is itself the Thinker; no non-phenomenal thinker behind it is needed to express the facts",
+   "verbatim_quote": "The passing Thought then seems to be the Thinker; and though there may be another non-phenomenal Thinker behind that, so far we do not seem to need him to express the facts.",
+   "page": "Chapter X (The Consciousness of Self), printed p. 342; extracted text lines 14964-14967",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each present thought appropriates past thoughts that come with the same warmth and intimacy, and is appropriated in turn",
+    "Personal identity is thus a chain of appropriations, not the act of a permanent substantial ego"
+   ],
+   "breakdown_regime": "James leaves the soul hypothesis standing as a possibility; the passing-Thought account is preferred on parsimony, and the appropriation criterion (warmth and intimacy) is itself unexplained",
+   "domain": "self and identity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuity of identity in the engine is implemented as appropriation, not as a persistent soul-object: each new state adopts prior states that bear the marks of ownership (warmth and intimacy, in James's terms; provenance and continuity markers, in the engine's) and disowns those that do not",
+    "source_operator": "passing_thought_is_thinker",
+    "telemetry": "appropriation chain audits, provenance marker continuity, identity-break incident logs"
+   }
+  },
+  {
+   "primitive_id": "attention_focalization_concentration",
+   "name": "Attention is focalization and concentration of consciousness; it implies withdrawal from some things to deal effectively with others",
+   "verbatim_quote": "Focalization, concentration, of consciousness are of its essence. It implies withdrawal from some things in order to deal effectively with others, and is a condition which has a real opposite in the confused, dazed, scatterbrained state",
+   "page": "Chapter XI (Attention), printed p. 404; extracted text lines 17711-17715",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Attention is the taking possession by the mind, in clear and vivid form, of one out of several simultaneously possible objects or trains of thought",
+    "Its opposite, distraction, is a real and common state, not a mere absence"
+   ],
+   "breakdown_regime": "The definition is descriptive; whether voluntary attention is a resultant of neural processes or an independent force is left open at the chapter's end",
+   "domain": "attention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Attention in the engine is zero-sum by definition: focalizing one object withdraws processing from others, so every attention allocation is recorded with what it withdrew from, and diffuse attention is treated as a distinct degraded state rather than a free default",
+    "source_operator": "attention_focalization_concentration",
+    "telemetry": "attention allocation records with withdrawal pairs, distraction-state incidence, focal clarity metrics"
+   }
+  },
+  {
+   "primitive_id": "span_of_consciousness_jevons",
+   "name": "Span of immediate apprehension is small for ungrouped objects: Jevons's bean counts (6 right 120 of 147 trials; 5 right 102 of 107; 4 and 3 always right)",
+   "verbatim_quote": "Professor Jevons, repeating this observation, by counting instantaneously beans thrown into a box, found that the number 6 was guessed correctly 120 times out of 147, 5 correctly 102 times out of 107, and 4 and 3 always right.",
+   "page": "Chapter XI (Attention), printed p. 406; extracted text lines 17831-17834",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Objects must not be grouped into classes during the test, or the groups count as units",
+    "James notes the observation measures distinctness of vision and primary memory as much as attention proper"
+   ],
+   "breakdown_regime": "The limit applies to unconnected sensory objects apprehended in one pulse; conceptually connected systems can be far more numerous because they form one complex object",
+   "domain": "attention and measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Immediate-grasp limits in the engine are set empirically in Jevons's manner: ungrouped items presented in one pulse are reliably held only up to a small count, and anything beyond that must be chunked into named units before it enters the focal state",
+    "source_operator": "span_of_consciousness_jevons",
+    "telemetry": "instantaneous count accuracy curves, chunking rates, error onset thresholds"
+   }
+  },
+  {
+   "primitive_id": "conception_defined",
+   "name": "Conception is the function of identifying a numerically distinct and permanent subject of discourse",
+   "verbatim_quote": "The function by which we thus identify a numerically distinct and permanent subject of discourse is called CONCEPTION",
+   "page": "Chapter XII (Conception), printed p. 461; extracted text lines 20214-20216",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conception names the relation between a mental state and what it signifies, neither the state nor the object alone",
+    "One and the same mental state can be the vehicle of many conceptions at once"
+   ],
+   "breakdown_regime": "Conceptions are held to be unchangeable in meaning while the states carrying them change; James must then argue separately that the conception of the same is not itself the same state of mind",
+   "domain": "conception",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A concept in the engine is a function, not a stored picture: it is the reusable operation of picking out the same subject of discourse across varying presentations, and one internal state may serve several such functions simultaneously",
+    "source_operator": "conception_defined",
+    "telemetry": "concept invocation records, cross-presentation identification accuracy, multi-function state usage"
+   }
+  },
+  {
+   "primitive_id": "webers_law",
+   "name": "Weber's law: the difference-threshold is a constant fraction of the stimulus, whatever its size",
+   "verbatim_quote": "This difference-threshold should be a constant fraction (no matter what is the size of S) if Weber's law holds universally true.",
+   "page": "Chapter XIII (Discrimination and Comparison), printed p. 540; extracted text lines 23745-23747",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The just discernible difference is estimated by Fechner's methods (just-discernible differences, true and false cases, average errors)",
+    "The law was found first for pressure (fraction about one third in the quoted experiments) and extended by Fechner to all departments of sensation"
+   ],
+   "breakdown_regime": "Near the discernibility limit, judgments fluctuate from moment to moment, so the threshold is an average over many appreciations; Fechner's own weight data deviate from the law in places (worse near 500 than 300 grams)",
+   "domain": "psychophysics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Discrimination thresholds in the engine scale with the magnitude of the quantity being judged: the detectable difference is a fixed proportion of the current level, not a fixed absolute amount, so alerting and comparison tolerances are set as fractions of the operating value",
+    "source_operator": "webers_law",
+    "telemetry": "just-noticeable-difference measurements across magnitudes, threshold-to-level ratios, false-alarm rates near threshold"
+   }
+  },
+  {
+   "primitive_id": "fechners_law",
+   "name": "Fechner's psychophysical law (Maasformel): sensation equals a constant times the logarithm of the stimulus, S = C log R",
+   "verbatim_quote": "If we call the stimulus R, and the constant factor C, we get the formula S = ClogR",
+   "page": "Chapter XIII (Discrimination and Comparison), printed p. 539; extracted text lines 23703-23706",
+   "latex": "S = C \\log R",
+   "symbol_and_unit_ledger": {
+    "S": "sensation magnitude, counted in just-perceptible increments (dimensionless units of sensation)",
+    "C": "constant factor, varying with the kind of sensation (dimensionless)",
+    "R": "stimulus magnitude, in the physical units of the modality (e.g., grams, candle-power)"
+   },
+   "assumptions": [
+    "Weber's law holds: each just-perceptible sensation increment corresponds to a constant fractional stimulus increase",
+    "Sensations form an arithmetical series while stimuli form a geometrical one, so sensations are proportional to logarithms of stimuli"
+   ],
+   "breakdown_regime": "James's verdict: the whole notion of measuring sensations numerically is a mathematical speculation never applied in practice; the derivation assumes sensation units can be added, which is exactly what is in question",
+   "domain": "psychophysics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Logarithmic compression is the engine's default response curve for magnitude signals: equal ratios of input produce equal steps of internal response, which keeps wide-range quantities discriminable at the top without losing the bottom",
+    "source_operator": "fechners_law",
+    "telemetry": "response-vs-input curves per channel, ratio-step uniformity tests, saturation onset points"
+   }
+  },
+  {
+   "primitive_id": "association_elementary_law",
+   "name": "Elementary law of association (neural habit): processes active together or in immediate succession tend to propagate excitement into each other on recurrence",
+   "verbatim_quote": "When two elementary brain-processes have been active together or in immediate succession, one of them, on reoccurring, tends to propagate its excitement into the other.",
+   "page": "Chapter XIV (Association), printed p. 566; extracted text lines 24882-24885",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Association is of objects thought of, not of ideas as separate entities",
+    "All the classical forms (contiguity, similarity, contrast) are derivatives of this single law plus quantitative variations in the processes at work"
+   ],
+   "breakdown_regime": "The law alone does not say which of many past associates will be awakened; that requires the further postulates of summation and prepotency by interest",
+   "domain": "association and learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Co-activity wiring is the engine's base learning rule, stated by James in 1890: elements active together or in immediate succession acquire a tendency to excite each other on recurrence, and every higher association phenomenon must be derived from this rule plus weighting, never from a separate mechanism",
+    "source_operator": "association_elementary_law",
+    "telemetry": "co-activation counts, learned propagation probabilities, derivation audits for higher association effects"
+   }
+  },
+  {
+   "primitive_id": "association_strength_proportionality",
+   "name": "Activity at a cortical point sums the discharge tendencies of all other points, proportionate to co-activation count, intensity, and absence of rivals",
+   "verbatim_quote": "such tendencies being proportionate (1) to the number of times the excitement of each other point may have accompanied that of the point in question; (2) to the intensity of such excitements ; and (3) to the absence of any rival point functionally disconnected with the first point, into which the discharges might be diverted.",
+   "page": "Chapter XIV (Association), printed p. 567; extracted text lines 24893-24900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tension and summation of excitements (Ch. III) supply the mechanism by which a latent associate wins",
+    "The total context, not the last item alone, determines the next thought: a word is awakened by its predecessor plus all preceding words together"
+   ],
+   "breakdown_regime": "The formula is qualitative: James gives proportionalities, not measurable coefficients, and the rival-diversion term makes outcomes path-dependent in ways the scheme cannot compute in advance",
+   "domain": "association and learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Next-state activation in the engine is a weighted sum over all currently active elements, with weights proportional to historical co-activation frequency and intensity, discounted by diversion to rival attractors; recency of a single cue never determines the successor by itself",
+    "source_operator": "association_strength_proportionality",
+    "telemetry": "activation sum decompositions, weight-vs-frequency fits, rival diversion rates"
+   }
+  },
+  {
+   "primitive_id": "law_of_interest_prepotency",
+   "name": "Law of interest: in every revival some ingredient is prepotent over the rest, and the prepotent items are those that appeal to interest",
+   "verbatim_quote": "In no revival of a past experience are all the items of our thought equally operative in determining what the next thought shall be. Always some ingredient is prepotent over the rest.",
+   "page": "Chapter XIV (Association), printed pp. 571-572; extracted text lines 25090-25093",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Impartial redintegration (all items equally operative) is the limiting case, approached only when interest is diffused equally over all parts",
+    "In brain terms: some one brain-process is always prepotent above its concomitants in arousing action elsewhere"
+   ],
+   "breakdown_regime": "What makes an item interesting is not derived from the law itself; in spontaneous revery the prepotent item is hard to determine beforehand, so the law explains retrospectively more than it predicts",
+   "domain": "association and attention",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Retrieval in the engine is interest-weighted, never impartial: when a past episode is reactivated, its high-interest components dominate what gets suggested next, and an equal-weight replay is treated as the degenerate case rather than the norm",
+    "source_operator": "law_of_interest_prepotency",
+    "telemetry": "per-component suggestion rates within replays, interest-weight distributions, replay bias audits"
+   }
+  },
+  {
+   "primitive_id": "specious_present_saddleback",
+   "name": "The practically cognized present is no knife-edge but a saddle-back: a duration-block with a bow and a stern, looked from in two directions",
+   "verbatim_quote": "In short, the practically cognized present is no knife edge, but a saddle-back, with a certain breadth of its own on which we sit perched, and from which we look in two directions into time.",
+   "page": "Chapter XV (The Perception of Time), printed p. 609; extracted text lines 26792-26795",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The unit of time perception is a duration, not an instant; succession is felt within the block as a whole",
+    "The nucleus of the specious present is roughly the dozen seconds or less just elapsed, with a vaguely vanishing fringe fore and aft"
+   ],
+   "breakdown_regime": "The specious present is, in Clay's phrase quoted by James, a fiction from the standpoint of physical time; its measured extent varies with rhythm, grouping, and practice, so no single duration defines it",
+   "domain": "time perception",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's present is a window, not a timestamp: current processing sits on a short trailing block of just-elapsed states (with a faint forward fringe of anticipation), and succession judgments are made inside that block rather than between instantaneous snapshots",
+    "source_operator": "specious_present_saddleback",
+    "telemetry": "window-width settings, succession judgment accuracy vs window width, fringe anticipation hit rates"
+   }
+  },
+  {
+   "primitive_id": "memory_defined",
+   "name": "Memory proper is the knowledge of a former state of mind after it has dropped from consciousness, with the added consciousness of having experienced it before",
+   "verbatim_quote": "Memory proper, or secondary memory as it might be styled, is the knowledge of a former state of mind after it has already once dropped from consciousness",
+   "page": "Chapter XVI (Memory), printed p. 648; extracted text lines 28609-28612",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A revived image alone is not a memory; mere recurrence of a similar feeling involves no recollection",
+    "The remembered event must be dated in the past and accompanied by warmth and intimacy and a setting of concomitants"
+   ],
+   "breakdown_regime": "Primary memory (the just-past still present in the specious present) is excluded from memory proper, so the definition depends on the time-perception apparatus of Ch. XV",
+   "domain": "memory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A record counts as memory in the engine only if it returns with its pastness attached: the content plus its setting, date, and ownership markers; a bare revived content indistinguishable from a fresh perception is stored as data, not as a recollection",
+    "source_operator": "memory_defined",
+    "telemetry": "recall records carrying setting and provenance fields, false-familiarity incident rates, dating accuracy of recalls"
+   }
+  },
+  {
+   "primitive_id": "memory_retention_recall_paths",
+   "name": "Retention and recall are the same brain-paths in two states: slumbering paths are retention, active paths are recall",
+   "verbatim_quote": "When slumbering, these paths are the condition of retention ; when active, they are the condition of recall.",
+   "page": "Chapter XVI (Memory), printed p. 655; extracted text lines 28918-28921",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cause of both retention and recollection is the law of habit in the nervous system working as association",
+    "Retention means nothing more than liability to recall; its only proof is that recall actually takes place"
+   ],
+   "breakdown_regime": "The identity of substrate for storage and retrieval means damage or interference cannot be cleanly assigned to one or the other from behavior alone",
+   "domain": "memory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Storage and retrieval in the engine share one substrate: a memory exists exactly as a reactivatable path, so retention is tested only by attempted recall, and there is no separate archive whose contents could be audited apart from the retrieval machinery",
+    "source_operator": "memory_retention_recall_paths",
+    "telemetry": "recall-probe success rates as the retention metric, path reactivation logs, storage-retrieval interference tests"
+   }
+  },
+  {
+   "primitive_id": "memory_improvement_elaboration",
+   "name": "All improvement of memory lies in elaborating the associates of each thing to be remembered (better thinking, not a stronger faculty)",
+   "verbatim_quote": "It will now appear clear that all improvement of the memory lies in the line of ELABORATING THE ASSOCIATES of each of the several things to be remembered.",
+   "page": "Chapter XVI (Memory), printed p. 663; extracted text lines 29298-29301",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In a system, every fact is retained by the combined suggestive power of all the others, so connected material resists forgetting",
+    "Cramming fails because material learned on one occasion for one purpose forms few associations and lies open to few paths of approach"
+   ],
+   "breakdown_regime": "The doctrine caps what training can do: it improves remembering of systematized material while leaving desultory memory untouched, so gains do not transfer to unrelated content",
+   "domain": "memory and learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Memory performance in the engine is improved by adding associations, never by strengthening a general store: each item to be retained is deliberately linked into the existing network along multiple relations, and study schedules spread encounters across contexts instead of massing them",
+    "source_operator": "memory_improvement_elaboration",
+    "telemetry": "associations-per-item counts, retention vs association-count curves, massed-vs-distributed practice comparisons"
+   }
+  },
+  {
+   "primitive_id": "native_retentiveness_unchangeable",
+   "name": "Native retentiveness is a fixed physiological quality: no culture can modify a man's general retentiveness",
+   "verbatim_quote": "This is a physiological quality, given once for all with his organization, and which he can never hope to change.",
+   "page": "Chapter XVI (Memory), printed p. 664; extracted text lines 29302-29306",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Retentiveness fluctuates with health and freshness but not with exercise of the faculty",
+    "Apparent counterexamples (actors learning parts) resolve into better systematic thinking, not improved tenacity"
+   ],
+   "breakdown_regime": "James's evidence is interrogation of practitioners plus the path theory's logic; he concedes the point is disposed, not demonstrated, and Ebbinghaus's early results are cited in the margin",
+   "domain": "memory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Capacity parameters of the engine's memory substrate are treated as fixed endowment, not trainable variables: engineering effort goes to encoding structure and retrieval cues, and any proposal claiming to raise raw retention itself is rejected as confusing faculty with method",
+    "source_operator": "native_retentiveness_unchangeable",
+    "telemetry": "retention baselines across training regimes, method-vs-capacity attribution in improvement reports"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "1eeec19323dd2eb8-t1",
+   "think": "This volume is the first half of William James's Principles of Psychology (Henry Holt, 1890), sixteen chapters running from the scope of the science through brain physiology, habit, two polemical chapters against the automaton-theory and the mind-stuff theory, method, the stream of thought, the self, attention, conception, discrimination with the Weber and Fechner laws, association, the perception of time, and memory. Its architecture is a deliberate descent and re-ascent. James begins by fixing the subject matter: psychology is the science of mental life and of its conditions, and the conditions are bodily. The general law that no mental modification occurs without an accompanying or following bodily change makes the brain the obligatory passage point of the whole book, and the teleological criterion, that mentality is marked by the pursuance of future ends with choice of means, supplies the test he applies at every level of the nervous system, from the frog's cord to the human hemispheres.\nThe physiological chapters build a single mechanics that the psychological chapters then reuse without alteration. Centres are converters of irritation into movement; the cord alone yields precise defensive movements, while the hemispheres add memory, association, and adaptation to remote and delicate features of the environment. Two physical laws do most of the work. The summation of stimuli says that excitations too weak to discharge a centre alone can do so jointly, leaving latent tension behind them. The law of habit, grounded in the plasticity of nervous tissue, says that a traversed path is deepened and made more permeable. Habit is the same law seen from the side of conduct: concatenated discharges in which each contraction's sensation triggers the next, movements simplified and made accurate, attention withdrawn, and the higher powers set free. James is explicit that the practical maxims of habit formation, launch with a strong initiative, suffer no exception, seize the first opportunity to act, are corollaries of the path physics and not moral ornaments.\nAgainst this machinery the two polemical chapters clear the ground. The automaton-theory, which would make consciousness an inert accompaniment, is rejected because the distribution of consciousness points to efficacy: it appears exactly where the nervous system is most unstable and most in need of a selecting, dice-loading agency that presses toward the owner's permanent interests and inhibits stray reactions. The mind-stuff theory, which would build consciousness by compounding elementary feelings, is rejected as unintelligible: twelve men each thinking one word nowhere make a consciousness of the sentence. Feelings do not self-compound; a whole feeling corresponds to a whole brain process. These two vetoes, no inert epiphenomenon and no aggregation of atoms of mind, discipline everything that follows.\nThe descriptive core is the stream of thought. Consciousness is personal, in constant change, sensibly continuous, and selective. Its parts alternate between substantive resting places and transitive flights, and the transitive parts, the feelings of relation and of tendency, the fringe or psychic overtone around every focal content, are real feelings even though language has no names for them and introspection can barely arrest them. Knowledge divides accordingly into acquaintance, the bare presence of a thing in feeling, and knowledge-about, which is knowledge of its relations and lives largely in the fringe. Attention is the stream's selecting operation made deliberate: focalization and concentration, withdrawal from some things in order to deal effectively with others, with a small measurable span for ungrouped objects. The self is then not a substance behind the stream but a construction within it: material, social, and spiritual selves, as many social selves as there are recognizing others, and, as the only thinker psychology requires, the passing Thought that appropriates its predecessors by their warmth and intimacy.\nThe final chapters convert the description into quantitative and genetic laws. Discrimination yields Weber's law, the difference-threshold as a constant fraction of the stimulus, and Fechner's logarithmic formula built upon it, which James reports and then deflates as a mathematical speculation never used in practice. Association is reduced to one elementary law of neural habit, that co-active processes tend to re-excite each other, together with a proportionality statement for the amount of activity at any point: it sums the discharge tendencies of all other points, weighted by the frequency and intensity of past co-excitement and discounted by rival diversion. On that base the law of interest explains why revivals are never impartial: some ingredient is always prepotent. The perception of time gives the specious present, a duration-block of roughly a dozen seconds at most, with a bow and a stern, within which succession is felt as a whole. Memory closes the volume by identifying its machinery with the same paths: retention is slumbering paths, recall is those paths active, excellence depends on the number and the persistence of paths, improvement is only the elaboration of associates, and native retentiveness is a fixed physiological endowment that no culture can raise.\nFor a reasoning engine the book is a parts list with assembly instructions. It supplies a layered control picture, reflex converters below and an unstable high centre above with selection as the bridge; a single learning rule with explicit weighting terms; a summation rule for weak signals; a distinction between raw acquaintance and articulated relational knowledge; a fringe mechanism for low-resolution context; a windowed present instead of an instantaneous now; and a memory doctrine in which storage and retrieval are one substrate, testable only by recall. Its limits are equally instructive. The physiology is that of 1890, schematic where it is not frankly conjectural; the quantitative laws are proportionalities without coefficients; the mind and brain relation is postulated, not explained; and the introspective method that discovers transitive states cannot reliably measure them. James knows most of this and says so, which is why the book can be mined as engineering doctrine without being mistaken for finished science.",
+   "retrocausal_genealogy": "The work is a confluence of four streams. From British associationism (Locke, Hume, Hartley, the Mills, and Bain) it takes the project of a psychology without faculties and the raw materials of habit and association, while rejecting the atomism that made ideas separate entities. From Spencer's evolutionary philosophy it takes the definition of life as adjustment of inner to outer relations and the demand for continuity in evolution, while refusing the mind-dust that continuity seemed to require. From German physiology and psychophysics (Helmholtz, Wundt, Weber, Fechner, and the ablation experimenters from Flourens to Goltz and Munk) it takes the reflex scheme, localization, reaction-time, and the measurement program. From French writers (Dumont on habit, Ribot, Taine) and from Carpenter's physiology it takes the plasticity picture of nervous tissue. Darwin stands behind the whole: consciousness must earn its place by efficacy in the struggle for existence, or be demoted to an epiphenomenon.",
+   "theory_of_mind": "James writes as a teacher addressing students whom the reigning psychologies have misled in opposite directions: spiritualists who explain everything by a soul with faculties, and associationists who build the mind from discrete ideas like bricks. His model of the problem is that psychology is a natural science in its infancy, entitled to postulates (thoughts occur, they know objects, brain states condition them) but not to metaphysical contraband smuggled in as description. His model of the reader is introspective and honest: the reader's own stream is the primary exhibit, experiments are checks upon it, and the standing danger is the psychologist's fallacy, the reader's temptation to substitute what he knows about a state for what the state itself contains. He assumes throughout that the mind is an organ for adapting conduct to an environment, and that any doctrine which makes its finest parts causally idle or structurally impossible has thereby refuted itself.",
+   "cross_layer_veto": "The work vetoes several moves that other layers of a system might otherwise make. The mind-stuff refutation vetoes aggregation: no unified state may be claimed from the mere summation of independent part-states, however numerous. The automaton chapter vetoes inertness: a selecting layer that never changes outcomes is not a permissible posit, so any component credited with selection must show causal effect. The psychologist's fallacy vetoes standpoint leakage: an evaluator may not write its own external knowledge into a component's internal account. The memory chapters veto capacity optimism: raw retentiveness is fixed, so improvements must be booked to encoding structure, never to a strengthened faculty. The Fechner critique vetoes decorative quantification: a formula that no investigation actually uses does not count as measurement. Together these vetoes constrain how the engine's higher layers may describe, combine, and take credit for the work of lower ones."
+  }
+ ],
+ "universal_lens": "Read as a general template, the volume describes any system that must act in a changing world with limited capacity. Such a system needs fast converters for the routine, an unstable and therefore adaptable high level, a selecting agency that loads the dice toward its permanent interests, paths that deepen with use so that skill compiles itself out of deliberation, weak-signal summation so that faint cues are not wasted, a fringe of dim context around every focus, a present that is a window rather than an instant, and a memory whose storage and retrieval are the same paths. Wherever those parts appear, in minds, organizations, or machines, James's laws and his vetoes apply with them.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this volume a research discipline and a vocabulary. The discipline: state postulates plainly, verify quotes and claims against primary sources, refuse both faculty-style explanations that name a power instead of a mechanism and atomistic accounts that lose the whole in the parts. The vocabulary: plasticity, summation, fringe, transitive states, acquaintance versus knowledge-about, and the passing Thought give the Institute precise terms for describing how analysts and students actually come to know a domain, how expertise compiles into habit, why cramming fails, and why elaborating associations, not drilling a supposed faculty, is the only honest method of improving memory and judgment in trainees.",
+ "gse_mapping": "The Galaxy Sports Edge reasoning engine takes the volume's machinery as design doctrine. Its learning rule is James's elementary law of association with his proportionality weights: frequency and intensity of co-activation, discounted by rival diversion. Its weak-signal handling follows summation of stimuli. Its deliberative layer is a selecting agency that loads the dice toward the system's permanent interests. Its memory is path-based, with retention defined as liability to recall and improvement sought only through elaborated associations. Its present state is a specious-present window, its context a fringe, and its evaluation reports are audited against the psychologist's fallacy. These mappings govern architecture and interpretation only; they introduce no numbers of their own."
+}
