@@ -280,6 +280,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave30_deepmind_mctx_bayesnf_weatherbench_and_ngs_suite",
         "src/gse_engine/memory/wave30_deepmind_mctx_bayesnf_weatherbench_and_ngs_suite.py",
     ),
+    (
+        "Pillar1_Wave31_AWS_NGS_Going_Deep_Dual_Use",
+        "aws_ngs_going_deep_gse_gsi_suite",
+        "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+    ),
+    (
+        "Pillar1_Wave32_Unified_All_Sports_Situational_Live_Fusion",
+        "wave32_unified_sports_situational_live_fusion",
+        "src/gse_engine/compute/wave32_unified_sports_situational_live_fusion.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
@@ -292,7 +302,7 @@ CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
     (
         "OSS_Ecosystem_Registry",
         "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
-        346,
+        354,
     ),
     ("Permanent_Lessons_Ledger", "data/engine/lessons_learned_permanent_ledger.jsonl", 20),
     (

@@ -238,6 +238,9 @@ def _cubic_bspline_basis_and_deriv(
     return b_mat, db_dx
 
 
+_SCOP_RELATIVE_CACHE: dict[tuple[object, ...], tuple[float, ScopMarketSurfaceResult]] = {}
+
+
 def fit_scop_monotone_survival_and_bl_density(
     strikes: Sequence[float],
     survival_probs: Sequence[float],
@@ -276,6 +279,30 @@ def fit_scop_monotone_survival_and_bl_density(
     x_min = x_lo - 0.10 * span
     x_max = x_hi + 0.10 * span
     j_cnt = max(6, min(20, int(n_basis)))
+
+    rel_cache_key: tuple[object, ...] = (
+        tuple(round(float(v - x_lo), 6) for v in xs),
+        tuple(round(float(v), 6) for v in ys),
+        tuple(round(float(v), 6) for v in w_arr),
+        j_cnt,
+        round(float(roughness_lambda), 6),
+        int(n_grid),
+    )
+    cached_entry = _SCOP_RELATIVE_CACHE.get(rel_cache_key)
+    if cached_entry is not None:
+        cached_x_lo, cached_res = cached_entry
+        shift = x_lo - cached_x_lo
+        return ScopMarketSurfaceResult(
+            x_grid=tuple(float(v + shift) for v in cached_res.x_grid),
+            survival_grid=cached_res.survival_grid,
+            density_grid=cached_res.density_grid,
+            integral_mass=cached_res.integral_mass,
+            mean=float(cached_res.mean + shift),
+            variance=cached_res.variance,
+            skewness=cached_res.skewness,
+            is_strictly_decreasing=cached_res.is_strictly_decreasing,
+            fit_rss=cached_res.fit_rss,
+        )
 
     # Smooth monotone increasing cumulative cumulative-basis weights G_k(x) so eta(x) is
     # strictly decreasing: eta(x) = beta_0 - sum_{l=2}^J exp(gamma_l) * C_l(x),
@@ -356,7 +383,7 @@ def fit_scop_monotone_survival_and_bl_density(
     skew_val = float(np.trapezoid((((xg - mean_val) / std_val) ** 3) * f_norm, xg))
     strictly_dec = bool(np.all(np.diff(s_g) < 0.0) and np.all(eta_prime_g < 0.0))
 
-    return ScopMarketSurfaceResult(
+    out = ScopMarketSurfaceResult(
         x_grid=tuple(float(v) for v in xg),
         survival_grid=tuple(float(v) for v in s_g),
         density_grid=tuple(float(v) for v in f_norm),
@@ -367,6 +394,9 @@ def fit_scop_monotone_survival_and_bl_density(
         is_strictly_decreasing=strictly_dec,
         fit_rss=fit_rss,
     )
+    if len(_SCOP_RELATIVE_CACHE) < 256:
+        _SCOP_RELATIVE_CACHE[rel_cache_key] = (x_lo, out)
+    return out
 
 
 def evaluate_non_commutative_filtration_bridge(

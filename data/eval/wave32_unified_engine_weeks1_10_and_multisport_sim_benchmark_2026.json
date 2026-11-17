@@ -1,0 +1,722 @@
+{
+  "schema": "wave32_unified_engine_benchmark_v2",
+  "generated_utc": "2026-11-17T18:37:01.635755+00:00",
+  "real_money_stake_cleared": false,
+  "live_stake_fraction": 0.0,
+  "max_nfl_week_simulated": 10,
+  "omni_stat_engineering_vaults": {
+    "schema": "wave32_universal_stat_engineering_vaults_v1",
+    "as_of_week": 10,
+    "clean_checkout_fallback": false,
+    "omni_vaults_loaded": 24,
+    "omni_empirical_rows_indexed": 551577,
+    "vault_row_counts": {
+      "advstats_season_pass": 848,
+      "advstats_season_rush": 2996,
+      "advstats_season_rec": 4476,
+      "advstats_season_def": 8146,
+      "qbr_week_level": 10867,
+      "snap_counts_2026": 9981,
+      "ngs_receiving": 15348,
+      "bdb26_coverage": 173150,
+      "bdb25_presnap": 16124,
+      "bdb27_enrichment": 4161,
+      "fourth_downs_1999_2025": 113156,
+      "player_stats_weekly_archive": 134470,
+      "karmane_rest_travel": 727,
+      "karmane_td_usage": 3932,
+      "karmane_weather_qb": 696,
+      "coaching_proe": 160,
+      "coaching_rz_mix": 160,
+      "coaching_script_elasticity": 160,
+      "coaching_tempo": 160,
+      "pbp_2026": 18738,
+      "ftn_charting_2026": 18019,
+      "pennydata_2026_player_week": 7447,
+      "injuries_2026": 3117,
+      "rosters_2026": 4538
+    },
+    "nov15_all44_csvs_indexed": 44,
+    "nov15_total_csv_rows_parsed": 755,
+    "teams_indexed": 32,
+    "causal_pre_asof_counts": {
+      "qbr_pre_asof_rows": 10867,
+      "ngs_pre_asof_rows": 15348,
+      "pbp_pre_asof_snaps": 18738,
+      "ftn_pre_asof_snaps": 18019,
+      "snap_pre_asof_rows": 9981,
+      "player_week_pre_asof_rows": 7447,
+      "injuries_pre_asof_rows": 2821,
+      "historical_4th_down_count": 113156,
+      "bdb_coverage_count": 173150,
+      "weekly_archive_count": 134470
+    },
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0
+  },
+  "real_2026_snap_optimization": {
+    "schema": "aws_ngs_real_2026_snap_optimization_v1",
+    "snaps_evaluated": 18738,
+    "ftn_charted_snaps": 18019,
+    "pass_attempts_oos": 6088,
+    "clean_checkout_fallback": false,
+    "xcomp_brier_aws_xgb": 0.20028,
+    "xcomp_brier_naive_air_yards": 0.21663,
+    "xcomp_brier_improvement": 0.01635,
+    "xcomp_logloss_aws_xgb": 0.58628,
+    "xcomp_logloss_naive_air_yards": 0.6249,
+    "xcomp_population_rate_ratio": 1.0221,
+    "xcomp_qb_spearman_rho": 0.9919,
+    "ship_gate_passed": true,
+    "cubes_14_count": 14,
+    "cubes_14": {
+      "cube_01_heavy_box_8plus_rush": {
+        "snaps": 471.0,
+        "epa_mean": -0.0276,
+        "yards_mean": 3.008,
+        "sr": 0.465
+      },
+      "cube_02_light_box_le6_rush": {
+        "snaps": 2687.0,
+        "epa_mean": -0.0581,
+        "yards_mean": 4.376,
+        "sr": 0.4027
+      },
+      "cube_03_blitz_5plus_dropback": {
+        "snaps": 2433.0,
+        "epa_mean": -0.0249,
+        "yards_mean": 5.783,
+        "sr": 0.4373
+      },
+      "cube_04_four_man_base_dropback": {
+        "snaps": 5169.0,
+        "epa_mean": 0.0717,
+        "yards_mean": 6.352,
+        "sr": 0.4502
+      },
+      "cube_05_play_action_pass": {
+        "snaps": 1718.0,
+        "epa_mean": 0.0898,
+        "yards_mean": 6.846,
+        "sr": 0.4767
+      },
+      "cube_06_no_play_action_pass": {
+        "snaps": 5884.0,
+        "epa_mean": 0.0265,
+        "yards_mean": 5.972,
+        "sr": 0.4371
+      },
+      "cube_07_screen_pass": {
+        "snaps": 669.0,
+        "epa_mean": -0.0999,
+        "yards_mean": 5.178,
+        "sr": 0.4021
+      },
+      "cube_08_rpo_snaps": {
+        "snaps": 643.0,
+        "epa_mean": -0.0948,
+        "yards_mean": 4.232,
+        "sr": 0.4199
+      },
+      "cube_09_presnap_motion_snaps": {
+        "snaps": 8057.0,
+        "epa_mean": -0.0021,
+        "yards_mean": 5.085,
+        "sr": 0.4304
+      },
+      "cube_10_out_of_pocket_dropbacks": {
+        "snaps": 1228.0,
+        "epa_mean": -0.0922,
+        "yards_mean": 5.041,
+        "sr": 0.3738
+      },
+      "cube_11_inside_pocket_clean": {
+        "snaps": 6374.0,
+        "epa_mean": 0.0664,
+        "yards_mean": 6.387,
+        "sr": 0.46
+      },
+      "cube_12_short_air_0_to_9": {
+        "snaps": 4018.0,
+        "epa_mean": -0.0822,
+        "yards_mean": 4.433,
+        "sr": 0.4644
+      },
+      "cube_13_intermediate_10_to_19": {
+        "snaps": 1494.0,
+        "epa_mean": 0.4057,
+        "yards_mean": 9.606,
+        "sr": 0.5509
+      },
+      "cube_14_redzone_opp20_snaps": {
+        "snaps": 3074.0,
+        "epa_mean": 0.014,
+        "yards_mean": 2.091,
+        "sr": 0.5387
+      }
+    },
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0
+  },
+  "player_and_settled_projection_optimization": {
+    "schema": "wave32_player_and_settled_projection_opt_v1",
+    "clean_checkout_fallback": false,
+    "player_week_rows_scanned": 7447,
+    "total_oos_player_week_evaluations": 1170,
+    "qb_passing_yards": {
+      "n_eval": 172,
+      "weeks_evaluated": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "naive_mae": 65.73,
+      "eb_opt_mae": 56.85,
+      "mae_reduction": 8.88,
+      "mae_reduction_pct": 13.5,
+      "beats_naive": true,
+      "naive_err_sum": 11305.1833,
+      "eb_err_sum": 9778.6644
+    },
+    "rb_rushing_yards": {
+      "n_eval": 237,
+      "weeks_evaluated": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "naive_mae": 26.73,
+      "eb_opt_mae": 24.61,
+      "mae_reduction": 2.13,
+      "mae_reduction_pct": 7.95,
+      "beats_naive": true,
+      "naive_err_sum": 6336.1,
+      "eb_err_sum": 5832.3901
+    },
+    "wr_te_receiving_yards": {
+      "n_eval": 761,
+      "weeks_evaluated": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "naive_mae": 27.46,
+      "eb_opt_mae": 24.85,
+      "mae_reduction": 2.61,
+      "mae_reduction_pct": 9.51,
+      "beats_naive": true,
+      "naive_err_sum": 20896.45,
+      "eb_err_sum": 18909.0738
+    },
+    "skill_players_combined": {
+      "n_eval": 998,
+      "naive_mae": 27.29,
+      "eb_opt_mae": 24.79,
+      "mae_reduction": 2.5,
+      "mae_reduction_pct": 9.15,
+      "passes_2529_floor": true
+    },
+    "floors_verification": {
+      "qb_pass_mae_floor_5877": true,
+      "rb_rush_mae_floor_2587": true,
+      "skill_player_mae_floor_2529": true,
+      "all_player_floors_held": true
+    },
+    "week9_sunday_settlement": {
+      "available": true,
+      "completed_games_count": 14,
+      "record": "7-4-0",
+      "wins": 7,
+      "losses": 4,
+      "net_units_1u_flat": 2.06,
+      "pass_discipline_avoided_losses_count": 38,
+      "sample_players_count": 18,
+      "conserved_503_book_engine_mae_dk_pts": 3.61,
+      "legacy_broken_pipeline_mae_dk_pts": 12.08,
+      "mae_improvement_pct": 70.1
+    },
+    "week9_mnf_buf_min_autopsy": {
+      "available": true,
+      "matchup": "BUF @ MIN",
+      "total_props_settled": 78,
+      "model_projected_props_evaluated": 64,
+      "model_directional_lean_hits": 45,
+      "model_directional_lean_accuracy_pct": 70.3,
+      "dk_pts_mae_across_20_projected_players": 3.54
+    }
+  },
+  "nfl_historical_pbp_suite": {
+    "games_simulated": 10,
+    "n_worlds_per_game": 10000,
+    "total_snaps_simulated": 17500000,
+    "mean_sim_crps": 8.9324,
+    "games": [
+      {
+        "game_id": "2026_01_ARI_LAC",
+        "week": 1,
+        "matchup": "ARI @ LAC",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 7.181,
+        "sim_std_margin": 13.516,
+        "mkt_expected_home_margin": 8.5,
+        "sim_mean_total": 47.536,
+        "actual_margin": -12.0,
+        "sim_abs_err": 19.1809,
+        "mkt_abs_err": 20.5,
+        "sim_gaussian_crps": 12.5054,
+        "mkt_gaussian_crps": 13.6734,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_02_CAR_ATL",
+        "week": 2,
+        "matchup": "CAR @ ATL",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": -2.284,
+        "sim_std_margin": 13.376,
+        "mkt_expected_home_margin": -2.5,
+        "sim_mean_total": 42.904,
+        "actual_margin": -31.0,
+        "sim_abs_err": 28.7157,
+        "mkt_abs_err": 28.5,
+        "sim_gaussian_crps": 21.3212,
+        "mkt_gaussian_crps": 21.1008,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_03_ARI_SF",
+        "week": 3,
+        "matchup": "ARI @ SF",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 7.837,
+        "sim_std_margin": 13.414,
+        "mkt_expected_home_margin": 7.5,
+        "sim_mean_total": 50.023,
+        "actual_margin": 6.0,
+        "sim_abs_err": 1.8368,
+        "mkt_abs_err": 1.5,
+        "sim_gaussian_crps": 3.2351,
+        "mkt_gaussian_crps": 3.1984,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_04_ARI_NYG",
+        "week": 4,
+        "matchup": "ARI @ NYG",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": -2.995,
+        "sim_std_margin": 13.497,
+        "mkt_expected_home_margin": -2.5,
+        "sim_mean_total": 43.94,
+        "actual_margin": 12.0,
+        "sim_abs_err": 14.9955,
+        "mkt_abs_err": 14.5,
+        "sim_gaussian_crps": 9.1929,
+        "mkt_gaussian_crps": 8.8449,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_05_BAL_ATL",
+        "week": 5,
+        "matchup": "BAL @ ATL",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 1.499,
+        "sim_std_margin": 13.495,
+        "mkt_expected_home_margin": 3.5,
+        "sim_mean_total": 46.429,
+        "actual_margin": -7.0,
+        "sim_abs_err": 8.4993,
+        "mkt_abs_err": 10.5,
+        "sim_gaussian_crps": 5.2213,
+        "mkt_gaussian_crps": 6.2557,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_06_ARI_LAR",
+        "week": 6,
+        "matchup": "ARI @ LAR",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 11.54,
+        "sim_std_margin": 13.555,
+        "mkt_expected_home_margin": 12.5,
+        "sim_mean_total": 51.36,
+        "actual_margin": -2.0,
+        "sim_abs_err": 13.5404,
+        "mkt_abs_err": 14.5,
+        "sim_gaussian_crps": 8.1561,
+        "mkt_gaussian_crps": 8.8449,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_07_CIN_BAL",
+        "week": 7,
+        "matchup": "CIN @ BAL",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": -1.814,
+        "sim_std_margin": 13.324,
+        "mkt_expected_home_margin": -3.0,
+        "sim_mean_total": 48.967,
+        "actual_margin": -22.0,
+        "sim_abs_err": 20.1861,
+        "mkt_abs_err": 19.0,
+        "sim_gaussian_crps": 13.4235,
+        "mkt_gaussian_crps": 12.3844,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_08_ARI_DAL",
+        "week": 8,
+        "matchup": "ARI @ DAL",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 6.332,
+        "sim_std_margin": 13.323,
+        "mkt_expected_home_margin": 7.0,
+        "sim_mean_total": 53.224,
+        "actual_margin": -3.0,
+        "sim_abs_err": 9.3323,
+        "mkt_abs_err": 10.0,
+        "sim_gaussian_crps": 5.6198,
+        "mkt_gaussian_crps": 5.9779,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_09_ARI_SEA",
+        "week": 9,
+        "matchup": "ARI @ SEA",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": 7.209,
+        "sim_std_margin": 13.401,
+        "mkt_expected_home_margin": 8.5,
+        "sim_mean_total": 40.571,
+        "actual_margin": 14.0,
+        "sim_abs_err": 6.791,
+        "mkt_abs_err": 5.5,
+        "sim_gaussian_crps": 4.476,
+        "mkt_gaussian_crps": 4.0197,
+        "corpus_conditioner_applied": true
+      },
+      {
+        "game_id": "2026_10_BUF_NYJ",
+        "week": 10,
+        "matchup": "BUF @ NYJ",
+        "n_worlds": 10000,
+        "snaps_per_world": 175,
+        "total_snaps_simulated": 1750000,
+        "sim_mean_home_margin": -8.649,
+        "sim_std_margin": 13.446,
+        "mkt_expected_home_margin": -8.5,
+        "sim_mean_total": 51.826,
+        "actual_margin": -19.0,
+        "sim_abs_err": 10.3505,
+        "mkt_abs_err": 10.5,
+        "sim_gaussian_crps": 6.1727,
+        "mkt_gaussian_crps": 6.2557,
+        "corpus_conditioner_applied": true
+      }
+    ]
+  },
+  "nfl_all_147_completed_games_pbp_suite": {
+    "games_simulated": 147,
+    "all_completed_games_count": 148,
+    "tie_games_excluded_count": 1,
+    "n_worlds_per_game": 1000,
+    "total_snaps_simulated": 25725000,
+    "combined_nfl_pbp_snaps_simulated": 43225000,
+    "weeks_covered": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "mean_sim_crps": 6.9904,
+    "mean_mkt_crps": 7.0108,
+    "sim_vs_close_crps_delta": -0.0204,
+    "mean_sim_margin_mae": 9.7902,
+    "mean_mkt_margin_mae": 9.7687,
+    "beats_close_crps": true,
+    "beats_close_mae": false,
+    "by_week": {
+      "1": {
+        "games_simulated": 16,
+        "total_snaps_simulated": 2800000,
+        "mean_sim_crps": 7.6777,
+        "mean_mkt_crps": 7.8482
+      },
+      "2": {
+        "games_simulated": 16,
+        "total_snaps_simulated": 2800000,
+        "mean_sim_crps": 8.0989,
+        "mean_mkt_crps": 8.0684
+      },
+      "3": {
+        "games_simulated": 16,
+        "total_snaps_simulated": 2800000,
+        "mean_sim_crps": 6.5821,
+        "mean_mkt_crps": 6.5731
+      },
+      "4": {
+        "games_simulated": 16,
+        "total_snaps_simulated": 2800000,
+        "mean_sim_crps": 5.5195,
+        "mean_mkt_crps": 5.4474
+      },
+      "5": {
+        "games_simulated": 14,
+        "total_snaps_simulated": 2450000,
+        "mean_sim_crps": 7.4351,
+        "mean_mkt_crps": 7.7001
+      },
+      "6": {
+        "games_simulated": 14,
+        "total_snaps_simulated": 2450000,
+        "mean_sim_crps": 4.8921,
+        "mean_mkt_crps": 4.8108
+      },
+      "7": {
+        "games_simulated": 14,
+        "total_snaps_simulated": 2450000,
+        "mean_sim_crps": 7.5778,
+        "mean_mkt_crps": 7.3755
+      },
+      "8": {
+        "games_simulated": 13,
+        "total_snaps_simulated": 2275000,
+        "mean_sim_crps": 8.597,
+        "mean_mkt_crps": 8.8171
+      },
+      "9": {
+        "games_simulated": 15,
+        "total_snaps_simulated": 2625000,
+        "mean_sim_crps": 6.2708,
+        "mean_mkt_crps": 6.1406
+      },
+      "10": {
+        "games_simulated": 13,
+        "total_snaps_simulated": 2275000,
+        "mean_sim_crps": 7.4652,
+        "mean_mkt_crps": 7.5736
+      }
+    }
+  },
+  "nfl_weeks1_to_10_walk_forward_ablation": {
+    "completed_games_evaluated": 147,
+    "oos_normalized_crps": 7.0897,
+    "raw_closing_market_crps": 7.0108,
+    "raw_gse_v41_margin_crps": 6.9915,
+    "closing_market_margin_mae": 9.7687,
+    "gse_v41_margin_mae": 9.761,
+    "closing_market_brier": 0.21988,
+    "gse_v41_brier": 0.21976,
+    "closing_market_overall_ece": 0.07171,
+    "overall_ece": 0.07102,
+    "fwl_partial_slope": 1.398187,
+    "rliable_iqm": 0.731646,
+    "monotone_ratchet_promote": true,
+    "live_weight_multiplier": 1.0,
+    "all_floors_held": true
+  },
+  "all_sports_unified_simulation_suite": {
+    "schema": "wave32_all_sports_8_competitions_10k_sim_v1",
+    "competitions_count": 8,
+    "leagues": [
+      "NFL_HIST",
+      "NCAAF",
+      "NBA",
+      "NCAAB",
+      "WNBA",
+      "NHL",
+      "MLB",
+      "SOCCER"
+    ],
+    "n_worlds_per_competition": 10000,
+    "total_worlds_simulated": 80000,
+    "nfl_historical_week": 10,
+    "all_conserved_and_frechet_valid": true,
+    "real_money_stake_cleared": false,
+    "live_stake_fraction": 0.0,
+    "sabermetric_pitch_control_overlay": {
+      "schema": "wave26_sabermetric_pitch_control_overlay_v1",
+      "mlb_woba": 0.406863,
+      "nhl_fenwick_pct": 0.535565,
+      "nhl_xg_share": 0.553398,
+      "nfl_vorp": 9.3,
+      "nhl_shot_xg": 0.24796102,
+      "soccer_pitch_control_attack": 0.516295,
+      "fpl_captain_id": "fpl_00",
+      "fpl_expected_points": 181.47216,
+      "all_finite": true
+    },
+    "results": [
+      {
+        "league": "NFL_HIST",
+        "matchup": "NE @ DET",
+        "n_worlds": 10000,
+        "mean_away": 20.374,
+        "mean_home": 24.604,
+        "mean_total": 44.978,
+        "home_win_prob": 0.6418,
+        "away_win_prob": 0.3582,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          26.7,
+          63.26
+        ],
+        "copula_student_t_lift": 1.1676,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "NCAAF",
+        "matchup": "TEX @ OSU",
+        "n_worlds": 10000,
+        "mean_away": 25.086,
+        "mean_home": 28.643,
+        "mean_total": 53.729,
+        "home_win_prob": 0.6019,
+        "away_win_prob": 0.3981,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          31.83,
+          75.63
+        ],
+        "copula_student_t_lift": 1.1479,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "NBA",
+        "matchup": "OKC @ BOS",
+        "n_worlds": 10000,
+        "mean_away": 107.845,
+        "mean_home": 114.3,
+        "mean_total": 222.145,
+        "home_win_prob": 0.6904,
+        "away_win_prob": 0.3096,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          191.24,
+          253.05
+        ],
+        "copula_student_t_lift": 1.1214,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "NCAAB",
+        "matchup": "KU @ DUKE",
+        "n_worlds": 10000,
+        "mean_away": 71.444,
+        "mean_home": 75.482,
+        "mean_total": 146.926,
+        "home_win_prob": 0.6601,
+        "away_win_prob": 0.3399,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          123.05,
+          170.8
+        ],
+        "copula_student_t_lift": 1.1297,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "WNBA",
+        "matchup": "MIN @ NYL",
+        "n_worlds": 10000,
+        "mean_away": 77.195,
+        "mean_home": 81.94,
+        "mean_total": 159.135,
+        "home_win_prob": 0.6564,
+        "away_win_prob": 0.3436,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          133.77,
+          184.5
+        ],
+        "copula_student_t_lift": 1.135,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "NHL",
+        "matchup": "EDM @ FLA",
+        "n_worlds": 10000,
+        "mean_away": 3.031,
+        "mean_home": 3.336,
+        "mean_total": 6.367,
+        "home_win_prob": 0.5501,
+        "away_win_prob": 0.4499,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          3.04,
+          9.7
+        ],
+        "copula_student_t_lift": 1.1993,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "MLB",
+        "matchup": "LAD @ COL",
+        "n_worlds": 10000,
+        "mean_away": 5.715,
+        "mean_home": 5.319,
+        "mean_total": 11.035,
+        "home_win_prob": 0.4603,
+        "away_win_prob": 0.5397,
+        "draw_prob": 0.0,
+        "directional_bc_aci_band": [
+          6.02,
+          16.05
+        ],
+        "copula_student_t_lift": 1.1866,
+        "marginal_and_simplex_conserved": true
+      },
+      {
+        "league": "SOCCER",
+        "matchup": "MCI @ ARS",
+        "n_worlds": 10000,
+        "mean_away": 1.43,
+        "mean_home": 1.67,
+        "mean_total": 3.1,
+        "home_win_prob": 0.4214,
+        "away_win_prob": 0.3245,
+        "draw_prob": 0.2541,
+        "directional_bc_aci_band": [
+          0.84,
+          5.36
+        ],
+        "copula_student_t_lift": 1.1314,
+        "marginal_and_simplex_conserved": true
+      }
+    ]
+  },
+  "benchmark_sha256": "84f37d8720bcf951b73a0b11c0643ee1fac65f44148638f25fd00ff5643bab39"
+}

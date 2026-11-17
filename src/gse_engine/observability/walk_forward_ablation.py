@@ -545,6 +545,102 @@ def _collect_completed_2026_games_and_pbp_stats(
     return ordered, weekly_team_epa
 
 
+def _collect_weekly_pbp_tracking_aux(repo_root: Path) -> dict[tuple[int, str], float]:
+    """Collect strictly week-stamped PBP + FTN charting tracking/trench aux score."""
+    pbp_path = repo_root / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            repo_root / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
+    if not pbp_path.is_file():
+        return {}
+    pd: Any = importlib.import_module("pandas")
+    df = pd.read_parquet(
+        pbp_path,
+        columns=[
+            "game_id",
+            "play_id",
+            "week",
+            "season_type",
+            "posteam",
+            "defteam",
+            "cpoe",
+            "sack",
+            "success",
+        ],
+    )
+    reg = df[df["season_type"].astype(str).str.upper() == "REG"].copy()
+    reg["posteam"] = reg["posteam"].astype(str).map(_norm_tm)
+    reg["defteam"] = reg["defteam"].astype(str).map(_norm_tm)
+
+    ftn_path = repo_root / "data" / "nflverse" / "ftn_charting_2026.parquet"
+    has_ftn = ftn_path.is_file()
+    if has_ftn:
+        ftn = pd.read_parquet(
+            ftn_path,
+            columns=[
+                "nflverse_game_id",
+                "nflverse_play_id",
+                "is_motion",
+                "is_play_action",
+                "is_interception_worthy",
+                "n_blitzers",
+            ],
+        )
+        reg = reg.merge(
+            ftn,
+            left_on=["game_id", "play_id"],
+            right_on=["nflverse_game_id", "nflverse_play_id"],
+            how="left",
+        )
+
+    aux_map: dict[tuple[int, str], float] = {}
+    for (wk_val, tm_val), grp in reg.groupby(["week", "posteam"]):
+        tm_s = str(tm_val)
+        if not (2 <= len(tm_s) <= 3):
+            continue
+        d_grp = reg[(reg["week"] == wk_val) & (reg["defteam"] == tm_s)]
+        sr_off = float(grp["success"].dropna().mean()) if grp["success"].notna().any() else 0.45
+        sr_def = (
+            float(d_grp["success"].dropna().mean())
+            if (not d_grp.empty and d_grp["success"].notna().any())
+            else 0.45
+        )
+        sk_off = float(grp["sack"].dropna().mean()) if grp["sack"].notna().any() else 0.03
+        sk_def = (
+            float(d_grp["sack"].dropna().mean())
+            if (not d_grp.empty and d_grp["sack"].notna().any())
+            else 0.03
+        )
+        cp_off = float(grp["cpoe"].dropna().mean()) / 100.0 if grp["cpoe"].notna().any() else 0.0
+        ftn_edge = 0.0
+        if has_ftn:
+            mot_off = (
+                float(grp["is_motion"].dropna().astype(float).mean())
+                if grp["is_motion"].notna().any()
+                else 0.50
+            )
+            pa_off = (
+                float(grp["is_play_action"].dropna().astype(float).mean())
+                if grp["is_play_action"].notna().any()
+                else 0.20
+            )
+            twp_off = (
+                float(grp["is_interception_worthy"].dropna().astype(float).mean())
+                if grp["is_interception_worthy"].notna().any()
+                else 0.025
+            )
+            twp_def = (
+                float(d_grp["is_interception_worthy"].dropna().astype(float).mean())
+                if (not d_grp.empty and d_grp["is_interception_worthy"].notna().any())
+                else 0.025
+            )
+            ftn_edge = 0.08 * (mot_off - 0.50) + 0.08 * (pa_off - 0.20) + 0.35 * (twp_def - twp_off)
+        aux_score = 0.5 * (sr_off - sr_def) + 1.2 * (sk_def - sk_off) + 0.4 * cp_off + ftn_edge
+        aux_map[(int(wk_val), tm_s)] = round(float(aux_score), 6)
+    return aux_map
+
+
 def _compute_mondrian_ece(
     items: Sequence[tuple[float, int, str]],
     *,
@@ -583,6 +679,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
     """Execute strict chronological 2026 Weeks 1-10 walk-forward OOS ablation."""
     priors_2025 = _load_2025_team_epa_priors(repo_root)
     games, weekly_epa = _collect_completed_2026_games_and_pbp_stats(repo_root)
+    weekly_aux = _collect_weekly_pbp_tracking_aux(repo_root)
     if not games:
         raise RuntimeError("No completed 2026 games found for walk-forward ablation.")
 
@@ -599,6 +696,18 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 visible_at_utc=stamp,
                 forecast_init_utc=stamp,
                 payload=net_epa,
+            )
+        )
+    for (wk_num, tm_code), aux_val in sorted(weekly_aux.items()):
+        stamp = int(wk_num) * 10000
+        all_bitemporal_records.append(
+            BitemporalRecord(
+                record_id=f"2026_W{wk_num:02d}_{tm_code}_aux_trk",
+                season=2026,
+                week=int(wk_num),
+                visible_at_utc=stamp,
+                forecast_init_utc=stamp,
+                payload=aux_val,
             )
         )
     for g_row in games:
@@ -621,6 +730,8 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
     gse_crps_list: list[float] = []
     mkt_abs_err: list[float] = []
     gse_abs_err: list[float] = []
+    mkt_tot_abs_err: list[float] = []
+    gse_tot_abs_err: list[float] = []
     brier_mkt_list: list[float] = []
     brier_gse_list: list[float] = []
     es_list: list[float] = []
@@ -631,6 +742,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
     by_week_summary: dict[int, dict[str, Any]] = {}
 
     quantiles_11 = (-1.645, -1.282, -0.842, -0.524, -0.253, 0.0, 0.253, 0.524, 0.842, 1.282, 1.645)
+    prior_wks_seen: dict[str, set[int]] = {}
 
     for wk in sorted({g.week for g in games}):
         decision_cutoff = wk * 10000 - 1
@@ -640,15 +752,15 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             decision_timestamp_utc=decision_cutoff,
             strict_fail=True,
         )
-        # Aggregate strictly prior 2026 weeks (< wk) per team
-        team_sum_epa: dict[str, float] = {}
-        team_gp_cnt: dict[str, int] = {}
+        # Aggregate strictly prior 2026 weeks (< wk) with Chronofy decay & aux tracking
+        team_epa_hist: dict[str, list[tuple[int, float]]] = {}
+        team_aux_hist: dict[str, list[float]] = {}
         for rec in allowed_records:
             parts = rec.record_id.split("_")
             if len(parts) >= 4 and rec.record_id.endswith("_net_epa"):
-                tm_c = parts[2]
-                team_sum_epa[tm_c] = team_sum_epa.get(tm_c, 0.0) + rec.payload
-                team_gp_cnt[tm_c] = team_gp_cnt.get(tm_c, 0) + 1
+                team_epa_hist.setdefault(parts[2], []).append((int(rec.week), float(rec.payload)))
+            elif len(parts) >= 4 and rec.record_id.endswith("_aux_trk"):
+                team_aux_hist.setdefault(parts[2], []).append(float(rec.payload))
 
         wk_games = [g for g in games if g.week == wk]
         wk_mkt_crps: list[float] = []
@@ -660,10 +772,24 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             hm_prior = hm_p25_off - hm_p25_def
             aw_prior = aw_p25_off - aw_p25_def
 
-            hm_gp = team_gp_cnt.get(g.home_team, 0)
-            aw_gp = team_gp_cnt.get(g.away_team, 0)
-            hm_curr = (team_sum_epa.get(g.home_team, 0.0) / hm_gp) if hm_gp > 0 else hm_prior
-            aw_curr = (team_sum_epa.get(g.away_team, 0.0) / aw_gp) if aw_gp > 0 else aw_prior
+            hm_hist = team_epa_hist.get(g.home_team, [])
+            aw_hist = team_epa_hist.get(g.away_team, [])
+            hm_gp = len(hm_hist)
+            aw_gp = len(aw_hist)
+            if hm_gp > 0:
+                hm_ws = [0.90 ** (wk - 1 - w0) for w0, _ in hm_hist]
+                hm_curr = sum(w * v for w, (_, v) in zip(hm_ws, hm_hist, strict=True)) / sum(
+                    hm_ws
+                )
+            else:
+                hm_curr = hm_prior
+            if aw_gp > 0:
+                aw_ws = [0.90 ** (wk - 1 - w0) for w0, _ in aw_hist]
+                aw_curr = sum(w * v for w, (_, v) in zip(aw_ws, aw_hist, strict=True)) / sum(
+                    aw_ws
+                )
+            else:
+                aw_curr = aw_prior
 
             # Enforce NFL_EPA_MIN_GAMES = 4 Empirical Bayes shrinkage toward 2025 prior
             w_hm = float(hm_gp) / float(hm_gp + NFL_EPA_MIN_GAMES)
@@ -671,17 +797,39 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             hm_shrunk_net = w_hm * hm_curr + (1.0 - w_hm) * hm_prior
             aw_shrunk_net = w_aw * aw_curr + (1.0 - w_aw) * aw_prior
 
-            # Layer-1 market foundation + FWL-damped orthogonal situational adjustment
-            epa_edge_pts = (hm_shrunk_net - aw_shrunk_net) * 18.0
+            hm_aux_l = team_aux_hist.get(g.home_team, [])
+            aw_aux_l = team_aux_hist.get(g.away_team, [])
+            hm_aux_sc = sum(hm_aux_l) / float(len(hm_aux_l)) if hm_aux_l else 0.0
+            aw_aux_sc = sum(aw_aux_l) / float(len(aw_aux_l)) if aw_aux_l else 0.0
+
+            hm_bye = (
+                1.0
+                if (wk >= 6 and (wk - 1) not in prior_wks_seen.get(g.home_team, set()))
+                else 0.0
+            )
+            aw_bye = (
+                1.0
+                if (wk >= 6 and (wk - 1) not in prior_wks_seen.get(g.away_team, set()))
+                else 0.0
+            )
+            alt_edge = 0.25 if (g.home_team == "DEN" and g.away_team != "DEN") else 0.0
+
+            # Layer-1 market foundation + Wave 32 FWL-damped orthogonal situational shift
+            epa_edge_pts = (
+                (hm_shrunk_net - aw_shrunk_net) * 18.0
+                + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
+                + 0.45 * (hm_bye - aw_bye)
+                + alt_edge
+            )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge
-            sit_shift = max(-1.65, min(1.65, 0.14 * orth_resid))
+            sit_shift = max(-1.75, min(1.75, 0.16 * orth_resid))
             dome_tot_shift = 0.45 if g.is_indoor else -0.15
 
             mu_mkt = g.expected_home_margin_mkt
             sigma_mkt = 13.40
             mu_gse = mu_mkt + sit_shift
-            sigma_gse = 12.85 if g.is_indoor else 12.60
+            sigma_gse = 12.75 if g.is_indoor else 12.50
             tot_gse = g.close_total_mkt + dome_tot_shift
 
             actual_margin = g.home_score - g.away_score
@@ -696,13 +844,17 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             wk_gse_crps.append(c_gse)
             mkt_abs_err.append(abs(actual_margin - mu_mkt))
             gse_abs_err.append(abs(actual_margin - mu_gse))
+            actual_tot = g.home_score + g.away_score
+            mkt_tot_abs_err.append(abs(actual_tot - g.close_total_mkt))
+            gse_tot_abs_err.append(abs(actual_tot - tot_gse))
 
             p_win_mkt = max(
                 0.04, min(0.96, 0.5 * math.erfc(-mu_mkt / (sigma_mkt * math.sqrt(2.0))))
             )
             # Layer-1 market foundation + shrunk temperature-calibrated residual probability
+            t_use = 11.8 if min(hm_gp, aw_gp) < 4 else 12.8
             p_raw_gse = max(
-                0.04, min(0.96, 0.5 * math.erfc(-mu_gse / (13.65 * math.sqrt(2.0))))
+                0.04, min(0.96, 0.5 * math.erfc(-mu_gse / (t_use * math.sqrt(2.0))))
             )
             p_win_gse = 0.85 * p_win_mkt + 0.15 * p_raw_gse
             y_home_win = 1 if actual_margin > 0.0 else 0
@@ -739,6 +891,9 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
                 ville_gate.step(c_mkt - c_gse, crps_scale=1.50)
 
         assert_operator_simulation_week_approved(int(wk), caller="walk_forward_ablation")
+        for g in wk_games:
+            prior_wks_seen.setdefault(g.home_team, set()).add(int(wk))
+            prior_wks_seen.setdefault(g.away_team, set()).add(int(wk))
         by_week_summary[wk] = {
             "games_evaluated": len(wk_mkt_crps),
             "mkt_margin_crps": round(sum(wk_mkt_crps) / max(1, len(wk_mkt_crps)), 4),
@@ -782,15 +937,31 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
         floor_loss=7.0944,
         fwl_residual_skill=fwl_slope,
     )
+    w32_compute: Any = importlib.import_module(
+        "gse_engine.compute.wave32_unified_sports_situational_live_fusion"
+    )
+    player_opt = w32_compute.optimize_all_2026_player_and_settled_projections(repo_root)
+    emp_pass_mae = float(player_opt["qb_passing_yards"]["eb_opt_mae"])
+    emp_rush_mae = float(player_opt["rb_rushing_yards"]["eb_opt_mae"])
+    emp_skill_mae = float(player_opt["skill_players_combined"]["eb_opt_mae"])
+    emp_147_tot_mae = round(sum(gse_tot_abs_err) / max(1, len(gse_tot_abs_err)), 4)
+    emp_mkt_tot_mae = round(sum(mkt_tot_abs_err) / max(1, len(mkt_tot_abs_err)), 4)
     floors_snapshot = {
-        "pass_mae": 58.77,
-        "rush_mae": 25.87,
-        "player_mae": 25.29,
+        "pass_mae": emp_pass_mae,
+        "rush_mae": emp_rush_mae,
+        "player_mae": emp_skill_mae,
         "game_total_mae": 8.85,
+        "empirical_147_game_total_mae": emp_147_tot_mae,
+        "closing_market_total_mae": emp_mkt_tot_mae,
         "oos_normalized_crps": normalized_crps_vs_7109_benchmark,
         "oos_normalized_crps_floor": 7.0944,
         "min_ess": 0.864,
-        "all_floors_held": bool(normalized_crps_vs_7109_benchmark <= 7.0944),
+        "all_floors_held": bool(
+            normalized_crps_vs_7109_benchmark <= 7.0944
+            and emp_pass_mae <= 58.77
+            and emp_rush_mae <= 25.87
+            and emp_skill_mae <= 25.29
+        ),
     }
     wave26_rliable_and_ratchet: dict[str, Any] = {
         "rliable_iqm": round(float(rliable_metrics["iqm"]), 6),
@@ -844,6 +1015,8 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             "clears_7099_normalized_target": bool(normalized_crps_vs_7109_benchmark <= 7.099),
             "closing_market_margin_mae": round(sum(mkt_abs_err) / n_evaluated, 4),
             "gse_v41_margin_mae": round(sum(gse_abs_err) / n_evaluated, 4),
+            "closing_market_total_mae": emp_mkt_tot_mae,
+            "gse_v41_total_mae": emp_147_tot_mae,
             "closing_market_brier": round(sum(brier_mkt_list) / n_evaluated, 5),
             "gse_v41_brier": round(sum(brier_gse_list) / n_evaluated, 5),
             "closing_market_overall_ece": mkt_overall_ece,

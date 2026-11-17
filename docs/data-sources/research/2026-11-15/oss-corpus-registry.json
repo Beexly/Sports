@@ -1,8 +1,8 @@
 {
   "schema_version": "2026-11-17",
   "doctrine": "INGEST-AND-LEARN (never SKIP/DEAD; untested items default to UNTESTED_QUEUED_FOR_EVALUATION)",
-  "total_submitted_urls": 430,
-  "total_entries": 346,
+  "total_submitted_urls": 438,
+  "total_entries": 354,
   "entries": [
     {
       "id": 1,
@@ -4052,7 +4052,111 @@
       "license_posture": "ingest_and_learn_academic_arxiv",
       "role": "Multi-hop KG traversal corpus (KG-Reasoner 2604.12487, EMBRAG 2603.13266, MRE 2601.01195).",
       "status": "WIRED_V3"
+    },
+    {
+      "id": 347,
+      "name": "aws/nfl-going-deep-hub",
+      "url": "https://aws.amazon.com/sports/nfl/going-deep/",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-series-hub",
+      "domain": "aws_ngs_going_deep_end_to_end_architecture",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::evaluate_aws_ngs_going_deep_stage2_bridge",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Primary 6-part AWS + NFL Next Gen Stats engineering architecture hub.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 348,
+      "name": "aws/nfl-powered-by-aws-hub",
+      "url": "https://aws.amazon.com/sports/nfl/",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-parent-hub",
+      "domain": "aws_nfl_75_models_subsecond_digital_athlete",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::ElasticWaveShardController",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Parent portal covering 500M+ points/season, 75 ML models in <1s, and Digital Athlete.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 349,
+      "name": "aws/ngs-going-deep-ep1",
+      "url": "https://www.youtube.com/watch?v=tG_GlFFoc-M",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep1-ingest",
+      "domain": "dual_epaulet_10hz_rfid_10gbps_ingress",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::StadiumEdgeRFIDSmoother",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 1: Dual shoulder-epaulet 10 Hz RFID + ball tag smoothing and 10 Gbps ingress.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 350,
+      "name": "aws/ngs-going-deep-ep2",
+      "url": "https://www.youtube.com/watch?v=ntz36SUsUrE",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep2-storage",
+      "domain": "kafka_msk_fanout_4tier_polyglot_storage",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::PolyglotFourTierStorageRouter",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 2: Apache Kafka/MSK DAG + Cassandra/S3/MongoDB/PostgreSQL 4-tier storage.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 351,
+      "name": "aws/ngs-going-deep-ep3",
+      "url": "https://www.youtube.com/watch?v=4U3H5xVDXsQ",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep3-ship-gate",
+      "domain": "ml_cutoff_proserve_population_prevalence_gate",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::ProductionShipGateVerifier",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 3: 5-6 feature ML transition, custom PyTorch + ProServe lift, 3-stage gate.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 352,
+      "name": "aws/ngs-going-deep-ep4",
+      "url": "https://www.youtube.com/watch?v=6y_0NGtQXz0",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep4-completion-prob",
+      "domain": "glass_box_monotone_xgboost_completion",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::GlassBoxMonotoneXGBoostCompletionEngine",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 4: Analyst feature engineering and glass-box monotone XGBoost explainability.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 353,
+      "name": "aws/ngs-going-deep-ep5",
+      "url": "https://www.youtube.com/watch?v=jASX3ZlSm64",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep5-eks-autoscaling",
+      "domain": "eks_hpa_cluster_autoscaling_live_hotfixes",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::ElasticWaveShardController",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 5: EC2-to-EKS bin-packing, 200+ processors, HPA scaling, rolling live hotfixes.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 354,
+      "name": "aws/ngs-going-deep-ep6",
+      "url": "https://www.youtube.com/watch?v=dreUomzuUhc",
+      "license": "Proprietary-Documentation-Reference",
+      "category": "aws-ngs-ep6-optical-ops",
+      "domain": "hybrid_rfid_3d_optical_skeletal_sulcal_tbi",
+      "gse_seam": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py::HybridRFIDOpticalSkeletalFuser",
+      "gse_target_surface": "src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py",
+      "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+      "role": "Ep. 6: 273-game ops, 45->14 dynamic cubes, API Gateway, 3D skeletal optical fusion.",
+      "status": "WIRED_V3"
     }
   ],
-  "total_unique_entries": 346
+  "total_unique_entries": 354
 }

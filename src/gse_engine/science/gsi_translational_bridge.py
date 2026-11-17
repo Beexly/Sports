@@ -316,11 +316,16 @@ def load_and_verify_wave16_telemetry(
     ),
 ) -> Wave16TranslationalBundle:
     """Load persisted Wave 16 telemetry and reconstruct typed invariant-checked objects."""
-    if not telemetry_path.is_file():
+    resolved_path = telemetry_path
+    if not resolved_path.is_file() and not telemetry_path.is_absolute():
+        repo_candidate = Path(__file__).resolve().parents[3] / telemetry_path
+        if repo_candidate.is_file():
+            resolved_path = repo_candidate
+    if not resolved_path.is_file():
         raise FileNotFoundError(
             f"Wave 16 telemetry file missing: {telemetry_path}. Run science synthesis export first."
         )
-    raw = json.loads(telemetry_path.read_text(encoding="utf-8"))
+    raw = json.loads(resolved_path.read_text(encoding="utf-8"))
     reports = tuple(
         PairedModelProgressionReport(**item) for item in raw.get("progression_reports", [])
     )

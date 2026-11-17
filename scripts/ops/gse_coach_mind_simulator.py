@@ -1280,6 +1280,19 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     from intelligence.simulation.spatial_micro_metrics_pbp_and_dfs_bridge import (
         compute_game_spatial_micro_pbp_conditioners,
     )
+    from gse_engine.compute.wave32_unified_sports_situational_live_fusion import (
+        evaluate_wave32_unified_sports_situational_live_fusion,
+    )
+    wave32_fusion = evaluate_wave32_unified_sports_situational_live_fusion(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=min(10, int(ctx.get("week") or 10)),
+        away_clean_epa=float(ctx.get("away_off_epa_base") or 0.05),
+        home_clean_epa=float(ctx.get("home_off_epa_base") or 0.05),
+        effective_wind_mph=wind_mph,
+        is_indoor=_indoor,
+        enforce_sim_hold=False,
+    )
     spatial_micro_bundle = compute_game_spatial_micro_pbp_conditioners(
         away_team=away_u,
         home_team=home_u,
@@ -1297,6 +1310,12 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["spatial_micro_home_epa_delta"] = float(
         spatial_micro_bundle["home_conditioners"]["composite_epa_per_snap_delta"]
     )
+    conditioners["wave32_unified_all_waves_live_coupled"] = True
+    conditioners["wave32_live_weight_multiplier"] = float(wave32_fusion["live_weight_multiplier"])
+    conditioners["wave32_nov15_44_csvs_ingested"] = int(wave32_fusion["nov15_csv_files_indexed"])
+    conditioners["wave32_aws_ngs_xcomp_delta"] = float(wave32_fusion["aws_ngs_xcomp_delta"])
+    conditioners["wave32_mctx_4th_down_edge"] = float(conditioners["double_dqn_4th_down_conv_boost"])
+    conditioners["wave32_gsi_pose2sim_snap_cap"] = float(wave32_fusion["gsi_k14_pose2sim_snap_cap"])
 
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1317,6 +1336,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "gse_143_skills_and_7_agy_plugins": skills_143_readiness,
         "gse_livebench_vs_forecastbench": gse_livebench,
         "spatial_micro_pbp_conditioners": spatial_micro_bundle,
+        "wave32_unified_sports_situational_fusion": wave32_fusion,
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,
     }

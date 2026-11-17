@@ -39,6 +39,10 @@ from gse_engine.compute.market_surface_and_filtration import (
     evaluate_non_commutative_filtration_bridge,
     fit_scop_monotone_survival_and_bl_density,
 )
+from gse_engine.compute.wave32_unified_sports_situational_live_fusion import (
+    evaluate_wave32_unified_sports_situational_live_fusion,
+    get_nov15_player_multiplier_boost,
+)
 from gse_engine.fabric.registry_hotswap import (
     HotSwapInferenceEngine,
     verify_champion_bundle,
@@ -115,6 +119,9 @@ from gse_engine.science.gsi_translational_bridge import (
     compute_k14_translational_tissue_hazard_prior,
     load_and_verify_wave16_telemetry,
 )
+from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
+    evaluate_aws_ngs_going_deep_stage2_bridge,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MANIFEST_877_PATH = REPO_ROOT / "data" / "sports_research_papers" / "manifest_877_pdfs.json"
@@ -152,6 +159,7 @@ _GSI_FABRIC_PILLAR_CACHE: dict[str, Any] | None = None
 _HIDDEN_GAME_CACHE: dict[tuple[str, str], dict[str, Any]] = {}
 _CHARTING_360_LIVE_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
 _BEAT_NLP_CACHE: dict[tuple[str, str], tuple[Any, Any, Any, Any]] = {}
+_HYBRID_RRF_CACHE: dict[tuple[object, ...], dict[str, Any]] = {}
 
 
 @dataclass(frozen=True, slots=True)
@@ -556,8 +564,30 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     regime_vector_8d: Sequence[float] | None = None,
 ) -> dict[str, Any]:
     """Fuse BM25F, 6D dense, AST cosine, 8D Mahalanobis, and authority via RRF (k=60)."""
-    static_items = _read_static_corpus_candidates()
     lessons = list(bm25f_lessons or [])
+    rrf_cache_key: tuple[object, ...] = (
+        away_team,
+        home_team,
+        tuple(round(float(x), 4) for x in situational_vector[:6]),
+        tuple(
+            (
+                str(les.get("source_work") or les.get("doc_id") or ""),
+                round(float(les.get("bm25f_plus_score") or 0.0), 4),
+            )
+            for les in lessons
+        ),
+        int(top_k),
+        int(rrf_k),
+        (
+            tuple(round(float(x), 4) for x in regime_vector_8d[:8])
+            if regime_vector_8d is not None and len(regime_vector_8d) >= 8
+            else None
+        ),
+    )
+    if _STATIC_CORPUS_CANDIDATES_CACHE is not None and rrf_cache_key in _HYBRID_RRF_CACHE:
+        return dict(_HYBRID_RRF_CACHE[rrf_cache_key])
+
+    static_items = _read_static_corpus_candidates()
 
     q_norm = math.sqrt(sum(float(x) ** 2 for x in situational_vector)) or 1.0
     q_unit = [float(x) / q_norm for x in situational_vector[:6]]
@@ -724,7 +754,7 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
         -0.012,
         0.012,
     )
-    return {
+    rrf_out: dict[str, Any] = {
         "matchup": f"{away_team} @ {home_team}",
         "fusion_method": "reciprocal_rank_fusion_3way_k60",
         "wave24_bm25f_weights": [3.0, 2.5, 2.0, 1.0],
@@ -739,6 +769,9 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
         "rrf_regime_epa_adjustment": round(rrf_regime_adj, 5),
         "top_fused_citations": top_items,
     }
+    if len(_HYBRID_RRF_CACHE) < 512:
+        _HYBRID_RRF_CACHE[rrf_cache_key] = dict(rrf_out)
+    return rrf_out
 
 
 def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
@@ -1814,6 +1847,12 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         effective_wind_mph=eff_wind,
         is_short_week=is_short_week,
     )
+    aws_ngs_res = evaluate_aws_ngs_going_deep_stage2_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_short_week=is_short_week,
+    )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
         + int(_FOUNDRY_SWEPT_FILES_CACHE)
@@ -1886,6 +1925,12 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave30_ruo_sports_weight": float(wave30_res["ruo_sports_weight"]),
         "wave30_arithmancer_cleared_false": wave30_res["arithmancer_cleared"] is False,
         "wave30_live_stage2_weight": float(wave30_res["live_stage2_weight"]),
+        "aws_ngs_going_deep_wired": bool(aws_ngs_res["aws_ngs_wired"]),
+        "aws_ngs_going_deep_sources_count": int(aws_ngs_res["sources_count"]),
+        "aws_ngs_going_deep_cubes": int(aws_ngs_res["dynamic_cubes"]),
+        "aws_ngs_going_deep_jacobians_nonzero": bool(aws_ngs_res["all_jacobians_nonzero"]),
+        "aws_ngs_going_deep_chalk_grad_zero": bool(aws_ngs_res["chalk_grad_zero"]),
+        "aws_ngs_going_deep_live_stage2_weight": float(aws_ngs_res["live_stage2_weight"]),
         "monorepo_vaults_verified": int(omnibus_res["vaults_verified"]),
         "all_46_data_subdirs_verified": int(omnibus_res["data_subdirs_verified_count"]) == 46,
         "complete_503_books_verified": int(omnibus_res["complete_corpus_books"]) >= 503,
@@ -2311,6 +2356,31 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
     k20_alpha = float(v4_unified_kernels_pillar.get("k20_alpha_priced", 0.0))
     ws13_iscat = float(v4_unified_kernels_pillar.get("ws13_i_scat_wr", 0.28))
 
+    wave32_res = evaluate_wave32_unified_sports_situational_live_fusion(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(week),
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_indoor=is_indoor,
+        is_short_week=is_short_week,
+        circadian_hours=circadian_h,
+        concussion_q_count=conc_q_cnt,
+        lower_extremity_q_count=lower_q_cnt,
+        away_proe=float(aw_sr.get("proe_season", 0.0) or 0.0),
+        home_proe=float(hm_sr.get("proe_season", 0.0) or 0.0),
+        away_blitz_rate=float(aw_ftn.get("dc_blitz_rate", 0.25) or 0.25),
+        home_blitz_rate=float(hm_ftn.get("dc_blitz_rate", 0.25) or 0.25),
+        away_two_high_rate=1.0 - float(aw_sig.opp_cover1_rate),
+        home_two_high_rate=1.0 - float(hm_sig.opp_cover1_rate),
+        away_motion_rate=float(aw_sh.get("motion_pct", 45.0) or 45.0) / 100.0,
+        home_motion_rate=float(hm_sh.get("motion_pct", 45.0) or 45.0) / 100.0,
+        enforce_sim_hold=False,
+        repo_root=REPO_ROOT,
+    )
+    w32_deltas = wave32_res["live_stage2_deltas"]
+
     away_epa_corpus_delta = _clip(
         _compute_team_epa_corpus_delta(
             aw_sig, math_epa=math_epa, epa_delta_360=aw_epa_delta_360, probe=aw_probe
@@ -2321,7 +2391,8 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + 0.5 * k14_epa_pen
         + 0.002 * hg_edge
         + float(wave20_res["away_wave20_epa_adj"])
-        + float(omnibus_res["omnibus_epa_prior_adj"]),
+        + float(omnibus_res["omnibus_epa_prior_adj"])
+        + float(w32_deltas["away_epa_delta"]),
         -0.055,
         0.055,
     )
@@ -2335,25 +2406,112 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + 0.5 * k14_epa_pen
         + 0.002 * hg_edge
         + float(wave20_res["home_wave20_epa_adj"])
-        + float(omnibus_res["omnibus_epa_prior_adj"]),
+        + float(omnibus_res["omnibus_epa_prior_adj"])
+        + float(w32_deltas["home_epa_delta"]),
         -0.055,
         0.055,
     )
     away_pass_rate_eff_delta = _clip(
-        aw_sig.pass_funnel + aw_pr_delta_360 * 0.45 + (ws13_iscat - 0.28) * 0.04,
+        aw_sig.pass_funnel
+        + aw_pr_delta_360 * 0.45
+        + (ws13_iscat - 0.28) * 0.04
+        + float(w32_deltas["away_pass_rate_delta"]),
         -0.045,
         0.045,
     )
     home_pass_rate_eff_delta = _clip(
-        hm_sig.pass_funnel + hm_pr_delta_360 * 0.45 + (ws13_iscat - 0.28) * 0.04,
+        hm_sig.pass_funnel
+        + hm_pr_delta_360 * 0.45
+        + (ws13_iscat - 0.28) * 0.04
+        + float(w32_deltas["home_pass_rate_delta"]),
         -0.045,
         0.045,
     )
+    away_comp_eff_delta = round(
+        _clip(aw_sig.comp_corpus_delta + float(w32_deltas["away_comp_rate_delta"]), -0.055, 0.055),
+        5,
+    )
+    home_comp_eff_delta = round(
+        _clip(hm_sig.comp_corpus_delta + float(w32_deltas["home_comp_rate_delta"]), -0.055, 0.055),
+        5,
+    )
+    away_sack_eff = round(
+        _clip(aw_sig.sack_prob_adj + float(w32_deltas["away_sack_prob_delta"]), 0.032, 0.165),
+        5,
+    )
+    home_sack_eff = round(
+        _clip(hm_sig.sack_prob_adj + float(w32_deltas["home_sack_prob_delta"]), 0.032, 0.165),
+        5,
+    )
+    away_ypa_eff_delta = round(
+        _clip(aw_sig.ypa_adj_delta + float(w32_deltas["away_ypa_delta"]), -0.95, 0.95),
+        4,
+    )
+    home_ypa_eff_delta = round(
+        _clip(hm_sig.ypa_adj_delta + float(w32_deltas["home_ypa_delta"]), -0.95, 0.95),
+        4,
+    )
+    away_rush_ypc_eff_delta = round(
+        _clip(aw_sig.rush_ypc_adj_delta + float(w32_deltas["away_rush_ypc_delta"]), -0.43, 0.43),
+        4,
+    )
+    home_rush_ypc_eff_delta = round(
+        _clip(hm_sig.rush_ypc_adj_delta + float(w32_deltas["home_rush_ypc_delta"]), -0.43, 0.43),
+        4,
+    )
+    away_pace_eff = round(
+        _clip(aw_sig.pace_sec_adj + float(w32_deltas["away_pace_sec_delta"]), 23.0, 32.5),
+        4,
+    )
+    home_pace_eff = round(
+        _clip(hm_sig.pace_sec_adj + float(w32_deltas["home_pace_sec_delta"]), 23.0, 32.5),
+        4,
+    )
+    away_rz_td_eff_delta = round(
+        _clip(
+            aw_sig.redzone_td_prob_delta + float(w32_deltas["away_redzone_td_delta"]),
+            -0.10,
+            0.10,
+        ),
+        5,
+    )
+    home_rz_td_eff_delta = round(
+        _clip(
+            hm_sig.redzone_td_prob_delta + float(w32_deltas["home_redzone_td_delta"]),
+            -0.10,
+            0.10,
+        ),
+        5,
+    )
+    away_q4_fatigue_eff = round(
+        _clip(away_q4_fatigue_decay + float(w32_deltas["away_q4_fatigue_delta"]), -0.055, 0.0),
+        5,
+    )
+    home_q4_fatigue_eff = round(
+        _clip(home_q4_fatigue_decay + float(w32_deltas["home_q4_fatigue_delta"]), -0.055, 0.0),
+        5,
+    )
     for p_nm, inf in (verified_athletes_map or {}).items():
         if p_nm in player_mults:
+            pos_nm = str(inf.get("position") or "").upper()
             inj_st_p = str((inf.get("injury_status") or {}).get("report_status") or "").upper()
+            if pos_nm in {"WR", "TE"}:
+                nv_boost = get_nov15_player_multiplier_boost(
+                    p_nm,
+                    as_of_week=int(week),
+                    repo_root=REPO_ROOT,
+                )
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * nv_boost, 0.88, 1.08), 4)
             if inj_st_p in {"QUESTIONABLE", "DOUBTFUL"}:
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.80, 1.0), 4)
+                player_mults[p_nm] = round(
+                    _clip(
+                        min(player_mults[p_nm], float(wave32_res["gsi_k14_pose2sim_snap_cap"])),
+                        0.78,
+                        1.0,
+                    ),
+                    4,
+                )
 
     contextual_coaching_pillar = {
         "wired": True,
@@ -2417,25 +2575,26 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "contextual_coaching_pillar": contextual_coaching_pillar,
         "gsi_and_compound_fabric_pillar": gsi_and_compound_fabric_pillar,
         "v4_unified_kernels_pillar": v4_unified_kernels_pillar,
+        "wave32_unified_live_fusion_pillar": wave32_res,
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
         "home_epa_corpus_delta": round(home_epa_corpus_delta, 5),
-        "away_comp_rate_corpus_delta": aw_sig.comp_corpus_delta,
-        "home_comp_rate_corpus_delta": hm_sig.comp_corpus_delta,
+        "away_comp_rate_corpus_delta": away_comp_eff_delta,
+        "home_comp_rate_corpus_delta": home_comp_eff_delta,
         "away_pass_rate_corpus_delta": round(away_pass_rate_eff_delta, 5),
         "home_pass_rate_corpus_delta": round(home_pass_rate_eff_delta, 5),
-        "away_sack_prob_adj": aw_sig.sack_prob_adj,
-        "home_sack_prob_adj": hm_sig.sack_prob_adj,
-        "away_ypa_adj_delta": aw_sig.ypa_adj_delta,
-        "home_ypa_adj_delta": hm_sig.ypa_adj_delta,
-        "away_rush_ypc_adj_delta": aw_sig.rush_ypc_adj_delta,
-        "home_rush_ypc_adj_delta": hm_sig.rush_ypc_adj_delta,
-        "away_pace_sec_adj": aw_sig.pace_sec_adj,
-        "home_pace_sec_adj": hm_sig.pace_sec_adj,
-        "away_redzone_td_prob_delta": aw_sig.redzone_td_prob_delta,
-        "home_redzone_td_prob_delta": hm_sig.redzone_td_prob_delta,
-        "away_q4_fatigue_decay": away_q4_fatigue_decay,
-        "home_q4_fatigue_decay": home_q4_fatigue_decay,
+        "away_sack_prob_adj": away_sack_eff,
+        "home_sack_prob_adj": home_sack_eff,
+        "away_ypa_adj_delta": away_ypa_eff_delta,
+        "home_ypa_adj_delta": home_ypa_eff_delta,
+        "away_rush_ypc_adj_delta": away_rush_ypc_eff_delta,
+        "home_rush_ypc_adj_delta": home_rush_ypc_eff_delta,
+        "away_pace_sec_adj": away_pace_eff,
+        "home_pace_sec_adj": home_pace_eff,
+        "away_redzone_td_prob_delta": away_rz_td_eff_delta,
+        "home_redzone_td_prob_delta": home_rz_td_eff_delta,
+        "away_q4_fatigue_decay": away_q4_fatigue_eff,
+        "home_q4_fatigue_decay": home_q4_fatigue_eff,
         "barber_romano_cqr_width_mult": barber_romano_cqr_width_mult,
         "player_target_and_carry_multipliers": player_mults,
     }
@@ -2922,6 +3081,19 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             v4_wired = True
 
+    w32_blk = priors.get("wave32_unified_live_fusion_pillar")
+    w32_wired = False
+    if w32_blk is not None:
+        if (
+            not isinstance(w32_blk, Mapping)
+            or w32_blk.get("wired") is not True
+            or w32_blk.get("ratchet_promoted") is not True
+            or w32_blk.get("gsi_k14_rule_in_only") is not True
+        ):
+            missing_or_unwired.append("wave32_unified_live_fusion_pillar")
+        else:
+            w32_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -2972,6 +3144,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "all_5_pillars_wired": True,
         "gsi_and_compound_fabric_wired": gsi_wired,
         "v4_unified_kernels_wired": v4_wired,
+        "wave32_unified_live_fusion_wired": w32_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

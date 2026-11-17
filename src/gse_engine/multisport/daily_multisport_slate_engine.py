@@ -24,6 +24,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from gse_engine.governance.simulation_hold_gate import assert_operator_simulation_week_approved
 from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
     compute_nhl_spatiotemporal_shot_xg,
     optimize_fpl_multiweek_squad_and_captaincy,
@@ -49,6 +50,7 @@ _LEAGUE_ALIASES: dict[str, str] = {
     "NCAAB": "NCAAB",
     "CBB": "NCAAB",
     "MENS-COLLEGE-BASKETBALL": "NCAAB",
+    "WNBA": "WNBA",
     "NHL": "NHL",
     "SOCCER": "SOCCER",
     "EPL": "SOCCER",
@@ -56,6 +58,10 @@ _LEAGUE_ALIASES: dict[str, str] = {
     "ENG.1": "SOCCER",
     "MLB": "MLB",
     "BASEBALL": "MLB",
+    "NCAAF": "NCAAF",
+    "CFB": "NCAAF",
+    "NFL_HIST": "NFL_HIST",
+    "NFL": "NFL_HIST",
 }
 
 
@@ -453,11 +459,12 @@ def build_dixon_coles_pmf(
 
 
 def _normalize_league(league: str) -> str:
-    """Normalize sport/league aliases to NBA, NCAAB, NHL, SOCCER, or MLB."""
+    """Normalize sport/league aliases across all 8 GSE competitions."""
     key = league.strip().upper()
     if key not in _LEAGUE_ALIASES:
         raise ValueError(
-            f"Unsupported league '{league}'. Expected one of NBA, NCAAB, NHL, SOCCER, MLB."
+            f"Unsupported league '{league}'. Expected NBA, NCAAB, WNBA, NHL, SOCCER, MLB, "
+            "NCAAF, or NFL_HIST."
         )
     return _LEAGUE_ALIASES[key]
 
@@ -482,12 +489,13 @@ def _simulate_basketball_10k(
     n_worlds: int,
     rng: np.random.Generator,
 ) -> dict[str, Any]:
-    """Simulate NBA or NCAAB via possession-pace Gamma-Normal correlated scoring."""
+    """Simulate NBA, WNBA, or NCAAB via possession-pace Gamma-Normal correlated scoring."""
     is_nba = norm_league == "NBA"
-    base_pace = 99.5 if is_nba else 68.5
-    pace_shape = 160.0 if is_nba else 110.0
+    is_wnba = norm_league == "WNBA"
+    base_pace = 99.5 if is_nba else (79.0 if is_wnba else 68.5)
+    pace_shape = 160.0 if is_nba else (130.0 if is_wnba else 110.0)
     default_spread = -3.5
-    default_total = 226.5 if is_nba else 144.5
+    default_total = 226.5 if is_nba else (162.5 if is_wnba else 144.5)
 
     eff_spread = default_spread if spread_line is None else float(spread_line)
     eff_total = default_total if total_line is None else float(total_line)
@@ -501,7 +509,7 @@ def _simulate_basketball_10k(
         base_ortg_home = 100.0 * implied_home_pts / base_pace
         base_ortg_away = 100.0 * implied_away_pts / base_pace
 
-    b2b_penalty = 2.6 if is_nba else 2.2
+    b2b_penalty = 2.6 if is_nba else (2.4 if is_wnba else 2.2)
     rest_diff = max(-2, min(2, home_rest_days - away_rest_days))
     ortg_home = (
         base_ortg_home
@@ -832,6 +840,93 @@ def _simulate_mlb_10k(
     }
 
 
+def _simulate_football_10k(
+    norm_league: str,
+    home_team: str,
+    away_team: str,
+    *,
+    home_rating: float | None,
+    away_rating: float | None,
+    spread_line: float | None,
+    total_line: float | None,
+    pace_factor: float,
+    home_b2b: bool,
+    away_b2b: bool,
+    circadian_shift_hours: float,
+    altitude_m: float,
+    bc_aci_state: BcAciState | None,
+    n_worlds: int,
+    rng: np.random.Generator,
+) -> dict[str, Any]:
+    """Simulate NFL_HIST (<= Week 10) or NCAAF via situational drive-pace + OT physics."""
+    is_nfl = norm_league == "NFL_HIST"
+    eff_spread = -3.0 if spread_line is None else float(spread_line)
+    eff_total = (44.5 if is_nfl else 54.5) if total_line is None else float(total_line)
+
+    if home_rating is not None and away_rating is not None:
+        mu_home = max(6.0, float(home_rating))
+        mu_away = max(6.0, float(away_rating))
+    else:
+        mu_home = max(7.0, 0.5 * (eff_total - eff_spread))
+        mu_away = max(7.0, 0.5 * (eff_total + eff_spread))
+
+    alt_excess = max(0.0, float(altitude_m) - 1000.0) / 1000.0
+    circ_abs = min(6.0, abs(float(circadian_shift_hours)))
+    short_wk_hm = -0.85 if home_b2b else 0.0
+    short_wk_aw = -0.85 if away_b2b else 0.0
+    mu_home = max(6.0, mu_home * pace_factor + 0.35 * alt_excess + short_wk_hm)
+    mu_away = max(6.0, mu_away * pace_factor - 0.30 * circ_abs + short_wk_aw)
+
+    if bc_aci_state is not None:
+        mu_home = max(6.0, mu_home + 0.35 * bc_aci_state.bias_center)
+        mu_away = max(6.0, mu_away + 0.35 * bc_aci_state.bias_center)
+
+    drive_shape = 140.0 if is_nfl else 95.0
+    drive_pace = rng.gamma(shape=drive_shape, scale=1.0 / drive_shape, size=n_worlds)
+    corr_chol = np.array([[1.0, 0.0], [0.14, math.sqrt(1.0 - 0.14**2)]], dtype=np.float64)
+    z_pair = rng.standard_normal((n_worlds, 2)) @ corr_chol.T
+    sig_pts = 9.2 if is_nfl else 10.8
+    raw_home = np.maximum(0.0, mu_home * drive_pace + sig_pts * z_pair[:, 0])
+    raw_away = np.maximum(0.0, mu_away * drive_pace + sig_pts * z_pair[:, 1])
+    home_scores = np.rint(raw_home).astype(np.float64)
+    away_scores = np.rint(raw_away).astype(np.float64)
+
+    tied = home_scores == away_scores
+    if np.any(tied):
+        n_ties = int(np.sum(tied))
+        ot_home_edge = 1.0 / (1.0 + math.exp(-0.07 * (mu_home - mu_away)))
+        home_wins_ot = rng.random(n_ties) < ot_home_edge
+        ot_margin = rng.choice(
+            np.array([3.0, 6.0, 7.0], dtype=np.float64),
+            size=n_ties,
+            p=[0.52, 0.36, 0.12],
+        )
+        home_scores[tied] += np.where(home_wins_ot, ot_margin, 0.0)
+        away_scores[tied] += np.where(home_wins_ot, 0.0, ot_margin)
+
+    total_scores = home_scores + away_scores
+    return {
+        "league": norm_league,
+        "home_team": home_team,
+        "away_team": away_team,
+        "n_worlds": int(n_worlds),
+        "mean_home": float(np.mean(home_scores)),
+        "mean_away": float(np.mean(away_scores)),
+        "mean_total": float(np.mean(total_scores)),
+        "std_home": float(np.std(home_scores)),
+        "std_away": float(np.std(away_scores)),
+        "std_total": float(np.std(total_scores)),
+        "home_win_prob": float(np.mean(home_scores > away_scores)),
+        "away_win_prob": float(np.mean(away_scores > home_scores)),
+        "draw_prob": 0.0,
+        "spread_line": eff_spread,
+        "spread_home_cover_prob": float(np.mean((home_scores + eff_spread) > away_scores)),
+        "total_line": eff_total,
+        "over_prob": float(np.mean(total_scores > eff_total)),
+        "under_prob": float(np.mean(total_scores < eff_total)),
+    }
+
+
 def simulate_multisport_matchup_10k(
     league: str,
     home_team: str = "HOME",
@@ -853,17 +948,42 @@ def simulate_multisport_matchup_10k(
     red_card_prob: float = 0.08,
     circadian_shift_hours: float = 0.0,
     altitude_m: float = 0.0,
+    nfl_week: int = 10,
     n_worlds: int = 10000,
     seed: int = 20261116,
 ) -> dict[str, Any]:
-    """Run a vectorized 10,000-world simulation for NBA, NCAAB, NHL, SOCCER, or MLB."""
+    """Run a vectorized 10k-world sim for NBA, NCAAB, WNBA, NHL, SOCCER, MLB, NCAAF, or NFL."""
     if n_worlds <= 0:
         raise ValueError(f"n_worlds must be > 0, got {n_worlds}")
     if pace_factor <= 0.0:
         raise ValueError(f"pace_factor must be > 0, got {pace_factor}")
 
     norm_league = _normalize_league(league)
+    if norm_league == "NFL_HIST":
+        assert_operator_simulation_week_approved(int(nfl_week), caller="multisport_nfl_hist")
     rng = np.random.default_rng(seed)
+
+    if norm_league in {"NCAAF", "NFL_HIST"}:
+        fb_res = _simulate_football_10k(
+            norm_league,
+            home_team,
+            away_team,
+            home_rating=home_rating,
+            away_rating=away_rating,
+            spread_line=spread_line,
+            total_line=total_line,
+            pace_factor=pace_factor,
+            home_b2b=home_b2b,
+            away_b2b=away_b2b,
+            circadian_shift_hours=circadian_shift_hours,
+            altitude_m=altitude_m,
+            bc_aci_state=bc_aci_state,
+            n_worlds=n_worlds,
+            rng=rng,
+        )
+        fb_res["circadian_shift_hours"] = float(circadian_shift_hours)
+        fb_res["altitude_m"] = float(altitude_m)
+        return fb_res
 
     if norm_league == "MLB":
         return _simulate_mlb_10k(
@@ -892,10 +1012,10 @@ def simulate_multisport_matchup_10k(
     if circ_abs > 0.0:
         if away_rating is not None:
             eff_away_rating = float(away_rating) * (1.0 - 0.015 * circ_abs)
-        elif norm_league in {"NBA", "NCAAB"}:
+        elif norm_league in {"NBA", "NCAAB", "WNBA"}:
             base_sp = -3.5 if spread_line is None else float(spread_line)
             base_tot = (
-                (226.5 if norm_league == "NBA" else 144.5)
+                (226.5 if norm_league == "NBA" else (162.5 if norm_league == "WNBA" else 144.5))
                 if total_line is None
                 else float(total_line)
             )
@@ -903,7 +1023,7 @@ def simulate_multisport_matchup_10k(
             eff_total = base_tot - 0.45 * circ_abs
 
     res: dict[str, Any]
-    if norm_league in {"NBA", "NCAAB"}:
+    if norm_league in {"NBA", "NCAAB", "WNBA"}:
         res = _simulate_basketball_10k(
             norm_league,
             home_team,
@@ -1619,6 +1739,176 @@ def fetch_365_day_five_league_slate(
         n_worlds=n_worlds,
         seed=seed,
     )
+
+
+def run_all_sports_unified_situational_simulation_suite(
+    *,
+    n_worlds: int = 10000,
+    seed: int = 20261117,
+    nfl_historical_week: int = 10,
+) -> dict[str, Any]:
+    """Run 10k-world unified situational simulations across all 8 GSE competitions."""
+    assert_operator_simulation_week_approved(
+        int(nfl_historical_week),
+        caller="all_sports_unified_suite",
+    )
+    matchups: tuple[dict[str, Any], ...] = (
+        {
+            "league": "NFL_HIST",
+            "home_team": "DET",
+            "away_team": "NE",
+            "spread_line": -2.5,
+            "total_line": 46.5,
+            "circadian_shift_hours": 6.0,
+            "rho": 0.34,
+        },
+        {
+            "league": "NCAAF",
+            "home_team": "OSU",
+            "away_team": "TEX",
+            "spread_line": -3.5,
+            "total_line": 53.5,
+            "altitude_m": 220.0,
+            "rho": 0.32,
+        },
+        {
+            "league": "NBA",
+            "home_team": "BOS",
+            "away_team": "OKC",
+            "spread_line": -3.5,
+            "total_line": 226.5,
+            "away_b2b": True,
+            "rho": 0.28,
+        },
+        {
+            "league": "NCAAB",
+            "home_team": "DUKE",
+            "away_team": "KU",
+            "spread_line": -4.0,
+            "total_line": 146.5,
+            "rho": 0.28,
+        },
+        {
+            "league": "WNBA",
+            "home_team": "NYL",
+            "away_team": "MIN",
+            "spread_line": -3.0,
+            "total_line": 162.5,
+            "away_b2b": True,
+            "rho": 0.26,
+        },
+        {
+            "league": "NHL",
+            "home_team": "FLA",
+            "away_team": "EDM",
+            "home_rating": 3.25,
+            "away_rating": 2.95,
+            "total_line": 6.0,
+            "rho": 0.34,
+        },
+        {
+            "league": "MLB",
+            "home_team": "COL",
+            "away_team": "LAD",
+            "home_rating": 4.9,
+            "away_rating": 5.3,
+            "total_line": 10.5,
+            "altitude_m": 1609.0,
+            "rho": 0.30,
+        },
+        {
+            "league": "SOCCER",
+            "home_team": "ARS",
+            "away_team": "MCI",
+            "home_rating": 1.62,
+            "away_rating": 1.38,
+            "total_line": 2.5,
+            "rho": 0.22,
+        },
+    )
+
+    overlay = evaluate_multisport_sabermetrics_and_pitch_control_overlay()
+    results: list[dict[str, Any]] = []
+    all_conserved = True
+
+    for idx, cfg in enumerate(matchups):
+        sim = simulate_multisport_matchup_10k(
+            league=str(cfg["league"]),
+            home_team=str(cfg["home_team"]),
+            away_team=str(cfg["away_team"]),
+            home_rating=cfg.get("home_rating"),
+            away_rating=cfg.get("away_rating"),
+            spread_line=cfg.get("spread_line"),
+            total_line=cfg.get("total_line"),
+            away_b2b=bool(cfg.get("away_b2b", False)),
+            circadian_shift_hours=float(cfg.get("circadian_shift_hours", 0.0)),
+            altitude_m=float(cfg.get("altitude_m", 0.0)),
+            nfl_week=int(nfl_historical_week),
+            n_worlds=int(n_worlds),
+            seed=int(seed + idx * 31),
+        )
+        d_aci = DirectionalBcAciState(
+            q_low=float(sim["std_total"]) * 1.28,
+            q_high=float(sim["std_total"]) * 1.28,
+        )
+        _, aci_lo, aci_hi = predict_directional_bc_aci_band(d_aci, float(sim["mean_total"]))
+        rho_val = float(cfg["rho"])
+        sgp = price_copula_conformal_sgp(
+            legs=[
+                CopulaLegSpec(
+                    athlete_or_side=f"{cfg['home_team']} ML",
+                    market="Moneyline",
+                    prob=float(sim["home_win_prob"]),
+                ),
+                CopulaLegSpec(
+                    athlete_or_side=f"OVER {sim['total_line']}",
+                    market="Total",
+                    prob=float(sim["over_prob"]),
+                ),
+            ],
+            rho_matrix=[[1.0, rho_val], [rho_val, 1.0]],
+            n_worlds=int(n_worlds),
+            seed=int(seed + idx * 31 + 7),
+            df=5.0,
+        )
+        tot_err = abs(sim["mean_total"] - (sim["mean_home"] + sim["mean_away"]))
+        prob_err = abs(
+            (sim["home_win_prob"] + sim["away_win_prob"] + sim["draw_prob"]) - 1.0
+        )
+        conserved = bool(tot_err < 1e-6 and prob_err < 1e-9 and sgp["within_frechet_bounds"])
+        if not conserved:
+            all_conserved = False
+
+        results.append(
+            {
+                "league": str(sim["league"]),
+                "matchup": f"{cfg['away_team']} @ {cfg['home_team']}",
+                "n_worlds": int(sim["n_worlds"]),
+                "mean_away": round(float(sim["mean_away"]), 3),
+                "mean_home": round(float(sim["mean_home"]), 3),
+                "mean_total": round(float(sim["mean_total"]), 3),
+                "home_win_prob": round(float(sim["home_win_prob"]), 4),
+                "away_win_prob": round(float(sim["away_win_prob"]), 4),
+                "draw_prob": round(float(sim["draw_prob"]), 4),
+                "directional_bc_aci_band": [round(max(0.0, aci_lo), 2), round(aci_hi, 2)],
+                "copula_student_t_lift": round(float(sgp["correlation_lift"]), 4),
+                "marginal_and_simplex_conserved": conserved,
+            }
+        )
+
+    return {
+        "schema": "wave32_all_sports_8_competitions_10k_sim_v1",
+        "competitions_count": len(results),
+        "leagues": [r["league"] for r in results],
+        "n_worlds_per_competition": int(n_worlds),
+        "total_worlds_simulated": int(len(results) * n_worlds),
+        "nfl_historical_week": int(nfl_historical_week),
+        "all_conserved_and_frechet_valid": all_conserved,
+        "real_money_stake_cleared": False,
+        "live_stake_fraction": 0.0,
+        "sabermetric_pitch_control_overlay": overlay,
+        "results": results,
+    }
 
 
 def main(argv: Sequence[str] | None = None) -> int:

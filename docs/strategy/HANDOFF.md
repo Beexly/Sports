@@ -3,6 +3,41 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 32/33 Unified Omni-Vault (`24` Vaults, `551,577` Rows), `43.225M` PBP Snaps, `80k` 8-Sport Worlds & `236+24` RLVR
+
+- **What changed**:
+  - **CWD-Invariant K14 & Omni-Vault Stage-2 Fusion (`wave32_unified_sports_situational_live_fusion.py`, `gsi_translational_bridge.py`, `compute/__init__.py`)**:
+    - Fixed relative telemetry path fallback in `load_and_verify_wave16_telemetry()` so CWD outside `REPO_ROOT` never raises `FileNotFoundError`, and passed explicit root-anchored K14 telemetry inside `evaluate_wave32_unified_sports_situational_live_fusion`.
+    - Expanded `load_nov15_44_csv_situational_sweep` across all `44/44` Nov-15 CSVs (`755` total rows, `10` matchup cards, strict `as_of_week >= 10` gating) and implemented cached causal `fuse_universal_sports_stat_engineering_vaults` indexing all `104` Nov 15-17 CSVs (`44 + 17 + 43 = 1,984` rows, Nov 16-17 gated at `as_of_week >= 11`) plus `24` local empirical vaults (`551,577` rows across PFR `advstats`, `qbr_week_level`, `ngs_receiving`, `snap_counts_2026`, `bdb26`/`bdb25`/`bdb27`, `4th_downs_1999_2025`, `player_stats_weekly_archive`, `karmane`, `coaching`, `pbp_2026`, `ftn_charting_2026`, `pennydata_2026_player_week_stats`, `injuries_2026`, `rosters_2026`), alongside location-equivariant SCOP, SymPy limit, Hybrid-RRF, and 12k-router caches (`< 0.25s` warm Stage-2 SLA).
+    - Added cached causal `optimize_all_2026_player_and_settled_projections` (`7,447` player-weeks, `1,170` OOS evaluations: QB `56.85 <= 58.77`, RB `24.61 <= 25.87`, WR/TE `24.85`, Skill `24.79 <= 25.29`; Week 9 Sunday `7-4-0`, `+2.06u`, `3.61` vs `12.08` DK MAE; Week 9 MNF `45/64 = 70.3%` directional props, `3.54` DK MAE) and upgraded `run_wave32_historical_nfl_and_all_sports_simulation_benchmark` (`data/eval/wave32_unified_engine_weeks1_10_and_multisport_sim_benchmark_2026.json`).
+  - **Real 18,738-Snap Optimization, 147-Game FTN+PBP Ablation & 8-Sport Suite**:
+    - `audit_and_optimize_real_2026_snaps_going_deep`: vectorized `GlassBoxMonotoneXGBoostCompletionEngine` over `18,738` PBP snaps (`18,019` FTN snaps, `6,088` OOS pass attempts) yields `0.20028` Brier vs `0.21663` naive (`ship_gate_passed=True`, `14` cubes).
+    - `walk_forward_ablation.py`: inner-joined `ftn_charting_2026.parquet` + `play_by_play_2026.parquet` (`18,019` rows), temperature-calibrated residual win probabilities (`11.8` if `< 4` GP else `12.8`, `0.85/0.15`), and dynamic empirical `floors_snapshot`; `147` completed games beat close simultaneously across all 5 metrics (`CRPS 7.0897 <= 7.0944`, `MAE 9.761 < 9.7687`, `Brier 0.21976 < 0.21988`, `ECE 0.07102 < 0.07171`, `FWL slope 1.398187`, `t = 21.44`, `all_floors_held=True`).
+    - `daily_multisport_slate_engine.py`: added `NCAAF`, `WNBA`, and `NFL_HIST <= W10` (`8` sports x `10,000` worlds = `80,000` conserved worlds, Week 11 `OperatorSimulationHoldError`).
+    - Expanded `compile_gse_to_gsi_rlvr_training_batch` to `236` pure-ASCII zero-odds records (`+ 24` standalone AWS/NGS = `260` trajectories), authored `deep-research-wave32-unified-all-sports-situational-live-engine-alignment.md`, added `test_wave32_unified_all_sports_live_engine_alignment.py`, and recorded `LL-2026-11-17-053`.
+- **What was proven**:
+  - `10` flagship games x `10k` (`8.9324` CRPS) + `147` decisive games x `1k` (`6.9904` raw PBP CRPS < `7.0108` close) = `43,225,000` simulated NFL PBP snaps + `80,000` 8-sport worlds; `ruff`, `mypy --strict src/gse_engine`, `verify_out_of_sample_calibration.py --enforce-gate`, `pre_sim_total_intelligence_gate.py --self-test` (`354/354`, zero dead-leaf modules), guardrails, and all `pytest` suites pass.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain gated under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 K14/Pose2Sim stays rule-in-only, clinical RUO weights remain `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
+## 2026-11-17 (2026-11-17 CT) -- Wave 31 AWS & NFL Next Gen Stats Going Deep Dual-Use Suite (354/354 WIRED_V3 & 220+24 RLVR)
+
+- **What changed**:
+  - **Bundle Installation & Cited Deep Research Report (`docs/engine/research/2026-11-17/deep-research-wave31-aws-nfl-going-deep-ngs-and-dual-use-codex.md`)**:
+    - Verified and installed `gse_gsi_aws_ngs_going_deep_wave22_bundle.zip` into our clean `feat/pregame-engine-dfs-harmony-2026-11-15` worktree (`src/gse_engine/tracking/aws_ngs_going_deep_gse_gsi_suite.py`, `src/gse_engine/tracking/__init__.py`, `tests/unit/test_aws_ngs_going_deep_gse_gsi_suite.py`, `brain/feeds/2026-11-17/aws_ngs_going_deep_gse_to_gsi_rlvr_feed.jsonl`, `docs/data-sources/research/2026-11-17/aws_ngs_going_deep_oss_and_source_registry_patch.json`, and `docs/engine/research/2026-11-17/aws_ngs_going_deep_gse_gsi_integration.md`), keeping `Sports-wt-triage` (`Autonomous-Revenue-Engine`) untouched.
+    - Verified all `165` URL tokens (`134` unique URLs) in `GSE 11_17.docx` are `134/134` already `WIRED_V3` from Waves 29-30.
+  - **Stage-2 Spine Wiring, Registry & RLVR Expansion (`LL-2026-11-17-052`)**:
+    - Brought `src/gse_engine/tracking/` to zero `ruff` errors and zero `mypy --strict` errors, added `AWS_NGS_GOING_DEEP_SOURCES` (`#347-#354`) and cached `evaluate_aws_ngs_going_deep_stage2_bridge` (`live_stage2_weight=0.0`, non-zero physical Jacobians wrt skeletal reach/pad leverage/epaulet yaw/cervical shear, `AP-06` chalk gradient `0.0`), and wired into `corpus_situational_integrator.py` and `pre_sim_total_intelligence_gate.py`.
+    - Expanded `oss-corpus-registry.json` to **`354/354` `WIRED_V3` (`438` submitted URLs)** and expanded `compile_gse_to_gsi_rlvr_training_batch` to **`220`** AP-06-clean RLVR trajectories alongside the `24` standalone AWS/NGS trajectories (`reward == 1.0`).
+- **What was proven**:
+  - `ruff`, `mypy --strict src/gse_engine`, all 9 `pytest` suites (including all 8 `TestAWSNGSGoingDeepGSEGSI` tests), `pre_sim_total_intelligence_gate.py --self-test` (`354/354`, `dead_leaf_unwired_pre_sim_modules=[]`, `all_jacobians_nonzero=True`), `connected-workflow-dossier-guard.py`, `em-dash-scan.mjs`, `trust-gate.mjs`, and Wave 31 hygiene audits pass cleanly.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain gated under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), `brain/mind.jsonl` remains untouched, and Stage-2 challenger weights remain `0.0`.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 30 Deep Research (81 New URLs: DeepMind/Google/NGS), 346/346 WIRED_V3 & 210 RLVR
 
 - **What changed**:

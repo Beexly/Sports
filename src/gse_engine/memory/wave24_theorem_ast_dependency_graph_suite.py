@@ -302,6 +302,9 @@ def six_regime_boundary_screen(
     return {"admissible": not failures, "values": values, "failures": failures}
 
 
+_SYMPY_LIMIT_SCREEN_CACHE: dict[tuple[object, ...], dict[str, Any]] = {}
+
+
 def sympy_six_regime_limit_screen(
     expr: str,
     bounds: Mapping[str, tuple[float, float]],
@@ -309,6 +312,18 @@ def sympy_six_regime_limit_screen(
     abs_limit: float = 1e6,
 ) -> dict[str, Any]:
     """Combine numeric 6-regime boundary screen with SymPy edge limit pole detection."""
+    cache_key: tuple[object, ...] = (
+        str(expr),
+        tuple(
+            (str(k), round(float(v[0]), 6), round(float(v[1]), 6))
+            for k, v in sorted(bounds.items())
+        ),
+        round(float(abs_limit), 6),
+    )
+    cached = _SYMPY_LIMIT_SCREEN_CACHE.get(cache_key)
+    if cached is not None:
+        return dict(cached)
+
     numeric = six_regime_boundary_screen(expr, bounds, abs_limit=abs_limit)
     sympy_mod: Any = importlib.import_module("sympy")
     names = sorted(bounds)
@@ -345,12 +360,15 @@ def sympy_six_regime_limit_screen(
             except (ArithmeticError, ValueError, TypeError, NotImplementedError):
                 poles.append(f"{n}:{tag}_error")
     limits_ok = not poles
-    return {
+    out: dict[str, Any] = {
         **numeric,
         "admissible": bool(numeric["admissible"]) and limits_ok,
         "sympy_limits_finite": limits_ok,
         "sympy_poles": poles,
     }
+    if len(_SYMPY_LIMIT_SCREEN_CACHE) < 256:
+        _SYMPY_LIMIT_SCREEN_CACHE[cache_key] = dict(out)
+    return out
 
 
 def g_fire_retraction_weight(source_text: str) -> float:

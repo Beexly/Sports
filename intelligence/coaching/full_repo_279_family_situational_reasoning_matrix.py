@@ -12,6 +12,7 @@ coaching, tracking, and mathematical stack prior to Stage 3 JEV snap-by-snap sim
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
@@ -306,6 +307,9 @@ def evaluate_measured_reasoning_primitives(game_ctx: Dict[str, Any]) -> Dict[str
 # ============================================================================
 # 3. 288-BIT / 279-SIGNAL-FAMILY / 12,304-EQUATION COGNITIVE ROUTER
 # ============================================================================
+_COGNITIVE_ROUTER_12K_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
 def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> Dict[str, Any]:
     """
     Executes the 4-stage Cognitive Router (`packages/mcp-equations-server/src/mcp-cognitive-router.ts`
@@ -318,6 +322,10 @@ def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> 
     """
     global _THOUSAND_EQ_COUNT_CACHE
     from intelligence.reasoning.equation_gate import evaluate_12304_equations_cognitive_router
+
+    cache_key = json.dumps(game_ctx or {}, sort_keys=True, default=str)
+    if _THOUSAND_EQ_COUNT_CACHE is not None and cache_key in _COGNITIVE_ROUTER_12K_CACHE:
+        return copy.deepcopy(_COGNITIVE_ROUTER_12K_CACHE[cache_key])
 
     if _THOUSAND_EQ_COUNT_CACHE is None:
         eq_1k_path = REPO_ROOT / "data" / "engine" / "thousand_equation_matrix_2026.json"
@@ -336,6 +344,8 @@ def execute_288bit_12304_equation_cognitive_router(game_ctx: Dict[str, Any]) -> 
 
     routed = evaluate_12304_equations_cognitive_router(game_ctx)
     routed["thousand_equation_matrix_count"] = _THOUSAND_EQ_COUNT_CACHE
+    if len(_COGNITIVE_ROUTER_12K_CACHE) < 256:
+        _COGNITIVE_ROUTER_12K_CACHE[cache_key] = copy.deepcopy(routed)
     return routed
 
 
