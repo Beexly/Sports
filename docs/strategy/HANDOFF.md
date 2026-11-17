@@ -3,6 +3,16 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 — Weekly cadence v1.0 Tue 04:00 CT seal (Week 11)
+
+**Changed:** Ran the v1.0 Tuesday seal cadence for NFL Week 11 (ISO 2026-W47). Deliverable: `docs/predictions/research/2026-11-17/cadence_tick_mon_tue_fine_tune_seal_sun_early_w11.json` (merkle `2c1fa2a4ae2cc323...`, phase `MON_TUE_FINE_TUNE_SEAL`, slot `SUN_EARLY`, v1.0).
+
+**Proven:** Seal verification 6/6 `unchanged=true` via `run_cadence_v25_injury_overlay.verify_seal` under ocr-venv python — merkle `23245bcb...` == authoritative, candidate lineage matches, tau rating 4.6607, coach-mind tau 0.42, EPA-dropoff table sha256 `9b8c701c...` unmodified, QB-questionable dropoff 0.0947. Canonical digest `354b4c13...` and frozen EPA factor `9b8c701c...` confirmed. nflverse currency guard ran live (season >= 2026). ISO-week second-seal guard exercised safely on a temp path: first seal for 2026-W47 succeeds, a second raises `SEAL BROKEN` — no second seal this ISO week.
+
+**Not proven / gaps:** nflverse currency guard reports one FAILURE — `pbp_participation` seasonal asset 404s for 2026 (nflverse likely renamed it); fix the catalog in `packages/data-ingestion/src/nflverse-source.ts`. The tick's writeup engine is still the Week-8 slate ("Simulated 14 2026 Week 8 games"); publish gate FAIL / ticket false (min_edge 0.0 < 1.2). Its `ensure_real_simulation_outputs` incidentally rewrote `data/packages/live-slate-writeups.json` (flipping Week-8 PLAY→PASS) and `docs/predictions/research/2026-10-29/GAME-DAY-CONTENT-PACKET-2026-10-29.md`; both were reverted — not part of the v1.0 seal contract.
+
+**Next role:** The active seal center stays `2026-W44` (`candidates/sealed-center.json`); do NOT advance it or the pinned `AUTHORITATIVE_MERKLE` in every cadence script breaks. Fix the `pbp_participation` catalog entry. The writeup engine needs a Week-11 slate before the v1.0 lock is more than a flag-only record.
+
 ## 2026-11-03 — GPP conservation coupling, no MNF
 
 **Changed:** `scripts/ops/pbp_conservation_coupling.py` is now what `run_full_dk_bitemporal_gpp.py` calls. Conserved PBP yards are no longer rescaled onto the static mean. A missed JEV call returns `DEGRADED_UNVERIFIED` / `PASS_FRAGILE` instead of `LOCK_TOURNAMENT_ALPHA` and 0.86. Showdown salary floor is clamped to $48,000. ESPN Week 8 finals are in `data/engine/espn_week8_finals_2026-11-02.json`.
