@@ -3,9 +3,10 @@
  *
  * Typed Content-OS & Multi-Stream Revenue / Short-Form Video / DFS / Week 10 Commercial Posture surface.
  * Strictly adheres to:
- *  - Official New Engine Verified Record (36-13-1, 73.5%, +20.14u entering Week 10:
- *    16-5-0 +10.45u pre-TNF prior + 14-6-1 +7.19u TNF CAR@GB + 6-2-0 +2.50u Sun Nov 1).
- *    All-in secondary view 47-19-1 (+24.92u) is labeled secondary wherever it appears.
+ *  - Public record: any record line printed by this engine comes from
+ *    `@/lib/ledger/public-record` (derived from verified-ledger.json at build
+ *    time). No hand-typed W-L-P record and no win-rate percentage, anywhere —
+ *    the rate stays locked until 200 CLV-backed settled plays.
  *  - Customer-Facing Human Copy Doctrine (natural football-film & matchup analysis; zero internal pipeline jargon).
  *  - Paywall Protection Doctrine (public previews share game-environment analytics; official plays & full DFS lineups stay behind `/packages` and `/fantasy/dfs`).
  */

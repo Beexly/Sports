@@ -32,9 +32,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_FOUNDRY_DB = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
-DEFAULT_UNPACK_MANIFEST = Path(
-    r"C:\Users\Garrett\Sports\foundry\audits\friday_full_audit_2026-11-13\01a_gcp_sync_4branch_unpack_manifest.json"
+DEFAULT_FOUNDRY_DB = REPO_ROOT / "foundry" / "foundry.db"
+DEFAULT_UNPACK_MANIFEST = (
+    REPO_ROOT / "foundry" / "audits" / "friday_full_audit_2026-11-13" / "01a_gcp_sync_4branch_unpack_manifest.json"
 )
 DEFAULT_RECEIPT_PATH = (
     REPO_ROOT

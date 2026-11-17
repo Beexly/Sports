@@ -808,7 +808,7 @@ def run_permanent_sequenced_pipeline(
     # ------------------------------------------------------------------
     coaching_dir = INTEL_ROOT / "coaching"
     coaching_files = sorted(p.name for p in coaching_dir.glob("*.py")) if coaching_dir.is_dir() else []
-    foundry_db = Path(r"C:\Users\Garrett\Sports\foundry\foundry.db")
+    foundry_db = repo_root / "foundry" / "foundry.db"
     db_ro_ok = True
     complete_books = None
     if foundry_db.is_file():
@@ -887,22 +887,34 @@ def run_permanent_sequenced_pipeline(
     # Gate 4: Conformal Calibration + Foundry RLVR 6-Veto Bridge
     # ------------------------------------------------------------------
     cal_path = repo_root / "data" / "calibration" / "market_calibration_heads_2026.json"
-    rlvr_dir = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\rlvr_vetoes")
+    # RLVR vetoes are committed under foundry/artifacts/rlvr_vetoes (6 batch
+    # files, 18 scenarios). Derive the path from the repo root rather than a
+    # hardcoded Windows host path: the literal host path resolves only on the
+    # dev box, so on any other host the directory is absent, rlvr_count stays
+    # 0 and the veto verification silently passes without loading a single
+    # scenario. The verified self-tests live in the repo, so the check is real
+    # wherever the repo is checked out.
+    rlvr_dir = repo_root / "foundry" / "artifacts" / "rlvr_vetoes"
     rlvr_ok = True
     rlvr_count = 0
     if rlvr_dir.is_dir():
         rlvr_res = load_and_verify_all_rlvr_vetoes(rlvr_dir)
         rlvr_ok = rlvr_res["all_passed"]
         rlvr_count = rlvr_res["total_scenarios"]
-    now_iso = datetime.now(timezone.utc).isoformat()
     bridge_check = evaluate_candidate_ticket_with_rlvr_bridge({
         "matchup": "BUF@NYJ",
         "player": "Greg Dortch",
         "team": "BUF",
         "raw_logit_z": 1.2,
         "both_sides_evaluated": True,
-        "as_of_utc": now_iso,
-        "feature_max_timestamp_utc": now_iso,
+        # Veto 6 (bitemporal leak) fails closed when the ticket carries no
+        # feature/as-of cutoffs, so a smoke ticket without them can never be
+        # approved and Gate 4 fail-closes on every run. Supply a non-leaking
+        # pair (feature timestamp at or before the as-of cutoff) so the smoke
+        # check exercises the 6-veto bridge instead of always vetoing on
+        # missing timestamps.
+        "feature_max_timestamp_utc": "2026-11-13T00:00:00Z",
+        "as_of_utc": "2026-11-13T12:00:00Z",
     })
     g4_ok = (cal_path.is_file() and rlvr_ok and bridge_check["approved"] is True) or dry_run
     _record_gate(

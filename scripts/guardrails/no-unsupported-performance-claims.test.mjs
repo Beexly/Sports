@@ -116,3 +116,49 @@ test("rendered verified claim still fires (skip is not over-broad)", () => {
   const hits = scanLine([line], 0, FILE);
   assert.ok(hits.length > 0, "rendered claim must still be flagged");
 });
+
+// --- Record + win-percentage rule (2026-11-15) ------------------------------
+// Fixtures are the strings that actually shipped, plus the control that must
+// keep passing. Verdicts hand-assigned before the implementation was written.
+import { scanRecordPercentLine } from "./no-unsupported-performance-claims.mjs";
+
+const RECORD_MUST_FAIL = [
+  "Verified Official NFL Record: 47-19-1 (71.2% win rate · +24.92u)",
+  "Official Season Ledger of Record: 36-13-1 (73.5%) · +20.14u Verified",
+  "73.5% (36-13-1) all-time",
+  '"description": "… reporting a 36-13-1 (+20.14u) verified record (73.5%, MAIN + DERIVATIVE + TNF SINGLE-STAKE)"',
+];
+
+const RECORD_MUST_PASS = [
+  "Superseded snapshot: 47-19-1 (+24.92u) is the audited 2026-11-02 all-in snapshot",
+  "79-46-0 +81.47u verified · win rate locked until 200 CLV-backed settled plays (53/200)",
+  "a publish-time market price by any honest reading (measured 2026-09-19: 99% of sessions)",
+  "16-5-0 +10.45u entering TNF CAR@GB",
+];
+
+for (const line of RECORD_MUST_FAIL) {
+  test(`RECORD+PERCENT FLAGS: "${line}"`, () => {
+    assert.ok(scanRecordPercentLine([line], 0, FILE).length > 0, `expected a hit for: ${line}`);
+  });
+}
+
+for (const line of RECORD_MUST_PASS) {
+  test(`RECORD+PERCENT PASSES: "${line}"`, () => {
+    assert.deepEqual(scanRecordPercentLine([line], 0, FILE), [], `expected no hit for: ${line}`);
+  });
+}
+
+test("unlabelled 36-13-1 is not exempt just because it is a known snapshot number", () => {
+  // The number being real history is not the exemption — the label is.
+  const hits = scanRecordPercentLine(["Our record stands at 36-13-1 (73.5%)."], 0, FILE);
+  assert.ok(hits.length > 0);
+});
+
+test("superseded label one line above the claim does not excuse it", () => {
+  const hits = scanRecordPercentLine(
+    ["<p class=\"kicker\">Superseded snapshot</p>", "<p>47-19-1 (71.2% win rate)</p>"],
+    1,
+    FILE,
+  );
+  assert.ok(hits.length > 0, "label must be on the same clause, not a neighbouring element");
+});

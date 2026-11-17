@@ -125,8 +125,8 @@ DOMAIN_DEFAULT_FAMILY: Dict[str, str] = {
 }
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-_MAIN_SPORTS_ROOT = Path(r"C:\Users\Garrett\Sports")
-_WT_ROOT = Path(r"C:\Users\Garrett\Sports_prepack_audit_wt")
+_MAIN_SPORTS_ROOT = REPO_ROOT
+_WT_ROOT = Path.home() / "Sports_prepack_audit_wt"
 
 WORKTREE_PRIMITIVES_DIR = REPO_ROOT / "foundry" / "artifacts" / "primitives"
 DEFAULT_PRIMITIVES_DIR = (
@@ -634,8 +634,8 @@ def run_wiring_and_export(
 
 def main() -> int:
     default_staging = (
-        Path(r"C:\Users\Garrett\.gemini\antigravity-cli\brain\8ce5ebec-edd0-4868-8683-9c37c157cd6f\scratch\bq_staging")
-        if Path(r"C:\Users\Garrett\.gemini").exists()
+        Path.home() / ".gemini" / "antigravity-cli" / "brain" / "8ce5ebec-edd0-4868-8683-9c37c157cd6f" / "scratch" / "bq_staging"
+        if (Path.home() / ".gemini").exists()
         else REPO_ROOT / "tmp_bq_staging"
     )
     ap = argparse.ArgumentParser(description="Wire Foundry Sovereign Primitives + GCP Shard B -> Cognitive Router + BigQuery NDJSON.")

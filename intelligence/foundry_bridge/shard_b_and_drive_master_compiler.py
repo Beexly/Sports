@@ -3,14 +3,14 @@
 Shard B (gcp_sync 6,300+ XML Markdown Extractions) & Google Drive Master Compiler (Track 2A).
 
 Deep-parses:
-  1. All XML-structured Markdown files under `C:\\Users\\Garrett\\Sports\\foundry\\artifacts\\gcp_sync`
+  1. All XML-structured Markdown files under `foundry/artifacts/gcp_sync`
      supporting uppercase and lowercase tags (`THINK_TRACE`/`think`, `SOURCE_OPERATORS_AND_EQUATIONS`,
      `RETROCAUSAL_GENEALOGY`, `RECURSIVE_THEORY_OF_MIND`, `CROSS_LAYER_VETO_ADJUDICATION`,
      `RLVR_COUNTERFACTUAL_VETOES`, `SOURCE_ANCHOR`, `SYNTHESIS`).
   2. Google Drive Master Archives:
-     - `G:\\My Drive\\GSE-GSI-Mega-Sweep-2026-11-06\\EQUATIONS-MASTER-2026-11-10.jsonl.gz`
-     - `G:\\My Drive\\GSE-GSI-Mega-Sweep-2026-11-06\\SITUATIONAL-MASTER-2026-11-10.jsonl.gz`
-     - `G:\\My Drive\\GSE-Ultra-30TB-Vault\\**\\*.jsonl` (.jsonl.gz)
+     - `$GDRIVE_ROOT/GSE-GSI-Mega-Sweep-2026-11-06/EQUATIONS-MASTER-2026-11-10.jsonl.gz`
+     - `$GDRIVE_ROOT/GSE-GSI-Mega-Sweep-2026-11-06/SITUATIONAL-MASTER-2026-11-10.jsonl.gz`
+     - `$GDRIVE_ROOT/GSE-Ultra-30TB-Vault/**/*.jsonl` (.jsonl.gz)
 
 Writes canonical outputs to:
   - `docs/engine/research/2026-11-13/corpus_compilation/shard_b_operators_and_vetoes_catalog.json`
@@ -26,6 +26,7 @@ import datetime as dt
 import gzip
 import hashlib
 import json
+import os
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -34,14 +35,15 @@ from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Seque
 from intelligence.foundry_bridge.multi_lane_sovereign_extractor import is_pii_or_correspondence_row
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_GCP_SYNC_DIR = Path(r"C:\Users\Garrett\Sports\foundry\artifacts\gcp_sync")
-DEFAULT_EQUATIONS_GZ = Path(
-    r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\EQUATIONS-MASTER-2026-11-10.jsonl.gz"
+DEFAULT_GCP_SYNC_DIR = REPO_ROOT / "foundry" / "artifacts" / "gcp_sync"
+GDRIVE_ROOT = Path(os.environ.get("GDRIVE_ROOT", str(Path.home() / "My Drive")))
+DEFAULT_EQUATIONS_GZ = (
+    GDRIVE_ROOT / "GSE-GSI-Mega-Sweep-2026-11-06" / "EQUATIONS-MASTER-2026-11-10.jsonl.gz"
 )
-DEFAULT_SITUATIONAL_GZ = Path(
-    r"G:\My Drive\GSE-GSI-Mega-Sweep-2026-11-06\SITUATIONAL-MASTER-2026-11-10.jsonl.gz"
+DEFAULT_SITUATIONAL_GZ = (
+    GDRIVE_ROOT / "GSE-GSI-Mega-Sweep-2026-11-06" / "SITUATIONAL-MASTER-2026-11-10.jsonl.gz"
 )
-DEFAULT_VAULT_DIR = Path(r"G:\My Drive\GSE-Ultra-30TB-Vault")
+DEFAULT_VAULT_DIR = GDRIVE_ROOT / "GSE-Ultra-30TB-Vault"
 
 DEFAULT_COMPILATION_DIR = (
     REPO_ROOT

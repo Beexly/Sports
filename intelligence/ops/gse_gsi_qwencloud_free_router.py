@@ -41,7 +41,7 @@ NVIDIA_CLOUD_ACCOUNT_ID = "0XbDpubbMneZ1iDmkQhjtqgIlA-4PUHJjEaWCPjY3rk"
 ENV_CANDIDATE_FILES: Tuple[Path, ...] = (
     Path.home() / "AppData" / "Local" / "hermes" / ".env",
     Path.home() / ".hermes" / ".env",
-    Path(r"C:\Users\Garrett\Sports\.env.local"),
+    Path.home() / "Sports" / ".env.local",
 )
 
 

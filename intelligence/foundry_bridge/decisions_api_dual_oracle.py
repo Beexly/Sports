@@ -32,7 +32,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
-HERMES_JEV_PATH = Path(r"C:\Users\Garrett\hermes-jev-skills")
+HERMES_JEV_PATH = Path(os.environ.get("HERMES_JEV_PATH", str(Path.home() / "hermes-jev-skills")))
 if HERMES_JEV_PATH.exists() and str(HERMES_JEV_PATH) not in sys.path:
     sys.path.insert(0, str(HERMES_JEV_PATH))
 
