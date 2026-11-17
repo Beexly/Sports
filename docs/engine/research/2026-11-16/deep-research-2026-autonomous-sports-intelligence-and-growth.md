@@ -102,15 +102,21 @@ Integrated directly inside `src/gse_engine/compute/corpus_situational_integrator
 
 ---
 
-## 6. Overnight `/goal` + Subagent Fleet Orchestration Blueprint
+## 6. Overnight `/goal` + Subagent Fleet Orchestration Blueprint (Updated `1.37M+` Units, `46` Vaults, `169/169` OSS)
 
-To mine the remaining latent signal density across `81,707` corpus artifacts overnight at near-zero marginal API cost (`Uncompressed-Intelligence Zero-Waste Cost Doctrine`), deploy an autonomous `WIRE-FIRST` swarm:
+To mine the remaining latent signal density across **`1.37M+` verified monorepo units**, **`46` vaults**, **`46/46` `data/*` subdirectories**, **`12,558` Foundry Tier-B files (`50,656` primitives)**, **`10` sibling remote branches (`CrossBranchKnowledgeRadar`)**, and **`169/169` `WIRED_V3` OSS repositories** overnight at `$0` extra API cost (`Uncompressed-Intelligence Zero-Waste Cost Doctrine`), deploy an autonomous `WIRE-FIRST` swarm:
 1. **Model Tiering:** Orchestrator dispatches bounded extraction/scoring shards to fast lightweight subagents (`flash` / `flash_lite`) while reserving frontier verification for Stage-2 Jacobian coupling and `pre_sim_total_intelligence_gate.py`.
-2. **Partitioning:**
-   - Shard A: `data/sports_research_papers/manifest_877_pdfs.json` + missing book PDFs -> extract testable situational rules into JSON candidates scored by out-of-sample CRPS / Brier lift.
-   - Shard B: `brain/feeds/2026-11-14/arxiv_sovereign_and_shard_b_*.jsonl` (`58,486` primitives) + `data/engine/thousand_equation_matrix_2026.json` (`9,875` equations) -> promote highest-orthogonality situational deltas with FWL `R^2` orthogonal to market lines.
-   - Shard C: Historical Weeks 1-10 OOS walk-forward calibration sweeps (`MIN_GAMES >= 4`) and 365-Day `NBA`/`NHL`/`NCAAB`/`SOCCER` `BC-ACI` conformal calibration sweeps: **zero Week 11+ simulations run unless `GSE_OPERATOR_APPROVED_SIM_WEEKS` explicitly grants authorization**.
-3. **Invariant Check After Every Cycle:** Run `python scripts/guardrails/pre_sim_total_intelligence_gate.py --repo-root . --self-test`, `mypy --strict src/gse_engine`, `ruff check`, `pytest`, `verify_zero_loss_knowledge_continuity()`, and keep `real_money_stake_cleared = False` and `live_stake_fraction = 0.0` untouched.
+2. **Hard Holds (Non-Negotiable):**
+   - **Zero Week 11+ Simulations (`simulation_hold_gate.py`):** Never set `GSE_OPERATOR_APPROVED_SIM_WEEKS`; focus exclusively on corpus mining, theorem AST verification, RLVR trajectories, historical NFL Weeks `1..10` OOS calibration, and 365-Day `NBA`/`NCAAB`/`NHL`/`SOCCER`/`MLB` calibration.
+   - **Polymarket Compliance Hold (`polymarket-hold`, `docs/ops/ORBIT_UNLOCK.md`):** Keep `cleared: False` across `#136..#142` and `#144`; never enable live prediction-market execution or gamma crons; extract strictly offline LMSR/FLB/weather math only.
+   - **Single-Writer & Quarantine Firewalls:** Never touch `brain/mind.jsonl` (emit to `brain/feeds/<YYYY-MM-DD>/`); keep `mimic_iv_demo` (`0.0` sports weight), `step-n-market` (`Stage 5` only), `Q52..Q54` (`SHADOW` `0.0` weight), and `real_money_stake_cleared = False` / `live_stake_fraction = 0.0`.
+3. **4 Subagent Shards (`flash` / `flash_lite`):**
+   - **Shard A (503 Books + 877 PDFs + 12,558 Foundry Files + 58,486 Sovereign Primitives):** Run `OpenViking` `L0/L1/L2`, `Docling` table/formula AST, `OpenScholar` citation critique, `Ragas` (`>= 0.70`), 6D Buckingham Pi homogeneity, `G_fire` (`DEFF_drive = 2.0`), and `PET-PEESE` meta-regression pooling to promote FWL orthogonal signals (`R^2` independent of market lines).
+   - **Shard B (46 Monorepo Vaults, `46/46` `data/*` & `CrossBranchKnowledgeRadar`):** Normalize remaining raw social deltas (`origin/motif/sweep-ingestion-2026-11-14` `11,152` records) into pure-ASCII `brain/feeds/`, expand `data/corpus_parsed_full/` (`2,949` zero-skip theorems), `data/equations/` (`12,304` + `21,419`), `data/coach-brain/` (`41,792`), `data/gse-dataset/` (`1.11M`), `data/film_room_2026/` (`36,337`), and `data/statking/` (`90` metrics).
+   - **Shard C (Wave 20-21 Tracking, Biomechanics, 4th-Down WP & 365-Day Multi-Sport):** Calibrate `SumerSports`/`Big-Data-Bowl` permutation-invariant tracking separation, `Metrica`/`SkillCorner` Spearman pitch control, `OpenBiomechanics` + `NFL-Injury-Database` + `movementneuromuscular.org` ACWR recurrence hazard (`K14`), `nfl4th`/`NFLWin` 4th-down WP, `tddlog` OBDD WMC, `WOODELF` Banzhaf synergy, `XGBoost`/`CatBoost`/`PyMC`, GFS/ECMWF stadium weather (`#140`), and `FPL-Auto` / `NHL-xG` / `hockeyR` / `pybaseball` + `BC-ACI` conformal tuning across NFL Weeks `1..10` and 365-Day slates.
+   - **Shard D (Bidirectional GSE -> GSI RLVR/GRPO & 6-Axis Frontier Benchmarks):** Compile self-verified GRPO trajectories into `brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl` using `Axolotl` FFD multipacking + `TRL` GRPO advantages + `lm-eval-harness` byte-normalized Brier scoring (`gse-gsi-reasoner-v1`), benchmarking continuously on `GPQA Diamond`, `MATH-500`, `GSM8K`, `HumanEval`, `ARC-Challenge`, `MMLU`, `ForecastBench`, and `CalibBench`.
+4. **Verification Gate After Every Cycle:** Run `python scripts/guardrails/pre_sim_total_intelligence_gate.py --repo-root . --self-test`, `mypy --strict src/gse_engine`, `ruff check`, `pytest`, `node scripts/guardrails/em-dash-scan.mjs`, `node scripts/guardrails/trust-gate.mjs`, and `verify_zero_loss_knowledge_continuity()` (`>= 1.37M` units).
+   See standalone copy-paste prompt: `docs/engine/research/2026-11-16/overnight-all-night-goal-prompt-2026-11-16.md`.
 
 ---
 

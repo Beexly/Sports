@@ -1,0 +1,28 @@
+# Overnight `/goal` Prompt (2026-11-16 -- `1.37M+` Units, `46` Vaults, `169/169` OSS, Zero Week 11+ Sims)
+
+Copy and paste the exact `/goal` instruction below to launch the autonomous overnight swarm:
+
+```text
+/goal Run an autonomous, zero-loss overnight intelligence-deepening swarm in C:\Users\Garrett\Sports-wt-triage (branch feat/pregame-engine-dfs-harmony-2026-11-15) across ALL 46 monorepo vaults, ALL 46/46 data/* subdirectories (>1.37M+ verified knowledge units), 12,558 Foundry Tier-B files (50,656 primitives), 58,486 Sovereign book primitives, 10 sibling branches (CrossBranchKnowledgeRadar), and 169/169 WIRED_V3 OSS repositories (Waves 20-21) to improve GSE calibration, situational reasoning, and bidirectional GSE -> GSI RLVR training feeds while pushing reasoning/calibration benchmarks toward frontier parity.
+
+HARD MANDATES & HOLDS (NON-NEGOTIABLE):
+1. ZERO WEEK 11+ SIMULATIONS: Never run any NFL Week >= 11 simulation and never set GSE_OPERATOR_APPROVED_SIM_WEEKS; keep src/gse_engine/governance/simulation_hold_gate.py enforcing OPERATOR_SIM_HOLD unless Garrett explicitly approves.
+2. POLYMARKET COMPLIANCE HOLD: Keep assert_prediction_market_compliance_hold(cleared=False) enforced across all 8 prediction-market repos (#136..#142, #144); NEVER enable live prediction-market execution, trading bots, or gamma crons per docs/ops/ORBIT_UNLOCK.md. Extract strictly offline mathematical microstructure (LMSR Bregman, FLB power debiasing) and ensemble stadium weather calibration only.
+3. SINGLE-WRITER & QUARANTINE FIREWALLS: Never write directly to brain/mind.jsonl (emit staged trainer feeds to brain/feeds/<YYYY-MM-DD>/ only); keep data/mimic_iv_demo (0.0 sports weight), data/step-n-market (Stage 5 anchor only), Q52..Q54 (SHADOW 0.0 weight), unvalidated artifacts/gse_brain proofs (0.0 weight), and real_money_stake_cleared=False / live_stake_fraction=0.0 untouched; $0 paid API spend; 0 new pip/npm installs.
+4. WIRE-FIRST SEQUENCING & FROZEN PATHS: Research -> wire -> weight -> calibrate -> verify. Never edit AGENTS.md, C:\Users\Garrett\Sports, C:\Users\Garrett\gse-ml-service, or Sports-wt-triage/gse-ml-service/** (read-only audit only); derive paths from REPO_ROOT / Path.home() (Two-Host Rule); keep authored docs/** pure 7-bit ASCII with zero em-dashes and zero banned copy-gate phrases.
+
+ORCHESTRATE 4 PARALLEL LIGHTWEIGHT SUBAGENTS (flash / flash_lite; reserve frontier model only for Stage-2 Jacobian coupling and final verification):
+- Shard A (Books/PDFs/Foundry/Theorems): Mine 503 complete books (data/mind/), 877 PDFs (manifest_877_pdfs.json), 12,558 Foundry Tier-B files (foundry/artifacts/primitives/), and 58,486 Sovereign primitives via OpenViking L0/L1/L2, Docling AST, OpenScholar citation critique, Ragas faithfulness >= 0.70, 6D Buckingham Pi homogeneity, G_fire (DEFF_drive=2.0), and PET-PEESE meta-pooling. Promote only situational signals with FWL orthogonal delta over market closing lines.
+- Shard B (46 Monorepo Vaults, 46/46 data/* & CrossBranchKnowledgeRadar): Audit and cross-link data/equations/ (12,304 + 21,419), data/corpus_parsed_full/ (2,949 zero-skip theorems), data/coach-brain/ (41,792), data/gse-dataset/ (1.11M), data/film_room_2026/ (36,337), data/identity/ (12,941), data/statking/ (90 metrics), engine/, eval/, formal-heartbeat/, workflows/, and workers/. Safely extract pure-ASCII trainer feeds from origin/motif/sweep-ingestion-2026-11-14 (11,152 records) into brain/feeds/ while keeping docs/ copy-scan clean.
+- Shard C (Wave 20-21 Tracking, Biomechanics, 4th-Down WP & OOS Calibration): Deepen Stage-2 priors across SumerSports/Big-Data-Bowl permutation-invariant tracking attention, Metrica/SkillCorner Spearman pitch control, OpenBiomechanics + NFL-Injury-Database + movementneuromuscular.org ACWR recurrence hazard (K14), nfl4th/NFLWin 4th-down WP, tddlog OBDD WMC, WOODELF Banzhaf interactions, XGBoost/CatBoost/PyMC, multi-member stadium weather exceedance (#140), historical NFL Weeks 1..10 OOS CPCV calibration (NFL_EPA_MIN_GAMES >= 4), and 365-Day NBA/NCAAB/NHL/SOCCER/MLB (FPL-Auto, NHL-xG, hockeyR, pybaseball, BC-ACI) conformal bands.
+- Shard D (Bidirectional GSE -> GSI RLVR & 6-Axis Frontier Suite): Compile additional deterministic self-verified trajectories from completed Weeks 1..10 autopsies, 2,949 theorem ASTs, biomechanics/ACWR, and tracking invariants into brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl using Axolotl FFD multipacking, HuggingFace TRL zero-mean GRPO advantages + reverse KL, and lm-eval-harness byte-normalized Brier scoring; benchmark against GPQA Diamond, MATH-500, GSM8K, HumanEval, ARC-Challenge, MMLU, ForecastBench, and CalibBench (CalibBench 100).
+
+END-OF-CYCLE VERIFICATION & CLEAN COMMIT/PUSH GATE:
+Every cycle must pass exit=0 across:
+1. python -m ruff check src/gse_engine scripts/guardrails/pre_sim_total_intelligence_gate.py scripts/ops/gse_t_minus_lock_orchestrator.py tests/unit/test_knowledge_continuity_and_gsi_rlvr.py
+2. python -m mypy --strict src/gse_engine
+3. python -m pytest tests/unit/test_knowledge_continuity_and_gsi_rlvr.py tests/unit/test_wave19_agentic_fleet.py tests/unit/test_t_minus_lock_orchestrator.py tests/unit/test_daily_multisport_slate_engine.py -q
+4. python scripts/guardrails/pre_sim_total_intelligence_gate.py --repo-root . --self-test
+5. node scripts/guardrails/em-dash-scan.mjs && node scripts/guardrails/trust-gate.mjs
+Stage explicit changed paths cleanly (never commit scratch traces), update data/engine/lessons_learned_permanent_ledger.jsonl and docs/strategy/HANDOFF.md (pure 7-bit ASCII), commit, push to origin/feat/pregame-engine-dfs-harmony-2026-11-15, and verify PR #1291 stays MERGEABLE.
+```
