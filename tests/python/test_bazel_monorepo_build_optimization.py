@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""
-Verification suite for Galaxy Sports Edge Bazel Monorepo Build Optimization (`bazel-build-optimization`).
+"""Verification suite for Galaxy Sports Edge Bazel Monorepo Build Optimization.
+
 Verifies:
-  1. `WORKSPACE.bazel`, `.bazelrc`, `.bazelignore`, and `BUILD.bazel` files exist and define required toolchains and rules.
+  1. `WORKSPACE.bazel`, `.bazelrc`, `.bazelignore`, and `BUILD.bazel` files exist and define
+     required toolchains and rules.
   2. Fine-grained targets across `//packages/prediction-engine`, `//intelligence`, and `//apps/web`.
-  3. Hardware-aware resource governors (`HOST_CPUS*.75`, `HOST_RAM*.75`), disk/remote caching, and remote execution configs.
+  3. Hardware-aware resource governors (`HOST_CPUS*.75`, `HOST_RAM*.75`), disk/remote caching,
+     and remote execution configs.
   4. Zero forbidden patterns (`etc.`, raw secrets) across all Bazel and architecture files.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
 import re
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 ETC_RE = re.compile(r"\betc" + r"\.", re.IGNORECASE)
@@ -53,7 +55,8 @@ def test_bazel_workspace_and_rc_configurations() -> None:
         assert required_flag in rc_txt, f"Missing {required_flag} in .bazelrc"
 
     ig_txt = ig_path.read_text(encoding="utf-8")
-    for ignored_dir in ("node_modules", ".next", "dist", ".git", ".turbo", "apps/mobile/node_modules"):
+    ignored_dirs = ("node_modules", ".next", "dist", ".git", ".turbo", "apps/mobile/node_modules")
+    for ignored_dir in ignored_dirs:
         assert ignored_dir in ig_txt, f"Missing {ignored_dir} in .bazelignore"
 
 

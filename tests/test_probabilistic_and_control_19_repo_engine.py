@@ -1,9 +1,9 @@
-r"""Comprehensive Multi-Pass Test Suite for the 19-Repository (20-URL) Probabilistic & Control Engine.
+r"""Comprehensive Multi-Pass Test Suite for the 19-Repository Probabilistic & Control Engine.
 
 Verifies mathematical invariants, edge cases, error paths, and hardware-aware replacements across:
   - Target A: Personal Hardware & Software Optimization (~)
   - Target B: Galaxy Sports Edge (GSE) Prediction Engine, SGP Copula & Player Tracking
-  - Target C: Galaxy Science Institute (GSI) Biomechanical Kinematics, Survival & Clinical Safety Gates
+  - Target C: Galaxy Science Institute (GSI) Biomechanical Kinematics & Clinical Safety Gates
 """
 
 from __future__ import annotations
@@ -12,7 +12,6 @@ import math
 
 import numpy as np
 import pytest
-
 from intelligence.ecosystem.probabilistic_and_control_19_repo_engine import (
     AlgorithmicNumericalKernelLibrary,
     DmpAndProMPBiomechanicalEngine,
@@ -42,8 +41,13 @@ from intelligence.ecosystem.probabilistic_and_control_19_repo_engine import (
 def test_repo1_neural_prophet_piecewise_trend_fourier_and_ar_net() -> None:
     decomposer = NeuralProphetArNetDecomposer(n_changepoints=3, fourier_order=2, ar_lags=2)
     t = np.arange(24, dtype=float)
-    # Construct synthetic NFL EPA / GSI circadian trajectory with a slope break at t=12 (t_norm ~ 0.522)
-    y = 0.05 + 0.012 * t + np.maximum(0.0, t - 12.0) * 0.025 + 0.04 * np.sin(2.0 * math.pi * t / 17.0)
+    # Synthetic NFL EPA / GSI circadian trajectory with a slope break at t=12 (t_norm ~ 0.522)
+    y = (
+        0.05
+        + 0.012 * t
+        + np.maximum(0.0, t - 12.0) * 0.025
+        + 0.04 * np.sin(2.0 * math.pi * t / 17.0)
+    )
     cov = np.cos(0.3 * t)[:, None]
     res = decomposer.fit_and_decompose(y, covariates=cov)
 
@@ -75,7 +79,10 @@ def test_repo2_eli5_conditional_permutation_taylor_and_80_rule_firewall() -> Non
     )
     assert clean["top_feature"] == "pressure_rate_over_expected"
     assert clean["80_rule_firewall_clean"] is True
-    assert clean["ranked_features"][0]["importance_mean"] > clean["ranked_features"][2]["importance_mean"]
+    assert (
+        clean["ranked_features"][0]["importance_mean"]
+        > clean["ranked_features"][2]["importance_mean"]
+    )
     assert clean["ranked_features"][0]["structural_weight"] > 2.5
 
     # Banned raw misleading stat must be flagged by the 80-rule firewall
@@ -117,31 +124,39 @@ def test_repo4_lumibot_event_broker_kelly_sizing_and_drawdown_breaker() -> None:
     )
     # 1. Valid positive-EV order that cleared the conjunction gate
     filled = broker.evaluate_order_sizing(
-        LumibotPositionOrder("T1", "DraftKings_NFL", model_prob=0.60, decimal_odds=1.95, publish_allowed=True)
+        LumibotPositionOrder(
+            "T1", "DraftKings_NFL", model_prob=0.60, decimal_odds=1.95, publish_allowed=True
+        )
     )
     assert filled["status"] == "FILLED_PARITY_VERIFIED"
     assert 0.0 < filled["stake_dollars"] <= 300.0
 
     # 2. Order blocked by conjunction gate (`publish_allowed=False`)
     passed = broker.evaluate_order_sizing(
-        LumibotPositionOrder("T2", "DraftKings_NFL", model_prob=0.65, decimal_odds=1.95, publish_allowed=False)
+        LumibotPositionOrder(
+            "T2", "DraftKings_NFL", model_prob=0.65, decimal_odds=1.95, publish_allowed=False
+        )
     )
     assert passed["status"] == "PASS_CONJUNCTION_GATE"
     assert passed["stake_dollars"] == 0.0
 
     # 3. Polymarket compliance hold enforcement
     poly = broker.evaluate_order_sizing(
-        LumibotPositionOrder("T3", "Polymarket_Contracts", model_prob=0.70, decimal_odds=2.0, publish_allowed=True)
+        LumibotPositionOrder(
+            "T3", "Polymarket_Contracts", model_prob=0.70, decimal_odds=2.0, publish_allowed=True
+        )
     )
     assert poly["status"] == "REJECTED_COMPLIANCE_HOLD"
 
     # 4. Trigger 12% drawdown -> circuit breaker halts all subsequent sizing and stays latched
     broker.record_settlement(stake_dollars=1200.0, decimal_odds=1.91, won=False)
     assert broker.circuit_breaker_tripped is True
-    # Even if an open winning ticket settles and brings drawdown below 10%, the tripped breaker stays latched
+    # Even if an open winning ticket settles and brings drawdown <10%, breaker stays latched
     broker.record_settlement(stake_dollars=500.0, decimal_odds=2.0, won=True)
     halted = broker.evaluate_order_sizing(
-        LumibotPositionOrder("T4", "DraftKings_NFL", model_prob=0.65, decimal_odds=2.0, publish_allowed=True)
+        LumibotPositionOrder(
+            "T4", "DraftKings_NFL", model_prob=0.65, decimal_odds=2.0, publish_allowed=True
+        )
     )
     assert halted["status"] == "HALTED_DRAWDOWN_CIRCUIT_BREAKER"
 
@@ -154,13 +169,17 @@ def test_repo5_ngboost_fisher_natural_gradient_and_closed_form_crps() -> None:
     y = true_mu + rng.normal(0.0, true_sigma)
 
     # URL 1: NormalLogScore natural gradient boosting
-    ngb_log = NGBoostNaturalGradientDistributionalEngine(n_estimators=35, learning_rate=0.08, score_rule="logscore")
+    ngb_log = NGBoostNaturalGradientDistributionalEngine(
+        n_estimators=35, learning_rate=0.08, score_rule="logscore"
+    )
     fit_log = ngb_log.fit(X, y)
     assert fit_log["nll_improved"] is True
     assert fit_log["final_nll"] < fit_log["initial_nll"]
 
     # URL 2: NormalCRPScore Riemannian natural gradient boosting
-    ngb_crps = NGBoostNaturalGradientDistributionalEngine(n_estimators=30, learning_rate=0.04, score_rule="crps")
+    ngb_crps = NGBoostNaturalGradientDistributionalEngine(
+        n_estimators=30, learning_rate=0.04, score_rule="crps"
+    )
     fit_crps = ngb_crps.fit(X, y)
     assert fit_crps["crps_improved"] is True
     assert fit_crps["mean_crps"] < fit_crps["initial_crps"]
@@ -170,8 +189,12 @@ def test_repo5_ngboost_fisher_natural_gradient_and_closed_form_crps() -> None:
     assert np.all(dist["sigma"] > 0.0)
 
     # Verify closed-form CRPS is non-negative and minimized near y == mu
-    crps_exact = ngb_log.normal_crps_closed_form(np.array([80.0]), np.array([80.0]), np.array([5.0]))[0]
-    crps_far = ngb_log.normal_crps_closed_form(np.array([105.0]), np.array([80.0]), np.array([5.0]))[0]
+    crps_exact = ngb_log.normal_crps_closed_form(
+        np.array([80.0]), np.array([80.0]), np.array([5.0])
+    )[0]
+    crps_far = ngb_log.normal_crps_closed_form(
+        np.array([105.0]), np.array([80.0]), np.array([5.0])
+    )[0]
     assert 0.0 < crps_exact < crps_far
 
 
@@ -200,7 +223,10 @@ def test_repo6_pymc_hierarchical_partial_pooling_and_nuts_hmc() -> None:
 def test_repo7_pyro_reparameterized_autodiagonal_normal_svi() -> None:
     target = np.array([2.5, -1.5])
     svi = PyroReparameterizedSviElboEngine.fit_autodiagonal_normal_svi(
-        log_joint_and_grad=lambda z: (-0.5 * float(np.sum(((z - target) / 0.5) ** 2)), -(z - target) / 0.25),
+        log_joint_and_grad=lambda z: (
+            -0.5 * float(np.sum(((z - target) / 0.5) ** 2)),
+            -(z - target) / 0.25,
+        ),
         dim=2,
         n_steps=85,
         lr=0.08,
@@ -266,12 +292,15 @@ def test_repo9_pgmpy_causal_dag_d_separation_and_do_calculus() -> None:
         factors=[
             (["Z"], np.array([0.6, 0.4])),
             (["Z", "X"], np.array([[0.8, 0.2], [0.1, 0.9]])),
-            (["X", "Z", "Y"], np.array([[[0.30, 0.70], [0.85, 0.15]], [[0.24, 0.76], [0.79, 0.21]]])),
+            (
+                ["X", "Z", "Y"],
+                np.array([[[0.30, 0.70], [0.85, 0.15]], [[0.24, 0.76], [0.79, 0.21]]]),
+            ),
         ],
         query_var="Y",
         evidence={"X": 1},
     )
-    # P(Y=1 | X=1) = (0.76 * 0.2 * 0.6 + 0.21 * 0.9 * 0.4) / (0.2 * 0.6 + 0.9 * 0.4) = 0.1668 / 0.48 = 0.3475
+    # P(Y=1|X=1) = (0.76*0.2*0.6 + 0.21*0.9*0.4) / (0.2*0.6 + 0.9*0.4) = 0.1668/0.48 = 0.3475
     assert abs(ve["posterior_probs"][1] - 0.3475) < 1e-4
 
     # Simpson's paradox / game-script confounding test
@@ -291,7 +320,7 @@ def test_repo10_uber_orbit_bayesian_structural_dlt_lgt_forecaster() -> None:
     y_wave = 20.0 + 2.0 * np.sin(2.0 * math.pi * t / 4.0)
     res = orbit.fit_predict_dlt_lgt(y_wave, horizon=4)
     assert len(res["forecast"]) == 4
-    for lo, mid, hi in zip(res["lower_90"], res["forecast"], res["upper_90"]):
+    for lo, mid, hi in zip(res["lower_90"], res["forecast"], res["upper_90"], strict=False):
         assert lo < mid < hi
         assert 17.0 <= mid <= 23.0
 
@@ -355,12 +384,14 @@ def test_repo12_nixtla_hierarchical_mint_coherent_prop_reconciliation() -> None:
     rng = np.random.default_rng(12)
     residuals = rng.normal(0.0, 2.0, size=(7, 30))
 
-    rec = NixtlaMinTCoherentReconciler.reconcile_mint(S, y_hat, residuals=residuals, method="mint_shrink")
+    rec = NixtlaMinTCoherentReconciler.reconcile_mint(
+        S, y_hat, residuals=residuals, method="mint_shrink"
+    )
     assert rec["coherence_violation_before"] > 0.5
     assert rec["is_coherent"] is True
     assert rec["coherence_violation_after"] < 1e-9
 
-    # Edge case 1: wls_var with single-column (n_obs=1) or zero-variance residuals must not produce NaNs
+    # Edge case 1: wls_var with single-column (n_obs=1) or zero-variance must not produce NaNs
     S_small = np.array([[1.0, 1.0], [1.0, 0.0], [0.0, 1.0]])
     rec_1col = NixtlaMinTCoherentReconciler.reconcile_mint(
         S_small, np.array([10.0, 6.0, 5.0]), residuals=np.ones((3, 1)), method="wls_var"
@@ -388,7 +419,7 @@ def test_repo13_openturns_jansen_sobol_and_hasofer_lind_form() -> None:
 
     # Linear limit state g(R, S) = R - S where R ~ N(200, 15^2), S ~ N(120, 20^2)
     # Exact analytical Hasofer-Lind beta = (200 - 120) / sqrt(15^2 + 20^2) = 80 / 25 = 3.20
-    # On a linear surface, SORM curvature is 0 and SORM failure probability equals FORM failure probability
+    # On a linear surface, SORM curvature is 0 and SORM failure prob equals FORM failure prob
     form = OpenTurnsSobolAndFormReliabilityEngine.solve_hasofer_lind_form_reliability(
         limit_state_g=lambda x: float(x[0] - x[1]),
         means=np.array([200.0, 120.0]),
@@ -412,7 +443,11 @@ def test_repo14_skpro_crps_pinball_coverage_and_harrell_c_index() -> None:
     mu = np.array([50.0, 60.0, 70.0, 80.0, 90.0])
     sigma = np.full(5, 5.0)
     y = np.array([51.0, 58.0, 72.0, 79.0, 91.0])
-    res = SkproProbabilisticMetricsAndSurvivalEngine.evaluate_probabilistic_and_survival_predictions(
+    eval_fn = (
+        SkproProbabilisticMetricsAndSurvivalEngine
+        .evaluate_probabilistic_and_survival_predictions
+    )
+    res = eval_fn(
         y_true=y,
         pred_mu=mu,
         pred_sigma=sigma,
@@ -462,7 +497,7 @@ def test_repo17_movement_primitives_dmp_rk4_and_promp_via_point_conditioning() -
     t = np.linspace(0.0, 1.0, 50)
     demo = 2.0 * (10.0 * (t**3) - 15.0 * (t**4) + 6.0 * (t**5))
 
-    # 1. DMP imitation & goal scaling (imitation_rmse must be evaluated against scaled trajectory, not 0.0)
+    # 1. DMP imitation & goal scaling (imitation_rmse vs scaled trajectory, not 0.0)
     dmp_res = engine.imitate_and_rollout_dmp(t, demo, new_goal=3.0)
     assert dmp_res["goal_convergence_error"] < 0.15
     assert 0.0 < dmp_res["imitation_rmse"] < 0.08
@@ -484,18 +519,24 @@ def test_repo18_wiseodd_cavi_variational_gmm_and_gaussian_process() -> None:
 
     X_tr = np.linspace(0.0, 2.0, 8)[:, None]
     y_tr = np.cos(X_tr[:, 0])
-    gp = WiseoddVariationalAndNonparametricEngine.predict_rbf_gaussian_process(X_tr, y_tr, np.array([[1.0]]))
+    gp = WiseoddVariationalAndNonparametricEngine.predict_rbf_gaussian_process(
+        X_tr, y_tr, np.array([[1.0]])
+    )
     assert abs(gp["posterior_mean"][0] - math.cos(1.0)) < 0.08
 
     # RBM Contrastive Divergence & EBM Hyvärinen Score Matching
     X_bin = (X > 0.0).astype(float)
-    rbm = WiseoddVariationalAndNonparametricEngine.fit_rbm_contrastive_divergence_and_score_matching(X_bin, X)
+    fit_rbm = (
+        WiseoddVariationalAndNonparametricEngine
+        .fit_rbm_contrastive_divergence_and_score_matching
+    )
+    rbm = fit_rbm(X_bin, X)
     assert rbm["rbm_recon_improved"] is True
     assert rbm["final_recon_mse"] < rbm["initial_recon_mse"]
 
 
 def test_repo19_scram_mocus_minimal_cut_sets_and_birnbaum_importance() -> None:
-    # Construct fault tree where Basic Event A is a single-point failure AND also appears in a 2-event cut set {A, B}
+    # Fault tree: Basic Event A is a single-point failure AND in a 2-event cut set {A, B}
     # Boolean absorption MUST eliminate {A, B} and keep only {A} and {C, D}!
     gates = {
         "Top": FaultTreeGate("Top", "OR", ["G1", "G2"]),
@@ -510,12 +551,12 @@ def test_repo19_scram_mocus_minimal_cut_sets_and_birnbaum_importance() -> None:
     # Minimal cut sets must be [['A'], ['C', 'D']] (with ['A', 'B'] absorbed!)
     assert res["minimal_cut_sets"] == [["A"], ["C", "D"]]
     assert res["single_point_failures"] == ["A"]
-    # Exact probability: P(A union (C intersect D)) = 1 - (1 - 0.10) * (1 - 0.30 * 0.40) = 1 - 0.90 * 0.88 = 0.208
+    # P(A union (C intersect D)) = 1 - (1 - 0.10)*(1 - 0.30*0.40) = 1 - 0.90*0.88 = 0.208
     assert abs(res["top_event_probability"] - 0.208) < 1e-6
     assert res["dominant_birnbaum_event"] == "A"
 
     # Stress-test >16 basic events (20 basic events with p=0.20):
-    # Shannon BDD + singleton factorization must compute exact probability 1 - 0.8^20 and Birnbaum 0.8^19
+    # Shannon BDD + singleton factorization gives exact prob 1 - 0.8^20, Birnbaum 0.8^19
     events_20 = [f"E{i:02d}" for i in range(20)]
     gates_20 = {"Top20": FaultTreeGate("Top20", "OR", events_20)}
     probs_20 = {e: 0.20 for e in events_20}

@@ -27,10 +27,8 @@ from __future__ import annotations
 import importlib.util
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-
-import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 _MOD = REPO / "scripts" / "ops" / "migration_observability.py"
@@ -140,8 +138,11 @@ def test_parse_prisma_enums_real_schema_contains_game_status():
 # ---------------------------------------------------------------------------
 
 def test_parse_prisma_schema_includes_enum_typed_field():
-    """Regression: old parser skipped every capitalised type, so `status`
-    (GameStatus) was dropped even though it is a real column."""
+    """Regression: include enum-typed fields in parsed Prisma schema.
+
+    Old parser skipped every capitalised type, so `status` (GameStatus) was
+    dropped even though it is a real column.
+    """
     tables = mo.parse_prisma_schema(PRISMA_SNIPPET)
     assert "status" in tables["games"]
     assert "homeScore" in tables["games"]
@@ -180,8 +181,11 @@ def test_parse_prisma_schema_uses_mapped_table_name():
 # ---------------------------------------------------------------------------
 
 def test_fetch_table_state_keeps_row_with_null_trailing_field(monkeypatch):
-    """Regression: old parser stripped '|' and required 6 fields, so a row
-    with last_autoanalyze NULL (empty trailing field) was dropped."""
+    """Regression: keep rows whose trailing field is NULL.
+
+    Old parser stripped '|' and required 6 fields, so a row with
+    last_autoanalyze NULL (empty trailing field) was dropped.
+    """
     monkeypatch.setattr(mo, "_run", lambda sql: TABLE_STATE)
     state = mo.fetch_table_state()
     assert "odds" in state
@@ -209,9 +213,11 @@ def test_fetch_table_state_keeps_normal_row_and_skips_header(monkeypatch):
 
 
 def test_fetch_table_state_then_never_analyzed_flags_odds(monkeypatch):
-    """End-to-end impact of bug 2: with the rows retained, never_analyzed
-    must flag `odds` (50000 rows, autoanalyze_count=0) instead of
-    reporting zero."""
+    """End-to-end impact of bug 2: retained rows flag unanalyzed tables.
+
+    With the rows retained, never_analyzed must flag `odds` (50000 rows,
+    autoanalyze_count=0) instead of reporting zero.
+    """
     monkeypatch.setattr(mo, "_run", lambda sql: TABLE_STATE)
     state = mo.fetch_table_state()
     result = mo.check_never_analyzed(state)
@@ -246,9 +252,11 @@ def _patch_migrations_dir(monkeypatch, tmp_path):
 
 
 def test_check_migration_drift_uses_chronology_not_lexicographic(monkeypatch, tmp_path):
-    """Baseline sorts BEFORE the old migration lexicographically but was
-    APPLIED after it. A lexicographic comparator would flag the old one;
-    the chronological check must not."""
+    """Baseline sorts BEFORE the old migration lexicographically but was APPLIED after it.
+
+    A lexicographic comparator would flag the old one; the chronological
+    check must not.
+    """
     # Fixture validity: lexicographic order really does disagree here.
     assert BASELINE < OLD_PRE_BASELINE
     _patch_migrations_dir(monkeypatch, tmp_path)
@@ -387,7 +395,7 @@ def test_check_planner_error_ok_when_estimates_agree(monkeypatch):
 
 def test_all_checks_return_standard_shape(monkeypatch, tmp_path):
     _patch_migrations_dir(monkeypatch, tmp_path)
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     migrations = [_mig(BASELINE, now)]
     state = {"odds": {"live": 5000, "dead": 10, "autoanalyze": 1,
                       "autovacuum": 1, "last_autoanalyze": now}}

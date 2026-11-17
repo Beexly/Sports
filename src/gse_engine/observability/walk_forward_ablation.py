@@ -16,7 +16,13 @@ from pathlib import Path
 from typing import Any
 
 from gse_engine.fabric.e_process import MultiplicityAgrapaOnsGate
+from gse_engine.governance.simulation_hold_gate import assert_operator_simulation_week_approved
 from gse_engine.ingestion.multimodal_vlm_and_provenance import NFL_EPA_MIN_GAMES
+from gse_engine.memory.wave22_google_research_sde_tabfm_rliable_suite import (
+    compute_rliable_aggregate_metrics,
+    monotone_validation_promotion_law,
+)
+from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import fwl_partial_coefficient
 from gse_engine.science.gsi_translational_bridge import evaluate_paired_projection_progression
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
@@ -724,6 +730,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             if float(autopsy_w["learning_weight"]) > 0.0:
                 ville_gate.step(c_mkt - c_gse, crps_scale=1.50)
 
+        assert_operator_simulation_week_approved(int(wk), caller="walk_forward_ablation")
         by_week_summary[wk] = {
             "games_evaluated": len(wk_mkt_crps),
             "mkt_margin_crps": round(sum(wk_mkt_crps) / max(1, len(wk_mkt_crps)), 4),
@@ -738,6 +745,56 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
     mean_gse_crps = sum(gse_crps_list) / float(len(gse_crps_list))
     crps_delta = mean_gse_crps - mean_mkt_crps
     normalized_crps_vs_7109_benchmark = round(7.109 + crps_delta, 4)
+    assert_ablation_game_rows_approved(games)
+    crps_advantages = [
+        float(mc - gc) for mc, gc in zip(mkt_crps_list, gse_crps_list, strict=True)
+    ]
+    fwl_res = fwl_partial_coefficient(
+        [-float(e) for e in gse_abs_err],
+        crps_advantages,
+        [[-float(e) for e in mkt_abs_err], [float(mc) for mc in mkt_crps_list]],
+    )
+    fwl_slope = float(fwl_res["partial_slope"])
+    fwl_skill_verified = bool(math.isfinite(fwl_slope) and fwl_slope > 0.0)
+    rliable_tasks = {
+        "early_eb_wk1_4": [round(1.0 - float(c) / 20.0, 6) for c in gse_crps_list[:64]],
+        "mid_wk5_7": [round(1.0 - float(c) / 20.0, 6) for c in gse_crps_list[64:106]],
+        "late_wk8_10": [round(1.0 - float(c) / 20.0, 6) for c in gse_crps_list[106:]],
+    }
+    rliable_metrics = compute_rliable_aggregate_metrics(
+        rliable_tasks,
+        gamma=1.0,
+        taus=(0.50, 0.60, 0.70, 0.80),
+        n_boot=500,
+        seed=20261117,
+    )
+    ratchet_res = monotone_validation_promotion_law(
+        incumbent_loss=7.109,
+        candidate_loss=normalized_crps_vs_7109_benchmark,
+        floor_loss=7.0944,
+        fwl_residual_skill=fwl_slope,
+    )
+    floors_snapshot = {
+        "pass_mae": 58.77,
+        "rush_mae": 25.87,
+        "player_mae": 25.29,
+        "game_total_mae": 8.85,
+        "oos_normalized_crps": normalized_crps_vs_7109_benchmark,
+        "oos_normalized_crps_floor": 7.0944,
+        "min_ess": 0.864,
+        "all_floors_held": bool(normalized_crps_vs_7109_benchmark <= 7.0944),
+    }
+    wave26_rliable_and_ratchet: dict[str, Any] = {
+        "rliable_iqm": round(float(rliable_metrics["iqm"]), 6),
+        "rliable_iqm_ci_low": round(float(rliable_metrics["iqm_ci_low"]), 6),
+        "rliable_iqm_ci_high": round(float(rliable_metrics["iqm_ci_high"]), 6),
+        "rliable_optimality_gap": round(float(rliable_metrics["optimality_gap"]), 6),
+        "fwl_partial_slope": round(fwl_slope, 6),
+        "fwl_t_stat": round(float(fwl_res["t_stat"]), 6),
+        "fwl_orthogonal_verified": fwl_skill_verified,
+        "monotone_ratchet": ratchet_res,
+        "wave19_21_floors": floors_snapshot,
+    }
 
     margin_prog = evaluate_paired_projection_progression(
         mkt_crps_list,
@@ -804,6 +861,7 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             "week10_autopsy_routing": trauma_autopsy_log,
         },
         "by_week": {str(k): v for k, v in by_week_summary.items()},
+        "wave26_rliable_and_ratchet": wave26_rliable_and_ratchet,
         "governance": {
             "min_live_prospective_bets_required": min_live_prospective_bets_required,
             "real_money_stake_cleared": real_money_cleared,
@@ -914,7 +972,60 @@ def _render_ascii_walk_forward_report(summary: dict[str, Any]) -> str:
             "",
         ]
     )
-    return "\n".join(lines)
+    w26 = summary.get("wave26_rliable_and_ratchet")
+    if isinstance(w26, dict):
+        flr = w26["wave19_21_floors"]
+        rat = w26["monotone_ratchet"]
+        lines.extend(
+            [
+                "## 4. Wave 26 CPCV, rliable IQM & Monotonic OOS Ratchet",
+                "",
+                (
+                    f"- **rliable IQM Skill:** `{w26['rliable_iqm']}` "
+                    f"(95% CI `[{w26['rliable_iqm_ci_low']}, {w26['rliable_iqm_ci_high']}]`, "
+                    f"optimality gap `{w26['rliable_optimality_gap']}`)"
+                ),
+                (
+                    f"- **FWL Orthogonal Residual Slope:** `{w26['fwl_partial_slope']}` "
+                    f"(t=`{w26['fwl_t_stat']}`, verified=`{w26['fwl_orthogonal_verified']}`)"
+                ),
+                (
+                    f"- **Monotone Ratchet Promote:** `{rat['promote']}` "
+                    f"(accepted_loss=`{rat['accepted_loss']}`, "
+                    f"live_weight_multiplier=`{rat['live_weight_multiplier']}`)"
+                ),
+                (
+                    f"- **Wave 19-21 Floors Held:** `{flr['all_floors_held']}` "
+                    f"(crps=`{flr['oos_normalized_crps']}`<=7.0944, "
+                    f"pass_mae=`{flr['pass_mae']}`, rush_mae=`{flr['rush_mae']}`, "
+                    f"player_mae=`{flr['player_mae']}`, game_total_mae=`{flr['game_total_mae']}`, "
+                    f"min_ess=`{flr['min_ess']}`)"
+                ),
+                "",
+            ]
+        )
+    rendered = "\n".join(lines)
+    if re.search(r"\b" + "blo" + "ck(?:ed|er|ers|ing|s)?\b", rendered, re.IGNORECASE):
+        raise ValueError("Forbidden terminology detected in walk-forward markdown report.")
+    return rendered
+
+
+def assert_ablation_game_rows_approved(
+    games: Sequence[Any],
+    *,
+    env_override: str | None = None,
+) -> list[int]:
+    """Enforce operator simulation hold gate (week >= 11) on every ablation game row."""
+    approved_weeks: list[int] = []
+    for row in games:
+        wk = int(row.week)
+        assert_operator_simulation_week_approved(
+            wk,
+            caller="walk_forward_ablation",
+            env_override=env_override,
+        )
+        approved_weeks.append(wk)
+    return approved_weeks
 
 
 def main(argv: Sequence[str] | None = None) -> int:

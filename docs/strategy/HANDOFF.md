@@ -3,6 +3,35 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Waves 22-27 Overnight Execution Complete (221/221 WIRED_V3, G_doc DAG, rliable/FWL Ratchet & 170-Trajectory RLVR)
+
+- **What changed**:
+  - **Wave 22 Cross-Branch Salvage & 12-Vault Cross-Link (`LL-2026-11-17-043`)**:
+    - Built `scripts/ops/wave22_cross_branch_rlvr_salvage.py` (read-only `git cat-file` plumbing across `43` sibling refs, `968` files, `1,417,408` lines, `0` unparsable) emitting `20,000` pure-ASCII Winnowing-deduped AP-06-clean RLVR records to `brain/feeds/2026-11-17/cross_branch_salvaged_rlvr_feed.jsonl` and manifest `data/engine/wave22_cross_branch_salvage_manifest.json`.
+    - Wired `build_vault_crosslink_graph` and `exact_substring_dedup` via `src/gse_engine/memory/wave22_cross_branch_salvage_and_vault_crosslink_suite.py` across 12 vaults inside `monorepo_omnibus_vault_indexer.py` and `knowledge_continuity_and_gsi_rlvr_flywheel.py`.
+  - **Wave 23 221/221 WIRED_V3 Registry & Social Spoof Quarantine (`LL-2026-11-17-044`)**:
+    - Expanded `docs/data-sources/research/2026-11-15/oss-corpus-registry.json` from `169` to **`221/221` unique `WIRED_V3` entries across `241` submitted URLs** (incorporating `#170..#196` Google Research SDE/`TabFM`/`rliable`/`ERA`/`Artemis`/`Google-Health`/`AI Studio`, `#197..#211` `PyG`/`DGL`/`torchsde`/`NGBoost`/`EBM`/`litstudy`/`VOSviewer`/`BERTopic`/`P_spoof` Hawkes+Dawid-Skene, and `#212..#221` `llm-d`/`DSPy`/`NVlabs/Sana`/`StyleGAN`/`tiny-cuda-nn`), with `live_stage2_weight = 0.0` social quarantine in `wave22_google_research_sde_tabfm_rliable_suite.py` and `wave23_boosting_graph_literature_and_spoof_quarantine_suite.py`.
+  - **Wave 24 Full-Corpus Theorem-to-AST Dependency DAG & 4-Way `G_doc` RRF (`LL-2026-11-17-045`)**:
+    - Built `src/gse_engine/memory/wave24_theorem_ast_dependency_graph_suite.py` and compiled `data/engine/wave24_theorem_ast_dependency_index_2026_11_17.json` (`383,456` nodes, `248,720` edges, `is_dag=True` spanning `503` books, `877` PDFs, `2,949` theorems, `21,419` equations, `12,558` Foundry files / `50,656` primitives, and `58,486` Sovereign primitives; `5` `G_fire`-quarantined nodes; `sympy_six_regime_limit_screen` across 6 regimes), upgrading `hybrid_rrf_corpus_and_arxiv_retriever` in `corpus_situational_integrator.py`.
+  - **Wave 25 Workstreams 2-4 Unified Bridge & Kyle-Lambda Devig (`LL-2026-11-17-046`)**:
+    - Added `kyle_lambda_liquidity_devig` (`cleared=False` hold enforced) and `evaluate_wave25_workstreams_bridge` (`30` finite scalars, cached, `live_stage2_weight=0.0`) inside `src/gse_engine/memory/wave25_situational_tracking_biomech_fwl_suite.py`, wired directly into Stage-2 `corpus_situational_integrator.py` and registered in `scripts/guardrails/pre_sim_total_intelligence_gate.py`.
+  - **Wave 26 Weeks 1..10 `rliable`/FWL Ratchet & 5-League Directional Engine (`LL-2026-11-17-047`)**:
+    - Enforced per-row `assert_operator_simulation_week_approved(g.week)` (`OPERATOR_SIM_HOLD` for week `>= 11`) in `src/gse_engine/observability/walk_forward_ablation.py`, wired `compute_rliable_aggregate_metrics` (`IQM=0.732011`), `fwl_partial_coefficient` (`slope=+1.387033`, `t=20.498`), `monotone_validation_promotion_law` (`promote=True` at `oos_normalized_crps=7.0944<=7.0944`), Wave 19-21 floor tracking (`pass_mae=58.77`, `rush_mae=25.87`, `player_mae=25.29`, `game_total_mae=8.85`, `min_ess=0.864`), and refreshed `data/eval/weeks1_to_10_walk_forward_ablation_2026.json` plus `docs/predictions/research/2026-11-16/weeks1_to_10_walk_forward_ablation_report.md`.
+    - Upgraded `src/gse_engine/multisport/daily_multisport_slate_engine.py` and `src/gse_engine/multisport/__init__.py` with 5th league `MLB` (`_simulate_mlb_10k` + `fetch_365_day_five_league_slate`), `DirectionalBcAciState`, `compute_frechet_hoeffding_joint_bounds` clamping inside `price_copula_conformal_sgp`, `circadian_shift_hours` / `altitude_m` modifiers, and `evaluate_multisport_sabermetrics_and_pitch_control_overlay`; added `MULTISPORT_ISR_REVALIDATE_SECONDS = 900` and `buildProgrammaticMultisportSlateSeoBundle` in `apps/web/lib/seo/programmatic-matchup-and-player-seo.ts`.
+  - **Wave 27 170-Trajectory Monotone Deduped RLVR & 8-Benchmark Parity (`LL-2026-11-17-048`)**:
+    - Upgraded `src/gse_engine/memory/knowledge_continuity_and_gsi_rlvr_flywheel.py` to compile `170` `exact_substring_dedup`-verified, monotone-ordered (`TIER_1_FOUNDATION: 58`, `TIER_2_SYNTHESIS: 56`, `TIER_3_BEHEMOTH: 56`) self-verified trajectories emitted exclusively to `brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl` and `brain/feeds/2026-11-17/gse_to_gsi_overnight_rlvr_feed.jsonl`, integrated with Axolotl multipack, TRL GRPO KL, lm-eval byte-normalized Brier, expanded AP-06 odds regex, and 8-benchmark (`450`-item, `CalibBench_100` Frechet-valid, `100.0` composite) verification.
+
+- **What was proven**:
+  - `ruff check`, `mypy --strict src/gse_engine` (`76` files), all Wave 9 / 19-27 + multisport + continuity + orchestrator + K01-K25 pytest suites, `pre_sim_total_intelligence_gate.py --self-test` (`221` OSS entries, `dead_leaf_unwired_pre_sim_modules=[]`, `all_jacobians_nonzero=True`), `em-dash-scan.mjs`, `trust-gate.mjs`, and Vitest (`8/8` tests) all exited `0`.
+
+- **What was not proven**:
+  - Forward Week 11+ NFL simulations remain halted under `OperatorSimulationHoldError`, prediction-market execution stays compliant under `cleared=False`, and `real_money_stake_cleared` remains `False` (`0.0u`).
+
+- **What the next role must do**:
+  - Keep Week 11+ hold and prediction-market compliance hold intact until explicit operator and counsel approvals arrive; promote challenger Stage-2 scalars only when Weeks `1..10` CPCV FWL residual skill and OOS CRPS ratchets hold monotonically.
+
+---
+
 ## 2026-11-17 (2026-11-16 CT) -- 46-Vault & 46/46 Continuity (12,558 Foundry), Wave 20-21 (169/169 WIRED_V3) & Compliance/Week 11+ Holds
 
 - **What changed**:

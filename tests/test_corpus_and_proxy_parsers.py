@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Pytest verification suite for corpus parsers, proxy HTML sources, BDB2025 shell calibration,
-15,947-pick replay vs 16-5 dual-panel ledger audit, and 877/877 PDF hydration.
+"""Pytest verification suite for corpus parsers, proxy HTML sources, and BDB2025 shell calibration.
+
+Also covers 15,947-pick replay vs 16-5 dual-panel ledger audit, and 877/877 PDF hydration.
 """
 from __future__ import annotations
 
@@ -30,11 +31,13 @@ def test_public_proxy_rates_values() -> None:
 
 
 def test_batches_5_7_160_works_and_877_pdfs_hydrated() -> None:
-    b57 = json.loads((ROOT / "data/research/batches_5_7_works_2026_11_05.json").read_text(encoding="utf-8"))
+    b57_path = ROOT / "data/research/batches_5_7_works_2026_11_05.json"
+    b57 = json.loads(b57_path.read_text(encoding="utf-8"))
     works = b57 if isinstance(b57, list) else b57.get("works", [])
     assert len(works) == 160
 
-    idx63 = json.loads((ROOT / "data/research/index_batch3_items_2026_11_05.json").read_text(encoding="utf-8"))
+    idx63_path = ROOT / "data/research/index_batch3_items_2026_11_05.json"
+    idx63 = json.loads(idx63_path.read_text(encoding="utf-8"))
     items = idx63 if isinstance(idx63, list) else idx63.get("items", [])
     assert len(items) == 63
 

@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.architecture.unified_quantitative_nfl_architecture import (
+from intelligence.architecture.unified_quantitative_nfl_architecture import (  # noqa: E402
     american_to_raw_implied_prob,
     cfbd_piecewise_line_yards,
     compute_cfbd_opponent_adjusted_line_yards,
@@ -30,7 +30,7 @@ from intelligence.architecture.unified_quantitative_nfl_architecture import (
     solve_nflfastr_pr618_net_ep,
     student_t_upper_tail_dependence,
 )
-from intelligence.equations.honest_equation_executor import (
+from intelligence.equations.honest_equation_executor import (  # noqa: E402
     STATUS_PARSED_EVALUATED,
     STATUS_PARSED_SYMBOLIC_ONLY,
     STATUS_UNPARSEABLE,
@@ -41,12 +41,16 @@ from intelligence.equations.honest_equation_executor import (
 class TestUnifiedQuantitativeNflArchitecture(unittest.TestCase):
     def test_honest_equation_executor_never_fabricates_bindings(self) -> None:
         # Pure numeric expression evaluates without bindings
-        r_num = parse_and_execute_honestly(r"\frac{12 + 4}{2^2}", bindings=None, allow_domain_probe=False)
+        r_num = parse_and_execute_honestly(
+            r"\frac{12 + 4}{2^2}", bindings=None, allow_domain_probe=False
+        )
         self.assertEqual(r_num.status, STATUS_PARSED_EVALUATED)
         self.assertAlmostEqual(float(r_num.evaluated_value or 0.0), 4.0, places=9)
 
-        # Symbolic expression with free symbols stays PARSED_SYMBOLIC_ONLY when bindings are omitted
-        r_sym = parse_and_execute_honestly(r"WOPR = 1.5 \cdot TS + 0.7 \cdot AYS", bindings=None, allow_domain_probe=False)
+        # Symbolic expression with free symbols stays PARSED_SYMBOLIC_ONLY when bindings omitted
+        r_sym = parse_and_execute_honestly(
+            r"WOPR = 1.5 \cdot TS + 0.7 \cdot AYS", bindings=None, allow_domain_probe=False
+        )
         self.assertEqual(r_sym.status, STATUS_PARSED_SYMBOLIC_ONLY)
         self.assertIsNone(r_sym.evaluated_value)
         self.assertIn("TS", r_sym.free_symbols)
@@ -93,9 +97,15 @@ class TestUnifiedQuantitativeNflArchitecture(unittest.TestCase):
         self.assertAlmostEqual(vf_200["clock_remaining_at_turnover_s"], 0.0, places=1)
         self.assertTrue(vf_200["kill_guaranteed"])
 
-        self.assertTrue(simulate_victory_formation_rule4(86.0, defensive_timeouts=1)["kill_guaranteed"])
-        self.assertTrue(simulate_victory_formation_rule4(46.0, defensive_timeouts=2)["kill_guaranteed"])
-        self.assertTrue(simulate_victory_formation_rule4(6.0, defensive_timeouts=3)["kill_guaranteed"])
+        self.assertTrue(
+            simulate_victory_formation_rule4(86.0, defensive_timeouts=1)["kill_guaranteed"]
+        )
+        self.assertTrue(
+            simulate_victory_formation_rule4(46.0, defensive_timeouts=2)["kill_guaranteed"]
+        )
+        self.assertTrue(
+            simulate_victory_formation_rule4(6.0, defensive_timeouts=3)["kill_guaranteed"]
+        )
 
     def test_sinkhorn_and_entropic_tilting_machine_precision(self) -> None:
         seed = np.array(
@@ -126,8 +136,22 @@ class TestUnifiedQuantitativeNflArchitecture(unittest.TestCase):
 
     def test_nflfastr_pr618_cfbd_line_yards_and_injury_dropoff_fix(self) -> None:
         pr618 = solve_nflfastr_pr618_net_ep(
-            {"td": 0.375, "opp_td": 0.195, "fg": 0.235, "opp_fg": 0.135, "safety": 0.004, "opp_safety": 0.003},
-            {"td": 0.415, "opp_td": 0.175, "fg": 0.250, "opp_fg": 0.115, "safety": 0.003, "opp_safety": 0.003},
+            {
+                "td": 0.375,
+                "opp_td": 0.195,
+                "fg": 0.235,
+                "opp_fg": 0.135,
+                "safety": 0.004,
+                "opp_safety": 0.003,
+            },
+            {
+                "td": 0.415,
+                "opp_td": 0.175,
+                "fg": 0.250,
+                "opp_fg": 0.115,
+                "safety": 0.003,
+                "opp_safety": 0.003,
+            },
             season=2026,
             half_seconds_remaining=900.0,
             exact_w=True,
@@ -147,7 +171,9 @@ class TestUnifiedQuantitativeNflArchitecture(unittest.TestCase):
             {"posteam": "SEA", "defteam": "LA", "yards_gained": 2.0},
         ] * 25
         ly = compute_cfbd_opponent_adjusted_line_yards(plays)
-        self.assertGreater(ly["LA"]["opp_adjusted_off_line_yards"], ly["SEA"]["opp_adjusted_off_line_yards"])
+        self.assertGreater(
+            ly["LA"]["opp_adjusted_off_line_yards"], ly["SEA"]["opp_adjusted_off_line_yards"]
+        )
 
         # Hermes Oct 30 role-key fix
         self.assertEqual(map_injury_designation_to_dropoff_bucket("LT"), "OL")
@@ -156,7 +182,9 @@ class TestUnifiedQuantitativeNflArchitecture(unittest.TestCase):
         self.assertEqual(map_injury_designation_to_dropoff_bucket("EDGE1"), "DEF")
 
     def test_physics_circadian_tail_dep_and_conservation(self) -> None:
-        rho_den = humid_air_density_kg_m3(temp_c=12.0, relative_humidity_0_1=0.30, elevation_m=1609.0)
+        rho_den = humid_air_density_kg_m3(
+            temp_c=12.0, relative_humidity_0_1=0.30, elevation_m=1609.0
+        )
         rho_mun = humid_air_density_kg_m3(temp_c=7.0, relative_humidity_0_1=0.78, elevation_m=520.0)
         rho_sea = humid_air_density_kg_m3(temp_c=20.0, relative_humidity_0_1=0.65, elevation_m=5.0)
         self.assertLess(rho_den, rho_mun)

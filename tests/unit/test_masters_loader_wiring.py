@@ -18,7 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.ingestion.masters_loader import (
+from intelligence.ingestion.masters_loader import (  # noqa: E402
     build_or_load_index,
     resolve_masters_paths,
 )
@@ -127,7 +127,10 @@ class TestStage6ConsumesMasters(unittest.TestCase):
 
         spec = importlib.util.spec_from_file_location(
             "run_tuesday_week9_autopsy_and_week10_unified_projections",
-            REPO_ROOT / "scripts" / "ops" / "run_tuesday_week9_autopsy_and_week10_unified_projections.py",
+            REPO_ROOT
+            / "scripts"
+            / "ops"
+            / "run_tuesday_week9_autopsy_and_week10_unified_projections.py",
         )
         tuesday = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(tuesday)
@@ -145,7 +148,9 @@ class TestStage6ConsumesMasters(unittest.TestCase):
             f"expected at least one live masters check to match; checks={link['checks']}",
         )
         devig_check = next(
-            c for c in link["checks"] if c["check"] == "devig_multiplicative_vs_master_normalization"
+            c
+            for c in link["checks"]
+            if c["check"] == "devig_multiplicative_vs_master_normalization"
         )
         self.assertTrue(devig_check["match"], f"devig/master check failed: {devig_check}")
         self.assertIn("master_row_id", devig_check)

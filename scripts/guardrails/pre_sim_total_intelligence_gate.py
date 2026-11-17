@@ -95,6 +95,11 @@ MASTER_PLAN_V3_REQUIRED_ARTIFACTS: dict[str, list[str]] = {
         "src/gse_engine/memory/wave20_openviking_ragas_bayesian_and_graph_suite.py",
         "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py",
         "src/gse_engine/memory/wave21_tracking_biomech_rlvr_and_market_hold_suite.py",
+        "src/gse_engine/memory/wave22_cross_branch_salvage_and_vault_crosslink_suite.py",
+        "src/gse_engine/memory/wave22_google_research_sde_tabfm_rliable_suite.py",
+        "src/gse_engine/memory/wave23_boosting_graph_literature_and_spoof_quarantine_suite.py",
+        "src/gse_engine/memory/wave24_theorem_ast_dependency_graph_suite.py",
+        "src/gse_engine/memory/wave25_situational_tracking_biomech_fwl_suite.py",
         "src/gse_engine/cli.py",
         "packages/prediction-engine/src/ensemble/remote-model-client.ts",
     ],
@@ -233,6 +238,31 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave21_tracking_biomech_rlvr_and_market_hold_suite",
         "src/gse_engine/memory/wave21_tracking_biomech_rlvr_and_market_hold_suite.py",
     ),
+    (
+        "Pillar1_Wave22_CrossBranch_Salvage_Vault_Crosslink",
+        "wave22_cross_branch_salvage_and_vault_crosslink_suite",
+        "src/gse_engine/memory/wave22_cross_branch_salvage_and_vault_crosslink_suite.py",
+    ),
+    (
+        "Pillar1_Wave23_GoogleResearch_SDE_TabFM_Rliable",
+        "wave22_google_research_sde_tabfm_rliable_suite",
+        "src/gse_engine/memory/wave22_google_research_sde_tabfm_rliable_suite.py",
+    ),
+    (
+        "Pillar1_Wave23_Boosting_GraphLit_PSpoofQuarantine",
+        "wave23_boosting_graph_literature_and_spoof_quarantine_suite",
+        "src/gse_engine/memory/wave23_boosting_graph_literature_and_spoof_quarantine_suite.py",
+    ),
+    (
+        "Pillar1_Wave24_TheoremAST_DependencyGraph_SymPy",
+        "wave24_theorem_ast_dependency_graph_suite",
+        "src/gse_engine/memory/wave24_theorem_ast_dependency_graph_suite.py",
+    ),
+    (
+        "Pillar1_Wave25_Situational_Tracking_Biomech_FWL",
+        "wave25_situational_tracking_biomech_fwl_suite",
+        "src/gse_engine/memory/wave25_situational_tracking_biomech_fwl_suite.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
@@ -245,7 +275,7 @@ CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
     (
         "OSS_Ecosystem_Registry",
         "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
-        169,
+        221,
     ),
     ("Permanent_Lessons_Ledger", "data/engine/lessons_learned_permanent_ledger.jsonl", 20),
     (

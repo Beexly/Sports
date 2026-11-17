@@ -37,7 +37,14 @@ WIRED_TESTS = (
 def _records():
     rows = []
     present = [path for path in FEEDS if path.is_file()]
-    assert (ROOT / "brain" / "feeds" / "2026-11-02" / "nov02_multidomain_corpus_and_equations_feed.jsonl") in present
+    expected_feed = (
+        ROOT
+        / "brain"
+        / "feeds"
+        / "2026-11-02"
+        / "nov02_multidomain_corpus_and_equations_feed.jsonl"
+    )
+    assert expected_feed in present
     for path in present:
         for line in path.read_text(encoding="utf-8").splitlines():
             if line.strip():

@@ -10,7 +10,7 @@ import json
 import os
 import socket
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -41,9 +41,8 @@ def test_acquire_on_fresh_path(tmp_path, rl):
 def test_second_acquire_raises_lockheld(tmp_path, rl):
     p = tmp_path / "t.lock"
     with rl.RunLock(p, task="first"):
-        with pytest.raises(rl.LockHeld) as exc:
-            with rl.RunLock(p, task="second"):
-                pass
+        with pytest.raises(rl.LockHeld) as exc, rl.RunLock(p, task="second"):
+            pass
         assert exc.value.holder["task"] == "first"
 
 
@@ -60,7 +59,7 @@ def test_stale_lock_with_dead_pid_is_taken_over(tmp_path, rl):
     p.write_text(json.dumps({
         "pid": 999999999,  # certainly not running
         "host": socket.gethostname(),
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
         "task": "crashed",
     }))
     with rl.RunLock(p, task="new") as lock:
@@ -70,7 +69,7 @@ def test_stale_lock_with_dead_pid_is_taken_over(tmp_path, rl):
 
 def test_old_lock_is_taken_over_even_if_pid_alive(tmp_path, rl):
     p = tmp_path / "t.lock"
-    old = (datetime.now(timezone.utc) - timedelta(hours=12)).isoformat()
+    old = (datetime.now(UTC) - timedelta(hours=12)).isoformat()
     p.write_text(json.dumps({
         "pid": os.getpid(),  # alive, but the lock is ancient
         "host": socket.gethostname(),
@@ -93,7 +92,7 @@ def test_non_numeric_pid_is_reclaimed(tmp_path, rl):
     p = tmp_path / "t.lock"
     p.write_text(json.dumps({
         "pid": "not-a-number", "host": socket.gethostname(),
-        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+        "started_at": datetime.now(UTC).isoformat(), "task": "half",
     }))
     with rl.RunLock(p, task="new") as lock:
         assert lock.acquired
@@ -103,7 +102,7 @@ def test_null_pid_is_reclaimed(tmp_path, rl):
     p = tmp_path / "t.lock"
     p.write_text(json.dumps({
         "pid": None, "host": socket.gethostname(),
-        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+        "started_at": datetime.now(UTC).isoformat(), "task": "half",
     }))
     with rl.RunLock(p, task="new") as lock:
         assert lock.acquired
@@ -113,7 +112,7 @@ def test_missing_pid_is_reclaimed(tmp_path, rl):
     p = tmp_path / "t.lock"
     p.write_text(json.dumps({
         "host": socket.gethostname(),
-        "started_at": datetime.now(timezone.utc).isoformat(), "task": "half",
+        "started_at": datetime.now(UTC).isoformat(), "task": "half",
     }))
     with rl.RunLock(p, task="new") as lock:
         assert lock.acquired
@@ -124,12 +123,11 @@ def test_foreign_host_lock_is_not_stolen(tmp_path, rl):
     p.write_text(json.dumps({
         "pid": 1,
         "host": "some-other-machine",
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
         "task": "remote",
     }))
-    with pytest.raises(rl.LockHeld):
-        with rl.RunLock(p, task="local"):
-            pass
+    with pytest.raises(rl.LockHeld), rl.RunLock(p, task="local"):
+        pass
 
 
 def test_acquire_or_none_returns_none_when_held(tmp_path, rl):
@@ -201,7 +199,7 @@ def test_exit_does_not_delete_another_processes_lock(tmp_path, rl):
     p.write_text(json.dumps({
         "pid": os.getpid() + 1,
         "host": socket.gethostname(),
-        "started_at": datetime.now(timezone.utc).isoformat(),
+        "started_at": datetime.now(UTC).isoformat(),
         "task": "theirs",
     }))
     ours.__exit__(None, None, None)

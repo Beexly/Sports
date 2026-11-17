@@ -1,18 +1,26 @@
-"""Unit tests verifying Fleet Agent 2 deep-read and live engine wiring across:
-1. Grok / xAI data (71 xAI waves, 457 coupled omniscience nodes, Grok export archive, universal metrics & 5 second-order kernels)
-2. Muse / Motif data (v5.3.0 book-path vs signal-path calibration, -285/-300 heavy-juice & PASS gate, 5B narrative hierarchy, beat desk, prop alignment, context matrix, 373 OpenAI math families, 1,116 textbooks, 21 Motif papers)
-3. Competitive Intel (nuke_calibration, ETR 35-contest 9,570-lineup solver audit, Two-Wave lineup simulation, 310 competitor dossiers, 30 Hermes competitor-intel files)
-4. Agent Bus & Wiring contracts (797 Agent Bus & coordination files across 6 channels: docs/wiring/inbox, docs/wiring, docs/ops, brain, ~/.hermes/plans, ~/.claude/plans)
-5. Two-Host Rule enforcement (zero hardcoded local host paths in intelligence/*.py or verification artifacts).
+"""Unit tests verifying Fleet Agent 2 deep-read and live engine wiring.
+
+1. Grok / xAI data (71 xAI waves, 457 coupled omniscience nodes, Grok export archive,
+   universal metrics & 5 second-order kernels)
+2. Muse / Motif data (v5.3.0 book-path vs signal-path calibration, -285/-300 heavy-juice
+   & PASS gate, 5B narrative hierarchy, beat desk, prop alignment, context matrix,
+   373 OpenAI math families, 1,116 textbooks, 21 Motif papers)
+3. Competitive Intel (nuke_calibration, ETR 35-contest 9,570-lineup solver audit,
+   Two-Wave lineup simulation, 310 competitor dossiers, 30 Hermes competitor-intel files)
+4. Agent Bus & Wiring contracts (797 Agent Bus & coordination files across 6 channels:
+   docs/wiring/inbox, docs/wiring, docs/ops, brain, ~/.hermes/plans, ~/.claude/plans)
+5. Two-Host Rule enforcement (zero hardcoded local host paths in intelligence/*.py
+   or verification artifacts).
 """
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import importlib.util
 import json
-from pathlib import Path
 import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -86,7 +94,9 @@ def test_receipt_exists_and_all_referenced_paths_resolve() -> None:
         "hermes",
         "claude",
     ):
-        assert loc_key in cross_loc, f"Missing external surface in cross_location_inventory: {loc_key}"
+        assert loc_key in cross_loc, (
+            f"Missing external surface in cross_location_inventory: {loc_key}"
+        )
     assert len(cross_loc["hermes"]["competitor_intel_dossiers"]) == 10
     assert len(cross_loc["hermes"]["competitor_intel_raw_probes"]) == 20
 
@@ -121,7 +131,9 @@ def test_receipt_exists_and_all_referenced_paths_resolve() -> None:
         + bd["prop_alignment_targets"]
         + bd["context_matrix_targets"]
     ):
-        assert (REPO_ROOT / p).exists(), f"Missing Beat Desk / Prop Alignment / Context Matrix file: {p}"
+        assert (
+            REPO_ROOT / p
+        ).exists(), f"Missing Beat Desk / Prop Alignment / Context Matrix file: {p}"
 
     muse_math = mm["muse_373_math_families_and_1116_textbooks"]
     for p in muse_math["artifacts"] + muse_math["live_engine_targets"]:
@@ -134,8 +146,12 @@ def test_receipt_exists_and_all_referenced_paths_resolve() -> None:
         + ci["nuke_calibration_and_nuke_dfs_hub"]["live_engine_targets"]
         + ci["etr_35_contest_9570_lineup_solver_audit"]["research_docs"]
         + ci["etr_35_contest_9570_lineup_solver_audit"]["live_engine_targets"]
-        + ci["two_wave_lineup_simulation"]["wave_1_player_pool_and_joint_trajectory_simulation"]["files"]
-        + ci["two_wave_lineup_simulation"]["wave_2_lineup_vs_field_contest_matrix_simulation"]["files"]
+        + ci["two_wave_lineup_simulation"]["wave_1_player_pool_and_joint_trajectory_simulation"][
+            "files"
+        ]
+        + ci["two_wave_lineup_simulation"][
+            "wave_2_lineup_vs_field_contest_matrix_simulation"
+        ]["files"]
         + ci["comp_intel_310_dossier_adapter"]["files"]
     ):
         assert (REPO_ROOT / p).exists(), f"Missing Competitive Intel file: {p}"
@@ -143,7 +159,9 @@ def test_receipt_exists_and_all_referenced_paths_resolve() -> None:
     # 4. Verify Agent Bus repo paths and omniverse manifest
     ab = receipt["agent_bus_inventory_and_wiring"]
     omniverse_manifest = REPO_ROOT / ab["omniverse_manifest_path"]
-    assert omniverse_manifest.exists(), f"Missing omniverse manifest: {ab['omniverse_manifest_path']}"
+    assert omniverse_manifest.exists(), (
+        f"Missing omniverse manifest: {ab['omniverse_manifest_path']}"
+    )
     for p in ab["core_files"] + ab["live_engine_targets"]:
         assert (REPO_ROOT / p).exists(), f"Missing Agent Bus file: {p}"
 
@@ -230,7 +248,7 @@ def test_grok_xai_universal_metrics_second_order_kernels_and_mega_sweep_wired() 
     assert cliff["script_cliff_epa_delta"] < -0.40
     assert "steam_vs_headfake_posterior_prob" in ref or len(ref) > 0
 
-    # Verify Mega-Sweep 2026-11-06 5-track, L5 order (OL -> scheme -> coaching -> QB -> trust), and Step 2 health
+    # Verify Mega-Sweep 2026-11-06 5-track, L5 order (OL->scheme->coaching->QB->trust), & health
     assert len(MANDATORY_FIVE_TRACKS) == 5
     assert MANDATORY_L5_SYNTHESIS_ORDER[:2] == ("3_offensive_line", "5_scheme_matchup")
     assert len(MANDATORY_SEVEN_STEP_WEEKLY_CYCLE) == 7
@@ -255,20 +273,32 @@ def test_grok_xai_universal_metrics_second_order_kernels_and_mega_sweep_wired() 
 
 
 def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wired() -> None:
-    scoring_ts = (REPO_ROOT / "packages/prediction-engine/src/scoring.ts").read_text(encoding="utf-8")
-    tail_shrink_ts = (REPO_ROOT / "packages/prediction-engine/src/book-path-tail-shrink.ts").read_text(encoding="utf-8")
-    signal_slate_ts = (REPO_ROOT / "packages/ingestion-pipeline/src/generate-signal-slate.ts").read_text(encoding="utf-8")
+    scoring_ts = (REPO_ROOT / "packages/prediction-engine/src/scoring.ts").read_text(
+        encoding="utf-8"
+    )
+    tail_shrink_ts = (
+        REPO_ROOT / "packages/prediction-engine/src/book-path-tail-shrink.ts"
+    ).read_text(encoding="utf-8")
+    signal_slate_ts = (
+        REPO_ROOT / "packages/ingestion-pipeline/src/generate-signal-slate.ts"
+    ).read_text(encoding="utf-8")
     steelers_test_ts = (
         REPO_ROOT / "packages/prediction-engine/src/__tests__/steelers-ml-285-regression.test.ts"
     ).read_text(encoding="utf-8")
     narrative_ts = (
-        REPO_ROOT / "packages/prediction-engine/src/signals/narrative/contract-incentives-milestones.ts"
+        REPO_ROOT
+        / "packages/prediction-engine/src/signals/narrative/"
+        "contract-incentives-milestones.ts"
     ).read_text(encoding="utf-8")
     narrative_signal_ts = (
         REPO_ROOT / "packages/prediction-engine/src/narrative-signal.ts"
     ).read_text(encoding="utf-8")
-    web_narrative_ts = (REPO_ROOT / "apps/web/lib/conviction/signals/narrative-incentive.ts").read_text(encoding="utf-8")
-    web_prop_ts = (REPO_ROOT / "apps/web/lib/conviction/signals/prop-alignment.ts").read_text(encoding="utf-8")
+    web_narrative_ts = (
+        REPO_ROOT / "apps/web/lib/conviction/signals/narrative-incentive.ts"
+    ).read_text(encoding="utf-8")
+    web_prop_ts = (
+        REPO_ROOT / "apps/web/lib/conviction/signals/prop-alignment.ts"
+    ).read_text(encoding="utf-8")
 
     # 1. Book-path vs Signal-path calibration separation
     assert "pricesWorseThanMarket" in scoring_ts
@@ -295,9 +325,17 @@ def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wire
     assert board["heavy_juice_minus_300_trap_blocked"] is True
     by_id = {row["ticket_id"]: row for row in board["passed_tickets"]}
     assert by_id["TKT-GATE-REGRESSION-PASS-08"]["publishAllowed"] is False
-    assert by_id["TKT-GATE-REGRESSION-PASS-08"]["gate_checks"]["stage1_independent_edge_not_pass"] is False
+    assert (
+        by_id["TKT-GATE-REGRESSION-PASS-08"]["gate_checks"]["stage1_independent_edge_not_pass"]
+        is False
+    )
     assert by_id["TKT-HEAVY-JUICE-MINUS-320-TRAP-09"]["publishAllowed"] is False
-    assert by_id["TKT-HEAVY-JUICE-MINUS-320-TRAP-09"]["gate_checks"]["stage0_not_heavy_juice_minus_250_or_300_trap"] is False
+    assert (
+        by_id["TKT-HEAVY-JUICE-MINUS-320-TRAP-09"]["gate_checks"][
+            "stage0_not_heavy_juice_minus_250_or_300_trap"
+        ]
+        is False
+    )
 
     # 3. Motif 21-Paper + 13-Dataset CQR & Kadavath P(IK) Engine live execution
     from intelligence.engine.motif_21papers_13datasets_cqr_and_pik_engine import (
@@ -319,9 +357,10 @@ def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wire
     assert "voided after the Nov 5 engine failure" in VOIDED_RECORD_NOTICE
 
     motif_receipt = json.loads(
-        (REPO_ROOT / "data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json").read_text(
-            encoding="utf-8"
-        )
+        (
+            REPO_ROOT
+            / "data/audits/motif_5_build_items_cqr_clv_pik_verification_2026_11_06.json"
+        ).read_text(encoding="utf-8")
     )
     assert motif_receipt["gateway_calibration_table"]["kadavath_pik_threshold"] == 0.65
     assert set(motif_receipt["gateway_calibration_table"]["market_cqr_parameters"].keys()) == {
@@ -341,7 +380,9 @@ def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wire
         run_layer,
     )
 
-    pkt = json.loads((REPO_ROOT / "data/context_packets/2024_10_CIN_BAL.json").read_text(encoding="utf-8"))
+    pkt = json.loads(
+        (REPO_ROOT / "data/context_packets/2024_10_CIN_BAL.json").read_text(encoding="utf-8")
+    )
     l05_out = run_layer(pkt)
     assert LAYER_ID == "L05_standings_and_incentives"
     assert EQUATION_FAMILY == "incentives"
@@ -378,7 +419,7 @@ def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wire
         process_item,
     )
 
-    now = datetime(2026, 11, 7, 18, 0, tzinfo=timezone.utc)
+    now = datetime(2026, 11, 7, 18, 0, tzinfo=UTC)
     schefter_src = SourceRecord(
         handle="@adamschefter",
         display_name="Adam Schefter",
@@ -433,7 +474,9 @@ def test_muse_motif_v530_calibration_heavy_juice_5b_narrative_and_beat_desk_wire
 
 
 def test_comp_intel_nuke_calibration_etr_audit_and_two_wave_dfs_wired() -> None:
-    proj_cal_ts = (REPO_ROOT / "apps/web/lib/fantasy/proj-calibration.ts").read_text(encoding="utf-8")
+    proj_cal_ts = (REPO_ROOT / "apps/web/lib/fantasy/proj-calibration.ts").read_text(
+        encoding="utf-8"
+    )
     assert "fitProjectionCalibration" in proj_cal_ts
     assert "applyCalibration" in proj_cal_ts
     assert "calibrationReport" in proj_cal_ts
@@ -447,17 +490,30 @@ def test_comp_intel_nuke_calibration_etr_audit_and_two_wave_dfs_wired() -> None:
     assert "35-contest, 9,570-lineup" in DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION
     assert "Establish The Run" in DFS_35_CONTEST_9570_LINEUP_ATTRIBUTION
 
-    wave1_proj = REPO_ROOT / "data/dfs/gse_post_game_sim_player_projections_week9_2026_11_07.json"
-    wave1_pool = REPO_ROOT / "data/dfs/gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
-    wave2_engine = REPO_ROOT / "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
-    wave2_receipt = REPO_ROOT / "docs/dfs/research/2026-11-07/dk-200pt-dfs-projections-simulations-and-26layer-reasoning-receipt.json"
+    wave1_proj = (
+        REPO_ROOT / "data/dfs/gse_post_game_sim_player_projections_week9_2026_11_07.json"
+    )
+    wave1_pool = (
+        REPO_ROOT / "data/dfs/gse_dedicated_curated_dfs_player_pool_week9_2026_11_07.json"
+    )
+    wave2_engine = (
+        REPO_ROOT / "intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py"
+    )
+    wave2_receipt = (
+        REPO_ROOT
+        / "docs/dfs/research/2026-11-07/"
+        "dk-200pt-dfs-projections-simulations-and-26layer-reasoning-receipt.json"
+    )
     assert wave1_proj.exists()
     assert wave1_pool.exists()
     assert wave2_engine.exists()
     assert wave2_receipt.exists()
 
     wave1_pool_data = json.loads(wave1_pool.read_text(encoding="utf-8"))
-    assert len(wave1_pool_data.get("curated_player_pool", wave1_pool_data.get("players", []))) > 0 or len(wave1_pool_data) > 0
+    pool_rows = wave1_pool_data.get(
+        "curated_player_pool", wave1_pool_data.get("players", [])
+    )
+    assert len(pool_rows) > 0 or len(wave1_pool_data) > 0
 
     wave2_receipt_data = json.loads(wave2_receipt.read_text(encoding="utf-8"))
     portfolio = wave2_receipt_data["draftkings_200pt_championship_dfs"]

@@ -3,14 +3,16 @@
 Verifies:
 1. Base-rate Brier score calculations for MONEYLINE (0.2229), SPREAD (0.2483), and TOTAL (0.2497).
 2. Monotonic mapping from calibrated cover probability to XX/100 conviction rating.
-3. Overfitting control via Bailey & López de Prado's Probability of Backtest Overfitting (PBO <= 0.15).
+3. Overfitting control via Bailey & López de Prado's Probability of Backtest Overfitting
+   (PBO <= 0.15).
 4. Market calibration heads serializable contract.
 """
 
-import pytest
-import numpy as np
-import os
 import json
+import os
+
+import numpy as np
+import pytest
 
 
 def test_true_market_base_rate_brier_scores():
@@ -28,7 +30,9 @@ def test_true_market_base_rate_brier_scores():
     assert perfect_skill == pytest.approx(1.0, abs=1e-4)
     
     # Base rate predictions give skill score of 0.0
-    base_skill = compute_brier_skill_score(TRUE_BASE_RATE_BRIER["SPREAD"], TRUE_BASE_RATE_BRIER["SPREAD"])
+    base_skill = compute_brier_skill_score(
+        TRUE_BASE_RATE_BRIER["SPREAD"], TRUE_BASE_RATE_BRIER["SPREAD"]
+    )
     assert base_skill == pytest.approx(0.0, abs=1e-4)
 
 
@@ -36,12 +40,15 @@ def test_monotonic_conviction_score_mapping():
     from scripts.calibration.train_market_specific_calibration_heads import (
         map_cover_prob_and_edge_to_confidence,
     )
-    
+
     # For a spread bet (-110, break-even 0.5238):
-    # As cover probability and edge rise, confidence score (50-100) must strictly monotonically increase
+    # As cover probability and edge rise, confidence score (50-100) must strictly increase
     p_covers = [0.525, 0.540, 0.560, 0.580, 0.620]
     edges = [p - 0.5238 for p in p_covers]
-    scores = [map_cover_prob_and_edge_to_confidence(p, e, market="SPREAD") for p, e in zip(p_covers, edges)]
+    scores = [
+        map_cover_prob_and_edge_to_confidence(p, e, market="SPREAD")
+        for p, e in zip(p_covers, edges, strict=False)
+    ]
     
     for i in range(len(scores) - 1):
         assert scores[i] <= scores[i + 1], f"Monotonicity violated: {scores[i]} > {scores[i+1]}"

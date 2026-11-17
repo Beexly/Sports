@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-Unit tests for Workstream 2:
+"""Unit tests for Workstream 2.
+
 1. Compiled safe AST formula_spec execution across all 21,419 equations (< 0.35s batch execution)
    with < 1e-12 parity against operator-branch evaluation.
 2. Positive-definite copula_tail repair across all 1,367 catalog / 1,372 registry entries
@@ -67,7 +67,9 @@ def test_eq_00003_and_eq_06896_unit_normalization_and_bounds() -> None:
         use_ast_executor=True,
     )
     assert res_06896["executed_via"] == "compiled_ast"
-    assert abs(res_06896["raw_signal"] - (-0.2014)) < 1e-4, f"Expected ~-0.2014, got {res_06896['raw_signal']}"
+    assert abs(res_06896["raw_signal"] - (-0.2014)) < 1e-4, (
+        f"Expected ~-0.2014, got {res_06896['raw_signal']}"
+    )
     assert -0.35 <= res_06896["log_odds_delta"] <= 0.35
 
 
@@ -131,8 +133,12 @@ def test_all_21419_ast_vs_operator_parity_sub_min_sample_gating_and_speed() -> N
             assert res_ast["post_gate_delta"] == 0.0
 
     elapsed = time.perf_counter() - t0
-    assert held_count == 1400, f"Expected exact 1400 sub-min_sample_size gated equations, got {held_count}"
-    assert elapsed < 0.35, f"Batch evaluation of 21,419 equations took {elapsed:.3f}s (> 0.35s budget)"
+    assert held_count == 1400, (
+        f"Expected exact 1400 sub-min_sample_size gated equations, got {held_count}"
+    )
+    assert elapsed < 0.35, (
+        f"Batch evaluation of 21,419 equations took {elapsed:.3f}s (> 0.35s budget)"
+    )
 
     # Verify AST vs operator kernel parity (< 1e-12) across 21,419 equations
     for rec in records:
@@ -196,7 +202,9 @@ def test_nan_inf_none_and_non_numeric_input_resilience() -> None:
     norm = normalize_canonical_features(corrupted_inputs)
     assert all(math.isfinite(v) and v == 0.0 for v in norm.values())
 
-    res = evaluate_equation_spec("EQ_06896", "FAM_199_WEATHER", corrupted_inputs, use_ast_executor=True)
+    res = evaluate_equation_spec(
+        "EQ_06896", "FAM_199_WEATHER", corrupted_inputs, use_ast_executor=True
+    )
     assert math.isfinite(res["diagnostic_raw_signal"])
     assert math.isfinite(res["log_odds_delta"])
     assert res["log_odds_delta"] == 0.0
@@ -213,7 +221,9 @@ def test_sea_level_altitude_ft_continuity() -> None:
         inputs={"altitude_ft": 8.0, "wind_mph": 0.0, "total_line": 44.5},
         use_ast_executor=True,
     )
-    assert abs(res_sea["raw_signal"]) < 0.01, f"Sea-level 8.0 ft should not be treated as 8 miles: {res_sea}"
+    assert abs(res_sea["raw_signal"]) < 0.01, (
+        f"Sea-level 8.0 ft should not be treated as 8 miles: {res_sea}"
+    )
 
 
 def test_equation_gate_12304_ast_and_bounds_parity() -> None:
@@ -227,7 +237,11 @@ def test_equation_gate_12304_ast_and_bounds_parity() -> None:
 
     v_00003 = evaluate_single_catalog_equation(
         by_id["EQ_00003"],
-        {"rest_differential_days": -10.0, "time_zone_shift_hours": 3.0, "home_neutral_pace_sec": 26.8},
+        {
+            "rest_differential_days": -10.0,
+            "time_zone_shift_hours": 3.0,
+            "home_neutral_pace_sec": 26.8,
+        },
     )
     assert -0.35 <= v_00003 <= 0.35
 
@@ -252,7 +266,9 @@ def test_per_game_context_packet_and_trace_sub_1_second_budget() -> None:
     pkt = build_context_packet("2026_09_DET_GB", persist=False)
     trace = execute_reasoning_workflow(pkt, persist=False)
     elapsed = time.perf_counter() - t0
-    assert elapsed < 1.0, f"Per-game context packet + reasoning trace took {elapsed:.3f}s (> 1.0s budget)"
+    assert elapsed < 1.0, (
+        f"Per-game context packet + reasoning trace took {elapsed:.3f}s (> 1.0s budget)"
+    )
     assert trace["family_consumption_census"]["accounted_families"] == 279
 
 
@@ -273,7 +289,9 @@ def test_edge_case_c3_fallback_parameter_binding_isolation() -> None:
         "equation_id": "EQ_TEST_C3_A",
         "family": "FAM_000_GENERAL",
         "_input_features_tuple": ("unprovided_binding_alpha", "unprovided_binding_beta", "proe"),
-        "_formula_spec_str": "0.5 * unprovided_binding_alpha - 0.25 * unprovided_binding_beta + 0.1 * proe",
+        "_formula_spec_str": (
+            "0.5 * unprovided_binding_alpha - 0.25 * unprovided_binding_beta + 0.1 * proe"
+        ),
         "_formula_type_lower": "linear_logit",
         "_prebound_weights": (0.5, -0.25, 0.1),
         "_is_sub_min": False,
@@ -286,14 +304,22 @@ def test_edge_case_c3_fallback_parameter_binding_isolation() -> None:
     assert "unprovided_binding_beta" not in pre_ctx.shared_ast_env
     assert pre_ctx.shared_ast_env["proe"] == -0.05
 
-    # Also verify evaluate_equation_spec cleans up temporary fallback bindings on _pre_ctx,
-    # supports 4+ parameter bindings (`bindings[3+]`), and never pops standard AST symbols (`x0`, `x1`, `x2`, `exp`)
+    # Verify evaluate_equation_spec cleans up temporary fallback bindings on _pre_ctx,
+    # supports 4+ parameter bindings (`bindings[3+]`), and keeps standard AST symbols.
     res_spec = evaluate_equation_spec(
         equation_id="EQ_TEST_C3_B",
         family="FAM_000_GENERAL",
         inputs=inputs,
-        parameter_bindings=["x1", "epa_per_play", "transient_custom_var_3", "transient_custom_var_4"],
-        formula_spec="0.3 * x0 + 0.2 * epa_per_play - 0.1 * transient_custom_var_3 + 0.05 * transient_custom_var_4",
+        parameter_bindings=[
+            "x1",
+            "epa_per_play",
+            "transient_custom_var_3",
+            "transient_custom_var_4",
+        ],
+        formula_spec=(
+            "0.3 * x0 + 0.2 * epa_per_play - 0.1 * transient_custom_var_3 "
+            "+ 0.05 * transient_custom_var_4"
+        ),
         use_ast_executor=True,
         _pre_ctx=pre_ctx,
     )
@@ -305,7 +331,7 @@ def test_edge_case_c3_fallback_parameter_binding_isolation() -> None:
     assert "x_primary" in pre_ctx.shared_ast_env
     assert "exp" not in pre_ctx.shared_ast_env
 
-    # Verify single-call context cache does not poison `ast_enabled` when toggling `use_ast_executor`
+    # Verify single-call context cache does not poison `ast_enabled` on mode toggle
     res_op = evaluate_equation_spec("EQ_00001", "FAM_001_OFFENSE", inputs, use_ast_executor=False)
     assert res_op["executed_via"] == "operator_kernel"
     res_ast = evaluate_equation_spec("EQ_00001", "FAM_001_OFFENSE", inputs)

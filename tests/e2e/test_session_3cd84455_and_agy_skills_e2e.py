@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Comprehensive 4-Tier End-to-End Verification Suite for Session `3cd84455` Recovery,
-M5/M6 21,419-Equation & 112-CSV Execution, and Antigravity Skills/Plugins/Workflows Integration
-(`tests/e2e/test_session_3cd84455_and_agy_skills_e2e.py`).
+"""Comprehensive 4-Tier E2E Suite for Session `3cd84455` Recovery & Integration.
+
+Covers M5/M6 21,419-Equation & 112-CSV Execution and Antigravity
+Skills/Plugins/Workflows Integration (`tests/e2e/test_session_3cd84455_and_agy_skills_e2e.py`).
 
 Covers all 12 Features (`F1`–`F12`) specified in `/home/antigravity/.agents/teamwork/PROJECT.md`:
   - Tier 1 — Feature Coverage: 60 tests (5 per feature across F1–F12)
@@ -27,7 +28,7 @@ import types
 import unittest
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # HISTORICAL SESSION AUDIT — NOT A CI GATE.
@@ -63,37 +64,28 @@ except ModuleNotFoundError:
     _pytest_shim.fixture = lambda *args, **kwargs: (lambda fn: fn)  # type: ignore[attr-defined]
     sys.modules["pytest"] = _pytest_shim
 
-from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
+from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (  # noqa: E402
     _empirical_bayes_within_group_weights,
-    build_conserved_week9_player_projections,
-    compute_conserved_team_environments,
     project_full_nfl_game_box_score_from_dossier,
 )
-from intelligence.funnel.gse_causal_looped_funnel_engine import (
+from intelligence.funnel.gse_causal_looped_funnel_engine import (  # noqa: E402
     FunnelSequenceViolationError,
     GSECausalLoopedFunnelEngine,
 )
-from intelligence.metrics.book_equations_to_stats_compiler import (
+from intelligence.metrics.book_equations_to_stats_compiler import (  # noqa: E402
     BOOK_DOMAIN_CROSSWALK_PATH,
-    BOOK_DOMAINS_6,
-    CANONICAL_92_STATS_AND_METRICS,
     COMPILED_STATS_OUTPUT_PATH,
     COMPLETE_458_BOOK_REGISTRY_PATH,
     MIND_EQUATIONS_JSONL_PATH,
     NFL_32_TEAMS,
     BookEquationsToStatsCompiler,
 )
-from intelligence.ops.gse_143_skills_orchestrator_and_router import (
+from intelligence.ops.gse_143_skills_orchestrator_and_router import (  # noqa: E402
     CANONICAL_7_AGY_PLUGINS,
     IMPORT_MANIFEST_PATH,
-    evaluate_143_skills_pre_projection_and_workflow_readiness,
     load_143_skills_catalog,
-    route_task_to_143_skills,
 )
-from intelligence.props.spatial_micro_metrics_prop_and_matchup_evaluator import (
-    SpatialMicroMetricsPropAndMatchupEvaluator,
-)
-from intelligence.retrieval.pinecone_hybrid_corpus_index import (
+from intelligence.retrieval.pinecone_hybrid_corpus_index import (  # noqa: E402
     BM25PlusScorer,
     CorpusDocument,
     MongoDBDossierArchiveAdapter,
@@ -106,7 +98,7 @@ AGY_SKILLS_PLUGIN_DIR = Path("/shared/user/.gemini/config/plugins/antigravity-sk
 AGY_SKILLS_MANAGER_DIR = Path("/shared/user/.gemini/config/skills/antigravity-skills-manager")
 MONGODB_ATLAS_SECRET_PATH = Path("/shared/user/.gemini/secrets/mongodb_atlas.env")
 
-EXPECTED_9_KERNELS: Set[str] = {
+EXPECTED_9_KERNELS: set[str] = {
     "bilinear_interaction",
     "rational_pade",
     "exponential_survival",
@@ -118,7 +110,7 @@ EXPECTED_9_KERNELS: Set[str] = {
     "linear_logit",
 }
 
-EXPECTED_5_MIGRATED_WORKFLOWS: Tuple[str, ...] = (
+EXPECTED_5_MIGRATED_WORKFLOWS: tuple[str, ...] = (
     "continuous-corpus-ingestion-and-wiring-loop",
     "continuous-post-game-learning-and-pathwise-calibration-loop",
     "dk-200pt-dfs-contest-simulation-loop",
@@ -143,7 +135,7 @@ def _get_dossier_guard_module():
 
 
 @lru_cache(maxsize=1)
-def _get_m5_feature_store() -> Dict[str, Any]:
+def _get_m5_feature_store() -> dict[str, Any]:
     if not M5_FEATURE_STORE_PATH.is_file():
         try:
             from intelligence.ingestion import nov7_9_sweep_and_112_csv_ingestor as m5_ing
@@ -166,7 +158,7 @@ def _get_m5_feature_store() -> Dict[str, Any]:
 
 
 @lru_cache(maxsize=1)
-def _get_compiler_and_payload() -> Tuple[BookEquationsToStatsCompiler, Dict[str, Any]]:
+def _get_compiler_and_payload() -> tuple[BookEquationsToStatsCompiler, dict[str, Any]]:
     compiler = BookEquationsToStatsCompiler()
     if not (
         MIND_EQUATIONS_JSONL_PATH.is_file()
@@ -182,7 +174,7 @@ def _get_compiler_and_payload() -> Tuple[BookEquationsToStatsCompiler, Dict[str,
 
 
 @lru_cache(maxsize=1)
-def _get_equations_21419() -> List[Dict[str, Any]]:
+def _get_equations_21419() -> list[dict[str, Any]]:
     _get_compiler_and_payload()
     lines = [
         ln.strip()
@@ -193,9 +185,12 @@ def _get_equations_21419() -> List[Dict[str, Any]]:
 
 
 @lru_cache(maxsize=1)
-def _get_mnf_box_score() -> Dict[str, Any]:
+def _get_mnf_box_score() -> dict[str, Any]:
     mnf_proj_path = (
-        REPO_ROOT / "data" / "projections" / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
+        REPO_ROOT
+        / "data"
+        / "projections"
+        / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
     )
     if mnf_proj_path.is_file():
         return json.loads(mnf_proj_path.read_text(encoding="utf-8"))
@@ -203,7 +198,9 @@ def _get_mnf_box_score() -> Dict[str, Any]:
 
 
 @lru_cache(maxsize=32)
-def _run_cached_cmd(cmd_tuple: Tuple[str, ...], cwd_str: str = str(REPO_ROOT)) -> subprocess.CompletedProcess:
+def _run_cached_cmd(
+    cmd_tuple: tuple[str, ...], cwd_str: str = str(REPO_ROOT)
+) -> subprocess.CompletedProcess:
     return subprocess.run(
         list(cmd_tuple),
         cwd=cwd_str,
@@ -225,9 +222,8 @@ class TestTier1FeatureCoverage(unittest.TestCase):
     # --- F1: Phase 2 Branch Reconciliation & trust-gate.mjs Fix (5 tests) ---
 
     def test_t1_f01_01_engine_live_bridge_47_19_1_and_week9_sunday_proof_merged(self) -> None:
-        bridge = (REPO_ROOT / "apps" / "web" / "lib" / "engine" / "engine-live-bridge.ts").read_text(
-            encoding="utf-8"
-        )
+        bridge_path = REPO_ROOT / "apps" / "web" / "lib" / "engine" / "engine-live-bridge.ts"
+        bridge = bridge_path.read_text(encoding="utf-8")
         self.assertIn('overallRecord: "47-19-1"', bridge)
         self.assertIn('overallWinPct: "71.2"', bridge)
         self.assertIn('overallNetUnits: "+24.92u"', bridge)
@@ -346,7 +342,7 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             re.findall(r'"((?:expected-metrics|nfl)/[^"]+\.ts)"', bridge_txt)
         )
         src_root = REPO_ROOT / "packages" / "prediction-engine" / "src"
-        actual: Set[str] = set()
+        actual: set[str] = set()
         for sub in ("expected-metrics", "nfl"):
             for p in (src_root / sub).glob("*.ts"):
                 if not p.name.endswith(".test.ts") and not p.name.endswith(".spec.ts"):
@@ -430,7 +426,7 @@ class TestTier1FeatureCoverage(unittest.TestCase):
     # --- F4: M5.2 Deterministic 112-CSV Ingestion & Entity Normalization (5 tests) ---
 
     @staticmethod
-    def _count_nonempty_csv_data_rows(files: List[Path]) -> int:
+    def _count_nonempty_csv_data_rows(files: list[Path]) -> int:
         total = 0
         for p in files:
             with p.open(encoding="utf-8") as f:
@@ -439,26 +435,34 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         return total
 
     def test_t1_f04_01_nov7_35_csv_tables_ingested_and_verified(self) -> None:
-        files = sorted((REPO_ROOT / "docs" / "research" / "2026-11-07" / "full-tables").glob("*.csv"))
+        csv_dir = REPO_ROOT / "docs" / "research" / "2026-11-07" / "full-tables"
+        files = sorted(csv_dir.glob("*.csv"))
         self.assertEqual(len(files), 35)
         rows = self._count_nonempty_csv_data_rows(files)
         self.assertEqual(rows, 444)
 
     def test_t1_f04_02_nov8_39_csv_tables_ingested_and_verified(self) -> None:
-        files = sorted((REPO_ROOT / "docs" / "research" / "2026-11-08" / "full-tables").glob("*.csv"))
+        csv_dir = REPO_ROOT / "docs" / "research" / "2026-11-08" / "full-tables"
+        files = sorted(csv_dir.glob("*.csv"))
         self.assertEqual(len(files), 39)
         rows = self._count_nonempty_csv_data_rows(files)
         self.assertEqual(rows, 862)
 
     def test_t1_f04_03_nov9_38_csv_tables_ingested_and_verified(self) -> None:
-        files = sorted((REPO_ROOT / "docs" / "research" / "2026-11-09" / "full-tables").glob("*.csv"))
+        csv_dir = REPO_ROOT / "docs" / "research" / "2026-11-09" / "full-tables"
+        files = sorted(csv_dir.glob("*.csv"))
         self.assertEqual(len(files), 38)
         rows = self._count_nonempty_csv_data_rows(files)
         self.assertEqual(rows, 484)
 
     def test_t1_f04_04_all_32_nfl_teams_normalized_in_m5_feature_store(self) -> None:
         store = _get_m5_feature_store()
-        teams_map = store.get("teams_32_features") or store.get("team_features") or store.get("teams") or {}
+        teams_map = (
+            store.get("teams_32_features")
+            or store.get("team_features")
+            or store.get("teams")
+            or {}
+        )
         self.assertEqual(set(teams_map.keys()), set(NFL_32_TEAMS))
         for tm in NFL_32_TEAMS:
             self.assertGreaterEqual(len(teams_map[tm]), 8)
@@ -581,7 +585,7 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertEqual(active, 20019)
         self.assertEqual(held, 1400)
 
-    # --- F7: M6.2 Vectorized NumPy 9-Kernel Evaluation in BookEquationsToStatsCompiler (5 tests) ---
+    # --- F7: M6.2 Vectorized NumPy 9-Kernel Evaluation in BookEquationsToStatsCompiler ---
 
     def test_t1_f07_01_compiler_executes_vectorized_numpy_9_kernels_over_21419_equations(
         self,
@@ -668,7 +672,9 @@ class TestTier1FeatureCoverage(unittest.TestCase):
     def test_t1_f07_05_spatial_prop_evaluator_wires_dynamic_5412_plus_equations_and_92_stats(
         self,
     ) -> None:
-        prop_path = REPO_ROOT / "data" / "props" / "week9_spatial_micro_metrics_prop_evaluations_2026.json"
+        prop_path = (
+            REPO_ROOT / "data" / "props" / "week9_spatial_micro_metrics_prop_evaluations_2026.json"
+        )
         self.assertTrue(prop_path.is_file())
         prop_data = json.loads(prop_path.read_text(encoding="utf-8"))
         summary = prop_data.get("evaluation_summary") or prop_data
@@ -678,7 +684,11 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             or 5412
         )
         self.assertGreaterEqual(eq_cnt, 5000)
-        self.assertNotEqual(eq_cnt, 5000, "Must use dynamic 5,000+ equation count (5,412), not hardcoded 5000")
+        self.assertNotEqual(
+            eq_cnt,
+            5000,
+            "Must use dynamic 5,000+ equation count (5,412), not hardcoded 5000",
+        )
 
     # --- F8: /gdocs, /gdrive, /github Plugin Launcher FUSE EPERM Fix (5 tests) ---
 
@@ -720,7 +730,9 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             )
 
     def test_t1_f08_05_gdrive_readonly_ls_max_flag_succeeds_with_default_env(self) -> None:
-        proc = _run_cached_cmd(("/opt/antigravity/bin/gdrive", "readonly", "ls", "--max", "3", "--json"))
+        proc = _run_cached_cmd(
+            ("/opt/antigravity/bin/gdrive", "readonly", "ls", "--max", "3", "--json")
+        )
         self.assertEqual(proc.returncode, 0, f"gdrive readonly ls failed: {proc.stderr}")
 
     # --- F9: rmyndharis/antigravity-skills (v2.0.0) Installation & 7-Plugin Parity (5 tests) ---
@@ -806,7 +818,11 @@ class TestTier1FeatureCoverage(unittest.TestCase):
     def test_t1_f10_04_validate_skills_js_strict_passes_on_307_vault_skills(self) -> None:
         val_js = str(AGY_SKILLS_PLUGIN_DIR / "scripts" / "validate-skills.js")
         proc = _run_cached_cmd(("node", val_js, "--strict"))
-        self.assertEqual(proc.returncode, 0, f"validate-skills.js failed on vault:\n{proc.stdout}\n{proc.stderr}")
+        self.assertEqual(
+            proc.returncode,
+            0,
+            f"validate-skills.js failed on vault:\n{proc.stdout}\n{proc.stderr}",
+        )
         self.assertIn("Validation passed for 307 skills.", proc.stdout)
 
     def test_t1_f10_05_validate_skills_js_strict_passes_on_sports_agents_skills(self) -> None:
@@ -865,21 +881,27 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertNotIn(priv_key, pinecone_src)
 
-    # --- F12: Final E2E Suite Pass, 36-Guardrail Verification, Git Push/PR & agent-bus Sync (5 tests) ---
+    # --- F12: Final E2E Suite Pass, 36-Guardrail Verification, Git Push/PR & agent-bus Sync ---
 
     def test_t1_f12_01_connected_workflow_dossier_guard_passes_all_15_games(self) -> None:
-        proc = _run_cached_cmd(("python3", "scripts/guardrails/connected-workflow-dossier-guard.py"))
+        proc = _run_cached_cmd(
+            ("python3", "scripts/guardrails/connected-workflow-dossier-guard.py")
+        )
         self.assertEqual(proc.returncode, 0, f"dossier-guard failed:\n{proc.stdout}\n{proc.stderr}")
         self.assertIn("PASS", proc.stdout)
 
     def test_t1_f12_02_mobile_lint_rules_passes_with_zero_violations(self) -> None:
         proc = _run_cached_cmd(("node", "apps/mobile/scripts/lint-rules.js"))
-        self.assertEqual(proc.returncode, 0, f"mobile lint-rules failed:\n{proc.stdout}\n{proc.stderr}")
+        self.assertEqual(
+            proc.returncode, 0, f"mobile lint-rules failed:\n{proc.stdout}\n{proc.stderr}"
+        )
         self.assertIn("violations 0", proc.stdout)
 
     def test_t1_f12_03_trust_gate_behavioral_test_suite_passes(self) -> None:
         proc = _run_cached_cmd(("node", "--test", "scripts/guardrails/trust-gate.test.mjs"))
-        self.assertEqual(proc.returncode, 0, f"trust-gate.test.mjs failed:\n{proc.stdout}\n{proc.stderr}")
+        self.assertEqual(
+            proc.returncode, 0, f"trust-gate.test.mjs failed:\n{proc.stdout}\n{proc.stderr}"
+        )
 
     def test_t1_f12_04_no_stray_agents_teamwork_dir_inside_sports_repo(self) -> None:
         self.assertFalse(
@@ -1104,10 +1126,15 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self,
     ) -> None:
         store = _get_m5_feature_store()
-        teams_map = store.get("teams_32_features") or store.get("team_features") or store.get("teams") or {}
+        teams_map = (
+            store.get("teams_32_features")
+            or store.get("team_features")
+            or store.get("teams")
+            or {}
+        )
         for bye_tm in ("PIT", "TEN"):
             self.assertIn(bye_tm, teams_map)
-            for k, v in teams_map[bye_tm].items():
+            for _k, v in teams_map[bye_tm].items():
                 if isinstance(v, (int, float)) and not isinstance(v, bool):
                     self.assertTrue(math.isfinite(float(v)))
 
@@ -1205,7 +1232,11 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     def test_t2_f06_02_every_formula_ast_clip_bounds_within_minus_035_to_plus_035(self) -> None:
         eqs = _get_equations_21419()
         for eq in eqs:
-            bounds = eq["formula_ast"].get("clip_bounds") or eq["formula_ast"].get("bounds") or [-0.35, 0.35]
+            bounds = (
+                eq["formula_ast"].get("clip_bounds")
+                or eq["formula_ast"].get("bounds")
+                or [-0.35, 0.35]
+            )
             self.assertEqual(len(bounds), 2)
             self.assertGreaterEqual(float(bounds[0]), -0.35)
             self.assertLessEqual(float(bounds[1]), 0.35)
@@ -1260,8 +1291,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         )
         for k, v in extreme_pkt.compiled_92_stats.items():
             self.assertTrue(math.isfinite(float(v)), f"Non-finite {k} under extreme inputs")
-        self.assertGreaterEqual(extreme_pkt.compiled_92_stats["compiled_pre_sim_log_odds_adjustment"], -0.35)
-        self.assertLessEqual(extreme_pkt.compiled_92_stats["compiled_pre_sim_log_odds_adjustment"], 0.35)
+        adj = extreme_pkt.compiled_92_stats["compiled_pre_sim_log_odds_adjustment"]
+        self.assertGreaterEqual(adj, -0.35)
+        self.assertLessEqual(adj, 0.35)
 
     def test_t2_f07_03_held_1400_equations_contribute_zero_weight_in_vectorized_eval(
         self,
@@ -1347,17 +1379,23 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 timeout=20,
                 check=False,
             )
-            self.assertEqual(proc.returncode, 0, f"{tool} --version failed on FUSE env: {proc.stderr}")
+            self.assertEqual(
+                proc.returncode, 0, f"{tool} --version failed on FUSE env: {proc.stderr}"
+            )
 
     # --- F9 Boundaries (5 tests) ---
 
     def test_t2_f09_01_zero_symlinks_anywhere_in_antigravity_skills_plugin_or_global_skills(
         self,
     ) -> None:
-        for root_dir in (AGY_SKILLS_PLUGIN_DIR, AGY_SKILLS_MANAGER_DIR, REPO_ROOT / ".agents" / "skills"):
+        for root_dir in (
+            AGY_SKILLS_PLUGIN_DIR,
+            AGY_SKILLS_MANAGER_DIR,
+            REPO_ROOT / ".agents" / "skills",
+        ):
             if root_dir.exists():
-                symlinks: List[str] = []
-                stack: List[Tuple[str, int]] = [(str(root_dir), 0)]
+                symlinks: list[str] = []
+                stack: list[tuple[str, int]] = [(str(root_dir), 0)]
                 while stack:
                     curr, depth = stack.pop()
                     try:
@@ -1388,7 +1426,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self.assertIn("kubernetes", proc_kube.stdout.lower())
 
     def test_t2_f09_04_install_skill_js_rejects_symlinks_and_overlapping_paths(self) -> None:
-        install_js = (AGY_SKILLS_PLUGIN_DIR / "lib" / "install-skill.js").read_text(encoding="utf-8")
+        install_js = (AGY_SKILLS_PLUGIN_DIR / "lib" / "install-skill.js").read_text(
+            encoding="utf-8"
+        )
         self.assertIn("Skill source must not contain symlinks", install_js)
         self.assertIn("Skill source and installation destination must not overlap", install_js)
 
@@ -1418,14 +1458,19 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self,
     ) -> None:
         skills_root = REPO_ROOT / ".agents" / "skills"
-        broken_helper_re = re.compile(r"`(?:\./)?(?:resources|references|assets|scripts|examples)/[^`\s]+`")
+        broken_helper_re = re.compile(
+            r"`(?:\./)?(?:resources|references|assets|scripts|examples)/[^`\s]+`"
+        )
         for wf_name in EXPECTED_5_MIGRATED_WORKFLOWS:
             txt = (skills_root / wf_name / "SKILL.md").read_text(encoding="utf-8")
             matches = broken_helper_re.findall(txt)
             self.assertEqual(
                 len(matches),
                 0,
-                f"Skill {wf_name} has unprefixed helper path(s) {matches} that validate-skills.js rejects",
+                (
+                    f"Skill {wf_name} has unprefixed helper path(s) {matches} "
+                    "that validate-skills.js rejects"
+                ),
             )
 
     def test_t2_f10_03_all_15_sports_agents_skills_respect_allowed_frontmatter_fields(
@@ -1445,7 +1490,11 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             for line in fm.splitlines():
                 if line and not line.startswith(" ") and ":" in line:
                     key = line.split(":", 1)[0].strip()
-                    self.assertIn(key, allowed, f"Disallowed top-level frontmatter key {key!r} in {sdir.name}")
+                    self.assertIn(
+                        key,
+                        allowed,
+                        f"Disallowed top-level frontmatter key {key!r} in {sdir.name}",
+                    )
 
     def test_t2_f10_04_all_15_sports_agents_skills_under_500_line_limit(self) -> None:
         skills_root = REPO_ROOT / ".agents" / "skills"
@@ -1510,17 +1559,27 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     ) -> None:
         mnf_box = _get_mnf_box_score()
         active_names = {p["player"] for p in mnf_box["player_stat_projections"]}
-        for banned_player in ("Malik Davis", "Alec Pierce", "Hunter Henry", "A.J. Brown", "Stefon Diggs"):
+        for banned_player in (
+            "Malik Davis",
+            "Alec Pierce",
+            "Hunter Henry",
+            "A.J. Brown",
+            "Stefon Diggs",
+        ):
             if banned_player in ("Malik Davis", "Alec Pierce", "Hunter Henry", "A.J. Brown"):
                 self.assertNotIn(banned_player, active_names)
 
     def test_t2_f12_02_mnf_buf_min_dossier_invariants_2_and_3_enforced(self) -> None:
-        dossier_path = REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        dossier_path = (
+            REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        )
         dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
         s5 = dossier["stage5_360_conjunction_gate"]
         for prop in s5.get("core_prop_evaluations", []):
             p_win = float(prop.get("calibrated_prob", prop.get("win_prob", 0.5)))
-            self.assertLessEqual(p_win, 0.780, f"INVARIANT_2 violated on {prop.get('athlete')}: {p_win}")
+            self.assertLessEqual(
+                p_win, 0.780, f"INVARIANT_2 violated on {prop.get('athlete')}: {p_win}"
+            )
 
     def test_t2_f12_03_funnel_sequence_violation_guard_blocks_out_of_order_stage_execution(
         self,
@@ -1559,7 +1618,9 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_01_f3_plus_f4_research_consolidation_doc_and_112_csv_feature_store_parity(
         self,
     ) -> None:
-        """F3 + F4: Verify RESEARCH-CONSOLIDATION-2026-11-07-to-09.md and M5 112-CSV feature store
+        """F3 + F4: Verify RESEARCH-CONSOLIDATION and M5 112-CSV feature store parity.
+
+        Checks that RESEARCH-CONSOLIDATION-2026-11-07-to-09.md and M5 112-CSV feature store
         agree on the 112 CSV tables (35 + 39 + 38) and HEALTH-UNRESOLVED items.
         """
         doc_txt = (
@@ -1574,19 +1635,27 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
         summary = store.get("summary") or store.get("ingestion_summary") or store
         self.assertIn("HEALTH-UNRESOLVED", doc_txt)
         self.assertIn("HEALTH-UNRESOLVED", json.dumps(store))
-        self.assertEqual(int(summary.get("total_csv_tables_ingested", summary.get("total_csv_tables", 112))), 112)
+        csv_cnt = summary.get("total_csv_tables_ingested", summary.get("total_csv_tables", 112))
+        self.assertEqual(int(csv_cnt), 112)
 
     def test_t3_02_f4_plus_f6_m5_feature_store_keys_and_21419_equations_jsonl_binding_parity(
         self,
     ) -> None:
-        """F4 + F6: Verify every m5_feature_key bound across the 21,419 equations in
-        data/mind/equations.jsonl resolves in data/mind/nov7_9_112_csv_feature_store_2026.json.
+        """F4 + F6: Verify every m5_feature_key in equations.jsonl resolves in M5 feature store.
+
+        Checks all 21,419 equations in data/mind/equations.jsonl against
+        data/mind/nov7_9_112_csv_feature_store_2026.json.
         """
         store = _get_m5_feature_store()
-        teams_map = store.get("teams_32_features") or store.get("team_features") or store.get("teams") or {}
+        teams_map = (
+            store.get("teams_32_features")
+            or store.get("team_features")
+            or store.get("teams")
+            or {}
+        )
         available_keys = set(teams_map["BUF"].keys()) | set(store.get("feature_keys_catalog", []))
         eqs = _get_equations_21419()
-        bound_keys: Set[str] = set()
+        bound_keys: set[str] = set()
         for eq in eqs:
             for k in eq.get("m5_feature_keys") or eq["formula_ast"].get("m5_feature_keys", []):
                 bound_keys.add(k)
@@ -1599,8 +1668,11 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_03_f5_plus_f7_503_book_crosswalk_and_compiler_domain_stat_counts_parity(
         self,
     ) -> None:
-        """F5 + F7: Verify book_domain_crosswalk_2026.json and week9_book_equations_compiled_stats_2026.json
-        agree on 503 books, 458 Mega-Sweep books, 21,419 equations, and 92 canonical stats.
+        """F5 + F7: Verify book_domain_crosswalk and compiled stats counts match.
+
+        Checks that book_domain_crosswalk_2026.json and
+        week9_book_equations_compiled_stats_2026.json agree on 503 books, 458 Mega-Sweep books,
+        21,419 equations, and 92 canonical stats.
         """
         _, payload = _get_compiler_and_payload()
         cw = json.loads(BOOK_DOMAIN_CROSSWALK_PATH.read_text(encoding="utf-8"))
@@ -1615,12 +1687,13 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_04_f6_plus_f7_symbolic_ast_9_kernels_and_compiler_92_stats_execution_parity(
         self,
     ) -> None:
-        """F6 + F7: Verify the 9 symbolic operator kernels in equations.jsonl match the
-        vectorized NumPy evaluation in BookEquationsToStatsCompiler.
+        """F6 + F7: Verify 9 symbolic operator kernels match BookEquationsToStatsCompiler.
+
+        Compares equations.jsonl kernel counts against vectorized NumPy evaluation.
         """
         compiler, _ = _get_compiler_and_payload()
         eqs = _get_equations_21419()
-        kernel_counts: Dict[str, int] = {}
+        kernel_counts: dict[str, int] = {}
         for eq in eqs:
             kt = str(eq["formula_ast"]["kernel"])
             kernel_counts[kt] = kernel_counts.get(kt, 0) + 1
@@ -1647,11 +1720,16 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_05_f2_plus_f4_q52_q53_q54_ts_modules_and_m5_shadow_kernel_features_parity(
         self,
     ) -> None:
-        """F2 + F4: Verify Q52, Q53, Q54 TypeScript expected-metrics modules and M5 Python
-        shadow kernel features both enforce the same mathematical split definitions.
+        """F2 + F4: Verify Q52-Q54 TypeScript modules and M5 Python shadow kernel parity.
+
+        Both must enforce the same mathematical split definitions.
         """
         store = _get_m5_feature_store()
-        q_kernels = store.get("intel_loop_q52_q54_shadow_kernels") or store.get("q52_q54_kernels") or store
+        q_kernels = (
+            store.get("intel_loop_q52_q54_shadow_kernels")
+            or store.get("q52_q54_kernels")
+            or store
+        )
         q_str = json.dumps(q_kernels)
         self.assertIn("0.55", q_str)
         self.assertIn("-0.42", q_str)
@@ -1659,8 +1737,10 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_06_f7_plus_f1_compiler_92_stats_to_conserved_mnf_projections_and_storefront_sync(
         self,
     ) -> None:
-        """F7 + F1: Verify MNF BUF @ MIN projections in current-nfl-slate.ts and
-        15_BUF_at_MIN_Week9_2026_Command_Packet.md match the conserved projection spine.
+        """F7 + F1: Verify MNF BUF @ MIN projections sync with command packet.
+
+        Checks current-nfl-slate.ts and 15_BUF_at_MIN_Week9_2026_Command_Packet.md
+        against the conserved projection spine.
         """
         slate_ts = (REPO_ROOT / "apps" / "web" / "lib" / "data" / "current-nfl-slate.ts").read_text(
             encoding="utf-8"
@@ -1681,8 +1761,10 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_07_f8_plus_f9_agy_plugin_launchers_and_7_plugin_import_manifest_parity(
         self,
     ) -> None:
-        """F8 + F9: Verify both the /opt/antigravity plugin launchers (gdocs, gdrive, gh)
-        and the 7-plugin import_manifest.json are operational simultaneously.
+        """F8 + F9: Verify plugin launchers and 7-plugin import_manifest.json parity.
+
+        Checks that /opt/antigravity plugin launchers (gdocs, gdrive, gh) and the
+        7-plugin import_manifest.json are operational simultaneously.
         """
         manifest = json.loads(IMPORT_MANIFEST_PATH.read_text(encoding="utf-8"))
         self.assertEqual(len(manifest["imports"]), 7)
@@ -1693,8 +1775,10 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_08_f9_plus_f10_antigravity_skills_validator_and_migrated_sports_workflow_skills(
         self,
     ) -> None:
-        """F9 + F10: Verify validate-skills.js from rmyndharis/antigravity-skills validates
-        all 5 migrated workflow skills in Beexly/Sports/.agents/skills with --strict.
+        """F9 + F10: Verify validate-skills.js validates migrated workflow skills.
+
+        Runs validate-skills.js from rmyndharis/antigravity-skills across all 5
+        migrated workflow skills in Beexly/Sports/.agents/skills with --strict.
         """
         import shutil
 
@@ -1718,26 +1802,34 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
     def test_t3_09_f10_plus_f12_migrated_workflow_skills_and_connected_workflow_dossier_guard(
         self,
     ) -> None:
-        """F10 + F12: Verify migrated workflow skills in .agents/skills pass trust-gate.mjs
-        with zero banned phrases and connected-workflow-dossier-guard.py passes.
+        """F10 + F12: Verify migrated workflow skills pass trust-gate and dossier guard.
+
+        Checks .agents/skills against trust-gate.mjs with zero banned phrases and
+        verifies connected-workflow-dossier-guard.py passes.
         """
         proc_tg = _run_cached_cmd(("node", "scripts/guardrails/trust-gate.mjs"))
-        proc_dg = _run_cached_cmd(("python3", "scripts/guardrails/connected-workflow-dossier-guard.py"))
+        proc_dg = _run_cached_cmd(
+            ("python3", "scripts/guardrails/connected-workflow-dossier-guard.py")
+        )
         self.assertEqual(proc_tg.returncode, 0)
         self.assertEqual(proc_dg.returncode, 0)
 
     def test_t3_10_f11_plus_f9_mongodb_atlas_adapter_and_pinecone_143_skills_hybrid_index(
         self,
     ) -> None:
-        """F11 + F9: Verify PineconeBM25HybridCorpusRetriever (offline BM25+ + hash-embedding)
-        and MongoDBDossierArchiveAdapter (backed by mongodb_atlas.env) index and archive
-        143-skill & 7-plugin catalog documents together.
+        """F11 + F9: Verify Pinecone retriever and MongoDB Atlas adapter index skills.
+
+        Checks PineconeBM25HybridCorpusRetriever (offline BM25+ + hash-embedding) and
+        MongoDBDossierArchiveAdapter (backed by mongodb_atlas.env) together.
         """
         cat = load_143_skills_catalog()
         doc = CorpusDocument(
             doc_id="SKILL-CAT-143",
             title="GSE 143 Skills & 7 AGY Plugins Catalog",
-            text=f"Total union skills: {cat['counts']['union_agents_and_claude_skills']}, plugins: 7, plugin skills: 383",
+            text=(
+                f"Total union skills: {cat['counts']['union_agents_and_claude_skills']}, "
+                "plugins: 7, plugin skills: 383"
+            ),
             namespace="gse-143-skills-and-plugins",
         )
         retriever = PineconeBM25HybridCorpusRetriever(force_offline=True)
@@ -1750,22 +1842,26 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
         arch = adapter.archive_document(doc)
         self.assertTrue(arch["archived"])
 
-    def test_t3_11_f1_plus_f12_pricing_and_writeup_merge_reconciliation_passes_trust_gate_and_dossier_guard(
+    def test_t3_11_f1_plus_f12_pricing_and_writeup_merge_reconciliation_passes_trust_gate_and_dossier_guard(  # noqa: E501
         self,
     ) -> None:
-        """F1 + F12: Verify reconciled pricing/page.tsx, engine-live-bridge.ts, and
-        coach-writeup-engine.ts satisfy both verify_web_storefront_human_copy() and trust-gate.mjs.
+        """F1 + F12: Verify pricing, engine-live-bridge, and coach-writeup-engine pass guards.
+
+        Satisfies both verify_web_storefront_human_copy() and trust-gate.mjs.
         """
         mod = _get_dossier_guard_module()
         mod.verify_web_storefront_human_copy()
         proc = _run_cached_cmd(("node", "scripts/guardrails/trust-gate.mjs"))
         self.assertEqual(proc.returncode, 0)
 
-    def test_t3_12_f4_plus_f7_plus_f12_end_to_end_funnel_stage2_spatial_props_and_conserved_optimizer(
+    def test_t3_12_f4_plus_f7_plus_f12_end_to_end_funnel_stage2_spatial_props_and_conserved_optimizer(  # noqa: E501
         self,
     ) -> None:
-        """F4 + F7 + F12: Verify GSECausalLoopedFunnelEngine Stage 2, SpatialMicroMetricsPropAndMatchupEvaluator,
-        and Conserved Optimizer agree on 21,419 equations, 92 stats, and conserved team totals.
+        """F4 + F7 + F12: Verify funnel Stage 2, spatial props, and conserved optimizer agree.
+
+        Checks GSECausalLoopedFunnelEngine Stage 2,
+        SpatialMicroMetricsPropAndMatchupEvaluator, and Conserved Optimizer on 21,419
+        equations, 92 stats, and conserved team totals.
         """
         mnf_box = _get_mnf_box_score()
         for tm in ("BUF", "MIN"):
@@ -1793,10 +1889,12 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_01_e2e_mnf_buf_min_full_projection_conservation_and_dossier_pipeline(
         self,
     ) -> None:
-        """Scenario 1: Full MNF `BUF @ MIN` pipeline from 112 CSVs -> M5 feature store ->
-        21,419 symbolic equations -> 92 stats -> conserved player projections -> Showdown CPT
-        Josh Allen ($15,600) -> 15_BUF_at_MIN_Week9_2026_Command_Packet.md -> current-nfl-slate.ts
-        -> connected-workflow-dossier-guard.py.
+        """Scenario 1: Full MNF `BUF @ MIN` projection, conservation, and dossier pipeline.
+
+        Covers 112 CSVs -> M5 feature store -> 21,419 symbolic equations -> 92 stats ->
+        conserved player projections -> Showdown CPT Josh Allen ($15,600) ->
+        15_BUF_at_MIN_Week9_2026_Command_Packet.md -> current-nfl-slate.ts ->
+        connected-workflow-dossier-guard.py.
         """
         store = _get_m5_feature_store()
         self.assertIn("BUF", store.get("teams_32_features", {}))
@@ -1804,7 +1902,9 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
 
         _, payload = _get_compiler_and_payload()
         self.assertIn("BUF@MIN", payload["week9_games_compiled_stats"])
-        self.assertEqual(len(payload["week9_games_compiled_stats"]["BUF@MIN"]["compiled_92_stats"]), 92)
+        self.assertEqual(
+            len(payload["week9_games_compiled_stats"]["BUF@MIN"]["compiled_92_stats"]), 92
+        )
 
         mnf_box = _get_mnf_box_score()
         by_name = {p["player"]: p for p in mnf_box["player_stat_projections"]}
@@ -1823,11 +1923,17 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_02_e2e_week9_sunday_13_game_settlement_and_3_61_mae_benchmark_pipeline(
         self,
     ) -> None:
-        """Scenario 2: End-to-end Week 9 Sunday 13-game settlement audit (`7-4-0`, `+2.06u`,
-        `3.61` DK pts MAE vs `12.08` legacy MAE) and `47-19-1` (`71.2%`, `+24.92u`) storefront ledger.
+        """Scenario 2: End-to-end Week 9 Sunday 13-game settlement audit and MAE benchmark.
+
+        Verifies (`7-4-0`, `+2.06u`, `3.61` DK pts MAE vs `12.08` legacy MAE) and
+        `47-19-1` (`71.2%`, `+24.92u`) storefront ledger.
         """
         settlement_path = (
-            REPO_ROOT / "data" / "engine" / "settlements" / "week9_sunday_2026-11-08_settlement.json"
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / "settlements"
+            / "week9_sunday_2026-11-08_settlement.json"
         )
         autopsy_md_path = (
             REPO_ROOT
@@ -1852,8 +1958,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_03_e2e_antigravity_plugins_gdocs_gdrive_gh_live_authenticated_operations(
         self,
     ) -> None:
-        """Scenario 3: End-to-end execution of `/gdocs`, `/gdrive`, and `/github` (`gh`)
-        plugin CLIs in default shell environment without manual `ANTIGRAVITY_APP_DATA_DIR` overrides.
+        """Scenario 3: End-to-end execution of `/gdocs`, `/gdrive`, and `/github` (`gh`).
+
+        Runs plugin CLIs in default shell environment without manual
+        `ANTIGRAVITY_APP_DATA_DIR` overrides.
         """
         p_gdocs = _run_cached_cmd(
             (
@@ -1875,8 +1983,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_04_e2e_antigravity_skills_v2_vault_cli_and_migrate_workflows_validation(
         self,
     ) -> None:
-        """Scenario 4: Full `rmyndharis/antigravity-skills` (`v2.0.0`) CLI & `/migrate-workflows`
-        validation pipeline across the 307-skill vault and the 5 migrated `Beexly/Sports/.agents/skills` workflow skills.
+        """Scenario 4: Full `antigravity-skills` (`v2.0.0`) CLI & `/migrate-workflows` pipeline.
+
+        Validates the 307-skill vault and the 5 migrated `Beexly/Sports/.agents/skills`
+        workflow skills.
         """
         import shutil
 
@@ -1895,7 +2005,9 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
                 timeout=30,
                 check=False,
             )
-            self.assertEqual(proc_inst.returncode, 0, f"ag-skills install failed: {proc_inst.stderr}")
+            self.assertEqual(
+                proc_inst.returncode, 0, f"ag-skills install failed: {proc_inst.stderr}"
+            )
             self.assertTrue((Path(tmpdir) / "workflow-patterns" / "SKILL.md").is_file())
 
         proc_vault = _run_cached_cmd(("node", val_js, "--strict"))
@@ -1920,8 +2032,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     def test_t4_05_e2e_503_book_mega_sweep_manifest_and_hybrid_pinecone_mongodb_retrieval(
         self,
     ) -> None:
-        """Scenario 5: End-to-end 503-book corpus, `SKELETON-BOOKS-2026-11-06.md`, `MANIFEST.md`,
-        BM25+ / Pinecone hybrid retrieval, and MongoDB Atlas Dossier Archive pipeline.
+        """Scenario 5: End-to-end 503-book corpus, retrieval, and archive pipeline.
+
+        Verifies `SKELETON-BOOKS-2026-11-06.md`, `MANIFEST.md`, BM25+ / Pinecone hybrid
+        retrieval, and MongoDB Atlas Dossier Archive pipeline.
         """
         _get_compiler_and_payload()
         cw = json.loads(BOOK_DOMAIN_CROSSWALK_PATH.read_text(encoding="utf-8"))
@@ -1933,11 +2047,17 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
                 doc_id="SKEL-BK-01",
                 title="Probabilistic Machine Learning: Advanced Topics",
                 authors="Kevin P. Murphy",
-                text="Bayesian hierarchical shrinkage, variational inference, and state-space models.",
+                text=(
+                    "Bayesian hierarchical shrinkage, variational inference, "
+                    "and state-space models."
+                ),
             ),
             CorpusDocument(
                 doc_id="A2-BK-05",
-                title="Modelling Association Football Scores and Inefficiencies in the Football Betting Market",
+                title=(
+                    "Modelling Association Football Scores and Inefficiencies "
+                    "in the Football Betting Market"
+                ),
                 authors="Mark J. Dixon, Stuart G. Coles",
                 text="Bivariate Poisson low-scoring dependence and betting market inefficiency.",
             ),
@@ -1953,8 +2073,10 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
             self.assertTrue(rec["archived"])
 
     def test_t4_06_e2e_full_production_guardrail_and_unit_suite_gatekeeper(self) -> None:
-        """Scenario 6: Full production gatekeeper executing `trust-gate.mjs`, `lint-rules.js`,
-        `connected-workflow-dossier-guard.py`, and verifying M5 + M6 unit test suites.
+        """Scenario 6: Full production gatekeeper for guardrails and M5/M6 suites.
+
+        Executes `trust-gate.mjs`, `lint-rules.js`, `connected-workflow-dossier-guard.py`,
+        and verifies M5 + M6 unit test suites.
         """
         for cmd in (
             ("node", "scripts/guardrails/trust-gate.mjs"),

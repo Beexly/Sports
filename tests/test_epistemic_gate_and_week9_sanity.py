@@ -3,7 +3,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-
 from research.hypotheses.multi_game_glycogen_and_pinn_sandbox import (
     RESEARCH_SANDBOX_QUARANTINED,
     MultiGameGlycogenDepletionEngine,
@@ -44,6 +43,7 @@ from scripts.ops.locked_production_pipeline import (
     validate_roster_and_coordinate_mutation_guard,
 )
 from scripts.ops.memory_mapped_spatial_backtest import evaluate_in_memory_telemetry_rows
+
 from tests.verify_out_of_sample_calibration import run_historical_backtest_eval
 
 
@@ -56,7 +56,7 @@ def test_enforce_production_sanity_gates_hurdle_and_dirichlet_conservation():
     )
     priors = {"STAR_RECEIVER": 0.85, "DEPTH_RECEIVER_A": 0.08, "INJURED_SHADOW_PLAYER": 0.00}
     out = enforce_production_sanity_gates(raw_df, priors, team_target_cap=10.0)
-    by_id = dict(zip(out["player_id"], out["conserved_volume"]))
+    by_id = dict(zip(out["player_id"], out["conserved_volume"], strict=False))
     assert by_id["STAR_RECEIVER"] == pytest.approx(10.0, abs=1e-9)
     assert by_id["DEPTH_RECEIVER_A"] == 0.0
     assert by_id["INJURED_SHADOW_PLAYER"] == 0.0
@@ -68,7 +68,9 @@ def test_anti_hallucination_roster_and_coordinate_guard():
         validate_roster_and_coordinate_mutation_guard([{"player_name": "A.J. Brown", "team": "NE"}])
 
     with pytest.raises(ValueError, match="Trey Hendrickson"):
-        validate_roster_and_coordinate_mutation_guard([{"player_name": "Trey Hendrickson", "team": "BAL"}])
+        validate_roster_and_coordinate_mutation_guard(
+            [{"player_name": "Trey Hendrickson", "team": "BAL"}]
+        )
 
     with pytest.raises(ValueError, match="Forbidden spatial coordinate mutation"):
         validate_roster_and_coordinate_mutation_guard(
@@ -103,9 +105,13 @@ def test_espn_2026_pbwr_prwr_and_week9_sea_ari_matrix():
             if r["team"] == "ARI"
         ]
     )
-    priors_ari = {r["player_id"]: r["route_participation"] for r in WEEK9_SEA_ARI_PASS_CATCHER_MATRIX if r["team"] == "ARI"}
+    priors_ari = {
+        r["player_id"]: r["route_participation"]
+        for r in WEEK9_SEA_ARI_PASS_CATCHER_MATRIX
+        if r["team"] == "ARI"
+    }
     conserved_ari = enforce_production_sanity_gates(raw_ari, priors_ari, team_target_cap=34.0)
-    by_id = dict(zip(conserved_ari["player_id"], conserved_ari["conserved_volume"]))
+    by_id = dict(zip(conserved_ari["player_id"], conserved_ari["conserved_volume"], strict=False))
     assert by_id["Kendrick Bourne"] == 0.0
     assert by_id["Marvin Harrison Jr."] > 6.5
     assert by_id["Trey McBride"] > by_id["Marvin Harrison Jr."] > by_id["Michael Wilson"] > 0.0
@@ -141,7 +147,12 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
     g2 = eng.simulate_weekly_regeneration_recharge("BREECE_HALL", rest_days=3.0)
     assert g1 < g2 < 150.0
     risk, mult = eng.evaluate_soft_tissue_injury_risk("BREECE_HALL")
-    assert risk in {"CRITICAL_SOFT_TISSUE_WARNING", "ELEVATED_FATIGUE_RISK", "OPTIMAL_METABOLIC_HEALTH"}
+    valid_risks = {
+        "CRITICAL_SOFT_TISSUE_WARNING",
+        "ELEVATED_FATIGUE_RISK",
+        "OPTIMAL_METABOLIC_HEALTH",
+    }
+    assert risk in valid_risks
     assert 0.78 <= mult <= 1.00
 
     pinn = compute_pinn_navier_stokes_composite_loss([0.1, -0.1], [0.05, 0.05], [0.02], [0.03])
@@ -150,7 +161,9 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
     mallat = compute_mallat_scattering_intermittency_residual([0.1, 0.2, 0.15, 2.8, 0.2, 0.1])
     assert mallat["intermittency_ratio"] > 0.5
 
-    turf = evaluate_acrisure_tahoma31_turf_shear_upgrade(780.0, 1150.0, 0.20, grip_upgrade_factor=1.04)
+    turf = evaluate_acrisure_tahoma31_turf_shear_upgrade(
+        780.0, 1150.0, 0.20, grip_upgrade_factor=1.04
+    )
     assert turf["coordinates_mutated"] is False
     assert 0.0 < turf["slip_probability"] < 1.0
 
@@ -168,14 +181,18 @@ def test_quarantined_glycogen_pinn_mallat_and_memory_slice():
 
 def test_wave3_alam_crosswind_kent_cleat_bezier_routes_and_congelio_ryoe_deconfounding():
     # Alam et al. (2012): C_D0 = 0.19 at 0 deg yaw, increases under crosswind toward C_D90 = 0.78
-    zero_wind = compute_alam_football_crosswind_drag(wind_speed_mph=0.0, ball_speed_mph=52.0, crosswind_angle_deg=90.0)
-    cross_wind = compute_alam_football_crosswind_drag(wind_speed_mph=22.0, ball_speed_mph=45.0, crosswind_angle_deg=90.0)
+    zero_wind = compute_alam_football_crosswind_drag(
+        wind_speed_mph=0.0, ball_speed_mph=52.0, crosswind_angle_deg=90.0
+    )
+    cross_wind = compute_alam_football_crosswind_drag(
+        wind_speed_mph=22.0, ball_speed_mph=45.0, crosswind_angle_deg=90.0
+    )
     assert zero_wind["cd_effective"] == pytest.approx(0.19, abs=1e-4)
     assert cross_wind["cd_effective"] > zero_wind["cd_effective"]
     assert cross_wind["drag_multiplier_vs_zero_yaw"] > 1.5
     assert cross_wind["drag_force_n"] > zero_wind["drag_force_n"]
 
-    # Kent et al. (2015): Natural grass divot tearing (3.2 kN, 145 Nm) vs infill turf (4.5 kN, 197 Nm)
+    # Kent et al. (2015): Natural grass divot tearing (3.2 kN, 145 Nm) vs infill turf (4.5, 197)
     grass = compute_kent_cleat_surface_entrapment(is_artificial_turf=False, vertical_load_kn=2.8)
     turf = compute_kent_cleat_surface_entrapment(is_artificial_turf=True, vertical_load_kn=2.8)
     assert grass["peak_horizontal_force_kn"] == pytest.approx(3.2, abs=1e-4)
@@ -236,7 +253,7 @@ def test_wave4_ocular_quiet_eye_bayesian_asymmetric_loss_and_vi_elbo():
     assert elite_oc["far_transfer_training_weight"] == 0.0
 
     # Davidson-Pilon (Bayesian Methods for Hackers Ch. 4 & Ch. 5):
-    # Small-sample high observation shrinks toward prior and asymmetric loss shifts action below mean
+    # Small-sample high obs shrinks toward prior; asymmetric loss shifts action below mean
     small_sample = optimize_bayesian_asymmetric_loss_action(
         prior_mean=32.0,
         prior_std=8.0,
@@ -255,7 +272,10 @@ def test_wave4_ocular_quiet_eye_bayesian_asymmetric_loss_and_vi_elbo():
         overprediction_penalty=2.5,
         underprediction_penalty=1.0,
     )
-    assert small_sample["empirical_bayes_shrinkage_weight_on_prior"] > large_sample["empirical_bayes_shrinkage_weight_on_prior"]
+    assert (
+        small_sample["empirical_bayes_shrinkage_weight_on_prior"]
+        > large_sample["empirical_bayes_shrinkage_weight_on_prior"]
+    )
     assert small_sample["bayes_optimal_asymmetric_action"] < small_sample["posterior_mean"]
     assert small_sample["conservative_buffer_below_mean"] > 0.0
 
@@ -303,7 +323,9 @@ def test_wave5_dfs_stochastic_milp_portfolio_and_newell_tiered_payout():
         # Verify QB is stacked with at least 1 same-team WR/TE and never paired with opposing DST
         qb_row = lu[lu["position"] == "QB"].iloc[0]
         dst_row = lu[lu["position"] == "DST"].iloc[0]
-        same_team_pass_catchers = lu[(lu["position"].isin(["WR", "TE"])) & (lu["team"] == qb_row["team"])]
+        same_team_pass_catchers = lu[
+            (lu["position"].isin(["WR", "TE"])) & (lu["team"] == qb_row["team"])
+        ]
         assert len(same_team_pass_catchers) >= 1
         assert str(dst_row["team"]) != str(qb_row["opponent"])
         assert float(lu["risk_adjusted_objective"].iloc[0]) > float(lu["projection"].sum())
@@ -314,16 +336,17 @@ def test_wave5_dfs_stochastic_milp_portfolio_and_newell_tiered_payout():
         for j in range(i + 1, len(player_sets)):
             assert len(player_sets[i].intersection(player_sets[j])) <= 6
 
-    # Verify Sarah Newell (2017) tiered GPP expected payout rises with higher lineup variance on top-heavy tiers
-    low_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 14.0, [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)])
-    high_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 26.0, [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)])
+    # Sarah Newell (2017): tiered GPP expected payout rises with variance on top-heavy tiers
+    tiers = [(185.0, 100000.0), (160.0, 500.0), (145.0, 25.0)]
+    low_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 14.0, tiers)
+    high_var = evaluate_newell_tiered_gpp_expected_payout(142.0, 26.0, tiers)
     assert high_var["top_tier_win_prob"] > low_var["top_tier_win_prob"]
     assert high_var["expected_payout_usd"] > low_var["expected_payout_usd"]
 
 
 def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
     # 1. Hunter, Vielma & Zaman (2019, `Picking-Winners (1).pdf`) Submodular Portfolio Selector
-    # Lineup 0 and Lineup 1 win in the exact same scenarios, while Lineup 2 wins in disjoint scenarios
+    # Lineup 0 and 1 win in identical scenarios; Lineup 2 wins in disjoint scenarios
     scenarios = np.array(
         [
             [192.0, 191.0, 140.0],
@@ -333,7 +356,9 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
         ],
         dtype=np.float64,
     )
-    submod = select_submodular_marginal_win_portfolio(scenarios, winning_threshold=185.0, k_portfolio_size=2)
+    submod = select_submodular_marginal_win_portfolio(
+        scenarios, winning_threshold=185.0, k_portfolio_size=2
+    )
     assert submod["selected_lineup_indices"] == [0, 2]
     assert submod["cumulative_portfolio_win_prob"] == 1.0
     assert submod["marginal_win_prob_gains"] == [0.5, 0.5]
@@ -347,7 +372,7 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
         expected_pass_tds_lambda=1.85,
         prop_line_tds=1.5,
     )
-    # Short-pass reliability weight (180/(180+180)=0.5) > deep-pass reliability weight (45/(45+380)=0.1059)
+    # Short-pass weight (180/(180+180)=0.5) > deep-pass weight (45/(45+380)=0.1059)
     assert qb_res["short_pass_reliability_weight"] > qb_res["deep_pass_reliability_weight"]
     assert 0.50 < qb_res["poisson_prob_over_td_line"] < 0.60
 
@@ -376,8 +401,8 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
     assert fujii_res["counterfactual_ite_epa_delta"] == pytest.approx(0.21)
     assert fujii_res["optimal_switch_recommended"] is True
 
-    # 5. Noyes (`9906014v1.pdf`) + Shore (`p26.pdf`) + Randi Project Alpha (`CIA-RDP96-00792R000700710002-1.pdf`)
-    # Large sample N=10000 with tiny effect 0.02 and systematic error 0.05 -> naive Z=4.0 but effective Z < 0.4 -> REJECTED
+    # 5. Noyes (`9906014v1.pdf`) + Shore (`p26.pdf`) + Randi (`CIA-RDP96-00792R000700710002-1.pdf`)
+    # N=10000, delta=0.02, sys_err=0.05 -> naive Z=4.0 but effective Z < 0.4 -> REJECTED
     noyes_reject = evaluate_noyes_systematic_error_gate(
         effect_size_delta=0.02,
         statistical_std=0.50,
@@ -434,7 +459,9 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
     pool_df = build_sample_week9_dfs_slate_pool().copy()
     pool_df["game_id"] = np.where(pool_df["team"].isin(["BAL", "DEN"]), "BAL_DEN", "SEA_ARI")
     pool_df["proj_ownership"] = 0.08
-    games_df = pd.DataFrame([{"game_id": "BAL_DEN", "wind_mph": 6.0}, {"game_id": "SEA_ARI", "wind_mph": 14.0}])
+    games_df = pd.DataFrame(
+        [{"game_id": "BAL_DEN", "wind_mph": 6.0}, {"game_id": "SEA_ARI", "wind_mph": 14.0}]
+    )
     sim = GSEFullSlateSimulator(pool_df, games_df, num_sims=200, seed=42)
     fpts_mat, cov_mat = sim.simulate_slate()
     assert fpts_mat.shape == (200, len(pool_df))
@@ -443,7 +470,7 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
     assert field_mat.shape == (40, len(pool_df))
     assert np.all(field_mat.sum(axis=1) == 9)
 
-    # 10. Verify 0 unmatched source files across all rows of nov02_multidomain_corpus_and_equations_feed.jsonl
+    # 10. Verify 0 unmatched source files across nov02_multidomain_corpus_and_equations_feed.jsonl
     planned = load_feed_and_manifest()
     assert len(planned) >= 235
     unmatched = [p for p in planned if not p["source_file"]]
@@ -452,25 +479,37 @@ def test_wave6_deep_corpus_kernels_and_zero_unmatched_sources():
 
 
 def test_track_a_b_c_d_forensic_repo_review_fixes():
-    """Verify all fixes from `DOC-NOV03-GSE-SYSTEM-REPO-REVIEW-2` (`GSE System and Repo Review (2).docx`)
-    and `EQ-NOV03-021` (`enforce_monotonic_cqr_cdf_consistency`).
+    """Verify fixes from DOC-NOV03-GSE-SYSTEM-REPO-REVIEW-2 and EQ-NOV03-021.
+
+    Covers `GSE System and Repo Review (2).docx` and
+    `enforce_monotonic_cqr_cdf_consistency`.
     """
     import json
     from pathlib import Path
+
     from scripts.ops.build_week9_tuesday_sealed_baseline import build_week9_tuesday_sealed_baseline
     from scripts.ops.dfs_stochastic_milp_optimizer import verify_dk_salaries_slate_identity
     from scripts.ops.week8_forensic_kernels import enforce_monotonic_cqr_cdf_consistency
-    from tests.verify_out_of_sample_calibration import main as cal_main, run_real_nflverse_walk_forward_backtests
+
+    from tests.verify_out_of_sample_calibration import main as cal_main
+    from tests.verify_out_of_sample_calibration import run_real_nflverse_walk_forward_backtests
 
     root = Path(__file__).resolve().parents[1]
 
-    # 1. EQ-NOV03-021: Monotonic CQR CDF-quantile consistency & -110 break-even implied probability (52.381%)
-    cqr_fix = enforce_monotonic_cqr_cdf_consistency(23.8, 66.1, line=21.5, model_p_over=0.7028, alpha=0.20)
+    # 1. EQ-NOV03-021: Monotonic CQR CDF-quantile consistency & -110 break-even prob (52.381%)
+    cqr_fix = enforce_monotonic_cqr_cdf_consistency(
+        23.8, 66.1, line=21.5, model_p_over=0.7028, alpha=0.20
+    )
     assert cqr_fix["low"] < 21.5
     assert cqr_fix["monotonic_consistent"] is True
 
-    card = json.loads((root / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json").read_text(encoding="utf-8"))
-    raymond_prop = [p for p in card["evaluated_player_props"] if p["player"] == "Kalif Raymond" and p["market"] == "Receiving Yards"][0]
+    card_path = root / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json"
+    card = json.loads(card_path.read_text(encoding="utf-8"))
+    raymond_prop = [
+        p
+        for p in card["evaluated_player_props"]
+        if p["player"] == "Kalif Raymond" and p["market"] == "Receiving Yards"
+    ][0]
     assert raymond_prop["barber_cqr_80"][0] < 21.5
     assert raymond_prop["cqr_monotonic_consistent"] is True
     assert raymond_prop["market_p"] == pytest.approx(110.0 / 210.0, abs=1e-4)
@@ -482,9 +521,13 @@ def test_track_a_b_c_d_forensic_repo_review_fixes():
     assert "ALTER SYSTEM SET shared_buffers" not in sql_txt
 
     with pytest.raises(ValueError, match="role = 'BALL'"):
-        validate_roster_and_coordinate_mutation_guard([], sql_statement="UPDATE telemetry_tracking_fact SET role = 'BALL'")
+        validate_roster_and_coordinate_mutation_guard(
+            [], sql_statement="UPDATE telemetry_tracking_fact SET role = 'BALL'"
+        )
     with pytest.raises(ValueError, match="velocity vx/vy"):
-        validate_roster_and_coordinate_mutation_guard([], sql_statement="UPDATE telemetry_tracking_fact SET vx = vx * 1.15")
+        validate_roster_and_coordinate_mutation_guard(
+            [], sql_statement="UPDATE telemetry_tracking_fact SET vx = vx * 1.15"
+        )
 
     # 3. CI Workflow & --enforce-gate exit code
     ci_txt = (root / ".github" / "workflows" / "epistemic_gate.yml").read_text(encoding="utf-8")
@@ -495,21 +538,43 @@ def test_track_a_b_c_d_forensic_repo_review_fixes():
     assert cal_main(["--enforce-gate", "--test-reject-exit-code"]) == 1
     assert cal_main(["--enforce-gate"]) == 0
 
-    # 4. Feed & Manifest Sanitization (Zero non-domain Charcuterie / OperaSetup / CIA Stargate pollution)
-    feed_txt = (root / "brain" / "feeds" / "2026-11-02" / "nov02_multidomain_corpus_and_equations_feed.jsonl").read_text(encoding="utf-8")
-    for banned_substr in ("Charcuterie-Chick", "OperaSetup.exe", "CIA-RDP96-00792", "some_eth_false_exposition", "_vitest_"):
+    # 4. Feed & Manifest Sanitization (Zero Charcuterie / OperaSetup / CIA Stargate pollution)
+    feed_path = (
+        root
+        / "brain"
+        / "feeds"
+        / "2026-11-02"
+        / "nov02_multidomain_corpus_and_equations_feed.jsonl"
+    )
+    feed_txt = feed_path.read_text(encoding="utf-8")
+    banned_substrings = (
+        "Charcuterie-Chick",
+        "OperaSetup.exe",
+        "CIA-RDP96-00792",
+        "some_eth_false_exposition",
+        "_vitest_",
+    )
+    for banned_substr in banned_substrings:
         assert banned_substr not in feed_txt
 
     # 5. Real nflverse walk-forward backtests & Week 9 Tuesday sealed baseline
     wf = run_real_nflverse_walk_forward_backtests()
     assert wf["eager_split_pass_epa_and_poisson_td"]["PROMOTION_GATE_STATUS"] == "APPROVED"
-    assert wf["davidson_pilon_empirical_bayes_receiving_props"]["PROMOTION_GATE_STATUS"] == "APPROVED"
-    assert wf["quarantined_pinn_navier_stokes_and_ocular_proxy"]["PROMOTION_GATE_STATUS"] == "REJECTED"
+    assert (
+        wf["davidson_pilon_empirical_bayes_receiving_props"]["PROMOTION_GATE_STATUS"]
+        == "APPROVED"
+    )
+    assert (
+        wf["quarantined_pinn_navier_stokes_and_ocular_proxy"]["PROMOTION_GATE_STATUS"]
+        == "REJECTED"
+    )
 
     sealed = build_week9_tuesday_sealed_baseline()
     assert sealed["mhj_shrunk_target_share_prior"] >= 0.20
 
-    dk_Sample = pd.DataFrame({"Game Info": ["MIN@DET 11/01/2026 01:00PM ET", "CHI@SEA 11/02/2026 08:15PM ET"]})
+    dk_Sample = pd.DataFrame(
+        {"Game Info": ["MIN@DET 11/01/2026 01:00PM ET", "CHI@SEA 11/02/2026 08:15PM ET"]}
+    )
     dk_id = verify_dk_salaries_slate_identity(dk_Sample)
     assert dk_id["detected_nfl_week"] == 8
     assert dk_id["is_week8_retrospective_file"] is True

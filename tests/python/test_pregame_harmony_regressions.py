@@ -1,9 +1,6 @@
-"""test_pregame_harmony_regressions.py
-=============================================================================
-Comprehensive Python Regression & Harmony Test Suite for Week 10
-Pre-Game & Post-Window Engine Workflows (Tracks A, B, C, D).
+"""Regression & Harmony Test Suite for Week 10 Pre-Game & Post-Window Engine Workflows.
 
-Verifies:
+Covers Tracks A, B, C, and D:
 1. Track D: Sequenced Pipeline Orchestrator (noon-lock & t90m-adjust modes,
    <180s T-90m SLA badge, unified summary packet emission).
 2. Track D: Post-Window Settlement & Autopsy (free-path ESPN scoreboard grading,
@@ -15,57 +12,50 @@ Verifies:
    classification suites: 1Q/1H props, halves/quarters, QB, skill, IDP, kicking).
 5. Track C: DFS Classic 2-TE FLEX Lineup Formatting & GSE Lineup Doctor.
 6. Conservation: PBP Conservation invariant checking & conserved box score allocation.
-=============================================================================
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+
 import pandas as pd
 import pytest
 
-# Paths
-REPO_ROOT = Path(__file__).resolve().parents[2]
-
-# Track D imports
-from scripts.ops.run_permanent_sequenced_weekly_pipeline import (
-    run_permanent_sequenced_pipeline,
-    resolve_target_window_games,
-    WEEK10_WINDOW_MAP,
-    WEEK10_ALL_REMAINING,
-)
-from scripts.ops.run_post_window_settlement_and_autopsy import (
-    run_post_window_settlement_and_autopsy,
-    resolve_window_for_event,
-    grade_completed_game,
-)
-
-# Track A imports
-from scripts.ops.build_live_stage0_truth import (
-    resolve_single_qb1_truth,
-    CANONICAL_HEALTHY_QB1,
-)
-
-# Track B imports
-from scripts.ops.build_game_boards_360 import (
-    classify_market_suite,
-    BOARD_MARKETS,
-    DEFAULT_REMAINING_GAMES,
-)
-
-# Track C imports
+# Track D / Track C imports
 from scripts.dfs.build_week10_all_slates_dfs_packets import _format_classic_lineup
 from scripts.dfs.build_weekly_dfs_packets import optimize_showdown_portfolio
 from scripts.dfs.gse_lineup_doctor import GSELineupDoctor
 
-# Forensic / Conservation imports
-from scripts.ops.week8_forensic_kernels import (
-    assert_pbp_conservation,
-    allocate_conserved_box_score,
+# Track B imports
+from scripts.ops.build_game_boards_360 import (
+    BOARD_MARKETS,
+    DEFAULT_REMAINING_GAMES,
+    classify_market_suite,
 )
 
+# Track A imports
+from scripts.ops.build_live_stage0_truth import (
+    CANONICAL_HEALTHY_QB1,
+    resolve_single_qb1_truth,
+)
+from scripts.ops.run_permanent_sequenced_weekly_pipeline import (
+    WEEK10_WINDOW_MAP,
+    resolve_target_window_games,
+    run_permanent_sequenced_pipeline,
+)
+from scripts.ops.run_post_window_settlement_and_autopsy import (
+    grade_completed_game,
+    run_post_window_settlement_and_autopsy,
+)
+
+# Forensic / Conservation imports
+from scripts.ops.week8_forensic_kernels import (
+    allocate_conserved_box_score,
+    assert_pbp_conservation,
+)
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # =============================================================================
 # TRACK D: SEQUENCED PIPELINE ORCHESTRATOR REGRESSIONS
@@ -124,7 +114,7 @@ def test_pipeline_noon_lock_execution_and_packet_emission(tmp_path: Path):
     assert summary_md_path is not None and Path(summary_md_path).is_file()
 
     # Verify packet json content structure
-    with open(summary_json_path, "r", encoding="utf-8") as f:
+    with open(summary_json_path, encoding="utf-8") as f:
         packet = json.load(f)
     assert packet.get("season") == 2026
     assert packet.get("week") == 10
@@ -222,7 +212,7 @@ def test_post_window_settlement_trainer_feed_schema():
     assert "brain" in feed_path.parts and "feeds" in feed_path.parts
 
     # Validate JSONL records
-    with open(feed_path, "r", encoding="utf-8") as f:
+    with open(feed_path, encoding="utf-8") as f:
         lines = [line.strip() for line in f if line.strip()]
     assert len(lines) >= 1
 
@@ -300,7 +290,10 @@ def test_360_board_market_classification_and_coverage():
     assert classify_market_suite("1st Half Rushing Yards", period="1H") == "1q_1h_player_props"
 
     # 3. Touchdown Scorers
-    assert classify_market_suite("Anytime Touchdown Scorer", period="FULL_GAME") == "touchdown_scorers"
+    assert (
+        classify_market_suite("Anytime Touchdown Scorer", period="FULL_GAME")
+        == "touchdown_scorers"
+    )
     assert classify_market_suite("First TD Scorer", period="FULL_GAME") == "touchdown_scorers"
 
     # 4. QB Full Game Suite
@@ -335,15 +328,51 @@ def test_dfs_format_classic_lineup_2te_flex_support():
     # Build a valid 9-man classic roster with 2 TEs:
     # 1 QB, 2 RB, 3 WR, 2 TE (one in TE, one in FLEX), 1 DST
     players = [
-        {"player_id": "1", "name": "Josh Allen", "position": "QB", "team": "BUF", "opponent": "NYJ", "salary": 8000, "median_fpts": 24.5, "p25_floor_fpts": 18.0, "p90_ceiling_fpts": 32.0, "kickoff_epoch": 1000},
-        {"player_id": "2", "name": "James Cook", "position": "RB", "team": "BUF", "opponent": "NYJ", "salary": 6500, "median_fpts": 16.2, "p25_floor_fpts": 10.0, "p90_ceiling_fpts": 22.0, "kickoff_epoch": 1000},
-        {"player_id": "3", "name": "Breece Hall", "position": "RB", "team": "NYJ", "opponent": "BUF", "salary": 7200, "median_fpts": 17.8, "p25_floor_fpts": 11.0, "p90_ceiling_fpts": 25.0, "kickoff_epoch": 1000},
-        {"player_id": "4", "name": "Khalil Shakir", "position": "WR", "team": "BUF", "opponent": "NYJ", "salary": 5400, "median_fpts": 13.1, "p25_floor_fpts": 7.0, "p90_ceiling_fpts": 19.0, "kickoff_epoch": 1000},
-        {"player_id": "5", "name": "Garrett Wilson", "position": "WR", "team": "NYJ", "opponent": "BUF", "salary": 6800, "median_fpts": 15.5, "p25_floor_fpts": 9.0, "p90_ceiling_fpts": 23.0, "kickoff_epoch": 1000},
-        {"player_id": "6", "name": "Davante Adams", "position": "WR", "team": "NYJ", "opponent": "BUF", "salary": 7000, "median_fpts": 14.8, "p25_floor_fpts": 8.0, "p90_ceiling_fpts": 21.0, "kickoff_epoch": 1000},
-        {"player_id": "7", "name": "Brock Bowers", "position": "TE", "team": "LV", "opponent": "SEA", "salary": 5800, "median_fpts": 14.0, "p25_floor_fpts": 8.0, "p90_ceiling_fpts": 20.0, "kickoff_epoch": 2000},
-        {"player_id": "8", "name": "George Kittle", "position": "TE", "team": "SF", "opponent": "DAL", "salary": 6000, "median_fpts": 15.0, "p25_floor_fpts": 9.0, "p90_ceiling_fpts": 22.0, "kickoff_epoch": 3000},
-        {"player_id": "9", "name": "Bills DST", "position": "DST", "team": "BUF", "opponent": "NYJ", "salary": 3000, "median_fpts": 7.5, "p25_floor_fpts": 3.0, "p90_ceiling_fpts": 14.0, "kickoff_epoch": 1000},
+        {
+            "player_id": "1", "name": "Josh Allen", "position": "QB", "team": "BUF",
+            "opponent": "NYJ", "salary": 8000, "median_fpts": 24.5,
+            "p25_floor_fpts": 18.0, "p90_ceiling_fpts": 32.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "2", "name": "James Cook", "position": "RB", "team": "BUF",
+            "opponent": "NYJ", "salary": 6500, "median_fpts": 16.2,
+            "p25_floor_fpts": 10.0, "p90_ceiling_fpts": 22.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "3", "name": "Breece Hall", "position": "RB", "team": "NYJ",
+            "opponent": "BUF", "salary": 7200, "median_fpts": 17.8,
+            "p25_floor_fpts": 11.0, "p90_ceiling_fpts": 25.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "4", "name": "Khalil Shakir", "position": "WR", "team": "BUF",
+            "opponent": "NYJ", "salary": 5400, "median_fpts": 13.1,
+            "p25_floor_fpts": 7.0, "p90_ceiling_fpts": 19.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "5", "name": "Garrett Wilson", "position": "WR", "team": "NYJ",
+            "opponent": "BUF", "salary": 6800, "median_fpts": 15.5,
+            "p25_floor_fpts": 9.0, "p90_ceiling_fpts": 23.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "6", "name": "Davante Adams", "position": "WR", "team": "NYJ",
+            "opponent": "BUF", "salary": 7000, "median_fpts": 14.8,
+            "p25_floor_fpts": 8.0, "p90_ceiling_fpts": 21.0, "kickoff_epoch": 1000,
+        },
+        {
+            "player_id": "7", "name": "Brock Bowers", "position": "TE", "team": "LV",
+            "opponent": "SEA", "salary": 5800, "median_fpts": 14.0,
+            "p25_floor_fpts": 8.0, "p90_ceiling_fpts": 20.0, "kickoff_epoch": 2000,
+        },
+        {
+            "player_id": "8", "name": "George Kittle", "position": "TE", "team": "SF",
+            "opponent": "DAL", "salary": 6000, "median_fpts": 15.0,
+            "p25_floor_fpts": 9.0, "p90_ceiling_fpts": 22.0, "kickoff_epoch": 3000,
+        },
+        {
+            "player_id": "9", "name": "Bills DST", "position": "DST", "team": "BUF",
+            "opponent": "NYJ", "salary": 3000, "median_fpts": 7.5,
+            "p25_floor_fpts": 3.0, "p90_ceiling_fpts": 14.0, "kickoff_epoch": 1000,
+        },
     ]
     df = pd.DataFrame(players)
     formatted = _format_classic_lineup(df, mode="gpp", lineup_index=1, salary_cap=56000)
@@ -359,7 +388,8 @@ def test_dfs_format_classic_lineup_2te_flex_support():
     flex_slot = next(r for r in roster if r["slot"] == "FLEX")
     assert te_slot["pos"] == "TE"
     assert flex_slot["pos"] == "TE"
-    assert flex_slot["name"] == "George Kittle"  # Latest kickoff placed in FLEX for recourse optionality
+    # Latest kickoff placed in FLEX for recourse optionality
+    assert flex_slot["name"] == "George Kittle"
 
 
 def test_dfs_lineup_doctor_self_test():
@@ -413,18 +443,48 @@ def test_allocate_conserved_box_score():
 
 
 def test_optimize_showdown_portfolio_enforces_salary_cap():
-    """Verify optimize_showdown_portfolio strictly enforces <= $50,000 cap (CPT 1.5x + 5 FLEX) and >= 2 teams."""
+    """Verify optimize_showdown_portfolio enforces <= $50,000 cap and >= 2 teams."""
     pool = pd.DataFrame([
-        {"name": "Star QB A", "team": "PIT", "position": "QB", "salary": 10600, "cpt_salary": 15900, "median_fpts": 22.0},
-        {"name": "Star WR A", "team": "PIT", "position": "WR", "salary": 11000, "cpt_salary": 16500, "median_fpts": 20.5},
-        {"name": "Star QB B", "team": "CIN", "position": "QB", "salary": 10200, "cpt_salary": 15300, "median_fpts": 21.0},
-        {"name": "Star RB B", "team": "CIN", "position": "RB", "salary": 9600, "cpt_salary": 14400, "median_fpts": 18.0},
-        {"name": "WR2 A", "team": "PIT", "position": "WR", "salary": 7000, "cpt_salary": 10500, "median_fpts": 13.0},
-        {"name": "TE1 B", "team": "CIN", "position": "TE", "salary": 5400, "cpt_salary": 8100, "median_fpts": 10.5},
-        {"name": "Kicker A", "team": "PIT", "position": "K", "salary": 5000, "cpt_salary": 7500, "median_fpts": 8.0},
-        {"name": "DST B", "team": "CIN", "position": "DST", "salary": 4200, "cpt_salary": 6300, "median_fpts": 7.0},
-        {"name": "WR3 A", "team": "PIT", "position": "WR", "salary": 3200, "cpt_salary": 4800, "median_fpts": 6.5},
-        {"name": "RB3 B", "team": "CIN", "position": "RB", "salary": 2400, "cpt_salary": 3600, "median_fpts": 5.0},
+        {
+            "name": "Star QB A", "team": "PIT", "position": "QB",
+            "salary": 10600, "cpt_salary": 15900, "median_fpts": 22.0,
+        },
+        {
+            "name": "Star WR A", "team": "PIT", "position": "WR",
+            "salary": 11000, "cpt_salary": 16500, "median_fpts": 20.5,
+        },
+        {
+            "name": "Star QB B", "team": "CIN", "position": "QB",
+            "salary": 10200, "cpt_salary": 15300, "median_fpts": 21.0,
+        },
+        {
+            "name": "Star RB B", "team": "CIN", "position": "RB",
+            "salary": 9600, "cpt_salary": 14400, "median_fpts": 18.0,
+        },
+        {
+            "name": "WR2 A", "team": "PIT", "position": "WR",
+            "salary": 7000, "cpt_salary": 10500, "median_fpts": 13.0,
+        },
+        {
+            "name": "TE1 B", "team": "CIN", "position": "TE",
+            "salary": 5400, "cpt_salary": 8100, "median_fpts": 10.5,
+        },
+        {
+            "name": "Kicker A", "team": "PIT", "position": "K",
+            "salary": 5000, "cpt_salary": 7500, "median_fpts": 8.0,
+        },
+        {
+            "name": "DST B", "team": "CIN", "position": "DST",
+            "salary": 4200, "cpt_salary": 6300, "median_fpts": 7.0,
+        },
+        {
+            "name": "WR3 A", "team": "PIT", "position": "WR",
+            "salary": 3200, "cpt_salary": 4800, "median_fpts": 6.5,
+        },
+        {
+            "name": "RB3 B", "team": "CIN", "position": "RB",
+            "salary": 2400, "cpt_salary": 3600, "median_fpts": 5.0,
+        },
     ])
     lineups = optimize_showdown_portfolio(
         pool,
@@ -451,11 +511,12 @@ def test_optimize_showdown_portfolio_enforces_salary_cap():
 
 def test_all_week10_slate_packets_enforce_50k_salary_cap():
     """Verify all 4 Week 10 slate packets obey $50,000 salary cap across every archetype."""
+    w10_dir = REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-15"
     packet_files = [
-        REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-15" / "week10_afternoon_classic_packet.json",
-        REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-15" / "week10_main_lateswap_classic_packet.json",
-        REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-15" / "week10_snf_pit_cin_showdown_packet.json",
-        REPO_ROOT / "docs" / "dfs" / "research" / "2026-11-15" / "week10_mnf_lac_bal_showdown_packet.json",
+        w10_dir / "week10_afternoon_classic_packet.json",
+        w10_dir / "week10_main_lateswap_classic_packet.json",
+        w10_dir / "week10_snf_pit_cin_showdown_packet.json",
+        w10_dir / "week10_mnf_lac_bal_showdown_packet.json",
     ]
     for path in packet_files:
         assert path.is_file(), f"Missing DFS packet JSON: {path}"
@@ -463,11 +524,16 @@ def test_all_week10_slate_packets_enforce_50k_salary_cap():
         archetypes = packet["archetypes"]
         for single_key in ("cash_optimal", "chalk_benchmark"):
             lu = archetypes[single_key]
-            assert lu["total_salary"] <= 50000, f"{path.name} {single_key} exceeded cap: {lu['total_salary']}"
+            assert lu["total_salary"] <= 50000, (
+                f"{path.name} {single_key} exceeded cap: {lu['total_salary']}"
+            )
             assert lu["salary_remaining"] >= 0
         for multi_key in ("se_3max_optimal", "mme_20max_portfolio"):
             lus = archetypes[multi_key]
             assert len(lus) >= 1, f"{path.name} {multi_key} empty"
             for lu in lus:
-                assert lu["total_salary"] <= 50000, f"{path.name} {multi_key} #{lu.get('lineup_index')} exceeded cap: {lu['total_salary']}"
+                assert lu["total_salary"] <= 50000, (
+                    f"{path.name} {multi_key} #{lu.get('lineup_index')} exceeded cap: "
+                    f"{lu['total_salary']}"
+                )
                 assert lu["salary_remaining"] >= 0

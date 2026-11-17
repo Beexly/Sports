@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Comprehensive 4-Tier E2E Verification Suite for Unified 5,000+ Equation Projections,
-Week 9 Sunday Settlement, MNF `BUF @ MIN` Dossier Sync, and Storefront Alignment
+"""Comprehensive 4-Tier E2E Verification Suite for Unified 5,000+ Equation Projections.
+
+Covers Week 9 Sunday Settlement, MNF `BUF @ MIN` Dossier Sync, and Storefront Alignment
 (`tests/unit/test_unified_5000eq_mnf_projections_and_storefront.py`).
 
 Covers all 8 Features (`F1`–`F8`) specified in `.agents/teamwork/PROJECT.md`:
   - Tier 1 — Feature Coverage (`F1`–`F7`)
-  - Tier 2 — Boundary & Corner Cases (Zero IR/Inactive Starters, Dossier Invariants 2 & 3, EB Shrinkage)
-  - Tier 3 — Cross-Feature Combinations (Funnel Stage 2 + Spatial Prop Evaluator + Conserved Optimizer)
+  - Tier 2 — Boundary & Corner Cases (Zero IR/Inactive, Dossier Invariants 2 & 3, EB)
+  - Tier 3 — Cross-Feature Combinations (Funnel Stage 2 + Prop Evaluator + Optimizer)
   - Tier 4 — Real-World Application Scenarios (Subprocess execution of CI Guardrails)
 """
 
@@ -14,13 +15,10 @@ from __future__ import annotations
 
 import inspect
 import json
-import math
-import re
 import subprocess
 import sys
 import unittest
 from pathlib import Path
-from typing import Any, Dict, List
 
 import numpy as np
 
@@ -28,25 +26,27 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
+from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (  # noqa: E402
     _empirical_bayes_within_group_weights,
     build_conserved_week9_player_projections,
     compute_conserved_team_environments,
     project_full_nfl_game_box_score_from_dossier,
 )
-from intelligence.funnel.gse_causal_looped_funnel_engine import (
+from intelligence.funnel.gse_causal_looped_funnel_engine import (  # noqa: E402
     CANONICAL_PROJECTIONS_OUT_PATH,
     FunnelSequenceViolationError,
     GSECausalLoopedFunnelEngine,
 )
-from intelligence.metrics.book_equations_to_stats_compiler import (
+from intelligence.metrics.book_equations_to_stats_compiler import (  # noqa: E402
     CANONICAL_92_STATS_AND_METRICS,
     COMPILED_STATS_OUTPUT_PATH,
     BookEquationsToStatsCompiler,
 )
-from intelligence.props.spatial_micro_metrics_prop_and_matchup_evaluator import (
+from intelligence.props.spatial_micro_metrics_prop_and_matchup_evaluator import (  # noqa: E402
     SpatialMicroMetricsPropAndMatchupEvaluator,
 )
+
+
 def _load_dossier_guard_module():
     import importlib.util
 
@@ -65,14 +65,15 @@ class TestTier1FeatureCoverage(unittest.TestCase):
     """Tier 1 — Core feature coverage across F1 through F7."""
 
     def test_t1_f1_book_equations_to_stats_compiler_21419_deterministic_routing(self) -> None:
-        """F1: Verify BookEquationsToStatsCompiler compiles all 21,419 equations across 503 books
-        into the 92 canonical micro-metrics with deterministic routing (zero MD5 fallback).
+        """F1: Verify BookEquationsToStatsCompiler compiles all 21,419 equations across 503 books.
+
+        Checks the 92 canonical micro-metrics with deterministic routing (zero MD5 fallback).
         """
         compiler_src = inspect.getsource(BookEquationsToStatsCompiler)
         self.assertNotIn(
             "hashlib.md5",
             compiler_src,
-            "BookEquationsToStatsCompiler must use deterministic target_layer/family routing, never hashlib.md5.",
+            "BookEquationsToStatsCompiler must use deterministic routing, never hashlib.md5.",
         )
 
         self.assertTrue(
@@ -118,12 +119,15 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertEqual(len(m1), 92)
 
     def test_t1_f2_f3_conserved_projection_team_identities_and_decoupled_ypr(self) -> None:
-        """F2 & F3: Verify conserved_nfl_projection_and_equation_optimizer.py enforces strict
-        team-level conservation within rounding tolerance and produces decoupled YPR/YPC
-        across pass-catchers (Justin Jefferson YPR > Aaron Jones YPR on MIN).
+        """F2 & F3: Verify conserved_nfl_projection_and_equation_optimizer.py conservation.
+
+        Enforces strict team-level conservation within rounding tolerance and produces
+        decoupled YPR/YPC across pass-catchers (Justin Jefferson YPR > Aaron Jones YPR on MIN).
         """
         team_envs = compute_conserved_team_environments()
-        self.assertGreaterEqual(len(team_envs), 28, "Expected at least 28 active Week 9 teams in team_envs")
+        self.assertGreaterEqual(
+            len(team_envs), 28, "Expected at least 28 active Week 9 teams in team_envs"
+        )
 
         for tm, env in team_envs.items():
             rec_share_sum = (
@@ -167,22 +171,34 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertLessEqual(
                 abs(sum_rec_yds - float(b["conserved_pass_yds"])),
                 0.5,
-                f"{tm} sum(player_rec_yds)={sum_rec_yds} != conserved_pass_yds={b['conserved_pass_yds']}",
+                (
+                    f"{tm} sum(player_rec_yds)={sum_rec_yds} "
+                    f"!= conserved_pass_yds={b['conserved_pass_yds']}"
+                ),
             )
             self.assertLessEqual(
                 abs(sum_recs - float(b["conserved_completions"])),
                 0.15,
-                f"{tm} sum(player_receptions)={sum_recs} != conserved_completions={b['conserved_completions']}",
+                (
+                    f"{tm} sum(player_receptions)={sum_recs} "
+                    f"!= conserved_completions={b['conserved_completions']}"
+                ),
             )
             self.assertLessEqual(
                 abs(sum_rush_yds - float(b["conserved_total_rush_yds"])),
                 0.5,
-                f"{tm} sum(player_rush_yds)={sum_rush_yds} != conserved_total_rush_yds={b['conserved_total_rush_yds']}",
+                (
+                    f"{tm} sum(player_rush_yds)={sum_rush_yds} "
+                    f"!= conserved_total_rush_yds={b['conserved_total_rush_yds']}"
+                ),
             )
             self.assertLessEqual(
                 abs(sum_rec_tds - float(b["conserved_pass_tds"])),
                 0.05,
-                f"{tm} sum(player_rec_tds)={sum_rec_tds} != conserved_pass_tds={b['conserved_pass_tds']}",
+                (
+                    f"{tm} sum(player_rec_tds)={sum_rec_tds} "
+                    f"!= conserved_pass_tds={b['conserved_pass_tds']}"
+                ),
             )
 
         # Verify decoupled YPR on MIN: Justin Jefferson YPR > Aaron Jones YPR
@@ -196,7 +212,7 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertGreater(
             jj_ypr,
             aj_ypr + 1.0,
-            f"Expected decoupled YPR with Justin Jefferson ({jj_ypr:.2f}) > Aaron Jones ({aj_ypr:.2f})",
+            f"Expected decoupled YPR: Justin Jefferson ({jj_ypr:.2f}) > Aaron Jones ({aj_ypr:.2f})",
         )
 
         # Verify James Cook lead back rush efficiency on BUF
@@ -209,11 +225,16 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         )
 
     def test_t1_f3_week9_sunday_settlement_mae_and_7_4_0_record(self) -> None:
-        """F3: Verify Week 9 Sunday settled player benchmark achieves MAE < 5.0 DK pts
-        (improving significantly on 12.08 legacy MAE) and 7-4-0 (+2.06u) game-line record.
+        """F3: Verify Week 9 Sunday settled player benchmark achieves MAE < 5.0 DK pts.
+
+        Improves significantly on 12.08 legacy MAE and achieves 7-4-0 (+2.06u) game-line record.
         """
         settlement_path = (
-            REPO_ROOT / "data" / "engine" / "settlements" / "week9_sunday_2026-11-08_settlement.json"
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / "settlements"
+            / "week9_sunday_2026-11-08_settlement.json"
         )
         self.assertTrue(settlement_path.is_file(), f"Missing {settlement_path}")
         settlement = json.loads(settlement_path.read_text(encoding="utf-8"))
@@ -236,25 +257,40 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         )
 
     def test_t1_f4_coach_mind_simulator_compiled_92_stats_and_qb_tier_dropoff(self) -> None:
-        """F4: Verify compute_qb_tier_adjusted_epa in gse_coach_mind_simulator.py incorporates
-        compiled_92_pocket_survival and preserves QB1_STARTER > QB2_BACKUP > EMERGENCY_QB3_UDFA ordering.
+        """F4: Verify compute_qb_tier_adjusted_epa in gse_coach_mind_simulator.py.
+
+        Incorporates compiled_92_pocket_survival and preserves
+        QB1_STARTER > QB2_BACKUP > EMERGENCY_QB3_UDFA ordering.
         """
         from scripts.ops.gse_coach_mind_simulator import compute_qb_tier_adjusted_epa
 
-        res_qb1 = compute_qb_tier_adjusted_epa(0.10, "QB1_STARTER", compiled_92_pocket_survival=0.68)
-        res_qb2 = compute_qb_tier_adjusted_epa(0.10, "QB2_BACKUP", compiled_92_pocket_survival=0.45)
-        res_qb3 = compute_qb_tier_adjusted_epa(0.10, "EMERGENCY_QB3_UDFA", compiled_92_pocket_survival=0.38)
+        res_qb1 = compute_qb_tier_adjusted_epa(
+            0.10, "QB1_STARTER", compiled_92_pocket_survival=0.68
+        )
+        res_qb2 = compute_qb_tier_adjusted_epa(
+            0.10, "QB2_BACKUP", compiled_92_pocket_survival=0.45
+        )
+        res_qb3 = compute_qb_tier_adjusted_epa(
+            0.10, "EMERGENCY_QB3_UDFA", compiled_92_pocket_survival=0.38
+        )
         self.assertGreater(res_qb1["adjusted_off_epa"], res_qb2["adjusted_off_epa"])
         self.assertGreater(res_qb2["adjusted_off_epa"], res_qb3["adjusted_off_epa"])
         self.assertEqual(res_qb2["compiled_92_pocket_survival"], 0.45)
 
     def test_t1_f5_mnf_buf_min_dossier_zero_discrepancy_and_showdown_cpt(self) -> None:
-        """F5: Verify connected_workflow_dossier_buf_min_week9.json and
-        mnf_buf_min_conserved_stat_projections_2026_11_09.json are 100% aligned.
+        """F5: Verify MNF BUF @ MIN dossier and conserved stat projections are aligned.
+
+        Checks connected_workflow_dossier_buf_min_week9.json and
+        mnf_buf_min_conserved_stat_projections_2026_11_09.json.
         """
-        dossier_path = REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        dossier_path = (
+            REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        )
         mnf_proj_path = (
-            REPO_ROOT / "data" / "projections" / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
+            REPO_ROOT
+            / "data"
+            / "projections"
+            / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
         )
         self.assertTrue(dossier_path.is_file())
         self.assertTrue(mnf_proj_path.is_file())
@@ -285,21 +321,29 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertLessEqual(
                 abs(doss_pass - float(t_mnf["conserved_pass_yds"])),
                 0.5,
-                f"{tm} pass_yds.mean mismatch: dossier={doss_pass} vs mnf={t_mnf['conserved_pass_yds']}",
+                (
+                    f"{tm} pass_yds.mean mismatch: dossier={doss_pass} "
+                    f"vs mnf={t_mnf['conserved_pass_yds']}"
+                ),
             )
             self.assertLessEqual(
                 abs(doss_rush - float(t_mnf["conserved_total_rush_yds"])),
                 0.5,
-                f"{tm} rush_yds.mean mismatch: dossier={doss_rush} vs mnf={t_mnf['conserved_total_rush_yds']}",
+                (
+                    f"{tm} rush_yds.mean mismatch: dossier={doss_rush} "
+                    f"vs mnf={t_mnf['conserved_total_rush_yds']}"
+                ),
             )
 
-        # 3. Verify strictly monotonic quantiles p10 <= p25 <= p50 <= p75 <= p90 across all Stage 3/4 athletes
+        # 3. Verify strictly monotonic quantiles p10 <= p25 <= p50 <= p75 <= p90 across Stage 3/4
         athletes_s34 = s34.get("athlete_post_sim_projections", {})
         self.assertGreaterEqual(len(athletes_s34), 8)
         for a_name, a_obj in athletes_s34.items():
             proj_map = a_obj.get("projections") or a_obj.get("stats") or {}
             for stat_k, stat_v in proj_map.items():
-                if isinstance(stat_v, dict) and all(q in stat_v for q in ("p10", "p25", "p50", "p75", "p90")):
+                if isinstance(stat_v, dict) and all(
+                    q in stat_v for q in ("p10", "p25", "p50", "p75", "p90")
+                ):
                     q_vals = [float(stat_v[q]) for q in ("p10", "p25", "p50", "p75", "p90")]
                     self.assertEqual(
                         q_vals,
@@ -323,7 +367,11 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             m_name = prop.get("market")
             cand_keys = market_to_stat_keys.get(m_name, ())
             if a_name in athletes_s34 and cand_keys:
-                proj_map = athletes_s34[a_name].get("projections") or athletes_s34[a_name].get("stats") or {}
+                proj_map = (
+                    athletes_s34[a_name].get("projections")
+                    or athletes_s34[a_name].get("stats")
+                    or {}
+                )
                 s34_stat = next((proj_map[k] for k in cand_keys if k in proj_map), None)
                 if isinstance(s34_stat, dict) and "mean" in s34_stat:
                     diff = abs(float(prop["post_sim_mean"]) - float(s34_stat["mean"]))
@@ -346,21 +394,43 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             self.assertEqual(int(roster[0].get("salary", 0)), 15600)
             self.assertLessEqual(int(lu_obj.get("total_salary", 99999)), 50000)
 
-        # 6. Verify Nov 7-9 consolidated research signals (Playcaller WAR, Q52-Q54 splits, James Cook RYOE)
+        # 6. Verify Nov 7-9 consolidated research signals (Playcaller WAR, Q52-Q54, Cook RYOE)
         cons_sig = mnf_proj.get("consolidated_research_signals_2026_11_09", {})
-        self.assertEqual(cons_sig.get("playcaller_war_residuals", {}).get("buf_oc_joe_brady_epa_per_play"), 0.07)
-        self.assertEqual(cons_sig.get("playcaller_war_residuals", {}).get("min_dc_brian_flores_epa_per_play"), -0.11)
-        self.assertEqual(cons_sig.get("situational_and_spatial_anchors", {}).get("min_series_conversion_rate_allowed_pct"), 62.4)
-        self.assertEqual(cons_sig.get("situational_and_spatial_anchors", {}).get("buf_avg_drive_start_yardline"), 34.79)
-        self.assertEqual(cons_sig.get("situational_and_spatial_anchors", {}).get("james_cook_ryoe_per_att"), 0.99)
+        self.assertEqual(
+            cons_sig.get("playcaller_war_residuals", {}).get("buf_oc_joe_brady_epa_per_play"),
+            0.07,
+        )
+        self.assertEqual(
+            cons_sig.get("playcaller_war_residuals", {}).get(
+                "min_dc_brian_flores_epa_per_play"
+            ),
+            -0.11,
+        )
+        self.assertEqual(
+            cons_sig.get("situational_and_spatial_anchors", {}).get(
+                "min_series_conversion_rate_allowed_pct"
+            ),
+            62.4,
+        )
+        self.assertEqual(
+            cons_sig.get("situational_and_spatial_anchors", {}).get(
+                "buf_avg_drive_start_yardline"
+            ),
+            34.79,
+        )
+        self.assertEqual(
+            cons_sig.get("situational_and_spatial_anchors", {}).get("james_cook_ryoe_per_att"),
+            0.99,
+        )
         self.assertIn("Q52", cons_sig.get("intel_loop_q52_q54_splits", {}))
         self.assertIn("Q53", cons_sig.get("intel_loop_q52_q54_splits", {}))
         self.assertIn("Q54", cons_sig.get("intel_loop_q52_q54_splits", {}))
         self.assertEqual(s34.get("consolidated_research_signals_2026_11_09"), cons_sig)
 
     def test_t1_f6_f7_web_storefront_mnf_alignment_and_pricing_integrity(self) -> None:
-        """F6 & F7: Verify apps/web storefront files align with MNF BUF @ MIN, repair
-        pricing/DFS/methodology defects, and contain zero banned robotic phrases or XX% confidence.
+        """F6 & F7: Verify apps/web storefront files align with MNF BUF @ MIN.
+
+        Checks pricing/DFS/methodology defects and zero banned robotic phrases or XX% confidence.
         """
         GUARD_MOD.verify_web_storefront_human_copy()
 
@@ -417,7 +487,8 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         # 5. fantasy/dfs/page.tsx duplicate sentence & closed pack check
         dfs_text = dfs_page_path.read_text(encoding="utf-8")
         self.assertNotIn(
-            "No licensed salary feed is connected. No licensed DFS salary feed is connected to this surface.",
+            "No licensed salary feed is connected. "
+            "No licensed DFS salary feed is connected to this surface.",
             dfs_text,
             "Duplicate salary feed sentence must be removed from fantasy/dfs/page.tsx",
         )
@@ -430,7 +501,8 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         # 6. sealed-table.tsx fake Trench X-Ray check
         sealed_text = sealed_path.read_text(encoding="utf-8")
         self.assertNotIn(
-            "Offensive line pass protection +1.34s pocket time · Defensive front pressure rate 28.4%",
+            "Offensive line pass protection +1.34s pocket time · "
+            "Defensive front pressure rate 28.4%",
             sealed_text,
             "Hardcoded fake Trench X-Ray string must be removed from sealed-table.tsx",
         )
@@ -446,7 +518,14 @@ class TestTier1FeatureCoverage(unittest.TestCase):
         self.assertIn("7-4-0", packet_text)
 
         # 8. Check zero banned phrases and zero XX% confidence strings across storefront files
-        for p in (writeup_path, bridge_path, redline_path, pricing_path, dfs_page_path, sealed_path):
+        for p in (
+            writeup_path,
+            bridge_path,
+            redline_path,
+            pricing_path,
+            dfs_page_path,
+            sealed_path,
+        ):
             txt = p.read_text(encoding="utf-8")
             for banned in GUARD_MOD.BANNED_WEB_STOREFRONT_PHRASES:
                 self.assertNotIn(
@@ -457,7 +536,10 @@ class TestTier1FeatureCoverage(unittest.TestCase):
             m = GUARD_MOD.PERCENT_CONF_RE.search(txt)
             self.assertIsNone(
                 m,
-                f"Forbidden percentage confidence '{m.group(0) if m else ''}' in {p.relative_to(REPO_ROOT)}",
+                (
+                    f"Forbidden percentage confidence '{m.group(0) if m else ''}' "
+                    f"in {p.relative_to(REPO_ROOT)}"
+                ),
             )
 
 
@@ -465,8 +547,10 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
     """Tier 2 — Boundary conditions, roster hygiene, and forensic invariants."""
 
     def test_t2_zero_inactive_or_ir_players_in_active_week9_projections(self) -> None:
-        """Verify zero inactive/IR/excluded players appear as active Week 9 starters across
-        MNF projections, Week 9 conserved pool, Funnel Stage 2 projections, and Spatial Prop Evaluator.
+        """Verify zero inactive/IR/excluded players appear as active Week 9 starters.
+
+        Checks MNF projections, Week 9 conserved pool, Funnel Stage 2 projections,
+        and Spatial Prop Evaluator.
         """
         banned_global_inactive = {
             "kyler murray",
@@ -491,7 +575,10 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
 
         # 1. MNF BUF @ MIN conserved stat projections
         mnf_path = (
-            REPO_ROOT / "data" / "projections" / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
+            REPO_ROOT
+            / "data"
+            / "projections"
+            / "mnf_buf_min_conserved_stat_projections_2026_11_09.json"
         )
         mnf_data = json.loads(mnf_path.read_text(encoding="utf-8"))
         for p in mnf_data.get("player_stat_projections", []):
@@ -525,7 +612,7 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 self.assertNotIn(
                     (nm, tm),
                     banned_player_team_pairs,
-                    f"Stale/excluded player-team pair {(nm, tm)} in canonical_looped_funnel_projections",
+                    f"Stale/excluded pair {(nm, tm)} in canonical_looped_funnel_projections",
                 )
 
         # 4. Spatial Micro-Metrics Prop Evaluator
@@ -555,7 +642,7 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 self.assertNotIn(
                     (w_low, wr.team.upper()),
                     banned_player_team_pairs,
-                    f"Stale/excluded WR/TE {(w_low, wr.team.upper())} in Spatial Evaluator ({m_str})",
+                    f"Stale/excluded WR/TE {(w_low, wr.team.upper())} in Evaluator ({m_str})",
                 )
             for qb in d.qbs:
                 q_low = qb.player_name.strip().lower()
@@ -571,10 +658,14 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
                 )
 
     def test_t2_dossier_forensic_invariants_2_and_3_on_mnf_buf_min(self) -> None:
-        """Verify INVARIANT_2 (max_prop_win_prob <= 0.780) and INVARIANT_3 (no unpriced prop
-        marked publishAllowed: true) hold across all props in connected_workflow_dossier_buf_min_week9.json.
+        """Verify INVARIANT_2 and INVARIANT_3 hold across MNF BUF @ MIN props.
+
+        Checks max_prop_win_prob <= 0.780 and no unpriced prop marked publishAllowed: true
+        in connected_workflow_dossier_buf_min_week9.json.
         """
-        dossier_path = REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        dossier_path = (
+            REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_buf_min_week9.json"
+        )
         dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
 
         violations = GUARD_MOD.validate_dossier_forensic_invariants(dossier)
@@ -601,16 +692,18 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             if prop.get("publishAllowed") is True:
                 self.assertIsNotNone(
                     prop.get("market_over_american"),
-                    f"Unpriced prop {prop.get('athlete')} {prop.get('market')} has publishAllowed=True",
+                    f"Unpriced prop {prop.get('athlete')} {prop.get('market')} publishAllowed=True",
                 )
                 self.assertIsNotNone(
                     prop.get("market_under_american"),
-                    f"Unpriced prop {prop.get('athlete')} {prop.get('market')} has publishAllowed=True",
+                    f"Unpriced prop {prop.get('athlete')} {prop.get('market')} publishAllowed=True",
                 )
 
     def test_t2_empirical_bayes_shrinkage_boundary_cases(self) -> None:
-        """Verify _empirical_bayes_within_group_weights handles empty, single-element,
-        zero-evidence, and multi-player inputs with exact simplex normalization.
+        """Verify _empirical_bayes_within_group_weights boundary behavior.
+
+        Handles empty, single-element, zero-evidence, and multi-player inputs with exact
+        simplex normalization.
         """
         empty_w = _empirical_bayes_within_group_weights(
             np.array([]), np.array([]), position="RB"
@@ -631,8 +724,9 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         self.assertTrue(np.all(zero_w > 0.0))
 
     def test_t2_funnel_sequence_violation_guard_blocks_out_of_order_calls(self) -> None:
-        """Verify GSECausalLoopedFunnelEngine strictly raises FunnelSequenceViolationError
-        when callers attempt to bypass Stage 1 or Stage 2 ordering.
+        """Verify GSECausalLoopedFunnelEngine raises FunnelSequenceViolationError.
+
+        Triggered when callers attempt to bypass Stage 1 or Stage 2 ordering.
         """
         funnel = GSECausalLoopedFunnelEngine()
         with self.assertRaises(FunnelSequenceViolationError):
@@ -645,8 +739,10 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
             )
 
     def test_t2_spatial_prop_evaluator_exact_mathematical_formulas_and_boundaries(self) -> None:
-        """Verify SpatialMicroMetricsPropAndMatchupEvaluator zero-touch boundary and exact
-        TOVS, Box Spacing Delta, and YPRR tier classification formulas.
+        """Verify SpatialMicroMetricsPropAndMatchupEvaluator boundaries and formulas.
+
+        Checks zero-touch boundary and exact TOVS, Box Spacing Delta, and YPRR tier
+        classification formulas.
         """
         self.assertEqual(
             SpatialMicroMetricsPropAndMatchupEvaluator.compute_pff_elusive_rating(
@@ -665,17 +761,26 @@ class TestTier2BoundaryAndCornerCases(unittest.TestCase):
         )
         # 15*0.6 + 3*1.2 + 1*2.4 + 4*1.5 = 9.0 + 3.6 + 2.4 + 6.0 = 21.0
         self.assertAlmostEqual(tovs, 21.0, places=4)
-        self.assertIn("Tier 1", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(1.95))
-        self.assertIn("Tier 2", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(1.25))
-        self.assertIn("Tier 3", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(0.75))
+        self.assertIn(
+            "Tier 1", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(1.95)
+        )
+        self.assertIn(
+            "Tier 2", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(1.25)
+        )
+        self.assertIn(
+            "Tier 3", SpatialMicroMetricsPropAndMatchupEvaluator.classify_rb_yprr_tier(0.75)
+        )
 
 
 class TestTier3CrossFeatureCombinations(unittest.TestCase):
-    """Tier 3 — Cross-module consistency between Funnel Stage 2, Prop Evaluator, and Conserved Optimizer."""
+    """Tier 3 — Cross-module consistency across Funnel, Evaluator, and Optimizer."""
 
-    def test_t3_funnel_stage2_prop_evaluator_and_conserved_optimizer_cross_consistency(self) -> None:
-        """Verify Funnel Stage 2, Spatial Prop Evaluator, and Conserved Optimizer agree on
-        active Week 9 MNF QB1s (Carson Wentz for MIN, Josh Allen for BUF) and produce
+    def test_t3_funnel_stage2_prop_evaluator_and_conserved_optimizer_cross_consistency(
+        self,
+    ) -> None:
+        """Verify Funnel Stage 2, Spatial Prop Evaluator, and Conserved Optimizer agree.
+
+        Checks active Week 9 MNF QB1s (Carson Wentz for MIN, Josh Allen for BUF) and
         matchup-conditioned, non-constant projections.
         """
         # 1. Conserved Optimizer MNF BUF @ MIN
@@ -716,7 +821,7 @@ class TestTier3CrossFeatureCombinations(unittest.TestCase):
             f"Expected matchup-specific total shifts across 15 games, got {total_shifts}",
         )
 
-        # Verify player projections in Stage 2 are distinct across players (not affine position clones)
+        # Verify player projections in Stage 2 are distinct across players
         rbs_s2 = [
             float(p["canonical_median_dk_pts"])
             for p in s2["canonical_player_projections"]
@@ -729,9 +834,12 @@ class TestTier4RealWorldApplicationScenarios(unittest.TestCase):
     """Tier 4 — End-to-end subprocess execution of repository CI guardrails."""
 
     def test_t4_connected_workflow_dossier_guard_subprocess_exits_zero(self) -> None:
-        """Execute scripts/guardrails/connected-workflow-dossier-guard.py as a subprocess and assert exit code 0."""
+        """Execute connected-workflow-dossier-guard.py as a subprocess and assert exit 0."""
         proc = subprocess.run(
-            [sys.executable, str(REPO_ROOT / "scripts" / "guardrails" / "connected-workflow-dossier-guard.py")],
+            [
+                sys.executable,
+                str(REPO_ROOT / "scripts" / "guardrails" / "connected-workflow-dossier-guard.py"),
+            ],
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,

@@ -1,10 +1,7 @@
-"""
-Unit and Integration Tests for 07:40 AM CST Live Week 9 Full-Slate Simulation Release Engine.
-"""
+"""Unit and Integration Tests for 07:40 AM CST Live Week 9 Full-Slate Simulation Release Engine."""
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from intelligence.data_sources.firecrawl_alexandria_live_sync import (
@@ -41,7 +38,7 @@ def test_release_live_week9_simulations_executes_all_15_games():
     assert by_id["2026_09_LV_SF"]["heavy_juice_firewall_blocked"] is True
     assert by_id["2026_09_NYJ_KC"]["heavy_juice_firewall_blocked"] is True
 
-    # Verify Argon 4 & Opus 5.5 Red-Team additions: 360-degree distributions & plain-English prop plays
+    # Verify Argon 4 & Opus 5.5 Red-Team additions: 360-degree distributions & plain-English plays
     det_mia = by_id["2026_09_DET_MIA"]
     dist_360 = det_mia["full_board_360_prop_distributions"]
     for key in (

@@ -9,7 +9,10 @@ import scripts.ingest.import_nov02_feed as imp
 def test_sensitive_never_hashed(tmp_path: Path):
     fake_sens = tmp_path / "Statement 10_26_26 (449K, PDF).pdf"
     fake_sens.write_bytes(b"secret")
-    fake_retracted = tmp_path / "Computational and Mathematical Methods in Medicine - 2022 - Wang - Retracted  Sports Feedback System Based on Video Digital.pdf"
+    fake_retracted = tmp_path / (
+        "Computational and Mathematical Methods in Medicine - 2022 - Wang - "
+        "Retracted  Sports Feedback System Based on Video Digital.pdf"
+    )
     fake_retracted.write_bytes(b"retracted-body")
     fake_ok = tmp_path / "PaulIbrahim (1).pdf"
     fake_ok.write_bytes(b"voronoi-pocket-survival")

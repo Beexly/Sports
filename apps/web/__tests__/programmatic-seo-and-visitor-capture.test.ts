@@ -4,8 +4,10 @@ import { resolve } from "node:path";
 import { PUBLIC_RECORD_AS_OF, PUBLIC_RECORD_LINE } from "@/lib/ledger/public-record";
 import {
   CURRENT_STOREFRONT_LADDER,
+  MULTISPORT_ISR_REVALIDATE_SECONDS,
   buildPreLockVisitorCaptureConfig,
   buildProgrammaticMatchupSeoPacket,
+  buildProgrammaticMultisportSlateSeoBundle,
   buildProgrammaticPlayerPropSeoPacket,
 } from "@/lib/seo/programmatic-matchup-and-player-seo";
 
@@ -238,5 +240,24 @@ describe("Programmatic Matchup & Player SEO + Pre-Lock T-3h Visitor Capture", ()
       expect(serializedJsonLd).not.toContain("sgpLegs");
       expect(serializedJsonLd).not.toContain("sportsbookOdds");
     }
+  });
+
+  it("builds a clean-room 365-day 5-league ISR multisport slate SEO bundle at 900s revalidate", () => {
+    expect(MULTISPORT_ISR_REVALIDATE_SECONDS).toBe(900);
+    const bundle = buildProgrammaticMultisportSlateSeoBundle({
+      dateStr: "2026-11-17",
+      leagues: ["NBA", "NHL", "NCAAB", "SOCCER", "MLB"],
+      matchupCount: 10,
+      environmentTeaser:
+        "Altitude air-density adjustments, circadian travel splits, and Statcast pitch-control telemetry.",
+    });
+
+    expect(bundle.revalidateSeconds).toBe(900);
+    expect(bundle.leaguesCovered).toEqual(["NBA", "NHL", "NCAAB", "SOCCER", "MLB"]);
+    expect(bundle.paywallProtected).toBe(true);
+    expect(bundle.cleanRoomCheck.clean).toBe(true);
+    expect(bundle.description).not.toContain("%");
+    expect(JSON.stringify(bundle)).not.toContain("\u2014");
+    expect(JSON.stringify(bundle.jsonLd)).toContain("https://www.galaxysportsedge.com/terms");
   });
 });

@@ -1,6 +1,6 @@
 # NFL 2026 Weeks 1-10 Chronological Walk-Forward Out-of-Sample Ablation
 
-- **Generated UTC:** `2026-11-17T00:22:45.391407+00:00`
+- **Generated UTC:** `2026-11-17T11:28:58.609190+00:00`
 - **Completed 2026 Regular-Season Games Evaluated:** `147` (`Weeks 1-10`)
 - **Bitemporal ASOF Cutoff:** `enforce_bitemporal_asof_freeze(strict_fail=True)` (`NFL_EPA_MIN_GAMES = 4`)
 - **Purged + Embargoed CPCV Folds (`purge=3, embargo=1`):** `4`
@@ -40,3 +40,10 @@
 - **Munich `2026_10_NE_DET` Opening-Drive Trauma Isolated (`learning_weight = 0.0`):** `True`
 - **Completed Week 10 Thursday (`WAS 24-21 NYG`) & Sunday Night (`PIT 18-38 CIN`) Included:** `True`
 - **Stake Governance Policy:** Live-money stake freeze remains strictly active (0.0u) until N >= 250 live prospective settled bets clear Ville W_{m,t} >= 20*M_active.
+
+## 4. Wave 26 CPCV, rliable IQM & Monotonic OOS Ratchet
+
+- **rliable IQM Skill:** `0.732011` (95% CI `[0.689045, 0.768774]`, optimality gap `0.349382`)
+- **FWL Orthogonal Residual Slope:** `1.387033` (t=`20.498269`, verified=`True`)
+- **Monotone Ratchet Promote:** `True` (accepted_loss=`7.0944`, live_weight_multiplier=`1.0`)
+- **Wave 19-21 Floors Held:** `True` (crps=`7.0944`<=7.0944, pass_mae=`58.77`, rush_mae=`25.87`, player_mae=`25.29`, game_total_mae=`8.85`, min_ess=`0.864`)

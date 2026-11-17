@@ -23,11 +23,11 @@ _spec.loader.exec_module(cs)  # type: ignore[union-attr]
 
 
 def rows(*specs):
-    """specs: (pick_type, n_wins, n_losses, p)"""
+    """Build synthetic row dicts from (pick_type, n_wins, n_losses, p) tuples."""
     out = []
-    for t, w, l, p in specs:
+    for t, w, losses, p in specs:
         out += [{"t": t, "p": p, "y": 1}] * w
-        out += [{"t": t, "p": p, "y": 0}] * l
+        out += [{"t": t, "p": p, "y": 0}] * losses
     return out
 
 
@@ -35,8 +35,8 @@ def rows(*specs):
 
 def test_break_even_matches_standard_juice():
     # -110/-110 pays 100 on 110 staked -> 0.5238
-    assert cs.BREAK_EVEN == pytest.approx(0.52381, abs=1e-5)
-    assert cs.PAYOUT == pytest.approx(100 / 110)
+    assert pytest.approx(0.52381, abs=1e-5) == cs.BREAK_EVEN
+    assert pytest.approx(100 / 110) == cs.PAYOUT
 
 
 # --- economics ------------------------------------------------------------
@@ -50,8 +50,11 @@ def test_net_units_matches_hand_computation():
 
 
 def test_net_units_is_not_wins_minus_total():
-    """Regression: the first draft printed (wins - n), which is always <= 0
-    and contradicts a positive ROI. Net units must be positive here."""
+    """Regression: net units must be positive here.
+
+    The first draft printed (wins - n), which is always <= 0 and contradicts
+    a positive ROI.
+    """
     e = cs.economics(rows(("MONEYLINE", 60, 40, 0.6)))
     assert e["MONEYLINE"]["net_units"] > 0
     assert e["MONEYLINE"]["net_units"] != 60 - 100

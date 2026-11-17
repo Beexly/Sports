@@ -7,7 +7,6 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-
 import scripts.ops.gse_coach_mind_simulator as sim
 import scripts.ops.pbp_conservation_coupling as pcc
 from scripts.ops.week8_forensic_kernels import enforce_route_snap_participation_gate
@@ -44,7 +43,10 @@ def test_low_route_player_blocked_from_play():
 
 
 def test_publishable_joint_is_worlds_mean():
-    card = json.loads((ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json").read_text(encoding="utf-8"))
+    card = json.loads(
+        (ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json")
+        .read_text(encoding="utf-8")
+    )
     assert "1.075" not in json.dumps(card)
 
 

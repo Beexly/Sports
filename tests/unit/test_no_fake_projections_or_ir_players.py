@@ -1,13 +1,15 @@
-"""Regression suite verifying the elimination of fake projections, IR player leaks,
-missing module imports, ASCII checksums, and uncalibrated multipliers across the Week 9 spine.
+"""Regression suite verifying the elimination of fake projections and IR leaks.
+
+Checks missing module imports, ASCII checksums, and uncalibrated multipliers
+across the Week 9 spine.
 """
 
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import sys
 import unittest
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -18,11 +20,15 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
     """End-to-end verification of all 8 forensic root-cause fixes."""
 
     def test_1_all_previously_broken_modules_import_cleanly(self) -> None:
+        import intelligence.trends.scores24_pfr_pff_ngs_unified_trend_engine as s24_mod
+        from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
+            evaluate_360_degree_picks_props_parlays_and_sgps,
+        )
         from intelligence.external_charting.morning_sweep_2026_11_08 import (
             load_all_nov8_morning_sweep_summary,
         )
-        from intelligence.trends.nfl_multi_horizon_trends_and_pre_game_vision_engine import (
-            WEEK9_MATCHUPS,
+        from intelligence.funnel.gse_causal_looped_funnel_engine import (
+            GSECausalLoopedFunnelEngine,
         )
         from intelligence.ingestion.sunday_0320am_x_api_1000_posts_week9_engine import (
             get_sunday_0320am_x_api_signal_tensor,
@@ -30,16 +36,12 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         from intelligence.metrics.book_equations_to_stats_compiler import (
             BookEquationsToStatsCompiler,
         )
-        import intelligence.trends.scores24_pfr_pff_ngs_unified_trend_engine as s24_mod
         from intelligence.reasoning.layers.layer_registry import ALL_26_LAYERS_META
         from intelligence.reasoning.reasoning_workflow_assembler import (
             execute_reasoning_workflow,
         )
-        from intelligence.funnel.gse_causal_looped_funnel_engine import (
-            GSECausalLoopedFunnelEngine,
-        )
-        from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
-            evaluate_360_degree_picks_props_parlays_and_sgps,
+        from intelligence.trends.nfl_multi_horizon_trends_and_pre_game_vision_engine import (
+            WEEK9_MATCHUPS,
         )
         from scripts.ops.run_0730_cst_fresh_pull_and_email_dispatch import (
             pull_fresh_0730_cst_data,
@@ -165,7 +167,7 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         self.assertIn("pass1_composite_log_odds_delta", p1_det_mia)
         self.assertLess(p1_det_mia["eq_arxiv_1807_09236_btl_shrunk_rating_diff"], 0.0)
 
-        # Verify 26-layer ContextPacket and 5-Track ReasoningTrace execute cleanly for 2026_09_DET_MIA
+        # Verify 26-layer ContextPacket and 5-Track ReasoningTrace execute for 2026_09_DET_MIA
         pkt = build_context_packet(
             game_id="2026_09_DET_MIA", as_of_utc="2026-11-08T12:00:00Z", persist=False
         )
@@ -216,7 +218,9 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
 
     def test_6_zero_forged_roster_or_web_bridge_contamination(self) -> None:
         # 1. rosters_2026.csv must never mark Malik Davis as ACT
-        rosters_txt = (REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv").read_text(encoding="utf-8")
+        rosters_txt = (REPO_ROOT / "data" / "nflverse" / "rosters_2026.csv").read_text(
+            encoding="utf-8"
+        )
         self.assertNotIn("Malik Davis,DAL,RB,ACT", rosters_txt)
         self.assertIn("Malik Davis,DAL,RB,INA", rosters_txt)
 
@@ -227,7 +231,7 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         self.assertNotIn('carries"] = 25', stage0_src)
         self.assertNotIn('rush_yds"] = 115.0', stage0_src)
 
-        # 3. Connected game workflow must not hardcode carry/target floors for Malik Davis or Greg Dulcich
+        # 3. Connected workflow must not hardcode carry/target floors for Davis or Dulcich
         wf_src = (
             REPO_ROOT / "scripts" / "ops" / "gse_connected_game_workflow.py"
         ).read_text(encoding="utf-8")
@@ -235,7 +239,7 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         self.assertNotIn("base_c = max(base_c, 18.5)", wf_src)
         self.assertNotIn("base_c = max(base_c, 11.5)", wf_src)
 
-        # 4. Two-wave iterative engine must not fabricate 1,000 synthetic @RapSheet/@AdamSchefter posts
+        # 4. Two-wave engine must not fabricate 1,000 synthetic @RapSheet/@AdamSchefter posts
         tw_src = (
             REPO_ROOT
             / "intelligence"
@@ -244,7 +248,7 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertNotIn("while len(posts) < 1000:", tw_src)
 
-        # 5. Live web TypeScript bridges must be free of Malik Davis, [PULLED_EXCLUDED], DET -3.5, and Malik Willis on MIA
+        # 5. Live web TS bridges must be free of Malik Davis, [PULLED_EXCLUDED], and DET -3.5
         for rel in (
             "apps/web/lib/fantasy/dfs-slate.ts",
             "apps/web/lib/engine/engine-live-bridge.ts",
@@ -280,7 +284,7 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
         self.assertNotIn("Malik Davis", by_name)
         self.assertNotIn("Drew Lock", by_name)
 
-        # Verify Miami low-total players are naturally suppressed by team-total conservation (no manual hacks)
+        # Verify Miami low-total players are suppressed by team-total conservation
         self.assertLessEqual(by_name["Ollie Gordon II"]["proj_dk_pts"], 11.5)
         self.assertLessEqual(by_name["Greg Dulcich"]["proj_dk_pts"], 7.5)
 
@@ -295,11 +299,16 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
                 tm_rec_yds,
                 envs[tm]["conserved_pass_yds"],
                 delta=4.0,
-                msg=f"Team {tm} receiving yards ({tm_rec_yds}) did not conserve pass yards ({envs[tm]['conserved_pass_yds']})",
+                msg=(
+                    f"Team {tm} receiving yards ({tm_rec_yds}) did not conserve "
+                    f"pass yards ({envs[tm]['conserved_pass_yds']})"
+                ),
             )
 
-        # Verify 10-lineup diversified portfolio obeys salary, max_tes=1, starter floors, and exposure caps
-        portfolio = optimize_diversified_conserved_dk_portfolio(num_lineups=10, num_sims=2000, seed=42)
+        # Verify 10-lineup diversified portfolio obeys salary, max_tes=1, floors, exposure caps
+        portfolio = optimize_diversified_conserved_dk_portfolio(
+            num_lineups=10, num_sims=2000, seed=42
+        )
         self.assertEqual(portfolio["portfolio_size"], 10)
         for p_name, exp in portfolio["player_exposures"].items():
             self.assertLessEqual(exp, 0.45, f"Player {p_name} exceeded 45% exposure cap: {exp}")
@@ -318,8 +327,8 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
                     self.assertGreaterEqual(r["proj_dk_pts"], 15.0)
 
     def test_8_regenerated_dk_upload_csvs_and_all_15_dossiers_clean_on_disk(self) -> None:
-        from collections import Counter
         import importlib.util
+        from collections import Counter
 
         guard_spec = importlib.util.spec_from_file_location(
             "connected_workflow_dossier_guard",
@@ -335,10 +344,18 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
             ("data/dfs/Dad_Top20_DK_Upload_MainSlate_Week9_2026_11_08.csv", 20),
         ):
             csv_path = REPO_ROOT / rel_csv
-            lines = [ln.strip() for ln in csv_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+            lines = [
+                ln.strip()
+                for ln in csv_path.read_text(encoding="utf-8").splitlines()
+                if ln.strip()
+            ]
             self.assertEqual(lines[0], "QB,RB,RB,WR,WR,WR,TE,FLEX,DST")
             data_rows = lines[1:]
-            self.assertEqual(len(data_rows), expected_lineups, f"Expected {expected_lineups} lineups in {rel_csv}")
+            self.assertEqual(
+                len(data_rows),
+                expected_lineups,
+                f"Expected {expected_lineups} lineups in {rel_csv}",
+            )
             counts: Counter[str] = Counter()
             for row in data_rows:
                 low_row = row.lower()
@@ -350,10 +367,14 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
                 for cell in cells:
                     counts[cell] += 1
             max_exp = max(c / len(data_rows) for c in counts.values())
-            self.assertLessEqual(max_exp, 0.405, f"Max exposure {max_exp} exceeded 40% in {rel_csv}")
+            self.assertLessEqual(
+                max_exp, 0.405, f"Max exposure {max_exp} exceeded 40% in {rel_csv}"
+            )
 
         # 2. Verify all 15 Week 9 Connected Workflow Dossiers on disk
-        dossier_paths = sorted((REPO_ROOT / "data" / "engine").glob("connected_workflow_dossier_*_week9.json"))
+        dossier_paths = sorted(
+            (REPO_ROOT / "data" / "engine").glob("connected_workflow_dossier_*_week9.json")
+        )
         self.assertEqual(len(dossier_paths), 15)
         for dp in dossier_paths:
             raw_txt = dp.read_text(encoding="utf-8")
@@ -363,15 +384,24 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
             d_obj = json.loads(raw_txt)
             guard_mod.verify_connected_workflow_json(dp)
             violations = guard_mod.validate_dossier_forensic_invariants(d_obj)
-            self.assertEqual(violations, [], f"Dossier {dp.name} failed forensic invariants: {violations}")
+            self.assertEqual(
+                violations, [], f"Dossier {dp.name} failed forensic invariants: {violations}"
+            )
 
         # 3. Verify DET@MIA dossier specifically enforces conserved Miami stats on disk
-        det_mia_d = json.loads(
-            (REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_det_mia_week9.json").read_text(encoding="utf-8")
+        det_mia_path = (
+            REPO_ROOT / "data" / "engine" / "connected_workflow_dossier_det_mia_week9.json"
         )
-        mia_athletes = det_mia_d["stage3_4_conserved_post_sim_projections"]["athlete_post_sim_projections"]
-        self.assertLessEqual(mia_athletes["Ollie Gordon II"]["projections"]["rush_yds"]["mean"], 60.0)
-        self.assertLessEqual(mia_athletes["Greg Dulcich"]["projections"]["rec_yds"]["mean"], 35.0)
+        det_mia_d = json.loads(det_mia_path.read_text(encoding="utf-8"))
+        mia_athletes = det_mia_d["stage3_4_conserved_post_sim_projections"][
+            "athlete_post_sim_projections"
+        ]
+        self.assertLessEqual(
+            mia_athletes["Ollie Gordon II"]["projections"]["rush_yds"]["mean"], 60.0
+        )
+        self.assertLessEqual(
+            mia_athletes["Greg Dulcich"]["projections"]["rec_yds"]["mean"], 35.0
+        )
 
     def test_9_week9_sunday_settlement_and_mnf_buf_min_projections_verified(self) -> None:
         from intelligence.dfs.conserved_nfl_projection_and_equation_optimizer import (
@@ -379,10 +409,17 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
             project_full_nfl_game_box_score_from_dossier,
         )
 
-        self.assertEqual(len(CORPUS_503_BOOKS_NFL_STAT_PROJECTION_ARCHITECTURE["laws_of_nfl_stat_projection"]), 5)
+        self.assertEqual(
+            len(CORPUS_503_BOOKS_NFL_STAT_PROJECTION_ARCHITECTURE["laws_of_nfl_stat_projection"]),
+            5,
+        )
 
         settlement_path = (
-            REPO_ROOT / "data" / "engine" / "settlements" / "week9_sunday_2026-11-08_settlement.json"
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / "settlements"
+            / "week9_sunday_2026-11-08_settlement.json"
         )
         self.assertTrue(settlement_path.is_file())
         settlement = json.loads(settlement_path.read_text(encoding="utf-8"))
@@ -400,7 +437,9 @@ class TestNoFakeProjectionsOrIRPlayers(unittest.TestCase):
             comp["legacy_broken_pipeline_rmse_dk_pts"],
         )
 
-        mnf = project_full_nfl_game_box_score_from_dossier("BUF @ MIN", apply_sunday_residual_calibration=True)
+        mnf = project_full_nfl_game_box_score_from_dossier(
+            "BUF @ MIN", apply_sunday_residual_calibration=True
+        )
         self.assertEqual(mnf["confirmed_qb1"]["BUF"], "Josh Allen")
         self.assertEqual(mnf["confirmed_qb1"]["MIN"], "Carson Wentz")
         mnf_names = {p["player"].lower() for p in mnf["player_stat_projections"]}

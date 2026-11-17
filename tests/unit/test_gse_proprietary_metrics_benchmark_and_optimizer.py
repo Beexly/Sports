@@ -1,6 +1,4 @@
-"""
-Unit and Integration Tests for GSE Proprietary Created Stats, Metrics & Kernels Optimizer.
-"""
+"""Unit and Integration Tests for GSE Proprietary Created Stats, Metrics & Kernels Optimizer."""
 
 from __future__ import annotations
 
@@ -24,16 +22,24 @@ def test_all_22_proprietary_gse_metrics_catalog_and_csv_warehouse() -> None:
 
 
 def test_proprietary_metrics_ablation_and_weight_optimization() -> None:
-    report = run_proprietary_metrics_ablation_and_optimization(n_historical_slates=320, seed=20261108)
+    report = run_proprietary_metrics_ablation_and_optimization(
+        n_historical_slates=320, seed=20261108
+    )
     assert report["total_proprietary_metrics_cataloged"] == 22
     assert report["all_22_metrics_wired_and_tested"] is True
 
     bench = report["out_of_sample_4fold_optimization_benchmark"]
     assert bench["optimized_beats_unoptimized_equal"] is True
     assert bench["optimized_beats_market_baseline"] is True
-    assert bench["logit_mse_optimized_james_stein_ridge"] < bench["logit_mse_unoptimized_equal_weights"]
+    assert (
+        bench["logit_mse_optimized_james_stein_ridge"]
+        < bench["logit_mse_unoptimized_equal_weights"]
+    )
     assert bench["logit_mse_unoptimized_equal_weights"] < bench["logit_mse_market_only"]
-    assert bench["dk_lineup_mae_optimized_james_stein_pts"] < bench["dk_lineup_mae_unoptimized_equal_pts"]
+    assert (
+        bench["dk_lineup_mae_optimized_james_stein_pts"]
+        < bench["dk_lineup_mae_unoptimized_equal_pts"]
+    )
     assert bench["dk_lineup_mae_unoptimized_equal_pts"] < bench["dk_lineup_mae_market_only_pts"]
 
     # Every single family A..F must improve accuracy when included (ablation increases MSE)
@@ -53,6 +59,9 @@ def test_proprietary_metrics_ablation_and_weight_optimization() -> None:
 
     # Verify empirical CSV blending and binary-outcome Brier + Brier Skill Score
     assert bench["binary_outcome_brier_optimized"] < bench["binary_outcome_brier_unoptimized_equal"]
-    assert bench["binary_outcome_brier_unoptimized_equal"] <= bench["binary_outcome_brier_market_only"]
+    assert (
+        bench["binary_outcome_brier_unoptimized_equal"]
+        <= bench["binary_outcome_brier_market_only"]
+    )
     assert bench["binary_outcome_brier_skill_score"] > 0.0
 

@@ -6,7 +6,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.ops.ticket_exposure_guard import (
+from scripts.ops.ticket_exposure_guard import (  # noqa: E402
     enforce_ticket_exposure,
     validate_ticket_exposure,
 )
@@ -14,7 +14,12 @@ from scripts.ops.ticket_exposure_guard import (
 
 def test_clean_tickets_pass():
     tickets = [
-        {"id": "t1", "game_id": "g1", "kind": "ANCHOR", "legs": [{"team": "DET", "market": "spread", "line": -3.5}]},
+        {
+            "id": "t1",
+            "game_id": "g1",
+            "kind": "ANCHOR",
+            "legs": [{"team": "DET", "market": "spread", "line": -3.5}],
+        },
         {"id": "t2", "game_id": "g2", "kind": "SGP", "legs": [
             {"team": "BUF", "market": "moneyline"},
             {"athlete": "J. Allen", "market": "passing yards", "line": 245.5},
@@ -48,7 +53,10 @@ def test_ml_plus_alt_spread_double_stake_banned_near_pickem():
     assert any(x["cap"] == "ban_ml_plus_alt_spread_double_stake" for x in v)
     # Outside the band the same construction is allowed.
     t2 = {**t, "spread": -4.5}
-    assert not any(x["cap"] == "ban_ml_plus_alt_spread_double_stake" for x in validate_ticket_exposure([t2]))
+    assert not any(
+        x["cap"] == "ban_ml_plus_alt_spread_double_stake"
+        for x in validate_ticket_exposure([t2])
+    )
 
 
 def test_sub_20_5_yard_prop_in_parlay_refused():
@@ -66,4 +74,7 @@ def test_single_yard_prop_not_parlay_is_not_cap3():
     t = {"id": "single", "game_id": "g1", "kind": "ANCHOR",
          "legs": [{"athlete": "WR5", "market": "receiving yards", "line": 14.5}]}
     # Single-anchor micro-lines are the Sniper Gate's job, not cap 3.
-    assert not any(x["cap"] == "no_sub_20_5_yard_props_in_parlays" for x in validate_ticket_exposure([t]))
+    assert not any(
+        x["cap"] == "no_sub_20_5_yard_props_in_parlays"
+        for x in validate_ticket_exposure([t])
+    )

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 
-import pytest
-
 from intelligence.research import corpus_index as ci
 
 
@@ -70,7 +68,7 @@ def test_mind_feed_marks_records_unwired(tmp_path):
     out = tmp_path / "feed.jsonl"
     n = ci.to_mind_feed(idx, out)
     assert n == 3
-    lines = [json.loads(l) for l in out.read_text(encoding="utf-8").splitlines()]
+    lines = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
     assert all(e["wired"] is False for e in lines)
     assert all(e["gate_status"] == "UNVALIDATED" for e in lines)
     assert all(e["provenance_status"] == "DIRECT_FROM_SOURCE" for e in lines)
@@ -250,7 +248,8 @@ def test_search_fused_demotes_cross_domain_document(tmp_path):
     hits = ci.search_fused(idx, "coverage disguise trajectory", k=3)
     assert hits, "expected fused hits"
     assert hits[0]["id"] == "af1", (
-        "cross-domain demotion failed: %s ranked first" % hits[0]["id"])
+        f"cross-domain demotion failed: {hits[0]['id']} ranked first"
+    )
     ids = [h["id"] for h in hits]
     assert "sc1" in ids, "demotion must not drop the cross-domain document"
 

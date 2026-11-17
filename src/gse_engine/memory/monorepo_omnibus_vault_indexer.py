@@ -23,6 +23,10 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+from gse_engine.memory.wave22_cross_branch_salvage_and_vault_crosslink_suite import (
+    build_vault_crosslink_graph,
+)
+
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
 
 _OMNIBUS_CENSUS_CACHE: dict[tuple[str, bool], dict[str, Any]] = {}
@@ -550,6 +554,20 @@ def audit_all_25_monorepo_knowledge_vaults(
         )
 
     radar = audit_cross_branch_knowledge_radar(root)
+    crosslink = build_vault_crosslink_graph(root)
+    if int(crosslink["vaults_present"]) < int(crosslink["vaults_total"]):
+        raise OmnibusVaultContinuityError(
+            "MONOREPO_VAULT_BREACH: wave22 crosslink vaults missing "
+            f"{crosslink['vaults_missing']}"
+        )
+    crosslink_summary = {
+        "vaults_total": int(crosslink["vaults_total"]),
+        "vaults_present": int(crosslink["vaults_present"]),
+        "undirected_edges": int(crosslink["undirected_edges"]),
+        "code_to_data_edges": int(crosslink["code_to_data_edges"]),
+        "isolated_present_vaults": list(crosslink["isolated_present_vaults"]),
+        "crosslink_graph_sha256": str(crosslink["crosslink_graph_sha256"]),
+    }
 
     out = {
         "verified": True,
@@ -565,6 +583,7 @@ def audit_all_25_monorepo_knowledge_vaults(
         "dormant_contracts": dormant_contracts,
         "quarantine_firewalls": quarantine_firewalls,
         "cross_branch_radar": radar,
+        "wave22_vault_crosslink": crosslink_summary,
         "vaults": vaults,
     }
     _OMNIBUS_CENSUS_CACHE[key] = dict(out)

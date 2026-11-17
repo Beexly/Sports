@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""
-Exhaustive Unit Tests for Every Section of the 26-Layer Situational Reasoning Stack,
-7-Surface Omniverse Knowledge Ingestion, 10,000-World Simulations, 360-Degree Projections
-(Picks / Props / Parlays / SGPs), and DraftKings 200+ Point Championship DFS Engine.
+"""Exhaustive Unit Tests for Every Section of the 26-Layer Situational Reasoning Stack.
+
+Covers 7-Surface Omniverse Knowledge Ingestion, 10,000-World Simulations,
+360-Degree Projections (Picks / Props / Parlays / SGPs), and DraftKings 200+ Point
+Championship DFS Engine.
 """
 
 from __future__ import annotations
@@ -11,7 +12,6 @@ from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
     FRONTIER_30_DFS_AND_PROJECTION_EQUATIONS,
     RECEIPT_PATH,
     apply_lesson_l1_and_l2_environment_scalars,
-    construct_and_verify_200pt_dk_championship_portfolio,
     run_complete_omniverse_reasoning_simulation_projection_and_200pt_dfs_suite,
 )
 
@@ -19,7 +19,7 @@ from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
 def test_lesson_l1_and_l2_environment_scalars_and_30_frontier_equations() -> None:
     assert len(FRONTIER_30_DFS_AND_PROJECTION_EQUATIONS) == 30
 
-    # L-1: Justin Jefferson 1.8% ownership in 28 mph crosswind + 90% precip is NOT a clean environment
+    # L-1: Justin Jefferson 1.8% ownership in 28 mph crosswind + 90% precip is NOT clean
     jj = apply_lesson_l1_and_l2_environment_scalars(
         base_projection=19.8,
         usage_boost=2.4,
@@ -48,7 +48,7 @@ def test_lesson_l1_and_l2_environment_scalars_and_30_frontier_equations() -> Non
     assert dkm["environment_scalar_l2"] < 0.75
     assert dkm["scaled_usage_boost"] < 3.0
 
-    # Clean indoor shootout (28.5 ITT, 0 mph wind): usage boost is amplified (> 1.20x) and zero clawback
+    # Clean indoor shootout (28.5 ITT, 0 mph wind): boost amplified (> 1.20x), zero clawback
     clean = apply_lesson_l1_and_l2_environment_scalars(
         base_projection=22.5,
         usage_boost=3.5,
@@ -113,7 +113,7 @@ def test_every_section_of_26_layer_reasoning_and_360_projections_and_200pt_dfs()
     assert sgp["correlated_copula_prob"] > sgp["naive_independent_prob"]
     assert sgp["publishAllowed"] is True
 
-    # 5. DraftKings 200+ Point Championship DFS Portfolio + Wave-2 Lineup-vs-Field Contest Simulations
+    # 5. DraftKings 200+ Point Championship DFS Portfolio + Wave-2 Contest Simulations
     dfs = receipt["draftkings_200pt_championship_dfs"]
     assert dfs["total_dfs_and_projection_equations_wired"] == 30
     w2 = dfs["wave2_lineup_vs_field_contest_simulation_summary"]

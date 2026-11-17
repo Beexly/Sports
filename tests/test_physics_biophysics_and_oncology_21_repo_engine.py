@@ -1,4 +1,4 @@
-r"""Comprehensive Multi-Pass Pytest Suite for the 21-Repository Physics, Biophysics & Oncology Engine.
+r"""Comprehensive Multi-Pass Pytest Suite for the 21-Repository Physics & Oncology Engine.
 
 Tests all 21 unique repositories (22 URLs, deduplicating `quantumlib/Cirq`) across:
   - Target A: Personal Hardware & Software Optimization (Intel i7-1255U / Iris Xe / 6.3 GB C: drive)
@@ -12,7 +12,6 @@ import math
 
 import numpy as np
 import pytest
-
 from research.gsi_sandbox.physics_biophysics_and_oncology_21_repo_sandbox import (
     CLINICAL_OR_DIAGNOSTIC_USE_PERMITTED,
     REPO_ROOT,
@@ -46,7 +45,13 @@ def test_gsi_sandbox_isolation_and_non_clinical_guardrails() -> None:
     assert RESEARCH_SANDBOX_ONLY is True
     assert CLINICAL_OR_DIAGNOSTIC_USE_PERMITTED is False
     assert SPORTS_SPINE_IMPORT_PERMITTED is False
-    assert not (REPO_ROOT / "intelligence" / "ecosystem" / "physics_biophysics_and_oncology_21_repo_engine.py").exists()
+    engine_mod = (
+        REPO_ROOT
+        / "intelligence"
+        / "ecosystem"
+        / "physics_biophysics_and_oncology_21_repo_engine.py"
+    )
+    assert not engine_mod.exists()
 
 
 def test_repo1_genesis_differentiable_contact_and_adjoint_verification() -> None:
@@ -59,12 +64,13 @@ def test_repo1_genesis_differentiable_contact_and_adjoint_verification() -> None
     assert no_hit["contact_active"] is False
     assert no_hit["normal_force_n"] == 0.0
 
-    # Active viscoelastic contact + finite-difference verification of analytical adjoint d_fn_d_delta
+    # Active viscoelastic contact + finite-difference verification of analytical adjoint
     eps = 1e-6
     delta0 = 0.015
-    c0 = GenesisDifferentiableContactAndSoftBodyKernel.solve_contact_with_adjoints(delta0, 2.5, 1.2)
-    c_plus = GenesisDifferentiableContactAndSoftBodyKernel.solve_contact_with_adjoints(delta0 + eps, 2.5, 1.2)
-    c_minus = GenesisDifferentiableContactAndSoftBodyKernel.solve_contact_with_adjoints(delta0 - eps, 2.5, 1.2)
+    solve = GenesisDifferentiableContactAndSoftBodyKernel.solve_contact_with_adjoints
+    c0 = solve(delta0, 2.5, 1.2)
+    c_plus = solve(delta0 + eps, 2.5, 1.2)
+    c_minus = solve(delta0 - eps, 2.5, 1.2)
     fd_grad = (c_plus["normal_force_n"] - c_minus["normal_force_n"]) / (2.0 * eps)
     assert c0["contact_active"] is True
     assert c0["normal_force_n"] > 0.0
@@ -106,7 +112,11 @@ def test_repo2_unity_ml_agents_ppo_gae_and_curiosity_edge_cases() -> None:
 
 def test_repo3_nuysoft_mock_and_anti_potemkin_production_gate() -> None:
     batch = MockDeterministicSchemaAndAntiPotemkinGate.generate_adversarial_schema_batch(
-        {"spread|1": "@float(-10.5, 10.5)", " snaps": "@int(0, 85)", "tier": "@pick(TIER_1,TIER_2)"},
+        {
+            "spread|1": "@float(-10.5, 10.5)",
+            " snaps": "@int(0, 85)",
+            "tier": "@pick(TIER_1,TIER_2)",
+        },
         count=3,
     )
     # First two rows hit exact min/max boundaries
@@ -124,9 +134,11 @@ def test_repo3_nuysoft_mock_and_anti_potemkin_production_gate() -> None:
         {"game_id": "2026_09_KC_BUF", "clv": 0.008, "is_hardcoded_floor": True}
     ])
     assert audit_fake_clv["production_pure"] is False
-    audit_unflagged_008 = MockDeterministicSchemaAndAntiPotemkinGate.verify_production_slate_purity([
-        {"game_id": "2026_09_KC_BUF", "clv": 0.008}
-    ])
+    audit_unflagged_008 = (
+        MockDeterministicSchemaAndAntiPotemkinGate.verify_production_slate_purity([
+            {"game_id": "2026_09_KC_BUF", "clv": 0.008}
+        ])
+    )
     assert audit_unflagged_008["production_pure"] is False
 
     # Authentic slate row passes
@@ -299,9 +311,11 @@ def test_repo11_mujoco_generalized_coordinates_contact_impedance() -> None:
 
 
 def test_repo12_handright_stroke_perturbation_and_ocr_token_recovery() -> None:
-    res = HandrightStrokePerturbationAndOcrRobustnessEngine.synthesize_perturbed_strokes_and_audit_ocr(
-        "GSI Cohort 04: 0simertinib 80mg QD"
+    synth = (
+        HandrightStrokePerturbationAndOcrRobustnessEngine
+        .synthesize_perturbed_strokes_and_audit_ocr
     )
+    res = synth("GSI Cohort 04: 0simertinib 80mg QD")
     assert res["glyph_count"] == len("GSI Cohort 04: 0simertinib 80mg QD")
     assert res["mean_baseline_offset_px"] > 0.0
     assert res["mean_bezier_arc_length_px"] > 0.0
@@ -309,7 +323,7 @@ def test_repo12_handright_stroke_perturbation_and_ocr_token_recovery() -> None:
     assert res["ocr_token_recovery_rate"] == 1.0
 
     # Empty string edge case must not crash or emit RuntimeWarning
-    empty_res = HandrightStrokePerturbationAndOcrRobustnessEngine.synthesize_perturbed_strokes_and_audit_ocr("")
+    empty_res = synth("")
     assert empty_res["glyph_count"] == 0
     assert empty_res["ocr_token_recovery_rate"] == 0.0
 
@@ -331,9 +345,13 @@ def test_repo13_awesome_open_geoscience_kriging_and_mile_high_air_density() -> N
     )
     assert math.isclose(denver["weights_sum"], 1.0, abs_tol=1e-5)
     assert denver["air_density_kg_m3"] < sea_level["air_density_kg_m3"]
-    assert denver["fg_and_deep_pass_carry_bonus_yds"] > sea_level["fg_and_deep_pass_carry_bonus_yds"]
+    assert (
+        denver["fg_and_deep_pass_carry_bonus_yds"]
+        > sea_level["fg_and_deep_pass_carry_bonus_yds"]
+    )
 
-    # Co-located / duplicate station coordinates must deduplicate cleanly without Singular matrix error
+    # Co-located / duplicate station coordinates must deduplicate cleanly
+    # without Singular matrix error
     colocated = GeoscienceKrigingAndStadiumAirDensityEngine.compute_kriging_and_air_density(
         station_coords_km=[(0.0, 0.0), (0.0, 0.0), (10.0, 0.0)],
         station_values=[20.0, 22.0, 24.0],
@@ -344,7 +362,7 @@ def test_repo13_awesome_open_geoscience_kriging_and_mile_high_air_density() -> N
 
 
 def test_repo14_forcefieldx_amoeba_14_7_and_zwanzig_fep() -> None:
-    # At r == r0, both AMOEBA 14-7 and Lennard-Jones 12-6 vdW potentials must equal -epsilon_kcal_mol
+    # At r == r0, both AMOEBA 14-7 and LJ 12-6 vdW potentials must equal -epsilon_kcal_mol
     eq = ForceFieldXAmoebaAndZwanzigFepEngine.compute_amoeba_potential_and_fep(
         distance_angstrom=3.80,
         r0_angstrom=3.80,
@@ -365,11 +383,18 @@ def test_repo15_nichemapr_homotherm_heat_budget_and_wbgt() -> None:
     )
     assert hot_humid["wbgt_c"] > cool_night["wbgt_c"]
     assert hot_humid["exertional_heat_risk_tier"] == "HIGH_CRAMP_FATIGUE_RISK"
-    assert hot_humid["q4_explosive_output_multiplier"] < cool_night["q4_explosive_output_multiplier"]
+    assert (
+        hot_humid["q4_explosive_output_multiplier"]
+        < cool_night["q4_explosive_output_multiplier"]
+    )
 
 
 def test_repo16_neuroconstruct_3d_frustum_cable_and_delay() -> None:
-    res = NeuroConstruct3dMorphologyAndCableRoutingEngine.analyze_3d_compartment_and_synaptic_routing(
+    analyze_cable = (
+        NeuroConstruct3dMorphologyAndCableRoutingEngine
+        .analyze_3d_compartment_and_synaptic_routing
+    )
+    res = analyze_cable(
         proximal_xyz_um=(0.0, 0.0, 0.0),
         distal_xyz_um=(100.0, 0.0, 0.0),
         proximal_radius_um=2.0,
@@ -382,14 +407,21 @@ def test_repo16_neuroconstruct_3d_frustum_cable_and_delay() -> None:
 
 
 def test_repo17_apbs_pdb2pqr_acidosis_histidine_protonation_shift() -> None:
-    tumor_acidic = ApbsPoissonBoltzmannAndPdb2pqrTitrationEngine.compute_titration_and_screened_electrostatics(
+    titrate = (
+        ApbsPoissonBoltzmannAndPdb2pqrTitrationEngine
+        .compute_titration_and_screened_electrostatics
+    )
+    tumor_acidic = titrate(
         residues=["HIS", "ALA", "GLY", "ASP", "GLU"], ph=6.2
     )
-    normal_phys = ApbsPoissonBoltzmannAndPdb2pqrTitrationEngine.compute_titration_and_screened_electrostatics(
+    normal_phys = titrate(
         residues=["HIS", "ALA", "GLY", "ASP", "GLU"], ph=7.4
     )
     # Histidine (pKa 6.04) is much more positively protonated at acidic pH 6.2 than at pH 7.4
-    assert tumor_acidic["histidine_protonated_charge_e"] > normal_phys["histidine_protonated_charge_e"]
+    assert (
+        tumor_acidic["histidine_protonated_charge_e"]
+        > normal_phys["histidine_protonated_charge_e"]
+    )
     assert tumor_acidic["net_protein_charge_e"] > normal_phys["net_protein_charge_e"]
     assert "nonlinear_pb_sinh_phi" in tumor_acidic
 
@@ -455,5 +487,10 @@ def test_end_to_end_21_repo_integration_receipt() -> None:
     assert receipt["total_urls_reviewed"] == 22
     assert receipt["unique_repositories_integrated"] == 21
     assert len(receipt["repos"]) == 21
-    audit_file = REPO_ROOT / "data" / "audits" / "physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json"
+    audit_file = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "physics_biophysics_and_oncology_21_repo_integration_2026_11_07.json"
+    )
     assert audit_file.exists()

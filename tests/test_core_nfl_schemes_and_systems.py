@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from intelligence.coaching.core_nfl_schemes_and_systems import (
     CORE_OFFENSIVE_SCHEMES,
-    DOWN_AND_DISTANCE_PRIORS,
     GRUDEN_AND_FOURTH_FILM_FORMATIONS,
     GSI_CTE_AND_HEAD_TRAUMA_PRIORS,
     ROUTE_CONCEPTS_MATRIX,
@@ -30,7 +29,10 @@ def test_core_offensive_schemes_completeness():
 
 def test_route_concepts_matrix_completeness():
     assert len(ROUTE_CONCEPTS_MATRIX) == 11
-    for code in ("MESH", "LEVELS", "FLOOD", "SMASH", "FOUR_VERTICALS", "STICK", "DAGGER", "Y_CROSS", "DOUBLE_CHINA", "GHOST", "MILLS"):
+    for code in (
+        "MESH", "LEVELS", "FLOOD", "SMASH", "FOUR_VERTICALS",
+        "STICK", "DAGGER", "Y_CROSS", "DOUBLE_CHINA", "GHOST", "MILLS",
+    ):
         assert code in ROUTE_CONCEPTS_MATRIX
         assert ROUTE_CONCEPTS_MATRIX[code].epa_delta_when_unmatched > 0
         assert ROUTE_CONCEPTS_MATRIX[code].epa_delta_when_matched < 0

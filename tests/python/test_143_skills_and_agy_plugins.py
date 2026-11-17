@@ -1,16 +1,19 @@
-"""Unit Test Suite for the 143 Newly Added Skills & 7 `agy` CLI Plugins Orchestrator & Router.
+r"""Unit Test Suite for the 143 Newly Added Skills & 7 `agy` CLI Plugins Orchestrator & Router.
 
 Verifies:
-1. All 143 skills in `C:\\Users\\Garrett\\.agents\\skills` union `C:\\Users\\Garrett\\.claude\\skills`
-   are cataloged and assigned across the 8 GSE & GSI Operational Domains.
+1. All 143 skills in `C:\Users\Garrett\.agents\skills` union
+   `C:\Users\Garrett\.claude\skills` are cataloged and assigned across the 8 GSE & GSI
+   Operational Domains.
 2. Zero symlinks remain across `.agents/skills`, `.claude/skills`, and `.gemini/config/skills`.
 3. All 7 `agy` CLI plugins (`superpowers`, `understand-anything`, `antigravity-skills`,
-   `antigravity-workflows`, `android-cli-plugin`, `chrome-devtools-plugin`, `google-antigravity-sdk`)
-   are registered in `C:\\Users\\Garrett\\.gemini\\config\\import_manifest.json` totaling 383 plugin skills.
+   `antigravity-workflows`, `android-cli-plugin`, `chrome-devtools-plugin`,
+   `google-antigravity-sdk`) are registered in
+   `C:\Users\Garrett\.gemini\config\import_manifest.json` totaling 383 plugin skills.
 4. `evaluate_143_skills_pre_projection_and_workflow_readiness("BAL", "JAX")` and
    `route_task_to_143_skills(...)` return deterministic, finite readiness telemetry.
-5. Pinecone (`2025-04` API) upsert receipt confirms 16 vectors in namespace `gse-143-skills-and-plugins`,
-   and zero raw secrets or forbidden abbreviations exist in the generated artifacts.
+5. Pinecone (`2025-04` API) upsert receipt confirms 16 vectors in
+   `gse-143-skills-and-plugins`, and zero raw secrets or forbidden abbreviations exist in the
+   generated artifacts.
 """
 
 from __future__ import annotations
@@ -25,7 +28,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.ops.gse_143_skills_orchestrator_and_router import (
+from intelligence.ops.gse_143_skills_orchestrator_and_router import (  # noqa: E402
     CANONICAL_7_AGY_PLUGINS,
     IMPORT_MANIFEST_PATH,
     evaluate_143_skills_pre_projection_and_workflow_readiness,
@@ -51,7 +54,9 @@ def test_all_7_agy_plugins_registered_in_import_manifest() -> None:
         manifest_data = json.loads(IMPORT_MANIFEST_PATH.read_text(encoding="utf-8"))
         registered_names = [item["name"] for item in manifest_data.get("imports", [])]
     else:
-        audit_path = REPO_ROOT / "data" / "audits" / "gse_143_skills_and_agy_plugins_audit_2026_11_06.json"
+        audit_path = (
+            REPO_ROOT / "data" / "audits" / "gse_143_skills_and_agy_plugins_audit_2026_11_06.json"
+        )
         audit_data = json.loads(audit_path.read_text(encoding="utf-8"))
         registered_names = audit_data["manifest_registration"]["registered_plugins"]
     assert set(CANONICAL_7_AGY_PLUGINS).issubset(set(registered_names))
@@ -79,8 +84,17 @@ def test_task_routing_and_matchup_readiness_telemetry() -> None:
 
 
 def test_audit_artifacts_pinecone_receipt_and_zero_secrets() -> None:
-    json_path = REPO_ROOT / "data" / "audits" / "gse_143_skills_and_agy_plugins_audit_2026_11_06.json"
-    md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "GSE_143_SKILLS_AND_AGY_PLUGINS_IMPLEMENTATION_BIBLE.md"
+    json_path = (
+        REPO_ROOT / "data" / "audits" / "gse_143_skills_and_agy_plugins_audit_2026_11_06.json"
+    )
+    md_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-06"
+        / "GSE_143_SKILLS_AND_AGY_PLUGINS_IMPLEMENTATION_BIBLE.md"
+    )
     assert json_path.is_file()
     assert md_path.is_file()
 

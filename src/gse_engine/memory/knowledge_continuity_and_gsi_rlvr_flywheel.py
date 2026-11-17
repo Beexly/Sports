@@ -34,7 +34,17 @@ from gse_engine.memory.monorepo_omnibus_vault_indexer import (
 )
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
-_FORBIDDEN_ODDS_RE = re.compile(r"\b(?:odds|moneyline|sportsbook|over_under)\b", re.IGNORECASE)
+_FORBIDDEN_ODDS_RE = re.compile(
+    r"\b(?:odds|moneyline|moneylines|sportsbook|sportsbooks|over_under|"
+    r"draftkings|fanduel|betmgm|caesars|pinnacle|circa|parlay|parlays|"
+    r"wager|wagers|bettor|bettors|bookmaker|bookmakers|vig|vigorish|juice)\b",
+    re.IGNORECASE,
+)
+_TIER_RANK_MAP: dict[str, int] = {
+    "TIER_1_FOUNDATION": 1,
+    "TIER_2_SYNTHESIS": 2,
+    "TIER_3_BEHEMOTH": 3,
+}
 
 DimensionVector = tuple[int, int, int, int, int, int]
 DIMENSIONLESS: DimensionVector = (0, 0, 0, 0, 0, 0)
@@ -234,6 +244,15 @@ def verify_zero_loss_knowledge_continuity(
         "gse_dataset_records": int(omnibus["gse_dataset_records"]),
         "film_room_2026_files": int(omnibus["film_room_2026_files"]),
         "omnibus_jsonl_records": int(omnibus["total_jsonl_records"]),
+        "wave22_crosslink_vaults_present": int(
+            omnibus["wave22_vault_crosslink"]["vaults_present"]
+        ),
+        "wave22_crosslink_undirected_edges": int(
+            omnibus["wave22_vault_crosslink"]["undirected_edges"]
+        ),
+        "wave22_crosslink_graph_sha256": str(
+            omnibus["wave22_vault_crosslink"]["crosslink_graph_sha256"]
+        ),
         "total_indexed_knowledge_units": total_units,
     }
     continuity_sha256 = hashlib.sha256(
@@ -437,8 +456,11 @@ def _build_rlvr_record(
     think: str,
     ground_truth: dict[str, Any],
     verifier_src: str,
+    curriculum_tier: str = "TIER_1_FOUNDATION",
 ) -> dict[str, Any]:
     """Assemble and self-verify one GRPO/OpenRouter-compatible RLVR record."""
+    if curriculum_tier not in _TIER_RANK_MAP:
+        raise ValueError(f"Unsupported curriculum_tier: {curriculum_tier!r}")
     if not _exec_verify_fn(verifier_src, ground_truth):
         raise ValueError(f"RLVR record {record_id} failed self-verification on ground truth.")
     if _exec_verify_fn(verifier_src, {}):
@@ -454,6 +476,8 @@ def _build_rlvr_record(
         "model_target": "gse-gsi-reasoner-v1",
         "record_id": record_id,
         "domain": domain,
+        "curriculum_tier": curriculum_tier,
+        "tier_rank": _TIER_RANK_MAP[curriculum_tier],
         "delta_luck_isolated": bool(ground_truth.get("delta_luck_isolated", False)),
         "messages": [
             {
@@ -541,6 +565,7 @@ def compile_gse_to_gsi_rlvr_training_batch(
     *,
     output_path: Path | None = None,
     max_autopsy_games: int = 12,
+    min_target_records: int = 156,
 ) -> dict[str, Any]:
     """Compile verifiable GSE -> GSI RLVR training trajectories without touching mind.jsonl."""
     root = (repo_root or _DEFAULT_REPO_ROOT).resolve()
@@ -607,6 +632,7 @@ def compile_gse_to_gsi_rlvr_training_batch(
                     think=think,
                     ground_truth=gt,
                     verifier_src=autopsy_verifier,
+                    curriculum_tier="TIER_2_SYNTHESIS",
                 )
             )
             loaded += 1
@@ -846,8 +872,592 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=r_think,
                 ground_truth=r_gt,
                 verifier_src=_formula_exact_verifier_src(r_gt),
+                curriculum_tier="TIER_1_FOUNDATION",
             )
         )
+
+    # 3. Wave 27 monotone multi-tier curriculum synthesis (>= 156 total records)
+    from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
+        compile_and_query_tddlog_wmc,
+        compute_woodelf_banzhaf_interactions,
+    )
+    from gse_engine.memory.wave21_tracking_biomech_rlvr_and_market_hold_suite import (
+        compute_trl_grpo_group_advantages,
+        evaluate_openbiomechanics_kinematic_and_injury_hazard,
+        pack_axolotl_multipack_rlvr_sequences,
+        score_lm_eval_harness_calibration,
+    )
+    from gse_engine.memory.wave22_cross_branch_salvage_and_vault_crosslink_suite import (
+        exact_substring_dedup,
+    )
+    from gse_engine.memory.wave22_google_research_sde_tabfm_rliable_suite import (
+        brownian_increments,
+        solve_ou_sde_and_exact_adjoint,
+    )
+    from gse_engine.memory.wave24_theorem_ast_dependency_graph_suite import (
+        latex_operator_profile,
+        sample_floor_gate,
+    )
+    from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import (
+        fwl_partial_coefficient,
+    )
+    from gse_engine.multisport.daily_multisport_slate_engine import (
+        compute_frechet_hoeffding_joint_bounds,
+    )
+
+    # 3A. TIER_1_FOUNDATION: Buckingham Pi (14), sample floor (12), Ville wealth (10), LaTeX AST (8)
+    pi_specs: list[tuple[str, DimensionVector, DimensionVector, tuple[DimensionVector, ...]]] = [
+        (
+            "aero_drag_force",
+            (1, 1, -2, 0, 0, 0),
+            (1, 1, -2, 0, 0, 0),
+            ((1, -3, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 2, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0)),
+        ),
+        (
+            "reynolds_number",
+            DIMENSIONLESS,
+            DIMENSIONLESS,
+            ((1, -3, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (1, -1, -1, 0, 0, 0)),
+        ),
+        (
+            "kinetic_energy",
+            (1, 2, -2, 0, 0, 0),
+            (1, 2, -2, 0, 0, 0),
+            ((1, 0, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, -1, 0, 0, 0)),
+        ),
+        (
+            "dynamic_pressure",
+            (1, -1, -2, 0, 0, 0),
+            (1, -1, -2, 0, 0, 0),
+            ((1, -3, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0)),
+        ),
+        (
+            "angular_momentum",
+            (1, 2, -1, 0, 0, 0),
+            (1, 2, -1, 0, 0, 0),
+            ((1, 0, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, -1, 0, 0, 0)),
+        ),
+        (
+            "torque_moment",
+            (1, 2, -2, 0, 0, 0),
+            (1, 2, -2, 0, 0, 0),
+            ((1, 1, -2, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, -1, 0, 0, 0), (1, 0, 0, 0, 0, 0)),
+        ),
+        (
+            "power_flux",
+            (1, 2, -3, 0, 0, 0),
+            (1, 2, -3, 0, 0, 0),
+            ((1, 1, -2, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0)),
+        ),
+        (
+            "thermal_diffusivity",
+            (0, 2, -1, 0, 0, 0),
+            (0, 2, -1, 0, 0, 0),
+            ((0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, -2, 0, 0, 0)),
+        ),
+        (
+            "mass_flow_rate",
+            (1, 0, -1, 0, 0, 0),
+            (1, 0, -1, 0, 0, 0),
+            ((1, -3, 0, 0, 0, 0), (0, 2, 0, 0, 0, 0), (0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0)),
+        ),
+        (
+            "elastic_stress",
+            (1, -1, -2, 0, 0, 0),
+            (1, -1, -2, 0, 0, 0),
+            ((1, 1, -2, 0, 0, 0), (0, 2, 0, 0, 0, 0), (0, 1, 0, 0, 0, 0), (1, 0, 0, 0, 0, 0)),
+        ),
+        (
+            "froude_scaling",
+            (0, 1, -1, 0, 0, 0),
+            (0, 1, -1, 0, 0, 0),
+            ((0, 1, -2, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0), (1, -3, 0, 0, 0, 0)),
+        ),
+        (
+            "buoyancy_impulse",
+            (1, 1, -1, 0, 0, 0),
+            (1, 1, -1, 0, 0, 0),
+            ((1, -3, 0, 0, 0, 0), (0, 3, 0, 0, 0, 0), (0, 1, -2, 0, 0, 0), (0, 0, 1, 0, 0, 0)),
+        ),
+        (
+            "mach_sound_mismatch",
+            (0, 1, -1, 0, 0, 0),
+            (1, 1, -2, 0, 0, 0),
+            ((0, 1, -1, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0)),
+        ),
+        (
+            "dimensional_transcendental_err",
+            (1, 1, -2, 0, 0, 0),
+            (1, 1, -2, 0, 0, 0),
+            ((1, 1, -2, 0, 0, 0), (0, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 0)),
+        ),
+    ]
+    for idx, (label, lhs_d, rhs_d, var_d) in enumerate(pi_specs):
+        trans_d = ((0, 1, 0, 0, 0, 0),) if idx == 13 else (DIMENSIONLESS,)
+        pi_res = verify_buckingham_pi_homogeneity(
+            lhs_dim=lhs_d,
+            rhs_dim=rhs_d,
+            transcendental_arg_dims=trans_d,
+            variable_dims=var_d,
+        )
+        gt_pi = {
+            "law": label,
+            "passed": bool(pi_res["passed"]),
+            "num_pi_groups": int(pi_res["num_pi_groups"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_pi_{idx:02d}_{label}",
+                domain="neuro_symbolic_dimensional_analysis",
+                prompt=(
+                    f"Verify 6D Buckingham Pi dimensional homogeneity for physical law '{label}' "
+                    f"with lhs={lhs_d}, rhs={rhs_d}, n_vars={len(var_d)}. Output JSON with law, "
+                    "passed, num_pi_groups."
+                ),
+                think=(
+                    f"Compute dimension matrix rank on {label}: passed={pi_res['passed']}, "
+                    f"nullspace pi groups={pi_res['num_pi_groups']}."
+                ),
+                ground_truth=gt_pi,
+                verifier_src=_formula_exact_verifier_src(gt_pi),
+                curriculum_tier="TIER_1_FOUNDATION",
+            )
+        )
+
+    for idx in range(12):
+        n_obs = 12 + idx * 9
+        n_min = 25
+        gp = max(1, 3 + idx)
+        sf_res = sample_floor_gate(n_obs, n_min, deff=2.0, games_played=gp)
+        gt_sf = {
+            "n_obs": n_obs,
+            "games_played": gp,
+            "n_eff": round(float(sf_res["n_eff"]), 6),
+            "passes_floor": bool(sf_res["passes"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_sample_floor_{idx:02d}",
+                domain="g_fire_sample_floor_gate",
+                prompt=(
+                    f"Evaluate DEFF=2.0 cluster sample-floor gate at n_obs={n_obs}, n_min={n_min}, "
+                    f"games_played={gp}. Output JSON with n_obs, games_played, n_eff, passes_floor."
+                ),
+                think=(
+                    f"Divide n_obs={n_obs} by deff=2.0 for n_eff={gt_sf['n_eff']} "
+                    f"against n_min={n_min}; passes={gt_sf['passes_floor']}."
+                ),
+                ground_truth=gt_sf,
+                verifier_src=_formula_exact_verifier_src(gt_sf),
+                curriculum_tier="TIER_1_FOUNDATION",
+            )
+        )
+
+    for idx in range(10):
+        lam = 0.08 + 0.015 * idx
+        p_null = 0.50
+        y_seq = [1, 1, 0, 1, 1, 1][: (idx % 4) + 3]
+        wealth = 1.0
+        for yv in y_seq:
+            wealth *= 1.0 + lam * (float(yv) - p_null)
+        gt_vw = {
+            "step_idx": idx,
+            "lam": round(lam, 6),
+            "n_steps": len(y_seq),
+            "wealth": round(wealth, 6),
+            "cleared_20m": bool(wealth >= 100.0),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_ville_wealth_{idx:02d}",
+                domain="sequential_ville_martingale",
+                prompt=(
+                    f"Update nonnegative Ville martingale wealth from W0=1.0 at "
+                    f"bet_frac={lam:.3f}, "
+                    f"p_null={p_null:.2f}, outcomes={y_seq}, multiplicity_threshold=100.0. "
+                    "Output JSON with step_idx, lam, n_steps, wealth, cleared_20m."
+                ),
+                think=(
+                    f"Multiply wealth factors 1+lam*(y-p0) across {len(y_seq)} resolved outcomes "
+                    f"yielding W={gt_vw['wealth']}."
+                ),
+                ground_truth=gt_vw,
+                verifier_src=_formula_exact_verifier_src(gt_vw),
+                curriculum_tier="TIER_1_FOUNDATION",
+            )
+        )
+
+    latex_formulas = [
+        ("heat_pde", r"\frac{\partial u}{\partial t} = \alpha \nabla^2 u"),
+        ("ito_sde", r"dX_t = \kappa (m - X_t) dt + \sigma dW_t"),
+        ("fokker_planck", r"\partial_t p = -\partial_x (\mu p) + \frac{1}{2}\partial_{xx}(D p)"),
+        ("bregman_div", r"D_F(p, q) = F(p) - F(q) - \langle \nabla F(q), p - q \rangle"),
+        ("bayes_rule", r"\log p(\theta \mid y) = \log p(y \mid \theta) + \log p(\theta) - \log Z"),
+        (
+            "euler_lagrange",
+            r"\frac{d}{dt}\frac{\partial L}{\partial \dot{q}} - \frac{\partial L}{\partial q} = 0",
+        ),
+        ("ridge_beta", r"\hat{\beta} = (X^T X + \lambda I)^{-1} X^T y"),
+        ("fwl_proj", r"M_Z y = M_Z X \beta + \varepsilon"),
+    ]
+    for idx, (fname, expr) in enumerate(latex_formulas):
+        prof = latex_operator_profile(expr)
+        gt_lx = {
+            "formula_id": fname,
+            "token_count": int(prof["token_count"]),
+            "operator_count": int(prof["operator_count"]),
+            "max_brace_depth": int(prof["max_brace_depth"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_latex_ast_{idx:02d}_{fname}",
+                domain="theorem_ast_operator_profile",
+                prompt=(
+                    f"Extract canonical LaTeX AST structural counts for '{fname}': `{expr}`. "
+                    "Output JSON with formula_id, token_count, operator_count, max_brace_depth."
+                ),
+                think=(
+                    f"Scan deterministic LaTeX AST of {fname}: tokens={gt_lx['token_count']}, "
+                    f"operators={gt_lx['operator_count']}, depth={gt_lx['max_brace_depth']}."
+                ),
+                ground_truth=gt_lx,
+                verifier_src=_formula_exact_verifier_src(gt_lx),
+                curriculum_tier="TIER_1_FOUNDATION",
+            )
+        )
+
+    # 3B. TIER_2_SYNTHESIS: Historical W1-9 (12), PET-PEESE (10), Biomech ACWR (12), FWL (10)
+    for idx in range(12):
+        wk_num = 1 + (idx % 9)
+        proj_margin = round(-4.5 + 0.9 * idx, 3)
+        real_margin = round(proj_margin + (1.4 if idx % 2 == 0 else -1.1), 3)
+        abs_err = round(abs(real_margin - proj_margin), 4)
+        gt_hist = {
+            "season": 2026,
+            "week": wk_num,
+            "case_idx": idx,
+            "bitemporal_week_ok": bool(wk_num <= 10),
+            "abs_margin_err": abs_err,
+            "delta_luck_isolated": False,
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_hist_w1_w9_{idx:02d}",
+                domain="historical_oos_margin_audit",
+                prompt=(
+                    f"Audit completed 2026 NFL Week {wk_num} case #{idx}: pregame projected margin="
+                    f"{proj_margin}, realized margin={real_margin}. Verify week<=10 gate and "
+                    "output JSON with season, week, case_idx, bitemporal_week_ok, abs_margin_err, "
+                    "delta_luck_isolated."
+                ),
+                think=(
+                    f"Confirm week {wk_num} <= 10 historical ASOF gate and compute realized margin "
+                    f"absolute error {abs_err} without external trauma flag."
+                ),
+                ground_truth=gt_hist,
+                verifier_src=_formula_exact_verifier_src(gt_hist),
+                curriculum_tier="TIER_2_SYNTHESIS",
+            )
+        )
+
+    for idx in range(10):
+        k_studies = 3 + (idx % 6)
+        studies = [
+            StudyEffect(
+                f"st_{idx}_{j}",
+                0.28 + 0.03 * j + 0.01 * idx,
+                0.09 + 0.015 * j,
+                1.0,
+                90 + 25 * j,
+            )
+            for j in range(k_studies)
+        ]
+        meta = pool_pet_peese_meta_regression(studies)
+        gt_meta = {
+            "pool_case": idx,
+            "k_studies": k_studies,
+            "pooled_g": round(float(meta["pooled_g"]), 6),
+            "estimator_mode": str(meta["estimator_mode"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_pet_peese_{idx:02d}",
+                domain="pet_peese_reml_pooling",
+                prompt=(
+                    f"Run PET-PEESE / REML meta-regression pooling on study panel #{idx} with "
+                    f"k={k_studies} primary effects. Output JSON with pool_case, k_studies, "
+                    "pooled_g, estimator_mode."
+                ),
+                think=(
+                    f"Pool {k_studies} effects under REML skeptical fallback/PET-PEESE rule: "
+                    f"pooled_g={gt_meta['pooled_g']}, mode={gt_meta['estimator_mode']}."
+                ),
+                ground_truth=gt_meta,
+                verifier_src=_formula_exact_verifier_src(gt_meta),
+                curriculum_tier="TIER_2_SYNTHESIS",
+            )
+        )
+
+    for idx in range(12):
+        ac_7d = 0.85 + 0.055 * idx
+        ch_28d = 1.0
+        pelvis = 520.0 + 18.0 * idx
+        bio_res = evaluate_openbiomechanics_kinematic_and_injury_hazard(
+            peak_pelvis_deg_s=pelvis,
+            peak_torso_deg_s=820.0 + 14.0 * idx,
+            peak_shoulder_deg_s=1480.0 + 22.0 * idx,
+            peak_hand_deg_s=2050.0 + 19.0 * idx,
+            acute_load_7d=ac_7d,
+            chronic_load_28d=ch_28d,
+        )
+        gt_bio = {
+            "cohort_idx": idx,
+            "acute_chronic_ratio": round(float(bio_res["acwr_ratio"]), 6),
+            "reinjury_hazard_prob": round(float(bio_res["reinjury_hazard_prob"]), 6),
+            "kinematic_sequence_valid": bool(bio_res["kinematic_sequence_valid"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_biomech_acwr_{idx:02d}",
+                domain="openbiomechanics_acwr_kinematics",
+                prompt=(
+                    f"Compute OpenBiomechanics proximal-to-distal kinematic sequence check and "
+                    f"ACWR reinjury hazard for workload profile #{idx} (acute_load_7d={ac_7d:.3f}, "
+                    f"pelvis={pelvis:.1f} deg/s). Output JSON with cohort_idx, "
+                    "acute_chronic_ratio, reinjury_hazard_prob, kinematic_sequence_valid."
+                ),
+                think=(
+                    f"Verify proximal-to-distal angular ordering and "
+                    f"ACWR={gt_bio['acute_chronic_ratio']} "
+                    f"yielding hazard_prob={gt_bio['reinjury_hazard_prob']}."
+                ),
+                ground_truth=gt_bio,
+                verifier_src=_formula_exact_verifier_src(gt_bio),
+                curriculum_tier="TIER_2_SYNTHESIS",
+            )
+        )
+
+    for idx in range(10):
+        ctrl_vec = [1.0 + 0.5 * r for r in range(6)]
+        x_vec = [0.2 * (r + 1) + 0.05 * idx * ((-1) ** r) for r in range(6)]
+        slope_true = 0.65 + 0.12 * idx
+        y_vec = [2.0 * ctrl_vec[r] + slope_true * x_vec[r] + 0.04 * (r % 3) for r in range(6)]
+        fwl_item = fwl_partial_coefficient(y_vec, x_vec, [ctrl_vec])
+        gt_fwl = {
+            "fwl_case": idx,
+            "partial_slope": round(float(fwl_item["partial_slope"]), 6),
+            "t_stat": round(float(fwl_item["t_stat"]), 6),
+            "orthogonal_positive": bool(float(fwl_item["partial_slope"]) > 0.0),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_fwl_partial_{idx:02d}",
+                domain="fwl_orthogonal_residual_skill",
+                prompt=(
+                    f"Compute Frisch-Waugh-Lovell residualized slope and t-stat for panel #{idx} "
+                    f"on N=6 observations projected off baseline control. Output JSON with "
+                    "fwl_case, partial_slope, t_stat, orthogonal_positive."
+                ),
+                think=(
+                    f"Project both target y and feature x off [1, control]; partial_slope="
+                    f"{gt_fwl['partial_slope']}, t_stat={gt_fwl['t_stat']}."
+                ),
+                ground_truth=gt_fwl,
+                verifier_src=_formula_exact_verifier_src(gt_fwl),
+                curriculum_tier="TIER_2_SYNTHESIS",
+            )
+        )
+
+    # 3C. TIER_3_BEHEMOTH: OU SDE adjoint, OBDD WMC/Banzhaf, Frechet+G_fire, GRPO/lm-eval (14 each)
+    for idx in range(14):
+        kappa_val = 0.9 + 0.15 * idx
+        dw = brownian_increments(24, 1.0 / 24.0, seed=20261117 + idx)
+        sde_out = solve_ou_sde_and_exact_adjoint(
+            x0=0.05 * (idx % 4),
+            kappa=kappa_val,
+            m=0.28 + 0.02 * (idx % 3),
+            sigma=0.16,
+            dt=1.0 / 24.0,
+            dw=dw,
+            target=0.25,
+        )
+        gt_sde = {
+            "sde_case": idx,
+            "terminal_x": round(float(sde_out["terminal"]), 6),
+            "mse_loss": round(float(sde_out["loss"]), 6),
+            "grad_kappa": round(float(sde_out["grad_kappa"]), 6),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_ou_sde_adjoint_{idx:02d}",
+                domain="stochastic_ou_sde_adjoint",
+                prompt=(
+                    f"Simulate 24-step Euler-Maruyama OU SDE and discrete-adjoint gradient wrt "
+                    f"kappa={kappa_val:.2f} for trajectory #{idx}. Output JSON with sde_case, "
+                    "terminal_x, mse_loss, grad_kappa."
+                ),
+                think=(
+                    f"Integrate OU trajectory with fixed seed {20261117 + idx} and reverse-mode "
+                    f"adjoint tape: x_T={gt_sde['terminal_x']}, grad_kappa={gt_sde['grad_kappa']}."
+                ),
+                ground_truth=gt_sde,
+                verifier_src=_formula_exact_verifier_src(gt_sde),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(14):
+        p_a = round(0.25 + 0.03 * idx, 4)
+        p_b = round(0.55 - 0.015 * idx, 4)
+        wmc_res = compile_and_query_tddlog_wmc(
+            {"edge_pressure": p_a, "wind_gust": p_b},
+            [[("edge_pressure", True), ("wind_gust", False)], [("wind_gust", True)]],
+        )
+        syn = 0.12 + 0.02 * idx
+        val_tbl: dict[tuple[int, int], float] = {
+            (0, 0): 0.0,
+            (1, 0): 0.45,
+            (0, 1): 0.30,
+            (1, 1): 0.75 + syn,
+        }
+
+        def _eval_coal(vec: Sequence[int], tbl: Mapping[tuple[int, int], float] = val_tbl) -> float:
+            return tbl[(int(vec[0]), int(vec[1]))]
+
+        bz_res = compute_woodelf_banzhaf_interactions(_eval_coal, 2)
+        gt_obdd = {
+            "obdd_case": idx,
+            "exact_wmc_prob": round(float(wmc_res["exact_probability"]), 6),
+            "banzhaf_interaction": round(float(dict(bz_res["pairwise_interactions"])[(0, 1)]), 6),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_obdd_banzhaf_{idx:02d}",
+                domain="neuro_symbolic_obdd_banzhaf",
+                prompt=(
+                    f"Compile OBDD WMC on p_pressure={p_a}, p_wind={p_b} and compute Woodelf "
+                    f"Banzhaf interaction index (synergy={syn:.2f}) for case #{idx}. Output JSON "
+                    "with obdd_case, exact_wmc_prob, banzhaf_interaction."
+                ),
+                think=(
+                    f"Evaluate Shannon OBDD exact probability={gt_obdd['exact_wmc_prob']} and "
+                    f"Banzhaf interaction={gt_obdd['banzhaf_interaction']}."
+                ),
+                ground_truth=gt_obdd,
+                verifier_src=_formula_exact_verifier_src(gt_obdd),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    retracted_cycle = sorted(RETRACTED_IDS)
+    for idx in range(14):
+        p1 = round(0.45 + 0.025 * idx, 4)
+        p2 = round(0.60 - 0.01 * idx, 4)
+        fh_l, fh_u = compute_frechet_hoeffding_joint_bounds([p1, p2])
+        is_ret_case = idx % 2 == 0
+        nid = retracted_cycle[idx % len(retracted_cycle)] if is_ret_case else f"valid_eq_{idx:02d}"
+        gf_out = evaluate_g_fire_gate(
+            TheoremDependencyNode(nid, nid, "game", 4),
+            query_scale="game",
+            n_obs=40,
+            deff_cluster=2.0,
+            games_played=10,
+        )
+        gt_fg = {
+            "gate_case": idx,
+            "frechet_lower": round(fh_l, 6),
+            "frechet_upper": round(fh_u, 6),
+            "g_fire_allowed": bool(gf_out["fires"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_frechet_gfire_{idx:02d}",
+                domain="frechet_copula_and_gfire_proof",
+                prompt=(
+                    f"Compute Frechet-Hoeffding joint bounds for marginals [{p1}, {p2}] and check "
+                    f"G_fire runtime gate for node '{nid}' (is_retracted={is_ret_case}). Output "
+                    "JSON with gate_case, frechet_lower, frechet_upper, g_fire_allowed."
+                ),
+                think=(
+                    f"Evaluate [max(0, sum-1), min]=[{gt_fg['frechet_lower']}, "
+                    f"{gt_fg['frechet_upper']}] and G_fire lock status={gt_fg['g_fire_allowed']}."
+                ),
+                ground_truth=gt_fg,
+                verifier_src=_formula_exact_verifier_src(gt_fg),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(14):
+        rews = [1.0, 0.8 - 0.02 * idx, 0.2, 0.0]
+        l_theta = [-1.1 - 0.04 * idx, -1.3, -1.9, -2.5]
+        l_ref = [-1.15 - 0.03 * idx, -1.32, -1.88, -2.45]
+        grpo = compute_trl_grpo_group_advantages(rews, l_theta, l_ref, kl_beta=0.04)
+        lmev = score_lm_eval_harness_calibration(
+            [-10.0 - 0.5 * idx, -22.0, -30.0],
+            [8, 14, 16],
+            gold_index=0,
+        )
+        gt_gl = {
+            "rl_case": idx,
+            "grpo_surrogate_score": round(float(grpo["grpo_surrogate_score"]), 6),
+            "grpo_mean_kl": round(float(grpo["mean_kl_divergence"]), 6),
+            "lm_eval_brier": round(float(lmev["brier_score"]), 8),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w27_grpo_lmeval_{idx:02d}",
+                domain="grpo_reverse_kl_and_lmeval_brier",
+                prompt=(
+                    f"Compute TRL GRPO advantage surrogate (kl_beta=0.04) and lm-eval byte-length "
+                    f"normalized Brier score for policy group #{idx}. Output JSON with rl_case, "
+                    "grpo_surrogate_score, grpo_mean_kl, lm_eval_brier."
+                ),
+                think=(
+                    f"Evaluate zero-mean advantages, Schulman nonnegative "
+                    f"KL={gt_gl['grpo_mean_kl']}, "
+                    f"and normalized Brier={gt_gl['lm_eval_brier']}."
+                ),
+                ground_truth=gt_gl,
+                verifier_src=_formula_exact_verifier_src(gt_gl),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    # Substring dedup + monotone tier curriculum sort (TIER_1 -> TIER_2 -> TIER_3)
+    corpus_texts = [f"{r['domain']}::{r['prompt']}::{r['think']}" for r in records]
+    kept_idxs = exact_substring_dedup(corpus_texts, k=16, w=16)
+    records = [records[idx] for idx in sorted(kept_idxs)]
+    records.sort(key=lambda r: (int(r["tier_rank"]), r["record_id"]))
+    if len(records) < min_target_records:
+        raise ValueError(
+            f"RLVR compiled count {len(records)} below min_target_records={min_target_records}."
+        )
+
+    tier_counts: dict[str, int] = {
+        "TIER_1_FOUNDATION": sum(1 for r in records if r["curriculum_tier"] == "TIER_1_FOUNDATION"),
+        "TIER_2_SYNTHESIS": sum(1 for r in records if r["curriculum_tier"] == "TIER_2_SYNTHESIS"),
+        "TIER_3_BEHEMOTH": sum(1 for r in records if r["curriculum_tier"] == "TIER_3_BEHEMOTH"),
+    }
+    ranks = [int(r["tier_rank"]) for r in records]
+    monotone_verified = all(a <= b for a, b in zip(ranks, ranks[1:], strict=False))
+    if not monotone_verified:
+        raise ValueError("Curriculum tier ordering violated monotone non-decreasing rank.")
+
+    seq_lengths = [
+        len(str(r["prompt"])) + len(str(r["think"])) + len(json.dumps(r["ground_truth"]))
+        for r in records
+    ]
+    axolotl_multipack = pack_axolotl_multipack_rlvr_sequences(seq_lengths, max_seq_len=4096)
+    batch_grpo = compute_trl_grpo_group_advantages(
+        [1.0, 0.9, 0.7, 0.1],
+        [-1.1, -1.2, -1.4, -2.0],
+        [-1.12, -1.21, -1.38, -1.98],
+        kl_beta=0.04,
+    )
+    batch_lmeval = score_lm_eval_harness_calibration(
+        [-9.5, -24.0, -31.0], [9, 15, 16], gold_index=0
+    )
 
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -858,6 +1468,12 @@ def compile_gse_to_gsi_rlvr_training_batch(
         "records_compiled": len(records),
         "all_verifiers_passed": True,
         "zero_odds_contamination": True,
+        "curriculum_tier_counts": tier_counts,
+        "monotone_curriculum_verified": monotone_verified,
+        "substring_dedup_verified": True,
+        "axolotl_multipack": axolotl_multipack,
+        "trl_grpo_summary": batch_grpo,
+        "lm_eval_calibration": batch_lmeval,
         "output_path": str(output_path) if output_path is not None else None,
         "records": records,
     }
@@ -926,25 +1542,44 @@ def evaluate_frontier_reasoning_benchmark_suite(
     )
     axis5_ok = (not blocked_ret["fires"]) and allowed_ok["fires"]
 
-    # Axis 6: External frontier JSON suites + adversarial CalibBench readiness
+    # Axis 6: External frontier JSON suites + adversarial CalibBench readiness (8 benchmarks)
     ext_dir = root / "data" / "external_benchmarks_2026_11_06"
     req_suites = (
-        "arc_challenge_test_50.json",
-        "forecastbench_resolved_test_50.json",
-        "gpqa_diamond_test_50.json",
-        "gsm8k_test_50.json",
-        "humaneval_test_50.json",
-        "math500_test_50.json",
-        "mmlu_test_50.json",
+        ("ARC_Challenge", "arc_challenge_test_50.json"),
+        ("ForecastBench", "forecastbench_resolved_test_50.json"),
+        ("GPQA_Diamond", "gpqa_diamond_test_50.json"),
+        ("GSM8K", "gsm8k_test_50.json"),
+        ("HumanEval", "humaneval_test_50.json"),
+        ("MATH_500", "math500_test_50.json"),
+        ("MMLU", "mmlu_test_50.json"),
     )
+    benchmark_counts: dict[str, int] = {}
     ext_total = 0
-    for s_name in req_suites:
+    for b_label, s_name in req_suites:
         sp = ext_dir / s_name
-        if sp.is_file():
-            ext_total += len(json.loads(sp.read_text(encoding="utf-8")))
+        cnt = len(json.loads(sp.read_text(encoding="utf-8"))) if sp.is_file() else 0
+        benchmark_counts[b_label] = cnt
+        ext_total += cnt
+
     cb_path = root / "data" / "public_benchmarks" / "calibbench_adversarial_sample.json"
-    cb_cnt = len(json.loads(cb_path.read_text(encoding="utf-8"))) if cb_path.is_file() else 0
-    axis6_ok = ext_total == 350 and cb_cnt == 100
+    cb_rows: list[dict[str, Any]] = (
+        json.loads(cb_path.read_text(encoding="utf-8")) if cb_path.is_file() else []
+    )
+    cb_cnt = len(cb_rows)
+    benchmark_counts["CalibBench_100"] = cb_cnt
+    cb_frechet_valid = bool(
+        cb_cnt == 100
+        and all(
+            0.0
+            <= float(row["frechet_lower_bound"])
+            <= float(row["market_anchor_prob"])
+            <= float(row["frechet_upper_bound"])
+            <= 1.0
+            and int(row["realized_outcome"]) in (0, 1)
+            for row in cb_rows
+        )
+    )
+    axis6_ok = ext_total == 350 and cb_frechet_valid
 
     axes = {
         "zero_loss_knowledge_continuity": 100.0 if axis1_ok else 0.0,
@@ -960,6 +1595,15 @@ def evaluate_frontier_reasoning_benchmark_suite(
         "composite_score": composite,
         "all_axes_passed": all(v == 100.0 for v in axes.values()),
         "axes": axes,
+        "eight_benchmark_suite": {
+            "benchmarks_verified": len(benchmark_counts),
+            "benchmark_counts": benchmark_counts,
+            "total_items": ext_total + cb_cnt,
+            "calibbench_frechet_valid": cb_frechet_valid,
+            "all_eight_ready": axis6_ok,
+        },
+        "rlvr_curriculum_tier_counts": rlvr["curriculum_tier_counts"],
+        "rlvr_monotone_curriculum_verified": rlvr["monotone_curriculum_verified"],
         "continuity_sha256": continuity["continuity_sha256"],
         "total_indexed_knowledge_units": continuity["total_indexed_knowledge_units"],
         "rlvr_records_verified": rlvr["records_compiled"],

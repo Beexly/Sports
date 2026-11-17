@@ -13,7 +13,7 @@ import math
 import sys
 import types
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 try:
     import pytest  # type: ignore
@@ -47,15 +47,15 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture(scope="module")
-def compiled_week9_payload() -> Dict[str, Any]:
+def compiled_week9_payload() -> dict[str, Any]:
     compiler = BookEquationsToStatsCompiler()
     return compiler.compile_full_week9_dataset(write_artifacts=True)
 
 
 def test_01_mind_book_and_equation_registries_503_books_and_21419_equations_synced(
-    compiled_week9_payload: Dict[str, Any],
+    compiled_week9_payload: dict[str, Any],
 ) -> None:
-    """Verify 458/503 book registries and 21,419 equation inventories are synced with 0 unmapped items."""
+    """Verify 458/503 book registries & 21,419 equations are synced with 0 unmapped items."""
     assert COMPLETE_458_BOOK_REGISTRY_PATH.exists()
     assert BOOK_DOMAIN_CROSSWALK_PATH.exists()
     assert EQUATION_INVENTORY_V2_PATH.exists()
@@ -75,7 +75,7 @@ def test_01_mind_book_and_equation_registries_503_books_and_21419_equations_sync
 
 
 def test_02_medical_68_books_gsi_quarantine_zero_sports_spine_weight(
-    compiled_week9_payload: Dict[str, Any],
+    compiled_week9_payload: dict[str, Any],
 ) -> None:
     """Verify all 68 books-b-medical books are strictly quarantined from the sports spine."""
     reg_data = json.loads(COMPLETE_458_BOOK_REGISTRY_PATH.read_text(encoding="utf-8"))
@@ -192,7 +192,10 @@ def test_05_domain2_voronoi_box_spacing_ssp_burn_rate_and_zver() -> None:
     assert len(light_box) == 16
     assert light_box["true_box_count_spacing_delta"] > 0.0
     assert heavy_box["true_box_count_spacing_delta"] < 0.0
-    assert light_box["stack_box_efficiency_rate_vs_personnel"] > heavy_box["stack_box_efficiency_rate_vs_personnel"]
+    assert (
+        light_box["stack_box_efficiency_rate_vs_personnel"]
+        > heavy_box["stack_box_efficiency_rate_vs_personnel"]
+    )
     assert light_box["separation_at_separation_point_yds"] > 2.5
     assert light_box["burn_rate_vs_man"] > heavy_box["burn_rate_vs_man"]
     assert light_box["zone_void_exploitation_rate"] > heavy_box["zone_void_exploitation_rate"]
@@ -224,10 +227,19 @@ def test_06_domain3_cox_weibull_survival_prwr_and_shed_time() -> None:
     )
 
     assert len(clean_pocket) == 15
-    assert high_pressure["true_pass_rush_win_rate_25s"] > clean_pocket["true_pass_rush_win_rate_25s"]
+    assert (
+        high_pressure["true_pass_rush_win_rate_25s"]
+        > clean_pocket["true_pass_rush_win_rate_25s"]
+    )
     assert clean_pocket["cox_pocket_survival_28s"] > high_pressure["cox_pocket_survival_28s"]
-    assert clean_pocket["pressure_to_sack_survival_prob"] > high_pressure["pressure_to_sack_survival_prob"]
-    assert clean_pocket["time_to_first_pressure_median_sec"] > high_pressure["time_to_first_pressure_median_sec"]
+    assert (
+        clean_pocket["pressure_to_sack_survival_prob"]
+        > high_pressure["pressure_to_sack_survival_prob"]
+    )
+    assert (
+        clean_pocket["time_to_first_pressure_median_sec"]
+        > high_pressure["time_to_first_pressure_median_sec"]
+    )
 
 
 def test_07_domain3_hawkes_self_exciting_stunt_latency_and_disguise_decay() -> None:
@@ -255,8 +267,14 @@ def test_07_domain3_hawkes_self_exciting_stunt_latency_and_disguise_decay() -> N
         eq_domain_signal=0.0,
     )
 
-    assert clustered_stunts["hawkes_blitz_contagion_intensity"] > quiet["hawkes_blitz_contagion_intensity"]
-    assert clustered_stunts["stunt_loop_handoff_latency_ms"] > quiet["stunt_loop_handoff_latency_ms"]
+    assert (
+        clustered_stunts["hawkes_blitz_contagion_intensity"]
+        > quiet["hawkes_blitz_contagion_intensity"]
+    )
+    assert (
+        clustered_stunts["stunt_loop_handoff_latency_ms"]
+        > quiet["stunt_loop_handoff_latency_ms"]
+    )
 
 
 def test_08_domain4_sinkhorn_knopp_optimal_transport_and_tovs() -> None:
@@ -277,7 +295,7 @@ def test_08_domain4_sinkhorn_knopp_optimal_transport_and_tovs() -> None:
 
 
 def test_09_domain4_wasserstein2_distance_and_pinball_quantiles_p10_to_p90() -> None:
-    """Verify Pinball quantile ordering (P10 <= P25 <= P50 <= P75 <= P90) and chunk creator isolation."""
+    """Verify Pinball quantile ordering (P10..P90) and chunk creator isolation."""
     chunk_creator = compute_optimal_transport_and_quantile_metrics(
         empirical_samples=[52.0, 68.0, 82.0, 95.0, 112.0, 134.0, 165.0],
         ol_baseline_mean=64.0,
@@ -306,7 +324,10 @@ def test_09_domain4_wasserstein2_distance_and_pinball_quantiles_p10_to_p90() -> 
         <= chunk_creator["expected_yardage_p75"]
         <= chunk_creator["expected_yardage_p90"]
     )
-    assert chunk_creator["consistency_rate_ryoe_gt_1"] > system_plodder["consistency_rate_ryoe_gt_1"]
+    assert (
+        chunk_creator["consistency_rate_ryoe_gt_1"]
+        > system_plodder["consistency_rate_ryoe_gt_1"]
+    )
     assert chunk_creator["boom_rate_ryoe_gt_5"] > system_plodder["boom_rate_ryoe_gt_5"]
     assert (
         chunk_creator["system_back_vs_chunk_creator_isolation_score"]
@@ -316,7 +337,7 @@ def test_09_domain4_wasserstein2_distance_and_pinball_quantiles_p10_to_p90() -> 
 
 def test_10_domain5_fwl_micro_blocking_segregation_strips_ol_ybc_above_18() -> None:
     """Verify FWL orthogonalization strips OL YBC/Att > 1.8 yds dominance from true RB talent."""
-    # Two RBs with identical raw EPA (+0.10), but one has 3.1 YBC/Att (OL-carried) and one has 1.6 YBC/Att (self-created)
+    # Two RBs with identical raw EPA (+0.10): 3.1 YBC/Att (OL-carried) vs 1.6 (self-created)
     ol_carried_rb = compute_bayesian_fwl_and_causal_aipw_metrics(
         raw_rb_epa_per_rush=0.10,
         ol_ybc_per_att=3.10,
@@ -432,7 +453,7 @@ def test_13_domain6_mofo_vs_mofc_kl_divergence_nash_and_hjb_control() -> None:
 
 
 def test_14_all_32_teams_15_week9_games_and_128_players_compiled_with_92_stats(
-    compiled_week9_payload: Dict[str, Any],
+    compiled_week9_payload: dict[str, Any],
 ) -> None:
     """Verify all 32 teams, 15 Week 9 games, and 128 players have all 92 finite compiled stats."""
     games = compiled_week9_payload["week9_games_compiled_stats"]
@@ -462,7 +483,7 @@ def test_14_all_32_teams_15_week9_games_and_128_players_compiled_with_92_stats(
 
 
 def test_15_persisted_compiled_stats_and_receipt_artifacts_verified(
-    compiled_week9_payload: Dict[str, Any],
+    compiled_week9_payload: dict[str, Any],
 ) -> None:
     """Verify persisted JSON artifacts on disk."""
     assert COMPILED_STATS_OUTPUT_PATH.exists()

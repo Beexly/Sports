@@ -1,6 +1,7 @@
-"""
-Unit and Integration Tests for Overnight 9-Model Fleet (`Inkling 2` + `Inkling Small 2 (New)`)
-Capability-Matched Projection, 360-Degree Board & DraftKings 200+ Point DFS Stress-Test Engine.
+"""Unit and Integration Tests for Overnight 9-Model Fleet.
+
+Covers `Inkling 2` + `Inkling Small 2 (New)` Capability-Matched Projection,
+360-Degree Board & DraftKings 200+ Point DFS Stress-Test Engine.
 """
 
 from __future__ import annotations
@@ -52,16 +53,22 @@ def test_9model_fleet_catalog_and_capability_matched_stage_assignment() -> None:
         assert spec.model_id in or_models
 
     # Verify exact capability-matched stage assignments ("strongest agent for their task")
-    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT["stage_1_and_corpus_book_deep_read_verification"] == (
+    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT[
+        "stage_1_and_corpus_book_deep_read_verification"
+    ] == (
         "MiniMax M2.7",
         "GLM-5.1",
     )
-    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT["stage_2_26layer_situational_and_21419_eq_22_metric_synthesis"] == (
+    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT[
+        "stage_2_26layer_situational_and_21419_eq_22_metric_synthesis"
+    ] == (
         "Grok 4.20 Beta",
         "Inkling 2",
         "DeepSeek V3.2",
     )
-    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT["stage_3_wave1_10k_world_175_snap_pbp_trajectory_dispatch"] == (
+    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT[
+        "stage_3_wave1_10k_world_175_snap_pbp_trajectory_dispatch"
+    ] == (
         "Grok 4.1 Fast",
         "Inkling Small 2 (New)",
         "MiMo-V2-Pro",
@@ -73,7 +80,9 @@ def test_9model_fleet_catalog_and_capability_matched_stage_assignment() -> None:
         "GLM-5.1",
         "DeepSeek V3.2",
     )
-    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT["wave_2_dk_200pt_dfs_milp_and_6_2m_lineup_vs_field_simulation"] == (
+    assert CAPABILITY_MATCHED_STAGE_ASSIGNMENT[
+        "wave_2_dk_200pt_dfs_milp_and_6_2m_lineup_vs_field_simulation"
+    ] == (
         "DeepSeek V3.2",
         "Inkling 2",
         "GLM-5-Turbo",
@@ -177,7 +186,7 @@ def test_edge_cases_heavy_juice_firewall_solo_source_split_vote_and_dfs_cap() ->
     assert s5_res["publishAllowed"] is False
     assert s5_res["pass_votes_count"] == 9
 
-    # 5. Over-salary ($50,500), zero-salary ($0), unstacked GPP, or borderline 200.2pt DFS lineups must be rejected
+    # 5. Over-salary ($50,500), zero-salary ($0), unstacked GPP, or borderline 200.2pt rejected
     for bad_lu in (
         {
             "lineup_id": 99,

@@ -208,7 +208,6 @@ def test_ordinary_failure_is_still_a_failure(tmp_path, dag):
 
 
 def test_dry_run_writes_run_log(tmp_path, dag, monkeypatch):
-    log_path = tmp_path / "_pipeline_run_log.json"
     monkeypatch.setattr(dag, "CORPUS", tmp_path)
     monkeypatch.setattr(dag, "FAILED_SENTINEL", tmp_path / "_failed.json")
     rc = dag.main(["--dry-run", "--force", "--only", "build_index"])

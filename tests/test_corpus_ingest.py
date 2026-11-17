@@ -38,8 +38,16 @@ def _run(tmp_path, rows, name="m.jsonl"):
     out = tmp_path / "clean.jsonl"
     dlq = tmp_path / "dlq.jsonl"
     m = ci.ingest([src], out, dlq)
-    clean = [json.loads(l) for l in out.read_text(encoding="utf-8").splitlines() if l.strip()]
-    dead = [json.loads(l) for l in dlq.read_text(encoding="utf-8").splitlines() if l.strip()]
+    clean = [
+        json.loads(line)
+        for line in out.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    dead = [
+        json.loads(line)
+        for line in dlq.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     return m, clean, dead
 
 

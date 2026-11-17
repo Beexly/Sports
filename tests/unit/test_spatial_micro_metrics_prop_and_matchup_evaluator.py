@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-Pytest Suite for 360-Degree Spatial Micro-Metrics Prop & Matchup Evaluator
+"""Pytest Suite for 360-Degree Spatial Micro-Metrics Prop & Matchup Evaluator.
+
 (`tests/unit/test_spatial_micro_metrics_prop_and_matchup_evaluator.py`)
 =============================================================================
 Tests (19 rigorous tests):
@@ -25,26 +25,19 @@ Tests (19 rigorous tests):
  19. Two-Host Rule (check_charge_9) Compliance & Cryptographic Receipt Validity
 """
 
-import hashlib
 import json
 from pathlib import Path
+
 import pytest
-import numpy as np
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-
 from intelligence.props.spatial_micro_metrics_prop_and_matchup_evaluator import (
-    SpatialMicroMetricsPropAndMatchupEvaluator,
-    RBSpatialMicroMetrics,
-    WRSpatialMicroMetrics,
-    QBSpatialMicroMetrics,
-    IDPSpatialMicroMetrics,
-    PropTicketEvaluation,
-    GameSpatialMatchupDossier,
-    WEEK9_OFFICIAL_15_GAMES,
     DEFAULT_PROPS_DATA_PATH,
     DEFAULT_RECEIPT_PATH,
+    WEEK9_OFFICIAL_15_GAMES,
+    PropTicketEvaluation,
+    SpatialMicroMetricsPropAndMatchupEvaluator,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture(scope="module")
@@ -65,7 +58,9 @@ def test_pff_elusive_rating_exact_formula() -> None:
     assert er == 70.0
 
     # Test edge case zero touches
-    assert SpatialMicroMetricsPropAndMatchupEvaluator.compute_pff_elusive_rating(0, 0, 0.0, 3.0) == 0.0
+    assert (
+        SpatialMicroMetricsPropAndMatchupEvaluator.compute_pff_elusive_rating(0, 0, 0.0, 3.0) == 0.0
+    )
 
 
 def test_true_box_spacing_delta_exact_formula() -> None:
@@ -78,7 +73,10 @@ def test_true_box_spacing_delta_exact_formula() -> None:
     assert abs(delta - 5.25) < 0.01
 
     # Edge case 0 blockers
-    assert SpatialMicroMetricsPropAndMatchupEvaluator.compute_true_box_spacing_delta(7.0, 0.0, 4.5) == 0.0
+    assert (
+        SpatialMicroMetricsPropAndMatchupEvaluator.compute_true_box_spacing_delta(7.0, 0.0, 4.5)
+        == 0.0
+    )
 
 
 def test_true_opportunity_value_score_exact_coefficients() -> None:
@@ -108,12 +106,16 @@ def test_catch_point_leverage_delta_vector_dot_product() -> None:
     p_db = (0.0, 0.0, 0.0)
     # diff = (2.0, 1.0, 0.0)
     # dot = 10.0 * 2.0 + 0.0 * 1.0 + (-1.0) * 0.0 = 20.0
-    delta_l = SpatialMicroMetricsPropAndMatchupEvaluator.compute_catch_point_leverage_delta(v_ball, p_wr, p_db)
+    delta_l = SpatialMicroMetricsPropAndMatchupEvaluator.compute_catch_point_leverage_delta(
+        v_ball, p_wr, p_db
+    )
     assert delta_l == 20.0
 
     # Negative leverage (DB in front of WR along incoming ball vector)
     p_wr_behind = (-1.0, 0.0, 0.0)
-    delta_l_neg = SpatialMicroMetricsPropAndMatchupEvaluator.compute_catch_point_leverage_delta(v_ball, p_wr_behind, p_db)
+    delta_l_neg = SpatialMicroMetricsPropAndMatchupEvaluator.compute_catch_point_leverage_delta(
+        v_ball, p_wr_behind, p_db
+    )
     assert delta_l_neg < 0.0
 
 
@@ -127,8 +129,10 @@ def test_expected_yardage_percentiles() -> None:
     assert pcts["p50"] > 50.0
 
 
-def test_system_back_identification_and_downgrade(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
-    """Test 7: Verify System Backs (high YBC, low Boom, low Elusive) are identified and penalized."""
+def test_system_back_identification_and_downgrade(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
+    """Test 7: Verify System Backs (high YBC, low Boom, low Elusive) are penalized."""
     dossiers = evaluator.slate_dossiers
     system_backs = []
     for d in dossiers.values():
@@ -146,7 +150,9 @@ def test_system_back_identification_and_downgrade(evaluator: SpatialMicroMetrics
         assert sb.rushing_yards_recommendation == "UNDER"
 
 
-def test_true_chunk_creator_identification_and_boost(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_true_chunk_creator_identification_and_boost(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 8: Verify True Chunk Creators (high Elusive, high Boom, high Shed) are identified."""
     dossiers = evaluator.slate_dossiers
     creators = []
@@ -163,15 +169,21 @@ def test_true_chunk_creator_identification_and_boost(evaluator: SpatialMicroMetr
     assert "Saquon Barkley" in creator_names
 
 
-def test_rb_passive_checkdown_72pct_baseline(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_rb_passive_checkdown_72pct_baseline(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 9: Verify RB passive checkdown rate and designated target rate sum to 1.0."""
     for d in evaluator.slate_dossiers.values():
         for rb in d.rbs:
-            assert abs((rb.first_read_designated_target_rate + rb.passive_checkdown_rate) - 1.0) < 0.01
+            assert (
+                abs((rb.first_read_designated_target_rate + rb.passive_checkdown_rate) - 1.0) < 0.01
+            )
             assert 0.0 <= rb.passive_checkdown_rate <= 1.0
 
 
-def test_wr_ssp_and_burn_rate_man_coverage(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_wr_ssp_and_burn_rate_man_coverage(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 10: Verify WR Separation at Break (SSP) and Burn Rate vs Man coverage."""
     sample_wrs = []
     for d in evaluator.slate_dossiers.values():
@@ -195,14 +207,18 @@ def test_wr_wopr_and_racr_formulas(evaluator: SpatialMicroMetricsPropAndMatchupE
             assert wr.xyac > 0.0
 
 
-def test_wr_body_frame_contested_sealing_rate(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_wr_body_frame_contested_sealing_rate(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 12: Verify body frame sealing rate is higher when Catch-Point Leverage Delta < 0."""
     for d in evaluator.slate_dossiers.values():
         for wr in d.wrs_tes:
             assert 0.10 <= wr.body_frame_contested_sealing_rate <= 0.60
 
 
-def test_qb_disguise_decay_rate_processing(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_qb_disguise_decay_rate_processing(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 13: Verify QB disguise decay tau in ms and elite threshold <= 220ms."""
     qbs = []
     for d in evaluator.slate_dossiers.values():
@@ -213,10 +229,16 @@ def test_qb_disguise_decay_rate_processing(evaluator: SpatialMicroMetricsPropAnd
     elite_qbs = [qb for qb in qbs if qb.disguise_decay_rate_tau_ms <= 220.0]
     assert len(elite_qbs) >= 5, "Expected elite processors (Lamar, Mahomes, Burrow, Purdy, Goff)"
     elite_names = [q.player_name for q in elite_qbs]
-    assert "Patrick Mahomes" in elite_names or "Lamar Jackson" in elite_names or "Brock Purdy" in elite_names
+    assert (
+        "Patrick Mahomes" in elite_names
+        or "Lamar Jackson" in elite_names
+        or "Brock Purdy" in elite_names
+    )
 
 
-def test_qb_pocket_anchor_depth_and_pcv(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_qb_pocket_anchor_depth_and_pcv(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 14: Verify Pocket Anchor Depth (PAD) and Pocket Collapse Vector (PCV)."""
     for d in evaluator.slate_dossiers.values():
         for qb in d.qbs:
@@ -225,20 +247,30 @@ def test_qb_pocket_anchor_depth_and_pcv(evaluator: SpatialMicroMetricsPropAndMat
             assert qb.sacks_taken_projected >= 1.0
 
 
-def test_qb_escape_vector_efficiency_and_scramble(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_qb_escape_vector_efficiency_and_scramble(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 15: Verify Escape Vector Efficiency (EVE) maps to scramble yardage."""
     for d in evaluator.slate_dossiers.values():
         for qb in d.qbs:
             assert 0.20 <= qb.escape_vector_efficiency_eve <= 2.5
             assert qb.qb_rushing_yards_projected >= 4.0
             # Dual-threat QBs (Lamar, Daniels, Allen, Hurts, Murray) should have high EVE
-            if qb.player_name in ("Lamar Jackson", "Jayden Daniels", "Josh Allen", "Jalen Hurts", "Kyler Murray"):
+            if qb.player_name in (
+                "Lamar Jackson",
+                "Jayden Daniels",
+                "Josh Allen",
+                "Jalen Hurts",
+                "Kyler Murray",
+            ):
                 assert qb.escape_vector_efficiency_eve >= 1.40
                 assert qb.qb_rushing_yards_projected >= 25.0
 
 
-def test_idp_025_sack_hazard_and_half_sack_credit(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
-    """Test 16: Verify IDP pass rusher 0.25 sack lines (half-sack credit) and Patton POE hazard."""
+def test_idp_025_sack_hazard_and_half_sack_credit(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
+    """Test 16: Verify IDP pass rusher 0.25 sack lines (half-sack credit) and Patton POE."""
     edge_players = []
     for d in evaluator.slate_dossiers.values():
         for idp in d.idp_players:
@@ -252,7 +284,9 @@ def test_idp_025_sack_hazard_and_half_sack_credit(evaluator: SpatialMicroMetrics
         assert idp.patton_poe_hazard > 0.0
 
 
-def test_all_15_week9_games_evaluated(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_all_15_week9_games_evaluated(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 17: Verify all 15 official Week 9 matchups are fully evaluated."""
     assert len(evaluator.slate_dossiers) == 15
     for m in WEEK9_OFFICIAL_15_GAMES:
@@ -265,7 +299,9 @@ def test_all_15_week9_games_evaluated(evaluator: SpatialMicroMetricsPropAndMatch
         assert len(d.evaluated_tickets) >= 8
 
 
-def test_over_75_prop_evaluations_in_slate(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_over_75_prop_evaluations_in_slate(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 18: Verify at least 75 prop tickets are generated and evaluated across slate."""
     assert len(evaluator.all_evaluated_tickets) >= 75
     # In fact, we generate > 200 tickets
@@ -279,9 +315,16 @@ def test_over_75_prop_evaluations_in_slate(evaluator: SpatialMicroMetricsPropAnd
         assert len(t.system_rationale) > 10
 
 
-def test_two_host_rule_and_receipt_validity(evaluator: SpatialMicroMetricsPropAndMatchupEvaluator) -> None:
+def test_two_host_rule_and_receipt_validity(
+    evaluator: SpatialMicroMetricsPropAndMatchupEvaluator,
+) -> None:
     """Test 19: Verify Two-Host Rule compliance and cryptographic receipt integrity."""
-    target_code = REPO_ROOT / "intelligence" / "props" / "spatial_micro_metrics_prop_and_matchup_evaluator.py"
+    target_code = (
+        REPO_ROOT
+        / "intelligence"
+        / "props"
+        / "spatial_micro_metrics_prop_and_matchup_evaluator.py"
+    )
     assert target_code.exists()
     code_text = target_code.read_text(encoding="utf-8")
     for bad in ("Users/Garrett", "Users\\\\Garrett", "/Users/Garrett"):

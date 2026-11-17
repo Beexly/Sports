@@ -490,3 +490,94 @@ export function buildProgrammaticPlayerPropSeoPacket(params: {
     paywallProtected,
   };
 }
+
+export const MULTISPORT_ISR_REVALIDATE_SECONDS = 900 as const;
+
+export interface ProgrammaticMultisportSlateSeoBundle {
+  readonly revalidateSeconds: typeof MULTISPORT_ISR_REVALIDATE_SECONDS;
+  readonly pathname: string;
+  readonly canonicalUrl: string;
+  readonly title: string;
+  readonly description: string;
+  readonly leaguesCovered: readonly string[];
+  readonly jsonLd: Record<string, unknown>;
+  readonly visitorCapture: PreLockVisitorCaptureConfig;
+  readonly cleanRoomCheck: CleanRoomCheckResult;
+  readonly paywallProtected: true;
+}
+
+export function buildProgrammaticMultisportSlateSeoBundle(params: {
+  dateStr: string;
+  leagues?: readonly string[];
+  matchupCount?: number;
+  environmentTeaser: string;
+}): ProgrammaticMultisportSlateSeoBundle {
+  const cleanDate = toSlug(params.dateStr) || "2026-11-17";
+  const leaguesCovered = (
+    params.leagues && params.leagues.length > 0
+      ? params.leagues.map((lg) => sanitizeNoEmDash(lg).trim().toUpperCase())
+      : ["NBA", "NHL", "NCAAB", "SOCCER", "MLB"]
+  ) as readonly string[];
+  const matchupCount = Math.max(1, Math.trunc(params.matchupCount ?? leaguesCovered.length * 2));
+  const environmentTeaser = sanitizeNoEmDash(params.environmentTeaser).trim();
+  const pathname = `/multisport/${cleanDate}-slate-projections`;
+  const canonicalUrl = `${ORIGIN}${pathname}`;
+  const leagueListText = leaguesCovered.join(", ");
+
+  const title = `Multi-Sport Quantitative Slate Projections (${leagueListText}) | Galaxy Sports Edge`;
+  const description = `365-day quantitative simulation overview for ${leagueListText} (${matchupCount} matchups): ${environmentTeaser} Verified ledger: ${PUBLIC_RECORD_LINE}. Paid picks and correlated leg tickets remain inside member access.`;
+
+  assertPublicCopyClean(title, "multisport.title");
+  assertPublicCopyClean(description, "multisport.description");
+
+  const datasetNode: Record<string, unknown> = {
+    "@type": "Dataset",
+    name: title,
+    description,
+    url: canonicalUrl,
+    license: GSE_DATASET_LICENSE_URL,
+    isAccessibleForFree: false,
+    temporalCoverage: cleanDate,
+    keywords: leaguesCovered,
+    variableMeasured: [
+      "BC-ACI Directional Total Band",
+      "CopulaCPTS Frechet-Bounded Joint Bounds",
+      "Circadian & Altitude Environment Adjustment",
+      "Sabermetric wOBA & Pitch-Control Telemetry",
+    ],
+  };
+
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@graph": [datasetNode],
+  };
+  assertPaywallProtectedJsonLd(jsonLd);
+
+  const visitorCapture = buildPreLockVisitorCaptureConfig({
+    league: "MULTI",
+    matchupSlug: `${cleanDate}-multisport-slate`,
+    lockWindowLabel: "Multi-Sport T-3h Cutoff",
+    injuryHeadline: environmentTeaser,
+  });
+
+  const cleanRoomPayload = [
+    title,
+    description,
+    JSON.stringify(jsonLd),
+    JSON.stringify(visitorCapture),
+  ].join("\n");
+  const cleanRoomCheck = assertAdLandingPageCleanRoom(cleanRoomPayload);
+
+  return {
+    revalidateSeconds: MULTISPORT_ISR_REVALIDATE_SECONDS,
+    pathname,
+    canonicalUrl,
+    title,
+    description,
+    leaguesCovered,
+    jsonLd,
+    visitorCapture,
+    cleanRoomCheck,
+    paywallProtected: true,
+  };
+}

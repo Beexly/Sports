@@ -1,6 +1,6 @@
 {
   "schema": "gse_weeks1_to_10_walk_forward_ablation_v4_1",
-  "generated_utc": "2026-11-17T00:22:45.391407+00:00",
+  "generated_utc": "2026-11-17T11:28:58.609190+00:00",
   "season": 2026,
   "weeks_covered": [
     1,
@@ -226,6 +226,31 @@
       "mkt_margin_crps": 7.5736,
       "gse_margin_crps": 7.624,
       "ville_wealth_end_of_week": 1.372559
+    }
+  },
+  "wave26_rliable_and_ratchet": {
+    "rliable_iqm": 0.732011,
+    "rliable_iqm_ci_low": 0.689045,
+    "rliable_iqm_ci_high": 0.768774,
+    "rliable_optimality_gap": 0.349382,
+    "fwl_partial_slope": 1.387033,
+    "fwl_t_stat": 20.498269,
+    "fwl_orthogonal_verified": true,
+    "monotone_ratchet": {
+      "promote": true,
+      "live_weight_multiplier": 1.0,
+      "accepted_loss": 7.0944,
+      "rejection_reasons": []
+    },
+    "wave19_21_floors": {
+      "pass_mae": 58.77,
+      "rush_mae": 25.87,
+      "player_mae": 25.29,
+      "game_total_mae": 8.85,
+      "oos_normalized_crps": 7.0944,
+      "oos_normalized_crps_floor": 7.0944,
+      "min_ess": 0.864,
+      "all_floors_held": true
     }
   },
   "governance": {

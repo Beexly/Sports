@@ -11,26 +11,19 @@ an empty result, because an empty result looks identical to "no plays here".
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import pytest
-
 from intelligence.vision import nfl_video_vl_harvester as h
 
-
-REPLAY_HTML = """
-<html><head><title>Chicago Bears vs. Seattle Seahawks - Full Game Replay - NFL Week 08</title></head>
-<body>
-<div id="video-player">
-  <p>Server #1 OK</p>
-  <a href="https://nhlgamestoday.com/nhl-games-on-tv-today-saturday-november-9-2024"
-     target="_blank">Watch</a>
-  <p>Server #2 DM</p>
-  <a href="https://guidedesgemmes.com/cristaux" target="_blank">Watch</a>
-</div>
-</body></html>
-"""
+REPLAY_HTML = (
+    "\n<html><head><title>Chicago Bears vs. Seattle Seahawks - "
+    "Full Game Replay - NFL Week 08</title></head>\n"
+    '<body>\n<div id="video-player">\n  <p>Server #1 OK</p>\n'
+    '  <a href="https://nhlgamestoday.com/nhl-games-on-tv-today-saturday-november-9-2024"\n'
+    '     target="_blank">Watch</a>\n'
+    "  <p>Server #2 DM</p>\n"
+    '  <a href="https://guidedesgemmes.com/cristaux" target="_blank">Watch</a>\n'
+    "</div>\n</body></html>\n"
+)
 
 
 def test_parse_replay_page_finds_server_links_but_no_video():

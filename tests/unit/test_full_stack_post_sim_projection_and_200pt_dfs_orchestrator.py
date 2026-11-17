@@ -1,14 +1,18 @@
-"""
-Unit & Full-Stack Contract Tests for `intelligence/dfs/full_stack_post_sim_projection_and_200pt_dfs_orchestrator.py`.
+"""Unit & Full-Stack Contract Tests for full_stack_post_sim_projection_and_200pt_dfs_orchestrator.
 
 Covers all 4 phases of `/antigravity-skills:full-stack-orchestration-full-stack-feature`:
   1. Database schema & persistence contract completeness + `pg_cron` zero-waste hygiene
-  2. Backend post-simulation 360-degree projection accuracy, 22 proprietary GSE metrics (`M-GSE-01`..`M-GSE-22`),
-     and Two-Wave `200+` DK Pt lineup generation (`top_lineup_p90_pts >= 200.0`)
-  3. `-250` / `-300+` Heavy-Juice Firewall & `PASS` suppression (never leaking `PASS` or `-300+` traps)
-  4. Server-side `FREE` vs. `PRO` paywall redaction (presentational-only client entitlement invariant)
-  5. Public copy linter gate (zero forbidden internal math jargon & confidence formatted strictly as `XX/100`)
-  6. Phase 4 deployment & observability readiness (`tracesSampleRate: 0.1`, Odds API ceiling, `<500ms` SLO)
+  2. Backend post-simulation 360-degree projection accuracy, 22 proprietary GSE metrics
+     (`M-GSE-01`..`M-GSE-22`), and Two-Wave `200+` DK Pt lineup generation
+     (`top_lineup_p90_pts >= 200.0`)
+  3. `-250` / `-300+` Heavy-Juice Firewall & `PASS` suppression
+     (never leaking `PASS` or `-300+` traps)
+  4. Server-side `FREE` vs. `PRO` paywall redaction
+     (presentational-only client entitlement invariant)
+  5. Public copy linter gate
+     (zero forbidden internal math jargon & confidence formatted strictly as `XX/100`)
+  6. Phase 4 deployment & observability readiness
+     (`tracesSampleRate: 0.1`, Odds API ceiling, `<500ms` SLO)
 """
 
 from __future__ import annotations
@@ -17,9 +21,7 @@ import copy
 from pathlib import Path
 
 import pytest
-
 from intelligence.dfs.full_stack_post_sim_projection_and_200pt_dfs_orchestrator import (
-    FORBIDDEN_PUBLIC_COPY_JARGON,
     VALID_CONFIDENCE_TOKEN_PATTERN,
     _format_confidence_xx_over_100,
     _sanitize_human_football_copy,
@@ -122,17 +124,27 @@ def test_phase2_backend_pipeline_proprietary_metrics_and_two_wave_200pt_dfs(back
     assert "gpt-6-luna" not in fleet_ids
     assert routing["cellular_sheaf_consensus"]["cohomology_h0_global_section"] is True
 
-    # Verify 22-metric weights actively modulate post-sim player projections (`metric_weighted_projection_boost`)
+    # Verify 22-metric weights actively modulate post-sim player projections
     assert prop_metrics["metric_weights_actively_modulate_projections"] is True
     assert prop_metrics["mean_metric_weighted_projection_boost"] > 0.0
-    assert backend_bundle["post_sim_360_projections_and_tickets"]["proprietary_22_metrics_optimal_weights_applied"] is True
+    assert (
+        backend_bundle["post_sim_360_projections_and_tickets"][
+            "proprietary_22_metrics_optimal_weights_applied"
+        ]
+        is True
+    )
     assert dfs_sim["proprietary_22_metrics_optimal_weights_applied"] is True
-    sample_players = backend_bundle["post_sim_360_projections_and_tickets"]["sample_player_projection_records"]
+    sample_players = backend_bundle["post_sim_360_projections_and_tickets"][
+        "sample_player_projection_records"
+    ]
     assert len(sample_players) >= 10
     for pl in sample_players:
         assert pl["metric_weighted_projection_boost"] > 0.0
         assert pl["gse_dk_projection"] >= pl["raw_post_sim_dk_projection"]
-    assert sample_players[0]["proprietary_metrics_vector"] is not sample_players[1]["proprietary_metrics_vector"]
+    assert (
+        sample_players[0]["proprietary_metrics_vector"]
+        is not sample_players[1]["proprietary_metrics_vector"]
+    )
 
     from intelligence.dfs.full_stack_post_sim_projection_and_200pt_dfs_orchestrator import (
         _compute_player_metric_weighted_projection_boost,
@@ -142,7 +154,9 @@ def test_phase2_backend_pipeline_proprietary_metrics_and_two_wave_200pt_dfs(back
     assert _compute_player_metric_weighted_projection_boost(sample_players[0], {}) == 0.0
     w_a = {f"M-GSE-{i:02d}": (1.0 if i <= 7 else 0.0) for i in range(1, 23)}
     w_b = {f"M-GSE-{i:02d}": (1.0 if i >= 18 else 0.0) for i in range(1, 23)}
-    assert _compute_player_metric_weighted_projection_boost(sample_players[0], w_a) != _compute_player_metric_weighted_projection_boost(sample_players[0], w_b)
+    assert _compute_player_metric_weighted_projection_boost(
+        sample_players[0], w_a
+    ) != _compute_player_metric_weighted_projection_boost(sample_players[0], w_b)
 
 
 def test_phase3_heavy_juice_firewall_and_pass_suppression(backend_bundle):
@@ -156,7 +170,7 @@ def test_phase3_heavy_juice_firewall_and_pass_suppression(backend_bundle):
     assert "TKT-HEAVY-JUICE-MINUS-320-TRAP-09" in passed_ids
     assert "TKT-SOLO-SOURCE-PASS-10" in passed_ids
 
-    # Adversarial injection test: inject a -310 heavy-juice trap and a PASS row into published_tickets
+    # Adversarial injection: inject a -310 heavy-juice trap and a PASS row into published_tickets
     # and verify `project_client_safe_payload` strips both even for PRO tier.
     tampered_bundle = copy.deepcopy(backend_bundle)
     tampered_bundle["post_sim_360_projections_and_tickets"]["published_tickets"].extend(
@@ -233,7 +247,7 @@ def test_phase3_public_copy_linter_and_confidence_format_gates(backend_bundle):
     for note in free_payload["public_game_environment_analytics"]["environment_film_notes"]:
         assert VALID_CONFIDENCE_TOKEN_PATTERN.match(note["environment_grade"])
 
-    # Negative-control tests: confirm `assert_zero_forbidden_public_copy` catches each forbidden phrase & % confidence
+    # Negative-control: confirm `assert_zero_forbidden_public_copy` catches each forbidden phrase
     for banned_phrase in (
         "Romano CQR",
         "Optimal Transport",
@@ -264,7 +278,9 @@ def test_phase4_deployment_observability_and_edge_cases(backend_bundle):
     with pytest.raises(ValueError):
         execute_backend_post_sim_projection_and_200pt_dfs_pipeline(slate_id="   ", tier="PRO")
     with pytest.raises(ValueError):
-        execute_backend_post_sim_projection_and_200pt_dfs_pipeline(slate_id="SLATE_1", tier="INVALID_TIER")
+        execute_backend_post_sim_projection_and_200pt_dfs_pipeline(
+            slate_id="SLATE_1", tier="INVALID_TIER"
+        )
     with pytest.raises(ValueError):
         project_client_safe_payload(backend_bundle, tier="ENTERPRISE")
 
@@ -286,10 +302,12 @@ def test_phase4_deployment_observability_and_edge_cases(backend_bundle):
     assert len(receipt["digest_sha256"]) == 64
 
 
-def test_adversarial_edge_cases_word_boundaries_nan_and_solo_source_suppression(backend_bundle):
-    # 1. Word-boundary check: player names containing 'Jev' (e.g., Miami Dolphins safety Jevon Holland)
-    # must NOT be corrupted by _sanitize_human_football_copy or flagged by assert_zero_forbidden_public_copy,
-    # whereas standalone 'JEV' or 'jevkit' must be scrubbed and flagged.
+def test_adversarial_edge_cases_word_boundaries_nan_and_solo_source_suppression(
+    backend_bundle,
+):
+    # 1. Word-boundary check: names containing 'Jev' (e.g., Miami Dolphins safety Jevon Holland)
+    # must NOT be corrupted by _sanitize_human_football_copy or flagged by
+    # assert_zero_forbidden_public_copy, whereas standalone 'JEV' or 'jevkit' must be scrubbed.
     benign_copy = "Jevon Holland aligns in two-high safety coverage with veteran longevity."
     assert _sanitize_human_football_copy(benign_copy) == benign_copy
     assert assert_zero_forbidden_public_copy({"copy": benign_copy}, "benign_jevon") == []
@@ -298,7 +316,7 @@ def test_adversarial_edge_cases_word_boundaries_nan_and_solo_source_suppression(
     assert "JEV" not in _sanitize_human_football_copy(standalone_jev).upper()
     assert len(assert_zero_forbidden_public_copy({"copy": standalone_jev}, "standalone_jev")) >= 2
 
-    # 2. _format_confidence_xx_over_100 resilience against NaN, Inf, None, pre-formatted tokens, and max_cap
+    # 2. _format_confidence_xx_over_100 resilience against NaN, Inf, None, pre-formatted tokens
     assert _format_confidence_xx_over_100(float("nan")) == "50/100"
     assert _format_confidence_xx_over_100(float("inf")) == "50/100"
     assert _format_confidence_xx_over_100(float("-inf")) == "50/100"
@@ -317,8 +335,8 @@ def test_adversarial_edge_cases_word_boundaries_nan_and_solo_source_suppression(
     #    - NaN edge or NaN win_prob -> suppressed (no ValueError)
     #    - Zero probability (`win_prob_capped: 0.0`) -> suppressed
     #    - Solo-source ticket (`agreement_count: 1` or `agreement: "SOLO"`) -> suppressed
-    #    - Uncapped probability (`win_prob_capped: 0.94`, `agreement_count: 3`) -> kept but capped at `78/100`
-    #    - SGP with `publishAllowed: False` or `decision: "PASS"` or negative ROI -> suppressed (`None`)
+    #    - Uncapped prob (`win_prob_capped: 0.94`, `agreement_count: 3`) -> capped at `78/100`
+    #    - SGP with `publishAllowed: False` or `decision: "PASS"` or negative ROI -> `None`
     adv_bundle = copy.deepcopy(backend_bundle)
     adv_bundle["post_sim_360_projections_and_tickets"]["published_tickets"] = [
         {

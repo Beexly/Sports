@@ -55,6 +55,11 @@ src = ["src"]
 select = ["E", "F", "I", "UP", "B", "SIM", "D"]
 ignore = ["D100", "D104"]
 
+[tool.ruff.lint.per-file-ignores]
+# Test functions are self-describing via their names; docstring presence is not
+# required in tests (pydocstyle D1xx only). All other rules still apply.
+"tests/**" = ["D101", "D102", "D103", "D107"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 

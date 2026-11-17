@@ -1,4 +1,4 @@
-"""Unit tests for the GSE Multi-Language Genkit Flows & Agents (`developing-genkit-python/js/go/dart`)."""
+"""Unit tests for the GSE Multi-Language Genkit Flows & Agents."""
 
 from __future__ import annotations
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-tests/test_week10_360_dfs_and_stage0_gates.py
+"""tests/test_week10_360_dfs_and_stage0_gates.py.
 
 Regression & Stage-0 gate test suite for Week 10 DraftKings 5-slate DFS packets
 (Seam 4 public contract: `scripts.dfs.build_week10_all_slates_dfs_packets`).
@@ -34,11 +33,11 @@ from scripts.dfs.build_week10_all_slates_dfs_packets import (  # noqa: E402
     load_and_gate_slate_pool,
     sync_dk_draftables_to_csvs,
 )
-from scripts.ops.solve_showdown_dfs_milp import solve_dk_showdown_milp  # noqa: E402
 from scripts.ops.preflight_live_roster_injury_gate import (  # noqa: E402
     assert_lineup_clean,
     require_week,
 )
+from scripts.ops.solve_showdown_dfs_milp import solve_dk_showdown_milp  # noqa: E402
 
 FORBIDDEN_WEEK10_DFS_NAMES = {
     "treveyon henderson",
@@ -53,7 +52,9 @@ FORBIDDEN_WEEK10_DFS_NAMES = {
 }
 
 
-def _check_showdown_lineup(lineup: dict, decoys: set[str], cfg: dict, is_cash: bool) -> tuple[str, ...]:
+def _check_showdown_lineup(
+    lineup: dict, decoys: set[str], cfg: dict, is_cash: bool
+) -> tuple[str, ...]:
     roster = lineup["roster"]
     assert len(roster) == 6
     cpts = [r for r in roster if r["slot"].startswith("CPT")]
@@ -71,9 +72,13 @@ def _check_showdown_lineup(lineup: dict, decoys: set[str], cfg: dict, is_cash: b
         assert r["player"].strip().lower() not in FORBIDDEN_WEEK10_DFS_NAMES
     if is_cash:
         for r in roster:
-            assert _norm_player_key(r["player"]) not in decoys, f"Decoy leaked into Cash: {r['player']}"
+            assert _norm_player_key(r["player"]) not in decoys, (
+                f"Decoy leaked into Cash: {r['player']}"
+            )
     else:
-        assert _norm_player_key(cpts[0]["player"]) not in decoys, f"Decoy in CPT: {cpts[0]['player']}"
+        assert _norm_player_key(cpts[0]["player"]) not in decoys, (
+            f"Decoy in CPT: {cpts[0]['player']}"
+        )
     return tuple(sorted(f"{r['slot']}:{r['player']}" for r in roster))
 
 
@@ -81,7 +86,9 @@ def test_slice1_munich_ne_det_showdown_stage0_and_stage34_hydration(tmp_path: Pa
     cfg = require_week(10, today=TEST_TODAY)
     sync_dk_draftables_to_csvs(dfs_dir=tmp_path)
 
-    pool_df, gate_meta = load_and_gate_slate_pool("munich_ne_det", today=TEST_TODAY, dfs_dir=tmp_path)
+    pool_df, gate_meta = load_and_gate_slate_pool(
+        "munich_ne_det", today=TEST_TODAY, dfs_dir=tmp_path
+    )
     assert len(pool_df) >= 12
     pool_names_low = {str(n).strip().lower() for n in pool_df["name"]}
     assert pool_names_low.isdisjoint(FORBIDDEN_WEEK10_DFS_NAMES)
@@ -94,9 +101,13 @@ def test_slice1_munich_ne_det_showdown_stage0_and_stage34_hydration(tmp_path: Pa
         or dossier.get("bundle_sha256")
         or hashlib.sha256(dossier_path.read_bytes()).hexdigest()
     )
-    decoys = extract_active_decoy_keys(dossier["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit"))
+    decoys = extract_active_decoy_keys(
+        dossier["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit")
+    )
 
-    packet = build_showdown_packet("munich_ne_det", write_outputs=True, today=TEST_TODAY, output_dir=tmp_path)
+    packet = build_showdown_packet(
+        "munich_ne_det", write_outputs=True, today=TEST_TODAY, output_dir=tmp_path
+    )
     assert packet["draft_group_id"] == 156422
     assert packet["matchup"] == "NE @ DET"
     assert packet["auto_email_sent"] is False
@@ -132,8 +143,22 @@ def test_slice2_primetime_snf_and_mnf_showdowns_and_decoy_blocks(tmp_path: Path)
     assert set(res.keys()) == {"snf_pit_cin", "mnf_lac_bal"}
 
     expected = [
-        ("snf_pit_cin", 156433, "PIT @ CIN", "pit_cin", "week10_snf_pit_cin_showdown_packet.json", "week10_snf_pit_cin_dk_upload.csv"),
-        ("mnf_lac_bal", 156434, "LAC @ BAL", "lac_bal", "week10_mnf_lac_bal_showdown_packet.json", "week10_mnf_lac_bal_dk_upload.csv"),
+        (
+            "snf_pit_cin",
+            156433,
+            "PIT @ CIN",
+            "pit_cin",
+            "week10_snf_pit_cin_showdown_packet.json",
+            "week10_snf_pit_cin_dk_upload.csv",
+        ),
+        (
+            "mnf_lac_bal",
+            156434,
+            "LAC @ BAL",
+            "lac_bal",
+            "week10_mnf_lac_bal_showdown_packet.json",
+            "week10_mnf_lac_bal_dk_upload.csv",
+        ),
     ]
     for slate_key, dg_id, matchup, slug, pkt_name, csv_name in expected:
         pkt = res[slate_key]
@@ -142,7 +167,9 @@ def test_slice2_primetime_snf_and_mnf_showdowns_and_decoy_blocks(tmp_path: Path)
         assert pkt["auto_email_sent"] is False
         assert len(pkt["master_bundle_sha256"]) == 64
         assert len(pkt["dossier_provenance"]) == 1
-        dossier_path = REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{slug}_week10.json"
+        dossier_path = (
+            REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{slug}_week10.json"
+        )
         dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
         expected_sha = str(
             dossier.get("master_bundle_sha256")
@@ -150,14 +177,16 @@ def test_slice2_primetime_snf_and_mnf_showdowns_and_decoy_blocks(tmp_path: Path)
             or hashlib.sha256(dossier_path.read_bytes()).hexdigest()
         )
         assert pkt["master_bundle_sha256"] == expected_sha
-        decoys = extract_active_decoy_keys(dossier["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit"))
+        decoys = extract_active_decoy_keys(
+            dossier["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit")
+        )
         _check_showdown_lineup(pkt["cash_lineup"], decoys, cfg, is_cash=True)
         sigs = {_check_showdown_lineup(lu, decoys, cfg, is_cash=False) for lu in pkt["gpp_lineups"]}
         assert len(sigs) == 20
         assert (tmp_path / pkt_name).is_file()
         assert (tmp_path / csv_name).is_file()
 
-    # Decoy Cash-block enforcement: synthetic decoy flag on highest-projected player blocks them from Cash
+    # Decoy Cash-block enforcement: synthetic decoy flag blocks top-projected player from Cash
     snf_pool, _ = load_and_gate_slate_pool("snf_pit_cin", today=TEST_TODAY, dfs_dir=tmp_path)
     recs = snf_pool.to_dict(orient="records")
     top_player = max(recs, key=lambda r: float(r["median_fpts"]))
@@ -170,7 +199,9 @@ def test_slice2_primetime_snf_and_mnf_showdowns_and_decoy_blocks(tmp_path: Path)
     assert top_name not in {r["player"] for r in cash_blocked["roster"]}
 
 
-def _check_classic_lineup(lineup: dict, decoys: set[str], cfg: dict, is_cash: bool) -> tuple[str, ...]:
+def _check_classic_lineup(
+    lineup: dict, decoys: set[str], cfg: dict, is_cash: bool
+) -> tuple[str, ...]:
     roster = lineup["roster"]
     assert len(roster) == 9
     slots = [r["slot"] for r in roster]
@@ -195,16 +226,25 @@ def _check_classic_lineup(lineup: dict, decoys: set[str], cfg: dict, is_cash: bo
         assert r["player"].strip().lower() not in FORBIDDEN_WEEK10_DFS_NAMES
     if is_cash:
         for r in roster:
-            assert _norm_player_key(r["player"]) not in decoys, f"Decoy leaked into Cash: {r['player']}"
+            assert _norm_player_key(r["player"]) not in decoys, (
+                f"Decoy leaked into Cash: {r['player']}"
+            )
     return tuple(sorted(names))
 
 
 def _load_decoys_for_games(games: list[tuple[str, str]]) -> set[str]:
     decoys: set[str] = set()
     for away, home in games:
-        dp = REPO_ROOT / "data" / "engine" / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week10.json"
+        dp = (
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / f"connected_workflow_dossier_{away.lower()}_{home.lower()}_week10.json"
+        )
         d = json.loads(dp.read_text(encoding="utf-8"))
-        decoys |= extract_active_decoy_keys(d["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit"))
+        decoys |= extract_active_decoy_keys(
+            d["stage3_4_conserved_post_sim_projections"].get("injury_decoy_audit")
+        )
     return decoys
 
 
@@ -217,7 +257,9 @@ def test_slice3_classic_main_and_sun_mon_14core_and_markdown_packet(tmp_path: Pa
         ("SEA", "LV"), ("SF", "DAL"),
     ]
     main_decoys = _load_decoys_for_games(main_games)
-    main_pkt = build_classic_packet("sun_main_classic", write_outputs=True, today=TEST_TODAY, output_dir=tmp_path)
+    main_pkt = build_classic_packet(
+        "sun_main_classic", write_outputs=True, today=TEST_TODAY, output_dir=tmp_path
+    )
     assert main_pkt["draft_group_id"] == 156416
     assert main_pkt["auto_email_sent"] is False
     assert len(main_pkt["master_bundle_sha256"]) == 64
@@ -225,7 +267,9 @@ def test_slice3_classic_main_and_sun_mon_14core_and_markdown_packet(tmp_path: Pa
     _check_classic_lineup(main_pkt["cash_lineup"], main_decoys, cfg, is_cash=True)
     main_gpp = main_pkt["gpp_lineups"]
     assert len(main_gpp) == 20
-    assert len({_check_classic_lineup(lu, main_decoys, cfg, is_cash=False) for lu in main_gpp}) == 20
+    assert (
+        len({_check_classic_lineup(lu, main_decoys, cfg, is_cash=False) for lu in main_gpp}) == 20
+    )
 
     main_csv = tmp_path / "week10_sun_main_classic_dk_upload.csv"
     assert main_csv.is_file()
@@ -235,14 +279,24 @@ def test_slice3_classic_main_and_sun_mon_14core_and_markdown_packet(tmp_path: Pa
     assert len(rows) >= 21
 
     exp_decoys = _load_decoys_for_games([*main_games, ("PIT", "CIN"), ("LAC", "BAL")])
-    exp_pkt = build_classic_packet("sun_mon_expanded", include_14_core=True, write_outputs=True, today=TEST_TODAY, output_dir=tmp_path)
+    exp_pkt = build_classic_packet(
+        "sun_mon_expanded",
+        include_14_core=True,
+        write_outputs=True,
+        today=TEST_TODAY,
+        output_dir=tmp_path,
+    )
     assert exp_pkt["draft_group_id"] == 156418
     assert exp_pkt["auto_email_sent"] is False
     assert len(exp_pkt["master_bundle_sha256"]) == 64
     assert len(exp_pkt["dossier_provenance"]) == 12
     _check_classic_lineup(exp_pkt["cash_lineup"], exp_decoys, cfg, is_cash=True)
     assert len(exp_pkt["gpp_lineups"]) == 20
-    assert len({_check_classic_lineup(lu, exp_decoys, cfg, is_cash=False) for lu in exp_pkt["gpp_lineups"]}) == 20
+    exp_sigs = {
+        _check_classic_lineup(lu, exp_decoys, cfg, is_cash=False)
+        for lu in exp_pkt["gpp_lineups"]
+    }
+    assert len(exp_sigs) == 20
 
     core = exp_pkt["expanded_14_player_core"]
     assert len(core) == 14
@@ -256,7 +310,9 @@ def test_slice3_classic_main_and_sun_mon_14core_and_markdown_packet(tmp_path: Pa
     assert core_pos == {"QB": 2, "RB": 4, "WR": 4, "TE": 2, "DST": 2}
 
     test_md_path = tmp_path / "week10-munich-main-primetime-dfs-packet.md"
-    all_res = build_all_week10_slates(today=TEST_TODAY, output_dir=tmp_path, docs_md_path=test_md_path)
+    all_res = build_all_week10_slates(
+        today=TEST_TODAY, output_dir=tmp_path, docs_md_path=test_md_path
+    )
     assert set(all_res.keys()) == {
         "munich_ne_det",
         "sun_main_classic",
@@ -300,11 +356,31 @@ _WEEK10_MATCHUPS: tuple[tuple[str, str], ...] = (
 )
 
 _WEEK10_DFS_SLATE_SPECS: dict[str, tuple[str, str, str]] = {
-    "munich_ne_det": ("SHOWDOWN", "week10_munich_ne_det_showdown_packet.json", "week10_munich_ne_det_dk_upload.csv"),
-    "sun_main_classic": ("CLASSIC", "week10_sun_main_classic_packet.json", "week10_sun_main_classic_dk_upload.csv"),
-    "sun_mon_expanded": ("CLASSIC", "week10_sun_mon_expanded_packet.json", "week10_sun_mon_expanded_dk_upload.csv"),
-    "snf_pit_cin": ("SHOWDOWN", "week10_snf_pit_cin_showdown_packet.json", "week10_snf_pit_cin_dk_upload.csv"),
-    "mnf_lac_bal": ("SHOWDOWN", "week10_mnf_lac_bal_showdown_packet.json", "week10_mnf_lac_bal_dk_upload.csv"),
+    "munich_ne_det": (
+        "SHOWDOWN",
+        "week10_munich_ne_det_showdown_packet.json",
+        "week10_munich_ne_det_dk_upload.csv",
+    ),
+    "sun_main_classic": (
+        "CLASSIC",
+        "week10_sun_main_classic_packet.json",
+        "week10_sun_main_classic_dk_upload.csv",
+    ),
+    "sun_mon_expanded": (
+        "CLASSIC",
+        "week10_sun_mon_expanded_packet.json",
+        "week10_sun_mon_expanded_dk_upload.csv",
+    ),
+    "snf_pit_cin": (
+        "SHOWDOWN",
+        "week10_snf_pit_cin_showdown_packet.json",
+        "week10_snf_pit_cin_dk_upload.csv",
+    ),
+    "mnf_lac_bal": (
+        "SHOWDOWN",
+        "week10_mnf_lac_bal_showdown_packet.json",
+        "week10_mnf_lac_bal_dk_upload.csv",
+    ),
 }
 
 
@@ -347,21 +423,29 @@ def test_week10_pure_dk_csv_upload_contract() -> None:
             assert csv_path.is_file(), f"Missing pure DK upload CSV: {csv_path}"
             with csv_path.open("r", encoding="utf-8", newline="") as fh:
                 rows = list(csv.reader(fh))
-            assert len(rows) == expected_rows, f"{csv_path.name} row count={len(rows)} != {expected_rows}"
+            assert len(rows) == expected_rows, (
+                f"{csv_path.name} row count={len(rows)} != {expected_rows}"
+            )
             assert rows[0] == expected_hdr, f"{csv_path.name} header mismatch: {rows[0]}"
             for r_idx, row in enumerate(rows[1:], start=1):
                 assert len(row) == len(expected_hdr), f"{csv_path.name} row {r_idx} width mismatch"
                 for cell in row:
-                    assert dk_cell_re.match(cell), f"{csv_path.name} row {r_idx} bad DK ID cell: {cell!r}"
+                    assert dk_cell_re.match(cell), (
+                        f"{csv_path.name} row {r_idx} bad DK ID cell: {cell!r}"
+                    )
 
         upload_path = dfs_dir / upload_filename
         assert upload_path.is_file(), f"Missing combined DK upload CSV: {upload_path}"
         with upload_path.open("r", encoding="utf-8", newline="") as fh:
             upload_rows = list(csv.reader(fh))
-        assert len(upload_rows) - 1 >= 21, f"{upload_filename} data rows={len(upload_rows) - 1} < 21"
+        assert len(upload_rows) - 1 >= 21, (
+            f"{upload_filename} data rows={len(upload_rows) - 1} < 21"
+        )
 
 
-def test_week10_dossiers_physical_conservation_and_stage0_qb1_conflict_fail_closed(monkeypatch) -> None:
+def test_week10_dossiers_physical_conservation_and_stage0_qb1_conflict_fail_closed(
+    monkeypatch,
+) -> None:
     import scripts.ops.enforce_stage0_roster_and_board_allowlist as stage0_mod
 
     engine_dir = REPO_ROOT / "data" / "engine"
@@ -379,7 +463,8 @@ def test_week10_dossiers_physical_conservation_and_stage0_qb1_conflict_fail_clos
             ptd_mean = float(team_projs[tm]["pass_tds"]["mean"])
             assert ptd_mean <= 2.5, f"{away}@{home} {tm} team pass_tds.mean={ptd_mean} > 2.5"
             assert ptd_mean <= pts_mean * 0.78 / 6.95 + 1e-5, (
-                f"{away}@{home} {tm} pass_tds.mean={ptd_mean} exceeds score bound for pts={pts_mean}"
+                f"{away}@{home} {tm} pass_tds.mean={ptd_mean} exceeds score bound "
+                f"for pts={pts_mean}"
             )
 
         pobj = s34["athlete_post_sim_projections"]
@@ -389,17 +474,24 @@ def test_week10_dossiers_physical_conservation_and_stage0_qb1_conflict_fail_clos
             pos = str(item.get("position") or "")
             if pos == "RB":
                 rec_mean = float((pm.get("receptions") or {}).get("mean") or 0.0)
-                assert rec_mean <= 6.5, f"{away}@{home} RB {item.get('athlete')} receptions.mean={rec_mean} > 6.5"
+                assert rec_mean <= 6.5, (
+                    f"{away}@{home} RB {item.get('athlete')} receptions.mean={rec_mean} > 6.5"
+                )
             if pos == "QB":
                 qb_ptd = float((pm.get("pass_tds") or {}).get("mean") or 0.0)
-                assert qb_ptd <= 2.5, f"{away}@{home} QB {item.get('athlete')} pass_tds.mean={qb_ptd} > 2.5"
+                assert qb_ptd <= 2.5, (
+                    f"{away}@{home} QB {item.get('athlete')} pass_tds.mean={qb_ptd} > 2.5"
+                )
             if away == "LAC" and home == "BAL" and item.get("team") == "LAC":
-                lac_rec_yds[str(item.get("athlete") or "")] = float((pm.get("rec_yds") or {}).get("mean") or 0.0)
+                lac_rec_yds[str(item.get("athlete") or "")] = float(
+                    (pm.get("rec_yds") or {}).get("mean") or 0.0
+                )
 
     kls_yds = lac_rec_yds["KeAndre Lambert-Smith"]
     for starter in ("Tre Harris", "Quentin Johnston", "Ladd McConkey"):
         assert lac_rec_yds[starter] > kls_yds, (
-            f"LAC WR {starter} ({lac_rec_yds[starter]:.2f}) must outproject unboarded 1-GP KeAndre Lambert-Smith ({kls_yds:.2f})"
+            f"LAC WR {starter} ({lac_rec_yds[starter]:.2f}) must outproject "
+            f"unboarded 1-GP KeAndre Lambert-Smith ({kls_yds:.2f})"
         )
 
     def _inject_unresolved_qb1_conflict(cfg: dict, week: int) -> dict:
@@ -407,11 +499,17 @@ def test_week10_dossiers_physical_conservation_and_stage0_qb1_conflict_fail_clos
         out["confirmed_qb1"] = {**(cfg.get("confirmed_qb1") or {}), "NE": "Synthetic Conflicted QB"}
         out["excluded_players"] = [
             *(cfg.get("excluded_players") or []),
-            {"name": "Synthetic Conflicted QB", "team": "NE", "reason": "test_unresolved_qb1_conflict"},
+            {
+                "name": "Synthetic Conflicted QB",
+                "team": "NE",
+                "reason": "test_unresolved_qb1_conflict",
+            },
         ]
         return out
 
-    monkeypatch.setattr(stage0_mod, "apply_stage0_qb1_live_starter_resolutions", _inject_unresolved_qb1_conflict)
+    monkeypatch.setattr(
+        stage0_mod, "apply_stage0_qb1_live_starter_resolutions", _inject_unresolved_qb1_conflict
+    )
     with pytest.raises(stage0_mod.Stage0RosterContaminationError, match="STAGE0_QB1_CONTRADICTION"):
         stage0_mod.load_stage0_game_roster_allowlist(
             away="NE",
@@ -473,7 +571,6 @@ def test_qb_rush_tds_capped_at_045_in_both_branches() -> None:
 def test_simulate_dirichlet_multinomial_field_enforces_salary_cap_never_bypasses() -> None:
     import numpy as np
     import pandas as pd
-
     from scripts.ops.dfs_stochastic_milp_optimizer import simulate_dirichlet_multinomial_field
 
     rows = [
@@ -482,21 +579,21 @@ def test_simulate_dirichlet_multinomial_field_enforces_salary_cap_never_bypasses
         {"name": "ExpRB1", "position": "RB", "team": "AAA", "salary": 9500, "proj_ownership": 0.45},
         {"name": "ExpRB2", "position": "RB", "team": "BBB", "salary": 9100, "proj_ownership": 0.45},
         {"name": "ExpRB3", "position": "RB", "team": "CCC", "salary": 8900, "proj_ownership": 0.40},
-        {"name": "ChpRB1", "position": "RB", "team": "DDD", "salary": 4000, "proj_ownership": 0.005},
-        {"name": "ChpRB2", "position": "RB", "team": "EEE", "salary": 3900, "proj_ownership": 0.005},
-        {"name": "ChpRB3", "position": "RB", "team": "FFF", "salary": 3800, "proj_ownership": 0.005},
+        {"name": "ChpRB1", "position": "RB", "team": "DDD", "salary": 4000, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ChpRB2", "position": "RB", "team": "EEE", "salary": 3900, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ChpRB3", "position": "RB", "team": "FFF", "salary": 3800, "proj_ownership": 0.005},  # noqa: E501
         {"name": "ExpWR1", "position": "WR", "team": "AAA", "salary": 9400, "proj_ownership": 0.45},
         {"name": "ExpWR2", "position": "WR", "team": "BBB", "salary": 9100, "proj_ownership": 0.45},
         {"name": "ExpWR3", "position": "WR", "team": "CCC", "salary": 8800, "proj_ownership": 0.45},
         {"name": "ExpWR4", "position": "WR", "team": "DDD", "salary": 8600, "proj_ownership": 0.40},
-        {"name": "ChpWR1", "position": "WR", "team": "EEE", "salary": 3400, "proj_ownership": 0.005},
-        {"name": "ChpWR2", "position": "WR", "team": "FFF", "salary": 3300, "proj_ownership": 0.005},
-        {"name": "ChpWR3", "position": "WR", "team": "GGG", "salary": 3200, "proj_ownership": 0.005},
-        {"name": "ChpWR4", "position": "WR", "team": "HHH", "salary": 3100, "proj_ownership": 0.005},
+        {"name": "ChpWR1", "position": "WR", "team": "EEE", "salary": 3400, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ChpWR2", "position": "WR", "team": "FFF", "salary": 3300, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ChpWR3", "position": "WR", "team": "GGG", "salary": 3200, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ChpWR4", "position": "WR", "team": "HHH", "salary": 3100, "proj_ownership": 0.005},  # noqa: E501
         {"name": "ExpTE1", "position": "TE", "team": "AAA", "salary": 8400, "proj_ownership": 0.45},
-        {"name": "ChpTE1", "position": "TE", "team": "BBB", "salary": 2500, "proj_ownership": 0.005},
-        {"name": "ExpDST1", "position": "DST", "team": "AAA", "salary": 5900, "proj_ownership": 0.45},
-        {"name": "ChpDST1", "position": "DST", "team": "BBB", "salary": 2000, "proj_ownership": 0.005},
+        {"name": "ChpTE1", "position": "TE", "team": "BBB", "salary": 2500, "proj_ownership": 0.005},  # noqa: E501
+        {"name": "ExpDST1", "position": "DST", "team": "AAA", "salary": 5900, "proj_ownership": 0.45},  # noqa: E501
+        {"name": "ChpDST1", "position": "DST", "team": "BBB", "salary": 2000, "proj_ownership": 0.005},  # noqa: E501
     ]
     df = pd.DataFrame(rows)
     salaries = df["salary"].to_numpy(dtype=np.int64)
@@ -513,7 +610,9 @@ def test_simulate_dirichlet_multinomial_field_enforces_salary_cap_never_bypasses
     totals = field @ salaries
     assert np.all(totals <= 50000)
 
-    with pytest.raises(ValueError, match="Cannot construct valid 9-player field roster under salary_cap"):
+    with pytest.raises(
+        ValueError, match="Cannot construct valid 9-player field roster under salary_cap"
+    ):
         simulate_dirichlet_multinomial_field(
             df,
             num_opponents=5,
@@ -525,7 +624,6 @@ def test_simulate_dirichlet_multinomial_field_enforces_salary_cap_never_bypasses
 
 def test_gse_full_slate_simulator_strict_projections_fails_closed_on_missing() -> None:
     import pandas as pd
-
     from scripts.ops.dfs_stochastic_milp_optimizer import GSEFullSlateSimulator
 
     games_df = pd.DataFrame([{"game_id": "G1", "wind_mph": 12.0}])
@@ -541,7 +639,9 @@ def test_gse_full_slate_simulator_strict_projections_fails_closed_on_missing() -
         }
     ])
     with pytest.raises(ValueError, match="missing proj_td"):
-        GSEFullSlateSimulator(missing_qb_df, games_df, num_sims=10, seed=42, strict_projections=True).simulate_slate()
+        GSEFullSlateSimulator(
+            missing_qb_df, games_df, num_sims=10, seed=42, strict_projections=True
+        ).simulate_slate()
 
     missing_wr_df = pd.DataFrame([
         {
@@ -557,7 +657,9 @@ def test_gse_full_slate_simulator_strict_projections_fails_closed_on_missing() -
         }
     ])
     with pytest.raises(ValueError, match="missing proj_rec_yds"):
-        GSEFullSlateSimulator(missing_wr_df, games_df, num_sims=10, seed=42, strict_projections=True).simulate_slate()
+        GSEFullSlateSimulator(
+            missing_wr_df, games_df, num_sims=10, seed=42, strict_projections=True
+        ).simulate_slate()
 
     fpts, _ = GSEFullSlateSimulator(
         missing_wr_df,
@@ -602,7 +704,9 @@ def test_gse_full_slate_simulator_strict_projections_fails_closed_on_missing() -
         }
     ])
     with pytest.raises(ValueError, match="non-finite proj_rec_yds"):
-        GSEFullSlateSimulator(inf_wr_df, games_df, num_sims=10, seed=42, strict_projections=True).simulate_slate()
+        GSEFullSlateSimulator(
+            inf_wr_df, games_df, num_sims=10, seed=42, strict_projections=True
+        ).simulate_slate()
 
 
 def test_week10_santa_remediation_invariants_across_all_13_dossiers_and_sims() -> None:
@@ -619,8 +723,11 @@ def test_week10_santa_remediation_invariants_across_all_13_dossiers_and_sims() -
         assert len(wave13) > 0, f"{away}@{home} empty wave13 sheaf"
 
         # 2. Panel B strictly uses +24.92u / 47-19-1 (never voided +26.50u / 62-23-1)
-        panel_b = d["stage5_360_conjunction_gate"]["dual_panel_ledger_summary"]["panel_b_21_pick_5stage_ledger"]
-        assert panel_b["net_units"] == "+24.92u", f"{away}@{home} wrong panel_b net_units={panel_b['net_units']}"
+        dual_panel = d["stage5_360_conjunction_gate"]["dual_panel_ledger_summary"]
+        panel_b = dual_panel["panel_b_21_pick_5stage_ledger"]
+        assert panel_b["net_units"] == "+24.92u", (
+            f"{away}@{home} wrong panel_b net_units={panel_b['net_units']}"
+        )
         assert int(panel_b["wins"]) == 47, f"{away}@{home} wrong panel_b wins={panel_b['wins']}"
         assert d["stage5_360_conjunction_gate"]["publishAllowed"] is False
 
@@ -632,10 +739,13 @@ def test_week10_santa_remediation_invariants_across_all_13_dossiers_and_sims() -
                 tk = pm["tackles_plus_assists"]
                 solo = pm["solo_tackles"]
                 ast = pm["assist_tackles"]
-                assert tk["mean"] >= 0.0 and tk["p10"] >= 0.0, f"{away}@{home} {name} negative tackle stats"
+                assert tk["mean"] >= 0.0 and tk["p10"] >= 0.0, (
+                    f"{away}@{home} {name} negative tackle stats"
+                )
                 assert tk["std"] <= 8.0, f"{away}@{home} {name} exploded tackle std={tk['std']}"
                 assert abs((solo["mean"] + ast["mean"]) - tk["mean"]) <= 0.08, (
-                    f"{away}@{home} {name} solo+ast != total ({solo['mean']} + {ast['mean']} vs {tk['mean']})"
+                    f"{away}@{home} {name} solo+ast != total "
+                    f"({solo['mean']} + {ast['mean']} vs {tk['mean']})"
                 )
 
         # 4. Armed .sim.json carries real simulated margin & total matching Stage 2
@@ -643,16 +753,32 @@ def test_week10_santa_remediation_invariants_across_all_13_dossiers_and_sims() -
         assert sim_p.is_file(), f"Missing Week 10 sim file: {sim_p}"
         sim_obj = json.loads(sim_p.read_text(encoding="utf-8"))
         b_a = d["stage2_jev_spine_and_10k_simulation"]["branch_a_tuten_out_primary"]
-        assert abs(float(sim_obj["projected_total_mean"]) - float(b_a["total_points"]["mean"])) < 1e-4
-        assert abs(float(sim_obj["projected_margin_mean"]) - float(b_a["home_margin_bal_minus_jax"]["mean"])) < 1e-4
+        assert abs(float(sim_obj["projected_total_mean"]) - float(b_a["total_points"]["mean"])) < (
+            1e-4
+        )
+        assert (
+            abs(
+                float(sim_obj["projected_margin_mean"])
+                - float(b_a["home_margin_bal_minus_jax"]["mean"])
+            )
+            < 1e-4
+        )
 
-    # 5. Bhayshul Tuten active RB1 in Week 10 JAX @ TEN & Deshaun Watson excluded from Stage 5 HOU @ CLE Showdown
-    jax_ten = json.loads((engine_dir / "connected_workflow_dossier_jax_ten_week10.json").read_text(encoding="utf-8"))
-    tuten_rush = jax_ten["stage3_4_conserved_post_sim_projections"]["athlete_post_sim_projections"]["Bhayshul Tuten"]["projections"]["rush_yds"]["mean"]
-    assert float(tuten_rush) > 20.0, f"JAX@TEN Bhayshul Tuten wrongly suppressed: rush_yds.mean={tuten_rush}"
+    # 5. Bhayshul Tuten active RB1 in JAX @ TEN & Deshaun Watson excluded from HOU @ CLE Showdown
+    jax_ten_path = engine_dir / "connected_workflow_dossier_jax_ten_week10.json"
+    jax_ten = json.loads(jax_ten_path.read_text(encoding="utf-8"))
+    tuten_rush = jax_ten["stage3_4_conserved_post_sim_projections"][
+        "athlete_post_sim_projections"
+    ]["Bhayshul Tuten"]["projections"]["rush_yds"]["mean"]
+    assert float(tuten_rush) > 20.0, (
+        f"JAX@TEN Bhayshul Tuten wrongly suppressed: rush_yds.mean={tuten_rush}"
+    )
 
-    hou_cle = json.loads((engine_dir / "connected_workflow_dossier_hou_cle_week10.json").read_text(encoding="utf-8"))
+    hou_cle_path = engine_dir / "connected_workflow_dossier_hou_cle_week10.json"
+    hou_cle = json.loads(hou_cle_path.read_text(encoding="utf-8"))
     sd = hou_cle["stage5_360_conjunction_gate"]["optimal_dfs_showdown_lineups"]
     for lu_key in ("draftkings_cash_hybrid_optimal", "draftkings_gpp_tournament_leverage"):
         roster_names = {r["player"] for r in sd[lu_key]["roster"]}
-        assert "Deshaun Watson" not in roster_names, f"Deshaun Watson leaked into HOU@CLE Stage 5 {lu_key}"
+        assert "Deshaun Watson" not in roster_names, (
+            f"Deshaun Watson leaked into HOU@CLE Stage 5 {lu_key}"
+        )

@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""
-tests/test_stage0_zero_hallucination_gate.py
+"""tests/test_stage0_zero_hallucination_gate.py.
 
 Permanent Regression Test Suite for the GSE Connected Game-to-Game / Week-to-Week Workflow:
   1. Verifies Stage-0 roster allowlist (`week9_live_roster_transactions_and_starters_2026.json` +
      `tnf_jax_bal_dk_full_board_2026_11_05.json` + `play_by_play_2026.parquet`).
-  2. Verifies `Stage0RosterContaminationError` blocks `Tank Bigsby`, `Isaiah Likely`, `Justin Tucker`,
-     `Travis Etienne Jr.`, and active projections for `Lamar Jackson`, `Tyler Huntley`, `Skylar Thompson`.
-  3. Verifies Stage 1A imports and executes all 38 coaching mind & scheme modules (`intelligence/coaching/`).
+  2. Verifies `Stage0RosterContaminationError` blocks `Tank Bigsby`, `Isaiah Likely`,
+     `Justin Tucker`, `Travis Etienne Jr.`, and active projections for `Lamar Jackson`,
+     `Tyler Huntley`, `Skylar Thompson`.
+  3. Verifies Stage 1A imports and executes all 38 coaching mind & scheme modules
+     (`intelligence/coaching/`).
   4. Verifies Stage 1B reviews all 5,367+ equations and scientific premises prior to simulation.
-  5. Verifies Stage 2 + Stage 3/4 conserve team and player yardage/TDs across all 10,000 worlds and
-     project all 37 verified 2026 board athletes.
+  5. Verifies Stage 2 + Stage 3/4 conserve team and player yardage/TDs across all 10,000 worlds
+     and project all 37 verified 2026 board athletes.
   6. Scans all TNF output JSON/Markdown files and scripts to guarantee zero roster contamination.
 """
 from __future__ import annotations
@@ -31,7 +32,7 @@ from scripts.ops.enforce_stage0_roster_and_board_allowlist import (  # noqa: E40
     assert_zero_roster_contamination,
     load_stage0_game_roster_allowlist,
 )
-from scripts.ops.preflight_live_roster_injury_gate import require_week, PreflightRosterGateError  # noqa: E402
+from scripts.ops.preflight_live_roster_injury_gate import PreflightRosterGateError, require_week  # noqa: E402
 
 
 def test_stage0_allowlist_and_confirmed_starters():
@@ -108,7 +109,9 @@ def test_stage0_contamination_gate_raises_on_hallucinated_or_excluded_players():
 
 
 def test_connected_workflow_master_bundle_and_all_37_athlete_projections():
-    master_path = REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_master_2026_11_05.json"
+    master_path = (
+        REPO_ROOT / "data" / "engine" / "tnf_jax_bal_connected_workflow_master_2026_11_05.json"
+    )
     assert master_path.is_file(), f"Missing master workflow bundle: {master_path}"
     bundle = json.loads(master_path.read_text(encoding="utf-8"))
 
@@ -177,7 +180,8 @@ def test_week10_stage0_live_roster_config_fresh_on_2026_11_14() -> None:
     assert cfg["week"] == 10
     as_of_dt = date.fromisoformat(cfg["as_of"])
     assert as_of_dt >= date(2026, 11, 13)
-    assert require_week(10, today=as_of_dt + timedelta(days=int(cfg.get("max_age_days", 3))))["week"] == 10
+    max_age = timedelta(days=int(cfg.get("max_age_days", 3)))
+    assert require_week(10, today=as_of_dt + max_age)["week"] == 10
     with pytest.raises(PreflightRosterGateError):
         require_week(10, today=as_of_dt + timedelta(days=int(cfg.get("max_age_days", 3)) + 1))
     excluded_names = {p["name"] for p in cfg["excluded_players"]}

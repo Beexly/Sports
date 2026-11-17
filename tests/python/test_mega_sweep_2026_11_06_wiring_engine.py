@@ -1,5 +1,5 @@
-"""
-Unit tests for `intelligence.coaching.mega_sweep_2026_11_06_wiring_engine`.
+"""Unit tests for `intelligence.coaching.mega_sweep_2026_11_06_wiring_engine`.
+
 Covers:
   1. Existing 5-Track (`L1-L5`, `L4` adversary, `L5` synthesis order `OL -> scheme -> QB`)
      and 7-Step Weekly Cycle (`1_usage` .. `7_books_last_price_check`) + GSI Step 2 Health.
@@ -72,8 +72,14 @@ def test_5track_and_7step_weekly_cycle_preserves_full_contract() -> None:
     assert trace["ol_to_scheme_to_qb_order_enforced"] is True
     assert tuple(trace["weekly_cycle_fixed_order"]) == MANDATORY_SEVEN_STEP_WEEKLY_CYCLE
     assert WEEKLY_CYCLE_FIXED_ORDER[-1] == "7_books_last_price_check"
-    assert trace["weekly_cycle_steps"]["7_books_last_price_check"]["market_is_headline_reason"] is False
-    assert trace["weekly_cycle_steps"]["7_books_last_price_check"]["market_weight_in_reasoning"] == 0.06
+    assert (
+        trace["weekly_cycle_steps"]["7_books_last_price_check"]["market_is_headline_reason"]
+        is False
+    )
+    assert (
+        trace["weekly_cycle_steps"]["7_books_last_price_check"]["market_weight_in_reasoning"]
+        == 0.06
+    )
 
 
 def test_gsi_step2_health_and_coverage_ledger() -> None:
@@ -92,7 +98,10 @@ def test_gsi_step2_health_and_coverage_ledger() -> None:
     )
     assert health["whim_kth_mps95_corpus_callosum"] > 0.0
     assert health["shaake_sign_ppv_football"] == 0.92
-    assert health["care_consortium_biomarker_kinetics"]["biomarker_negative_true_concussion_rate"] == 0.37
+    assert (
+        health["care_consortium_biomarker_kinetics"]["biomarker_negative_true_concussion_rate"]
+        == 0.37
+    )
     assert health["rupture_report_turf_hazard_mult"] == 1.24
 
     ledger = load_mega_sweep_coverage_ledger()

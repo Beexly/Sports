@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-tests/test_week10_dfs_zero_inactive_gate.py
+"""tests/test_week10_dfs_zero_inactive_gate.py.
 
 Phase-3 / Phase-4 fail-closed DFS launch gate for NFL Week 10 (2026-11-15).
 
@@ -83,11 +82,23 @@ def extract_dfs_players(obj, _depth: int = 0) -> list[dict]:
     if _depth > 12:
         return found
     if isinstance(obj, dict):
-        name = next((obj[k] for k in _NAME_KEYS if isinstance(obj.get(k), str) and obj[k].strip()), None)
-        team = next((obj[k] for k in _TEAM_KEYS if isinstance(obj.get(k), str) and obj[k].strip()), None)
+        name = next(
+            (obj[k] for k in _NAME_KEYS if isinstance(obj.get(k), str) and obj[k].strip()),
+            None,
+        )
+        team = next(
+            (obj[k] for k in _TEAM_KEYS if isinstance(obj.get(k), str) and obj[k].strip()),
+            None,
+        )
         if name and team:
             pos = next((obj[k] for k in _POS_KEYS if isinstance(obj.get(k), str)), "")
-            found.append({"name": name.strip(), "team": team.strip().upper(), "position": pos.strip().upper()})
+            found.append(
+                {
+                    "name": name.strip(),
+                    "team": team.strip().upper(),
+                    "position": pos.strip().upper(),
+                }
+            )
         for v in obj.values():
             found.extend(extract_dfs_players(v, _depth + 1))
     elif isinstance(obj, list):
@@ -101,7 +112,7 @@ def load_roster_cfg() -> dict:
 
 
 def load_week10_injuries() -> dict:
-    """normalized name -> {team, report_status} for week 10."""
+    """Normalized name -> {team, report_status} for week 10."""
     out: dict = {}
     if not INJURIES_CSV.is_file():
         return out
@@ -122,7 +133,9 @@ def load_week10_injuries() -> dict:
     return out
 
 
-def validate_players(players: list[dict], cfg: dict, injuries: dict, allowed_teams=None) -> list[str]:
+def validate_players(
+    players: list[dict], cfg: dict, injuries: dict, allowed_teams=None
+) -> list[str]:
     excluded = {_norm_name(p["name"]) for p in cfg.get("excluded_players", [])}
     traded = {_norm_name(p["name"]): p for p in cfg.get("traded_players", [])}
     violations: list[str] = []
@@ -143,9 +156,13 @@ def validate_players(players: list[dict], cfg: dict, injuries: dict, allowed_tea
             if inj["report_status"] in _INACTIVE_STATUSES:
                 violations.append(f"INACTIVE({inj['report_status']}): {p['name']} ({team})")
             if inj["team"] and team and inj["team"] != team:
-                violations.append(f"WRONG-TEAM: {p['name']} listed {team} but week-10 report team {inj['team']}")
+                violations.append(
+                    f"WRONG-TEAM: {p['name']} listed {team} but week-10 report team {inj['team']}"
+                )
         if allowed_teams is not None and team not in allowed_teams:
-            violations.append(f"SHOWDOWN-OFF-SLATE: {p['name']} ({team}) not in {sorted(allowed_teams)}")
+            violations.append(
+                f"SHOWDOWN-OFF-SLATE: {p['name']} ({team}) not in {sorted(allowed_teams)}"
+            )
     return violations
 
 
@@ -196,4 +213,7 @@ def test_week10_dfs_zero_inactive(label):
     players = extract_dfs_players(json.loads(path.read_text(encoding="utf-8")))
     assert players, f"No players extracted from {path.name}"
     violations = validate_players(players, cfg, injuries, allowed_teams)
-    assert not violations, f"{label}: {len(violations)} inactive/IR/wrong-team violations:\n" + "\n".join(violations[:40])
+    assert not violations, (
+        f"{label}: {len(violations)} inactive/IR/wrong-team violations:\n"
+        + "\n".join(violations[:40])
+    )

@@ -165,7 +165,11 @@ def test_all_heavy_seats_skip_on_dry_run():
 def test_run_all_maps_to_stage_five(isolated_runs, monkeypatch):
     seen = []
     for i in range(6):
-        monkeypatch.setitem(runner.SEATS, i, (lambda n: lambda **kw: (seen.append(n), _fake(n, "PASS"))[1])(i))
+        monkeypatch.setitem(
+            runner.SEATS,
+            i,
+            (lambda n: lambda **kw: (seen.append(n), _fake(n, "PASS"))[1])(i),
+        )
     assert runner.main(["--run-all", "--dry-run"]) == 0
     assert seen == [0, 1, 2, 3, 4, 5]
     state = json.loads(sorted(isolated_runs.glob("run_*.json"))[-1].read_text(encoding="utf-8"))

@@ -1,22 +1,23 @@
-"""
-Unit & Integration Tests for `intelligence/simulation/spatial_micro_metrics_pbp_and_dfs_bridge.py`
-==================================================================================================
+"""Unit & Integration Tests for `spatial_micro_metrics_pbp_and_dfs_bridge.py`.
+
 Verifies Garrett's 04:33 AM CST mandate:
 1. Two-Host Rule (`check_charge_9`) compliance across all wired files.
 2. Exact mathematical formulas:
    - PFF Elusive Rating = (MTF / (Designed Runs + Receptions)) * YAC/Att * 100
-   - True Box Spacing Delta = (Defenders in Box / Offensive Blockers in Box) * Avg Defender Dist from LOS
-   - True Opportunity Value Score (TOVS) = (Rush * 0.6) + (RZ Carries * 1.2) + (GL Carries * 2.4) + (Targets * 1.5)
+   - True Box Spacing Delta =
+     (Defenders in Box / Offensive Blockers in Box) * Avg Defender Dist from LOS
+   - True Opportunity Value Score (TOVS) =
+     (Rush * 0.6) + (RZ Carries * 1.2) + (GL Carries * 2.4) + (Targets * 1.5)
    - Catch-Point Leverage Delta = V_ball dot (P_WR - P_DB)
    - Micro-Blocking Metric Segregation (YBC/Att ~1.1-1.4 baseline with >1.8 yds OL scheme penalty,
      Shed-Time Survival Rate 1.8s / <1.5s block loss, Penetration Depth Rate -0.5 yds)
    - RB YPRR Trajectory Tiers (<0.90 2-down grinder, 1.00-1.50 functional, >=1.85+ elite Weapon X)
    - First-Read Designated Target Rate vs 72% Checkdowns
 3. All 6 Front-Office Matchup Domains populated across all Week 9 matchups.
-4. Wiring into `scripts/ops/gse_coach_mind_simulator.py` (175-snap PBP trajectories shift deterministically
-   when spatial/micro-blocking/processing domains are perturbed).
+4. Wiring into `scripts/ops/gse_coach_mind_simulator.py` (175-snap PBP trajectories shift
+   deterministically when spatial/micro-blocking/processing domains are perturbed).
 5. Wiring into `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py` and
-   `intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py` (200+ Pt DFS ceiling boosts).
+   `two_wave_200pt_full_information_iterative_perfection_engine.py` (200+ Pt DFS boosts).
 6. Wiring into `intelligence/trends/scores24_pfr_pff_ngs_unified_trend_engine.py` (6th Lens
    `FrontOfficeSpatialMicroTrendEvidence`).
 """
@@ -65,7 +66,10 @@ def test_01_two_host_rule_check_charge_9_zero_literal_host_paths():
         REPO_ROOT / "intelligence" / "simulation" / "spatial_micro_metrics_pbp_and_dfs_bridge.py",
         REPO_ROOT / "intelligence" / "trends" / "scores24_pfr_pff_ngs_unified_trend_engine.py",
         REPO_ROOT / "intelligence" / "dfs" / "dk_200pt_situational_dfs_and_projection_engine.py",
-        REPO_ROOT / "intelligence" / "dfs" / "two_wave_200pt_full_information_iterative_perfection_engine.py",
+        REPO_ROOT
+        / "intelligence"
+        / "dfs"
+        / "two_wave_200pt_full_information_iterative_perfection_engine.py",
     ]
     forbidden_tokens = [
         "C:" + "\\Users\\" + "Garrett",
@@ -80,9 +84,9 @@ def test_01_two_host_rule_check_charge_9_zero_literal_host_paths():
 
 
 def test_02_exact_pff_elusive_rating_formula():
-    """
-    Verify exact PFF Elusive Rating formula:
-    Elusive Rating = (MTF / (Designed Runs + Receptions)) * YAC/Att * 100
+    """Verify exact PFF Elusive Rating formula.
+
+    Elusive Rating = (MTF / (Designed Runs + Receptions)) * YAC/Att * 100.
     """
     # Example: 8 MTF across 16 designed runs + 4 receptions (20 touches), 3.60 YAC/Att
     # (8 / 20) * 3.60 * 100 = 0.40 * 3.60 * 100 = 144.0
@@ -97,8 +101,8 @@ def test_02_exact_pff_elusive_rating_formula():
 
 
 def test_03_exact_true_box_spacing_delta_and_tracking_vector_mesh_gap():
-    """
-    Verify exact True Box Spacing Delta formula:
+    """Verify exact True Box Spacing Delta formula.
+
     Box Spacing Delta = (Defenders in Box / Offensive Blockers in Box) * Avg Defender Dist from LOS
     Plus Tracking Vector Delta (Handoff to Mesh Point Spatial Gap ~3.4 yds baseline).
     """
@@ -120,8 +124,8 @@ def test_03_exact_true_box_spacing_delta_and_tracking_vector_mesh_gap():
 
 
 def test_04_micro_blocking_segregation_and_ol_scheme_regression_penalty():
-    """
-    Verify Micro-Blocking Metric Segregation:
+    """Verify Micro-Blocking Metric Segregation.
+
     - YBC/Att ~1.1-1.4 yds baseline; if YBC > 1.8 yds with low consistency rate, OL scheme
       segregation penalty is applied.
     - Shed-Time Survival Rate (1.8s clean hole threshold; <1.5s immediate block loss).
@@ -152,10 +156,10 @@ def test_04_micro_blocking_segregation_and_ol_scheme_regression_penalty():
 
 
 def test_05_rb_yprr_trajectory_tiers_and_exact_tovs_and_checkdown_segregation():
-    """
-    Verify RB YPRR Trajectory Tiers (<0.90, 1.00-1.50, >=1.85+), First-Read Designated Target Rate vs
-    72% Checkdowns, and exact True Opportunity Value Score (TOVS):
-    TOVS = (Rush Attempts * 0.6) + (RZ Carries * 1.2) + (GL Carries * 2.4) + (Targets * 1.5)
+    """Verify RB YPRR Trajectory Tiers, First-Read Rate, and exact TOVS.
+
+    Tiers (<0.90, 1.00-1.50, >=1.85+), First-Read Designated Target Rate vs 72% Checkdowns,
+    and TOVS = (Rush Attempts * 0.6) + (RZ Carries * 1.2) + (GL Carries * 2.4) + (Targets * 1.5).
     """
     tier_low, boost_low = classify_rb_yprr_trajectory_tier(0.78)
     tier_mid, boost_mid = classify_rb_yprr_trajectory_tier(1.28)
@@ -165,7 +169,7 @@ def test_05_rb_yprr_trajectory_tiers_and_exact_tovs_and_checkdown_segregation():
     assert tier_mid == "TIER_2_DUAL_THREAT_1_00_TO_1_50" and boost_mid > 0
     assert tier_high == "TIER_1_ELITE_RECEIVING_WEAPON_GE_1_85" and boost_high > boost_mid
 
-    # Exact TOVS check: 15 rushes (9.0) + 3 RZ carries (3.6) + 1.5 GL carries (3.6) + 6 targets (9.0) = 25.2
+    # Exact TOVS check: 15 rushes (9.0) + 3 RZ (3.6) + 1.5 GL (3.6) + 6 targets (9.0) = 25.2
     tovs = compute_exact_true_opportunity_value_score(
         rush_attempts=15.0,
         red_zone_carries=3.0,
@@ -186,11 +190,11 @@ def test_05_rb_yprr_trajectory_tiers_and_exact_tovs_and_checkdown_segregation():
 
 
 def test_06_wr_te_spatial_cushion_ssp_catch_point_leverage_and_csoe():
-    """
-    Verify Domain 2:
+    """Verify Domain 2.
+
     - Separation at Separation Point (SSP > 2.0 yds vs Man) & Burn Rate
     - Exact Catch-Point Leverage Delta: Delta L = V_ball dot (P_WR - P_DB) / |V_ball|
-    - True Coverage Snaps Over Expected (CSOE / Target Prevention Rate)
+    - True Coverage Snaps Over Expected (CSOE / Target Prevention Rate).
     """
     delta_l = compute_exact_catch_point_leverage_delta(
         ball_velocity_vec=(20.0, 0.0, 0.0),
@@ -212,12 +216,14 @@ def test_06_wr_te_spatial_cushion_ssp_catch_point_leverage_and_csoe():
 
 
 def test_07_qb_processing_trench_pocket_compression_and_scheme_structural_domains():
-    """
-    Verify Domains 3, 4, 5, and 6 across all Week 9 matchups:
-    - Domain 3: Disguise Decay ms (<=220ms elite), Simulated Pressure Success Rate, Throw-to-Leverage Variance (TLV)
+    """Verify Domains 3, 4, 5, and 6 across all Week 9 matchups.
+
+    - Domain 3: Disguise Decay ms (<=220ms elite), Simulated Pressure Success Rate,
+      Throw-to-Leverage Variance (TLV)
     - Domain 4: True PRWR <2.5s, Pocket Anchor Depth PAD >2.2 yds, Stunt/Loop Hand-Off Latency ms
     - Domain 5: Pocket Collapse Vector PCV >1.5 sq yds/s, Escape Vector Efficiency EVE
-    - Domain 6: MOFO/MOFC Structural Efficiency, Heat-Map Counter Delta, Zone Void Exploitation Rate (ZVER)
+    - Domain 6: MOFO/MOFC Structural Efficiency, Heat-Map Counter Delta,
+      Zone Void Exploitation Rate (ZVER).
     """
     for away, home in WEEK9_GAMES:
         cond = compute_game_spatial_micro_pbp_conditioners(away, home)
@@ -244,10 +250,10 @@ def test_07_qb_processing_trench_pocket_compression_and_scheme_structural_domain
 
 
 def test_08_pbp_175_snap_simulation_shifts_with_spatial_micro_domains():
-    """
-    Verify that `simulate_pbp_with_spatial_micro_metrics` (wired into `scripts/ops/gse_coach_mind_simulator.py`)
-    deterministically shifts rush yards, pass yards, sacks, and win probability when
-    the 6 spatial/micro-blocking/processing domains are perturbed.
+    """Verify `simulate_pbp_with_spatial_micro_metrics` shifts with spatial domains.
+
+    Wired into `scripts/ops/gse_coach_mind_simulator.py`, it deterministically shifts
+    rush yards, pass yards, sacks, and win probability when perturbed.
     """
     elite_sim = simulate_pbp_with_spatial_micro_metrics(
         away_team="ARI",
@@ -331,10 +337,11 @@ def test_08_pbp_175_snap_simulation_shifts_with_spatial_micro_domains():
 
 
 def test_09_dfs_200pt_and_360_prop_ceiling_boost_wiring():
-    """
-    Verify that `compute_player_spatial_micro_dfs_and_prop_ceiling_boost` is wired into both:
+    """Verify `compute_player_spatial_micro_dfs_and_prop_ceiling_boost` wiring.
+
+    Checks both:
     - `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py`
-    - `intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py`
+    - `intelligence/dfs/two_wave_200pt_full_information_iterative_perfection_engine.py`.
     """
     gibbs_boost = compute_player_spatial_micro_dfs_and_prop_ceiling_boost(
         player_name="Jahmyr Gibbs",
@@ -347,7 +354,10 @@ def test_09_dfs_200pt_and_360_prop_ceiling_boost_wiring():
     )
     assert gibbs_boost["spatial_p90"] > 28.0
     assert gibbs_boost["spatial_p99"] > 37.5
-    assert gibbs_boost["key_spatial_drivers"]["rb_yprr_tier"] == "TIER_1_ELITE_RECEIVING_WEAPON_GE_1_85"
+    assert (
+        gibbs_boost["key_spatial_drivers"]["rb_yprr_tier"]
+        == "TIER_1_ELITE_RECEIVING_WEAPON_GE_1_85"
+    )
     assert gibbs_boost["key_spatial_drivers"]["pff_elusive_rating"] > 50.0
 
     dk_source = (
@@ -356,17 +366,20 @@ def test_09_dfs_200pt_and_360_prop_ceiling_boost_wiring():
     assert "compute_player_spatial_micro_dfs_and_prop_ceiling_boost" in dk_source
 
     two_wave_source = (
-        REPO_ROOT / "intelligence" / "dfs" / "two_wave_200pt_full_information_iterative_perfection_engine.py"
+        REPO_ROOT
+        / "intelligence"
+        / "dfs"
+        / "two_wave_200pt_full_information_iterative_perfection_engine.py"
     ).read_text(encoding="utf-8")
     assert "compute_player_spatial_micro_dfs_and_prop_ceiling_boost" in two_wave_source
     assert "spatial_micro_ceiling_boosts" in two_wave_source
 
 
 def test_10_unified_trend_engine_6th_lens_front_office_spatial_micro_wiring():
-    """
-    Verify `intelligence/trends/scores24_pfr_pff_ngs_unified_trend_engine.py` includes Lens 6
-    (`FrontOfficeSpatialMicroTrendEvidence`) across all 15 Week 9 games without breaking any
-    existing 5-lens story convergence locks or fake streak trap detections.
+    """Verify `scores24_pfr_pff_ngs_unified_trend_engine.py` includes Lens 6.
+
+    Checks (`FrontOfficeSpatialMicroTrendEvidence`) across all 15 Week 9 games without
+    breaking any existing 5-lens story convergence locks or fake streak trap detections.
     """
     from intelligence.trends.scores24_pfr_pff_ngs_unified_trend_engine import (
         UnifiedScores24PfrPffNgsTrendEngine,
@@ -394,19 +407,24 @@ def test_10_unified_trend_engine_6th_lens_front_office_spatial_micro_wiring():
 
 
 def test_11_full_bridge_suite_and_receipt_generation():
-    """
-    Run `run_spatial_micro_metrics_pbp_and_dfs_bridge_suite(write_receipt=True)` and verify the
-    receipt artifact is written and 100% green across all 15 Week 9 games.
+    """Run `run_spatial_micro_metrics_pbp_and_dfs_bridge_suite(write_receipt=True)`.
+
+    Verifies the receipt artifact is written and 100% green across all 15 Week 9 games.
     """
     receipt = run_spatial_micro_metrics_pbp_and_dfs_bridge_suite(write_receipt=True)
     assert receipt["status"] == "VERIFIED_PASS"
     assert receipt["exact_formula_verifications"]["all_exact_formulas_verified"] is True
     assert receipt["pbp_175_snap_perturbation_proof"]["rush_yards_shifted_positively"] is True
     assert receipt["pbp_175_snap_perturbation_proof"]["pass_yards_shifted_positively"] is True
-    assert receipt["pbp_175_snap_perturbation_proof"]["sacks_reduced_by_pad_and_disguise_processing"] is True
+    assert (
+        receipt["pbp_175_snap_perturbation_proof"]["sacks_reduced_by_pad_and_disguise_processing"]
+        is True
+    )
     assert receipt["pbp_175_snap_perturbation_proof"]["win_prob_shifted_positively"] is True
     assert receipt["trends_6th_lens_integration"]["games_covered"] == 15
-    assert receipt["trends_6th_lens_integration"]["lens6_front_office_spatial_micro_attached"] is True
+    assert (
+        receipt["trends_6th_lens_integration"]["lens6_front_office_spatial_micro_attached"] is True
+    )
 
     receipt_path = (
         REPO_ROOT

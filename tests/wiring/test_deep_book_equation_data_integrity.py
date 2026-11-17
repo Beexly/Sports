@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""
-DEEP INTEGRITY SPOT-CHECK & VERIFICATION SUITE (2026-11-07)
+"""DEEP INTEGRITY SPOT-CHECK & VERIFICATION SUITE (2026-11-07).
+
 Proves with zero placeholders and zero synthetic templates that:
 1. All 21,419 equations in data/equations/equation_execution_registry.jsonl have real mathematical
-   formulas, real coefficients, real input_features, and real book/paper/module locators (0 'f_EQ_...' placeholders).
+   formulas, real coefficients, real input_features, and real book/paper/module locators
+   (0 'f_EQ_...' placeholders).
 2. intelligence/equations/equation_executor.py contains 0 synthetic math.tanh templates.
-3. Every single graduate monograph (BK-01..BK-25 + GAP-BK-01..08), extracted Drive PDF book (A-BK..F-BK),
-   local football PDF book (Bob Carroll Hidden Game of Football, etc.), and Sovereign 20-Downloads equation
-   (OpenAI Theorems 4-12, Navier-Stokes, Universal Phase-Transition, Core NFL Schemes GSE-SVA..GSE-DWP,
-   GSI Biomechanics WHIM/KTH/Camarillo/SHAAKE/Delaware-Oslo/Rupture Report) is registered, queryable,
-   executable, and deterministically responsive to feature perturbations.
+3. Every single graduate monograph (BK-01..BK-25 + GAP-BK-01..08), extracted Drive PDF book
+   (A-BK..F-BK), local football PDF book (Bob Carroll Hidden Game of Football, etc.), and
+   Sovereign 20-Downloads equation (OpenAI Theorems 4-12, Navier-Stokes, Universal
+   Phase-Transition, Core NFL Schemes GSE-SVA..GSE-DWP, GSI Biomechanics
+   WHIM/KTH/Camarillo/SHAAKE/Delaware-Oslo/Rupture Report) is registered, queryable, executable,
+   and deterministically responsive to feature perturbations.
 4. Every ReasoningTrace embeds the full 7-Step Weekly Cycle (1_usage .. 7_books_last_price_check),
-   5-Track L1-L5 depth audit (with L4 adversary pass & L5 OL->scheme->QB synthesis), and book equation executions.
-5. Zero stale roster data (Geno Smith = NYJ QB season 2026, Mike Evans = SF WR season 2026 across all parquets & CSVs)
-   and zero machine-specific absolute paths in ingestion_registry.jsonl, CORPUS-CENSUS.csv, or RESEARCH-LEDGER.jsonl.
+   5-Track L1-L5 depth audit (with L4 adversary pass & L5 OL->scheme->QB synthesis), and book
+   equation executions.
+5. Zero stale roster data (Geno Smith = NYJ QB season 2026, Mike Evans = SF WR season 2026 across
+   all parquets & CSVs) and zero machine-specific absolute paths in ingestion_registry.jsonl,
+   CORPUS-CENSUS.csv, or RESEARCH-LEDGER.jsonl.
 """
 from __future__ import annotations
 
@@ -41,14 +45,18 @@ def test_equation_registry_21419_zero_placeholders_and_zero_synthetic_tanh() -> 
     assert counts["wired_and_tested"] == counts["total_cataloged"]
     assert counts["placeholder_formula_specs"] == 0
 
-    executor_src = (REPO_ROOT / "intelligence" / "equations" / "equation_executor.py").read_text(encoding="utf-8")
+    executor_src = (
+        REPO_ROOT / "intelligence" / "equations" / "equation_executor.py"
+    ).read_text(encoding="utf-8")
     assert "math.tanh(" not in executor_src
 
     records = load_equation_registry()
     assert len(records) >= 21419
     for rec in records:
         fspec = str(rec.get("formula_spec", ""))
-        assert fspec and not fspec.startswith("f_EQ_"), f"Placeholder formula_spec found on {rec.get('equation_id')}"
+        assert fspec and not fspec.startswith("f_EQ_"), (
+            f"Placeholder formula_spec found on {rec.get('equation_id')}"
+        )
         assert isinstance(rec.get("input_features"), list) and len(rec["input_features"]) >= 1
         assert isinstance(rec.get("coefficients"), dict) and "w_primary" in rec["coefficients"]
         assert str(rec.get("real_source_file", "")).strip() != ""
@@ -63,7 +71,9 @@ def test_all_25_graduate_monographs_and_8_gap_books_executable() -> None:
     for book_id in all_book_ids:
         res_a = execute_book_equations(book_id, vec_a)
         res_b = execute_book_equations(book_id, vec_b)
-        assert res_a["equations_matched_and_executed"] >= 1, f"Book {book_id} had 0 matched equations!"
+        assert res_a["equations_matched_and_executed"] >= 1, (
+            f"Book {book_id} had 0 matched equations!"
+        )
         assert -0.35 <= res_a["aggregate_log_odds_delta"] <= 0.35
         assert res_a["aggregate_log_odds_delta"] != res_b["aggregate_log_odds_delta"], (
             f"Book {book_id} did not respond to feature perturbation!"
@@ -141,7 +151,10 @@ def test_sovereign_20_downloads_equations_and_theorems_executable() -> None:
     for eq_id in sovereign_eq_ids:
         matches = lookup_equations_by_book_or_source(eq_id, limit=5)
         assert len(matches) >= 1, f"Missing Sovereign equation {eq_id}"
-        res = execute_book_equations(eq_id, {"epa_per_play": 0.16, "pressure_rate": 0.31, "vorticity_omega": 1.6})
+        res = execute_book_equations(
+            eq_id,
+            {"epa_per_play": 0.16, "pressure_rate": 0.31, "vorticity_omega": 1.6},
+        )
         assert res["equations_matched_and_executed"] >= 1
 
 
@@ -165,16 +178,35 @@ def test_reasoning_trace_embeds_7step_weekly_cycle_5tracks_and_book_equations() 
 
     ft = trace.get("five_tracks_l1_to_l5", {})
     assert ft.get("all_5_tracks_reached_l5") is True
-    assert ft.get("synthesis_order_enforced") == ["1_offensive_line", "2_coaching_scheme", "4_qb_behavior"]
+    assert ft.get("synthesis_order_enforced") == [
+        "1_offensive_line",
+        "2_coaching_scheme",
+        "4_qb_behavior",
+    ]
 
     be = trace.get("book_equations_executed", {})
-    for b_key in ("BK-01", "BK-10", "BK-25", "Navier-Stokes", "Universal Phase-Transition", "Core NFL Schemes", "Hidden Game of Football"):
+    for b_key in (
+        "BK-01",
+        "BK-10",
+        "BK-25",
+        "Navier-Stokes",
+        "Universal Phase-Transition",
+        "Core NFL Schemes",
+        "Hidden Game of Football",
+    ):
         assert b_key in be
         assert be[b_key]["equations_matched_and_executed"] >= 1
 
 
 def test_zero_stale_rosters_and_clean_repo_relative_paths() -> None:
-    ros_pq = REPO_ROOT / "intelligence" / "data" / "warehouse" / "normalized" / "ds_nflverse_roster_annual.parquet"
+    ros_pq = (
+        REPO_ROOT
+        / "intelligence"
+        / "data"
+        / "warehouse"
+        / "normalized"
+        / "ds_nflverse_roster_annual.parquet"
+    )
     if pq is not None:
         rows = pq.read_table(ros_pq).to_pylist()
     else:
@@ -182,13 +214,26 @@ def test_zero_stale_rosters_and_clean_repo_relative_paths() -> None:
         rows = json.loads(sidecar.read_text(encoding="utf-8")).get("sample_rows", [])
     geno = [r for r in rows if r["full_name"] == "Geno Smith"]
     evans = [r for r in rows if r["full_name"] == "Mike Evans"]
-    assert len(geno) >= 1 and geno[0]["team"] == "NYJ" and geno[0]["position"] == "QB" and geno[0]["season"] == "2026"
-    assert len(evans) >= 1 and evans[0]["team"] == "SF" and evans[0]["position"] == "WR" and evans[0]["season"] == "2026"
+    assert (
+        len(geno) >= 1
+        and geno[0]["team"] == "NYJ"
+        and geno[0]["position"] == "QB"
+        and geno[0]["season"] == "2026"
+    )
+    assert (
+        len(evans) >= 1
+        and evans[0]["team"] == "SF"
+        and evans[0]["position"] == "WR"
+        and evans[0]["season"] == "2026"
+    )
 
-    wh_reg = (REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry.jsonl").read_text(encoding="utf-8")
+    wh_reg_path = REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry.jsonl"
+    wh_reg = wh_reg_path.read_text(encoding="utf-8")
     assert "C:\\Users\\Garrett" not in wh_reg and "C:/Users/Garrett" not in wh_reg
 
-    wh_dedup_path = REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry_deduped.jsonl"
+    wh_dedup_path = (
+        REPO_ROOT / "intelligence" / "data" / "warehouse" / "ingestion_registry_deduped.jsonl"
+    )
     if wh_dedup_path.exists():
         wh_dedup = wh_dedup_path.read_text(encoding="utf-8")
         assert "C:\\Users\\Garrett" not in wh_dedup and "C:/Users/Garrett" not in wh_dedup
@@ -199,7 +244,9 @@ def test_zero_stale_rosters_and_clean_repo_relative_paths() -> None:
     rl_txt = (REPO_ROOT / "docs" / "wiring" / "RESEARCH-LEDGER.jsonl").read_text(encoding="utf-8")
     assert "C:/Users/Garrett/Sports/" not in rl_txt and "C:\\Users\\Garrett" not in rl_txt
 
-    seal_router = REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "seal-pot-cognitive-router.ts"
+    seal_router = (
+        REPO_ROOT / "packages" / "mcp-equations-server" / "src" / "seal-pot-cognitive-router.ts"
+    )
     if seal_router.exists():
         assert "5,367" not in seal_router.read_text(encoding="utf-8")
     zw_router = REPO_ROOT / "scripts" / "ops" / "zero_waste_model_router.py"

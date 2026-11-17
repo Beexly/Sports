@@ -231,7 +231,7 @@ def test_gse_to_gsi_rlvr_compiler_verifiers_and_frontier_benchmarks(tmp_path: Pa
 
 
 def test_wave20_registry_and_rag_bayesian_hygiene_kernels() -> None:
-    """Verify all 169 WIRED_V3 registry entries and Wave 20 RAG/Bayesian/Defensive kernels."""
+    """Verify the monotone WIRED_V3 registry (>= 211 since Wave 23) and Wave 20 kernels."""
     reg_path = (
         REPO_ROOT
         / "docs"
@@ -242,14 +242,14 @@ def test_wave20_registry_and_rag_bayesian_hygiene_kernels() -> None:
     )
     reg = json.loads(reg_path.read_text(encoding="utf-8"))
     entries = reg["entries"]
-    assert reg["total_submitted_urls"] == 183
-    assert reg["total_entries"] == 169
-    assert reg["total_unique_entries"] == 169
+    assert reg["total_submitted_urls"] >= 228
+    assert reg["total_entries"] == reg["total_unique_entries"] == len(entries)
+    assert reg["total_unique_entries"] >= 211
     assert len(WAVE20_CORPUS_ENTRIES) == 26
     assert len(WAVE20B_CORPUS_ENTRIES) == 12
     assert len(WAVE21_CORPUS_ENTRIES) == 34
     urls = [str(e["url"]) for e in entries]
-    assert len(set(urls)) == 169
+    assert len(set(urls)) == len(entries)
     by_url = {str(e["url"]): e for e in entries}
     for req_url in (
         "https://github.com/facebookresearch/xformers",

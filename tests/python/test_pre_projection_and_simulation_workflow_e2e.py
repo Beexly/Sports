@@ -1,13 +1,17 @@
 """End-to-End Verification Suite for Pre-Projection & 10,000-World × 175-Snap Simulation Workflows.
 
 Verifies that:
-1. `universal_nfl_metric_and_situational_engine.py` (6 Universal Metric Suites + 6 Deep Non-Stationary Kernels),
-2. `mega_sweep_2026_11_06_wiring_engine.py` (Double-DQN, PER-DQN, CPC-SimCLR, autoresearch, Laptop Hardware Governor,
-   gse-ml-service 5 models, Kats BOCPD, NOFX 4-plan gate, 30 CSVs + 10 Innovation Kernels),
-3. `pinecone_hybrid_corpus_index.py` (Hybrid dense + BM25 sparse + RRF + cross-encoder rerank), and
-4. `posthog_cloud_context_layer.py` (Cloud feature flags + HogQL warehouse SQL + error tracking + LLM analytics)
+1. `universal_nfl_metric_and_situational_engine.py` (6 Universal Metric Suites + 6 Deep
+   Non-Stationary Kernels),
+2. `mega_sweep_2026_11_06_wiring_engine.py` (Double-DQN, PER-DQN, CPC-SimCLR, autoresearch,
+   Laptop Hardware Governor, gse-ml-service 5 models, Kats BOCPD, NOFX 4-plan gate, 30 CSVs +
+   10 Innovation Kernels),
+3. `pinecone_hybrid_corpus_index.py` (Hybrid dense + BM25 sparse + RRF + cross-encoder rerank),
+4. `posthog_cloud_context_layer.py` (Cloud feature flags + HogQL warehouse SQL + error tracking +
+   LLM analytics)
 are directly wired into:
-- `scripts/ops/gse_coach_mind_simulator.py` (`compute_pre_projection_universal_and_deep_non_stationary_priors`,
+- `scripts/ops/gse_coach_mind_simulator.py`
+  (`compute_pre_projection_universal_and_deep_non_stationary_priors`,
   `simulate_matchup_pbp`, and `simulate_full_game`), and
 - `scripts/ops/gse_connected_game_workflow.py` (`compile_stage1_to_stage2_simulation_priors`).
 """
@@ -15,9 +19,8 @@ are directly wired into:
 from __future__ import annotations
 
 import time
-import numpy as np
-import pytest
 
+import numpy as np
 from scripts.ops.gse_coach_mind_simulator import (
     compute_pre_projection_universal_and_deep_non_stationary_priors,
     load_live_corpus_situational_conditioner,
@@ -59,7 +62,7 @@ def test_pre_projection_universal_and_deep_non_stationary_priors_full_stack() ->
     assert priors["away_team"] == "JAX"
     assert priors["home_team"] == "BAL"
 
-    # Verify all 6 Universal Metric Suites and all 6 Deep Non-Stationary Kernels for both away & home
+    # Verify all 6 Universal Metric Suites and 6 Deep Non-Stationary Kernels for away & home
     for side_key in ("away_universal_360", "home_universal_360"):
         dossier = priors[side_key]
         for suite_key in ("qb", "receiving", "rushing", "trench", "defense_idp", "situational"):
@@ -88,7 +91,9 @@ def test_pre_projection_universal_and_deep_non_stationary_priors_full_stack() ->
     assert "kats_bocpd" in ms
     assert "nofx_4_plan_gate" in ms
     assert "morning_sweep_30_csv_and_10_kernels" in ms
-    assert ms["morning_sweep_30_csv_and_10_kernels"]["ngs_and_commercial_100_percent_ingested"] is True
+    assert (
+        ms["morning_sweep_30_csv_and_10_kernels"]["ngs_and_commercial_100_percent_ingested"] is True
+    )
 
     # Verify Pinecone hybrid corpus & PostHog cloud context layers
     assert priors["pinecone_hybrid_corpus"]["hybrid_pipeline_verified"] is True
@@ -128,9 +133,18 @@ def test_non_stationary_trauma_and_tut_fatigue_scale_monotonically_with_trench_d
     clean_cond = clean_priors["simulation_trajectory_conditioners"]
     duress_cond = duress_priors["simulation_trajectory_conditioners"]
 
-    assert duress_cond["home_tut_fatigue_q3_q4_sack_mult"] > clean_cond["home_tut_fatigue_q3_q4_sack_mult"]
-    assert duress_cond["home_qb_trauma_twp_hazard_mult"] > clean_cond["home_qb_trauma_twp_hazard_mult"]
-    assert duress_cond["home_qb_trauma_comp_decay_per_hit"] > clean_cond["home_qb_trauma_comp_decay_per_hit"]
+    assert (
+        duress_cond["home_tut_fatigue_q3_q4_sack_mult"]
+        > clean_cond["home_tut_fatigue_q3_q4_sack_mult"]
+    )
+    assert (
+        duress_cond["home_qb_trauma_twp_hazard_mult"]
+        > clean_cond["home_qb_trauma_twp_hazard_mult"]
+    )
+    assert (
+        duress_cond["home_qb_trauma_comp_decay_per_hit"]
+        > clean_cond["home_qb_trauma_comp_decay_per_hit"]
+    )
 
 
 def test_simulate_matchup_pbp_conditioned_10k_worlds_175_snaps_and_speed() -> None:
@@ -142,7 +156,11 @@ def test_simulate_matchup_pbp_conditioned_10k_worlds_175_snaps_and_speed() -> No
         "posted_home_spread": 2.5,
         "posted_total": 43.5,
         "away": {"qb_tier": "QB1", "off_epa_override": 0.048},
-        "home": {"qb_tier": "EMERGENCY_QB3_UDFA", "off_epa_override": -0.246, "sack_rate_mult": 1.48},
+        "home": {
+            "qb_tier": "EMERGENCY_QB3_UDFA",
+            "off_epa_override": -0.246,
+            "sack_rate_mult": 1.48,
+        },
     }
 
     # Warm-up run
@@ -182,7 +200,12 @@ def test_simulate_matchup_pbp_conditioned_10k_worlds_175_snaps_and_speed() -> No
     assert sim["matchup"] == "JAX @ BAL"
     assert sim["coachMindsetHash"] == expected_hash
     assert "pre_projection_universal_and_deep_priors" in sim
-    assert sim["pre_projection_universal_and_deep_priors"]["simulation_trajectory_conditioners"]["wired_into_10k_world_175_snap_simulation"] is True
+    assert (
+        sim["pre_projection_universal_and_deep_priors"]["simulation_trajectory_conditioners"][
+            "wired_into_10k_world_175_snap_simulation"
+        ]
+        is True
+    )
 
     vecs = sim["vectors"]
     assert isinstance(vecs["home_score"], np.ndarray)
@@ -190,7 +213,9 @@ def test_simulate_matchup_pbp_conditioned_10k_worlds_175_snaps_and_speed() -> No
     assert vecs["away_score"].shape == (10000,)
     assert vecs["home_wr1_yds"].shape == (10000,)
     assert vecs["away_wr1_yds"].shape == (10000,)
-    assert elapsed_ms < 3500.0, f"Expected vectorized 10k×175 simulation < 3500ms, got {elapsed_ms:.1f}ms"
+    assert elapsed_ms < 3500.0, (
+        f"Expected vectorized 10k×175 simulation < 3500ms, got {elapsed_ms:.1f}ms"
+    )
 
 
 def test_compile_stage1_to_stage2_simulation_priors_couples_pre_projection_priors() -> None:

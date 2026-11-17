@@ -1,4 +1,4 @@
-"""Unit tests verifying live execution of all 758 installed skills (`execute_all_installed_skills_suite.py`)."""
+"""Unit tests verifying live execution of all 758 installed skills."""
 
 from __future__ import annotations
 

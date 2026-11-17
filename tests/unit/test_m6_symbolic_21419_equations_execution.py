@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Unit & Verification Suite for Milestone M6 (21,419 Symbolic `formula_ast` Enrichment,
-Vectorized NumPy 9-Kernel Execution in `BookEquationsToStatsCompiler`, M5 Feature Store
-Binding, Pure Domain Backward Compatibility, and `F11` MongoDB Atlas Credentials Adapter).
+"""Unit & Verification Suite for Milestone M6.
+
+Covers 21,419 Symbolic `formula_ast` Enrichment, Vectorized NumPy 9-Kernel Execution in
+`BookEquationsToStatsCompiler`, M5 Feature Store Binding, Pure Domain Backward Compatibility,
+and `F11` MongoDB Atlas Credentials Adapter.
 
 Covers:
   - `test_01_all_21419_mind_equations_jsonl_enriched_with_symbolic_ast_and_m5_features`:
@@ -34,9 +36,6 @@ import sys
 import types
 import unittest
 from pathlib import Path
-from typing import Any, Dict, Set
-
-import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -50,7 +49,7 @@ except ModuleNotFoundError:
     _pytest_shim.fixture = lambda *args, **kwargs: (lambda fn: fn)  # type: ignore[attr-defined]
     sys.modules["pytest"] = _pytest_shim
 
-from intelligence.metrics.book_equations_to_stats_compiler import (
+from intelligence.metrics.book_equations_to_stats_compiler import (  # noqa: E402
     BOOK_DOMAIN_CROSSWALK_PATH,
     BOOK_DOMAINS_6,
     CANONICAL_92_STATS_AND_METRICS,
@@ -65,13 +64,13 @@ from intelligence.metrics.book_equations_to_stats_compiler import (
     compute_survival_and_point_process_metrics,
     compute_voronoi_and_continuum_geometry_metrics,
 )
-from intelligence.retrieval.pinecone_hybrid_corpus_index import (
+from intelligence.retrieval.pinecone_hybrid_corpus_index import (  # noqa: E402
     CorpusDocument,
     MongoDBDossierArchiveAdapter,
     load_env_local_secrets,
 )
 
-EXPECTED_9_OPERATOR_KERNELS: Set[str] = {
+EXPECTED_9_OPERATOR_KERNELS: set[str] = {
     "bilinear_interaction",
     "rational_pade",
     "exponential_survival",
@@ -95,8 +94,9 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
     def test_01_all_21419_mind_equations_jsonl_enriched_with_symbolic_ast_and_m5_features(
         self,
     ) -> None:
-        """M6.1: Verify all 21,419 rows in data/mind/equations.jsonl have non-empty formula_ast,
-        valid formula_type across all 9 operator kernels, and bound m5_feature_keys.
+        """M6.1: Verify all 21,419 rows in data/mind/equations.jsonl have formula_ast.
+
+        Checks valid formula_type across all 9 operator kernels and bound m5_feature_keys.
         """
         self.assertTrue(
             MIND_EQUATIONS_JSONL_PATH.is_file(),
@@ -113,7 +113,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
             f"Expected 21,419 equations in {MIND_EQUATIONS_JSONL_PATH}, got {len(lines)}",
         )
 
-        observed_kernels: Set[str] = set()
+        observed_kernels: set[str] = set()
         active_count = 0
         held_count = 0
 
@@ -141,14 +141,20 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
                 0,
                 f"Equation {eq_id} formula_ast must be non-empty",
             )
-            kernel_in_ast = ast_obj.get("kernel") or ast_obj.get("op") or ast_obj.get("formula_type")
+            kernel_in_ast = (
+                ast_obj.get("kernel") or ast_obj.get("op") or ast_obj.get("formula_type")
+            )
             self.assertEqual(
                 kernel_in_ast,
                 f_type,
                 f"Equation {eq_id} formula_ast kernel {kernel_in_ast!r} != formula_type {f_type!r}",
             )
 
-            m5_keys = rec.get("m5_feature_keys") or ast_obj.get("m5_feature_keys") or ast_obj.get("feature_keys")
+            m5_keys = (
+                rec.get("m5_feature_keys")
+                or ast_obj.get("m5_feature_keys")
+                or ast_obj.get("feature_keys")
+            )
             self.assertIsInstance(
                 m5_keys,
                 list,
@@ -167,17 +173,19 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
             else:
                 held_count += 1
 
+        missing_kernels = EXPECTED_9_OPERATOR_KERNELS - observed_kernels
         self.assertEqual(
             observed_kernels,
             EXPECTED_9_OPERATOR_KERNELS,
-            f"Expected all 9 kernels in equations.jsonl, missing: {EXPECTED_9_OPERATOR_KERNELS - observed_kernels}",
+            f"Expected all 9 kernels in equations.jsonl, missing: {missing_kernels}",
         )
         self.assertEqual(active_count, 20019)
         self.assertEqual(held_count, 1400)
 
     def test_02_m5_ground_truth_feature_store_loaded_and_bound(self) -> None:
-        """M6.2: Verify BookEquationsToStatsCompiler loads the M5 112-CSV feature store and binds
-        normalized team/entity features into compilation.
+        """M6.2: Verify BookEquationsToStatsCompiler loads the M5 112-CSV feature store.
+
+        Ensures normalized team/entity features are bound into compilation.
         """
         m5_path = REPO_ROOT / "data" / "mind" / "nov7_9_112_csv_feature_store_2026.json"
         self.assertTrue(m5_path.is_file(), f"Missing M5 feature store at {m5_path}")
@@ -198,12 +206,15 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
         self.assertEqual(len(teams_features), 32)
         self.assertEqual(set(teams_features.keys()), set(NFL_32_TEAMS))
 
-        # Verify M5 feature keys referenced in equations.jsonl exist in the M5 feature catalog/team vectors
+        # Verify M5 feature keys referenced in equations.jsonl exist in catalog/team vectors
         sample_team_vec = teams_features["BUF"]
         first_eq = json.loads(
             MIND_EQUATIONS_JSONL_PATH.read_text(encoding="utf-8").splitlines()[0]
         )
-        m5_keys = first_eq.get("m5_feature_keys") or first_eq["formula_ast"].get("m5_feature_keys", [])
+        m5_keys = (
+            first_eq.get("m5_feature_keys")
+            or first_eq["formula_ast"].get("m5_feature_keys", [])
+        )
         self.assertGreaterEqual(len(m5_keys), 1)
         catalog_keys = set(sample_team_vec.keys()) | set(
             m5_store.get("feature_keys_catalog", [])
@@ -218,8 +229,10 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
     def test_03_vectorized_numpy_9_kernels_sensitivity_and_distinct_player_evaluations(
         self,
     ) -> None:
-        """M6.2: Verify vectorized NumPy evaluation across all 9 operator kernels responds to
-        input perturbations and produces distinct player evaluations within [-0.35, 0.35].
+        """M6.2: Verify vectorized NumPy evaluation across all 9 operator kernels.
+
+        Responds to input perturbations and produces distinct player evaluations
+        within [-0.35, 0.35].
         """
         # 1. Input perturbation sensitivity test on BUF team entity
         pkt_low = self.compiler.compile_92_stats_for_entity(
@@ -274,7 +287,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
         self.assertGreaterEqual(
             changed_domains,
             4,
-            f"Expected >= 4 domain equation signals to change under input perturbation, got {changed_domains}",
+            f"Expected >= 4 domain signals to change under perturbation, got {changed_domains}",
         )
 
         # Compiled 92 stats must differ and remain strictly finite & bounded
@@ -284,7 +297,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
             places=4,
         )
         for pkt in (pkt_low, pkt_high):
-            for dom, sig in pkt.domain_equation_signals.items():
+            for _dom, sig in pkt.domain_equation_signals.items():
                 self.assertTrue(math.isfinite(sig))
                 self.assertGreaterEqual(sig, -0.35)
                 self.assertLessEqual(sig, 0.35)
@@ -292,7 +305,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
             self.assertGreaterEqual(log_odds_adj, -0.35)
             self.assertLessEqual(log_odds_adj, 0.35)
 
-        # 2. Distinct player evaluations test (even when precomputed_domain_tuple is passed or omitted)
+        # 2. Distinct player evaluations (when precomputed_domain_tuple is passed or omitted)
         p_buf_qb = self.compiler.compile_92_stats_for_entity(
             entity_id="BUF_QB1",
             entity_name="Josh Allen (QB)",
@@ -340,7 +353,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
     def test_04_pure_domain_functions_backward_compatibility_and_m5_crosswalk_preserved(
         self,
     ) -> None:
-        """Verify the 6 pure domain functions remain 100% backward compatible and M5 crosswalk keys persist."""
+        """Verify the 6 pure domain functions remain backward compatible and M5 crosswalk keys."""
         area = compute_shoelace_polygon_area([(-3.0, 0.0), (3.0, 0.0), (3.0, -4.0), (-3.0, -4.0)])
         self.assertAlmostEqual(area, 24.0, places=6)
 
@@ -435,7 +448,7 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
         self.assertIn("skeleton_shelf_13_books", cw)
 
     def test_05_all_16_book_equations_to_stats_compiler_tests_pass(self) -> None:
-        """Execute all 16 test_01..test_16 functions from tests.unit.test_book_equations_to_stats_compiler."""
+        """Execute all 16 test_01..test_16 functions from test_book_equations_to_stats_compiler."""
         from intelligence.metrics.book_equations_to_stats_compiler import (
             COMPILED_STATS_OUTPUT_PATH,
             COMPILER_RECEIPT_OUTPUT_PATH,
@@ -476,8 +489,9 @@ class TestM6Symbolic21419EquationsExecution(unittest.TestCase):
                 fn()
 
     def test_06_mongodb_atlas_persistent_credentials_adapter_wiring(self) -> None:
-        """F11: Verify load_env_local_secrets() and MongoDBDossierArchiveAdapter load
-        persistent organization credentials from /shared/user/.gemini/secrets/mongodb_atlas.env
+        """F11: Verify load_env_local_secrets() and MongoDBDossierArchiveAdapter.
+
+        Loads persistent org credentials from /shared/user/.gemini/secrets/mongodb_atlas.env
         without exposing raw credentials in git or archive receipts.
         """
         secret_env_path = Path("/shared/user/.gemini/secrets/mongodb_atlas.env")

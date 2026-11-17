@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-tests/test_morning_analytics_sweep_wiring.py
+"""tests/test_morning_analytics_sweep_wiring.py.
+
 ============================================
 Verifies that the Nov 7, 2026 Morning Analytics Sweep (35 full-table CSVs)
 is cleanly ingested and wired into:
@@ -12,7 +12,6 @@ is cleanly ingested and wired into:
 from __future__ import annotations
 
 from intelligence.external_charting.morning_sweep_2026_11_07 import (
-    build_morning_sweep_summary,
     get_player_situational_highlights,
     get_qb_supporting_cast_scores,
     get_seattle_red_zone_inversion_profile,

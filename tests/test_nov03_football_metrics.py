@@ -23,6 +23,20 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+from intelligence.coaching.drive_dire_situations import (  # noqa: E402
+    compute_dire_situation_drive_efficiency,
+)
+from intelligence.coaching.pgwe_luck_audit import compute_pgwe_luck_delta  # noqa: E402
+from intelligence.coaching.pressure_answer import (  # noqa: E402
+    compute_arby_pressure_survival_index,
+)
+from intelligence.coaching.redzone import (  # noqa: E402
+    compute_two_minute_trust_and_ez_regression,
+)
+from intelligence.coaching.schedule_cleaned_epa import (  # noqa: E402
+    compute_schedule_adjusted_epa,
+    detect_paired_adot_drop,
+)
 from intelligence.vision.polygon_zone_breach import (  # noqa: E402
     compute_zone_void_breach,
     point_in_polygon,
@@ -30,20 +44,6 @@ from intelligence.vision.polygon_zone_breach import (  # noqa: E402
     polygon_area,
     rect_zone,
     winding_number,
-)
-from intelligence.coaching.drive_dire_situations import (  # noqa: E402
-    compute_dire_situation_drive_efficiency,
-)
-from intelligence.coaching.pgwe_luck_audit import compute_pgwe_luck_delta  # noqa: E402
-from intelligence.coaching.schedule_cleaned_epa import (  # noqa: E402
-    compute_schedule_adjusted_epa,
-    detect_paired_adot_drop,
-)
-from intelligence.coaching.redzone import (  # noqa: E402
-    compute_two_minute_trust_and_ez_regression,
-)
-from intelligence.coaching.pressure_answer import (  # noqa: E402
-    compute_arby_pressure_survival_index,
 )
 
 SQUARE = [(0.0, 0.0), (10.0, 0.0), (10.0, 10.0), (0.0, 10.0)]
@@ -361,7 +361,7 @@ def test_arby_survival_curve_is_monotone_decreasing():
     assert len(curve) >= 2
     survivals = [p["sack_avoidance_survival"] for p in curve]
     assert all(0.0 <= s <= 1.0 for s in survivals)
-    for a, b in zip(survivals, survivals[1:]):
+    for a, b in zip(survivals, survivals[1:], strict=False):
         assert b <= a + 1e-9
     assert all(p["at_risk"] >= 30 for p in curve)
 

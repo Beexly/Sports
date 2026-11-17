@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""
-Unit & Integration Tests for the 95-Repository PacktPublishing + 5-PDF Clean-Room Engine
-(`intelligence/conformal_and_arrow_memory/packt_17repo_conformal_sports_arrow_and_agent_harness_engine.py`)
-and its integration with `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py`.
+"""Unit & Integration Tests for the 95-Repository PacktPublishing + 5-PDF Clean-Room Engine.
+
+Covers `packt_17repo_conformal_sports_arrow_and_agent_harness_engine.py` and its
+integration with `intelligence/dfs/dk_200pt_situational_dfs_and_projection_engine.py`.
 """
 
 from __future__ import annotations
@@ -12,8 +12,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-
-from intelligence.conformal_and_arrow_memory.packt_17repo_conformal_sports_arrow_and_agent_harness_engine import (
+from intelligence.conformal_and_arrow_memory.packt_17repo_conformal_sports_arrow_and_agent_harness_engine import (  # noqa: E501
     CLINICAL_HEALTHCARE_WORKFLOWS_PERMITTED,
     GSI_HEALTHCARE_REPO_SLUG,
     GSI_KGRAPH_HEALTHCARE_SUBTREE_SLUG,
@@ -80,7 +79,9 @@ def test_pillar1_applied_conformal_prediction_and_edge_cases() -> None:
         AppliedConformalPredictionEngine.split_inductive_conformal_interval([], [], [250.0])
 
     with pytest.raises(ValueError, match="cannot be empty"):
-        AppliedConformalPredictionEngine.conformalized_quantile_regression_cqr([], [], [], [200.0], [260.0])
+        AppliedConformalPredictionEngine.conformalized_quantile_regression_cqr(
+            [], [], [], [200.0], [260.0]
+        )
 
     cal_y = [240.0, 255.0, 270.0, 230.0, 285.0, 260.0, 250.0, 275.0, 265.0, 245.0]
     cal_hat = [245.0, 250.0, 265.0, 238.0, 278.0, 258.0, 252.0, 270.0, 262.0, 248.0]
@@ -109,7 +110,7 @@ def test_pillar1_applied_conformal_prediction_and_edge_cases() -> None:
     )
     assert 0.0 < va["p0_lower"] <= va["venn_abers_prob"] <= va["p1_upper"] <= 1.0
 
-    # Edge cases: tied calibration scores, test_score equal to calibration score, all-0 and all-1 labels
+    # Edge cases: tied calibration scores, test_score in cal scores, all-0 & all-1 labels
     va_tie = AppliedConformalPredictionEngine.inductive_venn_abers_multiprobability(
         cal_scores=[0.10, 0.50, 0.50, 0.90],
         cal_labels=[0, 1, 0, 0],
@@ -148,8 +149,8 @@ def test_pillar1_applied_conformal_prediction_and_edge_cases() -> None:
 
 
 def test_pillar2_sports_analytics_and_superlearner_simplex() -> None:
-    """Tests Pythagorean expectation (gamma=2.37), Bradley-Terry, Dixon-Coles, and SuperLearner."""
-    res = SportsAnalyticsAndEnsemblePredictionEngine.evaluate_pythagorean_bradley_terry_and_dixon_coles(
+    """Tests Pythagorean (gamma=2.37), Bradley-Terry, Dixon-Coles, and SuperLearner."""
+    res = SportsAnalyticsAndEnsemblePredictionEngine.evaluate_pythagorean_bradley_terry_and_dixon_coles(  # noqa: E501
         home_pf_per_g=28.5,
         home_pa_per_g=19.2,
         away_pf_per_g=21.4,
@@ -179,7 +180,9 @@ def test_pillar2_sports_analytics_and_superlearner_simplex() -> None:
         dtype=np.float64,
     )
     y_col = X_col[:, 0].copy()
-    sl_col = SportsAnalyticsAndEnsemblePredictionEngine.fit_simplex_superlearner_stacking(X_col, y_col)
+    sl_col = SportsAnalyticsAndEnsemblePredictionEngine.fit_simplex_superlearner_stacking(
+        X_col, y_col
+    )
     assert sl_col["weights_sum_to_one"] is True
     assert sl_col["stacking_beats_or_ties_best_single"] is True
 
@@ -214,13 +217,18 @@ def test_pillar4_zero_copy_apache_arrow_and_64byte_arena() -> None:
     assert meta["columnar_fortran_contiguous"] is True
     assert meta["zero_copy_shares_memory"] is True
     assert meta["zero_copy_buffer_protocol_verified"] is True
-    assert int(view[:, 0].__array_interface__["data"][0]) == int(view.__array_interface__["data"][0])
+    assert int(view[:, 0].__array_interface__["data"][0]) == int(
+        view.__array_interface__["data"][0]
+    )
 
 
 def test_pillar5_llm_as_code_dag_context_and_harnesslab_security() -> None:
-    """Tests compounding failure decay proof, DAG O(depth) unwinding, and HarnessLab security gate."""
-    proof = AgenticProgrammingAndSecureHarnessEngine.compute_orchestrator_compounding_failure_vs_llm_as_code(
-        per_step_accuracy=0.95, horizon_steps=50
+    """Tests compounding failure decay, DAG unwinding, and HarnessLab security gate."""
+    proof = (
+        AgenticProgrammingAndSecureHarnessEngine
+        .compute_orchestrator_compounding_failure_vs_llm_as_code(
+            per_step_accuracy=0.95, horizon_steps=50
+        )
     )
     assert proof["llm_as_orchestrator_survival_prob"] < 0.10
     assert proof["llm_as_code_deterministic_loop_compliance"] == 1.0
@@ -229,15 +237,21 @@ def test_pillar5_llm_as_code_dag_context_and_harnesslab_security() -> None:
     assert dag["step3_live_context_excludes_c_raw_transcript"] is True
     assert dag["step3_retains_c_one_line_summary"] is True
 
-    deny = AgenticProgrammingAndSecureHarnessEngine.evaluate_harnesslab_security_and_persistent_memory(
-        TrustTier.EXTERNAL, DataClass.SECRET, ActionRisk.PRIVILEGED_OPERATION, phase="tool_call"
+    deny = (
+        AgenticProgrammingAndSecureHarnessEngine
+        .evaluate_harnesslab_security_and_persistent_memory(
+            TrustTier.EXTERNAL,
+            DataClass.SECRET,
+            ActionRisk.PRIVILEGED_OPERATION,
+            phase="tool_call",
+        )
     )
     assert deny["decision"] == "deny"
     assert deny["sampling_temperature"] == 0.15
 
 
 def test_pillar6_no_more_lucky_models_purged_cv_and_heavy_juice_firewall() -> None:
-    """Tests multiple-testing Lucky Model rejection, purged/embargoed CV, and -300 heavy-juice trap rejection."""
+    """Tests Lucky Model rejection, purged/embargoed CV, and -300 firewall."""
     lucky = AntiOverfittingAndDataHygieneEngine.evaluate_no_more_lucky_models_deflation_gate(
         observed_hit_rate=0.56, sample_size_n=75, num_candidate_models_tested=200
     )
@@ -257,12 +271,26 @@ def test_pillar6_no_more_lucky_models_purged_cv_and_heavy_juice_firewall() -> No
 
 
 def test_pillar7_bayesian_causal_network_science_symbolic_huber_and_gsi_survival() -> None:
-    """Tests Empirical Bayes player_gp shrinkage, do-calculus, PageRank, Hilbert cap, symbolic/Huber, and GSI Weibull."""
-    eb_small = BayesianCausalAndNetworkScienceEngine.hierarchical_empirical_bayes_player_prop_shrinkage(
-        observed_player_mean=95.0, player_active_gp=2, within_player_sigma=24.0, positional_prior_mean=65.0, between_player_tau=12.0
+    """Tests Empirical Bayes, do-calculus, PageRank, Hilbert cap, Huber, & GSI Weibull."""
+    eb_small = (
+        BayesianCausalAndNetworkScienceEngine
+        .hierarchical_empirical_bayes_player_prop_shrinkage(
+            observed_player_mean=95.0,
+            player_active_gp=2,
+            within_player_sigma=24.0,
+            positional_prior_mean=65.0,
+            between_player_tau=12.0,
+        )
     )
-    eb_large = BayesianCausalAndNetworkScienceEngine.hierarchical_empirical_bayes_player_prop_shrinkage(
-        observed_player_mean=95.0, player_active_gp=15, within_player_sigma=24.0, positional_prior_mean=65.0, between_player_tau=12.0
+    eb_large = (
+        BayesianCausalAndNetworkScienceEngine
+        .hierarchical_empirical_bayes_player_prop_shrinkage(
+            observed_player_mean=95.0,
+            player_active_gp=15,
+            within_player_sigma=24.0,
+            positional_prior_mean=65.0,
+            between_player_tau=12.0,
+        )
     )
     # 2 active games shrinks much more toward positional prior than 15 active games
     assert eb_small["shrinkage_factor_b"] > eb_large["shrinkage_factor_b"]
@@ -274,15 +302,21 @@ def test_pillar7_bayesian_causal_network_science_symbolic_huber_and_gsi_survival
     assert hilbert["bounded_within_0_35_cap"] is True
     assert abs(hilbert["delta_log_odds"]) == 0.35
 
-    sym_huber = BayesianCausalAndNetworkScienceEngine.symbolic_pareto_discovery_and_huber_spline_regression(
-        x_pressure=[0.18, 0.22, 0.26, 0.30, 0.34, 0.38, 0.42, 0.46, 0.25, 0.35],
-        x_wind_mph=[5.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 30.0, 10.0, 22.0],
-        y_epa_with_outliers=[0.16, 0.11, 0.05, -0.02, -0.10, -0.21, -0.34, -2.85, 0.08, -0.14],
+    sym_huber = (
+        BayesianCausalAndNetworkScienceEngine
+        .symbolic_pareto_discovery_and_huber_spline_regression(
+            x_pressure=[0.18, 0.22, 0.26, 0.30, 0.34, 0.38, 0.42, 0.46, 0.25, 0.35],
+            x_wind_mph=[5.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 30.0, 10.0, 22.0],
+            y_epa_with_outliers=[0.16, 0.11, 0.05, -0.02, -0.10, -0.21, -0.34, -2.85, 0.08, -0.14],
+        )
     )
     assert sym_huber["huber_beats_or_ties_ols_under_outliers"] is True
 
     gsi = AntiOverfittingAndDataHygieneEngine.gsi_orthopedic_weibull_return_to_play_hazard(
-        days_since_injury=21.0, weibull_scale_lambda=28.0, weibull_shape_k=1.8, reinjury_history_count=1
+        days_since_injury=21.0,
+        weibull_scale_lambda=28.0,
+        weibull_shape_k=1.8,
+        reinjury_history_count=1,
     )
     assert gsi["clinical_workflows_permitted"] is False
     assert gsi["sports_spine_import_permitted"] is False
@@ -290,25 +324,35 @@ def test_pillar7_bayesian_causal_network_science_symbolic_huber_and_gsi_survival
 
 
 def test_pillar8_wave4_simulation_variance_reduction_markov_fem_graphrag_drl() -> None:
-    """Tests Wave 4 Simulation Variance Reduction, LHS/Sobol QMC, Absorbing Markov (including near-singular), RK4, FEM, GraphRAG & DRL."""
-    vr = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.antithetic_and_control_variate_dfs_monte_carlo()
+    """Tests Wave 4 Variance Reduction, QMC, Absorbing Markov, RK4, FEM, GraphRAG & DRL."""
+    vr = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.antithetic_and_control_variate_dfs_monte_carlo()  # noqa: E501
     assert vr["variance_reduction_factor_vrf"] > 1.5
     assert vr["control_variate_improves_over_antithetic"] is True
-    assert vr["variance_reduced_standard_error"] < vr["antithetic_only_standard_error"] < vr["crude_standard_error"]
+    assert (
+        vr["variance_reduced_standard_error"]
+        < vr["antithetic_only_standard_error"]
+        < vr["crude_standard_error"]
+    )
 
-    qmc = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.latin_hypercube_and_sobol_qmc_simulation()
+    qmc = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.latin_hypercube_and_sobol_qmc_simulation()  # noqa: E501
     assert qmc["qmc_discrepancy_beats_crude"] is True
     assert qmc["qmc_se_beats_crude"] is True
 
-    tail = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.importance_sampling_200pt_dfs_tail_estimator()
+    tail = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.importance_sampling_200pt_dfs_tail_estimator()  # noqa: E501
     assert tail["tail_se_reduction_ratio"] > 1.5
     assert abs(tail["importance_sampling_prob_200plus"] - tail["crude_prob_200plus"]) < 0.02
 
-    markov = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.absorbing_markov_chain_drive_fundamental_matrix()
-    for zone, probs in markov["absorption_probabilities"].items():
+    markov = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.absorbing_markov_chain_drive_fundamental_matrix()  # noqa: E501
+    for _zone, probs in markov["absorption_probabilities"].items():
         assert abs(probs["row_sum"] - 1.0) < 1e-5
-    assert markov["expected_points_by_zone"]["RED_ZONE"] > markov["expected_points_by_zone"]["PLUS_TERRITORY"]
-    assert markov["expected_points_by_zone"]["PLUS_TERRITORY"] > markov["expected_points_by_zone"]["MIDFIELD"]
+    assert (
+        markov["expected_points_by_zone"]["RED_ZONE"]
+        > markov["expected_points_by_zone"]["PLUS_TERRITORY"]
+    )
+    assert (
+        markov["expected_points_by_zone"]["PLUS_TERRITORY"]
+        > markov["expected_points_by_zone"]["MIDFIELD"]
+    )
 
     # Near-singular stress test: transient row of T has spectral radius rho(T) -> 1.0
     T_near_singular = np.array(
@@ -329,27 +373,32 @@ def test_pillar8_wave4_simulation_variance_reduction_markov_fem_graphrag_drl() -
         ],
         dtype=np.float64,
     )
-    markov_ns = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.absorbing_markov_chain_drive_fundamental_matrix(
-        T=T_near_singular, S=S_near_singular, max_spectral_radius=0.999
+    markov_ns = (
+        SimulationVarianceReductionFEMGraphRAGAndDRLEngine
+        .absorbing_markov_chain_drive_fundamental_matrix(
+            T=T_near_singular, S=S_near_singular, max_spectral_radius=0.999
+        )
     )
     assert markov_ns["near_singular_contraction_applied"] is True
     assert markov_ns["effective_spectral_radius_rho"] <= 0.999 + 1e-6
-    for zone, probs in markov_ns["absorption_probabilities"].items():
+    for _zone, probs in markov_ns["absorption_probabilities"].items():
         assert abs(probs["row_sum"] - 1.0) < 1e-5
 
-    rk4 = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.rk4_richardson_fatigue_and_welch_batch_means_diagnostics()
+    rk4 = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.rk4_richardson_fatigue_and_welch_batch_means_diagnostics()  # noqa: E501
     assert rk4["richardson_truncation_error_bound"] < 1e-5
     assert rk4["batch_means_decorrelated_pass"] is True
 
-    fem_rag_drl = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.gsi_fem_von_mises_graphrag_context_and_drl_4th_down()
+    fem_rag_drl = SimulationVarianceReductionFEMGraphRAGAndDRLEngine.gsi_fem_von_mises_graphrag_context_and_drl_4th_down()  # noqa: E501
     assert fem_rag_drl["gsi_fem_biomechanics"]["clinical_workflows_permitted"] is False
     assert fem_rag_drl["applied_context_engineering"]["highest_priority_at_edges"] is True
     assert fem_rag_drl["drl_4th_down_and_curriculum"]["optimal_action"] == "GO_FOR_IT"
 
 
 def test_end_to_end_packt_95_suite_and_dk_200pt_integration() -> None:
-    """Runs the full 95-repo + 5-PDF suite and verifies its integration into the 200+ Pt DFS engine."""
-    suite_res = run_packt_95repo_conformal_sports_arrow_bayesian_simulation_and_harness_suite(write_receipt=False)
+    """Runs the 95-repo + 5-PDF suite and verifies its integration into the 200+ Pt DFS engine."""
+    suite_res = run_packt_95repo_conformal_sports_arrow_bayesian_simulation_and_harness_suite(
+        write_receipt=False
+    )
     assert suite_res["status"] == "PASS"
     assert suite_res["quarantine_and_pdfs_verification"]["total_unique_packt_repos"] == 95
     assert suite_res["quarantine_and_pdfs_verification"]["total_local_pdfs"] == 5
@@ -359,13 +408,27 @@ def test_end_to_end_packt_95_suite_and_dk_200pt_integration() -> None:
     assert str(Path.home()).lower() not in serialized.lower()
     assert Path.home().as_posix().lower() not in serialized.lower()
 
-    omniverse_res = run_complete_omniverse_reasoning_simulation_projection_and_200pt_dfs_suite(write_receipt=True)
+    omniverse_res = run_complete_omniverse_reasoning_simulation_projection_and_200pt_dfs_suite(
+        write_receipt=True
+    )
     assert omniverse_res["status"] == "PASS"
-    w2_sim = omniverse_res["draftkings_200pt_championship_dfs"]["wave2_lineup_vs_field_contest_simulation_summary"]
-    assert w2_sim["antithetic_and_control_variate_diagnostics"]["control_variate_improves_over_antithetic"] is True
-    assert w2_sim["latin_hypercube_and_sobol_qmc_diagnostics"]["qmc_discrepancy_beats_crude"] is True
+    w2_sim = omniverse_res["draftkings_200pt_championship_dfs"][
+        "wave2_lineup_vs_field_contest_simulation_summary"
+    ]
+    assert (
+        w2_sim["antithetic_and_control_variate_diagnostics"][
+            "control_variate_improves_over_antithetic"
+        ]
+        is True
+    )
+    assert (
+        w2_sim["latin_hypercube_and_sobol_qmc_diagnostics"]["qmc_discrepancy_beats_crude"] is True
+    )
     assert w2_sim["importance_sampling_200pt_tail_diagnostics"]["tail_se_reduction_ratio"] > 1.5
-    assert w2_sim["absorbing_markov_drive_ep_by_zone"]["RED_ZONE"] > w2_sim["absorbing_markov_drive_ep_by_zone"]["OWN_TERRITORY"]
+    assert (
+        w2_sim["absorbing_markov_drive_ep_by_zone"]["RED_ZONE"]
+        > w2_sim["absorbing_markov_drive_ep_by_zone"]["OWN_TERRITORY"]
+    )
     packt_sec = omniverse_res["packt_95repo_conformal_simulation_arrow_and_harness"]
     assert packt_sec["status"] == "PASS"
     assert packt_sec["total_unique_packt_repos"] == 95

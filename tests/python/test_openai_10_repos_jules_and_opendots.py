@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 
 from intelligence.ops.openai_ecosystem_jules_and_opendots_engine import (
     build_opendots_ag_ui_human_review_card,
@@ -125,10 +125,31 @@ def test_jules_opendots_copilotkit_parallel_mcp_and_28_skills() -> None:
 
 
 def test_jules_167_sessions_75_patches_audit_and_pinecone_20_vectors() -> None:
-    jules_json_path = REPO_ROOT / "data" / "audits" / "google_jules_167_sessions_and_75_patches_audit_2026_11_06.json"
-    openai_json_path = REPO_ROOT / "data" / "audits" / "openai_10_repos_jules_and_opendots_audit_2026_11_06.json"
-    bible_md_path = REPO_ROOT / "docs" / "engine" / "research" / "2026-11-06" / "OPENAI_10_REPOS_JULES_AND_OPENDOTS_WIRING_BIBLE.md"
-    ts_bridge_path = REPO_ROOT / "packages" / "prediction-engine" / "src" / "engine" / "openai-ecosystem-jules-opendots-bridge.ts"
+    jules_json_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "google_jules_167_sessions_and_75_patches_audit_2026_11_06.json"
+    )
+    openai_json_path = (
+        REPO_ROOT / "data" / "audits" / "openai_10_repos_jules_and_opendots_audit_2026_11_06.json"
+    )
+    bible_md_path = (
+        REPO_ROOT
+        / "docs"
+        / "engine"
+        / "research"
+        / "2026-11-06"
+        / "OPENAI_10_REPOS_JULES_AND_OPENDOTS_WIRING_BIBLE.md"
+    )
+    ts_bridge_path = (
+        REPO_ROOT
+        / "packages"
+        / "prediction-engine"
+        / "src"
+        / "engine"
+        / "openai-ecosystem-jules-opendots-bridge.ts"
+    )
 
     for p in (jules_json_path, openai_json_path, bible_md_path, ts_bridge_path):
         assert p.is_file(), f"Missing {p}"
@@ -155,7 +176,14 @@ def test_jules_167_sessions_75_patches_audit_and_pinecone_20_vectors() -> None:
 
     checked_files = [
         REPO_ROOT / "intelligence" / "ops" / "openai_ecosystem_jules_and_opendots_engine.py",
-        REPO_ROOT / "packages" / "prediction-engine" / "src" / "engine" / "openai-ecosystem-jules-opendots-bridge.ts",
+        (
+            REPO_ROOT
+            / "packages"
+            / "prediction-engine"
+            / "src"
+            / "engine"
+            / "openai-ecosystem-jules-opendots-bridge.ts"
+        ),
         REPO_ROOT / "scripts" / "ops" / "harvest_and_wire_openai_9repos_jules_and_opendots.py",
         jules_json_path,
         openai_json_path,

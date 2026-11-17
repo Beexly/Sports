@@ -110,8 +110,11 @@ def test_verify_flags_out_of_range_p(monkeypatch, tmp_path):
 
 
 def test_verify_flags_non_binary_y(monkeypatch, tmp_path):
-    """y must be 0 or 1; a stray PUSH/VOID leaking in as 2 means the WHERE
-    clause broke and the population is no longer win/loss."""
+    """Y must be 0 or 1.
+
+    A stray PUSH/VOID leaking in as 2 means the WHERE clause broke and the
+    population is no longer win/loss.
+    """
     p = _write(tmp_path, [row(1, y="2")])
     monkeypatch.setattr(pe, "_run", lambda sql: BOXED.replace("3143", "1"))
     v = pe.verify(p)

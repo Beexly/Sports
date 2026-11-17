@@ -7,7 +7,6 @@ in-memory Polars frame.
 from __future__ import annotations
 
 import polars as pl
-
 from intelligence.ingest import nflreadpy_adapter as adapter
 
 REQUIRED = {

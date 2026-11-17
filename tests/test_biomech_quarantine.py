@@ -35,7 +35,8 @@ def test_generator_explicitly_unsets_flags(monkeypatch):
 
 
 def test_card_has_no_telemetry_and_sibling_stamped():
-    card = json.loads((ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json").read_text(encoding="utf-8"))
+    card_path = ROOT / "data" / "engine" / "mnf_chi_sea_360_locked_card_2026_11_02.json"
+    card = json.loads(card_path.read_text(encoding="utf-8"))
     banned = [
         "biomech_kinetic_overlay",
         "batch9_biomech_and_metabolic_telemetry",
@@ -43,7 +44,8 @@ def test_card_has_no_telemetry_and_sibling_stamped():
         "lumen_field_cleat_turf_slip_prob",
     ]
     assert not any(k in json.dumps(card) for k in banned)
-    tele = json.loads((ROOT / "data" / "engine" / "mnf_chi_sea_360_telemetry_2026_11_02.json").read_text(encoding="utf-8"))
+    tele_path = ROOT / "data" / "engine" / "mnf_chi_sea_360_telemetry_2026_11_02.json"
+    tele = json.loads(tele_path.read_text(encoding="utf-8"))
     assert tele["class"] == "RESEARCH_TELEMETRY_NOT_FOR_PUBLICATION"
 
 

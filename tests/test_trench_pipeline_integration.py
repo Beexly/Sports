@@ -12,9 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts" / "ops"))
 
-from intelligence.coaching.dc_pressure import pressure_index_with_trench
-from intelligence.coaching.ol_provider import weak_link_survival_for_grades
-from intelligence.coaching.trench_pocket_physics import (
+from gse_coach_mind_simulator import trench_survival_drop  # noqa: E402
+from intelligence.coaching.dc_pressure import pressure_index_with_trench  # noqa: E402
+from intelligence.coaching.ol_provider import weak_link_survival_for_grades  # noqa: E402
+from intelligence.coaching.trench_pocket_physics import (  # noqa: E402
     analyze_qb_escape_vectors,
     compute_cox_weibull_pocket_survival,
     compute_fourth_down_uncertainty_gate,
@@ -22,7 +23,6 @@ from intelligence.coaching.trench_pocket_physics import (
     compute_ruscio_pressure_win_probability,
     compute_weak_link_ol_efficiency,
 )
-from gse_coach_mind_simulator import trench_survival_drop
 
 
 def test_backup_lt_drops_weak_link_more_than_arithmetic_mean(monkeypatch):
@@ -45,7 +45,9 @@ def test_backup_lt_drops_weak_link_more_than_arithmetic_mean(monkeypatch):
 def test_named_trench_functions_execute():
     weak = compute_weak_link_ol_efficiency([0.92, 0.88, 0.86, 0.84, 0.52])
     assert weak["efficiency"] < weak["arithmetic_mean"]
-    pip = compute_pipping_adjusted_ol_efficiency([0.9, 0.88, 0.86, 0.84, 0.82], opponent_pass_rush=0.4, chip_help=0.2)
+    pip = compute_pipping_adjusted_ol_efficiency(
+        [0.9, 0.88, 0.86, 0.84, 0.82], opponent_pass_rush=0.4, chip_help=0.2
+    )
     assert 0.0 < pip["pipping_survival"] < 1.0
     surv = compute_cox_weibull_pocket_survival(2.8, {"rusher_threat": 0.6})
     assert 0.0 < surv["survival_at_throw"] <= 1.0

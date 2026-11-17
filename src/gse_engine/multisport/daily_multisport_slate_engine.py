@@ -24,6 +24,15 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
+    compute_nhl_spatiotemporal_shot_xg,
+    optimize_fpl_multiweek_squad_and_captaincy,
+)
+from gse_engine.memory.wave21_tracking_biomech_rlvr_and_market_hold_suite import (
+    compute_metrica_skillcorner_pitch_control,
+    compute_multisport_pybaseball_hockeyr_and_vorp_metrics,
+)
+
 ESPN_SCOREBOARD_ENDPOINTS: dict[str, str] = {
     "NBA": "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
     "NHL": "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
@@ -32,6 +41,7 @@ ESPN_SCOREBOARD_ENDPOINTS: dict[str, str] = {
         "basketball/mens-college-basketball/scoreboard"
     ),
     "SOCCER": "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard",
+    "MLB": "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard",
 }
 
 _LEAGUE_ALIASES: dict[str, str] = {
@@ -44,6 +54,8 @@ _LEAGUE_ALIASES: dict[str, str] = {
     "EPL": "SOCCER",
     "UCL": "SOCCER",
     "ENG.1": "SOCCER",
+    "MLB": "MLB",
+    "BASEBALL": "MLB",
 }
 
 
@@ -151,6 +163,62 @@ def update_bc_aci_interval(
     )
 
 
+@dataclass(frozen=True, slots=True)
+class DirectionalBcAciState:
+    """Asymmetric directional Bias-Corrected Adaptive Conformal Inference state."""
+
+    alpha_low: float = 0.05
+    alpha_high: float = 0.05
+    gamma: float = 0.02
+    q_low: float = 12.0
+    q_high: float = 12.0
+    bias_center: float = 0.0
+    beta: float = 0.05
+    updates: int = 0
+
+
+def predict_directional_bc_aci_band(
+    state: DirectionalBcAciState,
+    raw_mean: float,
+) -> tuple[float, float, float]:
+    """Compute asymmetric directional conformal prediction band."""
+    adjusted_center = float(raw_mean + state.bias_center)
+    lower = float(adjusted_center - state.q_low)
+    upper = float(adjusted_center + state.q_high)
+    return (adjusted_center, lower, upper)
+
+
+def update_directional_bc_aci_interval(
+    state: DirectionalBcAciState,
+    prediction: float,
+    observed: float,
+) -> DirectionalBcAciState:
+    """Update asymmetric lower and upper quantiles after observing an outcome."""
+    _, lower, upper = predict_directional_bc_aci_band(state, prediction)
+    miss_low = 1.0 if float(observed) < lower else 0.0
+    miss_high = 1.0 if float(observed) > upper else 0.0
+    signed_residual = float(observed - prediction)
+    new_bias = (1.0 - state.beta) * state.bias_center + state.beta * signed_residual
+    new_q_low = max(
+        1e-6,
+        state.q_low - max(1.0, state.q_low) * state.gamma * (state.alpha_low - miss_low),
+    )
+    new_q_high = max(
+        1e-6,
+        state.q_high - max(1.0, state.q_high) * state.gamma * (state.alpha_high - miss_high),
+    )
+    return DirectionalBcAciState(
+        alpha_low=state.alpha_low,
+        alpha_high=state.alpha_high,
+        gamma=state.gamma,
+        q_low=float(new_q_low),
+        q_high=float(new_q_high),
+        bias_center=float(new_bias),
+        beta=state.beta,
+        updates=state.updates + 1,
+    )
+
+
 def _norm_cdf_vec(x: NDArray[np.float64]) -> NDArray[np.float64]:
     """Compute standard normal CDF via vectorized Abramowitz-Stegun 7.1.26 erf."""
     z = x / math.sqrt(2.0)
@@ -218,6 +286,16 @@ def _prob_to_american_odds(prob: float) -> int:
     return int(round(100.0 * (1.0 - p) / p))
 
 
+def compute_frechet_hoeffding_joint_bounds(probs: Sequence[float]) -> tuple[float, float]:
+    """Return exact Frechet-Hoeffding joint probability bounds [L, U] for marginals."""
+    if not probs:
+        raise ValueError("probs must be non-empty")
+    clipped = [min(max(float(p), 0.0), 1.0) for p in probs]
+    lower = max(0.0, sum(clipped) - float(len(clipped) - 1))
+    upper = min(clipped)
+    return (float(lower), float(upper))
+
+
 def price_copula_conformal_sgp(
     legs: Sequence[CopulaLegSpec],
     rho_matrix: Sequence[Sequence[float]],
@@ -268,7 +346,9 @@ def price_copula_conformal_sgp(
         u_draws = _norm_cdf_vec(normals)
 
     joint_hits = np.all(u_draws <= probs[None, :], axis=1)
-    joint_sim_prob = float(np.clip(np.mean(joint_hits), 0.0, 1.0))
+    fh_low, fh_high = compute_frechet_hoeffding_joint_bounds(probs.tolist())
+    raw_joint_sim = float(np.clip(np.mean(joint_hits), 0.0, 1.0))
+    joint_sim_prob = float(min(max(raw_joint_sim, fh_low), fh_high))
     indep_prob = float(np.clip(math.prod(probs.tolist()), 0.0, 1.0))
     correlation_lift = (
         float(joint_sim_prob / indep_prob) if indep_prob > 1e-12 else 1.0
@@ -304,6 +384,9 @@ def price_copula_conformal_sgp(
         "n_legs": int(k),
         "copula_family": "student_t" if (df is not None and df > 0.0) else "gaussian",
         "joint_sim_prob": joint_sim_prob,
+        "frechet_lower_bound": float(fh_low),
+        "frechet_upper_bound": float(fh_high),
+        "within_frechet_bounds": bool(fh_low - 1e-12 <= joint_sim_prob <= fh_high + 1e-12),
         "indep_prob": indep_prob,
         "correlation_lift": correlation_lift,
         "fair_american_odds": fair_american_odds,
@@ -370,11 +453,11 @@ def build_dixon_coles_pmf(
 
 
 def _normalize_league(league: str) -> str:
-    """Normalize sport/league aliases to NBA, NCAAB, NHL, or SOCCER."""
+    """Normalize sport/league aliases to NBA, NCAAB, NHL, SOCCER, or MLB."""
     key = league.strip().upper()
     if key not in _LEAGUE_ALIASES:
         raise ValueError(
-            f"Unsupported league '{league}'. Expected one of NBA, NCAAB, NHL, SOCCER."
+            f"Unsupported league '{league}'. Expected one of NBA, NCAAB, NHL, SOCCER, MLB."
         )
     return _LEAGUE_ALIASES[key]
 
@@ -655,6 +738,100 @@ def _simulate_soccer_10k(
     }
 
 
+def _simulate_mlb_10k(
+    home_team: str,
+    away_team: str,
+    *,
+    home_rating: float | None,
+    away_rating: float | None,
+    spread_line: float | None,
+    total_line: float | None,
+    pace_factor: float,
+    home_b2b: bool,
+    away_b2b: bool,
+    circadian_shift_hours: float,
+    altitude_m: float,
+    bc_aci_state: BcAciState | None,
+    n_worlds: int,
+    rng: np.random.Generator,
+) -> dict[str, Any]:
+    """Simulate MLB via Gamma-Poisson run dispersion + extra-innings resolution."""
+    eff_spread = -1.5 if spread_line is None else float(spread_line)
+    eff_total = 8.5 if total_line is None else float(total_line)
+
+    if home_rating is not None and away_rating is not None:
+        lam_home = max(1.2, float(home_rating))
+        lam_away = max(1.2, float(away_rating))
+    else:
+        delta_r = max(-1.8, min(1.8, -0.38 * eff_spread))
+        lam_home = max(1.2, 0.5 * eff_total + 0.5 * delta_r)
+        lam_away = max(1.2, 0.5 * eff_total - 0.5 * delta_r)
+
+    alt_excess = max(0.0, float(altitude_m) - 1000.0) / 1000.0
+    alt_boost = 1.0 + 0.085 * alt_excess
+    circ_abs = min(4.0, abs(float(circadian_shift_hours)))
+    away_circ_mult = 1.0 - 0.015 * circ_abs
+
+    lam_home = max(0.9, lam_home * pace_factor * alt_boost - (0.14 if home_b2b else 0.0))
+    lam_away = max(
+        0.9,
+        lam_away * pace_factor * alt_boost * away_circ_mult - (0.14 if away_b2b else 0.0),
+    )
+
+    if bc_aci_state is not None:
+        lam_home = max(0.9, lam_home + 0.20 * bc_aci_state.bias_center)
+        lam_away = max(0.9, lam_away + 0.20 * bc_aci_state.bias_center)
+
+    rate_home = rng.gamma(shape=14.0, scale=lam_home / 14.0, size=n_worlds)
+    rate_away = rng.gamma(shape=14.0, scale=lam_away / 14.0, size=n_worlds)
+    reg_home = rng.poisson(rate_home).astype(np.float64)
+    reg_away = rng.poisson(rate_away).astype(np.float64)
+
+    final_home = reg_home.copy()
+    final_away = reg_away.copy()
+    tied = final_home == final_away
+    if np.any(tied):
+        n_ties = int(np.sum(tied))
+        extra_home_prob = (lam_home + 0.15) / (lam_home + lam_away + 0.25)
+        extra_base = rng.integers(0, 2, size=n_ties).astype(np.float64)
+        extra_edge = rng.integers(1, 3, size=n_ties).astype(np.float64)
+        home_wins_extra = rng.random(n_ties) < extra_home_prob
+        final_home[tied] += extra_base + np.where(home_wins_extra, extra_edge, 0.0)
+        final_away[tied] += extra_base + np.where(home_wins_extra, 0.0, extra_edge)
+
+    total_scores = final_home + final_away
+    home_win_prob = float(np.mean(final_home > final_away))
+    away_win_prob = float(np.mean(final_away > final_home))
+    runline_cover = float(np.mean((final_home + eff_spread) > final_away))
+    over_prob = float(np.mean(total_scores > eff_total))
+    under_prob = float(np.mean(total_scores < eff_total))
+
+    return {
+        "league": "MLB",
+        "home_team": home_team,
+        "away_team": away_team,
+        "n_worlds": int(n_worlds),
+        "mean_home": float(np.mean(final_home)),
+        "mean_away": float(np.mean(final_away)),
+        "mean_total": float(np.mean(total_scores)),
+        "std_home": float(np.std(final_home)),
+        "std_away": float(np.std(final_away)),
+        "std_total": float(np.std(total_scores)),
+        "home_win_prob": home_win_prob,
+        "away_win_prob": away_win_prob,
+        "draw_prob": 0.0,
+        "regulation_tie_prob": float(np.mean(tied)),
+        "spread_line": eff_spread,
+        "runline_home_cover_prob": runline_cover,
+        "spread_home_cover_prob": runline_cover,
+        "total_line": eff_total,
+        "over_prob": over_prob,
+        "under_prob": under_prob,
+        "circadian_shift_hours": float(circadian_shift_hours),
+        "altitude_m": float(altitude_m),
+    }
+
+
 def simulate_multisport_matchup_10k(
     league: str,
     home_team: str = "HOME",
@@ -674,36 +851,12 @@ def simulate_multisport_matchup_10k(
     bc_aci_state: BcAciState | None = None,
     rho_dc: float = -0.10,
     red_card_prob: float = 0.08,
+    circadian_shift_hours: float = 0.0,
+    altitude_m: float = 0.0,
     n_worlds: int = 10000,
     seed: int = 20261116,
 ) -> dict[str, Any]:
-    """Run a vectorized 10,000-world simulation for NBA, NCAAB, NHL, or SOCCER.
-
-    Args:
-        league: Target league (``NBA``, ``NCAAB``, ``NHL``, ``SOCCER`` or alias).
-        home_team: Home team name or code.
-        away_team: Away team name or code.
-        home_rating: Optional league-specific offensive expectation.
-        away_rating: Optional league-specific offensive expectation.
-        spread_line: Optional home spread / puckline / Asian handicap.
-        total_line: Optional game total line.
-        pace_factor: Tempo multiplier (> 0).
-        three_pt_rate_home: Basketball 3PT attempt rate for home variance scaling.
-        three_pt_rate_away: Basketball 3PT attempt rate for away variance scaling.
-        home_b2b: Whether home side is on a back-to-back.
-        away_b2b: Whether away side is on a back-to-back.
-        home_rest_days: Days since home team's prior game.
-        away_rest_days: Days since away team's prior game.
-        bc_aci_state: Optional BC-ACI state for bias centering and dispersion scaling.
-        rho_dc: Dixon-Coles low-score dependence parameter for soccer.
-        red_card_prob: Total match red-card probability for soccer tail modeling.
-        n_worlds: Monte Carlo worlds (default 10,000).
-        seed: Deterministic RNG seed.
-
-    Returns:
-        Dictionary with conserved marginal means (``mean_total == mean_home + mean_away``),
-        win/draw/cover/total probabilities, and simulation metadata.
-    """
+    """Run a vectorized 10,000-world simulation for NBA, NCAAB, NHL, SOCCER, or MLB."""
     if n_worlds <= 0:
         raise ValueError(f"n_worlds must be > 0, got {n_worlds}")
     if pace_factor <= 0.0:
@@ -712,9 +865,8 @@ def simulate_multisport_matchup_10k(
     norm_league = _normalize_league(league)
     rng = np.random.default_rng(seed)
 
-    if norm_league in {"NBA", "NCAAB"}:
-        return _simulate_basketball_10k(
-            norm_league,
+    if norm_league == "MLB":
+        return _simulate_mlb_10k(
             home_team,
             away_team,
             home_rating=home_rating,
@@ -722,6 +874,45 @@ def simulate_multisport_matchup_10k(
             spread_line=spread_line,
             total_line=total_line,
             pace_factor=pace_factor,
+            home_b2b=home_b2b,
+            away_b2b=away_b2b,
+            circadian_shift_hours=circadian_shift_hours,
+            altitude_m=altitude_m,
+            bc_aci_state=bc_aci_state,
+            n_worlds=n_worlds,
+            rng=rng,
+        )
+
+    alt_excess = max(0.0, float(altitude_m) - 1000.0) / 1000.0
+    circ_abs = min(4.0, abs(float(circadian_shift_hours)))
+    eff_pace = float(pace_factor) * (1.0 + 0.055 * alt_excess) * (1.0 - 0.008 * circ_abs)
+    eff_away_rating = away_rating
+    eff_spread = spread_line
+    eff_total = total_line
+    if circ_abs > 0.0:
+        if away_rating is not None:
+            eff_away_rating = float(away_rating) * (1.0 - 0.015 * circ_abs)
+        elif norm_league in {"NBA", "NCAAB"}:
+            base_sp = -3.5 if spread_line is None else float(spread_line)
+            base_tot = (
+                (226.5 if norm_league == "NBA" else 144.5)
+                if total_line is None
+                else float(total_line)
+            )
+            eff_spread = base_sp - 0.50 * circ_abs
+            eff_total = base_tot - 0.45 * circ_abs
+
+    res: dict[str, Any]
+    if norm_league in {"NBA", "NCAAB"}:
+        res = _simulate_basketball_10k(
+            norm_league,
+            home_team,
+            away_team,
+            home_rating=home_rating,
+            away_rating=eff_away_rating,
+            spread_line=eff_spread,
+            total_line=eff_total,
+            pace_factor=eff_pace,
             three_pt_rate_home=three_pt_rate_home,
             three_pt_rate_away=three_pt_rate_away,
             home_b2b=home_b2b,
@@ -732,35 +923,45 @@ def simulate_multisport_matchup_10k(
             n_worlds=n_worlds,
             rng=rng,
         )
-    if norm_league == "NHL":
-        return _simulate_nhl_10k(
+    elif norm_league == "NHL":
+        nhl_away = eff_away_rating
+        if circ_abs > 0.0 and nhl_away is None:
+            nhl_away = 2.85 * (1.0 - 0.015 * circ_abs)
+        res = _simulate_nhl_10k(
             home_team,
             away_team,
             home_rating=home_rating,
-            away_rating=away_rating,
-            spread_line=spread_line,
-            total_line=total_line,
-            pace_factor=pace_factor,
+            away_rating=nhl_away,
+            spread_line=eff_spread,
+            total_line=eff_total,
+            pace_factor=eff_pace,
             home_b2b=home_b2b,
             away_b2b=away_b2b,
             bc_aci_state=bc_aci_state,
             n_worlds=n_worlds,
             rng=rng,
         )
-    return _simulate_soccer_10k(
-        home_team,
-        away_team,
-        home_rating=home_rating,
-        away_rating=away_rating,
-        spread_line=spread_line,
-        total_line=total_line,
-        pace_factor=pace_factor,
-        rho_dc=rho_dc,
-        red_card_prob=red_card_prob,
-        bc_aci_state=bc_aci_state,
-        n_worlds=n_worlds,
-        rng=rng,
-    )
+    else:
+        soc_away = eff_away_rating
+        if circ_abs > 0.0 and soc_away is None:
+            soc_away = 1.20 * (1.0 - 0.015 * circ_abs)
+        res = _simulate_soccer_10k(
+            home_team,
+            away_team,
+            home_rating=home_rating,
+            away_rating=soc_away,
+            spread_line=eff_spread,
+            total_line=eff_total,
+            pace_factor=eff_pace,
+            rho_dc=rho_dc,
+            red_card_prob=red_card_prob,
+            bc_aci_state=bc_aci_state,
+            n_worlds=n_worlds,
+            rng=rng,
+        )
+    res["circadian_shift_hours"] = float(circadian_shift_hours)
+    res["altitude_m"] = float(altitude_m)
+    return res
 
 
 def _offline_fallback_fixtures(date_str: str) -> dict[str, list[dict[str, Any]]]:
@@ -890,6 +1091,42 @@ def _offline_fallback_fixtures(date_str: str) -> dict[str, list[dict[str, Any]]]
                 "away_rating": 1.36,
                 "home_b2b": False,
                 "away_b2b": False,
+                "odds_available": True,
+                "source": "offline_fallback",
+            },
+        ],
+        "MLB": [
+            {
+                "event_id": "offline-mlb-1",
+                "league": "MLB",
+                "home_team": "LAD",
+                "away_team": "NYY",
+                "start_time_utc": f"{date_str}T23:10:00Z",
+                "spread_line": -1.5,
+                "total_line": 8.5,
+                "home_rating": 4.65,
+                "away_rating": 4.10,
+                "home_b2b": False,
+                "away_b2b": False,
+                "circadian_shift_hours": 3.0,
+                "altitude_m": 85.0,
+                "odds_available": True,
+                "source": "offline_fallback",
+            },
+            {
+                "event_id": "offline-mlb-2",
+                "league": "MLB",
+                "home_team": "COL",
+                "away_team": "SD",
+                "start_time_utc": f"{date_str}T00:40:00Z",
+                "spread_line": 1.5,
+                "total_line": 11.0,
+                "home_rating": 5.30,
+                "away_rating": 5.85,
+                "home_b2b": False,
+                "away_b2b": False,
+                "circadian_shift_hours": 1.0,
+                "altitude_m": 1609.0,
                 "odds_available": True,
                 "source": "offline_fallback",
             },
@@ -1102,6 +1339,92 @@ def _derive_fixture_play(
     }
 
 
+def evaluate_multisport_sabermetrics_and_pitch_control_overlay(
+    *,
+    bb: int = 60,
+    hbp: int = 8,
+    singles: int = 105,
+    doubles: int = 34,
+    triples: int = 3,
+    hr: int = 29,
+    ab: int = 540,
+    sf: int = 5,
+    fenwick_for: int = 1280,
+    fenwick_against: int = 1110,
+    xgf: float = 68.4,
+    xga: float = 55.2,
+    player_proj_pts: float = 28.5,
+    replacement_baseline_pts: float = 19.2,
+    target_xy: tuple[float, float] = (32.0, 14.0),
+    attackers_xyv: Sequence[tuple[float, float, float, float]] = (
+        (30.0, 12.0, 4.0, 1.0),
+        (25.0, 18.0, 3.0, -1.0),
+    ),
+    defenders_xyv: Sequence[tuple[float, float, float, float]] = (
+        (36.0, 14.0, -2.0, 0.5),
+        (33.0, 19.0, 1.0, -1.5),
+    ),
+    rink_x_ft: float = 72.0,
+    rink_y_ft: float = 9.0,
+    is_rebound: bool = True,
+    is_rush: bool = False,
+    skater_diff: int = 1,
+) -> dict[str, Any]:
+    """Compute cross-league sabermetric, NHL xG, pitch-control, and FPL overlay."""
+    saber = compute_multisport_pybaseball_hockeyr_and_vorp_metrics(
+        bb=bb,
+        hbp=hbp,
+        singles=singles,
+        doubles=doubles,
+        triples=triples,
+        hr=hr,
+        ab=ab,
+        sf=sf,
+        fenwick_for=fenwick_for,
+        fenwick_against=fenwick_against,
+        xgf=xgf,
+        xga=xga,
+        player_proj_pts=player_proj_pts,
+        replacement_baseline_pts=replacement_baseline_pts,
+    )
+    pitch = compute_metrica_skillcorner_pitch_control(
+        target_xy, attackers_xyv, defenders_xyv
+    )
+    shot_xg = compute_nhl_spatiotemporal_shot_xg(
+        rink_x_ft=rink_x_ft,
+        rink_y_ft=rink_y_ft,
+        is_rebound=is_rebound,
+        is_rush=is_rush,
+        skater_diff=skater_diff,
+    )
+    fpl_cands = [
+        {"player_id": f"fpl_{i:02d}", "cost": 6.0 + 0.3 * i, "xpts": [6.5 - 0.1 * i, 5.8, 5.4]}
+        for i in range(13)
+    ]
+    fpl = optimize_fpl_multiweek_squad_and_captaincy(fpl_cands, horizon_weeks=3, budget_cap=100.0)
+    vals = [
+        float(saber["mlb_woba"]),
+        float(saber["nhl_fenwick_pct"]),
+        float(saber["nhl_xg_share"]),
+        float(saber["nfl_vorp"]),
+        float(pitch["attacker_pitch_control"]),
+        float(shot_xg["xg_prob"]),
+        float(fpl["net_horizon_expected_points"]),
+    ]
+    return {
+        "schema": "wave26_sabermetric_pitch_control_overlay_v1",
+        "mlb_woba": float(saber["mlb_woba"]),
+        "nhl_fenwick_pct": float(saber["nhl_fenwick_pct"]),
+        "nhl_xg_share": float(saber["nhl_xg_share"]),
+        "nfl_vorp": float(saber["nfl_vorp"]),
+        "nhl_shot_xg": float(shot_xg["xg_prob"]),
+        "soccer_pitch_control_attack": float(pitch["attacker_pitch_control"]),
+        "fpl_captain_id": str(fpl["captain_id"]),
+        "fpl_expected_points": float(fpl["net_horizon_expected_points"]),
+        "all_finite": all(math.isfinite(v) for v in vals),
+    }
+
+
 def render_multisport_daily_card(slate: Mapping[str, Any]) -> str:
     """Render a pure 7-bit ASCII XX/100 confidence card with zero live stake.
 
@@ -1115,11 +1438,18 @@ def render_multisport_daily_card(slate: Mapping[str, Any]) -> str:
     plays = list(slate.get("plays", []))
     source_summary = str(slate.get("source", "offline_fallback"))
 
+    leagues_val = slate.get("leagues", ["NBA", "NHL", "NCAAB", "SOCCER"])
+    leagues_line = (
+        "NBA, NHL, NCAAB, SOCCER (EPL/UCL), MLB"
+        if "MLB" in leagues_val
+        else "NBA, NHL, NCAAB, SOCCER (EPL/UCL)"
+    )
+
     lines: list[str] = [
         f"# MULTI-SPORT DAILY SLATE CARD ({date_str})",
         "",
         "## Governance & Safety Contract",
-        "* Leagues Covered: NBA, NHL, NCAAB, SOCCER (EPL/UCL)",
+        f"* Leagues Covered: {leagues_line}",
         "* Methodology: BC-ACI (arXiv:2412.19318) + CopulaCPTS + 10,000-World Vectorized Sim",
         f"* Data Source: {source_summary}",
         f"* real_money_stake_cleared: {slate.get('real_money_stake_cleared', False)}",
@@ -1183,6 +1513,7 @@ def fetch_live_multisport_slate(
     date_str: str = "2026-11-16",
     timeout_sec: float = 4.0,
     offline: bool = False,
+    include_mlb: bool = False,
     n_worlds: int = 10000,
     seed: int = 20261116,
 ) -> dict[str, Any]:
@@ -1192,6 +1523,7 @@ def fetch_live_multisport_slate(
         date_str: Slate date in ``YYYY-MM-DD`` format.
         timeout_sec: Network timeout per ESPN league request.
         offline: When True, bypasses network calls and uses deterministic offline fixtures.
+        include_mlb: When True, includes MLB as the 5th league across 365-day coverage.
         n_worlds: Monte Carlo simulation worlds per fixture.
         seed: Base RNG seed.
 
@@ -1200,11 +1532,16 @@ def fetch_live_multisport_slate(
         governance flags (``real_money_stake_cleared=False``, ``live_stake_fraction=0.0``),
         and ``card_markdown``.
     """
+    target_leagues: tuple[str, ...] = (
+        ("NBA", "NHL", "NCAAB", "SOCCER", "MLB")
+        if include_mlb
+        else ("NBA", "NHL", "NCAAB", "SOCCER")
+    )
     fallback_by_league = _offline_fallback_fixtures(date_str)
     all_fixtures: list[dict[str, Any]] = []
     league_sources: dict[str, str] = {}
 
-    for league in ("NBA", "NHL", "NCAAB", "SOCCER"):
+    for league in target_leagues:
         fetched: list[dict[str, Any]] = []
         if not offline:
             try:
@@ -1233,6 +1570,8 @@ def fetch_live_multisport_slate(
             total_line=fixture.get("total_line"),
             home_b2b=bool(fixture.get("home_b2b", False)),
             away_b2b=bool(fixture.get("away_b2b", False)),
+            circadian_shift_hours=float(fixture.get("circadian_shift_hours", 0.0)),
+            altitude_m=float(fixture.get("altitude_m", 0.0)),
             n_worlds=n_worlds,
             seed=fixture_seed,
         )
@@ -1246,19 +1585,40 @@ def fetch_live_multisport_slate(
     else:
         overall_source = "offline_fallback"
 
+    overlay = evaluate_multisport_sabermetrics_and_pitch_control_overlay()
     slate: dict[str, Any] = {
         "date": date_str,
         "source": overall_source,
         "league_sources": league_sources,
-        "leagues": ["NBA", "NHL", "NCAAB", "SOCCER"],
+        "leagues": list(target_leagues),
         "n_worlds": int(n_worlds),
         "real_money_stake_cleared": False,
         "live_stake_fraction": 0.0,
+        "sabermetric_pitch_control_overlay": overlay,
         "fixtures": all_fixtures,
         "plays": plays,
     }
     slate["card_markdown"] = render_multisport_daily_card(slate)
     return slate
+
+
+def fetch_365_day_five_league_slate(
+    *,
+    date_str: str = "2026-11-17",
+    timeout_sec: float = 4.0,
+    offline: bool = True,
+    n_worlds: int = 10000,
+    seed: int = 20261117,
+) -> dict[str, Any]:
+    """Run the 365-day 5-league (NBA, NHL, NCAAB, SOCCER, MLB) daily slate engine."""
+    return fetch_live_multisport_slate(
+        date_str=date_str,
+        timeout_sec=timeout_sec,
+        offline=offline,
+        include_mlb=True,
+        n_worlds=n_worlds,
+        seed=seed,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

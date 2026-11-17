@@ -26,3 +26,12 @@ Every cycle must pass exit=0 across:
 5. node scripts/guardrails/em-dash-scan.mjs && node scripts/guardrails/trust-gate.mjs
 Stage explicit changed paths cleanly (never commit scratch traces), update data/engine/lessons_learned_permanent_ledger.jsonl and docs/strategy/HANDOFF.md (pure 7-bit ASCII), commit, push to origin/feat/pregame-engine-dfs-harmony-2026-11-15, and verify PR #1291 stays MERGEABLE.
 ```
+
+## Waves 22-27 Execution Completion Update (2026-11-17 UTC / 2026-11-17 CT)
+
+- **Wave 22**: Cross-branch read-only git plumbing salvage across 43 refs emitted `20,000` deduped AP-06-clean pure-ASCII RLVR records to `brain/feeds/2026-11-17/cross_branch_salvaged_rlvr_feed.jsonl`; 12-vault `build_vault_crosslink_graph` wired into omnibus indexer and continuity hash.
+- **Wave 23**: Expanded `docs/data-sources/research/2026-11-15/oss-corpus-registry.json` to `221/221` unique `WIRED_V3` entries across `241` submitted URLs (Google Research pillars, boosting/graph/literature/`P_spoof`, and `llm-d`/`DSPy`/`NVlabs`) with social gradient quarantined at `live_stage2_weight = 0.0`.
+- **Wave 24**: Built `383,456`-node / `248,720`-edge theorem-to-AST dependency DAG (`data/engine/wave24_theorem_ast_dependency_index_2026_11_17.json`, `is_dag=True`, 6-regime SymPy screens, `5` `G_fire`-quarantined nodes) and upgraded Stage-2 `hybrid_rrf_corpus_and_arxiv_retriever` to 4-way RRF + `G_doc`.
+- **Wave 25**: Wired `30`-scalar Workstreams 2-4 bridge and `kyle_lambda_liquidity_devig` (`cleared=False` hold enforced) into `corpus_situational_integrator.py` and `pre_sim_total_intelligence_gate.py`.
+- **Wave 26**: Enforced Week 11+ `OPERATOR_SIM_HOLD` per game row in `walk_forward_ablation.py`, added `rliable` IQM (`0.732011`), `fwl_partial_coefficient` (`+1.387033`), `monotone_validation_promotion_law` (`promote=True` at CRPS `7.0944`), Wave 19-21 floor tracking, 5-league 365-day (`MLB` included) simulation + `DirectionalBcAciState` + Frechet-clamped `CopulaCPTS`, and `900s` clean-room ISR SEO bundle.
+- **Wave 27**: Compiled `170` substring-deduped monotone (`TIER_1_FOUNDATION -> TIER_2_SYNTHESIS -> TIER_3_BEHEMOTH`) self-verified RLVR trajectories to `brain/feeds/2026-11-16/gse_to_gsi_verifiable_reasoning_rlvr_feed.jsonl` and `brain/feeds/2026-11-17/gse_to_gsi_overnight_rlvr_feed.jsonl`, coupled with Axolotl/TRL-GRPO/lm-eval summaries and `450`-item 8-benchmark verification (`100.0` composite score).

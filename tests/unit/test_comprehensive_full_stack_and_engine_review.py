@@ -18,8 +18,8 @@ Covers:
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -27,7 +27,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from intelligence.audit.comprehensive_full_stack_and_engine_review import (
+from intelligence.audit.comprehensive_full_stack_and_engine_review import (  # noqa: E402
     DEFAULT_REVIEW_RECEIPT_PATH,
     DEFAULT_REVIEW_REPORT_MD_PATH,
     audit_docs_filing_compliance,
@@ -41,13 +41,13 @@ from intelligence.audit.comprehensive_full_stack_and_engine_review import (
     scan_text_for_hardcoded_secrets,
     verify_ast_sandbox_blocks_untrusted_expressions,
 )
-from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (
+from intelligence.dfs.dk_200pt_situational_dfs_and_projection_engine import (  # noqa: E402
     evaluate_360_degree_picks_props_parlays_and_sgps,
 )
-from intelligence.dfs.overnight_9model_fleet_projection_and_200pt_dfs_stress_tester import (
+from intelligence.dfs.overnight_9model_fleet_projection_and_200pt_dfs_stress_tester import (  # noqa: E402, E501
     evaluate_9model_fleet_consensus_on_ticket,
 )
-from intelligence.equations.equation_executor import (
+from intelligence.equations.equation_executor import (  # noqa: E402
     compile_formula_spec_ast,
 )
 
@@ -100,7 +100,10 @@ def test_phase_2_security_and_performance_passes() -> None:
     assert p2a["heavy_juice_and_conjunction_firewall"]["minus_285_pass_specimen_blocked"] is True
     assert p2a["heavy_juice_and_conjunction_firewall"]["minus_320_heavy_juice_trap_blocked"] is True
     assert p2a["heavy_juice_and_conjunction_firewall"]["solo_source_trap_blocked"] is True
-    assert p2a["heavy_juice_and_conjunction_firewall"]["fleet_9_of_9_unanimous_pass_on_minus_300"] is True
+    assert (
+        p2a["heavy_juice_and_conjunction_firewall"]["fleet_9_of_9_unanimous_pass_on_minus_300"]
+        is True
+    )
     assert p2a["external_supply_chain_quarantine_verified"] is True
 
     p2b = phase2["phase_2b_performance_engineering"]
@@ -150,7 +153,10 @@ def test_phase_4_best_practices_and_cicd_passes() -> None:
 
     charges_by_num = {c["charge"]: c for c in p4b["charges"]}
     assert charges_by_num[5]["status"] == "PASS"
-    assert "test_wave_consumption_proofs.py" in charges_by_num[5]["detail"] or "passed" in charges_by_num[5]["detail"]
+    assert (
+        "test_wave_consumption_proofs.py" in charges_by_num[5]["detail"]
+        or "passed" in charges_by_num[5]["detail"]
+    )
     assert charges_by_num[10]["status"] == "PASS"
     assert charges_by_num[10]["consumption_test_file_present"] is True
     assert charges_by_num[10]["ast_and_279_family_tests_passed"] is True
@@ -174,13 +180,16 @@ def test_edge_cases_docs_filing_compliance_violations(tmp_path: Path) -> None:
     assert clean_audit["retired_docs_research_violations"] == []
     assert clean_audit["dated_2026_11_07_artifacts_count"] == 26
 
-    # 2. Stray dated file directly under bucket root (docs/engine/2026-11-07-stray.md) flips Phase 3B to FAIL
+    # 2. Stray dated file directly under bucket root flips Phase 3B to FAIL
     stray_bucket_root = docs_root / "engine" / "2026-11-07-stray.md"
     stray_bucket_root.write_text("# Stray bucket root\n", encoding="utf-8")
     p3_fail = audit_phase_3_testing_and_documentation(run_pytest_suites=False, docs_root=docs_root)
     assert p3_fail["phase_3b_documentation_and_filing"]["status"] == "FAIL"
     assert p3_fail["status"] == "FAIL"
-    assert "docs/engine/2026-11-07-stray.md" in p3_fail["phase_3b_documentation_and_filing"]["bucket_root_filing_violations"]
+    assert (
+        "docs/engine/2026-11-07-stray.md"
+        in p3_fail["phase_3b_documentation_and_filing"]["bucket_root_filing_violations"]
+    )
     stray_bucket_root.unlink()
 
     # 3. Un-dated file directly under <bucket>/research/ flips Phase 3B to FAIL
@@ -188,7 +197,10 @@ def test_edge_cases_docs_filing_compliance_violations(tmp_path: Path) -> None:
     stray_res_root.write_text("# Stray research root\n", encoding="utf-8")
     audit_undated = audit_docs_filing_compliance(docs_root=docs_root)
     assert audit_undated["passed"] is False
-    assert "docs/engine/research/2026-11-07-undated.md" in audit_undated["undated_research_root_violations"]
+    assert (
+        "docs/engine/research/2026-11-07-undated.md"
+        in audit_undated["undated_research_root_violations"]
+    )
     stray_res_root.unlink()
 
     # 4. File inside retired docs/research/2026-11-07/ dumping ground flips Phase 3B to FAIL
@@ -198,7 +210,10 @@ def test_edge_cases_docs_filing_compliance_violations(tmp_path: Path) -> None:
     retired_file.write_text("# Retired dumping ground\n", encoding="utf-8")
     audit_retired = audit_docs_filing_compliance(docs_root=docs_root)
     assert audit_retired["passed"] is False
-    assert "docs/research/2026-11-07/legacy-dump-2026-11-07.md" in audit_retired["retired_docs_research_violations"]
+    assert (
+        "docs/research/2026-11-07/legacy-dump-2026-11-07.md"
+        in audit_retired["retired_docs_research_violations"]
+    )
 
 
 def test_edge_cases_two_host_portability_and_secret_scanner(tmp_path: Path) -> None:
@@ -355,7 +370,9 @@ def test_full_review_end_to_end_receipt_and_markdown_report(tmp_path: Path) -> N
     assert render_markdown_review_report(payload).startswith("# COMPREHENSIVE 4-PHASE")
 
     # Verify canonical artifacts in docs/engine/research/2026-11-07/ exist and pass
-    assert DEFAULT_REVIEW_RECEIPT_PATH.exists(), f"Missing canonical receipt: {DEFAULT_REVIEW_RECEIPT_PATH}"
+    assert DEFAULT_REVIEW_RECEIPT_PATH.exists(), (
+        f"Missing canonical receipt: {DEFAULT_REVIEW_RECEIPT_PATH}"
+    )
     assert DEFAULT_REVIEW_REPORT_MD_PATH.exists(), (
         f"Missing canonical markdown report: {DEFAULT_REVIEW_REPORT_MD_PATH}"
     )

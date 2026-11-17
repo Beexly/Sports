@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""
-Unit tests for Workstream 1:
+"""Unit tests for Workstream 1.
+
 1. All 279 canonical equation families (0..278) accounted for and bound to the 5 standing
    domain tracks in ReasoningTrace (`family_consumption_census.accounted_families == 279`).
 2. Per-family perturbation proof: overriding a single canonical family weight changes that
    family's FamilyConsumptionReceipt.post_gate_shrunk_delta.
-3. Deterministic L4 adversary sign-flip & L5 checklist verification in build_track_l1_to_l5_hierarchy.
-4. Reconciled situational rule counts: 80 Situational Catalog Rules + 7 Emission-Firewall Rules = 87 total
-   (and 80 + 5 = 85 situational + misleading-stat rules).
+3. Deterministic L4 adversary sign-flip & L5 checklist verification in
+   build_track_l1_to_l5_hierarchy.
+4. Reconciled situational rule counts: 80 Situational Catalog Rules + 7 Emission-Firewall
+   Rules = 87 total (and 80 + 5 = 85 situational + misleading-stat rules).
 """
 from __future__ import annotations
 
@@ -73,12 +74,15 @@ def test_reasoning_trace_binds_all_279_families_across_5_standing_tracks() -> No
     assert 0.005 <= abs(trace["final_reasoning_delta"]) <= 0.35
 
     import copy
+
     from intelligence.reasoning.layers.layer_registry import ALL_26_LAYERS
     for lid in ALL_26_LAYERS:
         pkt_sig = copy.deepcopy(pkt)
         pkt_sig["layers"][lid]["signals"]["equation_batch_log_odds_delta"] += 2.0
         tr_sig = execute_reasoning_workflow(pkt_sig, write_to_disk=False)
-        assert tr_sig["final_reasoning_delta"] != trace["final_reasoning_delta"], f"Layer {lid} had zero impact on final_reasoning_delta"
+        assert (
+            tr_sig["final_reasoning_delta"] != trace["final_reasoning_delta"]
+        ), f"Layer {lid} had zero impact on final_reasoning_delta"
 
 
 def test_single_family_weight_perturbation_changes_receipt() -> None:

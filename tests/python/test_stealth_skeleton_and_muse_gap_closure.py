@@ -29,11 +29,17 @@ def test_zero_waste_router_alibaba_deepinfra_posthog_and_stealth_skeleton() -> N
     assert r_alibaba["is_zero_cost"] is True
     assert "dashscope-intl.aliyuncs.com" in r_alibaba["endpoint"]
 
-    r_deepinfra = route_zero_waste_task("coach_tendency_synthesis", TaskTier.TIER_1E_DEEPINFRA_COACH_BRAIN)
+    r_deepinfra = route_zero_waste_task(
+        "coach_tendency_synthesis",
+        TaskTier.TIER_1E_DEEPINFRA_COACH_BRAIN,
+    )
     assert r_deepinfra["is_zero_cost"] is True
     assert "api.deepinfra.com" in r_deepinfra["endpoint"]
 
-    r_stealth = route_zero_waste_task("equation_trace_verify", TaskTier.TIER_1F_STEALTH_SKELETON_OPENROUTER)
+    r_stealth = route_zero_waste_task(
+        "equation_trace_verify",
+        TaskTier.TIER_1F_STEALTH_SKELETON_OPENROUTER,
+    )
     assert r_stealth["is_zero_cost"] is True
     assert "gse/stealth-skeleton-alpha" in r_stealth["endpoint"]
 
@@ -56,21 +62,30 @@ def test_frozen_intelligence_scale_bank_and_leaderboard() -> None:
     harness_path = REPO_ROOT / "scripts" / "eval" / "gse_livebench_harness.py"
     assert hashlib.sha256(harness_path.read_bytes()).hexdigest() == manifest["harness_sha256"]
 
-    lb_path = REPO_ROOT / "data" / "audits" / "gse_livebench_question_bank_and_leaderboard_2026_11_06.json"
+    lb_path = (
+        REPO_ROOT
+        / "data"
+        / "audits"
+        / "gse_livebench_question_bank_and_leaderboard_2026_11_06.json"
+    )
     lb = json.loads(lb_path.read_text(encoding="utf-8"))
     assert lb["freeze_verification"]["sha256_match"] is True
     assert lb["general_reasoning_evaluation"]["verified_correct"] == 50
     assert lb["general_reasoning_evaluation"]["total_questions"] == 50
-    assert lb["cohort_breakdowns"]["all_436_pre_gate_candidates_live_brain_calibrated"]["brier_score"] < (
-        lb["cohort_breakdowns"]["all_436_pre_gate_candidates_market_devig"]["brier_score"]
+    assert (
+        lb["cohort_breakdowns"]["all_436_pre_gate_candidates_live_brain_calibrated"]["brier_score"]
+        < lb["cohort_breakdowns"]["all_436_pre_gate_candidates_market_devig"]["brier_score"]
     )
-    assert lb["cohort_breakdowns"]["published_83_official_card_live_brain_calibrated"]["brier_score"] < (
-        lb["cohort_breakdowns"]["published_83_official_card_market_devig"]["brier_score"]
+    assert (
+        lb["cohort_breakdowns"]["published_83_official_card_live_brain_calibrated"]["brier_score"]
+        < lb["cohort_breakdowns"]["published_83_official_card_market_devig"]["brier_score"]
     )
 
 
 def test_job2_intelligence_foundations_artifact() -> None:
-    found_path = REPO_ROOT / "data" / "audits" / "stealth_skeleton_intelligence_foundations_2026_11_06.json"
+    found_path = (
+        REPO_ROOT / "data" / "audits" / "stealth_skeleton_intelligence_foundations_2026_11_06.json"
+    )
     assert found_path.exists()
     found = json.loads(found_path.read_text(encoding="utf-8"))
     assert len(found["job_2_arxiv_papers"]) == 10

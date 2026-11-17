@@ -1,5 +1,5 @@
-"""
-Unit tests for `intelligence.coaching.universal_nfl_metric_and_situational_engine`.
+"""Unit tests for `intelligence.coaching.universal_nfl_metric_and_situational_engine`.
+
 Covers all 6 Foundational Universal NFL Metric Suites and all 5 Deep Second- &
 Third-Order Non-Stationary Football Intelligence Kernels.
 """
@@ -51,7 +51,11 @@ def test_universal_qb_metrics_suite() -> None:
     assert res["garbage_time_snaps_excluded"] == 1
     assert math.isclose(res["epa_per_play"], (0.40 - 0.10 + 0.60 + 0.20) / 4.0, rel_tol=1e-5)
     assert math.isclose(res["cpoe"], 70.0 - 65.0, rel_tol=1e-5)
-    assert math.isclose(res["dakota_composite"], 0.20 * res["epa_per_play"] + 0.009 * 5.0 + 0.09, rel_tol=1e-5)
+    assert math.isclose(
+        res["dakota_composite"],
+        0.20 * res["epa_per_play"] + 0.009 * 5.0 + 0.09,
+        rel_tol=1e-5,
+    )
     # ANY/A = (270 + 40 - 45 - 15) / (30 + 2) = 250 / 32 = 7.8125
     assert math.isclose(res["any_a"], 7.8125, rel_tol=1e-5)
     assert math.isclose(res["pff_btt_rate"], 3.0 / 30.0, abs_tol=1e-5)

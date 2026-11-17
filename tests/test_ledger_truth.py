@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
 
-LEDGER = Path(__file__).resolve().parents[1] / "data" / "engine" / "new_engine_official_ledger_2026.json"
+LEDGER = (
+    Path(__file__).resolve().parents[1] / "data" / "engine" / "new_engine_official_ledger_2026.json"
+)
 
 
 def _load():
@@ -13,10 +15,10 @@ def test_verified_record_math():
     vr = d["verified_record"]
     assert vr["wins"] + vr["losses"] + vr["pushes"] == vr["total_graded"] == 50
     legs = vr["component_legs"]
-    wins = sum(l["wins"] for l in legs)
-    losses = sum(l["losses"] for l in legs)
-    pushes = sum(l["pushes"] for l in legs)
-    net = sum(float(l["net_units"].rstrip("u")) for l in legs)
+    wins = sum(leg["wins"] for leg in legs)
+    losses = sum(leg["losses"] for leg in legs)
+    pushes = sum(leg["pushes"] for leg in legs)
+    net = sum(float(leg["net_units"].rstrip("u")) for leg in legs)
     assert (wins, losses, pushes) == (36, 13, 1)
     assert abs(net - 20.14) < 1e-9
 
@@ -25,10 +27,10 @@ def test_tnf_reconciles_rows_to_settlement():
     d = _load()
     rows = d["tonight_pending_card_car_at_gb"]
     w = sum(1 for r in rows if r["result"] == "WIN")
-    l = sum(1 for r in rows if r["result"] == "LOSS")
+    losses = sum(1 for r in rows if r["result"] == "LOSS")
     s = sum(1 for r in rows if r["result"] in ("SPLIT", "PUSH"))
     settle = d["tnf_settlement"]["official_card"]
-    assert (w, l, s) == (settle["wins"], settle["losses"], settle["splits"]) == (14, 6, 1)
+    assert (w, losses, s) == (settle["wins"], settle["losses"], settle["splits"]) == (14, 6, 1)
 
 
 def test_old_banner_is_superseded_not_live():
@@ -62,9 +64,9 @@ def test_mnf_6_tickets_reconcile_line_by_line_to_both_views():
     tickets = mnf["tickets"]
     assert len(tickets) == 6
     w = sum(1 for t in tickets if t["result"] == "WIN")
-    l = sum(1 for t in tickets if t["result"] == "LOSS")
+    losses = sum(1 for t in tickets if t["result"] == "LOSS")
     p = sum(1 for t in tickets if t["result"] == "PUSH")
-    assert (w, l, p) == (4, 2, 0)
+    assert (w, losses, p) == (4, 2, 0)
 
     staked_usd = round(sum(t["stake_usd"] for t in tickets), 2)
     payout_usd = round(sum(t["payout_usd"] for t in tickets), 2)

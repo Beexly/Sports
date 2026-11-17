@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""
-Unit tests for the 58-Skill Enterprise Gateway, Airflow 3, Agent Platform,
-Compute Reservations, Pathways, GKE Storage, SecOps Detection Coverage,
+"""Unit tests for the 58-Skill Enterprise Gateway, Airflow 3, and Agent Platform wave.
+
+Covers Compute Reservations, Pathways, GKE Storage, SecOps Detection Coverage,
 Santa Method, TS Deep Modules, Wizard, Loop-Me, and Writing Fragments Wave.
 """
 from __future__ import annotations
 
-from intelligence.cloud_and_enterprise_skills.enterprise_gateway_airflow_rag_compute_and_secops_executor import (
+from intelligence.cloud_and_enterprise_skills.enterprise_gateway_airflow_rag_compute_and_secops_executor import (  # noqa: E501
     ALL_58_WAVE_SKILLS,
     WAVE_RECEIPT_PATH,
     execute_agent_platform_access_alerts_and_rag_suite,

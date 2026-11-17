@@ -15,22 +15,23 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-from intelligence.reasoning.engine import AnalysisEngine, analyze
-from intelligence.reasoning.enums import ReasoningDepth, Verification
-from intelligence.reasoning.interfaces import (
+from intelligence.reasoning.engine import AnalysisEngine, analyze  # noqa: E402
+from intelligence.reasoning.enums import ReasoningDepth, Verification  # noqa: E402
+from intelligence.reasoning.interfaces import (  # noqa: E402
     AnalysisRequest,
     DataContext,
     GameRequest,
 )
-from intelligence.reasoning.schemas import Claim, ReasoningTrace
-from intelligence.reasoning.specialists import ResearchSpecialist, SpecialistRegistry
-from intelligence.research import corpus_gate as gate
+from intelligence.reasoning.schemas import Claim, ReasoningTrace  # noqa: E402
+from intelligence.reasoning.specialists import (  # noqa: E402
+    ResearchSpecialist,
+    SpecialistRegistry,
+)
+from intelligence.research import corpus_gate as gate  # noqa: E402
 
 
 def _req() -> AnalysisRequest:

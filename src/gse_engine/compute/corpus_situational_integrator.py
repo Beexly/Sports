@@ -69,6 +69,27 @@ from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
 from gse_engine.memory.wave21_tracking_biomech_rlvr_and_market_hold_suite import (
     evaluate_wave21_tracking_biomech_and_rlvr_bridge,
 )
+from gse_engine.memory.wave22_cross_branch_salvage_and_vault_crosslink_suite import (
+    evaluate_wave22_crosslink_bridge,
+)
+from gse_engine.memory.wave22_google_research_sde_tabfm_rliable_suite import (
+    evaluate_wave23_google_research_bridge,
+)
+from gse_engine.memory.wave23_boosting_graph_literature_and_spoof_quarantine_suite import (
+    evaluate_wave23_boosting_literature_bridge,
+)
+from gse_engine.memory.wave24_theorem_ast_dependency_graph_suite import (
+    diagonal_mahalanobis_similarity,
+    echo_chamber_deweight,
+    embed_regime_vector_8d,
+    evaluate_wave24_theorem_ast_bridge,
+    g_fire_retraction_weight,
+    latex_operator_profile,
+    operator_tree_cosine,
+)
+from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import (
+    evaluate_wave25_workstreams_bridge,
+)
 from gse_engine.multisport.daily_multisport_slate_engine import (
     BcAciState,
     predict_bc_aci_band,
@@ -488,6 +509,19 @@ def _read_static_corpus_candidates() -> list[dict[str, Any]]:
                         }
                     )
 
+    for it in items:
+        txt_s = str(it.get("text") or "")
+        txt_low = str(it.get("txt_l") or txt_s.lower())
+        it["g_fire_weight"] = g_fire_retraction_weight(txt_low)
+        it["ops"] = dict(latex_operator_profile(txt_s))
+        it["regime_8d"] = embed_regime_vector_8d(txt_low)
+        it["fields_4"] = (
+            str(it.get("doc_id") or "").lower(),
+            str(it.get("source_type") or "").lower(),
+            txt_s[:120].lower(),
+            txt_low,
+        )
+
     _LESSONS_INDEXED_COUNT_CACHE = lessons_count
     _FOUNDRY_SWEPT_FILES_CACHE = foundry_swept
     _FOUNDRY_PRIMITIVES_COUNT_CACHE = foundry_prims
@@ -504,8 +538,9 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     bm25f_lessons: list[Mapping[str, Any]] | None = None,
     top_k: int = 8,
     rrf_k: int = 60,
+    regime_vector_8d: Sequence[float] | None = None,
 ) -> dict[str, Any]:
-    """Fuse sparse, dense 6D cosine, and empirical authority ranks via 3-way RRF (k=60)."""
+    """Fuse BM25F, 6D dense, AST cosine, 8D Mahalanobis, and authority via RRF (k=60)."""
     static_items = _read_static_corpus_candidates()
     lessons = list(bm25f_lessons or [])
 
@@ -514,11 +549,15 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     if len(q_unit) < 6:
         q_unit.extend([0.0] * (6 - len(q_unit)))
 
-    candidates: list[dict[str, Any]] = list(static_items)
+    candidates: list[dict[str, Any]] = [
+        c for c in static_items if float(c.get("g_fire_weight", 1.0)) > 0.0
+    ]
     for idx, les in enumerate(lessons):
         doc_title = str(les.get("source_work") or les.get("doc_id") or f"bm25f_{idx}")
         txt = f"{doc_title} {les.get('category', '')} {les.get('lesson_summary', '')}"
         txt_l = txt.lower()
+        if g_fire_retraction_weight(txt_l) <= 0.0:
+            continue
         bm_sc = float(les.get("bm25f_plus_score") or 0.0)
         candidates.append(
             {
@@ -529,6 +568,10 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
                 "vec_6d": _embed_6d_topic_vector(txt_l),
                 "bm25f_score": bm_sc,
                 "authority_prior": _clip(0.82 + 0.04 * bm_sc, 0.72, 0.99),
+                "g_fire_weight": 1.0,
+                "ops": dict(latex_operator_profile(txt)),
+                "regime_8d": embed_regime_vector_8d(txt_l),
+                "fields_4": (doc_title.lower(), "bm25f_lesson", txt[:120].lower(), txt_l),
             }
         )
 
@@ -551,36 +594,88 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     if not query_tokens:
         query_tokens = ["epa", "football", "bayes", "pressure", "pass", "markov"]
 
+    bm25f_weights = (3.0, 2.5, 2.0, 1.0)
     sparse_scored: list[tuple[float, int]] = []
     dense_scored: list[tuple[float, int]] = []
     authority_scored: list[tuple[float, int]] = []
     for idx, c in enumerate(candidates):
-        txt_l = str(c["txt_l"])
-        sp = sum(1.0 for tok in query_tokens if tok in txt_l) + 0.15 * float(
-            c.get("bm25f_score", 0.0)
-        )
+        f4 = c.get("fields_4") or ("", "", str(c["txt_l"])[:120], str(c["txt_l"]))
+        bm25f_val = 0.0
+        for tok in query_tokens:
+            for fw, ftext in zip(bm25f_weights, f4, strict=True):
+                if tok in ftext:
+                    bm25f_val += fw / (1.0 + 0.01 * max(1, len(ftext.split())))
+        sp = bm25f_val + 0.15 * float(c.get("bm25f_score", 0.0))
         d_vec = c["vec_6d"]
         dn = sum(a * b for a, b in zip(q_unit, d_vec, strict=True))
         sparse_scored.append((sp, idx))
         dense_scored.append((dn, idx))
         authority_scored.append((float(c.get("authority_prior", 0.72)), idx))
 
+    top_lex_idx = max(sparse_scored, key=lambda x: (x[0], -x[1]))[1]
+    q_ops = dict(candidates[top_lex_idx].get("ops") or {})
+    if not q_ops:
+        q_ops = {"add": 1, "mul": 1}
+    ast_scored: list[tuple[float, int]] = [
+        (
+            operator_tree_cosine(q_ops, dict(c.get("ops") or {})),
+            idx,
+        )
+        for idx, c in enumerate(candidates)
+    ]
+
+    reg_q = (
+        [float(x) for x in regime_vector_8d[:8]]
+        if regime_vector_8d is not None and len(regime_vector_8d) >= 8
+        else [
+            q_unit[5],
+            q_unit[4],
+            q_unit[1],
+            q_unit[0],
+            q_unit[3],
+            q_unit[4],
+            q_unit[2],
+            0.0,
+        ]
+    )
+    rows_8d = [
+        [float(v) for v in (c.get("regime_8d") or (0.0,) * 8)]
+        for c in candidates
+    ]
+    maha_sims = diagonal_mahalanobis_similarity(reg_q, rows_8d)
+    maha_scored = [(maha_sims[idx], idx) for idx in range(len(candidates))]
+
     sparse_order = sorted(sparse_scored, key=lambda x: (-x[0], x[1]))
     dense_order = sorted(dense_scored, key=lambda x: (-x[0], x[1]))
     auth_order = sorted(authority_scored, key=lambda x: (-x[0], x[1]))
+    ast_order = sorted(ast_scored, key=lambda x: (-x[0], x[1]))
+    maha_order = sorted(maha_scored, key=lambda x: (-x[0], x[1]))
+
     sparse_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(sparse_order)}
     dense_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(dense_order)}
     authority_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(auth_order)}
+    ast_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(ast_order)}
+    maha_rank = {idx: rank + 1 for rank, (_, idx) in enumerate(maha_order)}
 
-    fused: list[tuple[float, int]] = []
+    raw_rrf_scores: list[float] = []
+    src_keys: list[str] = []
     for idx in range(len(candidates)):
         rrf_val = (
             (1.0 / float(rrf_k + sparse_rank[idx]))
             + (1.0 / float(rrf_k + dense_rank[idx]))
             + (1.0 / float(rrf_k + authority_rank[idx]))
+            + (1.0 / float(rrf_k + ast_rank[idx]))
+            + (1.0 / float(rrf_k + maha_rank[idx]))
         )
-        fused.append((rrf_val, idx))
-    fused.sort(key=lambda x: (-x[0], x[1]))
+        raw_rrf_scores.append(rrf_val)
+        c = candidates[idx]
+        src_keys.append(f"{c.get('source_type')}:{str(c.get('doc_id')).split(':')[0]}")
+
+    deweighted = echo_chamber_deweight(src_keys, raw_rrf_scores)
+    fused = sorted(
+        ((deweighted[idx], idx) for idx in range(len(candidates))),
+        key=lambda x: (-x[0], x[1]),
+    )
 
     top_items: list[dict[str, Any]] = []
     signed_weighted_sum = 0.0
@@ -599,9 +694,11 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
                 "sparse_rank": sparse_rank[idx],
                 "dense_rank": dense_rank[idx],
                 "authority_rank": authority_rank[idx],
+                "ast_rank": ast_rank[idx],
+                "mahalanobis_rank": maha_rank[idx],
             }
         )
-    max_possible = 3.0 / float(rrf_k + 1)
+    max_possible = 5.0 / float(rrf_k + 1)
     coherence = _clip(
         sum(float(it["rrf_score"]) for it in top_items) / max(1e-9, top_k * max_possible),
         0.0,
@@ -615,6 +712,10 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     return {
         "matchup": f"{away_team} @ {home_team}",
         "fusion_method": "reciprocal_rank_fusion_3way_k60",
+        "wave24_bm25f_weights": [3.0, 2.5, 2.0, 1.0],
+        "wave24_ast_cosine_fused": True,
+        "wave24_8d_mahalanobis_fused": True,
+        "g_fire_retraction_locked": True,
         "candidates_evaluated": len(candidates),
         "lessons_ledger_indexed": _LESSONS_INDEXED_COUNT_CACHE,
         "equations_matrix_indexed": _EQUATIONS_9875_COUNT_CACHE,
@@ -1612,12 +1713,23 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         max(0.1, abs(aw_sig.eager_ypa - hm_sig.eager_ypa) + 0.35),
         max(0.1, abs(float(env_cfg.get("posted_home_spread", 0.0) or 0.0)) / 10.0 + 0.25),
     ]
+    regime_vec_8d = [
+        abs(float(env_cfg.get("posted_home_spread", 0.0) or 0.0)) / 14.0,
+        float(env_cfg.get("posted_total", 44.5) or 44.5) / 50.0,
+        eff_wind / 20.0,
+        float(aw_ftn.get("sack_rate_allowed", 0.065)) * 10.0,
+        1.0 - float(hm_sig.opp_cover1_rate),
+        abs(float(hm_sr.get("proe_season", 0.0) or 0.0)),
+        float(hm_sr.get("neutral_pace_sec", 27.5) or 27.5) / 30.0,
+        0.0,
+    ]
     hybrid_rrf_res = hybrid_rrf_corpus_and_arxiv_retriever(
         away_team=away_u,
         home_team=home_u,
         situational_vector=sit_vec_6d,
         bm25f_lessons=bm25f_lessons,
         top_k=8,
+        regime_vector_8d=regime_vec_8d,
     )
 
     census = uncompressed_25k_bridge.get("monorepo_and_drives_census") or {}
@@ -1641,6 +1753,33 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         away_clean_epa=aw_sig.clean_epa,
         home_clean_epa=hm_sig.clean_epa,
         is_short_week=is_short_week,
+    )
+    wave22_res = evaluate_wave22_crosslink_bridge(
+        away_team=away_u,
+        home_team=home_u,
+        repo_root=REPO_ROOT,
+    )
+    wave23_gr_res = evaluate_wave23_google_research_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_short_week=is_short_week,
+    )
+    wave23_boost_res = evaluate_wave23_boosting_literature_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+    )
+    wave24_res = evaluate_wave24_theorem_ast_bridge(
+        query_terms=["pressure", "wind", "fourth", "red", "pace"],
+        regime_vector_8d=regime_vec_8d,
+        repo_root=REPO_ROOT,
+    )
+    wave25_res = evaluate_wave25_workstreams_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_short_week=is_short_week,
+        is_indoor=bool(env_cfg.get("is_indoor", False)),
     )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
@@ -1666,6 +1805,36 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave21_oss_registry_entries": int(wave21_res["oss_registry_unique_entries"]),
         "polymarket_compliance_hold_cleared_false": wave21_res["polymarket_cleared"] is False,
         "wave21_weather_epa_adj": float(wave21_res["wave21_weather_epa_adj"]),
+        "wave22_crosslink_wired": bool(wave22_res["wave22_wired"]),
+        "wave22_crosslink_vaults_present": int(wave22_res["crosslink_vaults_present"]),
+        "wave22_crosslink_undirected_edges": int(wave22_res["crosslink_undirected_edges"]),
+        "wave22_crosslink_graph_sha256": str(wave22_res["crosslink_graph_sha256"]),
+        "wave22_matchup_covered_by_vaults": list(wave22_res["matchup_covered_by_vaults"]),
+        "wave22_salvage_feed_verified": bool(wave22_res["salvage_feed_verified"]),
+        "wave22_salvage_feed_records": int(wave22_res["salvage_feed_records"]),
+        "wave22_live_stage2_weight": float(wave22_res["live_stage2_weight"]),
+        "wave23_google_research_wired": bool(wave23_gr_res["wave23_google_research_wired"]),
+        "wave23_google_research_entries": int(wave23_gr_res["google_research_entries"]),
+        "wave23_fatigue_sde_grad_kappa": float(wave23_gr_res["fatigue_sde_grad_kappa"]),
+        "wave23_disentangle_mi_after": float(wave23_gr_res["disentangle_mi_after"]),
+        "wave23_boosting_literature_wired": bool(
+            wave23_boost_res["wave23_boosting_literature_wired"]
+        ),
+        "wave23_p_spoof_grad_hype_norm": float(wave23_boost_res["p_spoof_grad_hype_norm"]),
+        "wave23_live_stage2_weight": float(wave23_gr_res["live_stage2_weight"])
+        + float(wave23_boost_res["live_stage2_weight"]),
+        "wave24_theorem_ast_wired": bool(wave24_res["wave24_theorem_ast_wired"]),
+        "wave24_g_doc_nodes": int(wave24_res["g_doc_nodes"]),
+        "wave24_g_doc_is_dag": bool(wave24_res["g_doc_is_dag"]),
+        "wave24_ragas_gate_passed": bool(wave24_res["ragas_gate_passed"]),
+        "wave24_sympy_six_regime_admissible": bool(wave24_res["sympy_six_regime_admissible"]),
+        "wave24_g_fire_retracted_weight": float(wave24_res["g_fire_retracted_weight"]),
+        "wave24_live_stage2_weight": float(wave24_res["live_stage2_weight"]),
+        "wave25_workstreams_wired": bool(wave25_res["wave25_workstreams_wired"]),
+        "wave25_scalars_verified_count": int(wave25_res["scalars_verified_count"]),
+        "wave25_fwl_orthogonal_verified": bool(wave25_res["fwl_orthogonal_verified"]),
+        "wave25_k14_rule_in_only": bool(wave25_res["k14_rule_in_only"]),
+        "wave25_live_stage2_weight": float(wave25_res["live_stage2_weight"]),
         "monorepo_vaults_verified": int(omnibus_res["vaults_verified"]),
         "all_46_data_subdirs_verified": int(omnibus_res["data_subdirs_verified_count"]) == 46,
         "complete_503_books_verified": int(omnibus_res["complete_corpus_books"]) >= 503,
