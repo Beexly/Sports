@@ -5,11 +5,30 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
+import pytest
+
 from scripts.ops.execute_all_installed_skills_suite import (
     RECEIPT_JSON_PATH,
     REPORT_MD_PATH,
     run_all_758_skills_execution_suite,
     validate_infrastructure_artifacts,
+)
+
+# Host-installation prerequisite. The suites below assert a *locally installed*
+# skills tree (``~/.agents/skills`` + ``~/.gemini/config/{skills,plugins}`` — 758
+# skills on the dev box). A portable CI runner carries none of those roots, so the
+# scanner legitimately discovers 0 SKILL.md files and every count assertion fails.
+# The invariants are real *of that host*, so instead of deleting or weakening them
+# we gate the module on the skills install being present: it runs unchanged where
+# the tree exists and reports an explicit skip where it does not.
+_INSTALLED_SKILLS_ROOTS = (
+    Path.home() / ".agents" / "skills",
+    Path.home() / ".gemini" / "config" / "skills",
+    Path.home() / ".gemini" / "config" / "plugins",
+)
+pytestmark = pytest.mark.skipif(
+    not any(root.is_dir() for root in _INSTALLED_SKILLS_ROOTS),
+    reason="requires the local installed-skills tree (~/.agents/skills); absent on a portable CI runner",
 )
 
 
