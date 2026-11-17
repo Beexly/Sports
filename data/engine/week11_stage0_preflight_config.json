@@ -1,0 +1,511 @@
+{
+  "week": 11,
+  "as_of": "2026-11-17T02:14:20.430890+00:00",
+  "source": {
+    "qb1": "gse-unified-stage0-truth-v2 (authoritative single truth)",
+    "injuries": "nflverse injuries_2026.csv (week 11 4-source consensus)",
+    "banned": "4-source consensus IR state machine"
+  },
+  "confirmed_qb1": {
+    "ARI": "Carson Beck",
+    "ATL": "Michael Penix Jr.",
+    "BAL": "Jacoby Brissett",
+    "BUF": "Josh Allen",
+    "CAR": "Bryce Young",
+    "CIN": "Joe Burrow",
+    "CLE": "Jameis Winston",
+    "DAL": "Dak Prescott",
+    "DET": "Jared Goff",
+    "GB": "Jordan Love",
+    "HOU": "C.J. Stroud",
+    "IND": "Daniel Jones",
+    "JAX": "Trevor Lawrence",
+    "KC": "Patrick Mahomes",
+    "LAC": "Justin Herbert",
+    "LAR": "Matthew Stafford",
+    "LV": "Fernando Mendoza",
+    "MIA": "Kyle McCord",
+    "MIN": "Kirk Cousins",
+    "NE": "Tommy DeVito",
+    "NO": "Tyler Shough",
+    "NYJ": "Geno Smith",
+    "PIT": "Aaron Rodgers",
+    "SEA": "Drew Lock",
+    "SF": "Brock Purdy",
+    "TEN": "Cam Ward",
+    "CHI": "Caleb Williams",
+    "DEN": "Bo Nix",
+    "NYG": "J.J. McCarthy",
+    "PHI": "Joe Milton",
+    "TB": "Baker Mayfield",
+    "WAS": "Jayden Daniels"
+  },
+  "excluded_players": [
+    "Lamar Jackson",
+    "Jonathon Brooks",
+    "D.J. Moore",
+    "D.J. Moore",
+    "Zack Moss",
+    "Deshaun Watson",
+    "Ali Gaye",
+    "Azeez Al-Shaair",
+    "Brevin Jordan",
+    "British Brooks",
+    "Bryce Oliver",
+    "Caleb Johnson",
+    "Chris Braswell",
+    "Collin Wright",
+    "Danielle Hunter",
+    "Dylan Horton",
+    "E.J. Speed",
+    "Graham Mertz",
+    "Jaden Crumedy",
+    "Jaden Davis",
+    "James Neal III",
+    "Jawhar Jordan",
+    "Jayden Higgins",
+    "Jaylin Noel",
+    "Jaylin Smith",
+    "Josh Kelly",
+    "Josh Pitsenberger",
+    "Junior Tafuna",
+    "K.C. Ossai",
+    "Mario Edwards Jr.",
+    "Marvin Harrison Jr.",
+    "Max Pircher",
+    "Noah Whittington",
+    "Sam Hagen",
+    "Solomon Byrd",
+    "Treyvhon Saunders",
+    "Woody Marks",
+    "Akeem Davis-Gaither",
+    "Alec Pierce",
+    "Cam Taylor-Britt",
+    "Cameron Ball",
+    "Cameron Mitchell",
+    "Carl Lawson",
+    "Carson Towt",
+    "D.J. Montgomery",
+    "Daniel Scott",
+    "Davon Booth",
+    "Harrison Bryant",
+    "Jalen Travis",
+    "Jaylon Carlies",
+    "Jerry Tillery",
+    "Joshua Gray",
+    "Luke Rhodes",
+    "Mecole Hardman Jr.",
+    "Micheal Clemons",
+    "Mitchell Melton",
+    "Mo Alie-Cox",
+    "Natrone Brooks",
+    "Nolan Rucci",
+    "Reid Holskey",
+    "Roy Mbaeteka",
+    "Shemar Bartholomew",
+    "Will Mallory",
+    "Kenneth Walker III",
+    "Rashee Rice",
+    "Kyler Murray",
+    "Cooper Kupp",
+    "Brandon Aiyuk",
+    "Christian Kirk",
+    "Chris Godwin",
+    "Will Levis",
+    "Stefon Diggs"
+  ],
+  "return_from_ir": {
+    "Tank Dell": {
+      "name": "Tank Dell",
+      "team": "HOU",
+      "position": "WR",
+      "ramp_factor": 0.78,
+      "consensus_sources": [
+        "nflverse_injuries_not_out",
+        "dk_draftables_active"
+      ],
+      "status": "RETURN_FROM_IR_CONFIRMED"
+    }
+  },
+  "effective_role_snap_share": {
+    "Darren Waller": 0.76,
+    "Colby Parkinson": 0.74,
+    "Emmett Johnson": 0.65,
+    "Ollie Gordon II": 0.58,
+    "Khalil Shakir": 0.82,
+    "Xavier Worthy": 0.82,
+    "Antonio Williams": 0.82
+  },
+  "traded_players": [
+    {
+      "name": "Greg Dortch",
+      "from": "ARI",
+      "to": "BUF",
+      "position": "WR",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Kendrick Bourne",
+      "from": "SF",
+      "to": "ARI",
+      "position": "WR",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Josh Downs",
+      "from": "IND",
+      "to": "KC",
+      "position": "WR",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Keenan Allen",
+      "from": "IND",
+      "to": "SF",
+      "position": "WR",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Kenneth Walker III",
+      "from": "SEA",
+      "to": "KC",
+      "position": "RB",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Tyler Allgeier",
+      "from": "ATL",
+      "to": "ARI",
+      "position": "RB",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Myles Garrett",
+      "from": "CLE",
+      "to": "LAR",
+      "position": "LB",
+      "date": "2026-06-01"
+    },
+    {
+      "name": "Jared Verse",
+      "from": "LAR",
+      "to": "CLE",
+      "position": "DE",
+      "date": "2026-06-01"
+    },
+    {
+      "name": "Jeffery Simmons",
+      "from": "TEN",
+      "to": "CHI",
+      "position": "DT",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Trent McDuffie",
+      "from": "KC",
+      "to": "LAR",
+      "position": "CB",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Amani Hooker",
+      "from": "TEN",
+      "to": "BUF",
+      "position": "S",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Jessie Bates",
+      "from": "ATL",
+      "to": "JAX",
+      "position": "S",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Kyler Murray",
+      "from": "ARI",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Kirk Cousins",
+      "from": "ATL",
+      "to": "MIN",
+      "position": "QB",
+      "date": "2026-11-10"
+    },
+    {
+      "name": "Jacoby Brissett",
+      "from": "ARI",
+      "to": "BAL",
+      "position": "QB",
+      "date": "2026-11-04"
+    },
+    {
+      "name": "J.J. McCarthy",
+      "from": "MIN",
+      "to": "NYG",
+      "position": "QB",
+      "date": "2026-11-10"
+    }
+  ],
+  "venue_overrides": {
+    "IND@HOU": {
+      "matchup": "IND@HOU",
+      "espn_event_id": "401873066",
+      "kickoff_utc": "2026-11-20T01:15Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Reliant Stadium",
+      "city": "Houston",
+      "state_loc": "TX",
+      "country": "USA",
+      "is_indoor": true,
+      "neutral_site": false,
+      "teams": [
+        "HOU",
+        "IND"
+      ]
+    },
+    "MIA@BUF": {
+      "matchup": "MIA@BUF",
+      "espn_event_id": "401873070",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Highmark Stadium",
+      "city": "Orchard Park",
+      "state_loc": "NY",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "BUF",
+        "MIA"
+      ]
+    },
+    "NO@CHI": {
+      "matchup": "NO@CHI",
+      "espn_event_id": "401873071",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Soldier Field",
+      "city": "Chicago",
+      "state_loc": "IL",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "CHI",
+        "NO"
+      ]
+    },
+    "TEN@DAL": {
+      "matchup": "TEN@DAL",
+      "espn_event_id": "401873073",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "AT&T Stadium",
+      "city": "Arlington",
+      "state_loc": "TX",
+      "country": "USA",
+      "is_indoor": true,
+      "neutral_site": false,
+      "teams": [
+        "DAL",
+        "TEN"
+      ]
+    },
+    "TB@DET": {
+      "matchup": "TB@DET",
+      "espn_event_id": "401873072",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Ford Field",
+      "city": "Detroit",
+      "state_loc": "MI",
+      "country": "USA",
+      "is_indoor": true,
+      "neutral_site": false,
+      "teams": [
+        "DET",
+        "TB"
+      ]
+    },
+    "ARI@KC": {
+      "matchup": "ARI@KC",
+      "espn_event_id": "401873067",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Arrowhead Stadium",
+      "city": "Kansas City",
+      "state_loc": "MO",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "KC",
+        "ARI"
+      ]
+    },
+    "PIT@PHI": {
+      "matchup": "PIT@PHI",
+      "espn_event_id": "401873076",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Lincoln Financial Field",
+      "city": "Philadelphia",
+      "state_loc": "PA",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "PHI",
+        "PIT"
+      ]
+    },
+    "BAL@CAR": {
+      "matchup": "BAL@CAR",
+      "espn_event_id": "401873068",
+      "kickoff_utc": "2026-11-22T18:00Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Bank of America Stadium",
+      "city": "Charlotte",
+      "state_loc": "NC",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "CAR",
+        "BAL"
+      ]
+    },
+    "NYJ@LAC": {
+      "matchup": "NYJ@LAC",
+      "espn_event_id": "401873074",
+      "kickoff_utc": "2026-11-22T21:05Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "SoFi Stadium",
+      "city": "Inglewood",
+      "state_loc": "CA",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "LAC",
+        "NYJ"
+      ]
+    },
+    "LV@DEN": {
+      "matchup": "LV@DEN",
+      "espn_event_id": "401873075",
+      "kickoff_utc": "2026-11-22T21:25Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Empower Field at Mile High",
+      "city": "Denver",
+      "state_loc": "CO",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "DEN",
+        "LV"
+      ]
+    },
+    "JAX@NYG": {
+      "matchup": "JAX@NYG",
+      "espn_event_id": "401873069",
+      "kickoff_utc": "2026-11-22T21:25Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford",
+      "state_loc": "NJ",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "NYG",
+        "JAX"
+      ]
+    },
+    "MIN@SF": {
+      "matchup": "MIN@SF",
+      "espn_event_id": "401873077",
+      "kickoff_utc": "2026-11-23T01:20Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Estadio Banorte",
+      "city": "Mexico City",
+      "state_loc": null,
+      "country": "Mexico",
+      "is_indoor": false,
+      "neutral_site": true,
+      "teams": [
+        "SF",
+        "MIN"
+      ]
+    },
+    "CIN@WAS": {
+      "matchup": "CIN@WAS",
+      "espn_event_id": "401873078",
+      "kickoff_utc": "2026-11-24T01:15Z",
+      "status": "STATUS_SCHEDULED",
+      "state": "pre",
+      "venue": "Northwest Stadium",
+      "city": "Landover",
+      "state_loc": "MD",
+      "country": "USA",
+      "is_indoor": false,
+      "neutral_site": false,
+      "teams": [
+        "WAS",
+        "CIN"
+      ]
+    }
+  },
+  "slate_teams": [
+    "ARI",
+    "ATL",
+    "BAL",
+    "BUF",
+    "CAR",
+    "CHI",
+    "CIN",
+    "CLE",
+    "DAL",
+    "DEN",
+    "DET",
+    "GB",
+    "HOU",
+    "IND",
+    "JAX",
+    "KC",
+    "LAC",
+    "LAR",
+    "LV",
+    "MIA",
+    "MIN",
+    "NE",
+    "NO",
+    "NYG",
+    "NYJ",
+    "PHI",
+    "PIT",
+    "SEA",
+    "SF",
+    "TB",
+    "TEN",
+    "WAS"
+  ],
+  "qb1_ban_conflicts": []
+}

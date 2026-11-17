@@ -27,6 +27,7 @@ from __future__ import annotations
 import importlib
 import json
 import math
+import re
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -52,6 +53,11 @@ from gse_engine.ingestion.multimodal_vlm_and_provenance import (
 from gse_engine.ingestion.recency_last30days import (
     TemporalTrendObservation,
     compute_last30days_trend,
+)
+from gse_engine.multisport.daily_multisport_slate_engine import (
+    BcAciState,
+    predict_bc_aci_band,
+    update_bc_aci_interval,
 )
 from gse_engine.observability.kernel_registry_and_antipatterns import (
     run_all_antipattern_guards,
@@ -1600,12 +1606,19 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
     )
 
     census = uncompressed_25k_bridge.get("monorepo_and_drives_census") or {}
+    corpus_total_artifacts_indexed = (
+        int(manifest_877.get("total_pdfs", 0))
+        + int(_FOUNDRY_SWEPT_FILES_CACHE)
+        + int(_SOVEREIGN_PRIMITIVES_COUNT_CACHE)
+        + int(_EQUATIONS_9875_COUNT_CACHE)
+    )
     books_and_pdfs_pillar = {
         "wired": True,
         "manifest_877_pdfs_verified": bool(
             manifest_877.get("manifest_present") and manifest_877.get("total_pdfs", 0) >= 877
         ),
         "manifest_total_pdfs": int(manifest_877.get("total_pdfs", 0)),
+        "corpus_total_artifacts_indexed": corpus_total_artifacts_indexed,
         "live_books_engines_count": int(live_books_res.get("engines_executed_count", 22)),
         "uncompressed_25k_books_count": int(census.get("canonical_textbooks_count", 12)),
         "wave8_local_pdfs_wired": wave8_local_pdfs,
@@ -1903,8 +1916,26 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + env_risk
     )
     barber_romano_cqr_width_mult = round(_clip(cqr_scale * instab_mult, 0.94, 1.24), 4)
+    conformal_bridge = evaluate_books_pdfs_and_situational_conformal_bridge(
+        away_team=away_u,
+        home_team=home_u,
+        residual_history=(
+            (0.0, (aw_sig.sched_delta - hm_sig.sched_delta) * 14.0),
+            (0.0, (aw_sig.tukey_epa_delta - hm_sig.tukey_epa_delta) * 14.0),
+        ),
+        situational_vector=sit_vec_6d,
+        decay_rho=decay_rho,
+        n_weeks=n_weeks,
+        instability_mult=instab_mult,
+        rrf_result=hybrid_rrf_res,
+    )
     situational_279_pillar["barber_effective_sample_n"] = barber_effective_sample_n
     situational_279_pillar["barber_romano_cqr_width_mult"] = barber_romano_cqr_width_mult
+    situational_279_pillar["bc_aci_center_shift"] = conformal_bridge["bc_aci_center_shift"]
+    situational_279_pillar["bc_aci_alpha_next"] = conformal_bridge["bc_aci_alpha_next"]
+    situational_279_pillar["corpus_total_artifacts_indexed"] = conformal_bridge[
+        "corpus_total_artifacts_indexed"
+    ]
 
     rec_reg_map = pbp_tables["receivers"]
     player_mults: dict[str, float] = {}
@@ -2657,4 +2688,179 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),
+    }
+
+
+def build_bigquery_ai_and_observability_sql_bundle(
+    *,
+    dataset: str = "gse_data",
+    region: str = "region-us",
+    max_bytes_billed: int = 1_073_741_824,
+) -> dict[str, Any]:
+    """Return cost-bounded read-only BigQuery AI/ML & INFORMATION_SCHEMA SQL templates."""
+    safe_dataset = re.sub(r"[^A-Za-z0-9_]", "", dataset) or "gse_data"
+    safe_region = re.sub(r"[^A-Za-z0-9_-]", "", region) or "region-us"
+
+    sql_forecast = (
+        "SELECT *\n"
+        "FROM AI.FORECAST(\n"
+        "  (SELECT market_id, snapshot_ts, de_vigged_prob\n"
+        f"   FROM `{safe_dataset}.market_line_snapshots`\n"
+        "   WHERE snapshot_ts >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 14 DAY)),\n"
+        "  data_col => 'de_vigged_prob',\n"
+        "  timestamp_col => 'snapshot_ts',\n"
+        "  id_cols => ['market_id'],\n"
+        "  horizon => 6,\n"
+        "  confidence_level => 0.90\n"
+        ")"
+    )
+
+    sql_key_drivers = (
+        "SELECT *\n"
+        "FROM AI.KEY_DRIVERS(\n"
+        f"  (SELECT target_residual, pressure_rate, cpoe_delta, snap_share, wind_mph\n"
+        f"   FROM `{safe_dataset}.player_prop_autopsy`\n"
+        "   WHERE kickoff_ts >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)),\n"
+        "  target_col => 'target_residual'\n"
+        ")"
+    )
+
+    sql_change_points = (
+        "SELECT *\n"
+        "FROM ML.DETECT_CHANGE_POINTS(\n"
+        f"  (SELECT game_ts, rolling_epa_per_play FROM `{safe_dataset}.team_rolling_epa`\n"
+        "   WHERE game_ts >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY)),\n"
+        "  STRUCT(TRUE AS detect_trend_changes, 0.95 AS confidence_level)\n"
+        ")"
+    )
+
+    sql_graph_spillover = (
+        f"SELECT team_abbr, qb_name, rec_name, target_share_delta\n"
+        f"FROM GRAPH_TABLE (`{safe_dataset}.football_role_graph`\n"
+        "  MATCH (hc:Coach)-[:SCHEMES_FOR]->(qb:Player)-[t:TARGETS]->(rec:Player)\n"
+        "  WHERE hc.season = 2026 AND rec.status_active = TRUE\n"
+        "  COLUMNS (hc.team_abbr AS team_abbr, qb.full_name AS qb_name,\n"
+        "           rec.full_name AS rec_name, t.kantorovich_delta AS target_share_delta)\n"
+        ")"
+    )
+
+    sql_jobs_golden_cte = (
+        "WITH job_perf AS (\n"
+        "  SELECT\n"
+        "    job_id,\n"
+        "    user_email,\n"
+        "    statement_type,\n"
+        "    total_bytes_billed,\n"
+        "    SAFE_DIVIDE(total_bytes_billed, POW(1024, 4)) AS tib_billed,\n"
+        "    SAFE_DIVIDE(\n"
+        "      total_slot_ms,\n"
+        "      GREATEST(1, TIMESTAMP_DIFF(end_time, start_time, MILLISECOND))\n"
+        "    ) AS avg_slots_used\n"
+        f"  FROM `{safe_region}.INFORMATION_SCHEMA.JOBS`\n"
+        "  WHERE creation_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)\n"
+        "    AND job_type = 'QUERY'\n"
+        "    AND statement_type != 'SCRIPT'\n"
+        "    AND error_result IS NULL\n"
+        ")\n"
+        "SELECT job_id, statement_type,\n"
+        "  ROUND(tib_billed, 6) AS tib_billed,\n"
+        "  ROUND(avg_slots_used, 2) AS avg_slots_used\n"
+        "FROM job_perf\n"
+        "ORDER BY total_bytes_billed DESC\n"
+        "LIMIT 25"
+    )
+
+    templates = {
+        "ai_forecast_closing_line": sql_forecast,
+        "ai_key_drivers_prop_variance": sql_key_drivers,
+        "ml_detect_change_points_regime": sql_change_points,
+        "graph_table_coaching_spillover": sql_graph_spillover,
+        "information_schema_jobs_golden_cte": sql_jobs_golden_cte,
+    }
+    return {
+        "read_only": True,
+        "dry_run_required": True,
+        "max_bytes_billed_default": int(max_bytes_billed),
+        "dataset": safe_dataset,
+        "region": safe_region,
+        "templates": templates,
+    }
+
+
+def evaluate_books_pdfs_and_situational_conformal_bridge(
+    *,
+    away_team: str,
+    home_team: str,
+    residual_history: Sequence[tuple[float, float]] = (),
+    situational_vector: Sequence[float] = (0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+    alpha_target: float = 0.10,
+    gamma_aci: float = 0.05,
+    beta_bias: float = 0.12,
+    initial_halfwidth: float = 1.0,
+    decay_rho: float = 0.88,
+    n_weeks: int = 10,
+    instability_mult: float = 1.0,
+    top_k: int = 8,
+    rrf_result: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Synthesize 800+ Books, 877+ PDFs/Foundry, 279 Families & BC-ACI conformal state."""
+    away_u = _norm_team(away_team)
+    home_u = _norm_team(home_team)
+    if rrf_result is None:
+        rrf_res: Mapping[str, Any] = hybrid_rrf_corpus_and_arxiv_retriever(
+            away_team=away_u,
+            home_team=home_u,
+            situational_vector=[float(x) for x in situational_vector],
+            top_k=top_k,
+        )
+    else:
+        rrf_res = rrf_result
+
+    manifest_sum = _read_manifest_877_summary()
+    manifest_pdfs = int(manifest_sum.get("total_pdfs") or 0)
+    foundry_files = int(_FOUNDRY_SWEPT_FILES_CACHE)
+    sovereign_prims = int(_SOVEREIGN_PRIMITIVES_COUNT_CACHE)
+    equations_9875 = int(_EQUATIONS_9875_COUNT_CACHE)
+    corpus_total = manifest_pdfs + foundry_files + sovereign_prims + equations_9875
+
+    safe_rho = _clip(decay_rho, 0.50, 0.99)
+    bounded_weeks = max(2, min(22, int(n_weeks)))
+    w_seq = [safe_rho**idx for idx in range(bounded_weeks)]
+    w_sum = sum(w_seq) or 1.0
+    barber_eff_n = round(1.0 / sum((w / w_sum) ** 2 for w in w_seq), 4)
+    cqr_scale = (1.0 + 1.0 / max(2.0, barber_eff_n)) / 1.0833
+    barber_romano_mult = round(_clip(cqr_scale * float(instability_mult), 0.90, 1.35), 4)
+
+    rrf_epa_adj = float(rrf_res.get("rrf_regime_epa_adjustment", 0.0))
+    history = list(residual_history) or [(0.0, rrf_epa_adj * 14.0)]
+    state = BcAciState(
+        alpha=_clip(alpha_target, 0.01, 0.50),
+        gamma=max(1e-4, float(gamma_aci)),
+        q_halfwidth=max(1e-3, float(initial_halfwidth)),
+        bias_center=0.0,
+        beta=_clip(beta_bias, 0.01, 1.0),
+    )
+    last_miss = 0.0
+    for pred, obs in history:
+        _, lo_b, hi_b = predict_bc_aci_band(state, float(pred))
+        last_miss = 1.0 if (float(obs) < lo_b or float(obs) > hi_b) else 0.0
+        state = update_bc_aci_interval(state, float(pred), float(obs))
+
+    alpha_next = round(_clip(state.alpha + state.gamma * (state.alpha - last_miss), 0.01, 0.99), 6)
+    return {
+        "matchup": f"{away_u} @ {home_u}",
+        "manifest_pdfs_indexed": manifest_pdfs,
+        "foundry_files_swept": foundry_files,
+        "sovereign_books_primitives": sovereign_prims,
+        "equations_9875_indexed": equations_9875,
+        "corpus_total_artifacts_indexed": corpus_total,
+        "rrf_coherence_score": float(rrf_res.get("rrf_coherence_score", 0.0)),
+        "rrf_regime_epa_adjustment": rrf_epa_adj,
+        "barber_effective_sample_n": barber_eff_n,
+        "barber_romano_cqr_width_mult": barber_romano_mult,
+        "bc_aci_center_shift": round(float(state.bias_center), 6),
+        "bc_aci_q_halfwidth": round(float(state.q_halfwidth), 6),
+        "bc_aci_alpha_next": alpha_next,
+        "bc_aci_updates": int(state.updates),
+        "bigquery_sql_bundle": build_bigquery_ai_and_observability_sql_bundle(),
     }

@@ -1,0 +1,43 @@
+"""Multi-sport daily slate engine with BC-ACI and CopulaCPTS."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from gse_engine.multisport.daily_multisport_slate_engine import (
+        ESPN_SCOREBOARD_ENDPOINTS,
+        BcAciState,
+        CopulaLegSpec,
+        build_dixon_coles_pmf,
+        fetch_live_multisport_slate,
+        main,
+        predict_bc_aci_band,
+        price_copula_conformal_sgp,
+        render_multisport_daily_card,
+        simulate_multisport_matchup_10k,
+        update_bc_aci_interval,
+    )
+
+__all__ = [
+    "BcAciState",
+    "CopulaLegSpec",
+    "ESPN_SCOREBOARD_ENDPOINTS",
+    "build_dixon_coles_pmf",
+    "fetch_live_multisport_slate",
+    "main",
+    "predict_bc_aci_band",
+    "price_copula_conformal_sgp",
+    "render_multisport_daily_card",
+    "simulate_multisport_matchup_10k",
+    "update_bc_aci_interval",
+]
+
+
+def __getattr__(name: str) -> Any:
+    """Lazily resolve exports so ``python -m ...daily_multisport_slate_engine`` stays clean."""
+    if name in __all__:
+        from gse_engine.multisport import daily_multisport_slate_engine
+
+        return getattr(daily_multisport_slate_engine, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -17,15 +17,411 @@ import argparse
 import json
 import re
 import sys
+import urllib.request
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
+_ESPN_INACTIVE_INJURY_STATUSES = {"out", "injured reserve", "doubtful"}
+_ESPN_INACTIVE_ROSTER_STATUS_TYPES = {
+    "practice-squad",
+    "injured-reserve",
+    "suspended",
+    "out",
+}
+_ESPN_TEAM_NORM = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+_ESPN_TEAM_SLUG = {"WAS": "wsh", "LAR": "lar", "JAX": "jax"}
+
 
 class CardSanityFirewallError(RuntimeError):
     """Raised when any of the 7-Point Pre-Card Sanity Firewalls are violated."""
+
+
+def _norm_team(team: str) -> str:
+    """Normalize NFL team abbreviation."""
+    u = str(team or "").strip().upper()
+    return _ESPN_TEAM_NORM.get(u, u)
+
+
+def _espn_team_slug(team: str) -> str:
+    """Convert normalized NFL team abbreviation to ESPN roster API slug."""
+    u = _norm_team(team)
+    return _ESPN_TEAM_SLUG.get(u, u.lower())
+
+
+def is_player_truly_inactive(
+    summary_injuries_status: str | None,
+    roster_status_type: str | None,
+    roster_injuries: list[dict[str, Any]] | None,
+) -> bool:
+    """Return True only when live ESPN signals prove the player is inactive/excluded.
+
+    Only marks a player excluded when:
+      - Listed as 'Out', 'Injured Reserve', or 'Doubtful' in the event /summary
+        injuries array or /roster injuries array, OR
+      - roster_status_type (lowercased) is in {'practice-squad', 'injured-reserve',
+        'suspended', 'out'}.
+
+    NEVER excludes 'day-to-day' when roster_injuries is empty, because
+    activated-from-IR players (e.g. David Njoku, Denzel Perryman) remain
+    'day-to-day' with injuries == [].
+    """
+    if (
+        summary_injuries_status
+        and str(summary_injuries_status).strip().lower() in _ESPN_INACTIVE_INJURY_STATUSES
+    ):
+        return True
+
+    for inj in roster_injuries or []:
+        if isinstance(inj, dict):
+            inj_status = str(inj.get("status") or "").strip().lower()
+        else:
+            inj_status = str(inj or "").strip().lower()
+        if inj_status in _ESPN_INACTIVE_INJURY_STATUSES:
+            return True
+
+    return bool(
+        roster_status_type
+        and str(roster_status_type).strip().lower() in _ESPN_INACTIVE_ROSTER_STATUS_TYPES
+    )
+
+
+def _fetch_espn_json(url: str, timeout: int = 10) -> dict[str, Any]:
+    """Fetch JSON payload from ESPN API."""
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def _resolve_espn_event_id(away: str, home: str, week: int) -> str | None:
+    """Resolve ESPN event ID for (away, home, week) from local scoreboard or live API."""
+    away_u = _norm_team(away)
+    home_u = _norm_team(home)
+    sb: dict[str, Any] | None = None
+    local_sb = REPO_ROOT / "data" / "engine" / f"espn_2026_week{week}_scoreboard.json"
+    if local_sb.is_file():
+        try:
+            sb = json.loads(local_sb.read_text(encoding="utf-8"))
+        except Exception:
+            sb = None
+    if sb is None:
+        sb_url = (
+            "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+            f"?seasontype=2&week={week}&dates=2026"
+        )
+        sb = _fetch_espn_json(sb_url)
+
+    for ev in sb.get("events", []):
+        comps = ev.get("competitions") or []
+        comp = comps[0] if comps else {}
+        ev_away = ""
+        ev_home = ""
+        for competitor in comp.get("competitors") or []:
+            abbr = _norm_team((competitor.get("team") or {}).get("abbreviation") or "")
+            if competitor.get("homeAway") == "home":
+                ev_home = abbr
+            elif competitor.get("homeAway") == "away":
+                ev_away = abbr
+        if ev_away == away_u and ev_home == home_u:
+            ev_id = str(ev.get("id") or "").strip()
+            if ev_id:
+                return ev_id
+    return None
+
+
+def _iter_roster_items(roster_payload: dict[str, Any] | None) -> list[dict[str, Any]]:
+    """Flatten ESPN roster athletes payload into a list of athlete dicts."""
+    if not isinstance(roster_payload, dict):
+        return []
+    out: list[dict[str, Any]] = []
+    for grp in roster_payload.get("athletes") or []:
+        if isinstance(grp, dict) and isinstance(grp.get("items"), list):
+            for item in grp["items"]:
+                if isinstance(item, dict):
+                    out.append(item)
+        elif isinstance(grp, dict):
+            out.append(grp)
+    return out
+
+
+def sync_espn_t90_inactives(
+    away: str,
+    home: str,
+    week: int,
+    event_id: str | None = None,
+    summary_payload: dict[str, Any] | None = None,
+    away_roster_payload: dict[str, Any] | None = None,
+    home_roster_payload: dict[str, Any] | None = None,
+    config_path: Path | None = None,
+) -> dict[str, Any]:
+    """Sync live ESPN /summary injuries and /roster status into Stage-0 excluded_players.
+
+    Only marks players inactive per is_player_truly_inactive(), and lifts any stale
+    non-Master-Plan exclusion on (away, home) whose ESPN roster status is 'active'
+    with empty injuries, or 'day-to-day' with empty injuries and not listed in
+    summary injuries.
+    """
+    away_u = _norm_team(away)
+    home_u = _norm_team(home)
+    default_cfg_path = (
+        REPO_ROOT
+        / "data"
+        / "nflverse"
+        / f"week{week}_live_roster_transactions_and_starters_2026.json"
+    )
+    cfg_path = config_path or default_cfg_path
+    if cfg_path.is_file():
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    else:
+        cfg = {"week": week, "excluded_players": []}
+
+    resolved_event_id = event_id
+    if summary_payload is None:
+        rosters_missing = away_roster_payload is None or home_roster_payload is None
+        if resolved_event_id is None and rosters_missing:
+            resolved_event_id = _resolve_espn_event_id(away_u, home_u, week)
+        if resolved_event_id:
+            summary_payload = _fetch_espn_json(
+                f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event={resolved_event_id}"
+            )
+        else:
+            summary_payload = {}
+
+    if away_roster_payload is None:
+        away_roster_payload = _fetch_espn_json(
+            f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{_espn_team_slug(away_u)}/roster"
+        )
+    if home_roster_payload is None:
+        home_roster_payload = _fetch_espn_json(
+            f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{_espn_team_slug(home_u)}/roster"
+        )
+
+    summary_by_team_norm: dict[tuple[str, str], dict[str, str]] = {}
+    summary_by_norm: dict[str, dict[str, str]] = {}
+    for blk in (summary_payload or {}).get("injuries") or []:
+        if not isinstance(blk, dict):
+            continue
+        blk_team = _norm_team((blk.get("team") or {}).get("abbreviation") or "")
+        for item in blk.get("injuries") or []:
+            if not isinstance(item, dict):
+                continue
+            ath = item.get("athlete") or {}
+            pname = str(
+                ath.get("displayName") or ath.get("fullName") or ath.get("name") or ""
+            ).strip()
+            norm_p = _strip_name_suffix(pname)
+            if not norm_p:
+                continue
+            st = str(item.get("status") or "").strip()
+            pos_raw = ath.get("position")
+            pos = str(
+                pos_raw.get("abbreviation") if isinstance(pos_raw, dict) else (pos_raw or "UNKNOWN")
+            ).strip().upper() or "UNKNOWN"
+            detail = str(
+                ((item.get("details") or {}).get("type"))
+                or item.get("longComment")
+                or item.get("shortComment")
+                or "ESPN gameday status"
+            ).strip()
+            entry = {
+                "name": pname,
+                "team": blk_team,
+                "position": pos,
+                "status": st,
+                "detail": detail,
+            }
+            if blk_team:
+                summary_by_team_norm[(blk_team, norm_p)] = entry
+            summary_by_norm[norm_p] = entry
+
+    evaluated: dict[tuple[str, str], dict[str, Any]] = {}
+    for team_u, roster_payload in ((away_u, away_roster_payload), (home_u, home_roster_payload)):
+        for item in _iter_roster_items(roster_payload):
+            pname = str(
+                item.get("displayName") or item.get("fullName") or item.get("name") or ""
+            ).strip()
+            if not pname:
+                continue
+            norm_p = _strip_name_suffix(pname)
+            if not norm_p:
+                continue
+            pos_raw = item.get("position")
+            pos = str(
+                pos_raw.get("abbreviation") if isinstance(pos_raw, dict) else (pos_raw or "UNKNOWN")
+            ).strip().upper() or "UNKNOWN"
+            status_obj = item.get("status") or {}
+            roster_status_type = str(
+                status_obj.get("type") or status_obj.get("name") or ""
+            ).strip()
+            roster_injuries = item.get("injuries")
+            if not isinstance(roster_injuries, list):
+                roster_injuries = []
+            sum_entry = summary_by_team_norm.get((team_u, norm_p)) or summary_by_norm.get(norm_p)
+            sum_status = sum_entry["status"] if sum_entry else None
+            truly_inactive = is_player_truly_inactive(
+                sum_status, roster_status_type, roster_injuries
+            )
+            rt_low = roster_status_type.lower()
+            can_lift = (
+                (rt_low == "active" and len(roster_injuries) == 0 and not truly_inactive)
+                or (
+                    rt_low == "day-to-day"
+                    and len(roster_injuries) == 0
+                    and sum_status is None
+                )
+            )
+            evaluated[(team_u, norm_p)] = {
+                "name": pname,
+                "team": team_u,
+                "position": pos,
+                "truly_inactive": truly_inactive,
+                "can_lift": can_lift,
+                "roster_status_type": rt_low,
+                "roster_injuries": roster_injuries,
+                "summary_status": sum_status,
+                "detail": (sum_entry or {}).get("detail") or "",
+            }
+
+    for (blk_team, norm_p), sum_entry in summary_by_team_norm.items():
+        if blk_team not in (away_u, home_u):
+            continue
+        if (blk_team, norm_p) not in evaluated:
+            sum_status = sum_entry["status"]
+            if is_player_truly_inactive(sum_status, None, None):
+                evaluated[(blk_team, norm_p)] = {
+                    "name": sum_entry["name"],
+                    "team": blk_team,
+                    "position": sum_entry["position"],
+                    "truly_inactive": True,
+                    "can_lift": False,
+                    "roster_status_type": "",
+                    "roster_injuries": [],
+                    "summary_status": sum_status,
+                    "detail": sum_entry["detail"],
+                }
+
+    new_excluded: list[dict[str, Any]] = []
+    present_keys: set[tuple[str, str]] = set()
+    lifted_names: list[str] = []
+    added_names: list[str] = []
+
+    for raw_item in cfg.get("excluded_players") or []:
+        if isinstance(raw_item, dict):
+            ename = str(raw_item.get("name") or "").strip()
+            eteam = _norm_team(raw_item.get("team") or "")
+            epos = str(raw_item.get("position") or "UNKNOWN").strip().upper()
+            ereason = str(raw_item.get("reason") or "").strip()
+            entry_dict = dict(raw_item)
+        else:
+            ename = str(raw_item).strip()
+            eteam = ""
+            epos = "UNKNOWN"
+            ereason = ""
+            entry_dict = {
+                "name": ename,
+                "team": eteam or "UNKNOWN",
+                "position": epos,
+                "reason": ereason,
+            }
+
+        norm_e = _strip_name_suffix(ename)
+        if not norm_e:
+            continue
+
+        ev: dict[str, Any] | None = None
+        if eteam in (away_u, home_u):
+            ev = evaluated.get((eteam, norm_e))
+        elif eteam in ("", "UNKNOWN"):
+            ev = evaluated.get((away_u, norm_e)) or evaluated.get((home_u, norm_e))
+
+        if "MASTER-PLAN" in ereason.upper():
+            new_excluded.append(entry_dict)
+            present_keys.add((eteam or (ev["team"] if ev else "UNKNOWN"), norm_e))
+            continue
+
+        if ev is not None and ev["can_lift"]:
+            lifted_names.append(ename)
+            continue
+
+        new_excluded.append(entry_dict)
+        present_keys.add((eteam or (ev["team"] if ev else "UNKNOWN"), norm_e))
+
+    for (team_u, norm_p), ev in evaluated.items():
+        if not ev["truly_inactive"]:
+            continue
+        if (team_u, norm_p) in present_keys:
+            continue
+        sum_status = ev["summary_status"]
+        roster_injuries = ev["roster_injuries"]
+        rt_low = ev["roster_status_type"]
+        if sum_status and str(sum_status).strip().lower() in _ESPN_INACTIVE_INJURY_STATUSES:
+            detail_txt = ev["detail"] or "ESPN summary injury"
+            reason = f"{str(sum_status).upper()} - {detail_txt} (ESPN T-90m live)"
+        elif roster_injuries:
+            first_st = ""
+            for inj in roster_injuries:
+                cand_st = str((inj or {}).get("status") or "").strip()
+                if cand_st.lower() in _ESPN_INACTIVE_INJURY_STATUSES:
+                    first_st = cand_st
+                    break
+            reason = f"{(first_st or 'OUT').upper()} - ESPN roster injury (ESPN T-90m live)"
+        else:
+            reason = f"{rt_low.upper()} - ESPN roster status (ESPN T-90m live)"
+
+        new_excluded.append({
+            "name": ev["name"],
+            "team": team_u,
+            "position": ev["position"],
+            "reason": reason,
+        })
+        present_keys.add((team_u, norm_p))
+        added_names.append(ev["name"])
+
+    new_excluded.sort(key=lambda x: (str(x.get("team") or ""), str(x.get("name") or "")))
+    cfg["excluded_players"] = new_excluded
+    if "excluded_players_union" in cfg:
+        cfg["excluded_players_union"] = [str(p.get("name") or "") for p in new_excluded]
+
+    cfg_path.parent.mkdir(parents=True, exist_ok=True)
+    cfg_path.write_text(json.dumps(cfg, indent=2) + "\n", encoding="utf-8")
+
+    # Keep companion Stage-0 artifacts synced when operating on the default week config
+    if config_path is None:
+        union_names = [str(p.get("name") or "") for p in new_excluded]
+        for companion in (
+            REPO_ROOT / "data" / "nflverse" / f"stage0_truth_s2026_w{week}.json",
+            REPO_ROOT / "data" / "engine" / f"week{week}_unified_stage0_truth.json",
+            REPO_ROOT / "data" / "engine" / f"week{week}_stage0_preflight_config.json",
+        ):
+            if companion.is_file():
+                try:
+                    comp_data = json.loads(companion.read_text(encoding="utf-8"))
+                    if isinstance(comp_data.get("excluded_players"), list):
+                        if companion.name.endswith("_preflight_config.json"):
+                            comp_data["excluded_players"] = union_names
+                        else:
+                            comp_data["excluded_players"] = new_excluded
+                    if "excluded_players_union" in comp_data:
+                        comp_data["excluded_players_union"] = union_names
+                    companion.write_text(
+                        json.dumps(comp_data, indent=2) + "\n", encoding="utf-8"
+                    )
+                except Exception:
+                    pass
+
+    return {
+        "away": away_u,
+        "home": home_u,
+        "week": week,
+        "event_id": resolved_event_id,
+        "config_path": str(cfg_path),
+        "added_exclusions": sorted(added_names),
+        "lifted_exclusions": sorted(lifted_names),
+        "excluded_count": len(new_excluded),
+        "excluded_players": new_excluded,
+    }
 
 
 def _strip_name_suffix(name: str) -> str:
@@ -857,6 +1253,20 @@ def main() -> int:
 
         stage0_truth = build_live_stage0_truth(season=2026, week=args.week)
         sync_stage0_truth_files(stage0_truth, root=REPO_ROOT)
+        try:
+            t90_sync = sync_espn_t90_inactives(away=away, home=home, week=args.week)
+            if t90_sync.get("excluded_players") is not None:
+                stage0_truth["excluded_players"] = t90_sync["excluded_players"]
+            sys.stderr.write(
+                f"[*] Step 1b: ESPN T-90m Inactives Synced for {away}@{home}: "
+                f"+{len(t90_sync.get('added_exclusions', []))} added, "
+                f"-{len(t90_sync.get('lifted_exclusions', []))} lifted\n"
+            )
+        except Exception as exc:
+            sys.stderr.write(
+                f"[*] Step 1b: ESPN T-90m live sync offline fallback ({exc}); "
+                "using Stage-0 baseline.\n"
+            )
 
         sys.stderr.write(f"[*] Step 2: Scoped Board Refresh for {away}@{home}...\n")
         board_fname = f"week{args.week}_{away.lower()}_{home.lower()}_dk_full_board_2026_11_06.json"

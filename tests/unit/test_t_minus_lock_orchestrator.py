@@ -12,7 +12,9 @@ from pathlib import Path
 import pytest
 from scripts.ops.gse_t_minus_lock_orchestrator import (
     CardSanityFirewallError,
+    is_player_truly_inactive,
     render_operator_ranked_card_markdown,
+    sync_espn_t90_inactives,
     verify_card_sanity_or_raise,
 )
 
@@ -273,3 +275,203 @@ def test_cli_offline_verify_subprocess_timing() -> None:
     assert elapsed < 1.5, f"Execution took {elapsed:.3f}s (must be < 1.5s)"
     assert "OPERATOR-FIRST RANKED CONFIDENCE CARD" in proc.stdout
     assert "7-Point Pre-Card Sanity Firewall: 100% PASS" in proc.stdout
+
+
+def test_is_player_truly_inactive_activated_from_ir_vs_excluded() -> None:
+    """day-to-day with empty injuries is NOT excluded; Out/IR/Doubtful/practice-squad are."""
+    # Activated-from-IR pattern: David Njoku / Denzel Perryman
+    assert is_player_truly_inactive(None, "day-to-day", []) is False
+    assert is_player_truly_inactive("Questionable", "day-to-day", []) is False
+    assert is_player_truly_inactive(None, "active", []) is False
+    assert (
+        is_player_truly_inactive("Questionable", "active", [{"status": "Questionable"}])
+        is False
+    )
+
+    # Truly inactive statuses
+    assert is_player_truly_inactive("Out", "active", []) is True
+    assert is_player_truly_inactive("Doubtful", "active", []) is True
+    assert is_player_truly_inactive("Injured Reserve", "day-to-day", []) is True
+    assert is_player_truly_inactive(None, "day-to-day", [{"status": "Injured Reserve"}]) is True
+    assert is_player_truly_inactive(None, "active", [{"status": "Out"}]) is True
+    assert is_player_truly_inactive(None, "active", [{"status": "Doubtful"}]) is True
+    assert is_player_truly_inactive(None, "practice-squad", []) is True
+    assert is_player_truly_inactive(None, "injured-reserve", []) is True
+    assert is_player_truly_inactive(None, "suspended", []) is True
+    assert is_player_truly_inactive(None, "out", []) is True
+
+
+def test_sync_espn_t90_inactives_lifts_activated_from_ir_and_excludes_inactives(
+    tmp_path: Path,
+) -> None:
+    """sync_espn_t90_inactives lifts David Njoku/Denzel Perryman and keeps true inactives."""
+    cfg_path = tmp_path / "week10_config.json"
+    cfg_data = {
+        "week": 10,
+        "excluded_players": [
+            {
+                "name": "David Njoku",
+                "team": "LAC",
+                "position": "TE",
+                "reason": "IR - no detail (stale Neon wk10)",
+            },
+            {
+                "name": "Denzel Perryman",
+                "team": "LAC",
+                "position": "LB",
+                "reason": "IR - no detail (stale Neon wk10)",
+            },
+            {
+                "name": "Lamar Jackson",
+                "team": "BAL",
+                "position": "QB",
+                "reason": "IR - Back",
+            },
+            {
+                "name": "Rashod Bateman",
+                "team": "BAL",
+                "position": "WR",
+                "reason": "OUT - Ankle (stale)",
+            },
+        ],
+    }
+    cfg_path.write_text(json.dumps(cfg_data), encoding="utf-8")
+
+    summary_payload = {
+        "injuries": [
+            {
+                "team": {"abbreviation": "LAC"},
+                "injuries": [
+                    {
+                        "status": "Out",
+                        "athlete": {
+                            "displayName": "Ladd McConkey",
+                            "position": {"abbreviation": "WR"},
+                        },
+                        "details": {"type": "Back"},
+                    },
+                ],
+            },
+            {
+                "team": {"abbreviation": "BAL"},
+                "injuries": [
+                    {
+                        "status": "Doubtful",
+                        "athlete": {
+                            "displayName": "Kyle Hamilton",
+                            "position": {"abbreviation": "S"},
+                        },
+                        "details": {"type": "Groin"},
+                    },
+                ],
+            },
+        ]
+    }
+    away_roster_payload = {
+        "athletes": [
+            {
+                "position": "offense",
+                "items": [
+                    {
+                        "displayName": "David Njoku",
+                        "position": {"abbreviation": "TE"},
+                        "status": {"type": "day-to-day"},
+                        "injuries": [],
+                    },
+                    {
+                        "displayName": "Ladd McConkey",
+                        "position": {"abbreviation": "WR"},
+                        "status": {"type": "active"},
+                        "injuries": [{"status": "Out"}],
+                    },
+                    {
+                        "displayName": "Jake Browning",
+                        "position": {"abbreviation": "QB"},
+                        "status": {"type": "practice-squad"},
+                        "injuries": [],
+                    },
+                ],
+            },
+            {
+                "position": "defense",
+                "items": [
+                    {
+                        "displayName": "Denzel Perryman",
+                        "position": {"abbreviation": "LB"},
+                        "status": {"type": "day-to-day"},
+                        "injuries": [],
+                    },
+                    {
+                        "displayName": "Derwin James Jr.",
+                        "position": {"abbreviation": "S"},
+                        "status": {"type": "day-to-day"},
+                        "injuries": [{"status": "Injured Reserve"}],
+                    },
+                ],
+            },
+        ]
+    }
+    home_roster_payload = {
+        "athletes": [
+            {
+                "position": "offense",
+                "items": [
+                    {
+                        "displayName": "Lamar Jackson",
+                        "position": {"abbreviation": "QB"},
+                        "status": {"type": "day-to-day"},
+                        "injuries": [{"status": "Injured Reserve"}],
+                    },
+                    {
+                        "displayName": "Rashod Bateman",
+                        "position": {"abbreviation": "WR"},
+                        "status": {"type": "active"},
+                        "injuries": [],
+                    },
+                ],
+            },
+            {
+                "position": "defense",
+                "items": [
+                    {
+                        "displayName": "Kyle Hamilton",
+                        "position": {"abbreviation": "S"},
+                        "status": {"type": "active"},
+                        "injuries": [{"status": "Doubtful"}],
+                    },
+                ],
+            },
+        ]
+    }
+
+    res = sync_espn_t90_inactives(
+        away="LAC",
+        home="BAL",
+        week=10,
+        summary_payload=summary_payload,
+        away_roster_payload=away_roster_payload,
+        home_roster_payload=home_roster_payload,
+        config_path=cfg_path,
+    )
+
+    updated = json.loads(cfg_path.read_text(encoding="utf-8"))
+    excluded_names = {p["name"] for p in updated["excluded_players"]}
+
+    # Activated-from-IR & active-empty-injuries players lifted
+    assert "David Njoku" not in excluded_names
+    assert "Denzel Perryman" not in excluded_names
+    assert "Rashod Bateman" not in excluded_names
+    assert set(res["lifted_exclusions"]) == {"David Njoku", "Denzel Perryman", "Rashod Bateman"}
+
+    # Truly inactive players excluded
+    assert "Lamar Jackson" in excluded_names
+    assert "Ladd McConkey" in excluded_names
+    assert "Jake Browning" in excluded_names
+    assert "Derwin James Jr." in excluded_names
+    assert "Kyle Hamilton" in excluded_names
+    assert set(res["added_exclusions"]) == {
+        "Derwin James Jr.",
+        "Jake Browning",
+        "Kyle Hamilton",
+        "Ladd McConkey",
+    }

@@ -3,7 +3,39 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
-## 2026-11-17 (2026-11-16 CT) -- Wave 19, T-Minus Lock Postmortem & Orchestrator, Whop Storefront & Global Ops Handoff
+## 2026-11-17 (2026-11-16 CT) -- 81,707-Artifact Corpus + BC-ACI Conformal Bridge, Week 11 IND@HOU Lock, 365-Day Multi-Sport Engine & Programmatic SEO
+
+- **What changed**:
+  - **PR #1291 Conflict Resolution & `origin/main` Merge (`02052b9bf`)**: Merged `origin/main` (`b7c8e310e`) cleanly across `apps/web/app/packages/page.tsx`, `docs/strategy/HANDOFF.md`, and `scripts/ops/run_permanent_sequenced_weekly_pipeline.py` so PR `#1291` is cleanly mergeable.
+  - **81,707-Artifact Books/PDFs/Foundry/Situational Conformal Bridge & Read-Only BigQuery SQL Bundle (`LL-2026-11-16-037`)**:
+    - Enhanced `src/gse_engine/compute/corpus_situational_integrator.py` with `evaluate_books_pdfs_and_situational_conformal_bridge()` and `build_bigquery_ai_and_observability_sql_bundle()`.
+    - Wired `corpus_total_artifacts_indexed` (`877` local PDFs + `12,469` Foundry swept files + `58,486` Sovereign book primitives + `9,875` equation matrix entries = `81,707` total indexed artifacts) into `books_and_pdfs_pillar` and `situational_279_pillar`, alongside live `BC-ACI` (`arXiv:2412.19318`) online bias center shift (`bc_aci_center_shift`) and miscoverage adaptation (`bc_aci_alpha_next`) paired with Barber-Romano CQR width scaling.
+    - Embedded read-only, partition-pruned BigQuery SQL templates (`AI.FORECAST` TimesFM 2.5, `AI.KEY_DRIVERS`, `ML.DETECT_CHANGE_POINTS`, `GRAPH_TABLE` GQL role spillover, and `region-us.INFORMATION_SCHEMA.JOBS` Golden CTEs with `statement_type != 'SCRIPT'`).
+  - **ESPN Activated-from-IR Predicate & Week 11 Early Lock (`IND @ HOU` TNF)**:
+    - Hardened `is_player_truly_inactive()` and `sync_espn_t90_inactives()` inside `scripts/ops/gse_t_minus_lock_orchestrator.py` so newly activated IR veterans (`status.type == "day-to-day"` with `injuries == []`, such as David Njoku and Denzel Perryman) are preserved as active rather than excluded.
+    - Ingested live Week 11 ESPN scoreboard (`data/engine/espn_2026_week11_scoreboard.json`), live 34-market Bovada/DK board (`data/engine/week11_ind_hou_dk_full_board_2026_11_06.json`), Stage-0 unified truth (`data/engine/week11_unified_stage0_truth.json`), live full-game JEV spine (`data/engine/jev_full_game_spine_ind_hou_week11.json`), and verified `data/cards/ranked_plays_card_w11_ind_hou.md` through Firewalls `S1..S7`.
+  - **365-Day Multi-Sport (`NBA`, `NCAAB`, `NHL`, `SOCCER`) Engine (`src/gse_engine/multisport/`)**:
+    - Built `daily_multisport_slate_engine.py` with `BcAciState` / `predict_bc_aci_band` / `update_bc_aci_interval`, `CopulaLegSpec` / `price_copula_conformal_sgp`, 10,000-world vectorized `NBA`/`NCAAB`/`NHL` simulators, normalized Dixon-Coles bivariate Poisson `SOCCER` simulator (`build_dixon_coles_pmf`), keyless ESPN scoreboard ingestion with offline fallback, and pure 7-bit ASCII `XX/100` daily card generator (`data/cards/multisport_daily_card_2026_11_16.md`, `live_stake_fraction: 0.0`).
+  - **Programmatic Matchup & Player Prop ISR SEO & Pre-Lock `T-3h` Visitor Capture**:
+    - Created `apps/web/lib/seo/programmatic-matchup-and-player-seo.ts` and `apps/web/__tests__/programmatic-seo-and-visitor-capture.test.ts` enforcing the 6-tier active Whop/Stripe ladder (zero retired `$59.99`/`$249` tiers), `T-3h` Thu/Sun/Mon email/Telegram + `$0` Proof Room visitor capture, Google `Dataset.license`, clean-room domain checks, and strict paywall boundary (`paywallProtected: true`).
+  - **Deep Research Synthesis & Ship Harness Registration**:
+    - Published `docs/engine/research/2026-11-16/deep-research-2026-autonomous-sports-intelligence-and-growth.md` and registered `tests/unit/test_daily_multisport_slate_engine.py` plus `__tests__/programmatic-seo-and-visitor-capture.test.ts` in `scripts/ops/overnight-verify-and-ship.mjs`.
+
+- **What was proven**:
+  - `python -m mypy --strict src/gse_engine` (`65` source files clean) and `python -m ruff check` passed (`exit=0`).
+  - Programmatic SEO & Visitor Capture suite passed `7/7` in Vitest and `npm run typecheck --workspace=apps/web` exited `0`.
+  - Week 11 `IND @ HOU` TNF Ranked Card passed `S1..S7` Pre-Card Sanity Firewalls (`77/100` 2-Leg Correlated SGP + `4` straight props `60/100..64/100`).
+  - Multi-sport daily card emitted `9` fixtures across `NCAAB`, `NBA`, `NHL`, and `SOCCER` with `real_money_stake_cleared: False` and `live_stake_fraction: 0.0`.
+
+- **What was not proven**:
+  - Live real-money prospective execution stays frozen at `0.0u` until prospective `N >= 250` validation gate closes.
+
+- **What the next role must do**:
+  - Continue overnight subagent extraction across `81,707` corpus artifacts (`flash` / `flash_lite` workers under `WIRE-FIRST` sequencing) targeting out-of-sample CRPS/Brier lift and Sunday/Monday Week 11 slates (`MIN @ SF` Mexico City altitude `K16`, `CIN @ WAS` MNF), plus daily multi-sport `BC-ACI` residual calibration while preserving `$0` live-money freeze.
+
+---
+
+### Previous Entry (Wave 19 & MNF T-Minus Lock Postmortem)
 
 - **What changed**:
   - **MNF LAC @ BAL Workflow Postmortem, Six Systemic Pre-Lock Failures & T-Minus Lock Orchestrator (`LL-2026-11-16-036`)**:
