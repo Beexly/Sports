@@ -1,0 +1,720 @@
+{
+ "book_id": "12680c85e7ba3972",
+ "source_status": "COMPLETE",
+ "source_note": "Amos Alonzo Stagg, Touchdown! As Told by Coach Amos Alonzo Stagg to Wesley Winans Stout, G. P. Putnam's Sons, 1927. Local file is a scanned copy of the 1927 book (a University of Tulsa Library stamp appears on the final pages), fourteen chapters, printed pagination running to p. 352. PDF size 13033019 bytes; sha256 12680c85e7ba39724b68245fbc8170f36c1037af4ae96b032ac174bb4557424a; book_id is the first 16 hex characters of that digest over (str(size) + file bytes). Extracted text is 489268 bytes and about 83564 words of OCR: diagram plates and photo captions are garbled, some words are broken at line turns, and page headers interleave the prose, but the body text is largely clean and complete. Every verbatim quote below was verified as one contiguous string in the extracted text file under whitespace normalization, and no quote crosses a page break. The work contains no equations; its quantitative content is counts, dates, and rule values, so latex is empty throughout. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "rules_arms_race_balance",
+   "name": "The history of the game is a continuous effort to beat the rules, forcing constant readjustment to equalize the disturbed balance between offence and defence",
+   "verbatim_quote": "It has been a continuous effort, first to beat the rules, thereby forcing a constant read justment to equalize the disturbed balance between the offence and the defence.",
+   "page": "Chapter IV, Five Yards to Gain; extracted text line ~1549",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stagg frames rule change as reactive: each exploitation disturbs an offence defence balance and the code answers it.",
+    "The claim covers the whole 1876 to 1927 span he narrates."
+   ],
+   "breakdown_regime": "The frame underweights changes driven by safety politics or commerce rather than by on field exploitation, both of which Stagg himself documents for 1905 and 1906.",
+   "domain": "rules evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats every rule set and every opponent tendency as a moving target: when a signal or concept is exploited repeatedly, its expected value is decayed and the counter adjustment is modeled as the next state, not as a surprise.",
+    "source_operator": "rules_arms_race_balance",
+    "telemetry": "Rule change history, concept usage rates, success decay curves after repeated exposure."
+   }
+  },
+  {
+   "primitive_id": "scrummage_abolition_snapperback_origin",
+   "name": "Abolishing the scrummage created the snapperback and quarterback: one forward passes the ball back with his foot to a named back, the first step toward naming positions by function",
+   "verbatim_quote": "When the scrummage went out, the convention rovided that one of the forwards, or rush line, to be called the snapperback, was to pass the ball back to a back, to be known as the quarterback, with his foot.",
+   "page": "Chapter IV, Five Yards to Gain; extracted text line ~1627",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The convention provided that one forward, to be called the snapperback, pass the ball back to a back, to be known as the quarterback, with his foot.",
+    "Stagg notes this was the first step toward giving each position a name."
+   ],
+   "breakdown_regime": "Position names that begin as function labels later harden into roster categories even after the function changes, a drift Stagg does not flag.",
+   "domain": "formation origins",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine roles are defined by function performed on the play, not by roster label, so a player aligned as a nominal position but performing another function is modeled under the function.",
+    "source_operator": "scrummage_abolition_snapperback_origin",
+    "telemetry": "Alignment and action data per snap, function tags independent of listed position."
+   }
+  },
+  {
+   "primitive_id": "block_game_retention_loophole",
+   "name": "The 1880 and 1881 block games: the convention provided for retention of the ball but not for its surrender, and both teams exploited the gap by refusing to give the ball up",
+   "verbatim_quote": "Followed one of the most comic games on the records, the Princeton Yale block game of 1880, and the even more ab surd block game between the same teams in 1881.",
+   "page": "Chapter IV, Five Yards to Gain; extracted text line ~1655",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Princeton discovered the gap at once: retention was provided for, surrender was not.",
+    "With the championship decided by the previous season's winner on a tie, neither side had reason to surrender possession."
+   ],
+   "breakdown_regime": "A loophole this total is rare; most gaps are partial, and Stagg's comic framing understates that the same incentive logic operates on smaller gaps every season.",
+   "domain": "rules loopholes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine audits any strategy whose value comes from an unpriced gap in the rules or in the data definitions, and flags it as fragile value that disappears the moment the gap is closed.",
+    "source_operator": "block_game_retention_loophole",
+    "telemetry": "Strategy value decomposition, rule and definition change logs, edge persistence after patches."
+   }
+  },
+  {
+   "primitive_id": "rehearsed_strategy_signals_gridiron",
+   "name": "The five yards in three downs rule forced rehearsed strategy, signals to designate prearranged plays, and the five yard chalk sections that made the field a gridiron",
+   "verbatim_quote": "The immediate result was the appearance in 1883 of rehearsed strategy and the introduction of signals to designate these prearranged plays. The rule furthermore forced the laying off of the field in five-yard sections in 1882 by chalk lines, giving it the appearance of a gridiron,",
+   "page": "Chapter IV, Five Yards to Gain",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule furthermore forced the laying off of the field in five yard sections in 1882 by chalk lines.",
+    "Signals exist because plays are prearranged; prearrangement exists because the down and distance constraint punishes improvisation."
+   ],
+   "breakdown_regime": "Signals also leak: Stagg's later chapters show codes being read, stolen, and drowned out, costs this origin passage does not yet weigh.",
+   "domain": "strategy origins",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A constraint that forces planning also forces communication, and communication creates an observable channel: the engine models opponent play calling as a coded channel with a measurable leak rate.",
+    "source_operator": "rehearsed_strategy_signals_gridiron",
+    "telemetry": "Play call sequences, signal and formation observables, opponent anticipation rates."
+   }
+  },
+  {
+   "primitive_id": "interference_convoy_origin_1879",
+   "name": "Interference began as a categorical rule violation: Princeton's 1879 convoy of two players escorting the ball carrier, one on each side but never in advance",
+   "verbatim_quote": "grew out of Princeton's use in 1879 of two players to convoy the ball carrier, one on each side, but never in advance.",
+   "page": "Chapter IV, Five Yards to Gain; extracted text line ~1612",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Walter Camp, refereeing the Harvard game, warned the Princeton captain it was illegal, yet Yale used the same play later that season.",
+    "Acceptance by common consent, not by rule change, is what legitimized it."
+   ],
+   "breakdown_regime": "Stagg treats common consent as settling the matter; in a governed league the same spread would be stopped by enforcement, so the mechanism depends on weak officiating.",
+   "domain": "offense origins",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine distinguishes formal rules from enforced rules: a technique's real availability is set by observed enforcement, and historical adoption by imitation is tracked as its own diffusion signal.",
+    "source_operator": "interference_convoy_origin_1879",
+    "telemetry": "Penalty enforcement rates by technique, adoption curves across teams."
+   }
+  },
+  {
+   "primitive_id": "moffat_spiral_punt_1881",
+   "name": "Moffat's spiral punt of 1881 changed the whole science of punting: one technique innovation rewrote an entire phase of the game",
+   "verbatim_quote": "This same Moffat had invented the spiral punt in 1881 and changed thereby the whole science of punting.",
+   "page": "Chapter IV, Five Yards to Gain; extracted text line ~1865",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Moffat also kicked field goals with his left foot from difficult angles in the same passage.",
+    "The claim is that technique, not rules or personnel, was the causal lever."
+   ],
+   "breakdown_regime": "Single inventor attribution is Stagg's narrative habit; technique usually diffuses from several sources, and the passage gives no comparative punt measurements.",
+   "domain": "technique innovation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Technique changes are modeled as regime shifts in the engine: when a new technique appears, prior baselines for that phase are marked stale rather than averaged with the new regime.",
+    "source_operator": "moffat_spiral_punt_1881",
+    "telemetry": "Technique adoption dates, phase performance before and after adoption."
+   }
+  },
+  {
+   "primitive_id": "smock_canvas_jacket_tackling_descent",
+   "name": "Smock's laced canvas jacket of 1877 gave tacklers no handhold, and in time dropped the tackling line from above the waist to the hips and finally to the knees",
+   "verbatim_quote": "Smock's canvas jacket soon necessitated better tackling, and in time led to the tackling line being dropped from above the waist to the hips, and finally to the knees.",
+   "page": "Chapter II (the 1877 Princeton Yale game narrative); extracted text line ~1075",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The jacket was tough, fitted closely, and so stiff and smooth that it gave no handhold for tackling.",
+    "In that day anything below the waist was a foul, so the adaptation had to wait for technique and rules to move together."
+   ],
+   "breakdown_regime": "Equipment driven adaptation is bounded by the foul line of the era; the same jacket under a different tackling rule would have produced a different descent path.",
+   "domain": "equipment and technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Equipment and surface features enter the engine as technique modifiers: a change in what can be gripped, worn, or planted on revalues the techniques that depend on it.",
+    "source_operator": "smock_canvas_jacket_tackling_descent",
+    "telemetry": "Equipment and surface records joined to technique success rates."
+   }
+  },
+  {
+   "primitive_id": "tackling_dummy_drill_invention",
+   "name": "Stagg invented the tackling dummy in the fall of 1889: a rolled mattress suspended from the gym roof, built to drill the new low tackling technic the squad would not learn live",
+   "verbatim_quote": "A similar situation led to my invention of the football tackling dummy in the fall of 1889.",
+   "page": "Chapter VI, Playing End for Yale; extracted text line ~3041",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The previous year the rules convention had lowered the tackling line to the knees, but the Yale squad continued to tackle high and poorly.",
+    "The dummy is a simulation device: repetition against a stand in before repetition against men."
+   ],
+   "breakdown_regime": "A dummy cannot teach reading a moving ball carrier; Stagg's own later mechanical player passage admits practice performance does not guarantee game transfer.",
+   "domain": "practice design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Training and simulation design in the engine's operation follows the same order: build a stand in that isolates the exact new technic, drill it there, and only then test transfer under live conditions.",
+    "source_operator": "tackling_dummy_drill_invention",
+    "telemetry": "Drill design records, technique error rates in drill versus live settings."
+   }
+  },
+  {
+   "primitive_id": "ends_back_formation_1890",
+   "name": "Stagg pulled his ends back out of the line and used them like backs, to carry the ball around the opposite ends and to drive into the line ahead of the ball carrier",
+   "verbatim_quote": "Out of this experience I pulled my ends back out of the line, used them like backs to carry the ball around the opposite ends and to drive into the line ahead of the ball carrier,",
+   "page": "Chapter VII, Abracadabra; extracted text line ~3725",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The insight came from playing end at Yale: he could do more effective work as interference lining up slightly back than in conventional line play.",
+    "The practice was copied by other schools and claimed as original, and lasted fourteen years until six men were required on the line."
+   ],
+   "breakdown_regime": "The formation lived only until a line minimum rule killed it; structural innovations carry a rule change mortality that Stagg notes but does not price in advance.",
+   "domain": "formation design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine values alignment flexibility directly: a player moved off his nominal line who gains a functional advantage is credited at the function level, and every such edge is tagged with the rule that could abolish it.",
+    "source_operator": "ends_back_formation_1890",
+    "telemetry": "Alignment maps, function level success by alignment, rule exposure tags."
+   }
+  },
+  {
+   "primitive_id": "delayed_pass_lineage",
+   "name": "The delayed pass descends from McClung's wheel back run: Woodruff took the same principle and applied it with greater ease and effect as a pass",
+   "verbatim_quote": "This was the trick that suggested to Woodruff the delayed pass, working on the same principle but with greater ease and effect;",
+   "page": "Chapter VI, Playing End for Yale; extracted text line ~3153",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The parent trick: start as if to skirt the ends, then wheel diagonally back through the now opened line.",
+    "Stagg first saw the delayed pass used against his own Chicago team by Penn in 1898."
+   ],
+   "breakdown_regime": "Lineage claims rest on Stagg's memory of who suggested what to whom; parallel invention is possible and the passage offers no corroborating record.",
+   "domain": "play lineage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Play and signal genealogy is a first class engine object: a concept inherits the defensive reactions its parent concept trained, so a descendant concept is priced partly on the parent's usage history.",
+    "source_operator": "delayed_pass_lineage",
+    "telemetry": "Concept family trees, usage and success by generation of a concept family."
+   }
+  },
+  {
+   "primitive_id": "flying_wedge_momentum_mass",
+   "name": "The Deland flying wedge: on a waved signal two sections came forward in lock step, converged around the ball carrier, and the mass moved on with high momentum",
+   "verbatim_quote": "Trafford waved his hand as a signal, the two sections came swiftly forward in lock step, con verged around Trafford, who put the ball into play as they enveloped him, and the mass moved on with high momentum.",
+   "page": "Chapter IX, Deep-Dish Football; extracted text line ~5225",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wedge demanded the exact cooperation of eleven men and was extremely difficult to execute.",
+    "It was the final outgrowth of the original kick off formation, through the Princeton adaptation with the quarter inside a wedge of the other ten."
+   ],
+   "breakdown_regime": "Momentum mass plays were legislated out by the 1894 bans and the later five yard grouping limits; the principle survives only inside what the current code permits.",
+   "domain": "mass plays",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coordinated mass and timing are measurable engine quantities: a play's value rises with the synchronization of its moving parts, and synchronization is estimated from execution variance, not assumed.",
+    "source_operator": "flying_wedge_momentum_mass",
+    "telemetry": "Timing variance across participants, play success by synchronization measures."
+   }
+  },
+  {
+   "primitive_id": "section_e_1896_mass_play_reform",
+   "name": "Section E of the 1896 code disposed of mass play: no more than one step toward the opponent's goal before the ball is in play without a full stop, and at least five players on the line of scrimmage at the snap",
+   "verbatim_quote": "No player of the side in possession of the ball shall take more than one step toward his opponent's goal before the ball is in play without coming to a full stop. At least five players shall be on the line of scrimmage when the ball is snapped.",
+   "page": "Chapter IX, Deep-Dish Football; extracted text line ~5340",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reform followed the revolt against mass momentum play and forced the rival rules bodies to agree on a new code in midsummer 1896.",
+    "Stagg's verdict: it did help, but it was inadequate."
+   ],
+   "breakdown_regime": "A one step and full stop rule is an enforcement judgment call at game speed; Stagg's inadequacy verdict is exactly the gap between written and enforced rules.",
+   "domain": "rules reform",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Written constraints enter the engine with an enforcement confidence attached; a constraint that officials cannot measure at speed is discounted in proportion to its observed enforcement rate.",
+    "source_operator": "section_e_1896_mass_play_reform",
+    "telemetry": "Penalty call rates per rule, enforcement variance across crews."
+   }
+  },
+  {
+   "primitive_id": "shift_full_stop_measurement_1927",
+   "name": "By 1927 the shift rule had an operational measurement: approximately one second, or the time it takes to count 1, 2, 3, 4 fast, after a shift and huddle",
+   "verbatim_quote": "have set a measurement of approximately one second, or the time it takes to count 1, 2, 3, 4 fast, after a shift and huddle.",
+   "page": "Chapter IX, Deep-Dish Football (close); extracted text line ~5383",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule had been re-emphasized annually before the measurement was set.",
+    "The count fast standard is a human timing instrument, chosen because it is what an official can actually perform."
+   ],
+   "breakdown_regime": "A counted second varies by counter; the standard trades precision for enforceability, which Stagg reports without evaluating the variance.",
+   "domain": "rules measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine threshold that a human or a feed must apply gets an operational definition tied to the instrument that measures it, with the instrument's variance stated beside the threshold.",
+    "source_operator": "shift_full_stop_measurement_1927",
+    "telemetry": "Threshold definitions, measurement source and variance per input feed."
+   }
+  },
+  {
+   "primitive_id": "signal_code_book_1889",
+   "name": "Yale's first signal system of 1889 began as key words and phrases and switched to numbers late in the season; Stagg's copy of the first 1889 code book survives as the artifact",
+   "verbatim_quote": "Corbin graduated in 1889, and that fall we began with a system of key words and phrases, switching to numbers late in the season. Out of the forbidding accumulation of memorabilia in our Chicago home, Mrs. Stagg has exhumed a copy of our first 1889 code book.",
+   "page": "Chapter VII, Abracadabra; extracted text line ~3528",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Code words mapped ordinary speech to plays: praising any play meant left half between right tackle and end, condemning any play the mirror call.",
+    "The system had to be speakable in hearing of the defence without revealing itself."
+   ],
+   "breakdown_regime": "A code built on ordinary speech is deniable but low bandwidth and easily cracked once the mapping is suspected; Stagg's later chapters show complexity defeating itself.",
+   "domain": "signals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Signal design in the engine balances three quantities: bandwidth, leak resistance, and the caller's own error rate under noise; a code that maximizes one at the expense of the others is rejected.",
+    "source_operator": "signal_code_book_1889",
+    "telemetry": "Call error rates, opponent anticipation rates, code complexity measures."
+   }
+  },
+  {
+   "primitive_id": "military_obedience_with_initiative",
+   "name": "A player must obey orders like a soldier where orders have been given, and, like a good soldier, act swiftly and surely on his own in an unforeseen contingency",
+   "verbatim_quote": "A player must obey orders like a soldier where orders have been given, and, like a good soldier, act swiftly and surely on his own in an unforseen contingency.",
+   "page": "Chapter XI, Heroes and Goats (the safety man case); extracted text line ~6106",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The case behind it: a safety man crept forward against a temporary shift order across the 1897 and 1898 seasons and three games were lost to the one disobeyed instruction.",
+    "Obedience and initiative are both required; the boundary is whether orders covered the situation."
+   ],
+   "breakdown_regime": "The doctrine gives no test for when a player should judge an order obsolete, and Stagg's own Formation B failure in 1918 shows the cost when the boundary is misjudged the other way.",
+   "domain": "team discipline",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine decision rights are allocated the same way: a layer follows the standing plan where the plan covers the state, and deviates only in states the plan does not cover, with the deviation logged.",
+    "source_operator": "military_obedience_with_initiative",
+    "telemetry": "Plan coverage maps, deviation logs with state and outcome."
+   }
+  },
+  {
+   "primitive_id": "conference_pattern_1896_governance",
+   "name": "The February 8, 1896 conference wove a pattern followed by seventy to eighty other regional athletic conferences: faculty governance of eligibility as a template that blanketed the country",
+   "verbatim_quote": "The conference wove a pattern and blazed a trail that have been followed by seventy to eighty other regional athletic conferences which now blanket the country and include virtually every American school of collegiate rank, Yale, Harvard and a few others excepted.",
+   "page": "Chapter IX, Deep-Dish Football",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The first 1895 meeting's rules were not uniformly adopted; the 1896 meeting, quickened by Caspar Whitney's criticism of Minnesota, is the one that took.",
+    "Iowa and Indiana joined in 1899 and Ohio State in 1912 to make the Big Ten."
+   ],
+   "breakdown_regime": "Governance templates spread by imitation regardless of local fit; Stagg celebrates the spread without asking which schools the template served badly.",
+   "domain": "governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Institutional templates are treated like any other signal: adoption by many peers is evidence of legibility and coordination value, not of correctness for a specific case.",
+    "source_operator": "conference_pattern_1896_governance",
+    "telemetry": "Governance and eligibility rule sets, adoption histories, outcome comparisons across adopters."
+   }
+  },
+  {
+   "primitive_id": "conibear_dazed_player_test",
+   "name": "Trainer Conibear's dazed player test: a player may be badly dazed yet appear in full possession of his faculties, and games have been lost by failure to detect the condition",
+   "verbatim_quote": "Conibear knew that a player may be badly dazed, yet appear to be in full possession of his faculties. Games have been lost by failure to detect this condition and Con had a test he always applied.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 226; extracted text line ~6506",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The test was a direct question, what's your name, put to captain Kennedy after he was kicked in the head in the Wisconsin game.",
+    "Kennedy's insolent answer, not the literal answer, is what cleared him: the trainer read wit as evidence of faculty."
+   ],
+   "breakdown_regime": "A one question wit test will pass some genuinely impaired players and fail some healthy but literal ones; it is a screen, not a diagnosis, and Stagg presents it as settled practice.",
+   "domain": "player health screening",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Health and availability screens in the engine are treated as screens with error rates, never as clearances: a passed screen lowers concern, it does not zero it, and the screen's known failure modes travel with the result.",
+    "source_operator": "conibear_dazed_player_test",
+    "telemetry": "Availability reports with screen type, subsequent same game performance and injury outcomes."
+   }
+  },
+  {
+   "primitive_id": "scouted_weakness_whoa_back",
+   "name": "Stagg scouted Michigan himself, saw a weakness in the defence, and devised the whoa-back on the train home: a pusher behind the fullback in a drive on center and off tackle",
+   "verbatim_quote": "I thought I saw a weakness in his defence, and on the train coming home I devised a play to take advantage of it, putting a pusher behind the fullback in a drive on center and off tackle.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 229; extracted text line ~6592",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The play did what it was designed to do against a Michigan team Chicago was expected to lose to heavily.",
+    "Stagg also tested his undersized guard's mettle by asking for volunteers against the 220 pound Kelly, intending to use him anyway."
+   ],
+   "breakdown_regime": "One scout's eye from one game is a thin basis for a designed play; it worked here, and Stagg does not record the times such reads failed.",
+   "domain": "scouting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A scouted weakness becomes an engine hypothesis with a designed counter attached, and the hypothesis carries its sample size: one viewing earns a cheap test, not a game plan commitment.",
+    "source_operator": "scouted_weakness_whoa_back",
+    "telemetry": "Scouting reports with viewing counts, designed counters and their measured results."
+   }
+  },
+  {
+   "primitive_id": "false_reputations_spectacle_bias",
+   "name": "Only the spectacular catches the reporter's eye, so hundreds of false reputations pass current: backs are rated on carrying, ends on catching, and line play is invisible to the record",
+   "verbatim_quote": "Only the spectacular catches the eye of the average football reporter. A good back to him is one who can carry the ball; a good end, a man who can catch a forward pass. Hundreds of false reputations have been coined in the sporting pages and still pass current.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 232; extracted text line ~6675",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stagg adds the structural fact: with one exception, linemen have not played directly opposite one another since 1890, so even their matchups are misread.",
+    "Reputation in the sporting pages is therefore a biased sample of contribution."
+   ],
+   "breakdown_regime": "Stagg's correction is itself anecdotal; he offers no systematic line play measure, only the warning that the visible record is skewed.",
+   "domain": "measurement bias",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine discounts any reputation or ranking input by its visibility bias: contributions that the recording medium cannot see are estimated from structure, never assumed to be zero.",
+    "source_operator": "false_reputations_spectacle_bias",
+    "telemetry": "Visibility audits of data sources, contribution estimates for low visibility roles."
+   }
+  },
+  {
+   "primitive_id": "tempo_wear_down_112_plays",
+   "name": "Five yard football was a speed game: 112 plays in the first half of the 1902 Wisconsin game, the pace intended to wear the other fellow down so the better conditioned team cleaned up in the second half",
+   "verbatim_quote": "In the Chicago-Wisconsin 1902 game there were 112 plays in the first half. In our game with Michigan that year there were 100 plays in each of the fortyfive minute halves. This speed was intended to wear down the other fellow, and the team in the best physical shape cleaned up in the second half.",
+   "page": "Chapter XI, Heroes and Goats, printed pp. 245-246; extracted text line ~7075",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Series plays hitched together in sequence with only one signal, played off as fast as the team could line up, produced the pace.",
+    "The Michigan game that year ran 100 plays in each of the forty-five minute halves."
+   ],
+   "breakdown_regime": "Unlimited substitution, which Stagg notes arrived later, breaks the wear down mechanism entirely; tempo value is a function of the substitution rule in force.",
+   "domain": "tempo",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Tempo enters the engine as a fatigue weapon whose value is conditioned on substitution rules and opponent depth: pace is priced against the specific bench it is meant to exhaust.",
+    "source_operator": "tempo_wear_down_112_plays",
+    "telemetry": "Play pace series, substitution patterns, second half performance splits by pace."
+   }
+  },
+  {
+   "primitive_id": "huddle_noise_signal_masking",
+   "name": "The huddle was adopted because crowd noise drowned out signals: in 1914 a missed signal in the racket from a tallyho load of rooters with megaphones cost Chicago the Wisconsin game",
+   "verbatim_quote": "The drowning out of signals by the hullabaloo from the stands led to its general adoption. In 1914 we failed to win our game with Wisconsin because Vruwink, left end, missed a signal in the racket coming from a tallyho load of Wisconsin rooters, all with megaphones, near the corner of the field.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 246; extracted text line ~7093",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coach Zuppke in 1922 was the first to employ the huddle constantly; it had existed for occasional use long before.",
+    "The 1914 play: Vruwink thought the play was going the other way and collided head-on with his own fullback on the two yard line, and the game ended 0 to 0."
+   ],
+   "breakdown_regime": "The huddle solves noise at the cost of tempo, the trade Stagg records; a silent count or hand signals solve it differently, options he does not compare.",
+   "domain": "communications",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Communication channels in the engine are chosen against the measured noise of the environment: when the audible channel's error rate crosses a threshold, the system switches to a slower but noise immune channel and books the tempo cost.",
+    "source_operator": "huddle_noise_signal_masking",
+    "telemetry": "Venue noise levels, signal error rates by channel, tempo cost per channel."
+   }
+  },
+  {
+   "primitive_id": "hero_goat_risk_symmetry",
+   "name": "A hero is a man who takes a long chance and gets away with it; a goat is a man who risks all and loses all: the same gamble, judged only by its outcome",
+   "verbatim_quote": "A hero is a man who takes a long chance and gets away with it; a goat is a man who risks all and loses all.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 252; extracted text line ~7273",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The case is the 1905 Michigan game: Clark tried to run a punt out of his own end zone instead of touching it down, was slammed back for the safety that beat Michigan 2 to 0.",
+    "Stagg concedes Chicago won on an error of judgment and was lucky to do it, and that Eckersall's similar gamble was the smarter play."
+   ],
+   "breakdown_regime": "Stagg still grades the two gambles differently by their quality, which softens the pure outcome symmetry his aphorism states; the aphorism is about public judgment, not about decision quality.",
+   "domain": "decision evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine grades decisions on the information and prices available when they were made, never on the realized outcome alone; outcome only grading is named and rejected as the hero goat fallacy.",
+    "source_operator": "hero_goat_risk_symmetry",
+    "telemetry": "Decision logs with pre decision state, realized outcomes kept in a separate field."
+   }
+  },
+  {
+   "primitive_id": "injury_census_1905_reform_pressure",
+   "name": "The Chicago Tribune's compilation for 1905 showed 18 dead and 159 more or less serious injuries, most deaths among immature and untrained high school boys: the census that forced the deluge of reform",
+   "verbatim_quote": "The Chicago Tribune's compilation for the 1905 season showed 18 dead-eleven high-school players and 3 collegiate-and 159 more or less serious injuries-88 collegiate and 47 high school.",
+   "page": "Chapter XI, Heroes and Goats, printed p. 253; extracted text line ~7315",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Professor Dexter's careful multi sport account had left football looking relatively innocuous; the Tribune census is the number that moved presidents and faculties.",
+    "President Roosevelt had already called Yale, Harvard and Princeton to the White House in midseason to demand the objectionable features be removed."
+   ],
+   "breakdown_regime": "A newspaper compilation is not a verified registry; Stagg uses it as the reform's trigger without auditing its counting method, the same weakness he criticizes in reputation making.",
+   "domain": "safety data",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Safety and harm inputs enter the engine with their collection method attached: a press compilation can trigger review, but only a registry grade source can set a threshold.",
+    "source_operator": "injury_census_1905_reform_pressure",
+    "telemetry": "Injury data provenance tiers, counts by level of play and source type."
+   }
+  },
+  {
+   "primitive_id": "ten_yards_open_game_1906",
+   "name": "The 1906 code made the kicked ball from scrimmage live once it touched the ground and set the distance to be gained at ten yards instead of five, with three downs: the open game by rule",
+   "verbatim_quote": "a kicked ball from scrimmage as soon as it touched the ground, and the distance to be gained became ten instead of five yards, with three downs.",
+   "page": "Chapter XI, Heroes and Goats, printed pp. 255-256; extracted text line ~7388",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same rewrite introduced the forward pass, reduced playing time ten minutes in each half, and forbade hurdling.",
+    "A joint committee rewrote the code completely after many sessions, in the East, while the Conference imposed its own eligibility reforms."
+   ],
+   "breakdown_regime": "Doubling the distance with the same three downs is a difficulty increase that the new pass only partly offsets; Stagg celebrates the openness without pricing the conversion rate change.",
+   "domain": "rules reform",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When a governing parameter changes, the engine re-derives its baselines from the new regime instead of rescaling the old ones, because second order effects like the new pass change which actions exist.",
+    "source_operator": "ten_yards_open_game_1906",
+    "telemetry": "Parameter change logs, baseline resets, action availability by era."
+   }
+  },
+  {
+   "primitive_id": "emotion_explosive_quantity",
+   "name": "Emotion is the unknown and highly explosive quantity in football, and each coach is his own powder monkey",
+   "verbatim_quote": "Emotion is the unknown and highly explosive quantity in football, and each coach is his own powder monkey.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed p. 257; extracted text line ~7411",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter's evidence runs both ways: an opponent's boast handed Zuppke a free emotional weapon, and manufactured slurs are used by coaches who hold that the end justifies the means.",
+    "Stagg's own line: he cannot say much for the coach who has to lie to his men to make them play."
+   ],
+   "breakdown_regime": "Emotion is named unknown and explosive in the same breath that Stagg claims to dose it; the dosage claim is craft testimony, not measurement, and he admits it fails as often as it works.",
+   "domain": "team psychology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Emotional and situational state is an engine input with a variance warning: it is modeled as a high variance multiplier on execution, estimated from spot and narrative features, never as a stable team trait.",
+    "source_operator": "emotion_explosive_quantity",
+    "telemetry": "Situational spot features, rivalry and stakes tags, performance residuals in high emotion spots."
+   }
+  },
+  {
+   "primitive_id": "lemon_slur_motivation",
+   "name": "Stagg stored a rival coach's slur, that his player was a lemon, and spent it on the Wednesday before the game: the player begged to play Saturday to show whether he was a lemon or not, and did",
+   "verbatim_quote": "\"I give you up,\" I said. \"\"You're no good; you're just what Coach Blank says you are-a lemon.\"",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed pp. 259-260; extracted text line ~7474",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scout brought the comment back and Stagg tucked it away for possible future use, waiting until the player's practice interest flagged.",
+    "Stagg distinguishes this from fictitious slurs, which he calls utterly false when attributed to himself and refuses on honesty and policy grounds."
+   ],
+   "breakdown_regime": "The device works on a proud player and can wound a fragile one; Stagg gives no screening rule for which player gets the stored slur and which gets protection.",
+   "domain": "team psychology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Motivational and narrative inputs are dosed per individual in the engine's situational layer: the same stimulus is an asset for one profile and a liability for another, so it is stored with its target profile, not broadcast.",
+    "source_operator": "lemon_slur_motivation",
+    "telemetry": "Player response histories to criticism and praise, situational performance after motivational events."
+   }
+  },
+  {
+   "primitive_id": "lineup_suspense_selection_timing",
+   "name": "Stagg never selects his team until the day of the game, for tactical and psychological reasons: conditions may change at the last moment, and suspense heightens emotional tension",
+   "verbatim_quote": "But I never select my team until the day of the game. My motives are both tactical and psychological. Conditions may change at the last moment; and in any event, I purposely keep the men in suspense as long as possible in order to heighten their emotional tension.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed pp. 263-264; extracted text line ~7606",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The Whiting case is the worked example: played at guard and tackle all week and ignored, then named at left end in the tower room after a staged pause.",
+    "Whiting was keyed up enough to break his neck gladly, and did smash his shoulder in the first ten minutes."
+   ],
+   "breakdown_regime": "Suspense dosing that produces a first ten minutes injury is a cost Stagg reports without weighing; the same uncertainty that heightens tension can also prevent a player preparing for his actual assignment.",
+   "domain": "selection policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Late commitment is an engine option with a priced trade: keeping a decision open preserves information value and raises arousal, but it is charged with the preparation loss of the units kept waiting.",
+    "source_operator": "lineup_suspense_selection_timing",
+    "telemetry": "Decision timing logs, preparation quality by notice time, early game error rates."
+   }
+  },
+  {
+   "primitive_id": "imagination_prime_ingredient",
+   "name": "Imagination is the prime ingredient of football temperament: to dramatize the conflict and one's own part in it, to anticipate the foe's next move, and to capitalize instantly on any break in the game",
+   "verbatim_quote": "imagination is the prime ingredient of that temperament-imagination to dramatize the conflict and one's own part in it, imagination to anticipate what and where the foe's next move will be, imagination to capitalize instantly on any break in the game.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed p. 266; extracted text line ~7691",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Bulk, strength, grace and speed without temperament are, in Stagg's phrase, lath and painted plaster.",
+    "The failure modes are named too: the clod with no emotional nature, and the player whose imagination is vivid but misdirected."
+   ],
+   "breakdown_regime": "Imagination as Stagg defines it bundles anticipation, engagement, and opportunism into one trait; the bundle cannot be measured as one quantity, and he offers no separate tests for its parts.",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine splits Stagg's bundle into three separately estimated quantities: anticipation (pre snap read accuracy), engagement (effort consistency across game states), and opportunism (conversion of opponent errors).",
+    "source_operator": "imagination_prime_ingredient",
+    "telemetry": "Read accuracy metrics, effort consistency by game state, error conversion rates."
+   }
+  },
+  {
+   "primitive_id": "mechanical_player_transfer_failure",
+   "name": "The mechanical player masters the technic and performs perfectly in practice, but cannot transfer the technic to a game",
+   "verbatim_quote": "The mechanical player we have with us always. It is a fortunate coach who is not compelled to use one or more every season. They master the technic and perform perfectly in practice, but they cannot transfer the technic to a game.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed p. 271; extracted text line ~7843",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The companion case: a lineman perfect in practice who was lost at any variation in tactics, because he knew only how to play by the book.",
+    "Stagg's figure: a pianist goes through exercises, but when the notes change, both are expected to follow the music."
+   ],
+   "breakdown_regime": "Transfer failure is diagnosed after the fact from game errors; Stagg has no practice drill that predicts it, which is the gap a modern evaluation must fill.",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Practice and game performance are separate engine features with a measured transfer coefficient per unit; a unit with perfect drill numbers and a low transfer coefficient is valued at the game number, not the drill number.",
+    "source_operator": "mechanical_player_transfer_failure",
+    "telemetry": "Drill versus game performance pairs, variation response tests, transfer coefficients."
+   }
+  },
+  {
+   "primitive_id": "halftime_rewind_protocol",
+   "name": "The intermission protocol: get the assistants' reports, ask the linemen why certain plays failed, point out errors and the foe's unexploited blunders, advise changes, then rewind the emotional clockworks of the men",
+   "verbatim_quote": "During the intermission the coach, in a very brief period, has to point out both his own team's and the foe's weaknesses and strength, and to rewind the emotional clockworks of his men.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed pp. 275-276; extracted text line ~7970",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The order is fixed: assistants' reports plus his own observations first, diagnosis second, emotional reset last, all inside a very brief period.",
+    "Individual failures are told bluntly to the man before the team is addressed as a whole."
+   ],
+   "breakdown_regime": "The protocol depends on assistants seeing what the head coach missed; a staff that echoes the coach makes the first step worthless, a failure mode Stagg does not discuss.",
+   "domain": "in game adjustment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's halftime and between period layer runs the same fixed order: independent observation intake, failure diagnosis with the units that executed, adjustment, and only then a confidence reset, never the reverse order.",
+    "source_operator": "halftime_rewind_protocol",
+    "telemetry": "Period by period adjustment logs, second half deltas after documented adjustments."
+   }
+  },
+  {
+   "primitive_id": "loyalty_appeal_over_hate",
+   "name": "The better plan of motivation lies in an appeal to loyalty, sentiment, love of the university, love of one another and self-pride, not in the hate propaganda of the old grads",
+   "verbatim_quote": "The better plan lies in an appeal to the loyalty, sentiment, love of the university, love of one another and self-pride of the players.",
+   "page": "Chapter XII, I'd Die for Dear Old Rutgers, printed p. 274; extracted text line ~7926",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hate propaganda is conceded to have accomplished miracles at times, but Stagg calls it no credit to the coach or school that employs it.",
+    "The Big Three set the style for the poison, and Conference hatred has been cooling steadily in his account."
+   ],
+   "breakdown_regime": "Loyalty appeals are weaker medicine for some squads, and Stagg's preference is partly moral; he does not compare win rates between the two methods across his own seasons.",
+   "domain": "team psychology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Situational motivation features in the engine are typed by source: identity and loyalty based arousal is modeled as durable across a game, opponent hatred based arousal as spiky and decay prone.",
+    "source_operator": "loyalty_appeal_over_hate",
+    "telemetry": "Motivation spot types, performance by quarter after high arousal starts."
+   }
+  },
+  {
+   "primitive_id": "torn_signals_information_ethics",
+   "name": "Three times men interested in Chicago sent Stagg sets of opponent signals; he said nothing to his team and tore the signals up, unread, in each case",
+   "verbatim_quote": "In my time at Chicago I have had three different sets of opponent signals sent me by men interested in Chicago. I said nothing to my team and tore the signals up, unread, in each case;",
+   "page": "Chapter XIII, A Coach's Creed, printed p. 287; extracted text line ~8315",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same passage records the scouts' reform: the number allowed is reduced to two, and they are not spies but official observers.",
+    "The refusal is presented as a norm the Conference built deliberately, not as one man's quirk."
+   ],
+   "breakdown_regime": "An unread signals rule is unverifiable from outside; its value is as a public commitment that raises the cost of being caught accepting the next set.",
+   "domain": "information ethics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's data intake carries a provenance gate of the same shape: information obtained outside the agreed observation channels is refused at intake, and the refusal is logged, so downstream layers never price it.",
+    "source_operator": "torn_signals_information_ethics",
+    "telemetry": "Intake provenance logs, refused source records, observation channel definitions."
+   }
+  },
+  {
+   "primitive_id": "pass_as_equalizer",
+   "name": "The forward pass made all men equal: where small colleges never had defeated great ones and rarely had scored on them, the upset became a standing Saturday possibility",
+   "verbatim_quote": "pass made all men equal. Where small colleges never had defeated great ones and rarely had scored on them, Humpty Dumpty now was apt to be pushed off the wall most any Saturday.",
+   "page": "Chapter XIV, Galloping Ghosts, printed p. 304; extracted text line ~8817",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The East eyed the pass dubiously and used it timidly; the West, and Stagg's thin squads, took it as a life saver.",
+    "The pass added another dimension to the game, as the airplane did to war, the most radical advance since five yards in three downs."
+   ],
+   "breakdown_regime": "Equalizer is overstated: the pass rewards a rare skill, the accurate passer, and Stagg's own later lament is that for seasons he had no real forward passer on the squad.",
+   "domain": "offense innovation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A new action family that compresses the gap between strong and weak units is modeled as a variance and upset lever: it raises the weak unit's win probability more than the strong unit's, and projections must show that asymmetry.",
+    "source_operator": "pass_as_equalizer",
+    "telemetry": "Upset rates by era and action mix, unit strength versus variance profiles."
+   }
+  },
+  {
+   "primitive_id": "feinted_pass_decoy_strategy",
+   "name": "The first use of the pass as a feint, 1908: every time Steffen feinted to throw, Minnesota shifted to cover the decoy receivers, and when he had them where he wanted them he ran",
+   "verbatim_quote": "him in a new strategy, feinted passes. Every time he feinted to throw, Minnesota shifted to cover the decoy receivers. When he had them where he wanted them Steffen showed his heels. It was the first use of the pass as a feint, and we won 29 to o.",
+   "page": "Chapter XIV, Galloping Ghosts, printed p. 306; extracted text line ~8877",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The strategy capitalized on Steffen's established reputation as a deadly forward passer; the feint spends reputation, it does not create it.",
+    "Chicago won 29 to 0 with the run threat the pass reputation had manufactured."
+   ],
+   "breakdown_regime": "A feint strategy consumes the reputation it depends on: each feint that ends in a run teaches the defence to discount the next feint, a decay Stagg does not track.",
+   "domain": "deception",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deception value in the engine is a stock, not a flow: a feint draws down the credibility that prior real actions built up, and the stock is replenished only by real actions of the threatened type.",
+    "source_operator": "feinted_pass_decoy_strategy",
+    "telemetry": "Feint frequency, defensive reaction latency over a game, real action rates by type."
+   }
+  },
+  {
+   "primitive_id": "rules_laboratory_1910",
+   "name": "The 1910 rules were tested in the laboratory before adoption, the only instance: coaches ran the proposed rules in spring experiments, Stagg's at Arkansas with Bezdek's men, and reported back before summer",
+   "verbatim_quote": "involved so many unknown possibilities that the rules body concluded to experiment first-the only instance in which new rules have been tested in the laboratory before adoption.",
+   "page": "Chapter XIV, Galloping Ghosts, printed p. 313; extracted text line ~9101",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The proposed package removed the five yard lateral restriction, abolished pushing and pulling the ball carrier, and carried other tentative changes with unknown interactions.",
+    "The adopted code then held: since 1910 the sport has known its longest period of serenity, technically static except for minor changes."
+   ],
+   "breakdown_regime": "Spring scrimmage experiments with borrowed squads are a weak laboratory: no stakes, no full strength opposition, and no long season to surface slow effects, limits Stagg does not note.",
+   "domain": "rules testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rule and model changes in the engine are shadow tested before adoption with the experiment's limits stated in the adoption record, following the 1910 pattern: experiment first, report, then adopt, then leave the result alone long enough to measure it.",
+    "source_operator": "rules_laboratory_1910",
+    "telemetry": "Shadow test records, adoption decisions with stated limits, post adoption measurement windows."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "12680c85e7ba3972-t1",
+   "think": "Touchdown! is Amos Alonzo Stagg's account of the first fifty years of American football, told from inside the room where the game was invented twice over: once on the field, where players and coaches kept beating the rules, and once in the committee rooms, where the rules kept answering. Read as a reasoning artifact rather than a memoir, the book is a single long argument that a competitive system is a balance under constant attack. The opening movement establishes the arms race as the master mechanism. The scrummage is abolished and the snapperback and quarterback appear, not as administrative details but as the first proof that removing one structure creates named functions where none existed. The block games of 1880 and 1881 show the purest form of the dynamic: a code that provided for retaining the ball and not for surrendering it was not misunderstood, it was correctly read by both teams, and the championship was nearly decided by a drafting gap. From there the pattern repeats at every scale. Interference begins as a categorical violation, a Princeton convoy in 1879, is warned against by the very man, Walter Camp, who would become the game's legislator, spreads by imitation, and hardens into the keystone of offence. Smock's canvas jacket changes what a tackler can grip and the tackling line descends the body over a decade. Moffat's spiral punt rewrites one phase by technique alone. The five yard rule forces rehearsed strategy, signals, and the chalked gridiron itself: a measurement grid laid on the field because a constraint demanded planning, and planning demanded communication, and communication immediately became a channel the other side could read, steal, or drown in crowd noise. Stagg is unusually honest that each solution births its successor problem, which is why the book's middle chapters read as a catalog of coupled systems: the flying wedge answers mass with momentum and is answered by Section E, the one step and full stop rule, and when the full stop proves hard to judge at speed, the system does the most modern thing in the book and operationalizes it, setting the measurement at approximately one second, the time it takes to count 1, 2, 3, 4 fast. That move, from principle to instrument, is the book's recurring signature. The same signature appears in miniature in Conibear's dazed player test, in the 1905 injury census that forced reform because a number finally existed, and in the 1910 decision to test proposed rules in a spring laboratory before adopting them, the one time the game's legislators behaved like engineers. The second half of the book turns from the game's machinery to the operator's machinery, and it is here that Stagg becomes a theorist of the human layer. Emotion is named the unknown and highly explosive quantity, and the coach a powder monkey, yet the chapters that follow are a disciplined attempt to dose the explosive: store the rival's slur until the Wednesday it will cut deepest, keep the lineup unannounced until game day so suspense does the keying up, concentrate the full evangelism on the big game because a team cannot be held at concert pitch safely for longer, and run the intermission as a fixed protocol, assistants' reports, linemen asked why plays failed, adjustments, and only then the rewinding of the emotional clockworks. Alongside the dosing sits an evaluation doctrine that any modern analyst would recognize. Reputation is a biased sample because only the spectacular is visible, so linemen are misjudged by structure, not by malice. A hero and a goat are the same gamble separated by outcome, and Stagg says plainly that his own most famous win came from an opponent's error of judgment and luck. The mechanical player, perfect in practice and lost in games, is the transfer problem stated in 1927 vocabulary. Two further mechanisms deserve separate weight because they are easy to miss inside the narrative. The first is that scoring values are a steering instrument, not a record of worth. Across the book the touchdown climbs in value while the goal from the field falls, and Stagg treats the drift as a readable proxy for what the legislators wanted the game to emphasize: change the price of an outcome and you change the strategies rational men build, long before you change any rule about how play proceeds. The second is his own Chicago practice as a worked example of the general theory. The ends back formation, the man in motion principle he dates to 1896, the pivot deception family that evolves across a decade from Eckersall's runs to the quarter's drop back pass, and the feinted pass of 1908 are all presented as one lineage of ideas being spent, countered, and rebuilt, with the coach keeping the genealogy in his head because no one else was keeping it at all. That is why the book's apparently antiquarian detail matters: it is the only ledger in which the parentage of these concepts was written down, and parentage determines what a defence has already been trained to expect. What the book cannot do is measure its own claims. Its numbers are censuses compiled by newspapers, play counts from memory, and percentages that are never percentages at all but weights of emphasis. Its causal stories are single threaded, one inventor per innovation, one slur per turnaround. Its psychology is craft knowledge, real but untested, and its author is an interested party writing his own legend even when he is confessing his errors. The engine value of the book is therefore not its facts but its mechanisms, each stated cleanly enough to be re-derived with modern data: balance under attack, enforcement as the real rule, communication as a leaky channel, tempo as a fatigue weapon priced by substitution rules, deception as a stock drawn down by use, and decision quality judged before the outcome is known.",
+   "retrocausal_genealogy": "The genealogy runs from Rugby's scrummage through the Springfield convention of 1876 and Camp's Yale, where Stagg played end and learned the game as a system of named functions replacing a mass. The line passes through Princeton's inventions, the convoy, the jacket, the wedge, and Deland's Harvard formations, through the 1896 Conference that Stagg helped found as governance catching up with technique, and into the 1906 rewrite that admitted the forward pass. Every idea in the book has a parent play, a parent rule, or a parent scandal, and Stagg is careful to name the parent even when the child is his own.",
+   "theory_of_mind": "Stagg believes the reader is a practitioner, a coach or a serious student of the game, and that football is a moral and intellectual system before it is a spectacle. His model of the domain is dual: a formal layer of rules and techniques that can be taught, measured, and reformed, and a human layer of emotion, loyalty, and imagination that decides whether the formal layer is executed at its ceiling. He assumes character is trainable, that systems beat individuals over a season, and that the coach's real product is not plays but the state of the men executing them.",
+   "cross_layer_veto": "Three vetoes run through the work and constrain every other layer. First, enforcement vetoes text: a rule, a signal, or a plan that cannot be executed or judged at game speed does not exist, whatever the book says. Second, transfer vetoes practice: drill perfection that does not survive contact with a live opponent is worth nothing, which caps the value of every rehearsal based signal. Third, outcome vetoes judgment in reverse: a result, good or bad, cannot be allowed to certify the decision that produced it, because the hero and the goat made the same bet. Any layer that reports a number without its enforcement, transfer, and decision context is vetoed by this book."
+  }
+ ],
+ "universal_lens": "Any governed competitive system behaves as this book describes: participants read the code for its gaps, exploitation disturbs a balance, the code answers, and each answer creates the next surface of attack. The durable skills are the ones Stagg keeps demonstrating: define functions before naming roles, operationalize principles into measurements an official can actually perform, test rule changes in a laboratory before adopting them, and judge decisions by the information available when they were made rather than by how the gamble happened to land.",
+ "gsi_mapping": "The Institute takes the governance and pedagogy layer: the 1896 Conference as a template for faculty control of eligibility, the host and guest agreement and the torn up signals as an ethics of information that an institute can teach as doctrine, the tackling dummy and the 1910 rules laboratory as the founding examples of simulation before adoption, and Stagg's coach's creed, with its code for the letter winner, as a primary source on how a sport builds the character standards it later enforces.",
+ "gse_mapping": "The engine takes the mechanisms, each re-derivable from modern play by play and tracking data: the rules arms race as an edge decay model, enforcement rates as the real constraint set, signals as a leaky coded channel whose error rate rises with venue noise, tempo priced against substitution depth, deception treated as a stock spent by feints and rebuilt by real actions, reputation inputs discounted for spectacle bias, and every decision graded on its pre outcome state so that a lucky result never certifies a bad process."
+}
