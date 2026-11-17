@@ -88,7 +88,11 @@ MASTER_PLAN_V3_REQUIRED_ARTIFACTS: dict[str, list[str]] = {
         "src/gse_engine/storage/receipts_s3.py",
         "src/gse_engine/observability/arize_tracing.py",
         "src/gse_engine/observability/walk_forward_ablation.py",
+        "src/gse_engine/governance/simulation_hold_gate.py",
         "src/gse_engine/governance/wave19_agentic_fleet_and_registry_97.py",
+        "src/gse_engine/memory/knowledge_continuity_and_gsi_rlvr_flywheel.py",
+        "src/gse_engine/memory/wave20_openviking_ragas_bayesian_and_graph_suite.py",
+        "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py",
         "src/gse_engine/cli.py",
         "packages/prediction-engine/src/ensemble/remote-model-client.ts",
     ],
@@ -207,6 +211,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "multimodal_vlm_and_provenance",
         "src/gse_engine/ingestion/multimodal_vlm_and_provenance.py",
     ),
+    (
+        "Pillar1_Wave20_OpenViking_Ragas_PyMC_CatBoost",
+        "wave20_openviking_ragas_bayesian_and_graph_suite",
+        "src/gse_engine/memory/wave20_openviking_ragas_bayesian_and_graph_suite.py",
+    ),
+    (
+        "Pillar1_Wave20B_OpenScholar_TDDLog_Woodelf",
+        "wave20b_openscholar_tddlog_woodelf_tree_suite",
+        "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
@@ -219,7 +233,7 @@ CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
     (
         "OSS_Ecosystem_Registry",
         "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
-        97,
+        131,
     ),
     ("Permanent_Lessons_Ledger", "data/engine/lessons_learned_permanent_ledger.jsonl", 20),
 )

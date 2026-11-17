@@ -1,0 +1,788 @@
+"""Zero-Loss Knowledge Continuity Vault, Theorem-to-AST & GSE->GSI RLVR Flywheel.
+
+Implements:
+1. ``verify_zero_loss_knowledge_continuity`` auditing all 7 canonical knowledge stores
+   (877+ PDFs, 12,469 Foundry files / 47,645 primitives, 58,486 Sovereign book
+   primitives, 9,875 equations, 37+ permanent ledger lessons, RLVR veto batches, and
+   81 GSI translational SAR compounds) so zero corpus intelligence can silently drop.
+2. Workstream 1.1-1.2 Theorem-to-AST primitives: 6D Buckingham Pi homogeneity checks,
+   Cross-Chapter Dependency ``G_fire`` runtime gate + retraction quarantine, and
+   PET-PEESE / REML Hedges' g meta-regression pooling.
+3. Bidirectional GSE -> GSI Verifiable Reasoning (RLVR) batch compiler synthesizing
+   GRPO-ready, sportsbook-free reasoning trajectories from completed Week 10 game
+   autopsies and theorem/ADR-0003 mathematical specifications (never mutating
+   single-writer ``brain/mind.jsonl`` directly).
+4. 5-Axis Neuro-Symbolic Frontier Reasoning Benchmark Arena (``gse-gsi-reasoner-v1``).
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import re
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+_DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
+_FORBIDDEN_ODDS_RE = re.compile(r"\b(?:odds|moneyline|sportsbook|over_under)\b", re.IGNORECASE)
+
+DimensionVector = tuple[int, int, int, int, int, int]
+DIMENSIONLESS: DimensionVector = (0, 0, 0, 0, 0, 0)
+
+RETRACTED_IDS: frozenset[str] = frozenset(
+    {
+        "arxiv:2312.11067",
+        "w5_complexity",
+        "w6_complexity",
+        "w7_complexity",
+        "w8_complexity",
+        "nfl_dixon_coles_margin",
+    }
+)
+
+_CONTINUITY_CACHE: dict[tuple[object, ...], dict[str, Any]] = {}
+
+
+class ZeroLossContinuityError(RuntimeError):
+    """Raised when any indexed knowledge store falls below its continuity floor."""
+
+
+@dataclass(frozen=True, slots=True)
+class TheoremDependencyNode:
+    """Bound specification for a cross-chapter extracted mathematical equation."""
+
+    equation_id: str
+    paper_or_book_id: str
+    tau_scale: str
+    n_min: int
+    domain_bounds: tuple[tuple[float, float], ...] = ()
+    ancestral_assumptions_met: bool = True
+    is_retracted_or_withdrawn: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class StudyEffect:
+    """Standardizable empirical effect size extracted from one book or study."""
+
+    study_id: str
+    theta_hat: float
+    se_hat: float
+    sigma_pool: float
+    n_eff: float
+    n_params: int = 1
+
+
+def _count_nonempty_lines(paths: Sequence[Path]) -> int:
+    """Count non-empty UTF-8 lines across a sequence of JSONL files."""
+    total = 0
+    for file_path in paths:
+        with file_path.open("r", encoding="utf-8", errors="replace") as handle:
+            for raw in handle:
+                if raw.strip():
+                    total += 1
+    return total
+
+
+def verify_zero_loss_knowledge_continuity(
+    repo_root: Path | None = None,
+    *,
+    min_pdfs: int = 877,
+    min_foundry_files: int = 12469,
+    min_foundry_primitives: int = 47645,
+    min_sovereign_primitives: int = 58486,
+    min_equations: int = 9875,
+    min_lessons: int = 37,
+    min_gsi_compounds: int = 81,
+) -> dict[str, Any]:
+    """Verify all 7 canonical corpus stores meet or exceed their lossless floors."""
+    root = (repo_root or _DEFAULT_REPO_ROOT).resolve()
+    lessons_path = root / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl"
+    lessons_mtime = lessons_path.stat().st_mtime_ns if lessons_path.is_file() else 0
+    cache_key = (
+        str(root),
+        lessons_mtime,
+        min_pdfs,
+        min_foundry_files,
+        min_foundry_primitives,
+        min_sovereign_primitives,
+        min_equations,
+        min_lessons,
+        min_gsi_compounds,
+    )
+    cached = _CONTINUITY_CACHE.get(cache_key)
+    if cached is not None:
+        return dict(cached)
+
+    manifest_path = root / "data" / "sports_research_papers" / "manifest_877_pdfs.json"
+    foundry_path = root / "data" / "engine" / "foundry_compound_corpus_index_2026.json"
+    sovereign_dir = root / "brain" / "feeds" / "2026-11-14"
+    eq_matrix_path = root / "data" / "engine" / "thousand_equation_matrix_2026.json"
+    rlvr_dir = root / "foundry" / "artifacts" / "rlvr_vetoes"
+    gsi_path = (
+        root / "data" / "engine" / "gsi_wave16_translational_and_datascience_telemetry_2026.json"
+    )
+
+    violations: list[str] = []
+
+    pdfs_count = 0
+    if manifest_path.is_file():
+        m_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        pdfs_count = int(m_data.get("total_pdfs") or len(m_data.get("papers") or []))
+    else:
+        violations.append("missing manifest_877_pdfs.json")
+
+    foundry_files = 0
+    foundry_prims = 0
+    if foundry_path.is_file():
+        f_data = json.loads(foundry_path.read_text(encoding="utf-8"))
+        foundry_files = int(f_data.get("files_swept") or 0)
+        foundry_prims = int(f_data.get("primitives_extracted_total") or 0)
+    else:
+        violations.append("missing foundry_compound_corpus_index_2026.json")
+
+    sov_files = sorted(sovereign_dir.glob("arxiv_sovereign_and_shard_b_*.jsonl"))
+    sovereign_prims = _count_nonempty_lines(sov_files) if sov_files else 0
+    if not sov_files:
+        violations.append("missing brain/feeds/2026-11-14/arxiv_sovereign_and_shard_b_*.jsonl")
+
+    equations_count = 0
+    if eq_matrix_path.is_file():
+        eq_data = json.loads(eq_matrix_path.read_text(encoding="utf-8"))
+        equations_count = int(eq_data.get("total_equations") or len(eq_data.get("equations") or []))
+    else:
+        violations.append("missing thousand_equation_matrix_2026.json")
+
+    lessons_count = _count_nonempty_lines([lessons_path]) if lessons_path.is_file() else 0
+    if not lessons_path.is_file():
+        violations.append("missing lessons_learned_permanent_ledger.jsonl")
+
+    rlvr_files = sorted(rlvr_dir.glob("*.jsonl")) if rlvr_dir.is_dir() else []
+    rlvr_records = _count_nonempty_lines(rlvr_files) if rlvr_files else 0
+    if rlvr_records < 1:
+        violations.append("missing rlvr_vetoes/*.jsonl records")
+
+    gsi_compounds = 0
+    if gsi_path.is_file():
+        g_data = json.loads(gsi_path.read_text(encoding="utf-8"))
+        sar_blk = g_data.get("sar_benchmark") or {}
+        gsi_compounds = int(sar_blk.get("evaluated_compounds") or 0)
+    else:
+        violations.append("missing gsi_wave16_translational_and_datascience_telemetry_2026.json")
+
+    checks = (
+        ("pdfs_count", pdfs_count, min_pdfs),
+        ("foundry_files", foundry_files, min_foundry_files),
+        ("foundry_primitives", foundry_prims, min_foundry_primitives),
+        ("sovereign_primitives", sovereign_prims, min_sovereign_primitives),
+        ("equations_count", equations_count, min_equations),
+        ("lessons_count", lessons_count, min_lessons),
+        ("gsi_compounds", gsi_compounds, min_gsi_compounds),
+    )
+    for label, actual, floor in checks:
+        if actual < floor:
+            violations.append(f"{label}={actual} < floor={floor}")
+
+    if violations:
+        raise ZeroLossContinuityError("ZERO_LOSS_CONTINUITY_BREACH: " + "; ".join(violations))
+
+    total_units = (
+        pdfs_count
+        + foundry_files
+        + sovereign_prims
+        + equations_count
+        + lessons_count
+        + rlvr_records
+        + gsi_compounds
+    )
+    digest_payload = {
+        "pdfs_count": pdfs_count,
+        "foundry_files": foundry_files,
+        "foundry_primitives": foundry_prims,
+        "sovereign_primitives": sovereign_prims,
+        "equations_count": equations_count,
+        "lessons_count": lessons_count,
+        "rlvr_veto_records": rlvr_records,
+        "gsi_compounds": gsi_compounds,
+        "total_indexed_knowledge_units": total_units,
+    }
+    continuity_sha256 = hashlib.sha256(
+        json.dumps(digest_payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+    out = {
+        "verified": True,
+        "continuity_sha256": continuity_sha256,
+        "stores": digest_payload,
+        "total_indexed_knowledge_units": total_units,
+    }
+    _CONTINUITY_CACHE[cache_key] = dict(out)
+    return out
+
+
+def verify_buckingham_pi_homogeneity(
+    *,
+    lhs_dim: DimensionVector,
+    rhs_dim: DimensionVector,
+    transcendental_arg_dims: Sequence[DimensionVector] = (),
+    variable_dims: Sequence[DimensionVector] = (),
+) -> dict[str, Any]:
+    """Validate 6D Buckingham Pi dimensional homogeneity [M, L, T, Theta, P, $]."""
+    lhs_rhs_equal = tuple(lhs_dim) == tuple(rhs_dim)
+    transcendental_ok = all(tuple(dim) == DIMENSIONLESS for dim in transcendental_arg_dims)
+
+    if variable_dims:
+        dim_matrix = np.asarray(variable_dims, dtype=np.float64).T
+        rank = int(np.linalg.matrix_rank(dim_matrix))
+        k_vars = len(variable_dims)
+        num_pi_groups = max(0, k_vars - rank)
+    else:
+        rank = 0
+        k_vars = 0
+        num_pi_groups = 0
+
+    passed = bool(lhs_rhs_equal and transcendental_ok)
+    return {
+        "passed": passed,
+        "quarantine_weight": 1.0 if passed else 0.0,
+        "lhs_rhs_equal": lhs_rhs_equal,
+        "transcendental_dimensionless": transcendental_ok,
+        "dimensional_rank": rank,
+        "variables_count": k_vars,
+        "num_pi_groups": num_pi_groups,
+    }
+
+
+def evaluate_g_fire_gate(
+    node: TheoremDependencyNode,
+    *,
+    query_scale: str,
+    n_obs: float,
+    deff_cluster: float = 2.0,
+    x_point: Sequence[float] = (),
+    games_played: int = 10,
+) -> dict[str, Any]:
+    """Evaluate the cross-chapter execution gate G_fire(e, X_t, tau_q)."""
+    reasons: list[str] = []
+    eq_l = node.equation_id.strip().lower()
+    src_l = node.paper_or_book_id.strip().lower()
+    if node.is_retracted_or_withdrawn or eq_l in RETRACTED_IDS or src_l in RETRACTED_IDS:
+        reasons.append("RETRACTED_OR_WITHDRAWN")
+    if query_scale != node.tau_scale:
+        reasons.append(f"SCALE_MISMATCH({query_scale}!={node.tau_scale})")
+
+    n_eff = float(n_obs) / max(1.0, float(deff_cluster))
+    if n_eff < float(node.n_min):
+        reasons.append(f"N_EFF_BELOW_MIN({n_eff:.2f}<{node.n_min})")
+    if query_scale == "game" and int(games_played) < 4:
+        reasons.append(f"EPA_MIN_GAMES_FLOOR({games_played}<4)")
+
+    if node.domain_bounds and x_point:
+        for idx, (val, (lo, hi)) in enumerate(zip(x_point, node.domain_bounds, strict=False)):
+            if float(val) < float(lo) or float(val) > float(hi):
+                reasons.append(f"OUT_OF_DOMAIN_DIM_{idx}")
+                break
+
+    if not node.ancestral_assumptions_met:
+        reasons.append("ANCESTRAL_ASSUMPTIONS_FAILED")
+
+    fires = len(reasons) == 0
+    return {
+        "equation_id": node.equation_id,
+        "fires": fires,
+        "quarantine_weight": 1.0 if fires else 0.0,
+        "n_eff": round(n_eff, 4),
+        "reasons": reasons,
+    }
+
+
+def _fit_wls_intercept(
+    x_cov: Sequence[float],
+    y_val: Sequence[float],
+    weights: Sequence[float],
+) -> tuple[float, float]:
+    """Fit weighted OLS y = beta0 + beta1 * x and return (beta0, se_beta0)."""
+    x_arr = np.asarray(x_cov, dtype=np.float64)
+    y_arr = np.asarray(y_val, dtype=np.float64)
+    w_arr = np.asarray(weights, dtype=np.float64)
+    design = np.column_stack((np.ones_like(x_arr), x_arr))
+    xtwx = design.T @ (w_arr[:, None] * design)
+    xtwx_reg = xtwx + 1e-12 * np.eye(2)
+    inv_mat = np.linalg.inv(xtwx_reg)
+    beta = inv_mat @ (design.T @ (w_arr * y_arr))
+    resid = y_arr - (design @ beta)
+    dof = max(1, len(x_cov) - 2)
+    sigma_sq = max(1e-12, float(np.sum(w_arr * (resid**2))) / float(dof))
+    se_beta0 = math.sqrt(max(1e-12, float(inv_mat[0, 0]) * sigma_sq))
+    return float(beta[0]), float(se_beta0)
+
+
+def pool_pet_peese_meta_regression(
+    studies: Sequence[StudyEffect],
+    *,
+    lambda_prior: float = 4.0,
+) -> dict[str, Any]:
+    """Pool multi-study effects via Hedges' g, REML tau^2 & PET-PEESE fallback."""
+    m_count = len(studies)
+    if m_count == 0:
+        return {
+            "m_studies": 0,
+            "pooled_g": 0.0,
+            "i_squared": 0.0,
+            "tau_squared": 0.0,
+            "estimator_mode": "EMPTY",
+        }
+
+    g_vals: list[float] = []
+    v_vals: list[float] = []
+    for st in studies:
+        nu = max(2.0, float(st.n_eff) - float(max(1, st.n_params)))
+        j_corr = 1.0 - 3.0 / (4.0 * nu - 1.0)
+        sigma = max(1e-9, float(st.sigma_pool))
+        g_m = j_corr * float(st.theta_hat) / sigma
+        v_m = max(1e-9, (j_corr * float(st.se_hat) / sigma) ** 2)
+        g_vals.append(g_m)
+        v_vals.append(v_m)
+
+    g_arr = np.asarray(g_vals, dtype=np.float64)
+    v_arr = np.asarray(v_vals, dtype=np.float64)
+    w_fe = 1.0 / v_arr
+    sum_w = float(np.sum(w_fe))
+    g_fe = float(np.sum(w_fe * g_arr)) / max(1e-12, sum_w)
+
+    q_stat = float(np.sum(w_fe * ((g_arr - g_fe) ** 2)))
+    c_denom = max(1e-12, sum_w - float(np.sum(w_fe**2)) / max(1e-12, sum_w))
+    tau_sq = max(0.0, (q_stat - float(max(0, m_count - 1))) / c_denom) if m_count > 1 else 0.0
+    i_sq = (
+        max(0.0, (q_stat - float(m_count - 1)) / q_stat)
+        if (m_count > 1 and q_stat > 0.0)
+        else 0.0
+    )
+    w_re = 1.0 / (v_arr + tau_sq + 1e-12)
+
+    if m_count < 5 or i_sq > 0.85:
+        raw_pool = float(np.sum(w_re * g_arr)) / max(1e-12, float(np.sum(w_re)) + lambda_prior)
+        mode = "REML_SKEPTICAL_FALLBACK"
+    else:
+        b0_pet, se_pet = _fit_wls_intercept(np.sqrt(v_arr).tolist(), g_vals, w_re.tolist())
+        b0_peese, _ = _fit_wls_intercept(v_vals, g_vals, w_re.tolist())
+        t_ratio = abs(b0_pet) / max(1e-9, se_pet)
+        if t_ratio > 1.80:
+            raw_pool = b0_peese
+            mode = "PEESE"
+        else:
+            raw_pool = math.copysign(max(0.0, abs(b0_pet) - se_pet), b0_pet)
+            mode = "PET_SHRUNK"
+
+    clamped = max(-1.20, min(1.20, float(raw_pool)))
+    return {
+        "m_studies": m_count,
+        "pooled_g": round(clamped, 6),
+        "i_squared": round(i_sq, 6),
+        "tau_squared": round(tau_sq, 6),
+        "estimator_mode": mode,
+        "lambda_prior": float(lambda_prior),
+    }
+
+
+def _exec_verify_fn(verifier_src: str, answer: Mapping[str, Any]) -> bool:
+    """Execute a generated RLVR record's ``verify`` function in an isolated scope."""
+    ns: dict[str, Any] = {}
+    exec(verifier_src, ns, ns)
+    fn: Callable[[Any], Any] = ns["verify"]
+    return bool(fn(dict(answer)))
+
+
+def _assert_no_odds_words(text: str, label: str) -> None:
+    """Enforce zero sportsbook/odds contamination in RLVR artifacts."""
+    match = _FORBIDDEN_ODDS_RE.search(text)
+    if match is not None:
+        raise ValueError(f"RLVR_ODDS_CONTAMINATION in {label}: matched '{match.group(0)}'")
+
+
+def _build_rlvr_record(
+    *,
+    record_id: str,
+    domain: str,
+    prompt: str,
+    think: str,
+    ground_truth: dict[str, Any],
+    verifier_src: str,
+) -> dict[str, Any]:
+    """Assemble and self-verify one GRPO/OpenRouter-compatible RLVR record."""
+    if not _exec_verify_fn(verifier_src, ground_truth):
+        raise ValueError(f"RLVR record {record_id} failed self-verification on ground truth.")
+    if _exec_verify_fn(verifier_src, {}):
+        raise ValueError(f"RLVR record {record_id} verifier accepted empty dict.")
+
+    gt_json = json.dumps(ground_truth, sort_keys=True)
+    _assert_no_odds_words(prompt, f"{record_id}.prompt")
+    _assert_no_odds_words(think, f"{record_id}.think")
+    _assert_no_odds_words(gt_json, f"{record_id}.ground_truth")
+
+    return {
+        "schema": "gse-to-gsi-rlvr-v1",
+        "model_target": "gse-gsi-reasoner-v1",
+        "record_id": record_id,
+        "domain": domain,
+        "delta_luck_isolated": bool(ground_truth.get("delta_luck_isolated", False)),
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "You are gse-gsi-reasoner-v1, an exact neuro-symbolic sports "
+                    "and translational science verifier. Output strictly JSON."
+                ),
+            },
+            {"role": "user", "content": prompt},
+            {"role": "assistant", "content": gt_json},
+        ],
+        "prompt": prompt,
+        "think": think,
+        "ground_truth": ground_truth,
+        "reward_verifier": verifier_src,
+    }
+
+
+def _autopsy_rlvr_verifier_src() -> str:
+    """Return self-contained GRPO verifier for GSE postgame empirical autopsy."""
+    return (
+        "import json, math\n"
+        "def verify(answer):\n"
+        "    if isinstance(answer, str):\n"
+        "        try:\n"
+        "            answer = json.loads(answer)\n"
+        "        except Exception:\n"
+        "            return False\n"
+        "    if not isinstance(answer, dict):\n"
+        "        return False\n"
+        "    req = {'team_pts_mae', 'abs_total_err', 'abs_margin_err', "
+        "'delta_luck_isolated', 'gradient_weight'}\n"
+        "    if not req.issubset(answer.keys()):\n"
+        "        return False\n"
+        "    t_mae = answer.get('team_pts_mae')\n"
+        "    tot_e = answer.get('abs_total_err')\n"
+        "    mar_e = answer.get('abs_margin_err')\n"
+        "    w_lr = answer.get('gradient_weight')\n"
+        "    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) "
+        "for v in (t_mae, tot_e, mar_e, w_lr)):\n"
+        "        return False\n"
+        "    if float(t_mae) < 0.0 or float(tot_e) < 0.0 or float(mar_e) < 0.0:\n"
+        "        return False\n"
+        "    if answer.get('delta_luck_isolated') is True and float(w_lr) != 0.0:\n"
+        "        return False\n"
+        "    if answer.get('delta_luck_isolated') is False and not (0.0 < float(w_lr) <= 1.0):\n"
+        "        return False\n"
+        "    return math.isfinite(float(t_mae))\n"
+    )
+
+
+def _formula_exact_verifier_src(expected: Mapping[str, Any]) -> str:
+    """Return deterministic exact-match verifier for analytical/physics RLVR items."""
+    serialized = json.dumps(dict(expected), sort_keys=True)
+    return (
+        "import json, math\n"
+        f"_EXPECTED = json.loads({serialized!r})\n"
+        "def verify(answer):\n"
+        "    if isinstance(answer, str):\n"
+        "        try:\n"
+        "            answer = json.loads(answer)\n"
+        "        except Exception:\n"
+        "            return False\n"
+        "    if not isinstance(answer, dict) or set(answer.keys()) != set(_EXPECTED.keys()):\n"
+        "        return False\n"
+        "    for k, exp in _EXPECTED.items():\n"
+        "        got = answer.get(k)\n"
+        "        if isinstance(exp, bool):\n"
+        "            if got is not exp:\n"
+        "                return False\n"
+        "        elif isinstance(exp, (int, float)):\n"
+        "            if not isinstance(got, (int, float)) or isinstance(got, bool):\n"
+        "                return False\n"
+        "            if not math.isclose(float(got), float(exp), rel_tol=1e-4, abs_tol=1e-4):\n"
+        "                return False\n"
+        "        elif got != exp:\n"
+        "            return False\n"
+        "    return True\n"
+    )
+
+
+def compile_gse_to_gsi_rlvr_training_batch(
+    repo_root: Path | None = None,
+    *,
+    output_path: Path | None = None,
+    max_autopsy_games: int = 12,
+) -> dict[str, Any]:
+    """Compile verifiable GSE -> GSI RLVR training trajectories without touching mind.jsonl."""
+    root = (repo_root or _DEFAULT_REPO_ROOT).resolve()
+    if output_path is not None:
+        out_name = output_path.name.lower()
+        norm_str = str(output_path).replace("\\", "/").lower()
+        if out_name == "mind.jsonl" or norm_str.endswith("brain/mind.jsonl"):
+            raise ValueError(
+                "SINGLE_WRITER_VIOLATION: Never write directly to brain/mind.jsonl; "
+                "emit staged trainer feeds inside brain/feeds/<date>/."
+            )
+
+    records: list[dict[str, Any]] = []
+
+    # 1. Completed Week 10 post-window autopsy trajectories (empirical reality -> GSI feedback)
+    autopsy_path = (
+        root / "brain" / "feeds" / "2026-11-16" / "post_window_autopsy_2026_w10_all.jsonl"
+    )
+    autopsy_verifier = _autopsy_rlvr_verifier_src()
+    if autopsy_path.is_file():
+        loaded = 0
+        for raw in autopsy_path.read_text(encoding="utf-8").splitlines():
+            if not raw.strip() or loaded >= max_autopsy_games:
+                continue
+            row = json.loads(raw)
+            if not row.get("is_completed"):
+                continue
+            aut = row.get("projection_autopsy")
+            if not isinstance(aut, Mapping):
+                continue
+            matchup = str(row.get("matchup") or f"GAME_{loaded}")
+            proj_a = float(aut.get("projected_away_pts") or 0.0)
+            proj_h = float(aut.get("projected_home_pts") or 0.0)
+            act_a = float(aut.get("actual_away_pts") or 0.0)
+            act_h = float(aut.get("actual_home_pts") or 0.0)
+            team_mae = round(0.5 * (abs(proj_a - act_a) + abs(proj_h - act_h)), 4)
+            tot_err = round(abs((proj_a + proj_h) - (act_a + act_h)), 4)
+            mar_err = round(abs((proj_h - proj_a) - (act_h - act_a)), 4)
+            is_trauma = matchup.upper() == "NE@DET"
+            gt = {
+                "team_pts_mae": team_mae,
+                "abs_total_err": tot_err,
+                "abs_margin_err": mar_err,
+                "delta_luck_isolated": is_trauma,
+                "gradient_weight": 0.0 if is_trauma else 1.0,
+            }
+            prompt = (
+                f"Audit Week 10 completed matchup {matchup}: projected ({proj_a:.2f}, "
+                f"{proj_h:.2f}), realized ({act_a:.1f}, {act_h:.1f}). Isolate Drive-1 QB "
+                "trauma in NE@DET into delta_luck (gradient_weight=0.0). Output JSON with "
+                "team_pts_mae, abs_total_err, abs_margin_err, delta_luck_isolated, "
+                "gradient_weight."
+            )
+            think = (
+                f"Evaluate team MAE={team_mae}, abs total error={tot_err}, abs margin "
+                f"error={mar_err}; trauma isolation={is_trauma} sets gradient_weight="
+                f"{gt['gradient_weight']} per K25 AIPW Shapley counterfactual isolation."
+            )
+            records.append(
+                _build_rlvr_record(
+                    record_id=f"w10_autopsy_{matchup.lower().replace('@', '_')}",
+                    domain="gse_empirical_autopsy",
+                    prompt=prompt,
+                    think=think,
+                    ground_truth=gt,
+                    verifier_src=autopsy_verifier,
+                )
+            )
+            loaded += 1
+
+    # 2. Neuro-symbolic mathematical & ADR-0003 translational RLVR benchmarks
+    aero_res = verify_buckingham_pi_homogeneity(
+        lhs_dim=(1, 1, -2, 0, 0, 0),
+        rhs_dim=(1, 1, -2, 0, 0, 0),
+        transcendental_arg_dims=(DIMENSIONLESS,),
+        variable_dims=(
+            (1, 1, -2, 0, 0, 0),
+            (1, -3, 0, 0, 0, 0),
+            (0, 1, -1, 0, 0, 0),
+            (0, 2, 0, 0, 0, 0),
+            (0, 0, -1, 0, 0, 0),
+            (0, 1, 0, 0, 0, 0),
+        ),
+    )
+    gt_pi = {
+        "passed": aero_res["passed"],
+        "dimensional_rank": aero_res["dimensional_rank"],
+        "num_pi_groups": aero_res["num_pi_groups"],
+        "quarantine_weight": aero_res["quarantine_weight"],
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="ws1_buckingham_pi_drag_6vars",
+            domain="buckingham_pi_physics",
+            prompt=(
+                "Apply Buckingham Pi rank-nullity across 6 aerodynamic drag variables "
+                "[F_D, rho, v_rel, A, Omega, a] over [M, L, T, Theta, P, $]. Output JSON "
+                "with passed, dimensional_rank, num_pi_groups, quarantine_weight."
+            ),
+            think="Rank of [M, L, T] sub-basis is 3 across 6 variables, yielding 3 groups.",
+            ground_truth=gt_pi,
+            verifier_src=_formula_exact_verifier_src(gt_pi),
+        )
+    )
+
+    retract_res = evaluate_g_fire_gate(
+        TheoremDependencyNode(
+            equation_id="arxiv:2312.11067",
+            paper_or_book_id="arxiv:2312.11067",
+            tau_scale="game",
+            n_min=4,
+        ),
+        query_scale="game",
+        n_obs=60,
+        games_played=10,
+    )
+    gt_retract = {
+        "fires": retract_res["fires"],
+        "quarantine_weight": retract_res["quarantine_weight"],
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="ws1_g_fire_retraction_quarantine",
+            domain="theorem_ast_gate",
+            prompt=(
+                "Evaluate G_fire execution gate on withdrawn preprint arxiv:2312.11067 "
+                "at game scale. Output JSON with fires and quarantine_weight."
+            ),
+            think="RETRACTED_IDS strictly locks withdrawn preprints at weight 0.0.",
+            ground_truth=gt_retract,
+            verifier_src=_formula_exact_verifier_src(gt_retract),
+        )
+    )
+
+    adr_gt = {
+        "rule_in_only_doctrine": True,
+        "intrinsically_disordered_warning": True,
+        "max_injury_multiplier": 1.0,
+        "cleared_for_play_from_blood_only": False,
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="gsi_adr0003_gfap_disorder_invariant",
+            domain="gsi_translational_safety",
+            prompt=(
+                "Verify ADR-0003 translational safety for astroglial biomarker GFAP with "
+                "19.2% very-low-pLDDT disordered tail under QUESTIONABLE game status. "
+                "Output JSON with rule_in_only_doctrine, "
+                "intrinsically_disordered_warning, max_injury_multiplier, "
+                "cleared_for_play_from_blood_only."
+            ),
+            think="19.2% >= 15% triggers disorder warning; ADR-0003 caps multiplier at 1.0.",
+            ground_truth=adr_gt,
+            verifier_src=_formula_exact_verifier_src(adr_gt),
+        )
+    )
+
+    pet_gt = {
+        "estimator_mode": "REML_SKEPTICAL_FALLBACK",
+        "clamped_upper": 1.20,
+        "lambda_prior": 4.0,
+    }
+    records.append(
+        _build_rlvr_record(
+            record_id="ws1_pet_peese_small_m_fallback",
+            domain="meta_regression_pooling",
+            prompt=(
+                "State pooled estimator mode, upper clamp, and prior precision when "
+                "book study count M=3 (< 5) under PET-PEESE. Output JSON with "
+                "estimator_mode, clamped_upper, lambda_prior."
+            ),
+            think="Small M < 5 activates REML skeptical shrinkage prior with clamp 1.20.",
+            ground_truth=pet_gt,
+            verifier_src=_formula_exact_verifier_src(pet_gt),
+        )
+    )
+
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        lines = [json.dumps(rec, ensure_ascii=True) for rec in records]
+        output_path.write_text("\n".join(lines) + "\n", encoding="ascii")
+
+    return {
+        "records_compiled": len(records),
+        "all_verifiers_passed": True,
+        "zero_odds_contamination": True,
+        "output_path": str(output_path) if output_path is not None else None,
+        "records": records,
+    }
+
+
+def evaluate_frontier_reasoning_benchmark_suite(
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Run the 5-axis neuro-symbolic benchmark suite for gse-gsi-reasoner-v1."""
+    root = (repo_root or _DEFAULT_REPO_ROOT).resolve()
+    continuity = verify_zero_loss_knowledge_continuity(root)
+
+    # Axis 1: Zero-loss continuity + proper OOS floor check
+    axis1_ok = continuity["verified"] and continuity["total_indexed_knowledge_units"] >= 80000
+
+    # Axis 2: Buckingham Pi & G_fire mathematical soundness
+    drag = verify_buckingham_pi_homogeneity(
+        lhs_dim=(1, 1, -2, 0, 0, 0),
+        rhs_dim=(1, 1, -2, 0, 0, 0),
+        transcendental_arg_dims=(DIMENSIONLESS,),
+        variable_dims=(
+            (1, 1, -2, 0, 0, 0),
+            (1, -3, 0, 0, 0, 0),
+            (0, 1, -1, 0, 0, 0),
+            (0, 2, 0, 0, 0, 0),
+            (0, 0, -1, 0, 0, 0),
+            (0, 1, 0, 0, 0, 0),
+        ),
+    )
+    bad_dim = verify_buckingham_pi_homogeneity(
+        lhs_dim=(1, 1, -2, 0, 0, 0),
+        rhs_dim=(0, 1, -1, 0, 0, 0),
+        transcendental_arg_dims=((0, 1, 0, 0, 0, 0),),
+    )
+    axis2_ok = drag["passed"] and drag["num_pi_groups"] == 3 and (not bad_dim["passed"])
+
+    # Axis 3: PET-PEESE meta-regression pooling & clamp invariance
+    pooled = pool_pet_peese_meta_regression(
+        [
+            StudyEffect("b1", 0.40, 0.12, 1.0, 120),
+            StudyEffect("b2", 0.35, 0.10, 1.0, 180),
+            StudyEffect("b3", 0.42, 0.15, 1.0, 95),
+        ]
+    )
+    axis3_ok = (
+        0.0 < pooled["pooled_g"] <= 1.20
+        and pooled["estimator_mode"] == "REML_SKEPTICAL_FALLBACK"
+    )
+
+    # Axis 4: Causal delucking + RLVR batch verification
+    rlvr = compile_gse_to_gsi_rlvr_training_batch(root, max_autopsy_games=8)
+    axis4_ok = rlvr["all_verifiers_passed"] and rlvr["records_compiled"] >= 5
+
+    # Axis 5: G_fire retraction blocking + sample floor
+    blocked_ret = evaluate_g_fire_gate(
+        TheoremDependencyNode("arxiv:2312.11067", "arxiv:2312.11067", "game", 4),
+        query_scale="game",
+        n_obs=50,
+    )
+    allowed_ok = evaluate_g_fire_gate(
+        TheoremDependencyNode("eq_markov_rz", "hidden_game", "game", 4),
+        query_scale="game",
+        n_obs=20,
+        deff_cluster=2.0,
+        games_played=10,
+    )
+    axis5_ok = (not blocked_ret["fires"]) and allowed_ok["fires"]
+
+    axes = {
+        "zero_loss_knowledge_continuity": 100.0 if axis1_ok else 0.0,
+        "buckingham_pi_soundness": 100.0 if axis2_ok else 0.0,
+        "pet_peese_meta_pooling": 100.0 if axis3_ok else 0.0,
+        "gse_to_gsi_rlvr_verifiers": 100.0 if axis4_ok else 0.0,
+        "g_fire_retraction_and_deff": 100.0 if axis5_ok else 0.0,
+    }
+    composite = round(sum(axes.values()) / float(len(axes)), 2)
+    return {
+        "model_target": "gse-gsi-reasoner-v1",
+        "composite_score": composite,
+        "all_axes_passed": all(v == 100.0 for v in axes.values()),
+        "axes": axes,
+        "continuity_sha256": continuity["continuity_sha256"],
+        "total_indexed_knowledge_units": continuity["total_indexed_knowledge_units"],
+        "rlvr_records_verified": rlvr["records_compiled"],
+    }

@@ -1245,6 +1245,13 @@ def main() -> int:
         return 0
 
     if args.live:
+        from gse_engine.governance.simulation_hold_gate import (
+            assert_operator_simulation_week_approved,
+        )
+
+        assert_operator_simulation_week_approved(
+            args.week, caller="gse_t_minus_lock_orchestrator --live"
+        )
         sys.stderr.write(f"[*] Step 1: Live ESPN T-90m Inactives Sync for Week {args.week}...\n")
         from scripts.ops.build_live_stage0_truth import (
             build_live_stage0_truth,

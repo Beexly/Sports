@@ -7190,6 +7190,13 @@ def execute_connected_game_workflow(
     kickoff_utc: str | None = None,
 ) -> dict[str, Any]:
     """Run the entire connected Stage 0 -> Stage 1A -> Stage 1B -> Stage 2 -> Stage 3/4 -> Stage 5 pipeline."""
+    from gse_engine.governance.simulation_hold_gate import (
+        assert_operator_simulation_week_approved,
+    )
+
+    assert_operator_simulation_week_approved(
+        week, caller="execute_connected_game_workflow"
+    )
     away_u = away.strip().upper()
     home_u = home.strip().upper()
     if (away_u, home_u) != ("JAX", "BAL") and "jax_bal" in board_rel_path.lower():

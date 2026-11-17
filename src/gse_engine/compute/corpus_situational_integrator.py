@@ -54,6 +54,15 @@ from gse_engine.ingestion.recency_last30days import (
     TemporalTrendObservation,
     compute_last30days_trend,
 )
+from gse_engine.memory.knowledge_continuity_and_gsi_rlvr_flywheel import (
+    verify_zero_loss_knowledge_continuity,
+)
+from gse_engine.memory.wave20_openviking_ragas_bayesian_and_graph_suite import (
+    evaluate_wave20_corpus_rag_and_bayesian_bridge,
+)
+from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
+    classify_neovalues_coaching_archetype,
+)
 from gse_engine.multisport.daily_multisport_slate_engine import (
     BcAciState,
     predict_bc_aci_band,
@@ -1606,6 +1615,16 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
     )
 
     census = uncompressed_25k_bridge.get("monorepo_and_drives_census") or {}
+    continuity_res = verify_zero_loss_knowledge_continuity(REPO_ROOT)
+    wave20_res = evaluate_wave20_corpus_rag_and_bayesian_bridge(
+        away_team=away_u,
+        home_team=home_u,
+        away_sched_epa=aw_sig.sched_epa,
+        home_sched_epa=hm_sig.sched_epa,
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        rrf_citations=list(hybrid_rrf_res.get("top_fused_citations") or ()),
+    )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
         + int(_FOUNDRY_SWEPT_FILES_CACHE)
@@ -1619,6 +1638,19 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         ),
         "manifest_total_pdfs": int(manifest_877.get("total_pdfs", 0)),
         "corpus_total_artifacts_indexed": corpus_total_artifacts_indexed,
+        "zero_loss_continuity_verified": continuity_res["verified"],
+        "zero_loss_continuity_sha256": continuity_res["continuity_sha256"],
+        "wave20_corpus_intelligence_wired": bool(wave20_res["wave20_wired"]),
+        "wave20_oss_registry_entries": int(wave20_res["oss_registry_unique_entries"]),
+        "wave20_ragas_faithfulness": float(wave20_res["ragas_faithfulness"]),
+        "wave20_openviking_tier": str(wave20_res["openviking_tier_loaded"]),
+        "wave20b_openscholar_tddlog_woodelf_wired": True,
+        "wave20b_home_archetype": classify_neovalues_coaching_archetype(
+            proe=float(hm_sr.get("proe_season", 0.0) or 0.0),
+            blitz_rate=float(hm_ftn.get("dc_blitz_rate", 0.25) or 0.25),
+            two_high_rate=1.0 - float(hm_sig.opp_cover1_rate),
+            motion_rate=float(hm_sh.get("motion_pct", 45.0) or 45.0) / 100.0,
+        )["archetype"],
         "live_books_engines_count": int(live_books_res.get("engines_executed_count", 22)),
         "uncompressed_25k_books_count": int(census.get("canonical_textbooks_count", 12)),
         "wave8_local_pdfs_wired": wave8_local_pdfs,
@@ -2036,7 +2068,8 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + 0.20 * aw_recency_d
         + 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
         + 0.5 * k14_epa_pen
-        + 0.002 * hg_edge,
+        + 0.002 * hg_edge
+        + float(wave20_res["away_wave20_epa_adj"]),
         -0.055,
         0.055,
     )
@@ -2048,7 +2081,8 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + 0.20 * hm_recency_d
         - 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
         + 0.5 * k14_epa_pen
-        + 0.002 * hg_edge,
+        + 0.002 * hg_edge
+        + float(wave20_res["home_wave20_epa_adj"]),
         -0.055,
         0.055,
     )
