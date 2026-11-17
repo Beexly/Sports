@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-"""
-scripts/ops/build_week10_game_boards.py
+"""DraftKings 360 matchup boards builder for connected workflow Stage 0/Stage 5.
 
 Generate the per-game DraftKings 360 matchup boards (schema
-gse_360_matchup_board_v1) that the connected workflow's Stage 0/Stage 5 consume,
-for every remaining Week 10 game. Source: ESPN Core API provider-100 (DraftKings)
-propBets — the same keyless path refresh_live_dk_odds_and_props.py uses (bypasses
-the direct DK IP block). Athlete -> team resolved via the ESPN athlete + teams API.
+gse_360_matchup_board_v1) that the connected workflow's Stage 0/Stage 5 consume.
+Source: ESPN Core API provider-100 (DraftKings) propBets + Bovada live v2 two-sided odds.
+Athlete -> team resolved via the ESPN athlete + teams API.
 
-Output: data/engine/week10_{away}_{home}_dk_full_board_2026_11_06.json
-Props match the verified NE@DET board: {athlete, team, position, market, line,
-open_line, has_price}. has_price reflects whether DK over/under juice is present.
+Output: data/engine/week{week}_{away}_{home}_dk_full_board_2026_11_06.json
+Props match verified format: {athlete, team, position, market, line, open_line, has_price}.
 
 Resume-safe: skips games that already have a board unless --force.
 Fail-closed: a game with zero fetched props is recorded as failed (exit 1).
@@ -20,16 +17,18 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import json
-import os
 import re
 import sys
-import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 RE_AMERICAN_ODDS = re.compile(r"^[+-]?\d{3,4}$")
-BOVADA_COUPON_URL = "https://www.bovada.lv/services/sports/event/coupon/events/A/description/football/nfl?marketFilterId=def&preMatchOnly=true&lang=en"
+BOVADA_V2_NFL_URL = (
+    "https://www.bovada.lv/services/sports/event/v2/events/A/description/football/nfl"
+    "?preMatchOnly=true&lang=en"
+)
+BOVADA_COUPON_URL = BOVADA_V2_NFL_URL
 BOVADA_EVENT_V2_PREFIX = "https://www.bovada.lv/services/sports/event/v2/events/A/description"
 BOVADA_TEAM_NORM = {"LA": "LAR", "WAS": "WSH"}
 BOVADA_MARKET_MAP = {
@@ -57,7 +56,30 @@ BOVADA_MARKET_MAP = {
 }
 
 
+def _norm_name(name: str) -> str:
+    """Normalize athlete name by stripping suffixes, punctuation and nickname variants."""
+    cleaned = (
+        str(name)
+        .strip()
+        .lower()
+        .replace("'", "")
+        .replace("\u2019", "")
+        .replace("-", "")
+        .replace(".", "")
+        .replace(",", "")
+    )
+    if cleaned.startswith("matthew "):
+        cleaned = "matt " + cleaned[8:]
+    parts = [
+        w
+        for w in cleaned.split()
+        if w not in ("jr", "sr", "ii", "iii", "iv", "v")
+    ]
+    return " ".join(parts)
+
+
 def _match_key(name: str) -> str:
+    """Generate alphanumeric match key after stripping suffixes and punctuation."""
     return re.sub(r"[^a-z0-9]+", "", _norm_name(name))
 
 
@@ -65,7 +87,10 @@ def _american_implied(am: int) -> float:
     return (-am / (-am + 100.0)) if am < 0 else (100.0 / (am + 100.0))
 
 
-def _choose_bovada_rung(rungs: dict[float, dict[str, int]], prefer_line: float | None = None) -> tuple[float, int, int] | None:
+def _choose_bovada_rung(
+    rungs: dict[float, dict[str, int]],
+    prefer_line: float | None = None,
+) -> tuple[float, int, int] | None:
     if not rungs:
         return None
     if prefer_line is not None:
@@ -90,15 +115,66 @@ def _choose_bovada_rung(rungs: dict[float, dict[str, int]], prefer_line: float |
 
 
 def fetch_bovada_coupon_index() -> list[dict]:
+    """Fetch Bovada live NFL events from the v2 API."""
     try:
-        d = fetch_json(BOVADA_COUPON_URL, timeout=20)
+        d = fetch_json(BOVADA_V2_NFL_URL, timeout=20)
         events: list[dict] = []
         for grp in d if isinstance(d, list) else []:
             events.extend(grp.get("events") or [])
         return events
     except Exception as e:
-        print(f"  [WARN] Bovada coupon fetch failed: {e}", flush=True)
+        print(f"  [WARN] Bovada v2 fetch failed: {e}", flush=True)
         return []
+
+
+def extract_bovada_props_from_event_obj(ev_obj: dict) -> dict[tuple[str, str], dict]:
+    """Extract two-sided 2W-OU full-game (period.abbreviation == 'G') rungs from displayGroups."""
+    if not ev_obj or not isinstance(ev_obj, dict):
+        return {}
+    out: dict[tuple[str, str], dict] = {}
+    for dg in (ev_obj.get("displayGroups") or []):
+        for m in (dg.get("markets") or []):
+            if m.get("key") != "2W-OU":
+                continue
+            per = ((m.get("period") or {}).get("abbreviation") or "").upper()
+            if per != "G":
+                continue
+            desc = str(m.get("description") or "").strip()
+            mt = re.match(r"^(.*?)\s+-\s+(.+?)\s*\(([A-Z]{2,4})\)\s*$", desc)
+            if not mt:
+                continue
+            prefix = re.sub(r"\s+o/u$", "", mt.group(1).strip().lower()).strip()
+            canon_mkt = BOVADA_MARKET_MAP.get(prefix)
+            if not canon_mkt:
+                continue
+            ath_name = mt.group(2).strip()
+            tm_raw = mt.group(3).strip().upper()
+            tm = BOVADA_TEAM_NORM.get(tm_raw, tm_raw)
+            rungs: dict[float, dict[str, int]] = {}
+            for o in (m.get("outcomes") or []):
+                side = str(o.get("type") or "").upper()
+                if side not in ("O", "U"):
+                    continue
+                price = o.get("price") or {}
+                h_raw = price.get("handicap")
+                am = _parse_american_odds(price.get("american"))
+                if h_raw is None or am is None:
+                    continue
+                try:
+                    h_val = float(h_raw)
+                except (TypeError, ValueError):
+                    continue
+                rungs.setdefault(h_val, {})[side] = am
+            valid_rungs = {h: ou for h, ou in rungs.items() if "O" in ou and "U" in ou}
+            if not valid_rungs:
+                continue
+            key = (_match_key(ath_name), canon_mkt)
+            existing = out.get(key)
+            if existing is None:
+                out[key] = {"athlete": ath_name, "team": tm, "rungs": valid_rungs}
+            else:
+                existing["rungs"].update(valid_rungs)
+    return out
 
 
 def fetch_bovada_event_props(bovada_link: str) -> dict[tuple[str, str], dict]:
@@ -114,48 +190,12 @@ def fetch_bovada_event_props(bovada_link: str) -> dict[tuple[str, str], dict]:
     out: dict[tuple[str, str], dict] = {}
     for item in arr if isinstance(arr, list) else []:
         for ev in (item.get("events") or [item]):
-            for dg in (ev.get("displayGroups") or []):
-                for m in (dg.get("markets") or []):
-                    if m.get("key") != "2W-OU":
-                        continue
-                    per = ((m.get("period") or {}).get("abbreviation") or "").upper()
-                    if per != "G":
-                        continue
-                    desc = str(m.get("description") or "").strip()
-                    mt = re.match(r"^(.*?)\s+-\s+(.+?)\s*\(([A-Z]{2,4})\)\s*$", desc)
-                    if not mt:
-                        continue
-                    prefix = re.sub(r"\s+o/u$", "", mt.group(1).strip().lower()).strip()
-                    canon_mkt = BOVADA_MARKET_MAP.get(prefix)
-                    if not canon_mkt:
-                        continue
-                    ath_name = mt.group(2).strip()
-                    tm_raw = mt.group(3).strip().upper()
-                    tm = BOVADA_TEAM_NORM.get(tm_raw, tm_raw)
-                    rungs: dict[float, dict[str, int]] = {}
-                    for o in (m.get("outcomes") or []):
-                        side = str(o.get("type") or "").upper()
-                        if side not in ("O", "U"):
-                            continue
-                        price = o.get("price") or {}
-                        h_raw = price.get("handicap")
-                        am = _parse_american_odds(price.get("american"))
-                        if h_raw is None or am is None:
-                            continue
-                        try:
-                            h_val = float(h_raw)
-                        except (TypeError, ValueError):
-                            continue
-                        rungs.setdefault(h_val, {})[side] = am
-                    valid_rungs = {h: ou for h, ou in rungs.items() if "O" in ou and "U" in ou}
-                    if not valid_rungs:
-                        continue
-                    key = (_match_key(ath_name), canon_mkt)
-                    existing = out.get(key)
-                    if existing is None:
-                        out[key] = {"athlete": ath_name, "team": tm, "rungs": valid_rungs}
-                    else:
-                        existing["rungs"].update(valid_rungs)
+            props = extract_bovada_props_from_event_obj(ev)
+            for k, v in props.items():
+                if k not in out:
+                    out[k] = v
+                else:
+                    out[k]["rungs"].update(v["rungs"])
     return out
 
 
@@ -175,6 +215,7 @@ def _parse_american_odds(raw: object) -> int | None:
         val = int(text)
         return val if abs(val) >= 100 else None
     return None
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WEEK = 10
@@ -201,22 +242,17 @@ BOARD_MARKETS = (
 
 
 def fetch_json(url: str, timeout: int = 20):
+    """Fetch and decode JSON from a remote URL."""
     req = urllib.request.Request(url, headers=UA)
     return json.loads(urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8"))
 
 
-def _norm_name(name: str) -> str:
-    n = str(name).strip().lower()
-    for suf in (" jr.", " sr.", " iii", " ii"):
-        n = n.replace(suf, "")
-    return n.replace(".", "").replace("'", "").strip()
-
-
-def stage0_excluded() -> set[str]:
+def stage0_excluded(week: int = WEEK) -> set[str]:
     """Authoritative Stage-0 exclusion set (require_week), normalized."""
     sys.path.insert(0, str(REPO_ROOT))
     from scripts.ops.preflight_live_roster_injury_gate import require_week
-    cfg = require_week(WEEK)
+
+    cfg = require_week(week)
     out: set[str] = set()
     for ep in cfg.get("excluded_players", []):
         nm = ep.get("name") if isinstance(ep, dict) else str(ep)
@@ -226,6 +262,7 @@ def stage0_excluded() -> set[str]:
 
 
 def team_id_map() -> dict[str, str]:
+    """Build mapping of ESPN team IDs to standard abbreviations."""
     d = fetch_json("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams?limit=50")
     out = {}
     for grp in d.get("sports", [{}])[0].get("leagues", [{}])[0].get("teams", []):
@@ -235,6 +272,7 @@ def team_id_map() -> dict[str, str]:
 
 
 def athlete_info(ref: str, tid_map: dict[str, str]) -> dict:
+    """Fetch athlete name, position, and team from an ESPN athlete ref."""
     try:
         d = fetch_json(ref, timeout=15)
         team_ref = (d.get("team") or {}).get("$ref", "")
@@ -249,11 +287,14 @@ def athlete_info(ref: str, tid_map: dict[str, str]) -> dict:
 
 
 def fetch_event_propbets(ev_id: str) -> list[dict]:
+    """Fetch all paginated DraftKings propBets from ESPN Core API."""
     items: list[dict] = []
     page = 1
     while True:
-        url = (f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{ev_id}"
-               f"/competitions/{ev_id}/odds/100/propBets?limit=1000&page={page}")
+        url = (
+            f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{ev_id}"
+            f"/competitions/{ev_id}/odds/100/propBets?limit=1000&page={page}"
+        )
         try:
             d = fetch_json(url, timeout=25)
         except Exception as e:
@@ -288,9 +329,29 @@ def build_board(
     tid_map: dict[str, str],
     excluded: set[str],
     bovada_link: str = "",
+    bovada_ev: dict | None = None,
+    week: int = WEEK,
+    prior_board: dict | None = None,
 ) -> dict:
+    """Build 360 matchup board with DK lines, Bovada two-sided prices and prior fallback."""
     raw = fetch_event_propbets(ev_id)
-    bovada_props = fetch_bovada_event_props(bovada_link)
+    bovada_props: dict[tuple[str, str], dict] = {}
+    if bovada_ev and (bovada_ev.get("displayGroups") or []):
+        bovada_props = extract_bovada_props_from_event_obj(bovada_ev)
+    if not bovada_props and bovada_link:
+        bovada_props = fetch_bovada_event_props(bovada_link)
+
+    prior_props_by_key: dict[tuple[str, str], dict] = {}
+    if prior_board and isinstance(prior_board.get("props"), list):
+        for p in prior_board["props"]:
+            if (
+                p.get("has_price")
+                and p.get("over_american") is not None
+                and p.get("under_american") is not None
+            ):
+                k = (_match_key(p.get("athlete", "")), p.get("market", ""))
+                prior_props_by_key[k] = p
+
     by_key: dict[tuple, dict] = {}
     refs: set[str] = set()
     all_markets: set[str] = set()
@@ -312,19 +373,29 @@ def build_board(
         key = (ref, t_name)
         if key not in by_key:
             by_key[key] = {
-                "ref": ref, "market": t_name, "line": float(target),
-                "open_line": float(((it.get("open") or {}).get("target") or {}).get("value") or target),
+                "ref": ref,
+                "market": t_name,
+                "line": float(target),
+                "open_line": float(
+                    ((it.get("open") or {}).get("target") or {}).get("value") or target
+                ),
                 "has_price": bool(over_am is not None and under_am is not None),
                 "over_american": over_am,
                 "under_american": under_am,
-                "price_source": "ESPN DraftKings" if (over_am is not None and under_am is not None) else None,
+                "price_source": (
+                    "ESPN DraftKings" if (over_am is not None and under_am is not None) else None
+                ),
             }
     info: dict[str, dict] = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:
         futs = {pool.submit(athlete_info, r, tid_map): r for r in refs}
         for f in concurrent.futures.as_completed(futs):
             info[futs[f]] = f.result()
-    pos_by_match = {_match_key(v["name"]): v["position"] for v in info.values() if v.get("position")}
+    pos_by_match = {
+        _match_key(v["name"]): v["position"]
+        for v in info.values()
+        if v.get("position")
+    }
     matched_bovada_keys: set[tuple[str, str]] = set()
     props = []
     for (ref, t_name), v in by_key.items():
@@ -339,8 +410,8 @@ def build_board(
         under_am = v["under_american"]
         has_price = v["has_price"]
         price_source = v["price_source"]
+        b_key = (_match_key(a["name"]), t_name)
         if not has_price:
-            b_key = (_match_key(a["name"]), t_name)
             b_entry = bovada_props.get(b_key)
             if b_entry:
                 chosen = _choose_bovada_rung(b_entry["rungs"], prefer_line=line_val)
@@ -352,9 +423,22 @@ def build_board(
                     has_price = True
                     price_source = "Bovada Live v2 Two-Sided"
                     matched_bovada_keys.add(b_key)
+            if not has_price and b_key in prior_props_by_key:
+                old_p = prior_props_by_key[b_key]
+                old_line = old_p.get("line")
+                if old_line is not None and abs(float(old_line) - float(line_val)) <= 2.5:
+                    over_am = int(old_p["over_american"])
+                    under_am = int(old_p["under_american"])
+                    has_price = True
+                    prior_src = old_p.get("price_source") or "Prior Board Two-Sided"
+                    price_source = f"Preserved ({prior_src}, line {old_line})"
         props.append({
-            "athlete": a["name"], "team": a["team"], "position": a["position"],
-            "market": t_name, "line": line_val, "open_line": open_val,
+            "athlete": a["name"],
+            "team": a["team"],
+            "position": a["position"],
+            "market": t_name,
+            "line": line_val,
+            "open_line": open_val,
             "has_price": has_price,
             "over_american": over_am,
             "under_american": under_am,
@@ -390,38 +474,72 @@ def build_board(
     return {
         "schema": "gse_360_matchup_board_v1",
         "matchup": f"{away} @ {home}",
-        "week": WEEK,
+        "week": week,
         "market_type_count": len(all_markets),
         "props_count": len(props),
         "priced_props_count": priced_count,
         "props": props,
         "provenance": {
-            "source": "ESPN Core API provider-100 (DraftKings) propBets + Bovada Live v2 Two-Sided Odds",
+            "source": (
+                "ESPN Core API provider-100 (DraftKings) propBets + "
+                "Bovada Live v2 Two-Sided Odds"
+            ),
             "event_id": ev_id,
             "bovada_link": bovada_link or None,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "generator": "build_week10_game_boards.py",
         },
     }
 
 
 def main() -> int:
+    """Build 360 game boards for the given week."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--week", type=int, default=10, help="NFL week number (default 10)")
     ap.add_argument("--only", default="", help="Comma-separated AWAY@HOME filters")
     args = ap.parse_args()
 
-    sb = json.loads((REPO_ROOT / "data" / "engine" / "espn_2026_week10_scoreboard.json").read_text(encoding="utf-8"))
+    week = args.week
+    sb_path = REPO_ROOT / "data" / "engine" / f"espn_2026_week{week}_scoreboard.json"
+    if sb_path.is_file():
+        sb = json.loads(sb_path.read_text(encoding="utf-8"))
+    else:
+        sb_url = (
+            f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+            f"?dates=2026&week={week}&seasontype=2"
+        )
+        try:
+            sb = fetch_json(sb_url, timeout=15)
+        except Exception as e:
+            print(
+                f"[WARN] Failed to fetch live ESPN scoreboard for week {week}: {e}",
+                file=sys.stderr,
+            )
+            fallback = REPO_ROOT / "data" / "engine" / "espn_2026_week10_scoreboard.json"
+            sb = (
+                json.loads(fallback.read_text(encoding="utf-8"))
+                if fallback.is_file()
+                else {"events": []}
+            )
+
     tid_map = team_id_map()
-    excluded = stage0_excluded()
-    print(f"team id map: {len(tid_map)} teams | Stage-0 excluded: {len(excluded)} names", flush=True)
+    excluded = stage0_excluded(week=week)
+    print(
+        f"team id map: {len(tid_map)} teams | Stage-0 excluded: {len(excluded)} names",
+        flush=True,
+    )
     bovada_events = fetch_bovada_coupon_index()
-    bovada_link_map: dict[str, str] = {
-        str(ev.get("description") or "").strip().lower(): str(ev.get("link") or "")
-        for ev in bovada_events
-        if ev.get("description") and ev.get("link")
-    }
-    now = datetime.now(timezone.utc)
+    bovada_link_map: dict[str, str] = {}
+    bovada_ev_map: dict[str, dict] = {}
+    for ev in bovada_events:
+        d_key = str(ev.get("description") or "").strip().lower()
+        if d_key:
+            bovada_ev_map[d_key] = ev
+            if ev.get("link"):
+                bovada_link_map[d_key] = str(ev.get("link"))
+
+    now = datetime.now(UTC)
     games = []
     for ev in sb.get("events", []):
         comp = (ev.get("competitions") or [{}])[0]
@@ -435,33 +553,65 @@ def main() -> int:
             kickoff = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
         except Exception:
             continue
-        if (away, home) == ("NE", "DET"):
+        if (away, home) == ("NE", "DET") and week == 10:
             continue  # Munich 08:30 AM CST game is sealed
         if kickoff <= now:
-            continue  # already started (e.g. WSH@NYG Thursday)
-        desc_key = f"{away_team.get('displayName', '')} @ {home_team.get('displayName', '')}".strip().lower()
+            continue  # already started
+        desc_key = (
+            f"{away_team.get('displayName', '')} @ {home_team.get('displayName', '')}"
+            .strip()
+            .lower()
+        )
         bov_link = bovada_link_map.get(desc_key, "")
-        games.append((str(ev["id"]), away, home, bov_link))
+        bov_ev = bovada_ev_map.get(desc_key)
+        games.append((str(ev["id"]), away, home, bov_link, bov_ev))
     if args.only:
         wanted = {tuple(x.strip().split("@")) for x in args.only.split(",") if x.strip()}
         games = [g for g in games if (g[1], g[2]) in wanted]
-    print(f"Week {WEEK} boards to build: {len(games)} games (bovada links matched: {sum(1 for g in games if g[3])})", flush=True)
+    print(
+        f"Week {week} boards to build: {len(games)} games "
+        f"(bovada links matched: {sum(1 for g in games if g[3] or g[4])})",
+        flush=True,
+    )
 
     failures = []
     built = 0
-    for ev_id, away, home, bov_link in games:
-        out = REPO_ROOT / "data" / "engine" / f"week{WEEK}_{away.lower()}_{home.lower()}_dk_full_board_{BOARD_DATE_SUFFIX}.json"
-        if out.is_file() and not args.force:
-            print(f"[{away}@{home}] SKIP board exists", flush=True)
-            built += 1
-            continue
+    for ev_id, away, home, bov_link, bov_ev in games:
+        out = (
+            REPO_ROOT
+            / "data"
+            / "engine"
+            / f"week{week}_{away.lower()}_{home.lower()}_dk_full_board_{BOARD_DATE_SUFFIX}.json"
+        )
+        prior_board = None
+        if out.is_file():
+            if not args.force:
+                print(f"[{away}@{home}] SKIP board exists", flush=True)
+                built += 1
+                continue
+            try:
+                prior_board = json.loads(out.read_text(encoding="utf-8"))
+            except Exception as e:
+                print(f"  [WARN] Failed reading prior board for {away}@{home}: {e}", flush=True)
+                prior_board = None
         try:
-            board = build_board(ev_id, away, home, tid_map, excluded, bovada_link=bov_link)
+            board = build_board(
+                ev_id,
+                away,
+                home,
+                tid_map,
+                excluded,
+                bovada_link=bov_link,
+                bovada_ev=bov_ev,
+                week=week,
+                prior_board=prior_board,
+            )
             if board["props_count"] == 0:
                 raise RuntimeError("zero props fetched")
             out.write_text(json.dumps(board, indent=2), encoding="utf-8")
             print(
-                f"[{away}@{home}] DONE {board['props_count']} props ({board['priced_props_count']} priced), "
+                f"[{away}@{home}] DONE {board['props_count']} props "
+                f"({board['priced_props_count']} priced), "
                 f"{board['market_type_count']} market types -> {out.name}",
                 flush=True,
             )

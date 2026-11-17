@@ -3,9 +3,19 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
-## 2026-11-17 (2026-11-16 CT) -- Wave 19, T-60m MNF Lock (LAC @ BAL), Live Whop Storefront & Global SEO/CSP/Ops Handoff
+## 2026-11-17 (2026-11-16 CT) -- Wave 19, T-Minus Lock Postmortem & Orchestrator, Whop Storefront & Global Ops Handoff
 
 - **What changed**:
+  - **MNF LAC @ BAL Workflow Postmortem, Six Systemic Pre-Lock Failures & T-Minus Lock Orchestrator (`LL-2026-11-16-036`)**:
+    - Conducted comprehensive operational autopsy of the 2026-11-16 MNF lock (`docs/engine/research/2026-11-16/mnf-workflow-postmortem-and-t-minus-lock-optimization.md`) and built dedicated pre-lock coordinator `scripts/ops/gse_t_minus_lock_orchestrator.py` with six permanent code fixes:
+      1. Automated T-90m Inactives: Step 1 auto-polls live ESPN summary/roster endpoint, parsing official inactives and immediately zeroing out snap share, target distribution, and personnel alignments (eliminating manual intervention for Ladd McConkey OUT).
+      2. Bovada v2 API Migration: Repointed `build_week10_game_boards.py` from retired `/event/coupon/` URL (which returned 0 priced props on `--force`) to live `/event/v2/events/A/description/football/nfl?preMatchOnly=true&lang=en` with embedded `displayGroups` extraction, `--week` flag, and robust suffix/apostrophe normalization (`Tre' Harris`, `Oronde Gadsden II`).
+      3. Prop Sniper Gate Key Harmonization: Fixed silent key lookup mismatch (`_213.get("snap_share", 0.0)` returning `0.0` and vetoing 100% of RB/WR/TE props) in `gse_connected_game_workflow.py` by checking `snap_share`, `projected_snap_share`, and `offensive_snap_pct`; guarded permanently via Firewall `S5_skill_sniper_gate_liveness`.
+      4. Discrete Integer Touchdowns & QB Scramble Calibration: Eliminated fractional continuous multiplication (`1 * 0.49 = 0.49 < 0.5`) on discrete touchdown props via exact Poisson/negative-binomial modeling; replaced uncalibrated `1.24`-carry / `2.97`-yd QB scramble stub with live PBP scramble rates, offensive line injury context, and defensive shell metrics; guarded permanently by Firewalls `S3` and `S4`.
+      5. Scoped DFS Execution & Logging Deduplication: Restricted MILP lineup solver to matching slate (`slates={matching_slate}`) avoiding 45s+ latency from re-solving all 5 Week 10 slates, deduplicated repetitive Stage 0 stdout spam, and standardized dual UTC/CT date headers (`## YYYY-MM-DD (YYYY-MM-DD CT)`) in `HANDOFF.md` to prevent pre-commit DoD failures across midnight.
+      6. Operator-First Output Law: Enforced immediate rendering of descending `XX/100` Ranked Confidence Plays/Props/SGP Card first (< 25s live / < 1.5s cached) in `gse_t_minus_lock_orchestrator.py`, preventing critical betting decisions from being buried beneath heavy DFS matrices and commerce payloads.
+  - **CI/CD & Overnight Verification Harness Update**:
+    - Updated `scripts/ops/overnight-verify-and-ship.mjs` to include `tests/unit/test_t_minus_lock_orchestrator.py` in `PYTHON_TEST_FILES` and ruff args, and wired a dedicated `t-minus-lock-offline-verify` step executing `python scripts/ops/gse_t_minus_lock_orchestrator.py --week 10 --matchup LAC@BAL --offline-verify`.
   - **Wave 19 97/97 WIRED_V3 OSS Corpus Integration & Total Intelligence Gate**:
     - Finalized full Wave 19 open-source intelligence integration across all 97 external corpus repositories (`data-sources/research/2026-11-15/oss-corpus-registry.json`), verifying complete `WIRED_V3` operational wiring status for all 97/97 targets.
     - Implemented and activated the pre-simulation total intelligence gate (`scripts/guardrails/pre_sim_total_intelligence_gate.py`), which uses `sys.setprofile` execution tracking to mathematically verify that call counts >= 1 and that non-zero L2 Jacobians are registered across all five compound intelligence pillars: (1) Market Microstructure Filtration, (2) Multimodal Visual Language & Provenance, (3) Corpus Situational Integrator & Deception Firewall, (4) Biomechanics, Ballistics & Trench Physics, and (5) Ensemble Filtering & Coherence Transport before any simulation trajectory vector can run.
@@ -28,6 +38,11 @@ next role must do. ---
     - Prepared operational steps to pause legacy auto-deploy on Render background service `srv-db98ilvbtjjs739r9a30`.
 
 - **What was proven**:
+  - **T-Minus Lock Orchestrator and Pipeline Hardening**:
+    - Verified `gse_t_minus_lock_orchestrator.py` in offline mode (< 1.5s execution) across all 6 stages.
+    - Confirmed Firewall S5 prevents silent zero-prop rejections when valid skill players exist.
+    - Confirmed discrete Poisson model prevents integer touchdown under-projection (Firewall S3).
+    - Confirmed scramble physics calibrate QB rushing expectations against pressure and shell coverage (Firewall S4).
   - **Week 10 Empirical MAE Progression Outperformed Wave 18 Across Every Dimension**:
     - Pass Yards MAE: Improved from 64.17 down to **58.77** (-5.40 yds).
     - Rush Yards MAE: Improved from 25.92 down to **25.87** (-0.05 yds).
@@ -46,12 +61,13 @@ next role must do. ---
 
 - **What the next role must do**:
   - Execute the Executive Operations Action Checklist:
-    1. Render auto-deploy: In Render dashboard settings for `srv-db98ilvbtjjs739r9a30`, suspend auto-deploy to halt 37-failure notification loops while Vercel handles production.
-    2. Vercel environment: Copy `WHOP_WEBHOOK_SECRET` into Vercel Project Settings before merging `feat/pregame-engine-dfs-harmony-2026-11-15` into `main`.
-    3. Banking correspondence: Delete duplicate 04:51 UTC draft to `rhonda.jasso@frostbank.com` and send the 05:41 UTC draft.
-    4. Procurement compliance: Submit Tricia Holfelder TIPS-USA reference response prior to the Thursday, Nov 19 3:00 PM CT deadline.
-    5. Stripe security: Vault legacy live secret keys before November 20 deprecation and toggle Stripe Adaptive Pricing for global currency support across 150+ countries.
-    6. Domain DNS: Add Google Workspace MX records to `beexly.com` DNS configuration to prevent mail delivery bounces to `garrett@beexly.com`.
+    1. Pre-lock verification: Run `npm run lock:verify` (or `python scripts/ops/gse_t_minus_lock_orchestrator.py --week 10 --matchup LAC@BAL --offline-verify`) before any live game execution.
+    2. Render auto-deploy: In Render dashboard settings for `srv-db98ilvbtjjs739r9a30`, suspend auto-deploy to halt 37-failure notification loops while Vercel handles production.
+    3. Vercel environment: Copy `WHOP_WEBHOOK_SECRET` into Vercel Project Settings before merging `feat/pregame-engine-dfs-harmony-2026-11-15` into `main`.
+    4. Banking correspondence: Delete duplicate 04:51 UTC draft to `rhonda.jasso@frostbank.com` and send the 05:41 UTC draft.
+    5. Procurement compliance: Submit Tricia Holfelder TIPS-USA reference response prior to the Thursday, Nov 19 3:00 PM CT deadline.
+    6. Stripe security: Vault legacy live secret keys before November 20 deprecation and toggle Stripe Adaptive Pricing for global currency support across 150+ countries.
+    7. Domain DNS: Add Google Workspace MX records to `beexly.com` DNS configuration to prevent mail delivery bounces to `garrett@beexly.com`.
 
 ## 2026-11-16 -- Wave 18 Master Plan v4.0 (K01-K25 Unified Kernels, AP-01..13, Combinatorial CPCV & Week 10 25.88 Player MAE)
 
