@@ -1,0 +1,755 @@
+{
+ "book_id": "15d4618fc1b5a82b",
+ "source_status": "COMPLETE",
+ "source_note": "William W. (Bill) Roper, Princeton 1902 and Princeton head coach, Football, Today and Tomorrow, Duffield and Company, New York; copyright 1927, second edition 1928. Catalog correction: the local file is named for Willaman (Sam Willaman, Ohio State coach), but the title page and copyright page of the work itself name William W. Roper as author, and the text is Roper's first-person account of his Princeton teams; Willaman appears nowhere as author. The local file is an Internet Archive digitization (archive.org/details/footballtodaytomwill) of the printed book. PDF size 12258789 bytes; full sha256 15d4618fc1b5a82b80a8336d2f9bb965c6370916089eb79347b9337ef4bc5280; book_id is the first 16 hex of the scan digest sha256(str(size) + file bytes). Extracted text: 230282 characters, about 38213 words, OCR of scanned print; prose is generally clean, with occasional interleaved page headers, printed page numbers, and stray dash artifacts; all quoted passages were chosen inside single pages and verified as contiguous substrings of the extracted text file. The work contains no equations. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "zone_play_framework",
+   "name": "Zone play: field position partitions the field into bands, each with its own default play-calling policy",
+   "verbatim_quote": "Between your goal line and your twenty-five yard line you should either kick on first down or try a long-gaining play and kick if it fails.",
+   "page": "Chapter III, printed p. 41",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field position is the dominant state variable for risk tolerance",
+    "Turnovers deep in own territory are the costliest errors",
+    "The defense's expected posture varies by field band"
+   ],
+   "breakdown_regime": "Defaults become predictable if treated as laws; Roper himself orders the quarterback to learn the zones and then forget the details. Modern hash marks, pass rules and scoring rates shift the band boundaries. no_equation_domain",
+   "domain": "football strategy / field-position policy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's situational layer should carry field position as a first-class state that conditions every downstream policy: risk appetite, play family priors and turnover cost all change by band, exactly as Roper's four zones condition the quarterback's defaults.",
+    "source_operator": "zone_play_framework",
+    "telemetry": "Ball spot (yard line and hash), down, distance, score differential, time remaining"
+   }
+  },
+  {
+   "primitive_id": "punt_on_fourth_down_rule",
+   "name": "Punt on fourth down: an almost absolute rule, because a failed run hands the opponent midfield possession while a punt only postpones possession",
+   "verbatim_quote": "Always kick on the fourth down unless you are behind.",
+   "page": "Chapter III, printed p. 47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field position has compounding value across an exchange of punts",
+    "Short-yardage conversion probability is lower than intuition suggests",
+    "The opponent's offense starting deep is worth more than one extra possession at midfield"
+   ],
+   "breakdown_regime": "Breaks when trailing late, when the score state makes possession worth more than position; also degrades with a weak punter or a strong return unit. Modern analytics revises the threshold by distance and field spot. no_equation_domain",
+   "domain": "football strategy / possession economics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine needs explicit possession-versus-position exchange rates: Roper's rule is a stored policy that a failed gamble costs about fifty yards of position, which is the same accounting the engine must do when it weighs aggression against field state.",
+    "source_operator": "punt_on_fourth_down_rule",
+    "telemetry": "Fourth-down distance, ball spot, punt unit net average, opponent starting field position after exchanges"
+   }
+  },
+  {
+   "primitive_id": "play_to_the_score_exception",
+   "name": "Play to the score: every near-absolute rule carries a score-state exception, because late deficits invert the value of possession and risk",
+   "verbatim_quote": "when you are playing to the score and in football, as in bridge, you always should be playing to the score.",
+   "page": "Chapter III, printed p. 48",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Win probability, not yardage, is the objective late in games",
+    "A trailing team gains nothing from a rule that preserves a losing state",
+    "Risk that is folly at parity is correct when behind"
+   ],
+   "breakdown_regime": "The exception can be abused as a license for panic; it applies only when the score and clock make the conservative line a near-certain loss. no_equation_domain",
+   "domain": "football strategy / game-state conditioning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine's meta-rule: policies are conditional on game state, and the reasoning layer must re-derive risk posture from score and clock rather than applying static tendencies. It vetoes any signal that recommends the parity play in a deficit state.",
+    "source_operator": "play_to_the_score_exception",
+    "telemetry": "Score differential, time remaining, timeouts, possession count remaining"
+   }
+  },
+  {
+   "primitive_id": "no_forward_pass_when_leading_late",
+   "name": "Never forward pass in the last two minutes while holding the lead: the interception tail risk converts a won game into a loss",
+   "verbatim_quote": "You should never forward pass in the last two minutes of the game if you hold the long end of the score.",
+   "page": "Chapter III, printed p. 48",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A leading team's remaining risk is concentrated in turnover events",
+    "Running plays and punts cannot produce an opponent's short field",
+    "The clock, not yardage, is the scarce resource when ahead"
+   ],
+   "breakdown_regime": "Void when behind or tied; also softened when the run game cannot burn clock and a first down ends the game. no_equation_domain",
+   "domain": "football strategy / endgame risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should model endgame states asymmetrically: when protecting a lead, the cost function is dominated by turnover probability, so play families are ranked by variance and interception exposure rather than expected gain.",
+    "source_operator": "no_forward_pass_when_leading_late",
+    "telemetry": "Clock, lead size, play-family turnover rates, opponent timeout inventory"
+   }
+  },
+  {
+   "primitive_id": "never_attack_center_inside_ten",
+   "name": "Never send a play at the center of the line inside the opponent's ten yard line, because the defense masses its strength exactly there",
+   "verbatim_quote": "I give him an almost absolute rule never to send a play at the center of the line inside our opponents ten yard line.",
+   "page": "Chapter III, printed p. 49",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A compressed defense concentrates mass at the center near its own goal",
+    "Attacking the strongest, most expected point wastes the down",
+    "The massing that stops the center necessarily weakens some other sector"
+   ],
+   "breakdown_regime": "The center becomes correct precisely when the defense stops expecting it, for example after repeated wide plays; the rule targets the default, not the exception. no_equation_domain",
+   "domain": "football strategy / red-zone attack",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Red-zone reasoning must start from defensive mass distribution, not from the offense's favorite plays: the engine should locate where the defense has concentrated and route the attack to the sector the concentration abandoned.",
+    "source_operator": "never_attack_center_inside_ten",
+    "telemetry": "Defensive box count and interior massing by field position, play direction splits inside the ten"
+   }
+  },
+  {
+   "primitive_id": "drop_kicker_effective_range_rule",
+   "name": "Never stretch the effective range of the drop-kicker: a kick beyond the kicker's proven range is slower to launch, easier to block, and a mere pot shot",
+   "verbatim_quote": "I give my quarterback an almost absolute rule never to try to stretch the effective range of his drop-kicker.",
+   "page": "Chapter III, printed p. 51",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every kicker has a measurable maximum reliable distance",
+    "A kick attempt beyond range has near-zero success probability and elevated block risk",
+    "A punt from the same spot yields position without the block tail risk"
+   ],
+   "breakdown_regime": "Breaks when trailing by three or fewer late, where the small success chance dominates the alternative of certain loss. no_equation_domain",
+   "domain": "football strategy / kicking decisions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine must carry per-kicker range distributions and refuse low-probability kick recommendations outside them, while flagging the score-state exception explicitly instead of silently stretching range.",
+    "source_operator": "drop_kicker_effective_range_rule",
+    "telemetry": "Kicker success rate by distance band, block rate by kick type, game state"
+   }
+  },
+  {
+   "primitive_id": "ten_plays_unexpected_play",
+   "name": "Ten plays are better than fifty, and one unexpected play is worth ten obvious ones: a small, mastered playbook plus surprise beats a large, shallow one",
+   "verbatim_quote": "Ten plays are better than fifty. And one unexpected play is better than ten obvious plays",
+   "page": "Chapter III, printed p. 54",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Execution quality rises with repetition of a small set",
+    "A play's value includes the defense's expectation state",
+    "Any standard play becomes a trick play when called against the opposite expectation"
+   ],
+   "breakdown_regime": "A too-small set becomes scoutable; surprise decays with use, as Roper's Michigan example shows when a scoring play was spent at midfield and lost its deception near the goal. no_equation_domain",
+   "domain": "football strategy / playbook design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For the reasoning layer this prices expectation itself: a play call's value is a function of the defense's predicted call, so the engine should track tendency state and credit plays that attack the expectation, not only plays with high base rates.",
+    "source_operator": "ten_plays_unexpected_play",
+    "telemetry": "Play-calling tendency frequencies by situation, defensive alignment responses, success rate by expectation match or mismatch"
+   }
+  },
+  {
+   "primitive_id": "two_against_one_targeting",
+   "name": "Play two men against one, never one against two: route plays so local numbers favor the offense, and send plays away from defensive strength",
+   "verbatim_quote": "His object always should be to play two men against one; never one man against two.",
+   "page": "Chapter III, printed p. 43",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Local numerical superiority at the point of attack decides most plays",
+    "Defensive strength is unevenly distributed and partly observable before the snap",
+    "The defense's shift response reveals where its strength will be"
+   ],
+   "breakdown_regime": "Static counts mislead when defenders win individual matchups regardless of numbers; superior athletes compress the value of the count. no_equation_domain",
+   "domain": "football tactics / point-of-attack numbers",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a pre-snap counting primitive for the matchup layer: the engine should score each candidate play by the local numbers and matchup quality at its point of attack, updated by how the defense shifts.",
+    "source_operator": "two_against_one_targeting",
+    "telemetry": "Formation strength, defensive shift response, box counts, individual matchup grades"
+   }
+  },
+  {
+   "primitive_id": "opponent_position_dictates_play",
+   "name": "The position of the opponents must dictate the game: there are twenty-two players, and strategy built on only your own eleven is fiction",
+   "verbatim_quote": "The position of your opponents always must dictate your game.",
+   "page": "Chapter III, printed p. 42",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Defensive alignment is observable information available before every snap",
+    "Each alignment concedes something by construction",
+    "Ignoring the defense forfeits free information"
+   ],
+   "breakdown_regime": "Alignments can be disguised or rotated after the snap; over-reading invites the defense to bait calls. no_equation_domain",
+   "domain": "football tactics / defensive reading",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The matchup layer's core discipline: every offensive evaluation is conditional on the observed defensive structure, and the reasoning trace should name what the alignment concedes before it names what the offense prefers.",
+    "source_operator": "opponent_position_dictates_play",
+    "telemetry": "Defensive alignment and rotation data, safety depth, end and center positioning by down"
+   }
+  },
+  {
+   "primitive_id": "kick_release_under_two_seconds",
+   "name": "Get kicks off in under two seconds and none will be blocked: release time is the controlling variable for kick protection",
+   "verbatim_quote": "If you can get your kicks off under two seconds, none of them will be blocked.",
+   "page": "Chapter III, printed p. 44",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rushers need a minimum time to reach the kick point",
+    "Operation time is trainable and measurable",
+    "A shaken ball carrier makes a poor next-play kicker, so sequencing matters"
+   ],
+   "breakdown_regime": "Elite rushers and overload schemes compress the margin; weather and snap quality add variance the two-second rule hides. no_equation_domain",
+   "domain": "football operations / special teams timing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A threshold primitive: the engine can treat kick operation time as a hard feasibility check, the same pattern as any latency bound in a real-time system, and flag units whose operation time sits near the block threshold.",
+    "source_operator": "kick_release_under_two_seconds",
+    "telemetry": "Snap-to-kick operation times, block events, rusher get-off times"
+   }
+  },
+  {
+   "primitive_id": "force_your_own_breaks",
+   "name": "Force your own breaks: a team that waits for opponent mistakes loses; attack substitutes before they warm up and opponents right after their errors",
+   "verbatim_quote": "A football team depending to win on the other fellows mistakes is going to get licked. You must force your own breaks.",
+   "page": "Chapter III, printed p. 45",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Opponent vulnerability spikes at substitutions and immediately after errors",
+    "Breaks are manufactured by pressure, not received by patience",
+    "Alertness is a trainable team property"
+   ],
+   "breakdown_regime": "Over-aggression chasing breaks creates its own turnovers; the posture must stay inside the zone and score rules. no_equation_domain",
+   "domain": "football strategy / opportunism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The situational layer should carry transient vulnerability states: a cold substitute, a player who just erred, a unit that just surrendered a big play. The engine gains by timing its highest-variance calls into those windows.",
+    "source_operator": "force_your_own_breaks",
+    "telemetry": "Substitution events, post-error play outcomes, targeting rates against new entrants"
+   }
+  },
+  {
+   "primitive_id": "play_for_the_breaks",
+   "name": "Play for the breaks: train the team to fight hardest and think quickest in the moment a break arrives, and convert it before the opponent resets",
+   "verbatim_quote": "I have always taught my boys to play for the breaks, to fight hardest and think quickly when the break comes, to hammer away and sweep the opposition off their feet before they know what it's all about.",
+   "page": "Chapter I, printed p. 11",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Games turn on a small number of sudden possession or momentum events",
+    "The value of a break decays within a few plays as the opponent reorganizes",
+    "Conversion speed is a practiced behavior, not luck"
+   ],
+   "breakdown_regime": "A break misread invites overreach; the 1922 Chicago comeback still required sound plays after the fumble. no_equation_domain",
+   "domain": "football psychology / momentum conversion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Momentum in the engine should be modeled as a short-lived state with a decay window: after a turnover or sudden swing, the next few plays carry elevated leverage, and the reasoning layer should say so explicitly.",
+    "source_operator": "play_for_the_breaks",
+    "telemetry": "Turnover events, scoring rate in the three plays following a turnover, opponent disorganization markers"
+   }
+  },
+  {
+   "primitive_id": "quarterback_ideal_qualities",
+   "name": "The ideal quarterback blends courage, brains, fast straight thinking, initiative, and a compelling voice that drives the team",
+   "verbatim_quote": "He must have courage and brains. He must be able to think fast and straight.",
+   "page": "Chapter III, printed p. 33",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quarterback is the on-field decision node for the whole offense",
+    "Decision speed under crowd pressure is the binding constraint",
+    "Voice and presence measurably change teammates' execution"
+   ],
+   "breakdown_regime": "Physical talent without the mental traits fails at the position; the traits are also partly trainable, which is why Roper teaches generalship daily. no_equation_domain",
+   "domain": "football personnel / decision-maker profile",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For player evaluation the engine should score the quarterback position on decision traits separately from arm talent: processing speed, initiative rate and command presence are features, not color.",
+    "source_operator": "quarterback_ideal_qualities",
+    "telemetry": "Quarterback decision latency proxies, audible and adjustment rates, performance under pressure splits"
+   }
+  },
+  {
+   "primitive_id": "quarterback_sole_authority",
+   "name": "The quarterback alone gives the orders: no conference in the huddle, no interference from captain or teammates, because divided strategy loses games",
+   "verbatim_quote": "The quarterback gives the orders, and the other players are not permitted to butt in.",
+   "page": "Chapter III, printed p. 35",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single decision-maker prevents deadlock at the moment of choice",
+    "The captain's job is morale, not play selection",
+    "Committee calls consume the clock and blur accountability"
+   ],
+   "breakdown_regime": "A quarterback who is genuinely overmatched needs the sideline structure behind him; the rule presumes the coach has already sold him the strategy. no_equation_domain",
+   "domain": "football organization / decision rights",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An architecture principle the engine mirrors: one reasoning authority emits the final call, while other layers advise. Conflicting unranked signals produce the tie-game-by-argument failure Roper describes.",
+    "source_operator": "quarterback_sole_authority",
+    "telemetry": "Decision latency, incidence of changed calls, outcomes after timeouts spent on disputes"
+   }
+  },
+  {
+   "primitive_id": "case_method_generalship_training",
+   "name": "Teach generalship by the case system: walk the field with the quarterback, pose concrete down-distance-field-score situations, and argue each answer until he thinks football",
+   "verbatim_quote": "My method is similar to the \"case system\" in law.",
+   "page": "Chapter III, printed p. 37",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Abstract rules do not transfer to live decisions",
+    "Situated cases build the pattern library the quarterback later runs subconsciously",
+    "The coach must convince, not merely instruct, so the quarterback owns the strategy"
+   ],
+   "breakdown_regime": "Case training is slow and coach-intensive; it scales poorly beyond the one or two quarterbacks who receive it. no_equation_domain",
+   "domain": "football coaching / decision training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is scenario-based training for any decision system: the engine's reasoning should be exercised against a library of concrete game states with argued verdicts, which is precisely how a case corpus improves judgment over a rule list.",
+    "source_operator": "case_method_generalship_training",
+    "telemetry": "Scenario libraries of game states, verdict agreement rates, decision quality by situation type"
+   }
+  },
+  {
+   "primitive_id": "interchangeable_backfield",
+   "name": "Backfield designations are anomalous under the modern game: the four backs are interchangeable, all carrying the ball and working in interference",
+   "verbatim_quote": "designations which distinguish the men in the backfield are anomalous and unnecessary.",
+   "page": "Chapter III, printed p. 39",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Direct passing lets any back become the thrower or runner",
+    "Fixed roles make the offense readable",
+    "Versatility multiplies the formations a defense must prepare for"
+   ],
+   "breakdown_regime": "Specialization still wins at extremes of size or skill; interchangeability is bounded by each man's actual skill set. no_equation_domain",
+   "domain": "football tactics / personnel versatility",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should value role flexibility as a real feature: a backfield whose members can run, pass, kick and block widens the play space from every formation and degrades the defense's tendency reads.",
+    "source_operator": "interchangeable_backfield",
+    "telemetry": "Per-player skill usage distribution, formation-to-play diversity, defensive tendency-read accuracy"
+   }
+  },
+  {
+   "primitive_id": "physical_condition_first_factor",
+   "name": "Physical condition wins more football games than any single factor, ahead of scheme knowledge and individual ability",
+   "verbatim_quote": "Physical condition wins more football games than any single factor.",
+   "page": "Chapter II, printed p. 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Late-game execution decays with fatigue faster than scheme advantages decay",
+    "Condition is built before the season and cannot be installed during it",
+    "A conditioned team sustains its level while opponents fade"
+   ],
+   "breakdown_regime": "Condition cannot rescue a hopeless talent or scheme gap; it is the first factor, not the only one. no_equation_domain",
+   "domain": "football preparation / conditioning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The health and usage layers should treat conditioning state as a multiplier on every other signal: the same matchup projects differently in the fourth quarter depending on each side's conditioning and workload history.",
+    "source_operator": "physical_condition_first_factor",
+    "telemetry": "Snap counts, second-half performance decay, injury and cramp incidence, practice workload"
+   }
+  },
+  {
+   "primitive_id": "speed_brains_selection_shift",
+   "name": "Selection has inverted in twenty-five years: from the toughest and biggest to the fastest, brainiest and best conditioned",
+   "verbatim_quote": "Today the fastest, the brainiest and best conditioned players make up the eleven.",
+   "page": "Chapter II, printed p. 14",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rule changes toward the open game raised the return to speed and cognition",
+    "Early-season hardening processes that injure light, fast men destroy the modern roster",
+    "Weight without speed no longer converts to wins"
+   ],
+   "breakdown_regime": "Era-dependent: the claim tracks the 1906 and 1912 rule environment and must be re-derived whenever rules change the game's physics. no_equation_domain",
+   "domain": "football personnel / era shift",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standing warning for the engine: feature weights are era-conditional. When the rules or the meta change, yesterday's dominant traits must be re-estimated, not inherited.",
+    "source_operator": "speed_brains_selection_shift",
+    "telemetry": "Trait-to-outcome correlations by era, roster composition trends, rule change dates"
+   }
+  },
+  {
+   "primitive_id": "practice_time_budget",
+   "name": "The modern team trains on a fixed budget of sixty-four hours a season, two hours a day, four days a week, over about eight weeks, so every minute must count",
+   "verbatim_quote": "The modern football team puts in sixty-four hours of actual football practice during the season; two hours a day for four days a week over approximately eight weeks.",
+   "page": "Chapter II, printed p. 17",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Practice time is the scarcest coaching resource",
+    "Players must arrive already conditioned or the budget is spent on fitness instead of football",
+    "A hard daily cap protects the budget from coach overreach"
+   ],
+   "breakdown_regime": "The budget presumes a short season and amateur players with classes; professional calendars change the numbers but not the scarcity logic. no_equation_domain",
+   "domain": "football operations / resource budgeting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resource accounting for preparation: the engine's weekly cycle has the same shape, a fixed budget of analysis and practice that must be allocated across layers in order, with conditioning of the data assumed before the week begins.",
+    "source_operator": "practice_time_budget",
+    "telemetry": "Practice minutes by activity, allocation drift, performance per practice hour"
+   }
+  },
+  {
+   "primitive_id": "preseason_honor_conditioning",
+   "name": "Pre-season conditioning runs on the honor system: a letter a month out sets bedtime, no smoking, no eating between meals, setting-up exercises and daily sprints, and the squad reports in shape",
+   "verbatim_quote": "A month before our training season started we wrote to each player, asking him to stop smoking, to be in bed at half-past ten every night, not to eat between meals, to go through setting up exercises morning and evening, and to do some sprints and running each day.",
+   "page": "Chapter II, printed p. 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Self-administered preparation beats supervised cramming",
+    "Players who report in shape free the practice budget for football",
+    "Coaches training alongside the men sustains the honor norm"
+   ],
+   "breakdown_regime": "Honor systems fail with players who lack the motivation the system presumes; verification is deliberately absent, which is the point and the risk. no_equation_domain",
+   "domain": "football preparation / self-regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A monitoring design lesson: some states are best tracked by self-report under a trust norm, with the outcome (reported condition) verified at arrival rather than the process surveilled daily.",
+    "source_operator": "preseason_honor_conditioning",
+    "telemetry": "Arrival condition assessments, self-reported compliance, early-season injury rates"
+   }
+  },
+  {
+   "primitive_id": "abolish_falling_on_the_ball",
+   "name": "Falling on the ball is a useless and dangerous drill and a bad in-game habit: scoop the loose ball and run, as Suter, Poe, De Witt, Booth, White and Gray proved with touchdowns",
+   "verbatim_quote": "At best, this falling on the ball is a useless practice and a feat which was never good football",
+   "page": "Chapter II, printed p. 19",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A loose ball is a scoring opportunity, not merely a possession to secure",
+    "The drill injures players in early-season practice for no tactical return",
+    "Falling is the trained reflex and must be untrained deliberately"
+   ],
+   "breakdown_regime": "In traffic or near the goal line, securing the ball can still be correct; the doctrine targets the default reflex, not every circumstance. no_equation_domain",
+   "domain": "football tactics / loose-ball doctrine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should price loose-ball recovery as a return opportunity with field and traffic conditions, and it should audit its own drills and defaults the same way: any routine whose cost is injuries and whose value is nil gets removed, however traditional.",
+    "source_operator": "abolish_falling_on_the_ball",
+    "telemetry": "Fumble recovery return yardage, scoop versus fall-on outcomes, practice injury logs by drill"
+   }
+  },
+  {
+   "primitive_id": "daily_passing_catching_drill",
+   "name": "Half an hour of passing and catching every day of the season, with missed passes counted per player, until muffed passes nearly vanish in games",
+   "verbatim_quote": "We spend a half an hour a day catching passes.",
+   "page": "Chapter II, printed p. 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reception skill is a repetition product with a measurable error count",
+    "Rivalry between squads sustains drill intensity",
+    "Soft passes and relaxed arms are the teachable technique underneath"
+   ],
+   "breakdown_regime": "Drill proficiency plateaus; game drops also come from coverage and throw quality, which the drill does not address. no_equation_domain",
+   "domain": "football training / skill measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A measurement pattern: attach a per-player error counter to the highest-frequency skill and train it daily. The engine analogue is tracking per-signal error rates continuously instead of reviewing them after failure.",
+    "source_operator": "daily_passing_catching_drill",
+    "telemetry": "Drop counts in practice and games, per-receiver error rates, drill-to-game transfer"
+   }
+  },
+  {
+   "primitive_id": "scrimmage_rationing_overwork",
+   "name": "Scrimmage is rationed to about one day a week: more teams are overworked than underworked, and the worst fault a coach can commit is working his men to death",
+   "verbatim_quote": "Scrimmaging is often overdone, and more teams are overworked than underworked.",
+   "page": "Chapter II, printed p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Full-contact work has the highest injury and fatigue cost of any practice activity",
+    "Game sharpness does not scale linearly with scrimmage volume",
+    "A mid-season heavy week exists to let players win positions, then volume drops again"
+   ],
+   "breakdown_regime": "Some rosters, especially young ones, need contact to learn tackling; the ration presumes fundamentals are already installed. no_equation_domain",
+   "domain": "football preparation / load management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Load management for the usage layer: the highest-cost activity gets a budget and a schedule, and the reasoning should expect performance dips after overload weeks rather than treating them as mysteries.",
+    "source_operator": "scrimmage_rationing_overwork",
+    "telemetry": "Scrimmage minutes, injury incidence by practice type, performance after high-load weeks"
+   }
+  },
+  {
+   "primitive_id": "weekly_practice_cycle",
+   "name": "The week runs on a fixed cycle: Monday review of Saturday's mistakes and limbering, Tuesday hard individual work and signals, Wednesday scrimmage, Thursday polishing, Friday light work under an hour",
+   "verbatim_quote": "Monday is the easiest day of the week. We review the game of the previous Saturday and point out our mistakes.",
+   "page": "Chapter II, printed p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Error review must precede new installation",
+    "Hard work belongs early in the week, freshness late",
+    "A predictable rhythm lets players peak on game day"
+   ],
+   "breakdown_regime": "Short weeks and travel compress the cycle; the order (review, build, test, polish, rest) survives compression better than the durations. no_equation_domain",
+   "domain": "football operations / weekly periodization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the template for the engine's own weekly cycle: usage and health review first, matchup work in the middle, polish and price checks last, with the order fixed even when the calendar compresses.",
+    "source_operator": "weekly_practice_cycle",
+    "telemetry": "Weekly schedule adherence, error recurrence rates, game-day performance by preparation pattern"
+   }
+  },
+  {
+   "primitive_id": "daily_weight_monitoring",
+   "name": "Every player is weighed every day and the record kept; failure to regain game weight loss by Monday or Tuesday signals something wrong",
+   "verbatim_quote": "Each man is weighed every day, and a record kept.",
+   "page": "Chapter II, printed p. 25",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Body mass is a cheap daily proxy for recovery and health",
+    "A trend matters more than any single reading",
+    "The trainer acts on the signal before it becomes an injury"
+   ],
+   "breakdown_regime": "Weight is a crude proxy confounded by hydration and meals; it flags questions rather than answering them. no_equation_domain",
+   "domain": "football health / daily telemetry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The health layer's simplest instrument: one cheap daily measurement per athlete, trended, with a named threshold (weight not regained by Tuesday) that triggers human review. Cheap, frequent and trended beats elaborate and rare.",
+    "source_operator": "daily_weight_monitoring",
+    "telemetry": "Daily weights, deviation from baseline, illness and injury onset following deviations"
+   }
+  },
+  {
+   "primitive_id": "fatigue_injury_law",
+   "name": "Men are hurt far more easily when tired than when fresh, so the trainer's time limit binds the coach: the extra five minutes of practice are the costliest",
+   "verbatim_quote": "it is a provable fact that men are hurt far more easily when they are tired than when they are fresh.",
+   "page": "Chapter II, printed p. 26",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fatigue degrades the protective mechanics of the body",
+    "Coaches systematically overrun planned practice endings",
+    "An empowered trainer is the enforcement mechanism"
+   ],
+   "breakdown_regime": "Fresh players are still hurt by high-energy collisions; fatigue is a multiplier, not the sole cause. no_equation_domain",
+   "domain": "football health / fatigue risk",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A veto primitive: fatigue state should be able to override performance reasoning in the engine, because the injury cost function changes regime when athletes are tired, exactly as the trainer's call overrides the coach's drill.",
+    "source_operator": "fatigue_injury_law",
+    "telemetry": "Injury rate by practice minute and game quarter, fatigue markers, snap accumulation"
+   }
+  },
+  {
+   "primitive_id": "peak_timing_and_letdown",
+   "name": "A team can be at its peak for only a couple of games a season, so development is planned backward from the big games, with a deliberate let-down and two days of rest two weeks before them",
+   "verbatim_quote": "I believe a team can only be at its peak for a couple of games a season.",
+   "page": "Chapter X, printed p. 166",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Peak form is a depletable state, not a plateau",
+    "Burning the peak early (Princeton's 42-0 over Dartmouth in 1906) leaves a mediocre team for the rivalry game",
+    "Rest is a scheduled input to the peak, not a reward after it"
+   ],
+   "breakdown_regime": "Unpredictable schedules and injuries move the target games; the doctrine assumes the coach can identify which two games matter most. no_equation_domain",
+   "domain": "football preparation / peak scheduling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Season-level planning for the engine: form is a state variable with a budget, and the reasoning layer should know which weeks the program is built to peak for and discount stale peak performances accordingly.",
+    "source_operator": "peak_timing_and_letdown",
+    "telemetry": "Performance trajectory across the season, results relative to schedule position, rest-day placement"
+   }
+  },
+  {
+   "primitive_id": "pennsylvania_defense_6221",
+   "name": "The Pennsylvania Defense is the original 6-2-2-1: smashing ends strip the interference naked, a tight low line charges with shoulders, guards hold dual responsibility and swing behind the line to tackle runners",
+   "verbatim_quote": "The Pennsylvania Defense was the original 6-2-2-1 defense with the guards and tackles low, using their shoulders in their initial charge instead of their hands.",
+   "page": "Chapter IV, printed p. 61",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ends attacking interference rather than the carrier force the run wide",
+    "Each lineman owns a fixed space and nothing else",
+    "Great guards are the personnel premise the scheme was built around"
+   ],
+   "breakdown_regime": "The scheme predates the forward pass; the hidden ball and the pass forced the wing backs deeper and the center out, and Roper himself faults the smashing end. no_equation_domain",
+   "domain": "football defense / scheme genealogy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scheme genealogy matters to the matchup layer: a defense's current form is a modification of a historical structure under rule pressure, and knowing the original tells the engine which responsibilities were traded away in each modification.",
+    "source_operator": "pennsylvania_defense_6221",
+    "telemetry": "Defensive structure by era, end rush technique, guard responsibility assignments"
+   }
+  },
+  {
+   "primitive_id": "fluid_center_defense",
+   "name": "Refuse the fixed six-man line: whether the center plays in or out of the line should depend on the down, the yards to gain and the field position",
+   "verbatim_quote": "The position of the center rush, whether he is in or out of the line, should depend upon the down, the number of yards to gain and the position of the teams on the field.",
+   "page": "Chapter IV, printed p. 63",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Down and distance shift the run-pass probability enough to move a defender",
+    "A fluid structure denies the offense a fixed picture",
+    "Probabilities, not certainties, are the basis: the unexpected remains possible"
+   ],
+   "breakdown_regime": "Fluidity costs assignment clarity; a center caught between roles on a surprise play is worse than a committed one. no_equation_domain",
+   "domain": "football defense / situational structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Structural flexibility conditioned on situation is the defensive mirror of zone play: the engine should evaluate defenses by how their structure moves with down, distance and field position, not by a single base picture.",
+    "source_operator": "fluid_center_defense",
+    "telemetry": "Defensive front variation by down and distance, success rate by structural match to the call"
+   }
+  },
+  {
+   "primitive_id": "forward_pass_outcome_analysis",
+   "name": "Season analysis shows a forward pass most likely ends completed or grounded, with completions running about four times the interceptions, so the pass is among the safest gaining plays",
+   "verbatim_quote": "Analysis of the season's play of any fairly good eleven has shown that the most likely results of passing is that the pass was completed or grounded.",
+   "page": "Chapter IV, printed p. 68",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The outcome distribution of a play, not its worst case, should drive its reputation",
+    "A grounded pass costs only a down; possession rarely changes",
+    "Passer competence shifts the ratio further toward completion"
+   ],
+   "breakdown_regime": "Era-bound numbers: 1920s completion and interception rates do not transfer directly, and the analysis is asserted from season observation rather than published tables. The method, counting outcomes, is what transfers. no_equation_domain",
+   "domain": "football analytics / play outcome distributions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the book's most modern move: evaluate a play family by its full outcome distribution from season data. The engine should do the same for every signal it weighs, replacing reputation and worst-case thinking with counted outcomes.",
+    "source_operator": "forward_pass_outcome_analysis",
+    "telemetry": "Play outcome distributions by family, completion and interception rates, expected value per attempt"
+   }
+  },
+  {
+   "primitive_id": "pass_as_threat",
+   "name": "No play carries the force of the pass as a threat: even a pass that gains nothing rearranges the defense's alignment and morale for every other play",
+   "verbatim_quote": "there is no other play which possesses the force of the pass as a threat.",
+   "page": "Chapter IV, printed p. 69",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Defenses must honor the pass with depth and numbers",
+    "Threat value rises as the defense compresses near its goal",
+    "The threat is only real if the pass is actually competent when used"
+   ],
+   "breakdown_regime": "An empty threat collapses: a team that cannot complete passes gets no spacing benefit, as the Navy's deep wing backs showed by simply refusing Michigan's threat in 1926. no_equation_domain",
+   "domain": "football tactics / threat value",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine should credit plays with option value beyond their own yardage: a credible deep threat changes the defense's geometry for the run game, and that spillover belongs in the reasoning trace.",
+    "source_operator": "pass_as_threat",
+    "telemetry": "Defensive depth and box counts as a function of opponent pass credibility, run success by defensive structure"
+   }
+  },
+  {
+   "primitive_id": "notre_dame_shift_end_box",
+   "name": "The Notre Dame shift offense rests on the ends: the end shifts with the backs and boxes the defensive tackle in on wide plays or fakes out and drives him out on inside plays, confusing him either way",
+   "verbatim_quote": "On a wide flank play the end shifts outside the tackle and boxes him in.",
+   "page": "Chapter IV, printed p. 66",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defensive tackle stops more plays than any single defender, so the scheme is built to neutralize him",
+    "The end works nearly alone on the tackle, freeing the interference for the defensive end",
+    "Alternating the end's true assignment makes the tackle's read unreliable"
+   ],
+   "breakdown_regime": "The 1927 rules requiring a full stop after the shift attack the mechanism directly; the doctrine depends on shift legality and timing. no_equation_domain",
+   "domain": "football tactics / scheme design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Scheme design as targeted neutralization: identify the opponent's highest-leverage defender and build the structure around removing him, then alternate the removal method so his adjustment becomes the vulnerability.",
+    "source_operator": "notre_dame_shift_end_box",
+    "telemetry": "Tackle disruption rates, play success by target defender, adjustment patterns across a game"
+   }
+  },
+  {
+   "primitive_id": "huddle_system_tempo",
+   "name": "The huddle, adopted from Zuppke in 1925, made Princeton about a second faster per play than the signal-calling Navy, simplified signals, hid them from scouts, and allowed quick formation changes",
+   "verbatim_quote": "They reported we averaged about one second faster under the huddle system than the Navy, using the old system.",
+   "page": "Chapter X, printed p. 173",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tempo was measured by independent timers rather than assumed",
+    "Simpler signals reduce missed assignments in crowd noise",
+    "The cost is real: the quarterback cannot size up the defense from the huddle"
+   ],
+   "breakdown_regime": "The tempo claim rests on one timed game; modern no-huddle systems invert the trade entirely. no_equation_domain",
+   "domain": "football operations / tempo and communication",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A communication-architecture primitive with a measured claim attached: the engine should likewise measure the latency and error rate of its own decision pipeline instead of assuming the design is faster.",
+    "source_operator": "huddle_system_tempo",
+    "telemetry": "Seconds per play by communication system, missed-signal rates, formation change frequency"
+   }
+  },
+  {
+   "primitive_id": "rules_reform_1906_open_game",
+   "name": "The 1906 reforms created the modern game: ten yards in four downs instead of five in three, the legal forward pass and onside kick, quarters, and bans on hurdling and pulled-back interferers",
+   "verbatim_quote": "the number of yards to be gained was increased from five to ten and one additional down was added.",
+   "page": "Chapter X, printed p. 161",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The massed push-and-pull game was a rules artifact, not a natural state",
+    "Opening plays (the pass) plus harder conversion requirements jointly killed mass football",
+    "Reform followed crisis: 18 players killed and 149 seriously injured in 1905"
+   ],
+   "breakdown_regime": "Attributing the open game to single rules is contested even by Roper, who notes the push-and-pull play itself was never banned; the interaction of changes did the work. no_equation_domain",
+   "domain": "football history / rules as system design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rules are the engine's environment, and environment changes rewrite optimal strategy: the reasoning layer should version its assumptions by rules era and re-derive doctrine when the environment changes, exactly as coaches had to in 1906.",
+    "source_operator": "rules_reform_1906_open_game",
+    "telemetry": "Rule change chronology, strategy shifts following reforms, scoring and injury rates by era"
+   }
+  },
+  {
+   "primitive_id": "halftime_five_minute_rest",
+   "name": "Between the halves, the first five minutes are guaranteed absolute rest: no intruders, no coach, only the trainer, while the coach collects individual-watch reports before speaking",
+   "verbatim_quote": "For five minutes after the whistle my men are guaranteed absolute and undisturbed rest and quiet.",
+   "page": "Chapter V, printed p. 90",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nervous strain, not only physical fatigue, is what the interval must repair",
+    "Criticism lands only after rest restores the capacity to hear it",
+    "The coach's own information gathering happens in parallel, from assigned watchers"
+   ],
+   "breakdown_regime": "A team in genuine tactical confusion may need instruction more than rest; Roper's answer is that the watchers' reports make the later talk short and exact. no_equation_domain",
+   "domain": "football operations / halftime protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A recovery-then-reason protocol: after a high-load interval, the system first restores state and gathers observations, and only then issues corrections. The engine's halftime adjustments should follow the same order and be built from assigned per-unit observations.",
+    "source_operator": "halftime_five_minute_rest",
+    "telemetry": "Second-half performance after halftime protocols, adjustment success rates, error recurrence after the interval"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "15d4618fc1b5a82b-t1",
+   "think": "This book is a head coach's operating system disguised as a memoir. Roper writes about his Princeton teams of the 1920s, but the anecdotes are delivery vehicles for a complete decision apparatus, and the apparatus is what matters for a reasoning engine. Start with the quarterback chapter, because Roper does. The quarterback is the on-field decision node, and Roper's first move is organizational: one man gives the orders, nobody else interferes, the captain keeps morale and keeps out of strategy. His second move is educational: generalship is taught by the case system, walking the field and posing concrete states, down and distance and field position and score, and arguing each answer until the quarterback has internalized the coach's strategy as his own conviction. The output of that training is supposed to be subconscious decision-making, and Roper says so plainly: the things we do really well we do more or less unconsciously. The third move is the policy set the quarterback carries. Zone play partitions the field into bands with default risk postures. Three near-absolute rules sit on top of the zones: punt on fourth down, never pass late while leading, never attack the center inside the ten. A fourth rule protects the kicking game: never stretch the drop-kicker beyond his proven range. And a meta-rule governs all of them: play to the score, because the score state can invert every default, and there is no rule that should not be broken under the right circumstances. Around the policies sits a reading discipline: the opponent's alignment dictates the call, the object is local two-against-one at the point of attack, the defense's strong side and weak side are observed facts, and transient vulnerabilities, a cold substitute or a man who just made an error, are windows to attack. Layered under the strategy is an economics of preparation. Condition is the first factor in winning. Practice is a fixed budget of sixty-four hours with a two-hour daily cap. Scrimmage, the most expensive activity, is rationed. Weight is measured daily and trended. Fatigue is treated as an injury multiplier with the trainer empowered to veto the coach. Peak form is a scarce state that can be held for only a couple of games, so the season is planned backward from the games that matter, with a deliberate let-down scheduled before them. The systems chapters then do comparative scheme analysis: the Pennsylvania 6-2-2-1 as a genealogy that rule changes forced to mutate, Notre Dame's shift built around ends neutralizing the tackle, Michigan's long passing built on soft throws and trained receivers, Warner's wingback answer to the death of the unbalanced tandem. In the middle of that chapter sits the book's most modern passage, an outcome-distribution analysis of the forward pass: count what actually happens to passes over a season, completions and groundings against interceptions at roughly four to one, and the feared play becomes one of the safest on the sheet. That is evidence-based play evaluation in 1928, asserted from observation rather than tabulated, but methodologically unmistakable. The game-day chapters complete the system: protect the team from distraction, plan substitutions and the coach's own minutes like a timetable, assign watchers because no one man can see eleven players, guarantee five minutes of silence at the half, and never run the team from the sideline because a sideline-run team loses to one trained to think. What this changes for a reasoning engine is the shape of knowledge itself. Roper's doctrine is not a list of tendencies; it is policies with stated exception conditions, telemetry with named thresholds, resource budgets with hard caps, and an explicit account of which defender a scheme exists to neutralize. An engine that stores those forms can argue about a game the way Roper's quarterback was trained to: state the situation, name the default, check the exception conditions, read the opponent's structure, and only then call the play. Where it breaks is equally clear. The evidence is anecdotal and survivorship-flavored, the great comebacks and the one-yard stands doing argumentative work that counted data should do. The game he describes has since changed its hash marks, its pass rules, its substitution patterns and its athlete pool, so every quantitative claim, the four-to-one pass ratio, the two-second kick, the sixty-four hours, must be re-measured rather than inherited. And his confidence that character traits decide games is the era's psychology, useful as a hypothesis about decision-makers and useless as a substitute for measurement. The right way to hold the book is as a library of well-formed decision structures whose parameters are expired and whose forms are not. Two further strands deserve weight because they show Roper reasoning about people as carefully as about plays. The psychology chapter argues that the margin of victory between near-equal teams is always mental, that luck is usually a slow-witted team's name for a mental difference, and that confidence is a manageable variable: before the 1925 Yale game he dismantled his own squad's inferiority complex with a man-for-man statistical comparison showing the feared Yale line averaged three pounds less than Princeton's own, then staged an open practice to let the team feel its strength. That is belief revision by evidence, performed on athletes. The player-development chapter argues the complementary point about inputs: football players are made, not found, determination outranks size, small men thrive in the open game because coordination and speed beat bulk, and the coach who cuts slow developers early commits his most serious blunder. Even the professional football chapter is an incentives analysis in disguise: paid players rationally protect their bodies because injury ends the paycheck, so the professional game decays unless community ownership, as with the Frankford Yellowjackets, reattaches the player's incentives to something he loves. Roper is, throughout, asking what a man's situation makes him likely to do, which is the same question his quarterback is trained to ask about a defense.",
+   "retrocausal_genealogy": "The book's ideas descend from the crisis of 1905, when eighteen players were killed and a presidential intervention forced the 1906 rules: ten yards in four downs, the legal forward pass, the end of massed push-and-pull football. Roper came up as a player in the old game, coached Missouri, and built his Princeton system inside the new open game, so his doctrine is a translation layer between eras. His scheme chapters are explicitly genealogical: Woodruff's 1892 Pennsylvania defense, Warner's formations from 1906 forward, Haughton's field-general quarterback, Yost's and Rockne's rival answers. The training chapters descend from Keene Fitzpatrick's conditioning practice. Every primitive in this artifact is a survivor of that translation, which is why the book keeps marking what the old game did and why it no longer works.",
+   "theory_of_mind": "Roper models his reader as a practitioner, a coach or an intelligent player, who already knows football's surface and needs its decision structure exposed. He believes the audience overrates size, tradition and inspirational noise, and underrates conditioning, preparation budgets and calm. His model of the player is equally specific: boys are individuals with distinct temperaments, most work best under encouragement, a few must be driven, and all of them think worse when tired, distracted or shouted at. His model of the opponent is a reasoning agent whose alignment and expectations can be read and manipulated. Above all he believes games are decided by mental differences between near-equal teams, so the book treats psychology not as decoration but as the margin itself, and treats the coach's own composure as a signal the whole team reads.",
+   "cross_layer_veto": "Several primitives in this work veto others outright. The fatigue-injury law vetoes the competitive instinct to extend practice: when the trainer calls time, the drill ends, because injury risk has changed regime. The punt-on-fourth-down rule vetoes the offense's short-yardage confidence, and the score-state exception in turn vetoes the punt rule when trailing late. The kicker-range rule vetoes any field-goal impulse beyond proven distance, whatever the crowd wants. The peak-timing doctrine vetoes early-season dominance as a goal in itself. In engine terms these are hard constraints with named override conditions, not soft preferences: health state overrides scheme preference, game state overrides default policy, and measured individual limits override situational temptation."
+  }
+ ],
+ "universal_lens": "Read outside football, this is a manual for running any small expert team under scarcity and pressure. Its recurring moves generalize: give one named person undivided decision authority and train that person on concrete cases until judgment is fast; write default policies per situation band, then write the exception conditions with equal care; budget the scarcest resource, preparation time, with hard caps and ration the most dangerous activity; measure one cheap vital sign daily and trend it; treat peak performance as a depletable state to be scheduled, not a trait; evaluate feared options by their full outcome distribution instead of their worst case; and protect the team's attention as fiercely as its bodies, because distraction and fatigue are the two taxes every plan pays.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is a primary source on how coaching knowledge was organized before film and data: a case-method curriculum for decision-makers, a weekly periodization template, conditioning and monitoring practices, and a genealogy of schemes responding to rule changes. It teaches students to separate a doctrine's form from its parameters: the zone framework, the exception-bearing rule and the outcome-counting method are transferable research objects, while the 1920s numbers attached to them are historical data points. It also supplies a clean case study in how a sport's strategy literature argues from anecdote, and where counted evidence first enters that argument.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the book contributes decision structures to several layers. The situational layer takes zone play, the punt rule and play-to-the-score as state-conditioned policies with explicit exceptions. The matchup layer takes alignment-dictated play selection, two-against-one point-of-attack counting, and scheme genealogy for defenses. The health and usage layers take daily weight trending, the fatigue-injury veto, scrimmage rationing and peak scheduling. The reasoning layer takes the forward-pass outcome analysis as its methodological ancestor: weigh every signal by its counted outcome distribution, name the defender or condition a plan exists to neutralize, and record which veto fired when a default was overridden."
+}

@@ -1,0 +1,721 @@
+{
+ "book_id": "6bbee7510eb8f2f0",
+ "source_status": "COMPLETE",
+ "source_note": "W. H. Lewis, A Primer of College Football (New York: Harper & Brothers, 1896). The author is identified on the title page as a sometime player at Amherst College and Harvard University. The local file is a scanned PDF of the printed book (title page, contents, eleven chapters plus a supplementary training chapter, and publisher advertisements), 4,523,829 bytes, sha256 6bbee7510eb8f2f013bd1c8ee1908646df90583298134a187f4c19077e045ab4. The extracted text used for this artifact is the OCR text file at text/books-a-sports/Lewis-1896-A-Primer-of-College-Football.pdf.txt (196,567 bytes, 5,400 lines); it carries typical OCR noise (broken words, garbled display pages, and figure-caption disorder), so all verbatim quotes were taken from clean body passages and verified as contiguous substrings of that file. Printed pagination runs to p. 205. The work contains no formal equations; its quantitative content is geometric and procedural (field dimensions, angles, distances, down-and-distance schedules), so all primitives carry empty latex. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "football_science_how",
+   "name": "Football as a science: the player is told not only what to do, but how to do it",
+   "verbatim_quote": "The player is now told not only what to do, but how to do it.",
+   "page": "p. 1 (printed pagination), Introductory Chapter: Football a Science",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A science is systematized knowledge: facts logically arranged and explained by natural laws",
+    "The game has been reduced to scientific principles within the last few years"
+   ],
+   "breakdown_regime": "no_equation_domain: the claim is methodological, not quantitative; it fails wherever coaching remains unexamined custom rather than stated principle",
+   "domain": "football method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine must store procedures, not only outcomes: for every signal it should carry the mechanism by which the signal acts, so a pick can be explained as a how, not merely asserted as a what.",
+    "source_operator": "football_science_how",
+    "telemetry": "Play by play annotations that record mechanism (scheme, leverage, assignment) rather than result alone"
+   }
+  },
+  {
+   "primitive_id": "gridiron_laboratory",
+   "name": "Book knowledge is insufficient: the laboratory of football is the gridiron",
+   "verbatim_quote": "The student must go to the laboratory for the major part of his knowledge. The laboratory of football is the gridiron.",
+   "page": "p. 3 (printed pagination), Introductory Chapter: Football a Science",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only a minor part of the game can be learned from books and the blackboard",
+    "Field practice of an hour or so a day is required"
+   ],
+   "breakdown_regime": "no_equation_domain: breaks when practice volume is unavailable; the ratio of book to field knowledge is asserted, never measured",
+   "domain": "football method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Calibration must come from observed play, not from priors stated in texts: the engine should weight live, accumulated evidence over inherited doctrine when the two disagree.",
+    "source_operator": "gridiron_laboratory",
+    "telemetry": "Accumulated game logs and charted plays versus static preseason assumptions"
+   }
+  },
+  {
+   "primitive_id": "straight_arm_pass_purpose",
+   "name": "The straight-arm pass is used for long, low passes to the open, for swiftness and accuracy",
+   "verbatim_quote": "The straight-arm pass is used generally for long, low passes to the open, because of its swiftness and accuracy.",
+   "page": "p. 6 (printed pagination), Part I, Chapter I, Section 1: Passing",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Passing here is lateral or backward only; the rules forbid the forward pass",
+    "The pass is made with one hand, ball held in the palm, ends pointing up and down the arm"
+   ],
+   "breakdown_regime": "no_equation_domain: the taxonomy is era-bound; it collapses once the forward pass is legalized and the spiral pass replaces end-over-end delivery",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every delivery mechanism in an engine should be typed by its tradeoff profile (speed, accuracy, range) so the right tool is selected for the situation instead of one default method being used everywhere.",
+    "source_operator": "straight_arm_pass_purpose",
+    "telemetry": "Per play-type success rates split by distance and field position"
+   }
+  },
+  {
+   "primitive_id": "catching_body_rule",
+   "name": "As a rule, the ball should be caught with the arms and the body",
+   "verbatim_quote": "As a rule, the ball should be caught with the arms and the body.",
+   "page": "p. 9 (printed pagination), Part I, Chapter I, Section 2: Catching",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Secure possession outranks speed of return for forwards",
+    "Backs are allowed latitude toward a baseball-style catch because they must return or run with the ball"
+   ],
+   "breakdown_regime": "no_equation_domain: a reliability heuristic, not a measured catch-rate comparison",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reception reliability is a chain property: a signal that is usually dropped upstream should be discounted before downstream reasoning is built on it, the same way a muffed catch voids the return that was planned from it.",
+    "source_operator": "catching_body_rule",
+    "telemetry": "Drop and muff rates by receiver and by target type"
+   }
+  },
+  {
+   "primitive_id": "dropping_four_methods",
+   "name": "There are exactly four ways of falling upon a ball: knees, straight from the toes, diving, and sliding feet foremost",
+   "verbatim_quote": "There are just four ways of falling upon a ball : first, dropping upon the knees, to break the fall, then covering the ball with chest",
+   "page": "pp. 10-11 (printed pagination), Part I, Chapter I, Section 3: Dropping on Ball",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The correct method depends on whether the ball is moving or dead, and on its direction relative to the player",
+    "Each method breaks the fall with knees, elbows, or the ball itself to protect the player"
+   ],
+   "breakdown_regime": "no_equation_domain: an enumerated technique set for 1896 conditions; modern loose-ball rules and player-safety norms change the menu",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Loose-ball recovery is a discrete state problem: the engine should treat fumble recovery as its own modeled event with method and field-position dependence, not as a coin flip folded into turnover margin.",
+    "source_operator": "dropping_four_methods",
+    "telemetry": "Fumble recovery outcomes by field position and ball state (rolling, bouncing, dead)"
+   }
+  },
+  {
+   "primitive_id": "moving_ball_no_dive",
+   "name": "A moving ball should not be dived for unless its motion has nearly ceased",
+   "verbatim_quote": "A moving ball should not be dived for, unless its motion has nearly ceased",
+   "page": "p. 11 (printed pagination), Part I, Chapter I, Section 3: Dropping on Ball",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A dive commits the player to a fixed landing point while the ball is still moving",
+    "The failure modes are overreaching and under-reaching the ball"
+   ],
+   "breakdown_regime": "no_equation_domain: a judgment rule; the threshold of nearly ceased motion is left to the player's eye",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Do not commit to a moving target with a fixed action: projections should be revised as the state moves, and irreversible commitments (a dive, a published pick) should wait until the state has nearly settled.",
+    "source_operator": "moving_ball_no_dive",
+    "telemetry": "Rate at which late information (injuries, weather, line moves) changes the correct action"
+   }
+  },
+  {
+   "primitive_id": "rolling_ball_rule",
+   "name": "A rolling ball should never be picked up; a bounding ball may be picked up, and no other",
+   "verbatim_quote": "A rolling ball should never be picked up. Fall upon it and then get up, if possible. A bounding ball may be picked up, and no other.",
+   "page": "p. 14 (printed pagination), Part I, Chapter I, Section 3: Dropping on Ball",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A rolling ball's path is deceptive and it squirts away from grasping hands",
+    "Falling on the ball secures possession even when advancement is impossible"
+   ],
+   "breakdown_regime": "no_equation_domain: absolute form of a probabilistic claim; elite ball-handlers sometimes beat it, at visible risk",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Possession security dominates advancement when the asset is unstable: the engine should prefer the high-probability retention play over the low-probability scoop-and-score, and price turnovers accordingly.",
+    "source_operator": "rolling_ball_rule",
+    "telemetry": "Recovery method outcomes: fall-on versus pickup attempts on loose balls"
+   }
+  },
+  {
+   "primitive_id": "punt_definition",
+   "name": "A punt, by the rules: letting the ball fall from the hands and kicking it before it touches the ground",
+   "verbatim_quote": "\"made by letting the ball fall from the hands and kicking it before it touches the ground.\"",
+   "page": "p. 15 (printed pagination), Part I, Chapter I, Section 4: Kicking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The definition is the rulebook's own, quoted by Lewis",
+    "The punt is distinguished from the place kick and the drop kick by the ball never touching the ground first"
+   ],
+   "breakdown_regime": "no_equation_domain: a definition, valid only under the 1896 code; later codes keep the same core definition",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Definitions are load-bearing: an engine that cannot state exactly what event it is counting (a punt versus a drop kick, a target versus a reception) will silently mix populations and corrupt every rate built on them.",
+    "source_operator": "punt_definition",
+    "telemetry": "Event classification audit: share of plays whose recorded type matches the rule definition"
+   }
+  },
+  {
+   "primitive_id": "kicking_requirements",
+   "name": "Good kicking requires cool-headedness, a good eye, a good leg, and a good square-toe shoe",
+   "verbatim_quote": "The requirements for good kicking are cool-headedness, a good eye, a good leg, and a good square-toe shoe (or nearly so), reinforced at bottom.",
+   "page": "p. 15 (printed pagination), Part I, Chapter I, Section 4: Kicking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Kicking skill is obtainable only by constant, painstaking practice",
+    "Equipment (the reinforced square-toe shoe) is part of the skill, not an afterthought"
+   ],
+   "breakdown_regime": "no_equation_domain: a qualitative factor list; the relative weights of temperament, eye, leg, and equipment are not measured",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Performance factors decompose into temperament, perception, physical capacity, and equipment: the engine should ask which factor is binding before projecting a specialist's output in a new situation.",
+    "source_operator": "kicking_requirements",
+    "telemetry": "Kicker performance splits by pressure situation, distance, and conditions"
+   }
+  },
+  {
+   "primitive_id": "place_kick_holder_protocol",
+   "name": "Place-kick success depends on holder and kicker together; the holder lies flat and keeps the ball's direction unchanged",
+   "verbatim_quote": "The holder should have a cool head and steady hand. He should lie flat on the ground",
+   "page": "p. 20 (printed pagination), Part I, Chapter I, Section 4: Kicking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The kicker directs placement with calls such as snapper in or out, head in or out",
+    "The same man should hold for the same kicker all the time, if possible"
+   ],
+   "breakdown_regime": "no_equation_domain: a two-agent coordination protocol described qualitatively; modern snapping and holding differ in personnel but not in the dependency",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Chained skills fail at the interface: a kicking projection is really a snap-hold-kick chain probability, and the engine should model the chain, not the final actor alone.",
+    "source_operator": "place_kick_holder_protocol",
+    "telemetry": "Operation times and failure rates for each link of the kicking operation"
+   }
+  },
+  {
+   "primitive_id": "drop_kick_definition",
+   "name": "A drop kick is kicked at the very instant the ball rises from the ground; never punt a drop kick, let it strike the ground first",
+   "verbatim_quote": "Don't punt your drop kicks. Let the ball strike the ground first.",
+   "page": "p. 23 (printed pagination), Part I, Chapter I, Section 4: Kicking; the rule definition it enforces is quoted on pp. 21-22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule definition: a drop kick is made by letting the ball fall from the hands and kicking it at the very instant it rises from the ground",
+    "The ball must be booted with the toe, just below the stringing",
+    "The kicker stands about fifteen yards back because the drop rises more slowly than a punt and is easier to block"
+   ],
+   "breakdown_regime": "no_equation_domain: timing skill described, not quantified; the drop kick later nearly vanishes from the game",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some actions have a razor-thin execution window: the engine should treat timing-critical plays as high-variance and demand a larger edge before projecting them as reliable scoring routes.",
+    "source_operator": "drop_kick_definition",
+    "telemetry": "Success rates on timing-critical plays by distance and rush pressure"
+   }
+  },
+  {
+   "primitive_id": "blocking_height_window",
+   "name": "The blocker's fair position: high enough to protect the head, low enough not to expose the sternum",
+   "verbatim_quote": "body is high enough not to give his opponent a chance to grab him by the head in going through, and low enough not to expose the sternum to a straight blow.",
+   "page": "p. 24 (printed pagination), Part I, Chapter I, Section 5: Blocking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The strongest body form is angular, with two angles, not a trunk at right angles to the legs",
+    "Correct height varies with the player's build, position, and the territory he must cover"
+   ],
+   "breakdown_regime": "no_equation_domain: a bounded-window heuristic stated in anatomy, not in measured force or leverage",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Many engine parameters live in a window, not at an extreme: a threshold set too high exposes one failure mode and too low exposes the opposite one, so tuning should search for the viable band rather than maximize a single direction.",
+    "source_operator": "blocking_height_window",
+    "telemetry": "Outcome rates as a function of the tuned parameter, checked for degradation at both ends"
+   }
+  },
+  {
+   "primitive_id": "blocking_body_not_arm",
+   "name": "Block with the body; the arm is not strong enough and should be used only as a last resort",
+   "verbatim_quote": "The next thing is to block with the body. The arm is not strong enough to block with, and should not be used except as a last resort.",
+   "page": "p. 27 (printed pagination), Part I, Chapter I, Section 5: Blocking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The blocker stays close to his opponent and jumps into him first",
+    "The movement is down, forward, and up, with the feet kept under the body"
+   ],
+   "breakdown_regime": "no_equation_domain: qualitative biomechanics; no force measurements are offered",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Use the strongest available structure for the load-bearing task and reserve weak tools for last resorts: in the engine, core signals should carry the projection and thin, fragile signals should only break ties.",
+    "source_operator": "blocking_body_not_arm",
+    "telemetry": "Signal reliability ranking: which inputs hold up under out-of-sample pressure"
+   }
+  },
+  {
+   "primitive_id": "making_holes_get_under",
+   "name": "Making holes: get lower than the man in front of you, lift him up, and shove him back and out or in",
+   "verbatim_quote": "If he can get lower than his man, he should lift him up and shove him back, and out or in, as necessity requires.",
+   "page": "p. 28 (printed pagination), Part I, Chapter I, Section 6: Making Holes",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Blocking is making holes; the two are the same skill aimed differently",
+    "If the rusher cannot get under his man, he should pull him forward on his face so the backs can hurdle him"
+   ],
+   "breakdown_regime": "no_equation_domain: leverage described in words; the low-man-wins principle is real but unquantified here",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Leverage beats mass at the point of attack: a small, well-placed advantage applied at the decisive gap is worth more than diffuse superiority spread across the whole line, in matchups and in signal weighting alike.",
+    "source_operator": "making_holes_get_under",
+    "telemetry": "Rushing success by hole, with the blocking win at the called gap isolated"
+   }
+  },
+  {
+   "primitive_id": "breaking_through_small_arc",
+   "name": "Break through on as small an arc of the circle as possible, so as not to open up your own line",
+   "verbatim_quote": "In going through, the rusher should go through on as small an arc of the circle as possible, so as not to open up his own line too much",
+   "page": "pp. 29-30 (printed pagination), Part I, Chapter I, Section 7: Breaking Through",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every penetration attempt has a cost: the hole it leaves behind",
+    "The rusher goes through with arm extended so interferers cannot bowl him over"
+   ],
+   "breakdown_regime": "no_equation_domain: geometric intuition without measurement; the optimal arc depends on the play, which the rusher cannot know in advance",
+   "domain": "football defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggression has an opportunity cost measured in the space vacated: a blitz or a pressure scheme should be priced by what it opens up behind it, not only by what it attacks.",
+    "source_operator": "breaking_through_small_arc",
+    "telemetry": "Pressure rate versus explosive-play rate allowed, by blitz frequency"
+   }
+  },
+  {
+   "primitive_id": "lift_tackle",
+   "name": "The lift tackle: get under the runner, pin his knees together, and lift him up and throw him backwards",
+   "verbatim_quote": "or at least within reaching distance, pinning his knees together, and pulling his feet from under him",
+   "page": "p. 33 (printed pagination), Part I, Chapter I, Section 8: Tackling",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Used mostly in close territory, against backs coming into the line",
+    "The tackler must raise the man clear of the ground, not drag him"
+   ],
+   "breakdown_regime": "no_equation_domain: technique description; modern rules and safety practice restrict lifting and dumping ball carriers",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stopping power is about removing the base, not matching the mass: the engine should value defenders who end plays at or behind the line over defenders who merely slow runners after gains.",
+    "source_operator": "lift_tackle",
+    "telemetry": "Tackle depth distribution: share of tackles made at or behind the line of scrimmage"
+   }
+  },
+  {
+   "primitive_id": "tackle_low_hard_sure",
+   "name": "The tackling rule: tackle low, hard, and sure",
+   "verbatim_quote": "Remember, the rule is to tackle low, hard, and sure.",
+   "page": "p. 35 (printed pagination), Part I, Chapter I, Section 8: Tackling",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tackling behind the line, before interference forms, makes the runner lose ground instead of gaining",
+    "Every tackle is every defender's tackle: pursuit is a duty, not an option"
+   ],
+   "breakdown_regime": "no_equation_domain: a maxim, not a rate; its truth is in the aggregate of missed-tackle costs, which Lewis does not tabulate",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A maxim compresses a base rate: low tackling is preferred because high tackling fails more often. The engine should keep the base rate behind every maxim it uses, so the maxim can be retired when the rate changes.",
+    "source_operator": "tackle_low_hard_sure",
+    "telemetry": "Missed tackle rate by tackle height and by field zone"
+   }
+  },
+  {
+   "primitive_id": "injury_hesitation_principle",
+   "name": "The hesitating player is ten times more apt to get hurt than the courageous man who plays with snap and dash",
+   "verbatim_quote": "The man who plays as if he were afraid, in a hesitating, halting way, is ten times more apt to get hurt than the courageous man who plays with snap and dash.",
+   "page": "p. 39 (printed pagination), Part I, Chapter I, Section 9: Avoiding Injuries",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injuries come from unnecessary roughness, which discipline can eliminate, and from accident, which self-protection can reduce",
+    "Condition, padding, and well-fitted cleated shoes are the first line of prevention"
+   ],
+   "breakdown_regime": "no_equation_domain: the ten-times figure is rhetoric, not epidemiology; no injury counts are given",
+   "domain": "football training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Half-committed execution is the riskiest state: a model run at partial effort (stale inputs, skipped checks) produces worse outcomes than either full commitment or a clean pass, because it carries full exposure with degraded control.",
+    "source_operator": "injury_hesitation_principle",
+    "telemetry": "Error and loss rates for full-process versus shortcut-process decisions"
+   }
+  },
+  {
+   "primitive_id": "end_turn_runner_in",
+   "name": "The end's primary duty is to turn the runner in; the quicker, the less territory the others must cover",
+   "verbatim_quote": "The end's primary duty is to turn the runner in. The quicker this is done, the less territory the other men will have to cover",
+   "page": "p. 46 (printed pagination), Part I, Chapter II, Section 1: The End",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The end attacks on the sharp direction into the interference, never runs behind his own line",
+    "He keeps a little to the outside of the interference and takes the runner the moment it turns"
+   ],
+   "breakdown_regime": "no_equation_domain: sound contain doctrine stated without data; fails against misdirection designed to use his angle against him",
+   "domain": "football defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contain is a system property: forcing the play back into help is worth more than the solo stop attempt, so defenders (and signals) should be graded on what they funnel plays into, not only on what they finish.",
+    "source_operator": "end_turn_runner_in",
+    "telemetry": "Runner direction after first contact: share of runs forced back inside by the edge defender"
+   }
+  },
+  {
+   "primitive_id": "tackle_takes_nearest_man",
+   "name": "In blocking, the tackle always takes the man nearest the centre, the most dangerous man",
+   "verbatim_quote": "In blocking, the tackle should always take the man nearest the centre, as he is the nearest to the starting-point of the play, and therefore the most dangerous.",
+   "page": "p. 50 (printed pagination), Part I, Chapter II, Section 2: Tackle",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Threat is ranked by distance to the play's starting point",
+    "When the tackle takes the inside man, he calls his end in to take his own man"
+   ],
+   "breakdown_regime": "no_equation_domain: a priority rule; it can be beaten by schemes that make the nearest man a decoy",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Assign resources by threat proximity: the engine should rank opposing threats by distance to the decisive point of the play and allocate its attention (and its skepticism) in that order.",
+    "source_operator": "tackle_takes_nearest_man",
+    "telemetry": "Play success by which defender was occupied and which was left free"
+   }
+  },
+  {
+   "primitive_id": "centre_strength_axiom",
+   "name": "A team is no stronger than its centre; repeated gains through centre demoralize the whole eleven",
+   "verbatim_quote": "A team is no stronger than its centre. Nothing demoralizes a team more than to have gains made repeatedly through that point in the line.",
+   "page": "p. 58 (printed pagination), Part I, Chapter II, Section 3: Guard",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The two guards and the centre form the stone wall of the line",
+    "Without good guards no play can be started, because the quarterback must be protected"
+   ],
+   "breakdown_regime": "no_equation_domain: an axiom of interior play; the demoralization claim is psychological and untested here",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interior integrity is a ceiling on the whole system: if the middle of a model (its data spine, its core assumptions) leaks, no edge performance elsewhere can compensate, and repeated interior failures degrade every other unit's output.",
+    "source_operator": "centre_strength_axiom",
+    "telemetry": "Interior pressure and interior run success allowed, correlated with total defensive performance"
+   }
+  },
+  {
+   "primitive_id": "centre_snap_proximity",
+   "name": "Snap the ball from as far under the centre as possible: distance saved is time saved",
+   "verbatim_quote": "Place the ball as far under you as possible. That gives better protection. It also shortens the distance. Distance saved is time saved, and hence the ball gets quicker to the quarter.",
+   "page": "p. 75 (printed pagination), Part I, Chapter II, Section 4: Centre-Rush",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The side snap lets the snapper balance partly on the ball and start strongly",
+    "The end-over-end snap is quicker when well executed but more uncertain"
+   ],
+   "breakdown_regime": "no_equation_domain: a latency argument made without timing data; the size of the saving is asserted, not measured",
+   "domain": "football fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latency is a real cost in any pipeline: shortening the distance information travels (snap to quarterback, source to engine) buys time for everything downstream, and small savings compound across hundreds of plays.",
+    "source_operator": "centre_snap_proximity",
+    "telemetry": "Operation time from snap to quarterback hands, and its correlation with play success"
+   }
+  },
+  {
+   "primitive_id": "halfback_specialism",
+   "name": "The highest efficiency is attainable only along the lines of specialism; backs should not be interchanged",
+   "verbatim_quote": "efficiency is attainable only along the lines of specialism.",
+   "page": "p. 82 (printed pagination), Part I, Chapter II, Section 5: The Half-Back",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The left half should play at left half, the right half at right half, and the full-back at full-back",
+    "There are two distinct styles of back, the plunging back and the wriggler or dodger, and a team wants one of each"
+   ],
+   "breakdown_regime": "no_equation_domain: a strong claim stated without comparison data; interchangeability has real value under injury, which Lewis underweights",
+   "domain": "football position play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Specialization raises the ceiling and lowers the floor under attrition: the engine should model players in their actual roles (and role-specific rates) rather than as interchangeable carriers, while pricing the fragility that specialization creates.",
+    "source_operator": "halfback_specialism",
+    "telemetry": "Performance deltas when a player is moved off his primary role or position"
+   }
+  },
+  {
+   "primitive_id": "fullback_kick_priority",
+   "name": "The full-back's kick priorities, in order: get the kick in, then distance, then placing",
+   "verbatim_quote": "Whether the full-back uses the straight or round kicking, his first idea should be to get the kick in ; the second, distance ; third, placing.",
+   "page": "p. 99 (printed pagination), Part I, Chapter II, Section 6: Full-Back",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The full-back is chosen almost solely for his ability to kick; kicking is the biggest ground-gaining function of the backs",
+    "Twisters and floaters are a waste of time; a good simple punt is the thing to try for"
+   ],
+   "breakdown_regime": "no_equation_domain: an ordinal heuristic; the tradeoff between distance and placement is not quantified",
+   "domain": "football position play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Execution certainty outranks upside: a projection should first ask whether the play happens at all (the kick gets away, the pass is completed), then how far it goes, then where it lands, in that order.",
+    "source_operator": "fullback_kick_priority",
+    "telemetry": "Blocked-kick rate, then net distance, then inside-20 rate, as a staged evaluation of punters"
+   }
+  },
+  {
+   "primitive_id": "quarterback_brains",
+   "name": "The first essential qualification of a quarter-back is brains: take in the situation at a glance and execute at once",
+   "verbatim_quote": "The first essential qualification of a quarter -back is brains. He should be able to take in a situation at a glance, to think quickly, and to put that thought into execution at once.",
+   "page": "pp. 101-102 (printed pagination), Part I, Chapter II, Section 7: Quarter-Back",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physique is of the least possible importance in a quarter-back, given the other qualifications",
+    "The quarter is a second captain and selects the plays in real time"
+   ],
+   "breakdown_regime": "no_equation_domain: cognitive claims are unmeasured; the position's decision load, however, is real and grew with every later rules change",
+   "domain": "football position play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision speed under uncertainty is a position-defining trait: the engine should model the quarterback as a decision-maker (reads, adjustments, mistake rate) and not only as an arm producing yardage.",
+    "source_operator": "quarterback_brains",
+    "telemetry": "Quarterback decision outcomes: sacks taken versus thrown away, interceptions on late throws, success after audibles"
+   }
+  },
+  {
+   "primitive_id": "captain_example",
+   "name": "The captain must command by example rather than precept, and be the real head of the eleven",
+   "verbatim_quote": "He must command by example rather than precept. He must be the real, not merely the nominal and titular, head of the eleven.",
+   "page": "p. 111 (printed pagination), Part I, Chapter II, Section 8: Captain",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The captain should be the best player on the eleven, brains, brawn, and sand considered",
+    "A captain who changes his own position weakens two places at once"
+   ],
+   "breakdown_regime": "no_equation_domain: leadership doctrine, unfalsifiable as stated; its mechanism is imitation, which Lewis asserts rather than demonstrates",
+   "domain": "football team",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Standards propagate by visible example: in an engine operation, the checks that are actually performed on every run set the real standard, whatever the written standard says, so process discipline is itself a signal.",
+    "source_operator": "captain_example",
+    "telemetry": "Compliance rate of verification steps across runs, and error rate when steps are skipped"
+   }
+  },
+  {
+   "primitive_id": "team_play_every_man",
+   "name": "Offensive team play, in a word, is every man in every play every time",
+   "verbatim_quote": "Offensive team play, in a word, is every man in every play every time.",
+   "page": "p. 116 (printed pagination), Part III: The Team",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A player's contribution is the difference between him and his opponent at his position, plus what he does besides attending to his man",
+    "The team should be selected as early as possible so the machine can be adjusted"
+   ],
+   "breakdown_regime": "no_equation_domain: an ideal of total participation; real plays have decoys and rest built in, which the maxim ignores",
+   "domain": "football team",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Total participation is the team-play ideal: a projection that uses only the ball carrier's numbers and ignores the other ten contributions will systematically miss why plays succeed, so the engine should credit off-ball work explicitly.",
+    "source_operator": "team_play_every_man",
+    "telemetry": "Play success split by blocking and decoy execution grades, not only by carrier output"
+   }
+  },
+  {
+   "primitive_id": "direct_attack_principle",
+   "name": "The direct attack takes a given point by force instead of stratagem; the play goes where it starts",
+   "verbatim_quote": "The object of this style is to take a given point by force instead of stratagem.",
+   "page": "pp. 122-123 (printed pagination), Part III, Chapter I, Section 2(a): The Direct Attack",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Straight football is the foundation and bulk of the offensive game",
+    "Dive plays succeed when the runner reaches the line at the moment it opens, with the whole eleven behind pushing"
+   ],
+   "breakdown_regime": "no_equation_domain: force versus stratagem is a style taxonomy, not an efficiency comparison; Lewis gives no success rates for either",
+   "domain": "football offence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A base strategy that attacks strength directly is the control condition for everything else: the engine should establish what plain, strength-on-strength execution yields before crediting any deception premium.",
+    "source_operator": "direct_attack_principle",
+    "telemetry": "Base-play success rate by point of attack, used as the baseline for trick-play deltas"
+   }
+  },
+  {
+   "primitive_id": "execution_over_formation",
+   "name": "Formation may be something, but execution is everything; four or five trick plays are a sufficient repertoire",
+   "verbatim_quote": "Formation may be something, but execution is everything. The fewer the strictly trick plays the better. Four or five are a sufficient number in a repertoire of plays.",
+   "page": "p. 134 (printed pagination), Part III, Chapter I, Section 2(b): The Indirect Attack",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A trick is a feint at one point and a sudden concentration at another",
+    "The other side cannot be tricked into defeat; it must be whipped into defeat"
+   ],
+   "breakdown_regime": "no_equation_domain: the four-or-five figure is a practitioner's bound, not a derived optimum",
+   "domain": "football offence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Execution quality dominates scheme novelty: the engine should weight how well a team runs its base plays far above how exotic its playbook is, and cap the credit given to rare gadget plays with tiny samples.",
+    "source_operator": "execution_over_formation",
+    "telemetry": "Success rate of base plays versus gadget plays, with sample sizes attached"
+   }
+  },
+  {
+   "primitive_id": "kick_down_schedule",
+   "name": "With equal kickers and a favorable wind, kick on first down deep, second down at midfield, third down beyond",
+   "verbatim_quote": "a team will find it good policy to kick on the first down anywhere from its own ten-yard line to its forty-yard line",
+   "page": "p. 137 (printed pagination), Part III, Chapter I, Section 2(c): Kicking",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The schedule assumes nearly equal kickers and a wind blowing toward the opponents' goal",
+    "Do not wait until the third down to kick, because the opponent expects the kick then"
+   ],
+   "breakdown_regime": "no_equation_domain: a field-position policy stated as ranges; it predates formal expected-points analysis, which later both refined and partly overturned early-down kicking",
+   "domain": "football offence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is an early field-position decision table: action prescribed by down and yard line under stated conditions. The engine should hold its own decision tables in the same explicit form, with the conditions (wind, kicker differential) named so the table can be audited.",
+    "source_operator": "kick_down_schedule",
+    "telemetry": "Net field position gained or lost by kicking versus rushing, by down and yard line"
+   }
+  },
+  {
+   "primitive_id": "signal_index_code",
+   "name": "Signal code: an index number marks which following number carries the hole, by digit position",
+   "verbatim_quote": "For example, let the index number be 43 and the hole the second digit of the first number after the index number.",
+   "page": "p. 143 (printed pagination), Part III, Chapter I, Section 2(d): Signals",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Holes in the rush line are numbered, and the hole number indicates the point of attack",
+    "The code must be simple enough to be second nature, or it mystifies its own side more than the opponents"
+   ],
+   "breakdown_regime": "no_equation_domain: a coding scheme, not a theorem; its security rests on the opponents not collecting enough samples to decode it",
+   "domain": "football offence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is steganographic play-calling: information hidden inside noise by a positional key. The same principle runs the other way for the engine: opponent tendencies can be decoded from apparently noisy sequences once the key (formation, personnel, down) is known.",
+    "source_operator": "signal_index_code",
+    "telemetry": "Decoding accuracy: opponent play prediction from signal-like surface features, by sample size"
+   }
+  },
+  {
+   "primitive_id": "generalship_definition",
+   "name": "Good generalship consists simply in doing the right thing at the right time and place",
+   "verbatim_quote": "Good generalship consists simply in doing the right thing at the right time and place.",
+   "page": "p. 146 (printed pagination), Part III, Chapter I, Section 2(e): Generalship",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "There must be one head on the field; there is no time for consultation during play",
+    "The game may be largely planned before going on the field, from study of the opponents' preceding games"
+   ],
+   "breakdown_regime": "no_equation_domain: a definition whose only stated criterion is success, which makes it circular unless decision quality is judged before outcomes are known",
+   "domain": "football team",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision quality must be graded at decision time, not by outcome: the engine should log the information available when each choice was made, so generalship (and the model itself) can be audited without hindsight bias.",
+    "source_operator": "generalship_definition",
+    "telemetry": "Decision log completeness: share of choices with the pre-decision state recorded"
+   }
+  },
+  {
+   "primitive_id": "defence_territory_compression",
+   "name": "Defence theory: a fixed territory, 160 feet wide and about 115 feet deep, must be protected by eleven men, so the territory of possible advance must be shrunk",
+   "verbatim_quote": "and sixty feet wide at all points (width of the field) and one hundred and fifteen feet deep, more or less, reckoned from the centre of the field.",
+   "page": "p. 160 (printed pagination), Part III, Chapter II, Section 2(a): Theory of Defence",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The territory to be defended is one hundred and sixty feet wide at all points and about one hundred and fifteen feet deep, and the number of men is eleven",
+    "The smaller the territory is made through which an advance is possible, the better that territory may be protected; the rush line's natural tendency to pull open when breaking through enlarges the territory and weakens the defence"
+   ],
+   "breakdown_regime": "no_equation_domain: the compression principle is geometric and sound, but Lewis offers no measurement of how much compression buys",
+   "domain": "football defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Compression is the core defensive idea: shrink the space the opponent can attack and defenders concentrate faster than attackers can exploit it. The engine should measure defences by the space they actually concede, not by the yardage totals that lag behind it.",
+    "source_operator": "defence_territory_compression",
+    "telemetry": "Average separation and time-to-close on ball carriers, by defensive structure"
+   }
+  },
+  {
+   "primitive_id": "watch_the_ball",
+   "name": "The one way to stop all trick plays: keep your eyes on the ball; it does not matter which way the men run",
+   "verbatim_quote": "trick plays, and that is to keep your eyes on the ball. It does not matter which way the men run ; watch the ball, and follow that.",
+   "page": "pp. 172-173 (printed pagination), Part III, Chapter II, Section 2(c): Defence to Special Plays",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Deception works on the eyes: men can feint, the ball cannot be in two places",
+    "Forwards who go through every time and never run behind their own line also stop the criss-cross"
+   ],
+   "breakdown_regime": "no_equation_domain: an attention rule; play-action and option football later weaponized exactly this fixation, so the rule needs a keys-based refinement Lewis does not supply",
+   "domain": "football defence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Track the conserved quantity, not the decoration: fakes move players, but the ball (in analysis: the actual causal driver) can only be in one place, so the engine should anchor on the variable that cannot be feinted and treat motion around it as noise until proven otherwise.",
+    "source_operator": "watch_the_ball",
+    "telemetry": "Defensive failure rate on misdirection plays, split by whether the key defender held his assignment"
+   }
+  },
+  {
+   "primitive_id": "training_happy_medium",
+   "name": "Training method: neither the killing process nor the drawing-room system, but the happy medium, nearer the old system",
+   "verbatim_quote": "What is needed in football is a method of training which is neither the \"killing process\" nor the drawing-room system, but the happy medium.",
+   "page": "p. 188 (printed pagination), Supplementary Chapter: Training, Section 1: Physical Training",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All training must be adequate to the demands of the particular contest; football is the most vigorous and exhausting of sports",
+    "The old school reaches good condition early and holds it; the new school peaks only for the final match and is more liable to injuries on the way"
+   ],
+   "breakdown_regime": "no_equation_domain: the condition curves of Diagram 18 are schematic, drawn from argument, not from measured fitness data",
+   "domain": "football training",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Load management is a curve problem, not a peak problem: the engine should value availability across the whole schedule over a single peak, and treat any plan that only works at one future point as fragile.",
+    "source_operator": "training_happy_medium",
+    "telemetry": "Availability and performance by week under different workload progressions"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "6bbee7510eb8f2f0-t1",
+   "think": "Lewis wrote this primer in 1896, when the game he describes was still recognizably descended from rugby and yet had already become something else: a game of set formations, numbered holes, coded signals, and specialized positions, played under rules that required five yards in three downs and forbade the forward pass entirely. The book's architecture is itself its first argument. It divides the science into the Individual and the Team. The individual is built from fundamentals (passing, catching, dropping on the ball, kicking, blocking, making holes, breaking through, tackling, and the saving of injuries) and then from position play, one chapter each for end, tackle, guard, centre-rush, half-back, full-back, quarter-back, and captain. Only after the parts are made does he assemble the team, offence first (start-off, direct attack, indirect attack, kicking, signals, generalship) and then defence (theory, styles, special plays, field position, defensive generalship), closing with a supplementary chapter on training in its physical, mental, and moral parts. The order is a claim: collective performance is downstream of atomic skill and role clarity, and no formation survives contact with players who cannot execute the fundamentals. The fundamentals are treated as small machines with named failure modes. The punt is defined by rule, then decomposed into holds, drop, contact point, knee lock, and follow-through, with the rise of the ball traced to the height of contact, the part of the foot, and the slant of the drop. The chest catch is rejected not by taste but by its failure geometry: arms too wide and the ball goes through, or it rebounds before it can be grappled. Dropping on a ball is a decision table over ball state and direction: four methods, each matched to a moving ball, a dead ball, a ball at the feet, a ball arriving from front, right, or left. This is the book's characteristic move, and it repeats everywhere: enumerate the states, assign a method to each state, and drill until the assignment is automatic. Position play extends the same logic into specialization. Lewis is explicit that the highest efficiency comes only from specialism, that backs should not be interchanged, and that each position has its own body, stance geometry, and responsibility map. The end owns the outside first and the inside second; the guard owns the ground toward tackle first and toward centre second; the centre is the tempo of the whole team, because the side can play no faster than its snap. Responsibility is primary and secondary, never diffuse, which is what lets eleven men compress the territory they defend. His defence theory is the book's most durable idea: the offence may advance through any part of a line one hundred and sixty feet wide, so the defence wins by shrinking the territory that must be protected, closing the line up the moment a play starts, driving the runner into the pocket, and concentrating faster than the attack can exploit the space. The offence is a portfolio with stated proportions. Straight football is the foundation and the bulk; trick plays are an incident, four or five in a repertoire of twenty to thirty plays, because execution is everything and formation only something. Kicking, rehabilitated by Marshall Newell and the Cornell record, is treated as an offensive weapon and a field-position policy, with a down-and-distance schedule for when to kick, corrections for wind and for the opposing full-back's superiority, and placement rules by field zone. Signals are a coding problem: holes are numbered, the true digit is hidden by position inside a called series or behind an index number, and the code is kept simple because a code that mystifies its own side is worse than none. Generalship sits above all of it as real-time selection under one head, planned in advance from the opponents' preceding games and executed without consultation. The captain is treated as a twelfth player and a force multiplier whose example sets the team's standard, and who weakens two positions at once if he changes his own. Training, finally, is periodized with unusual care for 1896: an eight-week season divided between individual and team work, a day-by-day first week that builds from passing and falling on the ball to tackling and scrimmage, and a deliberate argument, drawn as two condition curves in Diagram 18, that a side trained to be fit early and to stay fit beats a side trained to peak once, because the intermediate matches are as hard as the final one and an undertrained side loses its best men to injury before the peak arrives. Morale is not decoration in this scheme; it is the third element of training, the spirit that converts knowledge into execution, and Lewis assigns its supply partly to the college itself. For a reasoning engine, the transferable machinery is not the plays, which are fossils, but the disciplines: decompose skills into states and methods; assign primary and secondary responsibility so coverage has no gaps; measure a defence by the space it concedes; hold a base strategy as the control against which deception is priced; keep the repertoire small enough to be executed perfectly; treat field position as an asset that can be worth more than possession; and grade decisions at the moment they are made. Where the book breaks is equally clear. Its numbers are rhetorical (ten times more apt to get hurt), its geometry is unmeasured, its science is systematization without statistics, and its entire tactical world was about to be overturned by the forward pass, which Lewis could mention only as a rule to avoid violating. Read it as a grammar of the running-and-kicking game at its most thoughtful, and as a template for how any complex team system should be taught: parts first, then the machine, then the judgment that runs it.",
+   "retrocausal_genealogy": "The primer stands at the end of the first great systematization of American football. Its lineage runs from the rugby-derived game of the 1870s through Walter Camp's rules revolution (the line of scrimmage, downs, and the numbered scoring that made set plays possible) to the coaching literature of the early 1890s, including Camp's own American Football and the work of Lorin Deland, whose momentum plays Lewis files under straight football. Marshall Newell is credited inside the text with demonstrating the kicking game, Amos Alonzo Stagg's concealed-ball play appears as a trick exemplar, and the defences of Pennsylvania and Princeton are described as living systems to be studied. Lewis, a former Amherst and Harvard player, writes as an insider codifying a craft that had previously been transmitted orally on the practice field.",
+   "theory_of_mind": "Lewis believes his reader is a beginner, often a schoolboy, who learns by decomposition and repetition: show him the fundamental, name its parts, drill it until it is second nature, then give him a position, then a team. His model of the domain is military throughout: football is a game of war, the eleven a company, the captain its commander, and discipline the medium in which skill operates. He trusts execution over invention and character over scheme; again and again the text returns to the claim that what a player is (conditioned, courageous, thoroughly drilled) determines what his team can do. He also believes the reader's college owes the team its spirit, so morale is treated as an institutional input, not a private virtue.",
+   "cross_layer_veto": "Several of the book's principles act as vetoes on everything downstream. If the fundamentals are not mastered, position play is capped, and if position play is capped, team play is fiction: no signal system or generalship can rescue an eleven whose blocking and tackling fail. The defence's compression principle vetoes freelancing, since one man running behind his own line reopens the territory the other ten have closed. The repertoire bound vetoes playbook expansion: beyond roughly thirty plays, execution decays faster than variety pays. The training doctrine vetoes peaking schemes that sacrifice the intermediate matches. And the watch-the-ball rule vetoes every read based on the movement of men rather than on the one object that decides the play."
+  }
+ ],
+ "universal_lens": "Read away from football, the primer is a general template for building any skilled collective: decompose the work into atomic fundamentals with named failure modes, train each atom to automaticity, specialize people into roles with primary and secondary responsibilities that tile the whole problem without gaps, hold a simple and reliable base method as the bulk of practice, reserve deception for a small and well-drilled minority of actions, communicate through codes simple enough to survive stress, and judge the system by the space of failures it has learned to close off. Its deepest claim is that coordination is a trained property of parts, not an inspiration of the whole.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the primer is a curriculum design document. It shows how a complex game can be taught to genuine beginners without dilution: fundamentals before positions, positions before team play, team play before generalship, with a written schedule that allocates the season between individual and collective work and protects team development from well-meaning late interference. Its treatment of training as physical, mental, and moral at once, and its insistence that the institution itself supplies the spirit the team plays with, give the Institute a framework for coaching education that joins technique, cognition, and culture in one syllabus.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the primer contributes structure rather than statistics. Its defence theory supplies a measurable idea, territory compression, that modern tracking can finally quantify as conceded space and time to close. Its responsibility maps model how coverage assignments should be represented so that no zone is owned by nobody. Its kicking schedule is a primitive decision table of exactly the kind the engine should hold explicitly, with conditions named. Its repertoire bound and its execution-over-formation doctrine argue for weighting proven base performance over scheme novelty. And its generalship chapter states the audit standard the engine should meet: decisions graded on the information available when they were made."
+}

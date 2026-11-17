@@ -1,0 +1,717 @@
+{
+ "book_id": "282273867365c790",
+ "source_status": "COMPLETE",
+ "source_note": "Robert C. Zuppke, Football Technique and Tactics, first edition, copyright 1922, Zuppke and Bearg Publishers, Urbana, Illinois. Zuppke was head football coach at the University of Illinois; the book presents the substance of a course of twenty-two lectures, each an hour and a half, delivered to his summer session class at Illinois, with Ernest E. Bearg assisting in arranging the material. The local file is a scanned PDF of the printed book, 7,354,963 bytes, sha256 282273867365c7900373439e1731e16ca7d6aaad1cdcde7a9dd1e5dff124a37f. The extracted text (225,783 bytes) is OCR with artifacts: running heads are misread (FoorsALL, FoorTBaLL), several diagram and game-map pages are garbled or rotated, and a few words are split or merged, but the body prose is legible throughout and every quoted passage was verified as a contiguous substring of the extracted text file. The catalog filename year (1922) matches the copyright page. The work contains no mathematical equations; its quantitative content is counts, distances and one fully charted game audit. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "center_stance_diagonal_base",
+   "name": "Center stance: feet on diagonal corners of an imaginary square base, knees bent, back parallel to the ground, weight entirely on the feet",
+   "verbatim_quote": "The center stands with his feet on diagonal corners of an imaginary square base, right foot forward if he is a right-handed passer, vice versa if a left-handed passer. The knees are bent, the back is parallel with the ground, and the head well over the ball.",
+   "page": "Book p. 1, Ch. I sec. I(A) Center's Stance; extracted text line 235",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The center must both deliver the snap and then block or charge, so the stance must serve two opposed next actions",
+    "Handedness determines which foot is forward"
+   ],
+   "breakdown_regime": "Tuned to the 1922 hand snap between the legs; shotgun geometry and modern snap rules change the base. A balance-first stance sacrifices the pure drive of a sprinter start. no_equation_domain: stated as posture geometry, no formula given.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A pre-action state should be neutral between opposed next actions: features recorded before a decision point must not commit the actor to one branch, the same neutrality the center keeps between passing and charging.",
+    "source_operator": "center_stance_diagonal_base",
+    "telemetry": "Snap-to-action timing and stance classification from film or tracking."
+   }
+  },
+  {
+   "primitive_id": "repetition_makes_master",
+   "name": "Repetition makes a master: constant practice of the center passes is what creates backfield confidence",
+   "verbatim_quote": "Repetition makes a master. Constant practice is necessary to perfect these passes. Perfect center passes create confidence in the backfield.",
+   "page": "Book p. 3, Ch. I sec. I(B) Center Passes; extracted text line 285",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Skill is habit formed by repetition volume",
+    "Reliability of one component (the snap) propagates as confidence through the whole backfield"
+   ],
+   "breakdown_regime": "Repetition without correction entrenches error; the claim assumes supervised reps. Confidence is asserted, not measured, in the text.",
+   "domain": "training_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Promotion by repeated verified execution: a component earns trust in the system only after a counted run of correct low-stakes repetitions, and its reliability is a team-level input, not a private trait.",
+    "source_operator": "repetition_makes_master",
+    "telemetry": "Rep counts and error rate per rep block in practice charting."
+   }
+  },
+  {
+   "primitive_id": "passer_no_telegraph",
+   "name": "The passer must get the throw away quickly and accurately even when hurried, with no long motion and no telegraphing of the throw's direction",
+   "verbatim_quote": "The passer must be able to get the pass away quickly and accurately, even when hurried. The thrower must not use a long motion, i.e., in slang, he must avoid \"pulling the ball out of his hip pocket.\" He must avoid \"telegraphing\" the direction of his throw.",
+   "page": "Book p. 5, Ch. I sec. I(D)(3) The Passer's Fundamentals; extracted text line 368",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense reads the thrower's body, gaze and windup for the target",
+    "A long motion both delays the throw and leaks its direction"
+   ],
+   "breakdown_regime": "A naturally long-motion thrower cannot fully comply; fakes deliberately trade release speed for deception, which this rule prices but does not forbid.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information leakage control at the individual level: an actor's pre-release behavior must be independent of the chosen target, the single-actor form of the masking the play cycle enforces for the whole team.",
+    "source_operator": "passer_no_telegraph",
+    "telemetry": "Thrower gaze, windup length and first-step direction versus actual throw direction in tracking data."
+   }
+  },
+  {
+   "primitive_id": "pass_leads_receiver_head_high",
+   "name": "The pass should lead the receiver and reach him head high or higher, to preclude interception or make it as difficult as possible",
+   "verbatim_quote": "It should lead the receiver and reach him head high or higher to preclude any possibility of interception, or at least to make the interception as difficult as possible.",
+   "page": "Book pp. 4-5, Ch. I sec. I(D)(2) Grip Pass; extracted text line 359",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The receiver is running and must be led to a point",
+    "A ball at head height or higher can at worst be knocked down by a shorter defender, per the following sentence in the text"
+   ],
+   "breakdown_regime": "High throws reduce catch security in wind and demand a tall or leaping receiver; leading the receiver fails when the route is rerouted or jumped.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Target placement under adversarial reach: aim the delivery so the opponent's access is minimized, not only so the receiver's completion chance is maximized; the two objectives give different aim points.",
+    "source_operator": "pass_leads_receiver_head_high",
+    "telemetry": "Throw location relative to the receiver and the nearest defender at arrival."
+   }
+  },
+  {
+   "primitive_id": "golden_rule_long_pass_defense",
+   "name": "The golden rule of individual pass defense: prevent the completion of all long passes",
+   "verbatim_quote": "The golden rule for the defense is to prevent the completion of all long passes.",
+   "page": "Book p. 6, Ch. I sec. I(F) Individual Defense Against Forward Passes; extracted text line 430",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A completed long pass may mean a touchdown, the highest-damage single event",
+    "The defense has as much right to catch the pass as the offense, per the same section"
+   ],
+   "breakdown_regime": "Absolute priority on the long ball can be exploited underneath by short passes and draws; the rule is a priority ordering, not a complete scheme.",
+   "domain": "pass_defense",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Worst-case-first risk ordering: cap the tail loss (the explosive completion) before optimizing the average play; depth of coverage is bought before underneath refinement.",
+    "source_operator": "golden_rule_long_pass_defense",
+    "telemetry": "Explosive pass rate allowed and depth-of-target distribution faced."
+   }
+  },
+  {
+   "primitive_id": "knockdown_vs_intercept_by_down",
+   "name": "When players of both teams are jumping for the ball, the defense should knock it down rather than contest the catch",
+   "verbatim_quote": "If players of both teams are jumping for the ball, it is much safer for the defense to knock it down.",
+   "page": "Book p. 6, Ch. I sec. I(F); extracted text line 442",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A deflection is a safe terminal outcome when the catch is contested",
+    "The same passage continues across the page break: intercept only when opponents are not too near, and not on fourth down, when the knockdown spot is worth more"
+   ],
+   "breakdown_regime": "The correct choice flips with down, field position and proximity of opponents; a blanket knockdown rule concedes interceptions that are freely available.",
+   "domain": "pass_defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Context-conditioned terminal action: identical ball state, different down and field position, different correct action; the policy must be indexed by situation, not by the ball alone.",
+    "source_operator": "knockdown_vs_intercept_by_down",
+    "telemetry": "Contested-target outcomes (completion, deflection, interception) split by down and field zone."
+   }
+  },
+  {
+   "primitive_id": "punt_spot_on_spot_contact",
+   "name": "A spiral punt is produced when one spot of the foot strikes a certain spot of the ball",
+   "verbatim_quote": "To make a spiral punt the ball must be so kicked \"that one spot of the foot strikes a certain spot of the ball.\"",
+   "page": "Book p. 8, Ch. I sec. II(A) The Punt; extracted text line 506",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The discussion assumes a right-footed kicker",
+    "Contact point on the ball determines spin and therefore flight stability"
+   ],
+   "breakdown_regime": "A wet ball, a bad drop or a rushed operation degrades the contact; the statement is a single-contact idealization of a continuous swing. no_equation_domain: the relation is stated verbally, never as a formula.",
+   "domain": "kicking_technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Output quality as a function of one precise contact parameter: small deviations at the contact point produce the wobble the book names as the failure signature, so the parameter, not effort, is what gets coached and measured.",
+    "source_operator": "punt_spot_on_spot_contact",
+    "telemetry": "Punt spiral rate, hang time and wobble grade per attempt."
+   }
+  },
+  {
+   "primitive_id": "punt_placement_by_wind",
+   "name": "Punt placement policy: kick high with the wind, low against the wind, long and low for out of bounds",
+   "verbatim_quote": "He should attempt to kick high with the wind, low against the wind, long and low for out of bounds.",
+   "page": "Book p. 10, Ch. I sec. II(A)(7) Follow Through; extracted text line 604",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Wind is observable before the kick and materially changes carry",
+    "With the wind, height buys coverage time; against it, height is punished"
+   ],
+   "breakdown_regime": "Gusting or swirling wind breaks the three-way policy; a dangerous returner overrides it toward out of bounds regardless of wind.",
+   "domain": "kicking_tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Environment-conditioned action parameters: one action, several parameter settings indexed by a measured environmental variable (wind), chosen before execution rather than improvised during it.",
+    "source_operator": "punt_placement_by_wind",
+    "telemetry": "Wind speed and direction, punt trajectory class, net yards and return yards."
+   }
+  },
+  {
+   "primitive_id": "tackling_timing_and_distance",
+   "name": "Good tackling demands perfect timing of speed and accurate judging of distance",
+   "verbatim_quote": "Good tackling demands perfect timing of speed and accurate judging of distance.",
+   "page": "Book p. 18, Ch. II sec. I(A) Tackling Fundamentals; extracted text lines 897-900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The tackler takes the initiative instead of waiting for the runner",
+    "The strike point is the thigh, about four inches above the knee, per the same section"
+   ],
+   "breakdown_regime": "A runner's stiff arm or late cut defeats a committed drive; the text warns it is just as bad to tackle too low as too high.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interception as estimation: stopping a moving target is a timing and distance-judgment problem before it is a force problem, so the trainable variables are approach speed control and distance reading.",
+    "source_operator": "tackling_timing_and_distance",
+    "telemetry": "Tackle success by approach angle, closing speed and contact distance."
+   }
+  },
+  {
+   "primitive_id": "first_and_second_movement",
+   "name": "Every line action decomposes into a first movement (the start) and a second movement (the sustained follow-up), with no pause between them",
+   "verbatim_quote": "We call the start \"the first movement,\" and the sustained action or follow-up \"the second movement.\" There should be no pause between the first and second movements.",
+   "page": "Book p. 27, Ch. III sec. I Offensive Stances and Charge; extracted text line 1227",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The initial charge without follow-up is wasted",
+    "The first movement must not throw the man off the base his feet give him"
+   ],
+   "breakdown_regime": "A lunging first movement destroys the second; against a defense that moves after the snap, the planned second movement may aim at a vacated spot.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two-phase action model: initiation and sustainment are separately trainable and separately failable, so any evaluated action should be graded in both phases rather than by its start alone.",
+    "source_operator": "first_and_second_movement",
+    "telemetry": "First-step quickness and post-contact drive or sustain grades."
+   }
+  },
+  {
+   "primitive_id": "lineman_start_with_ball",
+   "name": "The defensive lineman's drilled subconscious checklist: keep the eye on the ball rather than on a man, and start with the ball",
+   "verbatim_quote": "I must keep my eye on the ball rather than on a lineman or a back, and I must start with the ball.",
+   "page": "Book p. 32, Ch. III sec. II Defensive Stances and Charge; extracted text line 1383",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Watching a man instead of the ball leaks a step at the snap",
+    "The checklist (weight on the balls of the feet, relaxed, braced, hands ready) is drilled until it is subconscious, per the surrounding text"
+   ],
+   "breakdown_regime": "A shift or a hard count is designed to break exactly this checklist; the checklist governs the start only and does not read the play.",
+   "domain": "technique_fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pre-action invariants: a short fixed checklist executed identically before every trial removes variance from the start of the action and keys the start to the true trigger (the ball) rather than to a proxy (the opponent).",
+    "source_operator": "lineman_start_with_ball",
+    "telemetry": "Get-off times, offside and false-start rates, first-step direction errors."
+   }
+  },
+  {
+   "primitive_id": "cup_defense",
+   "name": "Cup defense: the defensive line charges so as to surround the offense end to end and steer its play to a point it did not intend to go",
+   "verbatim_quote": "the coaches have named that style of action the \"cup defense.\"",
+   "page": "Book p. 34, Ch. III sec. II Defensive Stances and Charge; extracted text line 1452",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Linemen keep equal distances and hold the offense between their extremities on the line-up and on the second movement",
+    "The full sentence in the text: ideally this defense surrounds the offense so tightly that it cannot act freely"
+   ],
+   "breakdown_regime": "A quick opening through the cup before it forms defeats it; it requires disciplined second movements from the whole line at once.",
+   "domain": "defensive_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Containment objective: win by shrinking the opponent's feasible set and steering the play off its intended path, not only by winning individual contacts; the objective function is the opponent's lost freedom of action.",
+    "source_operator": "cup_defense",
+    "telemetry": "Rush lanes conceded, play direction versus called direction, yards by direction."
+   }
+  },
+  {
+   "primitive_id": "center_keystone_attention",
+   "name": "The defensive center is the keystone of the line: he must focus on line plays yet change his mind instantly to serve the secondary, an exceptional attention load",
+   "verbatim_quote": "Because of this load, a good center is the keystone of the line and if that keystone crumbles, the defense is apt to collapse.",
+   "page": "Book p. 35, Ch. III sec. III(B) The Center, Defense; extracted text lines 1532-1536",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The center plays in the primary line but belongs to the secondary for pass defense",
+    "His fighting courage is contagious to the linemen on either side, per the same section"
+   ],
+   "breakdown_regime": "Overload produces the confusion the text warns of; a center who ranges out to help on end runs opens his own position to line attacks, and the text caps his pass duty as a qualified, pre-planned duty only.",
+   "domain": "defensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bottleneck node analysis: the node bridging two layers carries the highest context-switching load and is the structural failure point of the whole formation; protect and simplify that node first.",
+    "source_operator": "center_keystone_attention",
+    "telemetry": "Center assignment errors split by run, pass and play-action."
+   }
+  },
+  {
+   "primitive_id": "guard_personnel_allocation_rule",
+   "name": "Personnel allocation rule: with a weak center use the best line candidates as guards; with a strong center use them as tackles",
+   "verbatim_quote": "If the team has a weak center, it would be wise to use the best line candidates as guards, and if a strong center, as tackles.",
+   "page": "Book p. 38, Ch. III sec. IV(B) The Guard, Defense; extracted text line 1619",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Guard play can cover and steady a weak center",
+    "Tackle is the more strategic defensive position when the center needs no covering"
+   ],
+   "breakdown_regime": "The rule assumes line athletes are interchangeable across the three interior spots; specialization and size mismatches break the premise.",
+   "domain": "personnel_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Compensating allocation: reinforcement goes adjacent to the weakest structural node first, and only moves to the highest-leverage node once the weakness is covered.",
+    "source_operator": "guard_personnel_allocation_rule",
+    "telemetry": "Pressure and run success allowed by interior line grouping and by the center's individual grade."
+   }
+  },
+  {
+   "primitive_id": "complementary_end_tackle_pairing",
+   "name": "Pair complementary styles on the same side: a lunging, plunging end with a conservative tackle, and an aggressive tackle with a conservative end",
+   "verbatim_quote": "The wise coach will try to develop the talents and natural aptitudes of his ends and protect them by teaming them with tackles whose methods are opposite and so will be both supplements and complements to them.",
+   "page": "Book pp. 45-46, Ch. III sec. VI(B) The End, Defense; extracted text line 1886",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Adjacent defenders share the space between them after the first movement",
+    "Two gamblers leave an alley; two waiters surrender the initiative, per the surrounding argument"
+   ],
+   "breakdown_regime": "The pairing depends on honest assessment of the coach's own men; an opponent can scheme to isolate whichever side reads conservative.",
+   "domain": "personnel_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Portfolio pairing of adjacent agents with opposite risk postures, so the pair covers both branches of the opponent's choice (run at the gambler, run away from him) instead of doubling one posture.",
+    "source_operator": "complementary_end_tackle_pairing",
+    "telemetry": "Success rates by side, split by the pairing type on that side."
+   }
+  },
+  {
+   "primitive_id": "protect_the_general",
+   "name": "Protect the general: relieve the quarterback of the parts of the game requiring physical dexterity and energy, so he can specialize in directing the attack",
+   "verbatim_quote": "Therefore, I suggest that the coach protect his general to as great an extent as possible by relieving him from the worry and performance of those parts of the game",
+   "page": "Book p. 52, Ch. IV sec. III Quarterback; extracted text line 2138",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quarterback's scarcest resource is judgment at the decisive moment",
+    "Exhaustion, injury or an overheated brain impair that judgment, per the same passage, which continues: those parts require physical dexterity and energy, and he should focus on guiding the team"
+   ],
+   "breakdown_regime": "If the quarterback is also the best runner, passer or kicker, protection costs real production; the text admits some of Zuppke's own quarterbacks were forced to be all-around performers.",
+   "domain": "personnel_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Protect the decision node: route execution load away from the component whose judgment the whole system depends on, because its failure mode is cognitive and arrives exactly when the stakes peak.",
+    "source_operator": "protect_the_general",
+    "telemetry": "Late-game decision quality versus the quarterback's snap, carry and kick load."
+   }
+  },
+  {
+   "primitive_id": "simplicity_over_complexity",
+   "name": "Complex team play multiplies individual mistakes and destroys self-confidence; with fixed practice time, fundamentals plus simple team play is the efficient frontier",
+   "verbatim_quote": "The individuals using a complex offense and defense will make many more mistakes than the individuals of a more simple system, and the more mistakes a man makes the greater the tendency to lose self-confidence.",
+   "page": "Book p. 56, Ch. V sec. I Team Play of the Line; extracted text line 2253",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Practice time does not permit developing both fundamentals and complex team play to the highest degree",
+    "The coach selects for courage, initiative and fast reaction, traits complexity wastes"
+   ],
+   "breakdown_regime": "A stable veteran team can carry more complexity than the rule assumes; simplicity pushed too far becomes the predictability the tactics chapter punishes.",
+   "domain": "coaching_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Complexity budget: the complexity of the installed system is capped by execution reliability, and every added element must pay for the error rate and confidence loss it introduces.",
+    "source_operator": "simplicity_over_complexity",
+    "telemetry": "Error rates by play family, split by how long the family has been installed."
+   }
+  },
+  {
+   "primitive_id": "first_yard_line_priority",
+   "name": "The team that controls the first yard beyond the line of scrimmage, all other things being equal, should win; the line is the most important part of the team",
+   "verbatim_quote": "The team that controls the first yard beyond the line of scrimmage, all other things being equal, should win.",
+   "page": "Book p. 57, Ch. V sec. I; extracted text line 2277",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Line play gates back play: upon the line's play the success of the attack hinges more than on the backs, per the following sentences"
+   ],
+   "breakdown_regime": "The claim is explicitly ceteris paribus; a passing attack can score over the line entirely, and all other things are rarely equal.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gating-resource priority: find the resource that gates all downstream production (here the first yard) and weight it above the downstream production it enables.",
+    "source_operator": "first_yard_line_priority",
+    "telemetry": "Line win rate in the first yard versus game and drive outcomes."
+   }
+  },
+  {
+   "primitive_id": "wedge_apex_switching",
+   "name": "Wedge attack with apex switching: when the designated apex is jammed, an adhering lineman immediately becomes the new apex and the back switches to his wake",
+   "verbatim_quote": "Should the designated apex run into a jam so that his forward movement is blocked, then one of the adhering linemen immediately becomes a new apex",
+   "page": "Book p. 60, Ch. V sec. I(B) The Wedge; extracted text line 2367",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Linemen charge shoulder to shoulder as a tight, adhesive mass toward the designated apex",
+    "The back runs sheltered in the apex's wake rather than at an opening"
+   ],
+   "breakdown_regime": "If the wedge is halted inside the first yard it fails entirely; mass-momentum plays of this family were later restricted by rule changes.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Dynamic leader election inside a moving structure: the front role passes automatically to whichever member still has forward movement, so the structure degrades gracefully instead of dying with its first leader.",
+    "source_operator": "wedge_apex_switching",
+    "telemetry": "Interior run surge, second-effort yards and stuff rate."
+   }
+  },
+  {
+   "primitive_id": "play_cycle",
+   "name": "The play cycle: one or two straights, one or two slants, one angle play and one or two forward passes, all starting from the same initial formation and inheriting each other's mannerisms",
+   "verbatim_quote": "I am convinced that no group of plays is complete unless each carries one or two straights, one or two slants, one angle and one or two forward passes, all starting from the same initial formation. Such a group I call a \"play cycle.\"",
+   "page": "Book p. 61, Ch. V sec. II The Cycle of Plays; extracted text line 2423",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense cannot be allowed to read the intention from the formation or from the backs' first movements",
+    "Later plays in the cycle inherit the mannerisms of the earlier ones, so each play sells the others"
+   ],
+   "breakdown_regime": "Overloading the team with plays causes indecision, the book's own warning at the head of the same section; a tell in any member's mannerisms breaks the inheritance for the whole cycle.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A family of actions sharing one observable initial state and diverging late: the opponent must defend the whole family from a single look, so value is created by the family's shared prefix, not by any single play. This is the book's central transferable structure.",
+    "source_operator": "play_cycle",
+    "telemetry": "Play distribution, success and defensive alignment by formation family."
+   }
+  },
+  {
+   "primitive_id": "diamond_defense_layers",
+   "name": "Diamond defense: four layers, the primary of six linemen, the secondary of the center and fullback, the tertiary of the halfbacks, the quartenary of the safety",
+   "verbatim_quote": "If the defensive formation is divided into four parts, six linemen compose the primary, the center and fullback the secondary, the halfbacks the tertiary, and the safety the quartenary.",
+   "page": "Book p. 79, Ch. VI Formations on Defense; extracted text line 2737",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The center, although part of the secondary, plays in the line",
+    "The alternative three-part structure in the same chapter is the block defense"
+   ],
+   "breakdown_regime": "The four-layer split assumes two-way players under 1922 substitution limits; wide spread formations stretch the layer geometry past its design.",
+   "domain": "defensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defense in depth with responsibility assigned by depth band: each layer exists to handle exactly what the layer in front of it cannot, and is positioned and coached for that residue.",
+    "source_operator": "diamond_defense_layers",
+    "telemetry": "Yards and completions allowed by the depth at which plays terminate."
+   }
+  },
+  {
+   "primitive_id": "secondary_reads_tells",
+   "name": "The secondary defense is taught to watch the opponent's quarterback continually and to read the mannerisms and telltale stances of the backs",
+   "verbatim_quote": "Each individual should be taught to watch continually the opponent's quarterback, and the mannerisms and telltale stances of the backs.",
+   "page": "Book p. 86, Ch. VI sec. II Secondary Defense; extracted text line 2923",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Offensive players leak intent: the quarterback by his eyes or body movement, the designated receiver by tightening up, per the same paragraph",
+    "The secondary also shifts position so the offense cannot locate its men in advance"
+   ],
+   "breakdown_regime": "A disciplined offense masks its tells (the book teaches masking on offense too), and a secondary that over-reads is beaten by fakes; the read must be confirmed by the ball.",
+   "domain": "defensive_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Opponent leakage features: pre-action micro-signals of the actors predict the action class before the main event arrives, and are worth collecting as first-class features rather than as coaching folklore.",
+    "source_operator": "secondary_reads_tells",
+    "telemetry": "Pre-snap stance, alignment and gaze features versus the play that follows, from charting or tracking."
+   }
+  },
+  {
+   "primitive_id": "tertiary_conservatism",
+   "name": "The tertiary must play as conservatively as possible and not be drawn from position until the opponent's play has uncoiled to the point where its direction is beyond doubt",
+   "verbatim_quote": "The tertiary must play as conservatively as possible and not allow themselves to be drawn from their position until the opponent's formation or concentration of play has uncoiled itself to such an extent that there is no doubt as to its direction.",
+   "page": "Book p. 87, Ch. VI sec. III Tertiary Defense; extracted text line 2982",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The tertiary's one duty is the plays the primary and secondary cannot handle: trick plays, sweeping end runs, forward passes, onside kicks"
+   ],
+   "breakdown_regime": "Excessive patience concedes short gains and completions; once direction is certain the tertiary must come up with full commitment, and the text's own refrain is: don't be fooled, but also don't be late.",
+   "domain": "defensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Reserve-layer discipline: the deepest reliable layer trades reaction speed for certainty and refuses to spend itself on unresolved information, because there is no layer behind it.",
+    "source_operator": "tertiary_conservatism",
+    "telemetry": "Explosive plays allowed versus tertiary depth and trigger timing."
+   }
+  },
+  {
+   "primitive_id": "four_threat_man",
+   "name": "The four threat man: from a single lineup he may run, throw, punt, or drop kick, and his mere existence bends the defense's stance and taxes its sustained attention",
+   "verbatim_quote": "the man who from a certain lineup may do any one of four things, namely, run, throw, punt, or drop kick.",
+   "page": "Book pp. 99-100, Ch. IX The Forward Pass; extracted text line 3260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One player credibly holds all four options from the same lineup",
+    "The defense must honor every branch, which tires its power of sustained attention, per the same passage"
+   ],
+   "breakdown_regime": "A threat never exercised stops being honored; the player must actually run, throw, punt and kick often enough to keep all four branches live.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Option value of a multi-action node: much of the value sits in the opponent's forced coverage of the branches not taken, so the node is worth more than the production of whichever branch fires.",
+    "source_operator": "four_threat_man",
+    "telemetry": "Defensive alignment and depth shifts versus the threat player's position and the branch actually used."
+   }
+  },
+  {
+   "primitive_id": "pass_run_indistinguishability",
+   "name": "Forward pass and running plays must be constructed so the defense cannot detect, from the formation or the stance, which of the two to expect",
+   "verbatim_quote": "it is very important that the forward pass and running plays be constructed in such a way that the defense cannot detect, from the formation or the Stance, which of the two to expect.",
+   "page": "Book pp. 100-101, Ch. IX The Forward Pass; extracted text line 3285",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense keys its stance and attention on formation and stance",
+    "Successful passes then drive the defense back and make the ordinary slants and straights succeed, per the same passage"
+   ],
+   "breakdown_regime": "Down, distance, score and field position still leak the likely choice no matter how clean the presentation; construction cannot fix a skewed tendency.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Indistinguishability constraint on action families: the observable pre-action state must carry as little information as possible about which action class follows, and the residual leak should be measured, not assumed away.",
+    "source_operator": "pass_run_indistinguishability",
+    "telemetry": "Predictability of play class from pre-snap features alone, audited per formation."
+   }
+  },
+  {
+   "primitive_id": "throw_to_man_vs_zone",
+   "name": "Two completion methods: in the first the ball is thrown to the man, in the second it is thrown into a zone the receiver runs to",
+   "verbatim_quote": "In the first method the ball is thrown to the man, in the second into a zone.",
+   "page": "Book p. 102, Ch. IX The Forward Pass; extracted text line 3311",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A signal designates either the receiver's approximate distance and direction, or a limited zone",
+    "In the zone method the thrower fixes on the zone and may throw before he sees the receiver"
+   ],
+   "breakdown_regime": "Zone throws fail when a defender sits in the zone; man throws fail when the route is disrupted or the receiver is rerouted.",
+   "domain": "passing_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two targeting modes: track the moving target, or deliver to a predicted region on a timing commitment; the second mode trades observation for synchronization and is the ancestor of timing-based route concepts.",
+    "source_operator": "throw_to_man_vs_zone",
+    "telemetry": "Completion rate by throw type, receiver separation at throw time and at arrival."
+   }
+  },
+  {
+   "primitive_id": "screened_pass",
+   "name": "Screened pass: the five linemen run downfield in closest formation without blocking anyone, hampering defenders by forcing each to select an opening, while the receiver catches the ball behind their protection",
+   "verbatim_quote": "With the snap of the ball the five linemen from tackle to tackle run down the field in closest possible formation and toward the secondary or a tertiary, not blocking any man, but hampering his freedom of action by compelling him to select an opening through which he may force his way to bat down the ball.",
+   "page": "Book p. 107, Ch. IX Arrangement V Screened Pass; extracted text line 3392",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Era rules permitted this downfield structure; the design dates to about 1906 and was used almost entirely by the Oak Park High School teams of 1910-1912, per the text",
+    "Two or three backs stay back to protect the thrower and tackle a possible interceptor"
+   ],
+   "breakdown_regime": "The screen concedes immediate pressure on the thrower, and later rules on ineligible receivers downfield narrowed the design sharply.",
+   "domain": "passing_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interference without contact: a moving formation can deny an opponent his path by occupying his decision space and forcing a choice of gaps, rather than by applying force to his body.",
+    "source_operator": "screened_pass",
+    "telemetry": "Screen and downfield-structure pass success, by the path the nearest defender is forced to take."
+   }
+  },
+  {
+   "primitive_id": "hurry_the_thrower_first",
+   "name": "A successful forward pass defense begins by hurrying the thrower, before any coverage assignment is considered",
+   "verbatim_quote": "But under no circumstances should it be forgotten that a successful defense begins by hurrying the thrower.",
+   "page": "Book pp. 120-121, Ch. X Forward Pass Defense, introduction; extracted text lines 3686-3690",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coverage cannot hold indefinitely against an unhurried thrower",
+    "The coach scouts the opponent's one or two star receivers for special watching, per the same introduction, but pressure remains first"
+   ],
+   "breakdown_regime": "A reckless rush opens run, draw and screen lanes; the same chapter requires the end to rush from the outside with intent to tackle, so a faked run does not strand him.",
+   "domain": "pass_defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Attack the generator, not the outputs: degrading the decision maker's available time is prior to defending each of his options, because it worsens all of them at once.",
+    "source_operator": "hurry_the_thrower_first",
+    "telemetry": "Pressure rate versus completion, interception and sack splits."
+   }
+  },
+  {
+   "primitive_id": "shift_surprise_disorganization",
+   "name": "The shift (the hep and go) succeeds by surprise: its success hinges on disorganizing the primary line of the opponents",
+   "verbatim_quote": "The shift to be successful must contain the element of surprise. Its success hinges upon disorganizing the primary line of the opponents.",
+   "page": "Book p. 130, Ch. XI sec. II The Hep and Go, or the Shift; extracted text line 3855",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The shifting side knows by signal which way it will hep and so holds the advantage of time",
+    "The defense can counter by varying its own line-up from down to down, per the same section"
+   ],
+   "breakdown_regime": "The shift carries an inherent disorganizing uncertainty about its own men's exact duties when the defense is not lined up as anticipated, and it costs far more drill time; between equal teams late in the season the book finds neither method superior.",
+   "domain": "offensive_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pre-action reconfiguration trade: movement before the snap buys opponent disorganization at the price of own-side certainty, and the price is paid in practice time; the trade is only good while the opponent has not adapted.",
+    "source_operator": "shift_surprise_disorganization",
+    "telemetry": "Shift frequency versus defensive alignment errors and own assignment errors."
+   }
+  },
+  {
+   "primitive_id": "system_governs_generalship",
+   "name": "Generalship is supplied by the system: the system develops football brains, controls the football thought of the quarterback, and furnishes him the data on which to base his generalship",
+   "verbatim_quote": "The system develops football brains, controls the football thought of the quarterback, and furnishes him the data on which to base his generalship.",
+   "page": "Book p. 135, Ch. XII Generalship; extracted text line 4057",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system is built from the history of played games, studied by the coaches over many years, against the quarterback's few seasons",
+    "The system must stay flexible enough that the general can extricate it from a groove, per the same chapter"
+   ],
+   "breakdown_regime": "A quarterback who tries to be superior to the system proves himself a disorganizer, per the text; the opposite failure is a system so rigid and tradition-bound that it cannot evolve.",
+   "domain": "decision_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A policy prior over field decisions: individual choice is regularized by a precomputed system built from studied history, which supplies the play relations and the data, while the field general handles only the local state.",
+    "source_operator": "system_governs_generalship",
+    "telemetry": "Decision audit: called plays versus system prescriptions, split by situation and outcome."
+   }
+  },
+  {
+   "primitive_id": "when_in_doubt_punt",
+   "name": "Quarterback rule one: when in doubt, punt; the punt is the strongest offensive as well as defensive play",
+   "verbatim_quote": "When in doubt, punt. The punt is the strongest offensive as well as defensive play.",
+   "page": "Book p. 139, Ch. XII sec. I Quarterback rules, rule (1); extracted text line 4211",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A perfectly executed punt exchanges the ball for about forty yards of valuable territory, the figure given in the same chapter",
+    "Zone rules refine it: punt on first down in the danger zone, on second or third in the kicking area, per rules (3) and (5)"
+   ],
+   "breakdown_regime": "The book itself lists the overrides: when outclassed in punting, when behind late, and inside the last ten yards the ball is not given up on fourth down.",
+   "domain": "decision_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A standing default action under uncertainty: a low-variance territory exchange is the default, and departing from it requires a named situational reason rather than a feeling.",
+    "source_operator": "when_in_doubt_punt",
+    "telemetry": "Punt-versus-continue decisions by field zone, down and score, with realized outcomes."
+   }
+  },
+  {
+   "primitive_id": "punt_pass",
+   "name": "The punt pass: in the kicking area, select a long forward pass such that, if it is intercepted, it will have the value of a punt, an exchange of the ball for yardage",
+   "verbatim_quote": "select a long forward pass which may be called a punt pass, so that in case it is intercepted it will have the value of a punt, namely, an exchange of the ball for yardage.",
+   "page": "Book p. 140, Ch. XII sec. I Quarterback rules, rule (10); extracted text line 4245",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The interception point must be deep enough to equal a punt's exchange of ball for yardage",
+    "The play is prescribed for the kicking area, not for a team's own danger zone"
+   ],
+   "breakdown_regime": "An interception that is returned, or caught short, destroys the equivalence; the concept needs a thrower who can actually reach punt depth.",
+   "domain": "decision_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Downside-equivalent aggression: choose the aggressive action whose failure state approximates the safe action's outcome, so the gamble is priced by its worst realistic case rather than by its headline risk.",
+    "source_operator": "punt_pass",
+    "telemetry": "Long pass outcomes by field zone versus net punt yardage from the same zones."
+   }
+  },
+  {
+   "primitive_id": "game_charting_statistical_audit",
+   "name": "Chart every play of a game and audit it statistically by quarter (first downs, rush and pass yards, returns, lost ground, penalties), then name the tactical errors against the plan",
+   "verbatim_quote": "\"A\" was thrown for a loss of 44 yards in 8 downs. \"B\" was thrown for a loss of 16 yards in 5 downs.",
+   "page": "Book p. 145, Ch. XII sec. III(A) Statistical Summary of the Game; extracted text line 4494",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The worked example charts a full 1921 Big Ten game, won by A 7-0, with both teams charted identically",
+    "The audit compares the chart against the strategic map and lists tactical errors and successful tactics, including B's continued use of one compact offense in all zones"
+   ],
+   "breakdown_regime": "One game is a very small sample and the error-naming is narrative rather than statistical; several of the printed tables are partly garbled in this scan.",
+   "domain": "measurement_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Full-game telemetry plus post-hoc audit: record every play with formation and result, summarize by phase, and convert deviations from the plan into named, countable errors; the chart, not memory, is the record the next plan is built from.",
+    "source_operator": "game_charting_statistical_audit",
+    "telemetry": "The chart itself: play-by-play with formation code, down, gain, result and return data."
+   }
+  },
+  {
+   "primitive_id": "numbering_the_play_only",
+   "name": "Signal systems settled by experiment: numbering the play only is the simplest and therefore the best system, ahead of numbering the men or numbering the spaces",
+   "verbatim_quote": "After having experimented with the three systems, I am firmly convinced that numbering the play is the simplest and therefore the best system.",
+   "page": "Book p. 152, Ch. XIII Signals, introduction; extracted text line 4701",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Numbering men or spaces forces exceptions as soon as eccentric formations and a forward pass attack develop, per the same introduction"
+   ],
+   "breakdown_regime": "Play-only numbering concentrates all meaning in one number, which must then be disguised by key numbers and digit splitting, the subject of the following sections.",
+   "domain": "signal_system",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Encoding choice: address the action directly rather than composing it from addressed parts, when composition forces an exception system that grows faster than the code itself.",
+    "source_operator": "numbering_the_play_only",
+    "telemetry": "Signal error and delay rates by encoding system in practice."
+   }
+  },
+  {
+   "primitive_id": "three_week_curriculum",
+   "name": "The three-week install: at the end of three weeks a team should own the punt, a line smash, an end run and three forward passes from the punt formation, and a line smash, a tackle smash, a crisscross and two forward passes from the compact formation",
+   "verbatim_quote": "At the end of three weeks a team should have the punt, a line smash, an end run, and three forward passes from the punt formation; a line smash, a tackle smash, a crisscross, and two forward passes from the compact formation.",
+   "page": "Book p. 162, Ch. XV sec. I(C) Third Week; extracted text line 4978",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fundamentals are repeated every week while one new cycle is added at a time, punt formation first and the compact cycle on the Friday of week two",
+    "Scrimmage begins only once each man knows his duties, per the same section"
+   ],
+   "breakdown_regime": "The schedule assumes a three-week preseason with twice-daily early practices; an in-season install must compress it and accept a smaller owned inventory.",
+   "domain": "training_system",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Staged capability curriculum with a dated inventory gate: breadth is added one family at a time on top of continuously repeated fundamentals, and the owned set at each date is named exactly.",
+    "source_operator": "three_week_curriculum",
+    "telemetry": "Install checklist completion by week, and error rates for newly installed versus established families."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "282273867365c790-t1",
+   "think": "This book is the printed form of a working coach's operating system, and it should be read as a system rather than as a collection of tips. Robert Zuppke, head coach at Illinois, distilled nine years of a summer course for coaches, roughly twelve hundred of them by his own count in the introductory note, into fifteen chapters that move in a deliberate order: first the ball itself (passing, catching, kicking, carrying, falling on it), then the two contact skills (tackling and blocking), then position manuals for linemen and backs, then team structures (two rival methods of line attack, the play cycle, layered defensive formations), then the set pieces (punt formation and punt defense), then the forward pass as an attacking and defending system, then tempo (the deliberate get set and go against the shifting hep and go), and finally the layer that governs all the others: generalship as a precomputed system, a worked statistical audit of a real 1921 Big Ten game, signal encodings, and a week by week curriculum for installing the whole thing. The architecture matters for a reasoning engine because the book keeps separating three kinds of knowledge that are easy to confuse. The first is mechanics: contact points, stances, strike points four inches above the knee, the perpendicular axis of a drop kick. These are stated as physical facts about bodies and a ball, and they are trained by repetition until they are subconscious. The second is structure: the play cycle, in which straights, slants, an angle play and passes all leave from one formation wearing each other's mannerisms; the diamond defense, in which four layers each own exactly the residue the layer ahead cannot handle; the complementary pairing of a gambling end with a waiting tackle. Structures exist to control what the opponent can know and what he must defend. The third kind is decision policy: zone-indexed rules for the quarterback (punt on first down in the danger zone, on second or third in the kicking area, never surrender the ball on fourth down outside the scoring zone), the punt pass whose interception is worth a punt, and above all the doctrine that the system, built from studied history, supplies the generalship and the field general merely executes inside it. Several mechanisms in the book transfer directly. Masking is one: the center starts long and short snaps from an identical hold, the passer never telegraphs, the backs never sway before the start, and whole play families share one observable prefix, so that the opponent's pre-action information is driven toward zero and then measured only by its residue, the tells the secondary is taught to read. Layered conservatism is another: the deeper the defensive layer, the longer it waits for certainty, because there is nothing behind it. A third is the downside-equivalent gamble, the punt pass, which prices an aggressive call by its failure state rather than its headline. A fourth is the audit loop: chart every play of a game, summarize by quarter and by attack type, and convert the deviations from the strategic map into named tactical errors, including the sin the book keeps returning to, doing the same thing in all zones until the opponent solves it. The limits are equally clear. The rules world is 1922: pass restrictions are recent history, players play both ways, substitution is limited, and several designs, above all the screened pass with five linemen downfield, were later legislated away. Nothing is quantified beyond counts and averages from a single charted game; there are no probabilities, no sample sizes, and the statistical chapter is an audit method rather than an inference method. Personnel doctrines assume interchangeable two-way athletes. Read with those limits marked, the book remains a remarkably early statement of ideas a modern reasoning engine still needs: shared-prefix action families, leakage control, depth-indexed patience, protection of the decision node, and a chart-everything audit discipline. Two further features deserve record because they show the system auditing itself. The first is the treatment of the shift. Zuppke originated a three-part shift and used it with success, yet his chapter on it is even-handed to the point of suspicion: he lists the shift's costs in drill time and in its own men's uncertainty about their duties, describes how a defense varies its line-up to cancel the advantage, and concludes that between two teams of equal strength late in the season neither the shifting nor the non-shifting method is superior. A coach selling his own invention would not write that paragraph; a coach building a system writes it because the system's honesty about its own tools is what keeps the tools from being overused. The second is the statistical chapter, which charts a complete Big Ten game, the winner scoring once, and then reads the chart against the strategic map to produce a list of tactical errors: one team played a compact offense in all zones and was thrown for losses doing it, punted from positions where the rules said to attack, and wasted its strongest play by using it where the defense expected it. The errors are not about effort or talent; they are about applying the right action in the wrong zone, which is exactly the class of mistake a chart can catch and memory cannot. The curriculum chapter closes the loop between knowing and installing: fundamentals every week without exception, one new play family at a time, the punt formation cycle first because it is the most open and the most forgiving, the compact cycle second, scrimmage withheld until every man knows his duties, and a named inventory of what the team owns at the end of each week. The book therefore contains its own implementation plan, its own audit method, and its own decision policy, which is why it still reads as a system rather than as a memoir.",
+   "retrocausal_genealogy": "The book descends from the rugby-derived mass game of the Walter Camp era, through the crisis and rule reforms that legalized the forward pass in 1906 and progressively opened the field. Zuppke's own line runs from Oak Park High School, where his teams of 1910 to 1912 ran the screened pass almost entirely, to Illinois, where his three-part shift was originated and used with success, as the shift chapter records. The rival methods he weighs, the Minnesota shift and the Chicago formation, are named in the text as living alternatives, and the whole work is framed as the substance of twenty-two lectures delivered to other coaches, so its genealogy is pedagogical as much as tactical: it is one successful program's practice, written down for transmission.",
+   "theory_of_mind": "Zuppke writes for a reader who already coaches and has opinions; his stated task is to discriminate between whims and fancies and sound fundamentals, and he repeatedly marks contested points as matters of taste where the evidence is even, such as which foot a defensive lineman puts back. His model of the player is a creature of drilled habit and confidence: fundamentals must become subconscious, mistakes destroy self-confidence, and courage is contagious from the center outward. His model of the opponent is a reader of tells with a finite budget of attention, which the forward pass exists to tax; nearly every offensive doctrine in the book is aimed at that reader, and nearly every defensive doctrine is aimed at becoming a better one.",
+   "cross_layer_veto": "Several doctrines in the book veto others outright. Simplicity vetoes complex team play: practice time is finite, so an installed complexity that raises the error rate is rejected no matter how clever it is. The golden rule vetoes defensive gambling: no underneath aggression is allowed to concede the long completion. The zone rules veto fourth-down adventure outside the scoring zone, and the when-in-doubt rule vetoes the quarterback's improvisation in favor of the punt. The system vetoes the general himself: the moment he tries to be superior to it, he becomes a disorganizer. And protection of the thrower vetoes the tempting extra receiver, because the play's first duty is that the throw happen at all."
+  }
+ ],
+ "universal_lens": "Read outside football, this is a manual for building any skilled collective that must act under an observing adversary. Its recurring moves are general: make your own pre-action behavior carry no information about your choice; organize actions into families that share an opening and diverge late; stack defenses in depth and make each deeper layer more patient than the one before; protect the judgment of the decision maker by unloading his execution duties; price gambles by their failure state; and chart everything so the next plan is built from a record rather than from memory. Any domain with drilled fundamentals, an adaptive opponent and a scarce practice budget has the same shape.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book is a primary source in the history of football method: an early, explicit statement of play families from a single formation, layered defense with named strata, zone-indexed decision rules for the quarterback, and a complete charted game audit from 1921, all from a Hall of Fame program builder teaching other coaches. It anchors the institute's account of how the open game was systematized in the two decades after the forward pass was legalized, and its curriculum chapter is a period document on how a complete system was installed in three weeks of practice.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine the transferable assets are structural, not tactical: the play cycle as a shared-prefix action family whose value is the opponent's forced coverage; leakage and tell features read from pre-action behavior; depth-indexed patience for reserve layers; the punt pass as downside-equivalent aggression; zone and down indexed decision defaults with named overrides; and the chart-everything audit loop that converts a game into countable deviations from plan. These map onto the engine's matchup and situation layers as ways of representing what an opponent must defend and what a decision is worth when it fails, with no betting content involved."
+}
