@@ -1,0 +1,726 @@
+{
+ "book_id": "6851aef721cc984d",
+ "source_status": "COMPLETE",
+ "source_note": "Walter Camp, The Book of Foot-Ball, The Century Co., New York, 1910 (Walter Camp's Library of Sport). Complete extracted text read in full: 407,137 bytes, 9,832 lines, ten chapters from Early History through All-Time All-America Teams. The PDF is a scanned-image edition and the extraction carries occasional OCR garbling, so every quote was taken from a clean span and verified as a contiguous substring of the extracted text file after normalization; page fields give chapter, section, and extracted-text line anchors. The work contains no equations, so latex is empty throughout and every primitive is a qualitative mechanism, rule, or technique in Camp's own words. Era scoring values in the text: field-kick goal 3, goal from touchdown 6, touchdown without goal 5, safety 2.",
+ "primitives": [
+  {
+   "primitive_id": "team_play_problem_solving",
+   "name": "Football as a coordination problem, not a force contest",
+   "verbatim_quote": "It is a problem to be solved by the means of eleven men working together along lines for which that particular team is best adapted",
+   "page": "Ch. I, Early History; text lines 746-751",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Eleven players can be trained to act on one shared plan",
+    "A team's comparative advantage lies in the lines of play it is best adapted to, not in generic strength"
+   ],
+   "breakdown_regime": "Fails when personnel cannot execute coordinated assignments, and when an opponent's raw athletic edge is so large that coordination gains cannot close it.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to any multi-agent contest system where output is a joint product: the unit of analysis is the coordinated scheme, not the individual. In engine terms, team-level scheme fit is a first-class factor above player sums.",
+    "source_operator": "position_specialization",
+    "telemetry": "Scheme-level outcomes (drive success by play family) versus summed player ratings; divergence between the two measures the coordination term."
+   }
+  },
+  {
+   "primitive_id": "snap_back_controlled_delivery",
+   "name": "Controlled ball delivery: the snap-back as a reliability mechanism",
+   "verbatim_quote": "that the hand is used instead of the foot, and the center or snap-back has undisturbed possession of the ball, it is unusual for him to fail in properly sending the ball to his quarter.",
+   "page": "Ch. II, Foot-Ball in America; text lines 1305-1311",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The center has undisturbed possession before the snap",
+    "Delivery accuracy is trainable to near-certainty"
+   ],
+   "breakdown_regime": "Fails on a wet or mishandled ball and against defenses that legally disrupt the snap; the mechanism assumes a protected pre-snap interval that later rule changes had to keep defending.",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to any initiated-process system: a low-variance trigger action that starts every play makes downstream planning possible. Engine analogue: exchange and snap reliability as a drive-level variance reducer.",
+    "source_operator": "quarterback_directed_planning",
+    "telemetry": "Snap and exchange error rates by team and conditions; drives lost to exchange failures."
+   }
+  },
+  {
+   "primitive_id": "quarterback_directed_planning",
+   "name": "The directing mind: one player assigns the ball by plan",
+   "verbatim_quote": "quarter then directs the course of the play, so that scientific planning is possible ; whereas in the old method the element of chance was far greater than that of skill.",
+   "page": "Ch. II, Foot-Ball in America; text lines 1312-1316",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A single director sees the whole plan and the defense",
+    "Removing chance from ball distribution raises the value of preparation"
+   ],
+   "breakdown_regime": "Fails when the director's reads are wrong or predictable; central direction is a single point of failure that disguise and variation must protect.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to centralized play-calling: a directing agent converts a prepared plan into assignments in real time. Engine analogue: play-caller tendency and adjustment quality as a team trait.",
+    "source_operator": "team_play_problem_solving",
+    "telemetry": "Play-caller tendency profiles and second-half adjustment deltas in play success."
+   }
+  },
+  {
+   "primitive_id": "position_specialization",
+   "name": "Division of labor: fixed positions with peculiar duties",
+   "verbatim_quote": "This division of players is now universal, and each position has duties and responsibilities peculiar to itself.",
+   "page": "Ch. II, Foot-Ball in America; text lines 1263-1265",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Players differ enough in build and skill that specialization beats generalism",
+    "Duties can be specified per position and drilled"
+   ],
+   "breakdown_regime": "Fails when a specialist is lost and no substitute shares the drilled duties, and in eras whose rules reward two-way generalists over one-way specialists.",
+   "domain": "organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to role specialization in any production system: output rises when each role's duties are narrow, specified, and rehearsed. Engine analogue: position-specific responsibility maps (who kicks, who runs, who protects) as structure for usage projection.",
+    "source_operator": "team_play_problem_solving",
+    "telemetry": "Usage concentration by position group; performance drop when a specialist is replaced by a non-specialist."
+   }
+  },
+  {
+   "primitive_id": "five_yard_rule_downs_distance",
+   "name": "Downs and distance: possession must be earned by advance",
+   "verbatim_quote": "five-yard rule,'' compelling a side to advance the ball at least five yards in three attempts or else surrender it to the opponents, at once effected an immeasurable improvement.",
+   "page": "Ch. II, The Five-Yard Rule; text lines 2246-2250 (printed p. 64)",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A side values possession enough that threatening it changes behavior",
+    "Advance can be measured objectively on the field"
+   ],
+   "breakdown_regime": "Fails if the required distance is set so low that stalling remains profitable, or so high that ordinary offense cannot function and the game collapses into kicking.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The founding constraint of the modern game: a fixed advance quota inside a fixed number of attempts converts possession into a resource that must be spent productively. Engine analogue: down-and-distance state as the core state variable of drive modeling.",
+    "source_operator": "distance_to_gain_remedy",
+    "telemetry": "Success rate by down and distance; expected points by field position and downs remaining."
+   }
+  },
+  {
+   "primitive_id": "distance_to_gain_remedy",
+   "name": "The distance dial: raise the quota to price out mass play",
+   "verbatim_quote": "there is just one specific against increased or increasing mass plays, and that is in the increase of the distance to be gained in three downs.",
+   "page": "Ch. III, The New Foot-Ball; text lines 2776-2782",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Offenses choose mass plays because they are profitable at the current quota",
+    "Rulemakers can observe play mix and adjust the quota"
+   ],
+   "breakdown_regime": "Fails when offenses find a new low-risk concentration the quota does not price, and each increase also taxes legitimate power football; Camp concedes the dial may have to be turned again and again.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A mechanism-design kernel: when a degenerate strategy dominates, do not ban it; change the constraint that sets its price until it is unprofitable. Engine analogue: constraint sensitivity analysis, asking which single parameter change most alters optimal play mix.",
+    "source_operator": "five_yard_rule_downs_distance",
+    "telemetry": "Play-mix shift after historical rule changes; share of massed-formation plays before and after quota changes."
+   }
+  },
+  {
+   "primitive_id": "interference_bodies_not_hands",
+   "name": "Interference legalized with a body-only constraint",
+   "verbatim_quote": "was therefore legalized by enacting a law that the side with the ball might interfere with their bodies, but not with their hands and arms, while the side on the defense could use their hands and arms in breaking through.",
+   "page": "Ch. II, Foot-Ball in America; text lines 1893-1899",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Blocking help for the runner cannot be eliminated in practice, so it must be regulated instead",
+    "Restricting the tool (bodies, not hands) shapes the technique that develops"
+   ],
+   "breakdown_regime": "Fails at enforcement: the line between body interference and holding is judgment, and offenses continually probe it; the asymmetry also hands the defense a durable structural edge.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to constraint-shaped technique in any regulated contest: what is forbidden defines the skill that evolves. Engine analogue: blocking scheme legality and penalty risk as part of run-game structure.",
+    "source_operator": "interlocked_interference_ban",
+    "telemetry": "Penalty rates for holding and illegal blocks by scheme; run success by blocking scheme."
+   }
+  },
+  {
+   "primitive_id": "scoring_values_1910",
+   "name": "The 1910 objective function: touchdown 5 or 6, field goal 3, safety 2",
+   "verbatim_quote": "In the scoring, the value of a field-kick goal is only three points, of a goal kicked from a touch-down, six ; if the touch-down does not result in a goal it counts five, and a safety by the opponents counts the other side two.",
+   "page": "Ch. II, Foot-Ball in America; text lines 2000-2006",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Players and captains optimize toward the printed values",
+    "Relative values, not absolute points, drive strategy"
+   ],
+   "breakdown_regime": "Fails as a description the moment values change: with the field goal at 3 against a touchdown at 5 or 6, kicking held a larger strategic share than it does under modern values, so era strategy cannot be read through modern prices.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The scoring vector is the objective function of the whole system; every strategic claim in the book is priced in these units. Engine analogue: era-specific scoring values must parameterize any historical game model before its decisions can be judged.",
+    "source_operator": "theory_of_chances",
+    "telemetry": "Score composition by era: share of points from kicks versus touchdowns."
+   }
+  },
+  {
+   "primitive_id": "flying_wedge_concealment",
+   "name": "Deland's flying wedge: momentum plus concealed direction",
+   "verbatim_quote": "Mr. L. F. Deland of Boston brought out with the Harvard team the flyingwedge, where the attack, by dividing its men into two groups and getting under headway, could conceal the direction of the attack until the two groups met and it was too late for the defense to adjust itself.",
+   "page": "Ch. III, The New Foot-Ball; text lines 3127-3135",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The attack can get under headway before the ball is live",
+    "Splitting into two groups hides the point of attack until the groups merge"
+   ],
+   "breakdown_regime": "Fails once the defense learns to hold its adjustment, and it was legislated away because concentrated momentum at one point was judged too dangerous; concealment bought one adjustment cycle, not a permanent edge.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to any attack that combines mass with late commitment: force is concentrated while the direction stays ambiguous until the defender's response window has closed. Engine analogue: formation and motion that delay defensive commitment as a measurable pre-snap trait.",
+    "source_operator": "common_formation_disguise",
+    "telemetry": "Success of plays by how late the point of attack is revealed (motion, shifts, unbalanced looks)."
+   }
+  },
+  {
+   "primitive_id": "new_football_1905_bundle",
+   "name": "The 1905 bundle: ten-yard rule, forward pass, on-side kick",
+   "verbatim_quote": "The year 1905 was the first year of this ** new foot-ball,\" as it was called; that is, the introduction of the ten-yard rule, the forward pass, and the on-side kick.",
+   "page": "Ch. III, The New Foot-Ball; text lines 3348-3351",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Three changes at once interact: the pass stretches the defense that the quota already forces to defend space",
+    "Players and coaches need seasons to learn a new possibility space"
+   ],
+   "breakdown_regime": "Fails as a clean experiment: because the changes landed together, their separate effects cannot be isolated from this text, and early failure of the pass reflected unlearned skill as much as defensive strength.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to bundled reform in any system: simultaneous constraint changes open a new strategy space whose exploration takes years. Engine analogue: era segmentation; models must not pool play data across the 1905 boundary as if the game were continuous.",
+    "source_operator": "distance_to_gain_remedy",
+    "telemetry": "Pass frequency and success by season after 1905; time for new plays to reach stable success rates."
+   }
+  },
+  {
+   "primitive_id": "defense_adaptation_arms_race",
+   "name": "Defensive adaptation erases a new play's first advantage",
+   "verbatim_quote": "The forward pass was smothered by the alertness of the defense, and the on-side kick was accurately judged and taken by the defense.",
+   "page": "Ch. III, The New Foot-Ball; text lines 3468-3471",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Defenses study the new play against the second eleven before facing it live",
+    "The attacker's edge is largest before the defense has reps against the play"
+   ],
+   "breakdown_regime": "Fails as a permanent law when the innovation is structurally sound rather than merely surprising; some plays survive adaptation because they stress a rule or a matchup, not just recognition.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to innovation decay in adversarial systems: a new tactic's yield falls as the opponent accumulates practice reps against it. Engine analogue: novelty discounting; a play family's early success should be projected to decay toward its structural value.",
+    "source_operator": "flying_wedge_concealment",
+    "telemetry": "Week-by-week success of newly introduced plays or formations across a season."
+   }
+  },
+  {
+   "primitive_id": "delayed_pass_time_purchase",
+   "name": "Buying time: the delayed long pass trades space for seconds",
+   "verbatim_quote": "The time elapsing while he was thus running back would allow the ends and possibly a half-back or a tackle, if the end was dropped back, just so many more seconds to run down the field",
+   "page": "Ch. III, The New Foot-Ball; text lines 3523-3528",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Receivers need elapsed time to reach deep zones",
+    "The passer can manufacture that time by retreating, at the cost of field position if the play fails"
+   ],
+   "breakdown_regime": "Fails against a rush that arrives before the routes develop, and the retreat itself concedes yards; the same seconds that free the receivers also free the defense to close on the passer.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A time-for-space exchange kernel: depth of route is bought with elapsed time, and elapsed time is bought with territory and risk. Engine analogue: time-to-throw versus route depth as coupled variables in pass modeling.",
+    "source_operator": "play_timing_value",
+    "telemetry": "Time to throw, route depth, and completion rate joint distribution; sack rate on slow-developing plays."
+   }
+  },
+  {
+   "primitive_id": "interlocked_interference_ban",
+   "name": "The 1910 ban: no pushing, pulling, or interlocked interference",
+   "verbatim_quote": "forbidding the player on the side in possession of the ball to make use of his hands, arms or body to push, pull or hold upon his feet the player carrying the ball, and also the prohibition of interlocked interference",
+   "page": "Ch. III, The New Foot-Ball; text lines 3825-3830",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Aiding the runner had escalated until the runner was effectively carried by his team",
+    "A bright-line ban is enforceable where a degree standard was not"
+   ],
+   "breakdown_regime": "Fails to end assistance innovation: blocking reorganized into legal forms, and each new form reopens the same legislative question Camp describes for the wedge era.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to arms-control rules in contests: ban the mechanism, not the intent, and expect the intent to reappear in compliant mechanisms. Engine analogue: era legality flags on play types when comparing across rule regimes.",
+    "source_operator": "interference_bodies_not_hands",
+    "telemetry": "Play-type frequency before and after the ban; emergence dates of replacement blocking forms."
+   }
+  },
+  {
+   "primitive_id": "seven_men_line_forward_pass_rule",
+   "name": "Formation legality: seven on the line, passer five yards back",
+   "verbatim_quote": "The attacking side must have seven men on the line of scrimmage that is the forward line. Any of the four men in their back field may make a forward pass provided he is five yards back of the line of scrimmage when making it",
+   "page": "Ch. V, General Strategy; text lines 6354-6359",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Formation constraints define which plays can exist at all",
+    "The five-yard depth requirement gives the defense a readable passing tell"
+   ],
+   "breakdown_regime": "Fails as the game liberalizes: later eras relaxed both constraints, and strategy built on the tells these rules create does not transfer across the boundary.",
+   "domain": "rules design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to interface constraints in system design: the legal formation is the API through which all plays must pass. Engine analogue: formation legality and passer depth as features that condition pass-play outcomes by era.",
+    "source_operator": "new_football_1905_bundle",
+    "telemetry": "Pass success by passer depth and formation across eras."
+   }
+  },
+  {
+   "primitive_id": "poe_reliability_selection",
+   "name": "Select for steadiness where one failure is catastrophic",
+   "verbatim_quote": "his selection for the play was more for his reliability and steadiness in critical positions than for any other reason.",
+   "page": "Ch. IV, Personality in Foot-Ball; text lines 4324-4327",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Performance under decisive pressure is a trait separable from ordinary skill",
+    "Coaches can observe steadiness across a season of practice"
+   ],
+   "breakdown_regime": "Fails when the steady man's skill floor is simply too low for the attempt, and single famous successes are weak evidence: Poe's kick is one observation, however well chosen the man.",
+   "domain": "selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to reliability selection in any high-variance role: for one-shot decisive tasks, choose the performer with the narrowest outcome distribution, not the highest mean. Engine analogue: kicker and specialist selection by variance profile in late-game states.",
+    "source_operator": "kennard_deliberate_practice",
+    "telemetry": "Specialist performance in high-leverage attempts versus ordinary attempts, split by performer."
+   }
+  },
+  {
+   "primitive_id": "kennard_deliberate_practice",
+   "name": "Manufactured specialist: a season of daily practice for one kick",
+   "verbatim_quote": "the coach of the Harvard team, defeated Yale as related in the last chapter by the successful development of a kicking-machine in the person of Kennard, who previous to and throughout the season had practised short, accurate drop-kicking.",
+   "page": "Ch. V, General Strategy; text lines 5467-5472",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The decisive skill can be identified before the season",
+    "Daily deliberate practice of one narrow skill, including equipment experiments, compounds into reliability"
+   ],
+   "breakdown_regime": "Fails when the anticipated decisive moment never arrives, and the opportunity cost is real: a roster spot and a summer spent on one skill are unavailable for anything else.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to deliberate practice targeted at a forecast bottleneck: find the one act the season may hinge on and over-train exactly that act. Engine analogue: specialist development curves as program-level traits that precede on-field outcomes.",
+    "source_operator": "poe_reliability_selection",
+    "telemetry": "Specialist accuracy trajectories across a season of focused practice; performance in the forecast game state."
+   }
+  },
+  {
+   "primitive_id": "fundamentals_first",
+   "name": "Fundamentals before system: block, get through, tackle low",
+   "verbatim_quote": "The reason why we had such a close call last year was because we have been gradually drifting away from the good old principles of blocking your man, getting through, and tackling low. I tell you, any team that masters those fundamentals in the first month can then build up a game that will win.",
+   "page": "Ch. V, General Strategy; text lines 5198-5205",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A small set of contact fundamentals underlies every scheme",
+    "Drift from fundamentals, not scheme failure, explains most decline"
+   ],
+   "breakdown_regime": "Fails as a complete diagnosis when the scheme itself is unsound or the opponent is simply better; returning to fundamentals cannot fix a structural mismatch, only reveal it honestly.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to base-skill gating in any training system: advanced structure is built only on mastered primitives, and regression is treated first as primitive decay. Engine analogue: tackling and blocking efficiency as foundational team factors beneath scheme factors.",
+    "source_operator": "graduated_scrimmage_exposure",
+    "telemetry": "Missed tackle rate and block win rate as leading indicators of team performance."
+   }
+  },
+  {
+   "primitive_id": "theory_of_chances",
+   "name": "Strategy must take careful cognizance of the theory of chances",
+   "verbatim_quote": "Modern strategy on the gridiron must take cognizance and that, too, very careful cognizance, of the theory of chances.",
+   "page": "Ch. V, General Strategy; text lines 5593-5596",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Plays have outcome distributions, not outcomes",
+    "A captain can learn to weigh those distributions from experience"
+   ],
+   "breakdown_regime": "Fails without records: Camp offers the discipline but no frequencies, so his chance judgments are uncalibrated intuition; the doctrine is right and the era's data to feed it did not yet exist.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The book's decision kernel: evaluate a play by its distribution of outcomes and its price, never by its best case. Engine analogue: every candidate play and projection carries an explicit outcome distribution and an uncertainty statement.",
+    "source_operator": "stake_asymmetry_gamble",
+    "telemetry": "Calibration of stated play expectations against realized outcome distributions."
+   }
+  },
+  {
+   "primitive_id": "stake_asymmetry_gamble",
+   "name": "Refuse the asymmetric wager: a touchdown staked against four yards",
+   "verbatim_quote": "putting up their stake of a touch-down against opponents ' stake of four or five yards, they determined to cut these plays out.",
+   "page": "Ch. V, General Strategy; text lines 5587-5590",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Downside and upside can be stated in the same units before the play is called",
+    "A play that risks a catastrophe to gain a trifle is bad at any success rate short of certainty"
+   ],
+   "breakdown_regime": "Fails when the game state changes the prices: trailing late, the same wager can become correct because the trifle is no longer what is being bought.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A stake-asymmetry kernel: compare what is risked with what is gained before judging a gamble; plays whose downside is a touchdown and whose upside is a few yards are cut on arithmetic, not taste. Engine analogue: risk-priced play evaluation by field position and game state.",
+    "source_operator": "theory_of_chances",
+    "telemetry": "Turnover and catastrophe rates on trick plays by field zone; realized value of gadget plays inside a team's own territory."
+   }
+  },
+  {
+   "primitive_id": "play_timing_value",
+   "name": "Timing as the value of an indirect play: shorter or longer, never equal",
+   "verbatim_quote": "depends upon its timing. The time should be either shorter or longer than the time consumed in a direct pass and run.",
+   "page": "Ch. V, General Strategy; text lines 5622-5626",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Defenders key their reactions to the expected duration of a direct play",
+    "An indirect play profits only by arriving off that expected beat"
+   ],
+   "breakdown_regime": "Fails when the defense plays assignment-sound rather than reacting to the beat, and elaborate timing plays carry execution costs that grow with every added exchange.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A timing kernel: the value of deception is measured as deviation from the defense's expected time-to-contact. Engine analogue: play duration and time-to-pressure as features; plays whose timing matches the direct-play template lose their deception value.",
+    "source_operator": "delayed_pass_time_purchase",
+    "telemetry": "Success of indirect and play-action style plays by how far their duration deviates from the team's direct-play baseline."
+   }
+  },
+  {
+   "primitive_id": "captain_sole_selection_authority",
+   "name": "One accountable selector: the captain alone picks the team",
+   "verbatim_quote": "The captain should have sole power to select his team. He may take the advice of his coach, or of committees; but the putting of a man on or the dropping of him off should rest in his hands alone.",
+   "page": "Ch. V, General Strategy; text lines 5708-5712",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Command on the field requires undivided authority over who plays",
+    "Advice can be heard without sharing the decision"
+   ],
+   "breakdown_regime": "Fails when the captain's judgment is the weakest available and no check exists; the doctrine trades selection quality for command clarity and accepts the trade openly.",
+   "domain": "organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to single-owner decision rights in any performing unit: consultation is wide, the decision is singular, and accountability follows the decision. Engine analogue: none direct; a governance primitive for how a staff's projections become one published line.",
+    "source_operator": "adapt_plays_to_material",
+    "telemetry": "LATENT_UNIDENTIFIABLE for on-field telemetry; observable only as decision latency and post-decision dispute inside an organization."
+   }
+  },
+  {
+   "primitive_id": "adapt_plays_to_material",
+   "name": "Fit the system to the material, never the reverse",
+   "verbatim_quote": "One of the great secrets of good team play lies in adapting each play most carefully to the men taking part in it.",
+   "page": "Ch. V, General Strategy; text lines 5723-5725",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A roster's strengths are fixed in the short run",
+    "Every play in the book has a version that suits heavy men and a version that suits fast men, or it should be cut"
+   ],
+   "breakdown_regime": "Fails when adaptation becomes excuse: a team that only does what it already does well becomes predictable, and some capacities must be built rather than accommodated.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to roster-conditioned scheme design: the playbook is a function of the personnel, re-derived each season. Engine analogue: scheme projections conditioned on the actual available players, not on a generic team template.",
+    "source_operator": "captain_sole_selection_authority",
+    "telemetry": "Performance of plays split by whether the personnel running them match the play's physical requirements."
+   }
+  },
+  {
+   "primitive_id": "common_formation_disguise",
+   "name": "One formation, several outlets: disguise by shared setup",
+   "verbatim_quote": "The signal given indicates to the runner and his assistants which outlet will be used, and the opponents are utterly unable from the position of the men to tell which the outlet will be.",
+   "page": "Ch. V, General Strategy; text lines 5821-5825",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The defense reads the formation before the snap and commits men to it",
+    "If several outlets share one formation, the read yields nothing and the defense cannot mass"
+   ],
+   "breakdown_regime": "Fails when the outlets are not equally credible: a formation whose run outlet is weak is a pass tell no matter how it is dressed, and each added outlet dilutes practice time for the others.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to information hiding by shared prefix: identical observable setup, divergent continuation chosen by a private signal. Engine analogue: formation-level play distribution entropy as a measure of how much a defense can actually know pre-snap.",
+    "source_operator": "flying_wedge_concealment",
+    "telemetry": "Play distribution entropy by formation; defensive success against low-entropy versus high-entropy formations."
+   }
+  },
+  {
+   "primitive_id": "cardinal_rule_field_position_risk",
+   "name": "The 25-yard rule: no venture plays near your own goal",
+   "verbatim_quote": "in both cases is not to venture such plays when within one's own 25-yard line, on account of the risk of the opponents securing a touch-down if a fluke be made.",
+   "page": "Ch. V, General Strategy; text lines 5949-5954",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A mistake's cost is set by field position: near your own goal it is a touchdown",
+    "The same play's risk is therefore not a property of the play but of where it is run"
+   ],
+   "breakdown_regime": "Fails as an absolute when trailing late forces variance-seeking, and a rigid zone rule can be exploited by defenses that know the venture plays are switched off there.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A field-position risk kernel: permissible play variance is a function of where the ball sits, because the cost of failure is. Engine analogue: play-calling and projection variance scaled by field zone, with catastrophe risk priced explicitly.",
+    "source_operator": "stake_asymmetry_gamble",
+    "telemetry": "Catastrophe rate (turnovers yielding immediate scores) on high-variance plays by field zone."
+   }
+  },
+  {
+   "primitive_id": "workload_distribution",
+   "name": "Distribute the work: no one or two men can do it all",
+   "verbatim_quote": "start with the premise that no one or two men can do all the work. The object must be to use each man to the full extent of his capacity",
+   "page": "Ch. V, General Strategy; text lines 5970-5973",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Fatigue is a hard physiological limit that training raises but does not remove",
+    "Each man's capacity is best spent on the work he is fitted for"
+   ],
+   "breakdown_regime": "Fails when the gap between the best man and his substitute is larger than the fatigue cost, and Camp's own text admits captains resist the principle precisely because the star is better even tired.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to load distribution in any fatigue-limited system: total output is maximized by spending each unit's capacity where its marginal value is highest, before exhaustion allocates it badly. Engine analogue: usage and snap-load curves as predictors of late-game performance decay.",
+    "source_operator": "undertrained_not_overtrained",
+    "telemetry": "Performance by quarter as a function of cumulative snaps and touches for key players."
+   }
+  },
+  {
+   "primitive_id": "weak_side_persistent_assault",
+   "name": "Find the weak side and press it all game",
+   "verbatim_quote": "At this weak side of the opponents, then, must the early efforts of a team be directed.",
+   "page": "Ch. V, General Strategy; text lines 6150-6152 (printed p. 218)",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Every line has a weaker side, usually by personnel and not by design",
+    "Repeated pressure compounds: the weak side tires, substitutes, and loses confidence"
+   ],
+   "breakdown_regime": "Fails when the weakness is a decoy or when the opponent can rotate strength to the point of attack; persistence also forfeits the information that probing elsewhere would have bought.",
+   "domain": "strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to weakness-targeting in adversarial allocation: identify the lowest-resistance sector and concentrate repeated effort there rather than distributing evenly. Engine analogue: matchup-targeting rates, how often an offense attacks a defense's weakest graded unit.",
+    "source_operator": "adapt_plays_to_material",
+    "telemetry": "Success rate of plays directed at a defense's weakest unit versus elsewhere; persistence of targeting across a game."
+   }
+  },
+  {
+   "primitive_id": "play_elimination_before_big_game",
+   "name": "Cut the playbook: eliminate plays not classed as successful",
+   "verbatim_quote": "Now comes a most difficult act for any captain, namely, the elimination of all plays that are not sufficiently well executed by his men to be classed on the average as successful plays.",
+   "page": "Ch. V, General Strategy; text lines 6204-6209 (printed p. 222)",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Practice and minor games reveal which plays the men actually execute well",
+    "A smaller book of mastered plays beats a larger book of half-mastered ones"
+   ],
+   "breakdown_regime": "Fails when elimination is done on weak evidence: plays that failed against strong minor-game opponents may be exactly the ones a championship defense cannot expect, and cutting shrinks the disguise set other plays depend on.",
+   "domain": "organization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to portfolio pruning under a mastery threshold: keep only what clears an execution bar measured in rehearsal. Engine analogue: play-family reliability grades from practice and early-season data gating late-season projection weight.",
+    "source_operator": "fundamentals_first",
+    "telemetry": "Play success in big games split by whether the play family cleared the team's own rehearsal bar."
+   }
+  },
+  {
+   "primitive_id": "second_eleven_opposition_engine",
+   "name": "The second eleven as the first team's strength source",
+   "verbatim_quote": "a large proportion of the strength and skill of the 'varsity comes directly from the opposition which the second eleven can daily offer.",
+   "page": "Ch. VI, The Field, Costumes and Training; text lines 6921-6924 (printed p. 250)",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Practice improvement is bounded by the quality of daily opposition",
+    "The scrub side needs its own competent leadership to offer real resistance"
+   ],
+   "breakdown_regime": "Fails when the second eleven is so weak that resistance is nominal, or so strong and unrestrained that it injures the men it exists to prepare.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to training-against-resistance in any skill system: the practice opponent is part of the production function, and investing in its quality pays out in the first team's skill. Engine analogue: program depth and practice quality as slow-moving team traits.",
+    "source_operator": "graduated_scrimmage_exposure",
+    "telemetry": "Performance against strong opposition as a function of roster depth and second-unit quality."
+   }
+  },
+  {
+   "primitive_id": "graduated_scrimmage_exposure",
+   "name": "Dose the contact: minutes of scrimmage increased gradually",
+   "verbatim_quote": "Then they begin with a very few minutes and work up gradually. If this were not done, there would be a great many accidents, and very likely good men would be out for a season.",
+   "page": "Ch. VI, The Field, Costumes and Training; text lines 7274-7277 (printed p. 263)",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Untrained bodies are injured by full contact loads",
+    "A graded ramp reaches full load with fewer losses than an immediate full load"
+   ],
+   "breakdown_regime": "Fails if the ramp is so cautious that the team reaches its first game underprepared for real contact speed; the dose protects the roster at some cost to early sharpness.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to progressive loading in any physical preparation system: exposure is a dose with a therapeutic window, titrated upward. Engine analogue: preseason snap ramps and early-season performance as a function of camp contact load.",
+    "source_operator": "second_eleven_opposition_engine",
+    "telemetry": "Injury rates and early-season performance by preseason contact exposure."
+   }
+  },
+  {
+   "primitive_id": "undertrained_not_overtrained",
+   "name": "Keep men undertrained rather than overtrained",
+   "verbatim_quote": "an overtrained man becomes too delicate for the rough, hard work, and perceptibly loses his vigor after a few sharp struggles.",
+   "page": "Ch. VI, The Field, Costumes and Training; text lines 6805-6808",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Peak vigor, not maximal conditioning, is what a violent short season consumes",
+    "The overtrained state shows itself as lost vigor after a few hard efforts"
+   ],
+   "breakdown_regime": "Fails for underprepared men in a long modern season, and the era's diagnostics were impressionistic: Camp can see staleness but cannot measure it, so the line between under and over is a judgment call.",
+   "domain": "training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to peak-management in periodized training: arrive slightly under the maximum load rather than past it, because the cost of staleness exceeds the cost of a small conditioning deficit. Engine analogue: workload and freshness indicators entering late-season projections.",
+    "source_operator": "workload_distribution",
+    "telemetry": "Late-season performance decay curves by cumulative workload; staleness indicators from practice data."
+   }
+  },
+  {
+   "primitive_id": "center_tempo_control",
+   "name": "The center sets the tempo: every play passes through one man's hands",
+   "verbatim_quote": "It should be borne in mind that all degrees of speed of attack depend quite largely upon this position, for the ball must come into the center's hands every time, except on certain fakes, before it is put in play and that this man absolutely determines how fast the game may be played.",
+   "page": "Ch. VII, The Development and Play of the Different Positions; text lines 7611-7617",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The ball must come into the center's hands on nearly every play",
+    "His speed of delivery bounds the whole team's speed of attack"
+   ],
+   "breakdown_regime": "Fails when the offense routes around the position with direct snaps and fakes, and a fast center who cannot block trades the tempo gain for a hole in the middle of the line.",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A bottleneck kernel: the throughput of the whole system is set by the one component every transaction must pass through. Engine analogue: snap-to-set tempo as a team trait with the center exchange as its rate limiter.",
+    "source_operator": "snap_back_controlled_delivery",
+    "telemetry": "Seconds between plays and drive pace by team; exchange quality of the starting center."
+   }
+  },
+  {
+   "primitive_id": "quarterback_chance_computation",
+   "name": "The quarterback as field computer of chances",
+   "verbatim_quote": "must work out from practical experience his own theories of chances, and be able to compute to a nicety the outcome of any one of his plays.",
+   "page": "Ch. VII, The Development and Play of the Different Positions; text lines 8082-8084",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Experience can be converted into usable outcome estimates",
+    "The director must also budget his men's fatigue while he computes"
+   ],
+   "breakdown_regime": "Fails when the estimates are confident and wrong: Camp demands computation to a nicety from a man with no recorded data, so the doctrine's quality depends entirely on the quality of one memory.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decision-maker kernel: the on-field director runs a continuous expected-value computation over plays, men, and fatigue states. Engine analogue: quarterback decision quality measured against model-expected outcomes of the plays actually chosen.",
+    "source_operator": "theory_of_chances",
+    "telemetry": "Play-selection value added: realized outcomes of chosen plays versus model expectation for the alternatives in the same state."
+   }
+  },
+  {
+   "primitive_id": "play_concealment_tells",
+   "name": "One play in three is betrayed before the snap",
+   "verbatim_quote": "one play in every three even now executed by the ordinary team is betrayed by some one in the back field of the attacking side before the play starts",
+   "page": "Ch. VII, The Development and Play of the Different Positions; text lines 8288-8291",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "Backs leak the play through stance, gaze, and early movement",
+    "The leak, not the design, is often what the defense actually stops"
+   ],
+   "breakdown_regime": "Fails as a fixed rate: the one-in-three figure is Camp's impression, not a count, and disciplined teams can drive the leak rate far lower, which is precisely his point in raising it.",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to information leakage in any signaled system: the channel that betrays intent is usually an uncontrolled side channel, not the designed signal. Engine analogue: pre-snap tell detection from alignment and movement data as a defensive information edge.",
+    "source_operator": "common_formation_disguise",
+    "telemetry": "Defensive success split by whether the backfield showed a detectable pre-snap tell."
+   }
+  },
+  {
+   "primitive_id": "end_play_diagnosis",
+   "name": "The end's first skill is diagnosis: read the play instantly",
+   "verbatim_quote": "To be able to diagnose a play instantly, and to get into position for it, is one of the essentials of end play to-day.",
+   "page": "Ch. VII, The Development and Play of the Different Positions; text lines 8004-8006",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "The end sees the play's first shape before anyone else on the defense",
+    "Recognition speed, trained by experience, converts directly into position"
+   ],
+   "breakdown_regime": "Fails against the forward pass and the on-side kick, which Camp himself notes made diagnosis harder: the read that beats a run is a liability against a fake.",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to pattern recognition at the edge of a defensive system: the widest defender is a sensor whose classification speed sets the defense's response time. Engine analogue: edge defender reaction and play-recognition grades as run and pass defense inputs.",
+    "source_operator": "defense_adaptation_arms_race",
+    "telemetry": "Edge defender success by play type, split by how quickly the play type can be identified from its first movement."
+   }
+  },
+  {
+   "primitive_id": "catching_low_not_chest",
+   "name": "Catch low, never on the chest: reception technique",
+   "verbatim_quote": "A man who catches the ball high, or takes it on his chest, is never a sure catcher, and almost always gets into difficulty before a game is over.",
+   "page": "Ch. VIII, Kicking, Catching and Passing; text lines 8444-8447",
+   "latex": "",
+   "symbol_and_unit_ledger": [],
+   "assumptions": [
+    "A ball taken low against the body is trapped by the body's give",
+    "A ball taken high or on the chest rebounds and arrives with the defender"
+   ],
+   "breakdown_regime": "Fails for balls that arrive high by necessity, and modern gloves and one-hand technique have moved the boundary Camp treats as fixed; the principle survives as securing the ball before running, not as the exact body position.",
+   "domain": "technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to error-proofing in reception tasks: choose the contact geometry that absorbs energy instead of reflecting it. Engine analogue: drop and muff rates by catch type as specialist reliability inputs.",
+    "source_operator": "poe_reliability_selection",
+    "telemetry": "Drop rates by target type and catch location for receivers and returners."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "camp1910_trace_contest_design",
+   "think": "This book is usually shelved as nostalgia, but read closely it is a manual of contest design written by the man who operated the design. Camp sat in the rules process for decades, and the chapters keep returning to one engineering loop: observe a degenerate strategy, find the incentive that makes it profitable, change the constraint that prices it, and watch for the next degenerate strategy. The block game was not beaten by exhortation or by better sportsmanship; it was priced out of existence by the five-yard rule, and when mass play crept back the same dial, the distance to be gained, was turned again from five yards to ten. Camp calls that dial an infallible remedy, and the confidence is the tell: he thinks of rules as prices, not as commandments. Around that spine the book builds a second layer, the strategy layer, where the captain is taught to think in stakes and chances rather than in plays. A trick play is not good or bad in itself; it is a wager. Near his own goal the wager stakes a touchdown against a gain of four or five yards, and the correct response is not courage but refusal. The third layer is the human layer: eleven specialists, each with duties peculiar to his position, coordinated by signals, directed by a quarterback who computes chances, and selected by a captain whose authority is absolute because divided authority dissolves command. What makes the book durable is that the three layers constrain one another and Camp never confuses them. He does not ask players to solve a rules problem with effort, and he does not ask the committee to solve an execution problem with legislation. When a play fails because the men cannot run it, the remedy is elimination from the book, not a new rule. When a whole style of play corrupts the game, the remedy is a new price, not harder tackling. A modern reader should also register what is absent. There is not one equation in the book, not one table of outcomes, not one recorded frequency. The theory of chances is a discipline of reasoning carried in one man's memory, not a body of measurements. That absence marks the exact joint where a later, measurement-driven practice would have to be built on top of Camp's qualitative frame rather than discovered inside it, and it is why the book's mechanisms transfer while its numbers, being almost nonexistent, cannot. The committee chapters make the same point institutionally: the legislation worked because the legislators were non-partisan graduates rather than active partisans of one school, so the prices were set for the game itself rather than for any team's current roster.",
+   "retrocausal_genealogy": "Read backward from the modern game, nearly every load-bearing structure in this text is an ancestor. The five-yard rule of 1882 is the direct ancestor of four downs and ten yards, the state machine that still organizes every drive. The 1905 bundle, ten-yard rule, forward pass, and on-side kick, is the ancestor of the spaced modern field: once the pass existed, defenses had to defend width and depth, and the massed line Camp spent chapters pricing out became structurally obsolete rather than merely discouraged. His center, the man through whose hands every play must pass and who therefore sets the tempo of the whole attack, is the ancestor of every later tempo system, from hurry-up offenses to the modern obsession with seconds between snaps. His quarterback, required to compute the outcome of his plays to a nicety, is the ancestor of the analytics play-caller, differing only in that the modern version keeps the records Camp lacked.",
+   "theory_of_mind": "Camp writes as a man modeling three minds at once. He models the player, who will always drift toward the profitable degenerate play and must be priced out of it rather than preached out of it. He models the opponent, who studies every new play against his second eleven and erases its advantage within weeks, which is why Camp treats novelty as a wasting asset. And he models the public and the colleges, whose demand for an open, watchable game is the political force that lets the committee turn the distance dial at all. His captains are taught the same discipline at field level: know your own men's capacities, know the adversary's weak side within fifteen minutes, and never assume the other side will cooperate with your plan.",
+   "cross_layer_veto": "The layers veto each other throughout the book, and the vetoes are the method. The rules layer vetoes strategy: once interlocked interference and pushing the runner are banned, a whole family of wedge plays is not discouraged but deleted, and no amount of strategic affection revives it. The human layer vetoes strategy from below: plays the men cannot execute to a successful average are eliminated before the championship game no matter how beautiful their design. The strategy layer vetoes the human layer's instincts: the captain's wish to ride his best runner is overruled by the arithmetic of exhaustion. Any transfer of this material that ignores the vetoes, lifting a play or a drill without its governing constraint, reproduces the words and loses the system."
+  },
+  {
+   "trace_id": "camp1910_trace_practice_economy",
+   "think": "The second half of the book is a treatise on how skill is manufactured, and its structure is strikingly modern even where its content is dated. Specialists, in Camp's account, are not found but built. Harvard decided before the season that it needed a drop-kicker it could rely on, chose Victor Kennard, and had him practise that single skill daily through the summer, working with his center and experimenting with his shoes, until the championship game turned on exactly the act that had been rehearsed all year. Selection runs on the same logic from the other side. Poe was sent in for Princeton's decisive kick not because he was the most gifted kicker available but because he was the steadiest man in a critical position, which is a claim that reliability under pressure is a trait of its own, separable from ordinary skill and selectable in advance. Practice itself is dosed like medicine. Scrimmage is withheld for a week or ten days while men work in a general way, then introduced for a few minutes and increased gradually, because Camp had watched the alternative fill the early season with accidents and lose good men for a year. The training load is managed from above as well: men are to be kept undertrained rather than overtrained, on the stated ground that the overtrained man becomes too delicate for rough work and loses his vigor after a few sharp struggles. Inside the game the same economy continues. No one or two men can do all the work, so the captain must distribute carries before exhaustion distributes them for him, spending each man's capacity on the work he is fitted for and saving the best runner for the critical moment rather than the convenient one. Even the opposition is treated as training equipment. The second eleven is valuable in direct proportion to the resistance it can offer every day, it needs a competent captain of its own, and when the roster cannot supply enough resistance Camp recommends practising uphill, buying a harder practice field than the one the schedule provides. Read together these passages describe a complete practice economy: identify the decisive skill early, build it deliberately, select for steadiness where a single failure is catastrophic, dose the contact, protect the peak, distribute the load, and manufacture the best opposition you can. The leather, the drop-kick, and the canvas jacket belong to 1910. The economy does not, and it is the economy that a later training science would formalize with measurements Camp did not have. Camp also treats the classroom as part of practice: the blackboard evenings, where plays are drawn out and men are taught to ask questions about their own duties, exist because a play understood can be adjusted in the game, while a play merely memorized breaks at the first surprise it meets.",
+   "retrocausal_genealogy": "Read backward from modern practice, this half of the book is an early draft of several sciences that now have names. Kennard's summer is deliberate practice aimed at a forecast bottleneck, decades before the term existed. The graduated scrimmage ramp and the undertrained-not-overtrained doctrine are periodization and load management in prose, including the modern insight that the cost of staleness exceeds the cost of a small conditioning deficit. The second eleven is the scout team, and Camp already understands it the modern way, as an input to the first team's production rather than a parking place for substitutes. Poe's selection anticipates the modern separation of mean skill from outcome variance in high-leverage roles, the same reasoning that now governs closer selection in baseball and kicker trust in late-game football.",
+   "theory_of_mind": "Camp's coach is constantly modeling minds he cannot see inside. He models the player's body as a mind might: the overtrained man does not announce his staleness, so the coach must read vigor after sharp struggles as the signal. He models the future at the moment of selection, choosing Kennard in the summer for a kick that might be needed in November, which requires imagining a game that has not happened and staffing for it. He models the opponent's preparation through the second eleven, assuming the other camp is solving his plays in practice just as he is solving theirs. And in the Poe story he models the decisive moment itself, reasoning that what fails there is not technique but steadiness, and selecting the man whose mind he trusts.",
+   "cross_layer_veto": "The practice economy is vetoed from two directions and Camp records both. From above, the rules veto training ambition: the game has been shortened to four fifteen-minute periods, and substitution and formation law bound how the manufactured skills may be deployed. From below, the body vetoes the plan: no scheme survives contact with exhausted men, which is why the workload and staleness primitives constrain the strategy primitives rather than serving them. There is also an honesty veto on the whole layer. Camp's evidence is anecdote, one kick by Poe, one season of Kennard, and a career of impressions. The mechanisms are stated crisply enough to be tested, but nothing in the book tests them, and any modern use must supply the measurements the text omits instead of borrowing authority from its famous names."
+  }
+ ],
+ "universal_lens": "Across domains, Camp's book teaches one recurring pattern: contested systems evolve when someone reprices the degenerate strategy instead of denouncing it. A quota that must be met to keep a resource, a formation that hides intent behind a shared setup, a specialist manufactured for one decisive act, a workload distributed before exhaustion distributes it badly: each is the same move in a different material, which is to find the constraint that actually governs behavior and adjust that. The book also models coordination honestly. Eleven specialists beat eleven athletes when a single directing mind assigns the work, when the signals are simple enough to master and hard enough to steal, and when the plan is fitted to the men rather than the men to the plan. Finally it prices risk by position and by stake, refusing gambles whose downside is catastrophic and whose upside is trivial, a discipline that transfers intact to any field where decisions are made under uncertainty with asymmetric losses.",
+ "gsi_mapping": "For general systems work the book contributes a working vocabulary of mechanisms: constraint pricing as the lever that changes a population's behavior without commanding it; bottleneck analysis, since the center passage states plainly that total throughput is set by the one component every transaction must pass through; information hygiene, since disguise by shared formation and betrayal by backfield tells are the same phenomenon seen from opposite sides; and load governance, since the training chapters treat exposure, staleness, and distribution as one control problem. It also contributes a governance pattern, the standing non-partisan committee that revises the rules annually in light of observed play, which is a feedback controller for the contest itself: sense the degenerate strategy, adjust the price, sense again. These mappings are structural, not numerical; the source offers no measurements to carry across.",
+ "gse_mapping": "For the engine, the book supplies qualitative factors and modeling disciplines rather than data. Down-and-distance state, priced by Camp's quota logic, remains the core state variable for drive reasoning. Tempo enters as a team trait with a named rate limiter at the center exchange. Play-calling is framed as chance computation with stake asymmetry priced by field position, which is a discipline for the reasoning layer: any liked play should be able to state what it risks and what it buys in the same units. Personnel factors include specialist reliability under decisive pressure, workload distribution across a game, and the quality of daily opposition as a slow program trait. Era discipline is the binding constraint on all of it: scoring values, formation law, and equipment in this text are 1910 values, so the mechanisms inform how the engine reasons while none of the era's particulars may be read as modern facts."
+}
