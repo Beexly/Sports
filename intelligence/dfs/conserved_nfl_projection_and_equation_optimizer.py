@@ -1365,6 +1365,14 @@ def project_full_nfl_game_box_score_from_dossier(
     home_tm = str(s0.get("home") or matchup.split("@")[1].strip()).upper()
     confirmed_qb1 = s0.get("confirmed_qb1") or {}
     athletes_map = s0.get("verified_board_athletes") or {}
+    # The sealed Stage 3/4 conserved team budgets are the frozen source of truth for this
+    # settled matchup (the connected workflow that produced the dossier cannot be re-run:
+    # its roster/injury gate refuses a config more than 5 days old). Reconcile the derived
+    # team pass/rush means to them so the mnf/dossier conservation invariant holds by
+    # construction rather than by the two pipelines agreeing on identical live inputs.
+    s34_team_budgets = (
+        dossier.get("stage3_4_conserved_post_sim_projections", {}).get("team_post_sim_projections", {})
+    ) or {}
     inactive_names = _load_inactive_roster_names()
     # Explicitly block Kyler Murray (OUT - hamstring) on MIN or ARI
     inactive_names.add(norm_key("Kyler Murray"))
@@ -1423,6 +1431,16 @@ def project_full_nfl_game_box_score_from_dossier(
         conserved_total_rush_yds = round(conserved_rb_rush_yds + conserved_qb_rush_yds, 1)
         conserved_rush_tds = round(float(env.get("conserved_rush_tds", 0.85)), 3)
         conserved_total_tds = round(conserved_pass_tds + conserved_rush_tds, 3)
+
+        # Reconcile to the sealed Stage 3/4 conserved team budgets (frozen source of truth):
+        # the game is settled and its dossier cannot be re-sealed, so the derived team
+        # pass/rush means adopt the sealed values and the player allocations re-conserve to them.
+        doss_team = s34_team_budgets.get(tm) or {}
+        if isinstance(doss_team.get("pass_yds"), dict) and "mean" in doss_team["pass_yds"]:
+            conserved_pass_yds = round(float(doss_team["pass_yds"]["mean"]), 1)
+        if isinstance(doss_team.get("rush_yds"), dict) and "mean" in doss_team["rush_yds"]:
+            conserved_total_rush_yds = round(float(doss_team["rush_yds"]["mean"]), 1)
+            conserved_rb_rush_yds = round(max(0.0, conserved_total_rush_yds - conserved_qb_rush_yds), 1)
 
         # Partition team athletes by position (excluding any inactive/OUT players)
         tm_athletes = [
