@@ -28,6 +28,11 @@ from typing import Any
 
 import numpy as np
 
+from gse_engine.memory.monorepo_omnibus_vault_indexer import (
+    OmnibusVaultContinuityError,
+    audit_all_25_monorepo_knowledge_vaults,
+)
+
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
 _FORBIDDEN_ODDS_RE = re.compile(r"\b(?:odds|moneyline|sportsbook|over_under)\b", re.IGNORECASE)
 
@@ -92,8 +97,8 @@ def verify_zero_loss_knowledge_continuity(
     repo_root: Path | None = None,
     *,
     min_pdfs: int = 877,
-    min_foundry_files: int = 12469,
-    min_foundry_primitives: int = 47645,
+    min_foundry_files: int = 12558,
+    min_foundry_primitives: int = 50656,
     min_sovereign_primitives: int = 58486,
     min_equations: int = 9875,
     min_lessons: int = 37,
@@ -190,6 +195,11 @@ def verify_zero_loss_knowledge_continuity(
     if violations:
         raise ZeroLossContinuityError("ZERO_LOSS_CONTINUITY_BREACH: " + "; ".join(violations))
 
+    try:
+        omnibus = audit_all_25_monorepo_knowledge_vaults(root)
+    except OmnibusVaultContinuityError as exc:
+        raise ZeroLossContinuityError(str(exc)) from exc
+
     total_units = (
         pdfs_count
         + foundry_files
@@ -198,6 +208,8 @@ def verify_zero_loss_knowledge_continuity(
         + lessons_count
         + rlvr_records
         + gsi_compounds
+        + int(omnibus["total_jsonl_records"])
+        + int(omnibus["film_room_2026_files"])
     )
     digest_payload = {
         "pdfs_count": pdfs_count,
@@ -208,6 +220,20 @@ def verify_zero_loss_knowledge_continuity(
         "lessons_count": lessons_count,
         "rlvr_veto_records": rlvr_records,
         "gsi_compounds": gsi_compounds,
+        "monorepo_vaults_verified": int(omnibus["vaults_verified"]),
+        "all_46_data_subdirs_verified": int(omnibus["data_subdirs_verified_count"]),
+        "cross_branch_radar_tracked": int(
+            omnibus["cross_branch_radar"]["branches_tracked"]
+        ),
+        "complete_corpus_books": int(omnibus["complete_corpus_books"]),
+        "zero_skip_theorems": int(omnibus["zero_skip_theorems"]),
+        "coach_brain_records": int(omnibus["coach_brain_records"]),
+        "equation_registry_jsonl": int(omnibus["vaults"]["data_equations"]["jsonl_records"]),
+        "identity_tenure_records": int(omnibus["vaults"]["data_identity"]["jsonl_records"]),
+        "coach_brain_sft_records": int(omnibus["vaults"]["data_llm_sft"]["jsonl_records"]),
+        "gse_dataset_records": int(omnibus["gse_dataset_records"]),
+        "film_room_2026_files": int(omnibus["film_room_2026_files"]),
+        "omnibus_jsonl_records": int(omnibus["total_jsonl_records"]),
         "total_indexed_knowledge_units": total_units,
     }
     continuity_sha256 = hashlib.sha256(
@@ -692,6 +718,137 @@ def compile_gse_to_gsi_rlvr_training_batch(
         )
     )
 
+    # 3. Monorepo 25-vault internal corpus & dormancy invariant trajectories
+    vault_rlvr_specs: tuple[tuple[str, str, str, str, dict[str, Any]], ...] = (
+        (
+            "vault_zero_skip_theorems_2949",
+            "monorepo_theorem_corpus",
+            "Verify zero-skip theorem extraction index data/corpus_parsed_full/ for "
+            "THM_20261106_00001 and total extracted theorem count. Output JSON with "
+            "first_theorem_id, total_theorems, verified_zero_skip.",
+            "Page-by-page zero-skip audit indexes 2949 theorems/lemmas/algorithms.",
+            {
+                "first_theorem_id": "THM_20261106_00001",
+                "total_theorems": 2949,
+                "verified_zero_skip": True,
+            },
+        ),
+        (
+            "vault_complete_503_book_shelf",
+            "monorepo_book_registry",
+            "Verify deduplicated book shelf counts from data/mind/complete_458_book_registry.json "
+            "including medical quarantine weight. Output JSON with complete_corpus_books, "
+            "unique_drive_ids, medical_quarantine_weight.",
+            "503 complete books map to 472 Drive IDs; 68 medical books keep 0.0 sports weight.",
+            {
+                "complete_corpus_books": 503,
+                "unique_drive_ids": 472,
+                "medical_quarantine_weight": 0.0,
+            },
+        ),
+        (
+            "vault_coach_brain_coherence_zone1",
+            "monorepo_coach_brain",
+            "Inspect ClarusC64 coach-brain coherence zone for playcall vs defensive shell mismatch "
+            "under Cover_3 + high pressure + deep_shot. Output JSON with label, suite_rows, "
+            "firewall_zone.",
+            "Long-developing deep_shot vs Cover_3 high pressure yields label=incoherent.",
+            {
+                "label": "incoherent",
+                "suite_rows": 160,
+                "firewall_zone": "ZONE_1_PURE_FOOTBALL",
+            },
+        ),
+        (
+            "vault_fourth_down_wp_atl_phi_278",
+            "monorepo_gse_dataset",
+            "Evaluate 4th-down WP decision on 2018_01_ATL_PHI play 278 (go_wp=0.5969, "
+            "fg_wp=0.5280, punt_wp=null). Output JSON with optimal_action, wp_edge.",
+            "go_wp (0.5969) exceeds fg_wp (0.5280) by +0.0689 WP.",
+            {"optimal_action": "GO", "wp_edge": 0.0689},
+        ),
+        (
+            "vault_kalman_vision_dormancy_contract",
+            "monorepo_gse_brain_dormancy",
+            "State effective live weight for kalman_proof_play_baseline_latest.json "
+            "when validation_spec_met is false. Output JSON with player_tracks, "
+            "validation_spec_met, effective_live_weight.",
+            "VISION-CONTRACT strictly enforces weight=0.0 until falsifier validation clears.",
+            {
+                "player_tracks": 22,
+                "validation_spec_met": False,
+                "effective_live_weight": 0.0,
+            },
+        ),
+        (
+            "vault_sealed_center_merkle_anchor",
+            "monorepo_sealed_candidates",
+            "Verify calibration quantile target tau and week in candidates/sealed-center.json. "
+            "Output JSON with week, tau, merkle_prefix.",
+            "Sealed center anchors week 2026-W44 at tau=0.42.",
+            {"week": "2026-W44", "tau": 0.42, "merkle_prefix": "23245bcbba04"},
+        ),
+        (
+            "vault_equation_catalog_12304",
+            "monorepo_equation_catalog",
+            "Inspect data/equations/equation_executable_catalog_12304.json structural dimensions. "
+            "Output JSON with total_equations, total_signal_families, context_mask_bits, "
+            "stage_c_spectral_clusters.",
+            "12304 executable equations span 279 families, 288 mask bits, and 25 clusters.",
+            {
+                "total_equations": 12304,
+                "total_signal_families": 279,
+                "context_mask_bits": 288,
+                "stage_c_spectral_clusters": 25,
+            },
+        ),
+        (
+            "vault_q52_q54_shadow_governance",
+            "monorepo_shadow_metrics",
+            "Verify deployment status and live weight for expected-metric modules Q52, Q53, Q54. "
+            "Output JSON with q52_status, q53_status, q54_status, effective_live_weight.",
+            "Q52-Q54 remain SHADOW with weight 0.0 until validation gate promotion.",
+            {
+                "q52_status": "SHADOW",
+                "q53_status": "SHADOW",
+                "q54_status": "SHADOW",
+                "effective_live_weight": 0.0,
+            },
+        ),
+        (
+            "vault_mimic_and_step_n_quarantine",
+            "monorepo_quarantine_firewall",
+            "Enforce data/mimic_iv_demo medical RUO quarantine and data/step-n-market Stage 1-3 "
+            "leak firewall. Output JSON with mimic_sports_weight, mimic_sports_import_permitted, "
+            "step_n_stage1_to_3_permitted.",
+            "Medical RUO holds 0.0 sports weight; Step-N pricing never leaks to Stage 1-3.",
+            {
+                "mimic_sports_weight": 0.0,
+                "mimic_sports_import_permitted": False,
+                "step_n_stage1_to_3_permitted": False,
+            },
+        ),
+        (
+            "vault_firstandthirty_pass_calibration",
+            "monorepo_external_verified",
+            "Check full-sample calibration fit of firstandthirty_pass_yds_distribution_fit_summary "
+            "across n=1435 historical rows. Output JSON with rows, calibration_gap_below_0_001.",
+            "Full sample n=1435 measures calibration_gap=0.000730 (< 0.001).",
+            {"rows": 1435, "calibration_gap_below_0_001": True},
+        ),
+    )
+    for rid, dom, r_prompt, r_think, r_gt in vault_rlvr_specs:
+        records.append(
+            _build_rlvr_record(
+                record_id=rid,
+                domain=dom,
+                prompt=r_prompt,
+                think=r_think,
+                ground_truth=r_gt,
+                verifier_src=_formula_exact_verifier_src(r_gt),
+            )
+        )
+
     if output_path is not None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         lines = [json.dumps(rec, ensure_ascii=True) for rec in records]
@@ -769,12 +926,33 @@ def evaluate_frontier_reasoning_benchmark_suite(
     )
     axis5_ok = (not blocked_ret["fires"]) and allowed_ok["fires"]
 
+    # Axis 6: External frontier JSON suites + adversarial CalibBench readiness
+    ext_dir = root / "data" / "external_benchmarks_2026_11_06"
+    req_suites = (
+        "arc_challenge_test_50.json",
+        "forecastbench_resolved_test_50.json",
+        "gpqa_diamond_test_50.json",
+        "gsm8k_test_50.json",
+        "humaneval_test_50.json",
+        "math500_test_50.json",
+        "mmlu_test_50.json",
+    )
+    ext_total = 0
+    for s_name in req_suites:
+        sp = ext_dir / s_name
+        if sp.is_file():
+            ext_total += len(json.loads(sp.read_text(encoding="utf-8")))
+    cb_path = root / "data" / "public_benchmarks" / "calibbench_adversarial_sample.json"
+    cb_cnt = len(json.loads(cb_path.read_text(encoding="utf-8"))) if cb_path.is_file() else 0
+    axis6_ok = ext_total == 350 and cb_cnt == 100
+
     axes = {
         "zero_loss_knowledge_continuity": 100.0 if axis1_ok else 0.0,
         "buckingham_pi_soundness": 100.0 if axis2_ok else 0.0,
         "pet_peese_meta_pooling": 100.0 if axis3_ok else 0.0,
         "gse_to_gsi_rlvr_verifiers": 100.0 if axis4_ok else 0.0,
         "g_fire_retraction_and_deff": 100.0 if axis5_ok else 0.0,
+        "external_frontier_and_forecastbench_suite": 100.0 if axis6_ok else 0.0,
     }
     composite = round(sum(axes.values()) / float(len(axes)), 2)
     return {

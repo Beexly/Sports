@@ -1,0 +1,751 @@
+{
+ "book_id": "920564f2a1314d8e",
+ "source_status": "COMPLETE",
+ "source_note": "Hiroki Sayama, Introduction to the Modeling and Analysis of Complex Systems, Open SUNY Textbooks, Milne Library, State University of New York at Geneseo, 2015 (ISBN 978-1-942341-09-3 ebook; Creative Commons Attribution-NonCommercial-ShareAlike 3.0). The local file is the complete publisher PDF of the textbook, 19,619,055 bytes, sha256 920564f2a1314d8e7fdf049f81a7e0a7acc651a50117e7552ff531260410c11b. Extracted text is clean and complete (about 123k words across 19 chapters plus front matter), with occasional line-break hyphenation and page headers interleaved; all verbatim quotes were chosen inside single pages and proven contiguous in the extracted text file. No catalog or title corrections needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "complex_system_definition",
+   "name": "A complex system is many microscopic components interacting in nontrivial ways, with key information in the relationships between parts",
+   "verbatim_quote": "Complex systems are systems made of a large number of microscopic components interacting with each other in nontrivial ways.",
+   "page": "About the Textbook, p. iii (text lines 45-47)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system has many components, not a handful",
+    "Interactions between components are nontrivial, i.e. not simple aggregation"
+   ],
+   "breakdown_regime": "Fails as a working definition when component count is small or interactions are linear and separable, where reduction to parts is exact",
+   "domain": "complex systems foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A game, a league, or a roster is treated as a system whose output is carried by interactions among components rather than by component averages; the engine state must therefore include interaction terms, not only per-unit ratings.",
+    "source_operator": "complex_system_definition",
+    "telemetry": "Per-component event streams plus pairwise interaction records (matchup snaps, shared minutes, coverage assignments)"
+   }
+  },
+  {
+   "primitive_id": "emergence_scale_relation",
+   "name": "Emergence is a nontrivial relationship between a system's properties at microscopic and macroscopic scales (Bar-Yam's definition, adopted by Sayama)",
+   "verbatim_quote": "More concisely, emergence is a nontrivial relationship between the system’s properties at different scales.",
+   "page": "Ch. 1.1, p. 4 (text lines 563-565)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Properties are compared across at least two scales of description",
+    "The macro property is not the natural expectation from micro rules alone"
+   ],
+   "breakdown_regime": "The label is often applied loosely; without an explicit micro rule set and a macro observable, an emergence claim is untestable",
+   "domain": "complex systems foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Team-level outcomes (drive success, red zone conversion) are modeled as macro observables that need not equal sums of player grades; the reasoning layer checks whether a macro pattern is actually implied by the micro inputs before crediting it.",
+    "source_operator": "emergence_scale_relation",
+    "telemetry": "Play-by-play micro events aggregated to drive, quarter, and game level outcomes for cross-scale comparison"
+   }
+  },
+  {
+   "primitive_id": "self_organization_dynamics",
+   "name": "Self-organization is a dynamical process in which an open system spontaneously produces macroscopic order over time",
+   "verbatim_quote": "In other words, self-organization is a dynamical process that looks as if it were going against the second law of thermodynamics (which states that entropy of a closed system increases monotonically over time).",
+   "page": "Ch. 1.1, pp. 5-6 (text lines 594-597)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system is open, driven by energy or information flow from outside",
+    "Order arises from internal interactions, not from an external controller"
+   ],
+   "breakdown_regime": "Closed systems cannot self-organize in this sense; apparent order imposed by an external schedule or script is not self-organization",
+   "domain": "complex systems foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In-game momentum-like structure is only credited when it emerges from the play sequence itself (success breeding play-calling tendencies, fatigue accumulation), never inserted as an external narrative prior.",
+    "source_operator": "self_organization_dynamics",
+    "telemetry": "Within-game play sequences, substitution patterns, and tempo series that could show spontaneous ordering"
+   }
+  },
+  {
+   "primitive_id": "model_definition",
+   "name": "A model is a simplified representation of a system, and modeling is the only rational approach to an unreachable reality",
+   "verbatim_quote": "A model is a simplified representation of a system. It can be conceptual, verbal, diagrammatic, physical, or formal (mathematical).",
+   "page": "Ch. 2, p. 13 (text lines 821-822)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Simplification is deliberate: some features of the real system are intentionally omitted",
+    "The representation must still answer the question it was built for"
+   ],
+   "breakdown_regime": "A model that reproduces the system in full detail is no longer a model; over-simplified models answer the wrong question precisely",
+   "domain": "modeling fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine projection is a representation with named omissions; the reasoning trail must state what the representation leaves out (for example unmodeled coaching adjustments) so confidence is priced against the simplification.",
+    "source_operator": "model_definition",
+    "telemetry": "Model registry entries listing included and excluded factors per projection type"
+   }
+  },
+  {
+   "primitive_id": "dynamical_system_definition",
+   "name": "A dynamical system is a system whose state is uniquely specified by a set of variables and whose behavior is described by predefined rules",
+   "verbatim_quote": "A dynamical system is a system whose state is uniquely specified by a set of variables and whose behavior is described by predefined rules.",
+   "page": "Ch. 3.1 (text lines 1295-1296)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The state variables suffice to specify the system at an instant",
+    "Rules are fixed in advance of the evolution being studied"
+   ],
+   "breakdown_regime": "If the rules themselves change with unmodeled context, the fixed-rule description breaks and the model must be re-specified",
+   "domain": "dynamical systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A matchup is encoded as a state vector (personnel, health, usage, situation) advanced by explicit transition rules (play outcomes, clock, field position), which is exactly the pre-play expectation and post-play grading loop the engine runs.",
+    "source_operator": "dynamical_system_definition",
+    "telemetry": "State snapshots per play: down, distance, field position, personnel, score, clock, fatigue proxies"
+   }
+  },
+  {
+   "primitive_id": "phase_space_definition",
+   "name": "The phase space maps every state of a system to a unique spatial location, with one axis per degree of freedom",
+   "verbatim_quote": "A phase space of a dynamical system is a theoretical space where every state of the system is mapped to a unique spatial location.",
+   "page": "Ch. 3.1 (text lines 1364-1365)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "State variables are taken as orthogonal axes",
+    "The mapping from state to location is unique"
+   ],
+   "breakdown_regime": "High-dimensional systems cannot be visualized directly; projections of the phase space can hide the structure that matters",
+   "domain": "dynamical systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Game scripts are read as regions of a state space (score differential by time remaining by field position); a team being 'in control' means its trajectory sits in a region where almost all continuations end one way.",
+    "source_operator": "phase_space_definition",
+    "telemetry": "Historical trajectories of comparable games plotted in score-time-field-position space"
+   }
+  },
+  {
+   "primitive_id": "equilibrium_points_iterative_map",
+   "name": "For an iterative map, equilibrium points are states that stay unchanged over time, found by solving x_eq = F(x_eq)",
+   "verbatim_quote": "one of the first things you should do is to find its equilibrium points (also called fixed points or steady states), i.e., states where the system can stay unchanged over time.",
+   "page": "Ch. 5.1, p. 61 (text lines 2528-2530)",
+   "latex": "x_{eq} = F(x_{eq})",
+   "symbol_and_unit_ledger": {
+    "x_{eq}": "equilibrium state value, in the units of the state variable",
+    "F": "the one-step transition function of the iterative map"
+   },
+   "assumptions": [
+    "The map is autonomous: F does not depend explicitly on time",
+    "The system is first-order: the next state depends on the current state only"
+   ],
+   "breakdown_regime": "Time-varying or higher-order systems need state augmentation before this fixed-point equation applies",
+   "domain": "discrete-time dynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pregame ratings are treated as equilibrium claims: the level at which a unit's output stops drifting given its inputs; deviations from that level are the signal the reasoning layer must explain rather than average away.",
+    "source_operator": "equilibrium_points_iterative_map",
+    "telemetry": "Rolling unit performance series tested for mean reversion toward a fitted equilibrium level"
+   }
+  },
+  {
+   "primitive_id": "logistic_growth_equilibria",
+   "name": "The discrete logistic growth model has exactly two equilibria: extinction at 0 and saturation at the carrying capacity K",
+   "verbatim_quote": "The result shows that the population will not change if there are no organisms (xeq = 0) or if the population size reaches the carrying capacity of the environment (xeq = K).",
+   "page": "Ch. 5.1, p. 62 (text lines 2555-2557)",
+   "latex": "x_t = x_{t-1} + r x_{t-1} \\left(1 - \\frac{x_{t-1}}{K}\\right)",
+   "symbol_and_unit_ledger": {
+    "x_t": "population size at time step t, count of individuals",
+    "r": "intrinsic growth rate per time step, dimensionless",
+    "K": "carrying capacity, count of individuals"
+   },
+   "assumptions": [
+    "Growth is proportional to current size and to the unused fraction of capacity",
+    "No migration, no age structure, constant r and K"
+   ],
+   "breakdown_regime": "With time-varying capacity or Allee effects the two-equilibrium picture fails; large r drives the map into oscillation and chaos instead of saturation",
+   "domain": "discrete-time dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Usage and workload have carrying capacities: a player's touch share saturates against a team-level ceiling, so projections must bend growth curves toward the cap instead of extrapolating early-season rates linearly.",
+    "source_operator": "logistic_growth_equilibria",
+    "telemetry": "Weekly touch/target shares per player against team play volume ceilings"
+   }
+  },
+  {
+   "primitive_id": "logistic_map",
+   "name": "Rescaling the logistic growth model yields the logistic map x_t = r x_{t-1} (1 - x_{t-1}), the most extensively studied one-dimensional nonlinear iterative map",
+   "verbatim_quote": "has a designated name; it is called the logistic map. It is arguably the most extensively studied 1-D nonlinear iterative map.",
+   "page": "Ch. 5.5 (text lines 3303-3306)",
+   "latex": "x_t = r x_{t-1} (1 - x_{t-1})",
+   "symbol_and_unit_ledger": {
+    "x_t": "rescaled population at step t, dimensionless fraction of capacity",
+    "r": "combined growth parameter, dimensionless"
+   },
+   "assumptions": [
+    "Population rescaled by carrying capacity so K disappears",
+    "Single parameter r carries all qualitative dynamics"
+   ],
+   "breakdown_regime": "The map is a caricature: real populations have noise, structure, and multiple interacting species that one parameter cannot carry",
+   "domain": "discrete-time dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One-parameter families warn the engine that a single driving rate (pace, pressure rate, blitz rate) can flip a unit's behavior qualitatively as it crosses thresholds, so parameter sweeps beat point estimates near regime boundaries.",
+    "source_operator": "logistic_map",
+    "telemetry": "Unit performance as a function of a single swept driver, checked for threshold flips"
+   }
+  },
+  {
+   "primitive_id": "variable_rescaling_parameter_elimination",
+   "name": "Variable rescaling can eliminate as many parameters as the model has variables, and should be tried before mathematical analysis",
+   "verbatim_quote": "You should try variable rescaling to eliminate as many parameters as possible from your model before conducting a mathematical analysis.",
+   "page": "Ch. 5.5 summary box (text lines 3308-3310)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Variables can be re-expressed in natural units of the problem",
+    "The rescaling is a pure change of units and changes no dynamics"
+   ],
+   "breakdown_regime": "Not every parameter is removable; parameters that encode genuinely independent mechanisms survive any rescaling",
+   "domain": "modeling fundamentals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Ratings are nondimensionalized against league baselines before combination, which removes spurious scale parameters and keeps unlike signals (EPA, success rate, pressure rate) commensurable inside one reasoning pass.",
+    "source_operator": "variable_rescaling_parameter_elimination",
+    "telemetry": "League-average baselines per metric per season used as rescaling units"
+   }
+  },
+  {
+   "primitive_id": "linear_stability_analysis",
+   "name": "Linear stability analysis rewrites dynamics around an equilibrium in terms of a small perturbation and drops higher-order terms",
+   "verbatim_quote": "The basic idea of linear stability analysis is to rewrite the dynamics of the system in terms of a small perturbation added to the equilibrium point of your interest.",
+   "page": "Ch. 5.7, p. 91 (text lines 3712-3714)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Perturbations are infinitesimally small, so squared and higher terms are negligible",
+    "The equilibrium point itself is known exactly"
+   ],
+   "breakdown_regime": "Says nothing about behavior far from the equilibrium; large shocks, injuries, or scheme changes leave the regime where the linearization is valid",
+   "domain": "stability analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Injury and lineup news is priced as a perturbation test: a small change near a stable projection moves the estimate slightly, while the same change near an unstable one (a thin offensive line, a one-read offense) can flip it, and the reasoning layer must say which case applies.",
+    "source_operator": "linear_stability_analysis",
+    "telemetry": "Projection sensitivity runs perturbing one input at a time around the pregame state"
+   }
+  },
+  {
+   "primitive_id": "jacobian_eigenvalue_stability_criterion",
+   "name": "Stability of an equilibrium is decided by the Jacobian's eigenvalues at that point: dominant eigenvalue magnitude below 1 is stable, above 1 is unstable (discrete time)",
+   "verbatim_quote": "Calculate the Jacobian matrix of the system at the equilibrium point.",
+   "page": "Ch. 5.7 summary, p. 95 (text lines 3875-3877)",
+   "latex": "|\\lambda_d| < 1 \\Rightarrow \\mathrm{stable}, \\qquad |\\lambda_d| > 1 \\Rightarrow \\mathrm{unstable}",
+   "symbol_and_unit_ledger": {
+    "\\lambda_d": "dominant eigenvalue of the Jacobian at the equilibrium, dimensionless",
+    "J": "Jacobian matrix of partial derivatives of the transition function at the equilibrium"
+   },
+   "assumptions": [
+    "The system is differentiable at the equilibrium",
+    "Discrete-time dynamics, where the unit circle is the stability boundary"
+   ],
+   "breakdown_regime": "Eigenvalue exactly at magnitude 1 is the marginal case the test cannot decide; non-smooth systems (thresholds, discrete plays) violate differentiability",
+   "domain": "stability analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feedback loops in a matchup (a defense that must blitz more as it falls behind) are checked for amplification: if each loop multiplies a deviation by more than one, the projection should widen its uncertainty band instead of holding a point estimate.",
+    "source_operator": "jacobian_eigenvalue_stability_criterion",
+    "telemetry": "Estimated feedback gains between coupled unit metrics across a game script"
+   }
+  },
+  {
+   "primitive_id": "continuous_time_equilibrium",
+   "name": "For a continuous-time model dx/dt = G(x), equilibria solve 0 = G(x_eq) because a constant state makes the left hand side zero",
+   "verbatim_quote": "This actually makes the left hand side zero, because xeq is no longer a dynamical variable but just a static constant.",
+   "page": "Ch. 7.1 (text lines 4378-4380)",
+   "latex": "0 = G(x_{eq})",
+   "symbol_and_unit_ledger": {
+    "G": "the vector field giving the rate of change of the state",
+    "x_{eq}": "constant equilibrium state, in the units of the state variable"
+   },
+   "assumptions": [
+    "The model is autonomous: G has no explicit time dependence",
+    "Equilibria are constant states, not cycles"
+   ],
+   "breakdown_regime": "Systems with periodic forcing have no constant equilibria; limit cycles require a different analysis",
+   "domain": "continuous-time dynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Continuous in-game win probability flow is anchored at states where the rates balance; the engine reads a stalled drive rate or a bleeding clock as movement toward or away from those balance points.",
+    "source_operator": "continuous_time_equilibrium",
+    "telemetry": "Second-by-second game state with scoring-rate differentials"
+   }
+  },
+  {
+   "primitive_id": "lotka_volterra_predator_prey",
+   "name": "The Lotka-Volterra model describes predator-prey interactions, the canonical two-species coupled nonlinear system",
+   "verbatim_quote": "The model we have created above is actually a variation of the Lotka-Volterra model, which describes various forms of predator-prey interactions.",
+   "page": "Ch. 4 (text lines 2440-2442)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prey grows logistically on its own; predators decay exponentially without prey",
+    "Encounters are proportional to the product of the two populations"
+   ],
+   "breakdown_regime": "No functional response saturation, no refuge, no third species; real coupled systems rarely stay on the neutral cycles of the basic model",
+   "domain": "continuous-time dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Offense-defense pairs are coupled oscillators: a pass rush that feeds on obvious passing downs grows when the offense trails, and starves when the run game keeps downs short; projections must evolve the pair jointly, not rate each side in isolation.",
+    "source_operator": "lotka_volterra_predator_prey",
+    "telemetry": "Down-by-down splits of pressure rate and play mix by score state"
+   }
+  },
+  {
+   "primitive_id": "bifurcation_definition",
+   "name": "A bifurcation is a qualitative, topological change of a system's phase space when parameters cross critical thresholds",
+   "verbatim_quote": "Bifurcation is a qualitative, topological change of a system’s phase space that occurs when some parameters are slightly varied across their critical thresholds.",
+   "page": "Ch. 8.1, p. 131 (text lines 5180-5181)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A parameter can be varied continuously across the threshold",
+    "The change is qualitative: the structure of trajectories changes, not just their speed"
+   ],
+   "breakdown_regime": "Noise can smear or trigger threshold crossings early; in finite real systems the sharp mathematical threshold becomes a transition zone",
+   "domain": "bifurcations and chaos",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold effects are first-class in the reasoning layer: a quarterback under a pressure rate above a critical band, or a defense losing its second corner, can change the kind of game being played, not just shift a projection by a point.",
+    "source_operator": "bifurcation_definition",
+    "telemetry": "Performance curves scanned for breakpoints as a driver (pressure, fatigue, score gap) varies"
+   }
+  },
+  {
+   "primitive_id": "period_doubling_cascade",
+   "name": "Period-doubling bifurcations cascade with geometrically shrinking intervals until the period diverges to infinity, which is the onset of chaos",
+   "verbatim_quote": "Figure 8.10 showed a cascade of period-doubling bifurcations, with the intervals between consecutive bifurcation thresholds getting shorter and shorter geometrically as r increased.",
+   "page": "Ch. 9.1, p. 153 (text lines 6040-6042)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system is a smooth one-parameter family of maps",
+    "Bifurcation intervals shrink by a roughly constant ratio"
+   ],
+   "breakdown_regime": "The cascade picture is exact for unimodal maps; multi-parameter or noisy systems can reach chaos by other routes (intermittency, torus breakdown)",
+   "domain": "bifurcations and chaos",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Escalation dynamics (each answer forcing a faster answer, as in a shootout script) can pass through a few visible doublings of tempo before the game state becomes effectively unpredictable; the engine widens bands as escalation frequency rises.",
+    "source_operator": "period_doubling_cascade",
+    "telemetry": "Drive tempo and scoring frequency series within games, watched for escalation patterns"
+   }
+  },
+  {
+   "primitive_id": "chaos_definition",
+   "name": "Chaos is long-term behavior of a nonlinear dynamical system that never falls into static or periodic trajectories, deterministic yet effectively unpredictable",
+   "verbatim_quote": "is a long-term behavior of a nonlinear dynamical system that never falls in any static or periodic trajectories.",
+   "page": "Ch. 9.1, p. 153 (text lines 6052-6053)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system is nonlinear and deterministic",
+    "The trajectory is bounded but never repeats periodically"
+   ],
+   "breakdown_regime": "Chaos is not randomness: stochastic systems are a different category, and short-term prediction in chaotic systems still works",
+   "domain": "bifurcations and chaos",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some game states are chaotic in this precise sense: deterministic play-by-play rules but no stable script, where the honest output is a distribution over outcomes with a short prediction horizon, not a confident single line.",
+    "source_operator": "chaos_definition",
+    "telemetry": "Forecast skill decay measured as a function of horizon for volatile matchup classes"
+   }
+  },
+  {
+   "primitive_id": "lyapunov_exponent",
+   "name": "The Lyapunov exponent is the time average of log |dF/dx| along the trajectory and measures how fast nearby states separate",
+   "verbatim_quote": "The final result is quite simple—the Lyapunov exponent is a time average of log |dF/dx| at every state the system visits over the course of the simulation.",
+   "page": "Ch. 9.3, p. 158 (text lines 6337-6339)",
+   "latex": "\\lambda = \\lim_{t \\to \\infty} \\frac{1}{t} \\sum_{i=0}^{t-1} \\log \\left| \\frac{dF}{dx} \\right|_{x=x_i}",
+   "symbol_and_unit_ledger": {
+    "\\lambda": "Lyapunov exponent, per time step; positive values mean exponential separation of nearby trajectories",
+    "F": "the iterative map",
+    "x_i": "the state visited at step i"
+   },
+   "assumptions": [
+    "The trajectory is long enough for the time average to converge",
+    "The map is differentiable along the visited states"
+   ],
+   "breakdown_regime": "Finite data gives only an estimate; a positive exponent in a noisy fitted model may reflect noise rather than deterministic chaos",
+   "domain": "bifurcations and chaos",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Forecast divergence is quantified, not vibes: the engine can measure how fast two nearly identical pregame states (one player questionable versus active) separate in projected outcomes, and cap its confidence at the measured divergence rate.",
+    "source_operator": "lyapunov_exponent",
+    "telemetry": "Paired projection runs from perturbed initial states, logging outcome separation over game time"
+   }
+  },
+  {
+   "primitive_id": "cellular_automaton_definition",
+   "name": "Cellular automata are automata on a regular spatial grid, simultaneously updated by a uniform state-transition function of their neighbors' states",
+   "verbatim_quote": "Cellular automata (CA) [18] are a set of such automata arranged along a regular spatial grid, whose states are simultaneously updated by a uniformly applied state-transition function that refers to the states of their neighbors.",
+   "page": "Ch. 11.1, p. 185 (text lines 7105-7108)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Space and states are discrete; the grid is regular",
+    "The same transition function and neighborhood apply everywhere (spatial homogeneity)"
+   ],
+   "breakdown_regime": "Real spatial systems are rarely homogeneous or regular; network models exist precisely to relax this assumption",
+   "domain": "cellular automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Field-level processes (pressure spreading along an offensive line, coverage rotations propagating) can be simulated as local update rules on a grid, giving the engine a cheap way to generate emergent line-level behavior from per-player rules.",
+    "source_operator": "cellular_automaton_definition",
+    "telemetry": "Per-position unit states on a formation grid updated snap by snap"
+   }
+  },
+  {
+   "primitive_id": "ca_update_rule",
+   "name": "The CA update rule computes each cell's next state from the current states of its fixed neighborhood",
+   "verbatim_quote": "where st (x) is the state of an automaton located at x at time t, F is the state-transition function, and N = {x0 , x1 , . . . , xn−1 } is the neighborhood.",
+   "page": "Ch. 11.1, p. 186 (text lines 7143-7146)",
+   "latex": "s_{t+1}(x) = F\\big(s_t(x + x_0), s_t(x + x_1), \\ldots, s_t(x + x_{n-1})\\big)",
+   "symbol_and_unit_ledger": {
+    "s_t(x)": "state of the cell at position x at time t, discrete state label",
+    "F": "state-transition function, identical for all cells",
+    "N": "the neighborhood offset set, in grid units"
+   },
+   "assumptions": [
+    "Updating is synchronous across all cells",
+    "Interactions are strictly local within the neighborhood"
+   ],
+   "breakdown_regime": "Asynchronous updating or long-range interactions break the classical CA form and can change the resulting patterns",
+   "domain": "cellular automata",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local interaction kernels are the template for matchup simulation: a receiver's separation on a snap is computed from his own state and his immediate neighbors (the covering defender, the safety's position), then aggregated, rather than assigned from a global rating.",
+    "source_operator": "ca_update_rule",
+    "telemetry": "Snap-level neighbor states: nearest defender distance, help position, leverage"
+   }
+  },
+  {
+   "primitive_id": "epidemic_forest_fire_contact_process",
+   "name": "In the epidemic/forest fire CA, a tree catches fire if at least one neighbor burns, and a burning tree is charred after one step: a minimal threshold contact process",
+   "verbatim_quote": "A tree will catch fire if there is at least one tree burning in its neighborhood, and the burning tree will be charred (3) completely after one time step.",
+   "page": "Ch. 11.5, p. 206 (text lines 7878-7880)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Trees are placed independently with probability p",
+    "Spread is to immediate neighbors only, one step per generation"
+   ],
+   "breakdown_regime": "Real contagion has heterogeneous susceptibility and long-range jumps; the single-neighbor threshold understates superspreading",
+   "domain": "cellular automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contagion processes inside a team (an injury cluster at one position group, a coverage bust pattern spreading across a secondary) follow threshold contact dynamics: one failure raises the failure probability of adjacent units on the next snap.",
+    "source_operator": "epidemic_forest_fire_contact_process",
+    "telemetry": "Positional adjacency of failures: busts, penalties, and missed assignments by neighboring positions over consecutive snaps"
+   }
+  },
+  {
+   "primitive_id": "diffusion_equation",
+   "name": "The diffusion equation dc/dt = alpha Laplacian c + s is the fundamental PDE for spreading driven by local random motion",
+   "verbatim_quote": "Now we see the Laplacian coming out! This is called the diffusion equation, one of the most fundamental PDEs that has been applied to many spatio-temporal dynamics in physics, biology, ecology, engineering, social science, marketing science, and many other disciplines.",
+   "page": "Ch. 13 (text lines 9594-9597)",
+   "latex": "\\frac{\\partial c}{\\partial t} = \\alpha \\nabla^2 c + s",
+   "symbol_and_unit_ledger": {
+    "c": "concentration or density of the spreading quantity, per unit area or volume",
+    "\\alpha": "diffusion constant, area per unit time",
+    "s": "source term, quantity per unit area per unit time"
+   },
+   "assumptions": [
+    "Movement is unbiased random walk at the micro level",
+    "The continuum limit applies: many particles, small steps"
+   ],
+   "breakdown_regime": "Directed transport (advection, chemotaxis) and long jumps violate pure diffusion and need extra terms",
+   "domain": "continuous field models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Yardage and field position diffuse: a drive's field position spreads from its start with a rate set by play mix, and the diffusion constant per team is a measurable style parameter the engine can estimate from drive histories.",
+    "source_operator": "diffusion_equation",
+    "telemetry": "Drive start and end field positions across a season, fitted as a diffusion process"
+   }
+  },
+  {
+   "primitive_id": "reaction_diffusion_system",
+   "name": "Reaction-diffusion systems couple local reaction terms R_i with pure Laplacian diffusion terms D_i, and nothing else spatial",
+   "verbatim_quote": "Reaction terms (Ri (. . .)) describe only local dynamics, without any spatial derivatives involved. Diffusion terms (Di ∇2 fi ) are strictly limited to the Laplacian of the state variable itself.",
+   "page": "Ch. 13 (text lines 10325-10328)",
+   "latex": "\\frac{\\partial f_i}{\\partial t} = R_i(f_1, \\ldots, f_n) + D_i \\nabla^2 f_i",
+   "symbol_and_unit_ledger": {
+    "f_i": "concentration of component i, per unit area",
+    "R_i": "local reaction rate for component i, per unit time",
+    "D_i": "diffusion constant of component i, area per unit time"
+   },
+   "assumptions": [
+    "Spatial coupling is diffusion only, no advection or chemotaxis",
+    "Reactions are purely local functions of the component concentrations"
+   ],
+   "breakdown_regime": "When components move at very different speeds pattern formation appears; when a component is actively transported the system leaves the reaction-diffusion class",
+   "domain": "continuous field models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pattern formation logic maps to scheme emergence: local rules (a coverage's reaction to a route concept) plus spatial spreading (adjustments propagating across the field) can generate stable patterns, like a defense's recurring bust against one formation, that no single play call explains.",
+    "source_operator": "reaction_diffusion_system",
+    "telemetry": "Formation-by-formation defensive bust rates and their spread across a game"
+   }
+  },
+  {
+   "primitive_id": "degree_distribution_definition",
+   "name": "A network's degree distribution P(k) is the probability that a node has degree k, the fraction of nodes with exactly k connections",
+   "verbatim_quote": "A degree distribution of a network is a probability distribution",
+   "page": "Ch. 17 (text lines 15427-15431)",
+   "latex": "P(k) = \\frac{|\\{ i \\mid \\mathrm{deg}(i) = k \\}|}{n}",
+   "symbol_and_unit_ledger": {
+    "P(k)": "probability a randomly chosen node has degree k, dimensionless",
+    "deg(i)": "degree of node i, count of edges",
+    "n": "total number of nodes"
+   },
+   "assumptions": [
+    "The network is a static snapshot for the measurement",
+    "Degree counts edges without weights unless a weighted variant is defined"
+   ],
+   "breakdown_regime": "A single snapshot distribution hides temporal rewiring; directed networks need separate in- and out-degree distributions",
+   "domain": "network analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Target and touch distributions are degree distributions: the shape (hub-dominated versus flat) tells the reasoning layer whether an offense runs through one node whose removal collapses the structure or through a flat rotation that absorbs losses.",
+    "source_operator": "degree_distribution_definition",
+    "telemetry": "Per-player target, carry, and snap-share histograms per team per week"
+   }
+  },
+  {
+   "primitive_id": "clustering_coefficient",
+   "name": "The clustering coefficient of a node is the probability that its neighbors are also neighbors of each other",
+   "verbatim_quote": "Therefore, the clustering coefficient of node i calculates the probability for its neighbors to be each other’s neighbors as well.",
+   "page": "Ch. 17 (text lines 15294-15297)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The network is undirected for this metric",
+    "The node has at least two neighbors, or the coefficient is undefined"
+   ],
+   "breakdown_regime": "Undefined or misleading for very low-degree nodes; weighted and directed variants give different values",
+   "domain": "network analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Clustering measures redundancy in a passing network: if a quarterback's top targets also connect heavily to each other (shared routes, same side of the field), removing one target reroutes less cleanly than the raw share suggests.",
+    "source_operator": "clustering_coefficient",
+    "telemetry": "Co-targeting matrices: how often pairs of receivers are targeted on the same drives and formations"
+   }
+  },
+  {
+   "primitive_id": "small_world_networks",
+   "name": "Watts-Strogatz small-world networks combine very high clustering with short paths, unlike their random counterparts",
+   "verbatim_quote": "The clustering coefficient was first introduced by Watts and Strogatz [56], where they showed that their small-world networks tend to have very high clustering compared to their random counterparts.",
+   "page": "Ch. 17 (text lines 15348-15350)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Comparison is against a random network of comparable size and density",
+    "A small rewiring probability interpolates between a regular lattice and a random graph"
+   ],
+   "breakdown_regime": "High clustering alone is not small-world; the short average path length must also be verified",
+   "domain": "network analysis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Schedule and matchup graphs are small-world: most opponents cluster inside divisions, but a few long-range edges (cross-conference games) carry outsized information about true team strength, and the reasoning layer should weight those bridge games heavily.",
+    "source_operator": "small_world_networks",
+    "telemetry": "Season schedule graph with clustering by division and the bridge games between clusters"
+   }
+  },
+  {
+   "primitive_id": "preferential_attachment",
+   "name": "In the Barabasi-Albert model a newcomer connects to existing node i with probability proportional to its degree, p(i) = deg(i) / sum_j deg(j)",
+   "verbatim_quote": "Here p(i) is the probability for an existing node i to be connected by a newcomer node, which is proportional to its degree (preferential attachment).",
+   "page": "Ch. 16.3, p. 355 (text lines 14030-14033)",
+   "latex": "p(i) = \\frac{\\mathrm{deg}(i)}{\\sum_j \\mathrm{deg}(j)}",
+   "symbol_and_unit_ledger": {
+    "p(i)": "probability that a new edge attaches to node i, dimensionless",
+    "deg(i)": "current degree of node i, count of edges"
+   },
+   "assumptions": [
+    "The network grows one node at a time",
+    "Attachment probability is exactly linear in current degree"
+   ],
+   "breakdown_regime": "Sublinear or superlinear attachment changes the degree distribution away from a pure power law; aging and fitness effects break pure degree proportionality",
+   "domain": "network growth",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Usage concentration is a preferential attachment process: targets breed targets because coverage rolls toward the hot receiver slowly while the quarterback's trust compounds; the engine projects share growth with an attachment kernel instead of freezing early-season shares.",
+    "source_operator": "preferential_attachment",
+    "telemetry": "Week-over-week target share changes regressed on current share to estimate the attachment exponent"
+   }
+  },
+  {
+   "primitive_id": "scale_free_power_law",
+   "name": "Networks whose degree distributions follow a power law P(k) ~ k^-gamma are scale-free, with hub nodes that a normal distribution would forbid",
+   "verbatim_quote": "Barabási and Albert called networks whose degree distributions follow a power law scale-free networks, because there is no characteristic “scale” that stands out in their degree distributions.",
+   "page": "Ch. 16.3, p. 355 (text lines 14048-14054)",
+   "latex": "P(k) \\sim k^{-\\gamma}",
+   "symbol_and_unit_ledger": {
+    "P(k)": "probability a node has degree k, dimensionless",
+    "\\gamma": "scaling exponent; gamma = 3 in the Barabasi-Albert model"
+   },
+   "assumptions": [
+    "The power law holds over a broad range of k, not just the tail",
+    "The network is large enough for the tail to be populated"
+   ],
+   "breakdown_regime": "Finite networks always truncate the tail; many claimed power laws fail rigorous fitting against log-normal alternatives",
+   "domain": "network growth",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player production is heavy-tailed: a few hub players carry a disproportionate share of team output, so the reasoning layer prices the loss of a hub as a structural change, while the loss of a median node is a rounding adjustment.",
+    "source_operator": "scale_free_power_law",
+    "telemetry": "Distribution of team EPA share across players, fitted for tail heaviness per team"
+   }
+  },
+  {
+   "primitive_id": "kuramoto_synchronization",
+   "name": "The Kuramoto model couples phase oscillators through the sine of their phase differences, with coupling strength alpha, and produces collective synchronization",
+   "verbatim_quote": "To represent this type of phase-based interaction among coupled oscillators, a Japanese physicist Yoshiki Kuramoto proposed the following very simple, elegant mathematical model in the 1970s [70]:",
+   "page": "Ch. 16 (text lines 13559-13562)",
+   "latex": "\\frac{d\\theta_i}{dt} = \\omega_i + \\frac{\\alpha}{|N_i|} \\sum_{j \\in N_i} \\sin(\\theta_j - \\theta_i)",
+   "symbol_and_unit_ledger": {
+    "\\theta_i": "phase of oscillator i, radians",
+    "\\omega_i": "natural frequency of oscillator i, radians per unit time",
+    "\\alpha": "coupling strength, per unit time",
+    "N_i": "neighbor set of node i"
+   },
+   "assumptions": [
+    "Interactions depend only on phase differences through a sine coupling",
+    "Each oscillator has a fixed natural frequency"
+   ],
+   "breakdown_regime": "Below a critical coupling the population stays incoherent; strongly heterogeneous frequencies or adversarial coupling prevent synchronization",
+   "domain": "dynamical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unit cohesion is synchronization: an offensive line's five blockers are oscillators whose timing either locks (combo blocks arriving together) or drifts (stunts exploiting the gaps), and the lock quality is a measurable state variable, not a chemistry narrative.",
+    "source_operator": "kuramoto_synchronization",
+    "telemetry": "Timing dispersion of coordinated actions: line get-off times, route break synchronization, snap-to-throw rhythm"
+   }
+  },
+  {
+   "primitive_id": "phase_coherence_order_parameter",
+   "name": "Phase coherence is an order parameter that equals 1 when all nodes are perfectly synchronized and 0 when phases are completely random",
+   "verbatim_quote": "This measurement becomes 1 if all the nodes are in perfect synchronization, or 0 if their phases are completely random and uniformly distributed in the angular space.",
+   "page": "Ch. 16, Exercise 16.8 context (text lines 13679-13682)",
+   "latex": "r = \\left| \\frac{1}{n} \\sum_{j=1}^{n} e^{i \\theta_j} \\right|",
+   "symbol_and_unit_ledger": {
+    "r": "phase coherence order parameter, dimensionless between 0 and 1",
+    "\\theta_j": "phase of node j, radians",
+    "n": "number of nodes"
+   },
+   "assumptions": [
+    "Phases live on a circle and are averaged as unit vectors",
+    "All nodes weighted equally"
+   ],
+   "breakdown_regime": "The scalar hides cluster structure: two opposed synchronized clusters can average to a deceptively low or high value depending on sizes",
+   "domain": "dynamical networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A single coherence number per unit per game (line timing, secondary communication, route timing) gives the reasoning layer a comparable, trackable cohesion signal across weeks instead of prose impressions.",
+    "source_operator": "phase_coherence_order_parameter",
+    "telemetry": "Per-game coherence scores computed from timing dispersion of coordinated unit actions"
+   }
+  },
+  {
+   "primitive_id": "adaptive_network_coevolution",
+   "name": "In adaptive networks, node state transitions and topological transformations are deeply coupled, producing state-topology co-evolution",
+   "verbatim_quote": "In these adaptive networks, state transitions of each node and topological transformation of networks are deeply coupled with each other, which could produce characteristic behaviors that are not found in other forms of dynamical network models.",
+   "page": "Ch. 17 (text lines 14301-14304)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both node states and the edge structure evolve in time",
+    "Each dynamics runs on a timescale that can influence the other"
+   ],
+   "breakdown_regime": "If topology changes much faster or slower than states, the coupling effectively decouples and static-network or mean-field methods suffice",
+   "domain": "dynamical networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A team's target network rewires as it plays: injuries and coverage responses change both player states and the connection structure, so the engine updates the network and the node values together after every game instead of re-rating players on a fixed graph.",
+    "source_operator": "adaptive_network_coevolution",
+    "telemetry": "Weekly target and personnel networks with node performance states, tracked as joint evolution"
+   }
+  },
+  {
+   "primitive_id": "agent_based_model_definition",
+   "name": "Agent-based models are computational simulation models that involve many discrete agents",
+   "verbatim_quote": "Agent-based models are computational simulation models that involve many discrete agents.",
+   "page": "Ch. 19.1, p. 427 (text lines 17014-17016)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Agents are discrete entities with their own behavioral rules",
+    "The model is run as a simulation rather than solved in closed form"
+   ],
+   "breakdown_regime": "With no constraints on agent rules, an ABM can fit anything post hoc; explanatory value requires the rules to be stated before outcomes are inspected",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The pre-simulation layer is an ABM in this sense: players as agents with stated behavioral rules (route choices, rush moves, coverage responsibilities) generate the matchup behavior that the analytic layers then summarize.",
+    "source_operator": "agent_based_model_definition",
+    "telemetry": "Agent rule sets per position with parameters fitted from tracking and play data"
+   }
+  },
+  {
+   "primitive_id": "abm_generalized_framework",
+   "name": "ABMs are the most generalized modeling framework in the book: cellular automata and dynamical networks are special cases of them",
+   "verbatim_quote": "ABMs are arguably the most generalized framework for modeling and simulation of complex systems, which actually include both cellular automata and dynamical networks as special cases.",
+   "page": "Ch. 19.1, p. 427 (text lines 16998-17001)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CA are recovered when agents sit on a regular grid with uniform rules",
+    "Dynamical networks are recovered when agents sit on a fixed or evolving graph"
+   ],
+   "breakdown_regime": "Generality is not accuracy: the special-case frameworks often admit analysis that the general ABM does not",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Framework choice is a ladder: use the most restrictive model that still expresses the mechanism (map, CA, network, full ABM), because restrictiveness is what makes a projection falsifiable; the reasoning trail names the rung used.",
+    "source_operator": "abm_generalized_framework",
+    "telemetry": "Model registry tagging each projection with the framework rung it was produced on"
+   }
+  },
+  {
+   "primitive_id": "schelling_segregation_threshold",
+   "name": "Schelling's model shows segregation emerges at a much lower homophily threshold than intuition expects, and very high homophily can paradoxically produce a mixed state",
+   "verbatim_quote": "But what Schelling actually showed was that the critical threshold can be much lower than one would expect. This means that segregation can occur even if people aren’t so homophilic.",
+   "page": "Ch. 19 (text lines 17268-17271)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Agents move when the same-type fraction among neighbors falls below their threshold",
+    "Agents choose new locations at random in a finite two-dimensional space"
+   ],
+   "breakdown_regime": "Results depend on vacancy density and neighborhood definition; the model explains a mechanism, it does not measure any real population's preferences",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Emergent clustering warns against reading intent from pattern: a defense's apparent tendency (always busting against trips formations) can emerge from mild local rules rather than a deliberate scheme flaw, and the fix the reasoning suggests differs completely between the two causes.",
+    "source_operator": "schelling_segregation_threshold",
+    "telemetry": "Pattern audits comparing observed clustering of failures against null models from mild local rules"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "920564f2a1314d8e-t1",
+   "think": "This book is a complete operating system for thinking about systems whose behavior is generated by interacting parts, and its machinery assembles in a deliberate order. It begins with a philosophy: a model is a simplified representation, science is the endless construction of such representations, and two cross-cutting phenomena, emergence and self-organization, are what make the representations nontrivial. Emergence says the macroscopic property is not a simple sum of microscopic ones. Self-organization says the macroscopic order can arise over time from the interactions themselves, in an open system, without a controller. Everything after Chapter 1 is a sequence of increasingly expressive ways to write down the microscopic rules and then read off the macroscopic consequences. The dynamical systems chapters supply the grammar: a state, a set of variables that uniquely specifies it, a phase space in which every state is a location, and rules that move the state through that space. Once that grammar exists, the first analytic questions are always the same. Where are the equilibrium points, the states that reproduce themselves? Are they stable, meaning does a small perturbation decay or grow? The discrete-time chapters answer with fixed-point equations and with linearization: rewrite the dynamics around the equilibrium in terms of a small perturbation, build the Jacobian, and let the eigenvalues vote. The logistic family is the laboratory for all of this. The logistic growth model has two transparent equilibria, extinction and carrying capacity. Rescaling strips it to the logistic map, one parameter, and that one parameter turns out to contain period doubling, a cascade whose intervals shrink geometrically, and then chaos: deterministic behavior with no period at all, whose unpredictability is measured rather than asserted, through the Lyapunov exponent as a time average of log derivative magnitudes along the trajectory. The continuous-time chapters mirror the discrete ones, with equilibria solving G(x) equal to zero and coupled systems like Lotka-Volterra showing how two species, or any two coupled quantities, oscillate because each one's growth rate is the other one's state. Bifurcation theory names the moment the whole picture changes: a parameter crosses a critical threshold and the phase space itself is topologically rearranged, so the analyst's job is not only to locate equilibria but to map the thresholds at which the equilibrium structure is replaced. Part III then scales the number of components. Cellular automata put identical dynamical variables on a grid and let a uniform local rule generate global pattern, including threshold contact processes like the epidemic and forest fire model where one burning neighbor is enough to propagate the front. Continuous field models replace the grid with partial differential equations: diffusion spreads quantities with the Laplacian, and reaction-diffusion systems show that local reactions plus pure diffusion are already sufficient for pattern formation. Network models relax the grid's regularity. The static analysis contributes the descriptive statistics: degree distributions, which in growing networks with preferential attachment become power laws with hubs, and clustering coefficients, which with short path lengths define the small-world regime. The dynamic chapters then let the network itself move: Kuramoto oscillators synchronize through sine coupling when the coupling is strong enough, with phase coherence as a clean order parameter between zero and one, and adaptive networks close the loop by letting node states and topology change each other. Agent-based models sit at the top of the ladder as the most general framework, with cellular automata and dynamical networks as special cases, and Schelling's segregation model as the standing warning that strong macroscopic pattern can emerge from thresholds far weaker than intuition demands. For a reasoning engine, the value of this machinery is discipline. It forces every claim into one of a few shapes: an equilibrium claim, a stability claim, a threshold claim, a distribution-shape claim, a synchronization claim, or an emergence claim, and each shape carries its own test. A projection that says a unit will keep performing at its current level is an equilibrium claim and must survive a perturbation test. A projection that says a matchup flips if one player is removed is a bifurcation claim and must name the threshold. A projection built on one star is a hub claim and must price the heavy tail. Two further habits deserve extraction because they transfer directly. The first is rescaling before analysis: the logistic growth model carries two parameters until a change of units reveals that only one combination of them matters, and the same discipline applied to any rating system removes dimensions that were never real degrees of freedom. Fewer effective parameters means fewer ways to overfit and a cleaner map of where the thresholds actually sit. The second habit is the paired presentation of simulation and analysis. Simulation shows what a rule does; analysis shows why, and where it must stop doing it. A simulation without analysis can be a coincidence with good graphics. An analysis without simulation can be a proof about a regime the system never visits. The book refuses to publish either one alone, and an engine should hold itself to the same refusal. The network chapters add one more transferable warning about measurement. A degree distribution is a claim about shape, and shape claims are falsifiable in a way that average claims are not: two networks with the same average degree can be a homogeneous mesh or a hub system, and they fail in completely different ways when a node is removed. Any aggregate that reports only the mean of a distribution whose shape drives the behavior is hiding the load-bearing information. The book also supplies the failure vocabulary. Linearization fails far from equilibrium. Fixed rules fail when the agents adapt. Homogeneous grids fail when the real connection structure is a network. A model that cannot state which of these failures it is exposed to has not finished its work. That is the standard this extraction encodes: every primitive is either a definition that fixes language, an equation that fixes computation, or a named regime change that fixes where the computation stops being valid.",
+   "retrocausal_genealogy": "The lineage runs from von Neumann and Ulam inventing cellular automata in the 1940s and 1950s to model self-reproduction, through Lorenz and the discovery of chaos in deterministic systems, May's work on the logistic map in ecology, Watts and Strogatz on small worlds in 1998, Barabasi and Albert on preferential attachment in 1999, and Kuramoto's 1970s synchronization model imported from physics. Sayama's genealogy is explicit that complex systems science is a confluence: nonlinear dynamics, systems theory, and game theory as historical roots, with pattern formation, evolution and adaptation, networks, and collective behavior as the newer topical clusters that grew once computation became cheap enough to simulate what analysis could not solve.",
+   "theory_of_mind": "Sayama's model of the reader is a working scientist in training: someone who should never mistake the model for the reality, who should rescale before analyzing, find equilibria before simulating, and treat simulation and analysis as two views of the same object, which is why most topics get paired computational and mathematical chapters. His model of the domain is that cross-disciplinary generality is real: the same logistic map governs a population and a learning curve because the mechanism, growth limited by saturation, is shared. He trusts simple rules honestly explored over elaborate models weakly understood, and he expects the reader to verify every claim by running the code.",
+   "cross_layer_veto": "Several results in this book veto common reasoning shortcuts. The chaos chapters veto long-horizon point prediction in sensitive regimes: when the Lyapunov exponent is positive, confidence must decay at a measured rate, and any layer that outputs a single confident number far downstream is overruled. The bifurcation material vetoes linear extrapolation across thresholds: near a critical parameter value, small input changes are not small output changes. Schelling vetoes intent attribution from pattern: a clustered outcome does not prove a strong preference or a deliberate scheme. And the linearization chapters veto stability claims made far from equilibrium: a perturbation analysis is only licensed near the point it was computed at."
+  }
+ ],
+ "universal_lens": "Read as a general template, this book says: any system of many interacting parts can be approached with the same sequence. Fix the state variables. Write the local rules. Find the equilibria and test their stability. Map the thresholds where the structure changes. Measure the distribution shapes and the coupling structure. Only then simulate the general case. The sequence is domain-free: it applies to ecosystems, economies, epidemics, organizations, and software systems with equal force, because the questions are about dynamics, not about subject matter.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as curriculum and as method. As curriculum, it is the single-volume spine for teaching modeling: dynamical systems, bifurcations, chaos, cellular automata, fields, networks, and agent-based models in one consistent notation with runnable code. As method, it supplies the audit questions for any submitted model: What is the state? Where are the equilibria? What is the stability argument? Where are the thresholds? What distribution shape is assumed, and was it measured? A submission that cannot answer is returned, whatever its headline accuracy.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes five concrete mechanisms. Equilibrium and stability analysis turns ratings into testable fixed-point claims with perturbation pricing for injuries and lineup news. Bifurcation mapping names the thresholds where a matchup changes kind rather than degree. Power-law degree structure prices hub players as structural single points of failure. Synchronization and phase coherence turn unit cohesion into a measurable weekly signal. And the Lyapunov discipline caps forecast confidence by measured divergence rates, so the reasoning trail states not only a projection but the horizon over which that projection deserves trust."
+}

@@ -1,0 +1,724 @@
+{
+ "book_id": "89ecb5a26f28aad5",
+ "source_status": "COMPLETE",
+ "source_note": "Walter Camp, compiler, Football Facts and Figures: A Symposium of Expert Opinion on the Game's Place in American Athletics, New York: Harper and Brothers, 1894. The statistics were collected by a committee named in the book's Note: James W. Alexander, Joseph H. Twichell, Henry E. Howland, Endicott Peabody, Robert Bacon, and Walter Camp. The local file is an Internet Archive scan of the 1894 edition (PDF metadata title 'Football facts and figures', creator 'Digitized by the Internet Archive'), 262 PDF pages, 10,175,139 bytes; scan digest sha256(str(size) + file bytes) = 89ecb5a26f28aad5ac3ba0c7755aaecf20237b1730fb4f378cf69a22ed492778, whose first 16 hex are the book_id. The extracted text (474,137 bytes) is OCR of the scan: the cover leaves are garbled, tables on pages 12-13 are partly illegible, and there are typical misreads (for example 'arras' for arms, 'pai't' for part, 'isdue' for is due, 'wouldseem' for would seem); all quoted passages were chosen from legible text and verified as contiguous substrings of the extracted text file, with OCR readings preserved. Publisher advertisements after page 237 are not part of the work and were not used. The work contains no formal equations; its one quantitative construction, the gain-in-symmetry index, is stated in prose and is represented in LaTeX in that primitive. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "triangulated_opinion_plan",
+   "name": "The investigation plan samples opinion from three independent standpoints: school head-masters, college faculty, and former team captains",
+   "verbatim_quote": "This plan was to secure an expression of opinion from head-masters of schools, | members of faculty of colleges, and former captains of football teams.",
+   "page": "Introduction, p. vi; text lines 209-217",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Different institutional standpoints see different effects of the same activity",
+    "Opinion is evidence when the question is partly about lived effect, not only about counts"
+   ],
+   "breakdown_regime": "Opinion sampling inherits the sympathies of who is asked; the committee mitigates this by printing hostile faculty letters but cannot remove self-selection from replies.",
+   "domain": "evidence design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine should never grade a contested intervention from one standpoint. It should collect player, coach, and external observer channels as separate evidence streams, keep their disagreements visible, and let agreement across unlike standpoints raise confidence more than volume within one standpoint.",
+    "source_operator": "triangulated_opinion_plan",
+    "telemetry": "Separate testimony streams tagged by standpoint (participant, supervisor, independent observer), with agreement and disagreement rates per claim"
+   }
+  },
+  {
+   "primitive_id": "comparator_benchmark_morgan_rowing",
+   "name": "A contested sport is benchmarked against the one prior sport with a thorough benefit and injury enquiry, matched on cohort size: Morgan's Oxford rowing study",
+   "verbatim_quote": "After investigation it was found that the only thorough enquiry into the question of the number benefited and injured by any sport was one made by Dr. Morgan of Oxford, regarding the boating men of his university.",
+   "page": "Introduction, p. vi; text lines 219-224",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rowing and football cohorts are comparable enough for benefit and injury proportions to be informative",
+    "The Harvard, Princeton, and Yale player count was chosen to sit close to Morgan's rowing count"
+   ],
+   "breakdown_regime": "Cross-sport comparison breaks where exposure, era, country, and selection differ; it calibrates plausibility, it does not estimate a football effect.",
+   "domain": "evidence design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Novel signals need a reference class. The engine should anchor any new risk or benefit claim to the best measured comparator activity with a similar cohort, state the matching variables, and report the claim as relative to that anchor rather than as an absolute.",
+    "source_operator": "comparator_benchmark_morgan_rowing",
+    "telemetry": "Comparator cohort sizes, exposure windows, and benefit and injury proportions for reference activities"
+   }
+  },
+  {
+   "primitive_id": "longitudinal_followup_coverage",
+   "name": "Near-complete longitudinal follow-up: every Harvard and Yale player bar one, and all but about six Princeton players, traced across eighteen years",
+   "verbatim_quote": "In order to do this they have followed up every player on the Harvard and Yale teams with one exception, and all but some half dozen on the Princeton teams, during that period of eighteen years.",
+   "page": "Introduction, p. vii; text lines 280-287",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A defined roster cohort can be traced almost completely, so nonresponse is small enough to bound",
+    "Effects worth judging include long-run outcomes, not only season outcomes"
+   ],
+   "breakdown_regime": "Coverage this complete is rare outside closed institutions; in open populations the same design degrades into responder bias unless missingness is modeled.",
+   "domain": "evidence design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Outcome evaluation should start from a closed roster and a follow-up window, then report the traced fraction as part of the result. The engine should treat an effect estimate with unknown coverage as a weaker claim than the same estimate with near-complete tracing.",
+    "source_operator": "longitudinal_followup_coverage",
+    "telemetry": "Roster cohort size, traced count, untraced count, follow-up years, and outcome completeness per cohort"
+   }
+  },
+  {
+   "primitive_id": "mortality_attribution_audit",
+   "name": "Mortality is audited through family and friend testimony for the dead, and only one death in eighteen years is attributed to the sport, with no direct connection even there",
+   "verbatim_quote": "the dead, the testimony of friends or family as to the cause of death. Regarding the latter, in only a single instance was death attributed in any way to the sport. In that single case overtraining in several athletic lines was supposed to have weakened the constitution of the man, although no direct connection existed.",
+   "page": "Introduction, p. viii; text lines 292-297",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Proxy testimony can establish attributed cause of death for men who cannot reply",
+    "Attribution is graded: an indirect weakening claim is recorded as weaker than a direct causal claim"
+   ],
+   "breakdown_regime": "Family attribution is not medical certification, and a single attributed case in a self-selected survivor-heavy cohort cannot bound a true mortality rate.",
+   "domain": "injury epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rare catastrophic outcomes need their own audit channel, separate from average effects, with attribution strength graded. The engine should keep direct, indirect, and unattributed severe outcomes in distinct buckets so a reassuring average never absorbs a catastrophic tail.",
+    "source_operator": "mortality_attribution_audit",
+    "telemetry": "Severe outcome count, attribution grade per case, proxy source type, and exposure cohort size"
+   }
+  },
+  {
+   "primitive_id": "player_letter_selection_bias",
+   "name": "Player letters are published selectively because player opinion was nearly unanimous, so the printed player sample overstates the consensus it reports",
+   "verbatim_quote": "In the case of the letters from players, the opinion was so unanimously in favor of the sport that only a few are given.",
+   "page": "Introduction, p. viii; text lines 308-310",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The editors state their selection rule openly, so the bias is documented rather than hidden",
+    "Unanimity among respondents is itself a datum, separate from the letters chosen to print"
+   ],
+   "breakdown_regime": "Any downstream reader who treats printed letters as a random sample will double-count the consensus; the selection rule must travel with the data.",
+   "domain": "evidence design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every curated corpus needs its selection rule stored beside the records. The engine should distinguish the population statistic (respondent unanimity) from the displayed sample (chosen letters) and never let display frequency masquerade as population frequency.",
+    "source_operator": "player_letter_selection_bias",
+    "telemetry": "Selection rule per corpus, population response distribution, and displayed sample size versus population size"
+   }
+  },
+  {
+   "primitive_id": "mind_directed_strength",
+   "name": "Supremacy in football is strength rightly directed by mind, not strength alone",
+   "verbatim_quote": "supremacy is gained not by physical strength alone, but by this strength rightly directed by mind.",
+   "page": "Chapter I, p. 3; text lines 319-321",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physical capacity is a resource whose value depends on the quality of its direction",
+    "Direction quality varies between players and teams facing the same physical contest"
+   ],
+   "breakdown_regime": "The claim is qualitative and era-bound; it does not say how much direction is worth against how much strength, and mass-play styles can compress the direction premium.",
+   "domain": "game cognition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Raw physical inputs should enter a projection only through a direction layer: decision quality, assignment correctness, and timing convert the same athleticism into different outcomes. The engine should model physical tools and their direction as separate factors so a stronger but worse-directed unit is not automatically favored.",
+    "source_operator": "mind_directed_strength",
+    "telemetry": "Assignment error rates, decision latency, play success by athlete grade, and coach or scheme direction indicators"
+   }
+  },
+  {
+   "primitive_id": "continuous_rule_interpretation",
+   "name": "Successful play requires interpreting and applying the rules at every moment, so rule knowledge is a live cognitive skill, not a pregame formality",
+   "verbatim_quote": "In the first place the rules of the game must be observed by every playei*. The interpretation and application of them in every moment of play calls for no ordinary quickness of mind in a successful player.",
+   "page": "Chapter I, p. 3; text lines 322-325",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule set is stable enough within a game to be learned, but its application is situational",
+    "Players differ in how fast they map a developing situation onto the rule that governs it"
+   ],
+   "breakdown_regime": "When rules change faster than players relearn them, or officials apply them inconsistently, measured rule cognition reflects the officials as much as the players.",
+   "domain": "game cognition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine should treat the governing code as an active constraint layer that is re-evaluated per situation, not as static metadata. Players and teams with faster correct rule application gain hidden yardage through avoided penalties and exploited allowances.",
+    "source_operator": "continuous_rule_interpretation",
+    "telemetry": "Penalty rates by type, declined versus accepted penalties, rule-change dates, and official crew tendencies"
+   }
+  },
+  {
+   "primitive_id": "positional_interdependence",
+   "name": "Each position has a special line of play, but no player can act without regard to the rest: individual play matters, team play matters more",
+   "verbatim_quote": "Though each man has a special line of play belonging to his position on a team, yet his play is so related to the plays of the rest of the team, that he cannot act without regard to the other players. It is eminently a game of combinations.",
+   "page": "Chapter I, p. 3; text lines 326-331",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Roles are differentiated but coupled; the coupling, not the role, produces the play outcome",
+    "A player's correct action depends on what teammates do on the same play"
+   ],
+   "breakdown_regime": "Interdependence is not uniform: a broken assignment by one role can dominate, and star leverage grows in open-play styles where coupling loosens.",
+   "domain": "team systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unit projections should be built from coupled role models rather than summed individual grades. The engine should carry interaction terms between adjacent roles, so replacing one player changes the value of his neighbors, not only his own slot.",
+    "source_operator": "positional_interdependence",
+    "telemetry": "Play outcomes by personnel grouping, adjacent-role pair performance, and substitution effects on neighboring positions"
+   }
+  },
+  {
+   "primitive_id": "shared_signal_protocol",
+   "name": "The captain's signals bind the whole team and are studied, memorized, and practised for weeks until execution is collective and automatic",
+   "verbatim_quote": "Then, through weeks of preparation, these signals have to be studied, to be memorized, to be practised as thoroughly and faithfully by the men as the laws of any science by successful scholars.",
+   "page": "Chapter I, p. 3; text lines 334-337",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A shared code only coordinates if every member holds the same version of it",
+    "Rehearsal converts deliberate decoding into fast collective response"
+   ],
+   "breakdown_regime": "Signal systems decay under noise, opponent decoding, and personnel turnover; a new player resets part of the shared state.",
+   "domain": "team systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coordination is a stored asset that depreciates. The engine should track continuity of the communicating unit, weeks of shared practice, and signal complexity, because the same play call is a different play for a unit that has rehearsed it together and one that has not.",
+    "source_operator": "shared_signal_protocol",
+    "telemetry": "Unit continuity counts, shared snap counts, communication-error plays, and false-start or misalignment rates"
+   }
+  },
+  {
+   "primitive_id": "balanced_whole_body_development",
+   "name": "Football play brings almost every muscle into activity and develops no part of the muscular system abnormally",
+   "verbatim_quote": "Yet the play brings into activity almost every muscle of the body. The legs, the arras, and the trunk are all used. No part of the muscular system is developed abnormally.",
+   "page": "Chapter I, p. 4; text lines 379-382",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The game's movements are varied enough to load the whole body across a season",
+    "Balanced loading is claimed as a benefit distinct from total load"
+   ],
+   "breakdown_regime": "Position specialization narrows the loading pattern, and collision load is not training load; the claim predates any workload measurement.",
+   "domain": "physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Training value should be assessed by loading distribution, not only total volume. For the engine's health layer, a broadly distributed load profile and a narrow spiking profile carry different adaptation and injury implications even at equal totals.",
+    "source_operator": "balanced_whole_body_development",
+    "telemetry": "Workload distribution by muscle group and movement type, position-level load profiles, and acute load spikes"
+   }
+  },
+  {
+   "primitive_id": "courage_under_known_risk",
+   "name": "The courage football cultivates is not ignorance of danger: the best players see the danger, remember their injuries, and continue to face plays that may worsen them",
+   "verbatim_quote": "Indeed, the best players feel and see the danger which they brave. Conscious of injuries received, they often continue to face plays which may exaggerate their pains.",
+   "page": "Chapter I, p. 4; text lines 392-395",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Continuing under known risk is treated as a trainable disposition, distinct from recklessness",
+    "The disposition is claimed to transfer beyond the game"
+   ],
+   "breakdown_regime": "The same behavior is a medical hazard when the injury is structural; a culture that prizes playing hurt suppresses injury reporting and corrupts availability data.",
+   "domain": "character formation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Willingness to play through pain is a signal with two faces: it predicts availability and effort, and it predicts under-reporting. The engine should raise both an availability estimate and an injury-reporting uncertainty estimate when a player or program shows this pattern.",
+    "source_operator": "courage_under_known_risk",
+    "telemetry": "Injury reports versus later confirmed injuries, games played while listed with injuries, and reporting lag by player and program"
+   }
+  },
+  {
+   "primitive_id": "self_control_and_obedience",
+   "name": "Training couples self-control in strong excitement and self-denial in preparation with instant obedience to captain and coach",
+   "verbatim_quote": "To training in courage, endurance, and self-control must be added the valuable lesson of obedience to authority.",
+   "page": "Chapter I, p. 5; text lines 400-406",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Emotional regulation and command compliance are trained by the same practice environment",
+    "Preparation sacrifices are voluntary and visible to teammates, which makes them a commitment signal"
+   ],
+   "breakdown_regime": "Obedience training can suppress legitimate dissent and injury disclosure; self-denial regimes can slide into overtraining and eating or sleep restriction.",
+   "domain": "character formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A team's discipline profile should be modeled as regulation under arousal, not as generic effort. The engine can use penalty-after-whistle rates, response to adversity, and preparation compliance as observable traces of this trained regulation.",
+    "source_operator": "self_control_and_obedience",
+    "telemetry": "Personal fouls, post-play penalties, comeback performance after turnovers, and training compliance records"
+   }
+  },
+  {
+   "primitive_id": "character_and_team_success",
+   "name": "No college sport depends so much for success on good all-round men: character quality is presented as a performance input, not a decoration",
+   "verbatim_quote": "As there is no other college sport which so brings out the best virtues in a man, so there is no other college sport which is so dependent for its success upon good all-round men.",
+   "page": "Chapter I, p. 5; text lines 417-420",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The qualities the game rewards and the qualities it develops are claimed to be the same set",
+    "Team success is attributed partly to the stock of character across the whole eleven, not to a few stars"
+   ],
+   "breakdown_regime": "The argument is circular if success is the only evidence of character; it also reflects the era's moral vocabulary and cannot be measured in its own terms.",
+   "domain": "character formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Translated out of moral vocabulary, the claim is that reliability, honesty in preparation, and steadiness are distributed performance inputs. The engine should prefer measurable proxies, availability, assignment reliability, and error rates under pressure, over any direct character grade.",
+    "source_operator": "character_and_team_success",
+    "telemetry": "Availability rates, assignment reliability, late-game error rates, and off-field availability losses"
+   }
+  },
+  {
+   "primitive_id": "hazing_displacement",
+   "name": "Football discipline at the start of college displaces hazing: freshmen learn submission from the sport under better instructors, and the older occupation loses its excuse",
+   "verbatim_quote": "The discipline of the sport, coming at the time it does, has almost entirely done away with that occupation. The Freshmen have learned their lesson in a better way, under better instructors. The discipline of football has almost banished the discipline of hazing, or left it tame and without excuse for its existence.",
+   "page": "Chapter I, p. 6; text lines 466-472",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A structured hierarchy introduced early can substitute for an unstructured one competing for the same social function",
+    "Timing matters: the substitute arrives when newcomers first seek standing"
+   ],
+   "breakdown_regime": "Displacement is not abolition; team hierarchies can themselves become the hazing channel, which the claim does not examine.",
+   "domain": "institutional culture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Institutional behaviors compete for functions. When the engine or an analyst evaluates a program practice, the right question includes what worse practice it displaces and what function it serves, not only its isolated cost.",
+    "source_operator": "hazing_displacement",
+    "telemetry": "Program incident reports, newcomer integration timing, and practice structure at season start"
+   }
+  },
+  {
+   "primitive_id": "brutality_observer_dependence",
+   "name": "Brutality is observer-dependent: the same collisions read as brutal to timid observers and as tame fun to the average schoolboy",
+   "verbatim_quote": "collisions between young men in the most properly conducted game would seem brutal, though these same collisions wouldseem tame fun to the average schoolboy.",
+   "page": "Chapter I, p. 7; text lines 482-485",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Judgments of acceptable contact embed the observer's baseline, not only the event",
+    "The book uses this to discount alarm, which is itself a standpoint move"
+   ],
+   "breakdown_regime": "Observer dependence cuts both ways: participants habituate and under-report harm, so insider calm is no more neutral than outsider alarm.",
+   "domain": "risk governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Contact severity should be measured against physical criteria, force, mechanism, and outcome, because every human standpoint in the chain is biased in a known direction. The engine should log who classified an event whenever classification affects a downstream decision.",
+    "source_operator": "brutality_observer_dependence",
+    "telemetry": "Injury mechanism classifications, classifier identity, and outcome-confirmed severity per event"
+   }
+  },
+  {
+   "primitive_id": "violent_contact_self_control_test",
+   "name": "Violent encounters create the temptation to injure needlessly, and therefore also the opportunity to develop courage and self-control by resisting it",
+   "verbatim_quote": "If violent encounters on the football field do lead to the temptation of inflicting needless personal injuries on an opponent, they also give opportunities for resisting this temptation, and consequently for the development of the highest forms of courage and self-control.",
+   "page": "Chapter I, p. 7; text lines 506-510",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A hazard and a training stimulus can be the same event viewed at different layers",
+    "Most players are claimed to take the resisting option; the minority who yield rarely reach prominent places"
+   ],
+   "breakdown_regime": "Framing hazard as opportunity can rationalize keeping hazards that rules could remove; the developmental claim does not price the injuries of those who were the temptation's targets.",
+   "domain": "character formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Signals should be decomposed into hazard and information before being weighted. A violent play type can simultaneously raise an injury prior and provide evidence about a player's regulation; the engine should book both effects instead of netting them into one impression.",
+    "source_operator": "violent_contact_self_control_test",
+    "telemetry": "Retaliation penalties, fouls after contact, injury events by play type, and repeat-offender rates"
+   }
+  },
+  {
+   "primitive_id": "gate_receipt_budget_discipline",
+   "name": "Gate money disciplines a club: a club that can spend only what it earns is stimulated to play a good game and to spend with prudence",
+   "verbatim_quote": "If a club knows that it has to spend only what it earns, it will be stimulated, first, to play as good a game as possible ; and, secondly, to spend its earnings witli prudence.",
+   "page": "Chapter I, p. 8; text lines 533-536",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Earned revenue ties spending to demonstrated demand",
+    "The same receipts that discipline also reward spectacle, which can pull against safety and moderation"
+   ],
+   "breakdown_regime": "The mechanism fails when one program's receipts subsidize others or when winning itself becomes the revenue strategy; the book's own conclusion worries about exactly this scale of gate money.",
+   "domain": "finance governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Budget constraints shape behavior only when the constraint binds the decision maker. In engine terms, any incentive channel should be modeled with its recipient and its bindingness, not as a generic claim that money improves or corrupts.",
+    "source_operator": "gate_receipt_budget_discipline",
+    "telemetry": "Revenue by source, spending by category, and the share of budget covered by earned receipts per program"
+   }
+  },
+  {
+   "primitive_id": "medical_clearance_certificate",
+   "name": "Participation should be gated by examination: every candidate examined by a competent physician, and excluded without a certificate of physical soundness",
+   "verbatim_quote": "Such an issue might be avoided by the requirement that every candidate for trial should be examined by a competent physician, and, in default of pi'ocuring a certificate of physical soundness, should be excluded from participation in physical contests.",
+   "page": "Chapter I, p. 8; text lines 548-552",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Some catastrophic risk comes from pre-existing organic weakness that play exposes rather than causes",
+    "A pre-participation screen can catch part of that risk at acceptable cost"
+   ],
+   "breakdown_regime": "A one-time certificate cannot catch acquired conditions, and screening quality varies; the gate also creates false assurance if treated as a guarantee.",
+   "domain": "health governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Eligibility gates belong before exposure in any health model. The engine should treat clearance status and screening recency as availability inputs, and should widen uncertainty for athletes whose screening state is unknown rather than assuming soundness.",
+    "source_operator": "medical_clearance_certificate",
+    "telemetry": "Clearance status, screening dates, excluded conditions, and subsequent injury rates by screening state"
+   }
+  },
+  {
+   "primitive_id": "undergraduate_eligibility_control",
+   "name": "Limiting teams to undergraduates brings teams under faculty supervision and caps competition, because professional-school students escape the attendance discipline undergraduates live under",
+   "verbatim_quote": "would also limit teams to undergraduates. This measure would bring the teams better under control of faculty supervision, and Avould besides put a certain limit to competition.",
+   "page": "Chapter I, p. 8; text lines 557-559",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eligibility rules are control instruments, not only fairness instruments",
+    "Unequal outside obligations between player classes distort both competition and supervision"
+   ],
+   "breakdown_regime": "Eligibility restriction trades playing quality and older athletes' access for control; modern equivalents involve age, enrollment, and transfer status rather than professional schools.",
+   "domain": "eligibility governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Roster composition rules change the population a model is fitted on. The engine should segment players by eligibility class and obligation load, because the same athlete under different external constraints is a different availability and development prospect.",
+    "source_operator": "undergraduate_eligibility_control",
+    "telemetry": "Roster eligibility classes, enrollment status, outside obligation indicators, and availability by class"
+   }
+  },
+  {
+   "primitive_id": "director_of_athletics_interface",
+   "name": "A director of athletics seated in the faculty should mediate between students and instructors, holding both the scholarship side and the healthy boy side at once",
+   "verbatim_quote": "appointment of a director of athletics to a seat in the undergraduate faculty, who should be the medium of communication between the students and the instructors.",
+   "page": "Chapter I, p. 9; text lines 583-586",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conflicts between athletics and faculty persist partly because no role owns the interface",
+    "The mediator needs standing in both worlds: a graduate, a scholar, and someone students trust"
+   ],
+   "breakdown_regime": "A mediator without authority becomes a mailbox; the proposal depends on the person and on faculty willingness to route through him.",
+   "domain": "institutional governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recurring cross-layer conflicts usually mark a missing interface role rather than bad actors. In engine design the same principle assigns every contested signal family an owning layer with authority to reconcile it, instead of letting disputes surface as noise.",
+    "source_operator": "director_of_athletics_interface",
+    "telemetry": "Governance role assignments, dispute resolution times, and policy exception counts per program"
+   }
+  },
+  {
+   "primitive_id": "paired_growth_measurements",
+   "name": "Growth is measured in pairs: the same class measured on entry and again in sophomore year, so change is computed within the same men",
+   "verbatim_quote": "from Dr. Seaver of Yale College two sets of measurements of members of one class, so as to ascertain the growth for one year. The first set of measurements was made soon after the class entered college, and its second set was taken in its sophomore year.",
+   "page": "Chapter I, p. 11; text lines 653-658",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Within-person change removes stable between-person differences from the comparison",
+    "The two measurement occasions bracket one year of college exposure"
+   ],
+   "breakdown_regime": "Paired designs still confound maturation with the activity, and men who skip the second measurement can bias the change estimate.",
+   "domain": "measurement design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Longitudinal features should be computed as within-athlete deltas wherever possible. The engine gains more from a player's change against his own baseline than from his level against a population, because the delta cancels stable confounders the level cannot.",
+    "source_operator": "paired_growth_measurements",
+    "telemetry": "Repeated anthropometric and strength measurements per athlete with matched measurement dates"
+   }
+  },
+  {
+   "primitive_id": "small_subgroup_significance_limit",
+   "name": "Subgroup figures from very few men are merely significant, not conclusive: the six football players in the growth table cannot carry a verdict",
+   "verbatim_quote": "The figures for the special athletes are derived from so small a number of men that they can hardly be taken as conclusive. They are merely significant.",
+   "page": "Chapter I, p. 11; text lines 684-687",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The authors grade their own evidence by subgroup size and say so in print",
+    "One man's loss moved the six-man football average, which the text discloses"
+   ],
+   "breakdown_regime": "The caution is applied to the growth table but not consistently to the book's testimonial majorities; graded confidence must be enforced by the reader.",
+   "domain": "measurement design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every estimate should carry its effective sample size into the reasoning layer, and small-subgroup estimates should be labeled indicative only. The engine should shrink tiny-cell effects toward the parent population instead of letting a six-man average argue at full weight.",
+    "source_operator": "small_subgroup_significance_limit",
+    "telemetry": "Cell sizes for every subgroup estimate and the shrinkage weight applied per cell"
+   }
+  },
+  {
+   "primitive_id": "symmetry_gain_index",
+   "name": "Gain in symmetry is a normalized index: sum the right-left size differences for arm, forearm, thigh, and calf each year; the percentage gain is the reduction in that sum divided by the first-year sum",
+   "verbatim_quote": "To test the question of symmetry of growth, the differences between the sizes of right arm and left arm, of right forearm and left forearm, of right thigh and left thigh, of right calf and left calf, were taken for each year. The sum of the differences of the second year (being less in both classes of students) was subtracted from the sum of the differences of the first year. The remainder was a gain in symmetry. This remainder, divided by the sum of the differences of the first year, gave the percentage of \" gain in symmetry.\"",
+   "page": "Chapter I, p. 14; text lines 779-788",
+   "latex": "\\mathrm{Gain\\ in\\ symmetry} = \\frac{D_1 - D_2}{D_1} \\times 100\\%",
+   "symbol_and_unit_ledger": {
+    "D_1": "sum of right-left size differences (arm, forearm, thigh, calf) in the first year, in millimetres",
+    "D_2": "the same sum in the second year, in millimetres",
+    "result": "percentage gain in symmetry, per cent"
+   },
+   "assumptions": [
+    "Bilateral differences are treated as magnitudes, so a smaller second-year sum means more symmetry",
+    "Four bilateral pairs (arm, forearm, thigh, calf) are summed with equal weight"
+   ],
+   "breakdown_regime": "Undefined when the first-year sum is zero; measurement error inflates both sums, and equal weighting lets one pair dominate if its scale differs.",
+   "domain": "measurement design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a complete derived metric: an asymmetry level converted into a normalized change score. The engine can reuse the shape for any bilateral or balance quantity, tracking the level and the normalized change separately, because a large percentage gain on a tiny base is not a large effect.",
+    "source_operator": "symmetry_gain_index",
+    "telemetry": "Bilateral measurement pairs per athlete and year, first and second asymmetry sums, and the normalized change"
+   }
+  },
+  {
+   "primitive_id": "physical_benefit_self_report_counts",
+   "name": "Self-reported physical benefit is near-universal in the traced cohort: 328 of 337 Harvard, Yale, and Princeton respondents considered themselves benefited",
+   "verbatim_quote": "Harvard, Yale, and Princeton players, 1876-1894 inclusive. Number of answers received, 337 in all. Number of men who considered themselves benefited, 328",
+   "page": "Chapter II, p. 59; text lines 2809-2812",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Self-report is the outcome measure; benefited is the respondent's own global judgment",
+    "The denominator is answers received, not the full roster"
+   ],
+   "breakdown_regime": "Survivors who feel benefited are likelier to answer; the count measures respondent sentiment, not a treatment effect, and the committee's framing invited affirmation.",
+   "domain": "injury epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self-reported benefit should be stored as sentiment with its denominator, never converted into an effect size. The engine can use such majorities to detect controversy or consensus, while causal claims wait for measured outcomes.",
+    "source_operator": "physical_benefit_self_report_counts",
+    "telemetry": "Respondent counts, roster denominators, response rates, and self-report distributions per cohort"
+   }
+  },
+  {
+   "primitive_id": "permanent_injury_case_series",
+   "name": "Permanent injuries are enumerated as a case series: twenty-three cases among Yale, Harvard, and Princeton players from 1876 to 1893, printed in the men's own words",
+   "verbatim_quote": "Of permanent injuries to Yale, Harvard, and Princeton players from 1876-1893 inclusive there were twentythree cases.",
+   "page": "Chapter II, p. 60; text lines 2879-2881",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Permanence is judged by the man's present reminder of the injury at reply time",
+    "The case series is complete for men who answered other than a flat No"
+   ],
+   "breakdown_regime": "Twenty-three cases without an exposure denominator cannot give a rate; permanence judged at varying years after play mixes resolved and resolving injuries.",
+   "domain": "injury epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Case series and rates answer different questions. The engine should keep enumerated severe cases visible as cases, with mechanism and sequel, even when a rate cannot be computed, because mechanism patterns are actionable before denominators exist.",
+    "source_operator": "permanent_injury_case_series",
+    "telemetry": "Severe case count, mechanism per case, years since play, and current functional sequel per case"
+   }
+  },
+  {
+   "primitive_id": "verbatim_negative_case_reporting",
+   "name": "Every adverse reply is printed in the respondent's exact words, so negative evidence cannot be softened by summary",
+   "verbatim_quote": "So much has been said regarding the great extent of these injuries and the seriousness of them that we give the exact words of every man who replied otherwise than \"No\" to the question of the permanency of any injury received.",
+   "page": "Chapter II, p. 60; text lines 2874-2878",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Verbatim publication lets readers audit the severity classification themselves",
+    "The rule is asymmetric by design: flat No answers are counted, all other answers are quoted"
+   ],
+   "breakdown_regime": "Verbatim adverse cases are vivid and can dominate judgment beyond their frequency; the design informs audit but distorts casual reading.",
+   "domain": "evidence design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Adverse cases should be preserved verbatim and linked to their aggregate count in the same record. The engine should let an analyst open the exact words behind any severe-case flag, while keeping the count, not the vividness, as the weighting input.",
+    "source_operator": "verbatim_negative_case_reporting",
+    "telemetry": "Verbatim adverse reports linked to aggregate counts and severity classifications"
+   }
+  },
+  {
+   "primitive_id": "west_point_scholarship_heterogeneity",
+   "name": "The scholarship effect is heterogeneous by class: at West Point the gain in marks during the season exceeded the loss in classes A and B, and the loss exceeded the gain in class C",
+   "verbatim_quote": "\"In the first, A class, the gain in marks (scholarship) during the football season exceeded the loss. \" In the second, B class, the gain in marks during the football season exceeded the loss. \"In the third, C class, the loss exceeded the gain.",
+   "page": "Chapter II, p. 65; text lines 3093-3097",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Marks before and during the season are comparable within a class",
+    "Class level proxies for academic standing, so the split suggests the effect depends on the student's margin"
+   ],
+   "breakdown_regime": "One school and one season; class C's reversal could reflect subject mix or instructor differences, and class D had no baseline marks at all.",
+   "domain": "academic outcomes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Average effects hide sign reversals across subgroups. The engine should always test whether a workload or participation effect flips sign across the population, especially between secure and marginal performers, before publishing a single average verdict.",
+    "source_operator": "west_point_scholarship_heterogeneity",
+    "telemetry": "Academic or performance outcomes split by baseline standing, with per-group gains and losses during exposure windows"
+   }
+  },
+  {
+   "primitive_id": "early_season_conditioning_window",
+   "name": "Injuries cluster early in the season, before men are hardened in muscle and supple in joint, and excitement drives men to play beyond what their condition warrants",
+   "verbatim_quote": "The majority of injuries my year were sprains or strains, and I remember no more serious accident. The most of these were received in the early part of the season before the men had become hardened in muscles and supple in joints. It is such a hard game to moderate that the excitement of the moment drives men to play beyond the limit warranted by their condition in the early season, and injuries received then generally last and are a bother in the final games.",
+   "page": "Chapter IV, p. 149; text lines 6589-6597",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tissue readiness rises across the opening weeks of practice",
+    "Competitive arousal overrides self-pacing most when readiness is lowest"
+   ],
+   "breakdown_regime": "The testimony is one captain's season; early schedules also differ in opponent quality and roster experimentation, which the account does not separate.",
+   "domain": "training load",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Availability risk should be conditioned on time since training resumed and on the gap between current conditioning and game intensity. The engine should raise early-season injury priors and discount early-season performance as a readiness artifact.",
+    "source_operator": "early_season_conditioning_window",
+    "telemetry": "Days since training start, conditioning measures, injury timing within season, and performance by season phase"
+   }
+  },
+  {
+   "primitive_id": "mass_plays_backward_step",
+   "name": "A former captain judges the introduction of mass plays a backward step that the framers of the rules never contemplated",
+   "verbatim_quote": "I consider the introduction of the mass plays a backward step and one that was never contemplated by the framers of the rules.",
+   "page": "Chapter IV, p. 145; text lines 6407-6410",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Play styles evolve inside a rule set faster than the rule set's intent",
+    "A style can be legal and still be a regression by the game's own standards"
+   ],
+   "breakdown_regime": "Backward is a value judgment from a participant of the older game; mass play also produced wins, which is why it spread.",
+   "domain": "rules evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Style drift should be monitored as its own signal: when a legal tactic concentrates advantage in one physical dimension, the engine should expect both a competitive shift and a regulatory response, and should not treat the drifted style's results as era-comparable.",
+    "source_operator": "mass_plays_backward_step",
+    "telemetry": "Play-type frequencies by season, success rates by play type, and rule-change dates"
+   }
+  },
+  {
+   "primitive_id": "adaptive_rulemaking_from_experience",
+   "name": "A rapidly developing game necessarily requires new rules as experience teaches their need, made after careful consideration by practical men",
+   "verbatim_quote": "as has football must of necessity require new rules, as experience teaches their need. But these are to be made only after very careful and thorough consideration by practical, level-headed men",
+   "page": "Chapter I, p. 32; text lines 1569-1574",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rule systems for evolving games are permanently provisional",
+    "Legitimate revision requires domain experience, not editorial pressure"
+   ],
+   "breakdown_regime": "Experience-led revision lags the harm it answers, and practical men are often incumbents of the style being judged.",
+   "domain": "rules evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Governing parameters should be versioned with effective dates in the engine, and every historical comparison should be computed inside its own rule version. A model that pools across rule regimes without version flags learns a game that never existed.",
+    "source_operator": "adaptive_rulemaking_from_experience",
+    "telemetry": "Rule version per season, effective dates of changes, and play-style distributions per version"
+   }
+  },
+  {
+   "primitive_id": "cultivation_as_pruning",
+   "name": "Reform is framed as cultivation: prune rough and foul play and modify the rules to lessen danger to life and limb, restoring the more open game",
+   "verbatim_quote": "To cultivate is to prune, and we are among those who ask earnestly, not only for the suppression of rough and foul play, but for such modification of the rules as shall lessen the danger to life and limb.",
+   "page": "Chapter I, p. 53; text lines 2570-2574",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The game's value is assumed; the reform target is its dangerous excrescences, not its existence",
+    "Open play is treated as both safer and more scientific than mass play"
+   ],
+   "breakdown_regime": "Pruning rhetoric can protect the core from needed structural change by defining every harm as an excrescence.",
+   "domain": "rules evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Interventions should be aimed at the specific mechanism of harm, a play type, a protection gap, a field condition, rather than at participation itself. The engine should attribute injuries to mechanisms so reform options map to the mechanisms that produce them.",
+    "source_operator": "cultivation_as_pruning",
+    "telemetry": "Injury rates by play type and mechanism, foul rates, and rule-change effect windows"
+   }
+  },
+  {
+   "primitive_id": "vigilance_against_unscrupulous_spirit",
+   "name": "Only close vigilance prevents an unscrupulous spirit among athletes: winning pressure cultivates excuse-making for whatever wins games",
+   "verbatim_quote": "At the same time I am more and more convinced that only by close vigilance and care shall we be able to prevent the development of the unscrupulous spirit among our athletes",
+   "page": "Chapter III, p. 71; text lines 3363-3366",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Competitive incentives continuously push toward trickery and brutality unless counterweighted",
+    "Culture is maintained by active supervision and peer condemnation, not by initial selection"
+   ],
+   "breakdown_regime": "Vigilance can become surveillance that drives misconduct underground; the letter assumes supervisors share the standard they enforce.",
+   "domain": "institutional culture",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Incentive pressure is a standing force, not an event. Any system the engine evaluates, a team, a program, a market, should carry a drift term: absent counterweights, behavior migrates toward whatever the scoring rule rewards.",
+    "source_operator": "vigilance_against_unscrupulous_spirit",
+    "telemetry": "Foul and trickery rates over time, supervision changes, and incentive structure changes per program"
+   }
+  },
+  {
+   "primitive_id": "rule_evasion_becomes_rule",
+   "name": "Rule evasion widens year by year until the evasion itself becomes the rule: the game's unsatisfactory state is chiefly accumulated evasion",
+   "verbatim_quote": "The development of the game to its present state, in so many respects unsatisfactory, isdue chiefly to evasion or dodging of the rules, becoming each year gradually wider and wider, until finally the evasion has become the rule itself.",
+   "page": "Chapter V, p. 229; text lines 9927-9931",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unenforced boundaries move; each season's tolerated evasion becomes next season's baseline",
+    "Formal revision then ratifies practice rather than directing it"
+   ],
+   "breakdown_regime": "The claim is one player's diagnosis; some apparent evasion is genuine ambiguity in the written rule.",
+   "domain": "rules evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Enforcement state is part of the effective rule set. The engine should track called versus uncalled violations and crew-level tolerance, because the played game is the enforced game, and drift in enforcement is drift in the sport itself.",
+    "source_operator": "rule_evasion_becomes_rule",
+    "telemetry": "Violation rates, call rates per violation type, crew tolerance indicators, and season-over-season enforcement drift"
+   }
+  },
+  {
+   "primitive_id": "practice_time_arms_limitation",
+   "name": "Practice time has doubled in two years and a further doubling breaks moderation: rival captains should cap it by mutual agreement, a disarmament plan",
+   "verbatim_quote": "already the strain is great, the amount of time devoted to \" summer practice \" and \" morning practice \" has doubled in the last two years, and that a further doubling would certainly be inconsistent with either moderation or benefit, physically or mentally. Upon the disarmament plan the rival captains could thus agree",
+   "page": "Chapter VI, p. 236; text lines 10183-10188",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Practice load is set by competitive escalation between rivals, not by benefit optimization",
+    "A mutual cap can hold only if rivals trust it binds everyone"
+   ],
+   "breakdown_regime": "Unilateral restraint loses games, so the cap needs verification; the committee proposes agreement without an enforcement mechanism.",
+   "domain": "training load",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Load escalation is a multiplayer equilibrium problem. The engine should model practice and workload norms as rival-driven: a team's load predicts its opponents' future loads, and sustainable levels require coordination, not individual virtue.",
+    "source_operator": "practice_time_arms_limitation",
+    "telemetry": "Practice hours by team and season, rival practice hours, and injury or performance changes after load shifts"
+   }
+  },
+  {
+   "primitive_id": "field_accountability_and_ankle_protection",
+   "name": "Most injuries are ankle and knee sprains; special shoes protect the ankle, ground condition drives the accident count, and a named person should be accountable for every field",
+   "verbatim_quote": "As to the matter of injuries, the committee find that by far the greater pai't of these injuries were sprains of the ankle and knee, the former predominating. But judicious protection of the ankle by means of special shoes, it is found, does much to save that member. It is probable, however, that the condition of the ground ismainly responsible for any great increase in the number of accidents to the knee and ankle, and the committee would suggest that no school or college field be used for football without some responsible person being held accountable for its condition.",
+   "page": "Chapter VI, p. 235; text lines 10125-10135",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Injury mechanism concentrates in two joints, so targeted protection can move the total",
+    "Surface condition is a controllable environmental cause, separable from play style"
+   ],
+   "breakdown_regime": "The shoe claim is observational and the ground claim is probabilistic; neither is separated from opponent, weather, or footwear fashion in the data shown.",
+   "domain": "injury epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Environmental accountability is a measurable input: venue surface state should be a first-class feature in injury and performance models, with a responsible-party flag, because the committee's mechanism says the same game on a different ground is a different risk.",
+    "source_operator": "field_accountability_and_ankle_protection",
+    "telemetry": "Surface condition reports, venue injury rates, footwear types, and weather at game time"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "89ecb5a26f28aad5-t1",
+   "think": "This book is not a coaching manual and not a history in the ordinary sense. It is an evidence machine built to answer a public accusation: that American football, as played in the colleges in 1893, injured the bodies, minds, and morals of the young men who played it. Walter Camp compiled it, but the compiling is the least of it. A committee of university and school men designed an investigation, gathered testimony from three standpoints, traced a defined cohort of players across eighteen years, borrowed the only comparable enquiry in another sport as a benchmark, measured bodies before and after a year of college, tabulated injuries and grades, and then printed both the aggregates and the adverse cases in the respondents' own words. The artifact's real subject is therefore twofold: what football did to players, and how a contested practice can be investigated honestly enough that its defenders and critics must argue from the same material.\n\nThe machinery fits together in layers. The bottom layer is the cohort. Harvard, Yale, and Princeton players from 1876 forward are followed almost completely, and the completeness is itself reported, one exception at Harvard and Yale, about six at Princeton. On that cohort the committee runs three instruments. The first is self-report: physical effect, mental effect, and whether any injury left a permanent reminder. The second is testimony: faculty and head-masters printed in full on both sides, captains and players printed selectively, with the selection rule stated. The third is measurement: Seaver's paired anthropometric measurements of a Yale class across one year, Conant's injury list for the Harvard teams, and grade standings from Princeton, Harvard, Yale, and West Point. Each instrument has a different failure mode, and the book is most valuable where the instruments disagree or qualify each other. The self-reports are near-unanimous for benefit, which the selection of player letters then amplifies. The faculty letters are genuinely divided, especially on scholarship and on whether vigilance can hold the unscrupulous spirit that winning cultivates. The measurements are the most cautious material in the book: the growth subgroups are tiny, the authors say the figures are merely significant, and the West Point marks split by class, with the sign of the season effect reversing for the weakest class.\n\nInside the testimony sits a theory of the game itself. Football is presented as strength directed by mind: rules interpreted continuously, positions coupled so that no man acts alone, signals rehearsed until the eleven share one protocol. The physical claims are of the same kind, systemic rather than local. The game loads almost every muscle and develops none abnormally; its dangers concentrate in ankle and knee sprains, in the early season before conditioning, in mass plays that substitute combined weight for agility, and in fields whose condition nobody owns. The moral claims translate, in modern terms, into claims about trained regulation: self-control under excitement, obedience to a shared command structure, courage understood as continuing under known risk, and the displacement of hazing by an earlier, better-disciplined hierarchy. Read critically, these are hypotheses about mechanisms, and the book often supplies the mechanism's observable trace, a penalty avoided, a mark gained or lost during the season, an injury timed to the season's first weeks.\n\nFor a reasoning engine the transfer is direct. First, evidence grading: the book repeatedly shows how to carry a claim with its coverage, its denominator, and its selection rule attached, and how a vivid verbatim case should inform audit without outweighing its count. Second, subgroup discipline: the West Point split and the six-man growth average teach that an average effect is a summary that can conceal a reversal, and that small cells must be shrunk and labeled. Third, mechanism attribution: injuries are assigned to conditioning phase, play type, surface, and protection, which is what makes them actionable; a modern engine should refuse to reason from an injury total that has not been decomposed. Fourth, governance as a system variable: eligibility classes, medical clearance, a director owning the interface between students and faculty, mutual caps on practice escalation, and a named person accountable for the field are all treated as levers that change outcomes, and each has a modern analogue in roster construction, availability management, and workload policy. Fifth, drift: the book's sharpest structural insight is that unenforced rules and rival-driven practice loads both move by accumulation, evasion becoming the rule and doubled practice becoming the baseline, so any static model of a living competition decays.\n\nThe book also breaks, and the breaks are instructive. Its central population is elite, male, and self-selected; its benefit measures are self-reported to a committee chaired by the game's leading advocate; its mortality audit rests on family attribution; its scholarship comparisons cannot separate selection from effect, a limitation one player states plainly when he notes that no one can know what his intellectual powers would have been under other conditions. Its moral vocabulary, manliness, dudish spirit, praying men, belongs to 1894 and cannot be operationalized as written. Its confidence about permanent injury is bounded by short follow-up for recent players. A faithful extraction therefore keeps the committee's conclusions labeled as the committee's, preserves the dissenting faculty letters and the adverse cases at full strength, and treats the transferable residue as method: how the investigation was built, which mechanisms it named, and where its own evidence refuses to carry its conclusions. That residue is large. Few modern evaluations of a sport, a training method, or a rule change are designed as carefully as this defense of football was designed in 1894, and fewer still publish their negative cases verbatim.",
+   "retrocausal_genealogy": "The genealogy runs from Dr. John Edward Morgan's enquiry into Oxford rowing, which the committee adopted as both method and benchmark: trace a defined cohort of sportsmen, ask them and their observers what the sport did, and tabulate benefit and injury. Behind Morgan stands the older public-school ideology of athleticism, in which games were already credited with forming character, and the immediate provocation of 1893, when newspaper attacks on football's brutality forced Harvard's overseers to ask for facts. Camp, the game's chief legislator, chaired the response, so the lineage is double: a genuine empirical method inherited from the rowing study, carried by an advocate who needed the method to survive hostile reading.",
+   "theory_of_mind": "The authors model their reader as a deciding parent, faculty member, or schoolmaster who is assumed to be reachable by facts and suspicious of both newspaper sensation and athletic partisanship. Their theory of the problem is that opinion had outrun evidence: accusations were vivid, general, and uncounted, so the remedy is enumeration, testimony from every standpoint, and verbatim adverse cases that prove the enquiry is not hiding its worst material. They also model the player as a whole person whose body, scholarship, and character are jointly at stake, which is why no single outcome measure is allowed to settle the question alone.",
+   "cross_layer_veto": "The book vetoes several easy inferences in both directions. Against the alarmist layer, its cohort counts and case series veto the claim that permanent injury was the typical price of play. Against its own defense layer, three internal vetoes stand: the faculty letters veto any claim that scholarship and discipline effects were uniformly good; the small growth subgroups veto strong physiological conclusions, by the authors' own statement; and the mass-play protests from captains and the committee veto the claim that the contemporary style was the game's best form. Any synthesis that quotes the benefit majorities must also carry these vetoes, or it misrepresents the source."
+  }
+ ],
+ "universal_lens": "Beyond football, this volume is a template for evaluating any contested practice that forms people while exposing them to risk. Define the exposed cohort and trace it almost completely. Ask participants, supervisors, and skeptics separately, and print the skeptics in full. Measure what can be measured in pairs, before and after. Publish adverse cases verbatim beside their counts. Decompose harm by mechanism, timing, environment, and protection so that reform can aim at causes. Expect the practice to drift through evasion and rivalry, and design governance, eligibility, clearance, workload caps, and accountable ownership of conditions, as part of the intervention rather than as commentary after it.",
+ "gsi_mapping": "The Galaxy Sports Institute takes a research method and a curriculum. The method is the committee itself: cohort tracing, triangulated testimony, paired measurement, verbatim adverse cases, and graded confidence stated in print. The curriculum is the book's mechanism map of formation: shared signal protocols, self-control under excitement, courage under known risk, and discipline that displaces worse hierarchies, each tied to observable traces rather than slogans. The Institute also inherits the book's cautions as research standards: selection rules travel with data, small subgroups are labeled indicative, and a practice's defenders are never its only witnesses. That combination, advocacy disciplined by published dissent, is the scholarly posture the Institute exists to teach.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes measurement and governance machinery. From the measurements: within-athlete deltas over population levels, subgroup sign checks before any average verdict, small-cell shrinkage, injury decomposition by mechanism, play type, surface, and season phase, and verbatim adverse-case audit linked to counts. From the governance chapters: eligibility class and clearance state as availability inputs, practice load as a rival-driven equilibrium, enforcement drift as part of the effective rule set, and rule versions stamped on every historical comparison. The engine's published reasoning should show the same structure the committee used: the claim, its coverage, its denominator, its dissent, and the mechanism that would change it."
+}

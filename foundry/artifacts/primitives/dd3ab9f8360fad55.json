@@ -1,0 +1,791 @@
+{
+ "book_id": "dd3ab9f8360fad55",
+ "source_status": "COMPLETE",
+ "source_note": "Pierre Simon, Marquis de Laplace, Essai philosophique sur les probabilités (1814), translated from the sixth French edition by Frederick Wilson Truscott and Frederick Lincoln Emory; Dover Publications unabridged reprint, copyright 1951, Library of Congress Card Catalog Number 52-12019, with an introductory note by E. T. Bell. Source PDF 8788177 bytes; scan sha256 dd3ab9f8360fad551a03c72a07c2792efb406117306e2ebadad2d193ac9c2632; book_id is the first 16 hexadecimal digits of the scan digest computed over the byte size followed by the full PDF bytes. The essay proper runs to printed page 196; material after that point in the file is Dover catalog advertising and was not extracted. Text layer quality: OCR with spacing artifacts, split words, and garbled fraction glyphs; every quoted passage was selected from clean prose whose sense does not depend on a printed fraction, and quotes were verified as contiguous substrings of the extracted text file within a single page span. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "principle_of_sufficient_reason_determinism",
+   "name": "Determinism: the present state of the universe is the effect of its anterior state and the cause of the state which is to follow",
+   "verbatim_quote": "We ought then to regard the present state of the universe as the effect of its anterior state and as the cause of the one which is to follow.",
+   "page": "Chapter II, printed pp. 3-4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The universe evolves by fixed laws from state to state",
+    "Causality is total: every present state has an anterior cause and produces a future effect"
+   ],
+   "breakdown_regime": "Breaks down as a usable method wherever the anterior state cannot be observed completely; Laplace himself converts it into probability, the calculus of ignorance, rather than a computable dynamics. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "foundations of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine represents any forecasted system as a sequence of states in which each state is generated from the previous one, so every forecast is a statement about a transition between states and never about an isolated snapshot.",
+    "source_operator": "principle_of_sufficient_reason_determinism",
+    "telemetry": "Timestamped state sequences: play by play records, situation logs, and state snapshots with their generating events."
+   }
+  },
+  {
+   "primitive_id": "laplaces_intelligence",
+   "name": "The ideal intelligence: a mind that comprehended all forces and the respective situation of all beings at one instant would embrace past and future in a single formula, so chance would vanish for it",
+   "verbatim_quote": "Given for one instant an intelligence which could comprehend all the forces by which nature is animated and the respective situation of the beings who compose it",
+   "page": "Chapter II, printed p. 4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Complete knowledge of all forces and positions at one instant is conceivable as a limit",
+    "The laws connecting states are fixed and knowable in form"
+   ],
+   "breakdown_regime": "Breaks down for every finite observer: the data and computation required exceed any real capacity, which is precisely why probability exists as the working substitute for this ideal. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "foundations of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The ideal observer sets the bound that defines uncertainty as epistemic: forecast error measures missing state information, so widening data coverage strictly reduces error instead of merely decorating the forecast.",
+    "source_operator": "laplaces_intelligence",
+    "telemetry": "Data completeness audits per input stream: coverage of tracking, availability, lineup, and context feeds at prediction time."
+   }
+  },
+  {
+   "primitive_id": "probability_relative_to_knowledge",
+   "name": "Probability is relative to the observer: it depends in part on our ignorance and in part on our knowledge, so the same event carries different probabilities for different information states",
+   "verbatim_quote": "Probability is relative, in part to this ignorance, in part to our knowledge.",
+   "page": "Chapter II, printed p. 6",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two observers with different information may legitimately assign different probabilities to the same event",
+    "Probability is not a property of the event alone"
+   ],
+   "breakdown_regime": "Breaks down if probability is treated as a purely physical frequency: when information changes the probability must change, so no single observer-independent number can serve all reasoners. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "foundations of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine probability is conditioned on an information set and versioned by it: a probability is stored together with the timestamp and contents of the information it was computed from, and is superseded, not edited, when information arrives.",
+    "source_operator": "probability_relative_to_knowledge",
+    "telemetry": "Information-set snapshots and feature availability logs recorded at the moment each prediction is issued."
+   }
+  },
+  {
+   "primitive_id": "classical_definition_of_probability",
+   "name": "Classical definition: probability is found by reducing all events of a kind to a number of equally possible cases and taking the ratio of the favorable cases to all the cases",
+   "verbatim_quote": "The theory of chance consists in reducing all the events of the same kind to a certain number of cases equally possible, that is to say, to such as we may be equally undecided about in regard to their existence, and in determining the number of cases favorable to the event whose probability is sought.",
+   "page": "Chapter II, printed p. 6",
+   "latex": "P(A) = \\frac{N_{\\mathrm{fav}}}{N_{\\mathrm{total}}}",
+   "symbol_and_unit_ledger": {
+    "P(A)": "probability of event A (dimensionless)",
+    "N_fav": "number of cases favorable to A (count)",
+    "N_total": "number of all cases possible (count)"
+   },
+   "assumptions": [
+    "The events of a kind can be decomposed into a finite number of cases",
+    "The cases can be judged equally possible, meaning we are equally undecided about each"
+   ],
+   "breakdown_regime": "Breaks down when no natural equipossible decomposition exists, as with continuous magnitudes or asymmetric mechanisms, where counting cases becomes arbitrary and the definition risks circularity.",
+   "domain": "foundations of probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Base-rate construction by case counting: before any modeling, enumerate an equipossible reference class for the event and count favorable cases, so prior probabilities are built from an explicit case decomposition that can be audited.",
+    "source_operator": "classical_definition_of_probability",
+    "telemetry": "Reference-class outcome counts and historical frequency tables with the case decomposition recorded."
+   }
+  },
+  {
+   "primitive_id": "second_principle_unequal_cases",
+   "name": "Second principle: when cases are not equally possible, determine the possibility of each case first; the probability is then the sum of the possibilities of each favorable case",
+   "verbatim_quote": "If they are not so, we will determine first their respective possibilities, whose exact appreciation is one of the most delicate points of the theory of chance. Then the probability will be the sum of the possibilities of each favorable case.",
+   "page": "Chapter III, printed p. 11",
+   "latex": "P(A) = \\sum_{i \\in F} p_i",
+   "symbol_and_unit_ledger": {
+    "P(A)": "probability of the event (dimensionless)",
+    "p_i": "possibility (probability weight) of case i (dimensionless)",
+    "F": "set of cases favorable to the event"
+   },
+   "assumptions": [
+    "The possibility of each individual case can be appreciated, however delicately",
+    "The possibilities of all cases sum to unity"
+   ],
+   "breakdown_regime": "Breaks down when case possibilities cannot be estimated independently of the target probability itself, which reintroduces the circularity the principle was meant to remove.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mixture weights over cases: a forecast over heterogeneous scenarios is computed as the sum of scenario weights restricted to the scenarios in which the outcome occurs, with each scenario weighed on its own evidence first.",
+    "source_operator": "second_principle_unequal_cases",
+    "telemetry": "Scenario weight tables and per-case probability estimates with their provenance."
+   }
+  },
+  {
+   "primitive_id": "third_principle_product_rule_independence",
+   "name": "Third principle: if events are independent of one another, the probability of their combined existence is the product of their respective probabilities",
+   "verbatim_quote": "If the events are independent of one another, the probability of their combined existence is the product of their respective probabilities.",
+   "page": "Chapter III, printed pp. 12-13",
+   "latex": "P(A \\cap B) = P(A) P(B)",
+   "symbol_and_unit_ledger": {
+    "P(A)": "probability of event A (dimensionless)",
+    "P(B)": "probability of event B (dimensionless)",
+    "P(A \\cap B)": "probability of the combined existence of A and B (dimensionless)"
+   },
+   "assumptions": [
+    "The events are independent: the occurrence of one does not change the possibility of the other"
+   ],
+   "breakdown_regime": "Breaks down under any dependence between the events; applying the product rule to dependent events misstates the joint probability, the error the fourth principle exists to correct.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independence multiplication for combining independent signals: joint confidence in two independent pieces of evidence is the product of their separate confidences, and the multiplication is licensed only after a dependence screen passes.",
+    "source_operator": "third_principle_product_rule_independence",
+    "telemetry": "Pairwise correlation and dependence screens between signal families, recomputed on rolling windows."
+   }
+  },
+  {
+   "primitive_id": "fourth_principle_conditional_probability",
+   "name": "Fourth principle: when two events depend on each other, the probability of the compound event is the probability of the first times the probability that, the first having occurred, the second will occur",
+   "verbatim_quote": "When two events depend upon each other, the probability of the compound event is the product of the probability of the first event and the probability that, this event having occurred, the second will occur.",
+   "page": "Chapter III, printed p. 14",
+   "latex": "P(A \\cap B) = P(A) P(B \\mid A)",
+   "symbol_and_unit_ledger": {
+    "P(A)": "probability of the first event (dimensionless)",
+    "P(B \\mid A)": "probability that the second event occurs given the first has occurred (dimensionless)",
+    "P(A \\cap B)": "probability of the compound event (dimensionless)"
+   },
+   "assumptions": [
+    "The first event's occurrence is well defined and observable",
+    "The conditional probability of the second event given the first can be assessed"
+   ],
+   "breakdown_regime": "Breaks down when the conditioning event has probability zero or is only vaguely specified, so the conditional factor cannot be estimated from any record.",
+   "domain": "probability calculus",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conditional chaining: sequential forecasts multiply a base probability by the probability of each next stage given the stages already realized, which is how multi-step projections over dependent stages are assembled.",
+    "source_operator": "fourth_principle_conditional_probability",
+    "telemetry": "Conditional frequency tables estimated from historical sequences of the same staged process."
+   }
+  },
+  {
+   "primitive_id": "fifth_principle_probability_drawn_from_observed_event",
+   "name": "Fifth principle: the probability of an event expected, drawn from an observed event, is the a priori probability of the compound event divided by the a priori probability of the observed event",
+   "verbatim_quote": "the second probability divided by the first will be the probability of the event expected, drawn from the observed event",
+   "page": "Chapter III, printed p. 15",
+   "latex": "P(F \\mid E) = \\frac{P(E \\cap F)}{P(E)}",
+   "symbol_and_unit_ledger": {
+    "E": "the observed event",
+    "F": "the event expected",
+    "P(E \\cap F)": "a priori probability of the event composed of E and F (dimensionless)",
+    "P(E)": "a priori probability of the observed event (dimensionless)",
+    "P(F \\mid E)": "probability of F drawn from the observed event E (dimensionless)"
+   },
+   "assumptions": [
+    "Both a priori probabilities can be computed before the observation is used",
+    "The observed event has nonzero a priori probability"
+   ],
+   "breakdown_regime": "Breaks down when the a priori probabilities are themselves unknown, which is the generic case and forces the passage to the sixth principle, from events to causes.",
+   "domain": "inverse probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequential updating: each new observation rescales the probability of what is expected next by the ratio of the compound probability to the probability of what was observed, the elementary step of Bayesian filtering.",
+    "source_operator": "fifth_principle_probability_drawn_from_observed_event",
+    "telemetry": "Timestamped observation streams with the prior probabilities registered before each observation arrives."
+   }
+  },
+  {
+   "primitive_id": "sixth_principle_probability_of_causes",
+   "name": "Sixth principle, the probability of causes: each cause of an observed event is indicated with likelihood proportional to the probability of the event supposing the cause, normalized over all causes and weighted by prior probability when causes are unequally probable a priori; Laplace calls this the fundamental principle of passing from events to causes",
+   "verbatim_quote": "This is the fundamental principle of this branch of the analysis of chances which consists in passing from events to causes.",
+   "page": "Chapter III, printed pp. 15-16",
+   "latex": "P(C_i \\mid E) = \\frac{P(E \\mid C_i) P(C_i)}{\\sum_j P(E \\mid C_j) P(C_j)}",
+   "symbol_and_unit_ledger": {
+    "C_i": "candidate cause i of the observed event",
+    "E": "the observed event",
+    "P(E \\mid C_i)": "probability of the event supposing cause i (dimensionless)",
+    "P(C_i)": "a priori probability of cause i (dimensionless)",
+    "P(C_i \\mid E)": "probability of cause i drawn from the event (dimensionless)"
+   },
+   "assumptions": [
+    "The candidate causes exhaust the ways the event could have arisen",
+    "The probability of the event under each cause can be computed",
+    "Priors over causes are stated explicitly; equality of priors is used only when no reason prefers one cause"
+   ],
+   "breakdown_regime": "Breaks down when the true cause is missing from the candidate set or priors are set by convention rather than evidence; the posterior then concentrates confidently on a wrong cause.",
+   "domain": "inverse probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Posterior over causes: the engine maintains a probability distribution over candidate explanations of an observed outcome and updates it by normalized, prior-weighted likelihood, instead of collapsing to a single best explanation.",
+    "source_operator": "sixth_principle_probability_of_causes",
+    "telemetry": "Labeled outcomes paired with candidate-cause features, so each likelihood can be estimated and audited after the fact."
+   }
+  },
+  {
+   "primitive_id": "extraordinary_events_strong_proofs",
+   "name": "Extraordinary events demand strong proofs: an event is extraordinary when it belongs to a class comprising very few cases, and the more extraordinary it is, the stronger the proof required to establish it",
+   "verbatim_quote": "From what precedes, we ought generally to conclude that the more extraordinary the event, the greater the need of its being supported by strong proofs.",
+   "page": "Chapter III, printed pp. 17-18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Events can be sorted into classes whose numbers of cases differ enormously",
+    "Witnesses and instruments carry nonzero rates of error and deception"
+   ],
+   "breakdown_regime": "Breaks down if hardened into blanket skepticism: with genuinely strong proofs the extraordinary event must be accepted, and Laplace's own treatment of testimony shows evidence, not prior disbelief alone, decides. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "inverse probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evidence thresholds scale with prior improbability: before the engine acts on a signal whose base rate is tiny, it demands confirming evidence strong enough to overcome that base rate, and records the threshold used.",
+    "source_operator": "extraordinary_events_strong_proofs",
+    "telemetry": "Base-rate registry for signal classes and measured error rates for each evidence source."
+   }
+  },
+  {
+   "primitive_id": "seventh_principle_predictive_probability",
+   "name": "Seventh principle, predictive probability: the probability of a future event is the sum of the products of the probability of each cause drawn from the observed event by the probability that, this cause existing, the future event will occur",
+   "verbatim_quote": "The probability of a future event is the sum of the products of the probability of each cause, drawn from the event observed",
+   "page": "Chapter III, printed p. 17",
+   "latex": "P(F) = \\sum_i P(C_i \\mid E) P(F \\mid C_i)",
+   "symbol_and_unit_ledger": {
+    "F": "the future event",
+    "C_i": "candidate cause i",
+    "E": "the observed event",
+    "P(C_i \\mid E)": "probability of cause i drawn from the observed event (dimensionless)",
+    "P(F \\mid C_i)": "probability of the future event supposing cause i exists (dimensionless)",
+    "P(F)": "probability of the future event drawn from the observation (dimensionless)"
+   },
+   "assumptions": [
+    "The candidate causes are exhaustive",
+    "The probability of the future event under each cause can be assessed"
+   ],
+   "breakdown_regime": "Breaks down when a cause outside the enumerated set drives the future event; the mixture then averages carefully over the wrong hypothesis space.",
+   "domain": "inverse probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Posterior predictive mixture: forecasts average each candidate model's conditional prediction over the posterior weights of the models, so model uncertainty enters the forecast itself rather than being resolved beforehand.",
+    "source_operator": "seventh_principle_predictive_probability",
+    "telemetry": "Per-model predictions logged together with their posterior weights at forecast time."
+   }
+  },
+  {
+   "primitive_id": "rule_of_succession",
+   "name": "Rule of succession: an event having occurred successively n times, the probability that it will happen again the next time is n increased by unity divided by the same number increased by two units",
+   "verbatim_quote": "Thus we find that an event having occurred successively any number of times, the probability that it will happen again the next time is equal to this number increased by unity divided by the same number, increased by two units.",
+   "page": "Chapter III, printed p. 19",
+   "latex": "P = \\frac{n+1}{n+2}",
+   "symbol_and_unit_ledger": {
+    "n": "number of successive occurrences observed (count)",
+    "P": "probability the event happens again the next time (dimensionless)"
+   },
+   "assumptions": [
+    "All values of the event's underlying possibility are equally probable a priori (uniform prior over the urn composition)",
+    "Trials are exchangeable draws whose composition does not change"
+   ],
+   "breakdown_regime": "Breaks down when the uniform prior is wrong: with prior mass concentrated near impossibility or certainty the same run of successes yields a very different next-trial probability, and Laplace notes the sunrise bet itself changes once astronomical knowledge replaces ignorance.",
+   "domain": "inverse probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Add-one smoothing for rare and unseen events: an outcome seen every time in n trials is assigned probability (n+1)/(n+2) rather than certainty, and an outcome never seen keeps probability 1/(n+2) rather than zero.",
+    "source_operator": "rule_of_succession",
+    "telemetry": "Outcome counts per category together with total trial counts."
+   }
+  },
+  {
+   "primitive_id": "mathematical_hope",
+   "name": "Mathematical hope: the advantage attached to a hoped sum is the product of the sum hoped for by the probability of obtaining it",
+   "verbatim_quote": "This advantage in the theory of chance is a product of the sum hoped for by the probability of obtaining it; it is the partial sum which ought to result when we do not wish to run the risks of the event in supposing that the division is made proportional to the probabilities.",
+   "page": "Chapter IV, printed p. 20",
+   "latex": "H = p s",
+   "symbol_and_unit_ledger": {
+    "H": "mathematical hope (units of the sum at stake)",
+    "p": "probability of obtaining the sum (dimensionless)",
+    "s": "sum hoped for (units of the stake)"
+   },
+   "assumptions": [
+    "The probability of obtaining the sum is known",
+    "Value is linear in the sum at stake"
+   ],
+   "breakdown_regime": "Breaks down when value is not linear in the stake; that failure is the St. Petersburg paradox, and the tenth principle repairs it by replacing absolute sums with value relative to fortune.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Expected value scoring: every candidate action is first scored by probability times payoff, giving the baseline ranking that later corrections for risk attitude and ruin constraints adjust.",
+    "source_operator": "mathematical_hope",
+    "telemetry": "Payoff tables with event probabilities for each candidate action."
+   }
+  },
+  {
+   "primitive_id": "eighth_principle_expected_value",
+   "name": "Eighth principle: when the advantage depends on several events, it is the sum of the products of the probability of each event by the benefit attached to its occurrence",
+   "verbatim_quote": "When the advantage depends on several events it is obtained by taking the sum of the products of the probability of each event by the benefit attached to its occurrence.",
+   "page": "Chapter IV, printed pp. 20-21",
+   "latex": "A = \\sum_i p_i b_i",
+   "symbol_and_unit_ledger": {
+    "A": "total advantage (units of benefit)",
+    "p_i": "probability of event i (dimensionless)",
+    "b_i": "benefit attached to the occurrence of event i (units of benefit)"
+   },
+   "assumptions": [
+    "Benefits attached to distinct events are commensurable in one unit",
+    "The probability of each event is known"
+   ],
+   "breakdown_regime": "Breaks down when benefits interact, so the value of two benefits together differs from the sum of their separate values, or when one outcome is ruinous, which the moral-hope correction addresses.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Expected value over scenario sets: the value of a plan is the probability-weighted sum of its scenario payoffs, computed over the full scenario set rather than the most likely scenario alone.",
+    "source_operator": "eighth_principle_expected_value",
+    "telemetry": "Scenario payoff tables with scenario probabilities, refreshed as probabilities update."
+   }
+  },
+  {
+   "primitive_id": "ninth_principle_net_advantage",
+   "name": "Ninth principle: the net advantage of several events is the sum of probability times benefit over the favorable events minus the sum of probability times loss over the unfavorable events",
+   "verbatim_quote": "in order to obtain the advantage which results from several simple events, of which the ones produce a benefit and the others a loss, it is necessary to add the products of the probability of each favorable event by the benefit which it procures, and subtract from their sum that of the products of the probability of each unfavorable event by the loss which is attached to it",
+   "page": "Chapter IV, printed p. 21",
+   "latex": "A = \\sum_{i \\in F} p_i b_i - \\sum_{j \\in U} q_j l_j",
+   "symbol_and_unit_ledger": {
+    "A": "net advantage (units of benefit)",
+    "F": "set of favorable events",
+    "U": "set of unfavorable events",
+    "p_i": "probability of favorable event i (dimensionless)",
+    "b_i": "benefit procured by event i",
+    "q_j": "probability of unfavorable event j (dimensionless)",
+    "l_j": "loss attached to event j"
+   },
+   "assumptions": [
+    "Gains and losses are measured in the same unit",
+    "All relevant favorable and unfavorable events are enumerated"
+   ],
+   "breakdown_regime": "Breaks down when the loss side contains outcomes no gain can compensate, such as ruin, where netting gains against losses is illegitimate and the moral-hope framework must take over.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Net gain-loss ledgers for decisions: candidate actions are ranked by probability-weighted benefits minus probability-weighted losses, with both sides of the ledger recorded for later audit against realized outcomes.",
+    "source_operator": "ninth_principle_net_advantage",
+    "telemetry": "Decision logs with the realized gains and losses of each action class."
+   }
+  },
+  {
+   "primitive_id": "st_petersburg_paradox",
+   "name": "St. Petersburg paradox: the stake fixed by the eighth principle grows with the number of throws and is infinite if the game continues to infinity, yet no reasonable man risks even a small sum on it, which refutes raw expectation as a decision rule",
+   "verbatim_quote": "His stake at the play ought to be, according to the eighth principle, equal to the number of throws, so that if the game continues to infinity the stake ought to be infinite. However, no reasonable man would wish to risk at this game even a small sum, for example five francs.",
+   "page": "Chapter IV, printed p. 22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Payoffs double with each throw without bound",
+    "The game can in principle continue indefinitely"
+   ],
+   "breakdown_regime": "The paradox is itself the breakdown regime: mathematical hope diverges while willingness to pay stays finite, proving that expectation alone cannot price unbounded payoff distributions. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Unbounded payoff tails are mispriced by raw expectation: before any ranking, extreme payoff branches are capped or passed through a relative-value transform, so a single astronomical branch cannot dominate a decision.",
+    "source_operator": "st_petersburg_paradox",
+    "telemetry": "Payoff distribution tails per decision class, with realized outcomes compared against expected values."
+   }
+  },
+  {
+   "primitive_id": "tenth_principle_moral_hope_log_utility",
+   "name": "Tenth principle, moral hope: the relative value of an infinitely small sum is its absolute value divided by the total benefit of the person interested, so value accumulates with the logarithm of fortune and a poor man's loss outweighs an equal gain",
+   "verbatim_quote": "The relative value of an infinitely small sum is equal to its absolute value divided by the total benefit of the person interested.",
+   "page": "Chapter IV, printed p. 23",
+   "latex": "\\delta v = \\frac{\\delta x}{x}",
+   "symbol_and_unit_ledger": {
+    "\\delta x": "infinitely small absolute increment of fortune (units of the stake)",
+    "x": "total benefit (fortune) of the person interested (units of the stake)",
+    "\\delta v": "relative (moral) value of the increment (dimensionless); integrating the rule gives value proportional to the logarithm of fortune"
+   },
+   "assumptions": [
+    "Value is judged relative to the holder's total fortune",
+    "Increments are small enough for the differential rule to apply"
+   ],
+   "breakdown_regime": "Breaks down at the extremes in instructive ways: near zero fortune any loss is catastrophic, which the rule represents faithfully, and for very large fortunes moral hope coincides with mathematical hope, as Laplace notes.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Log-utility scaling: gains and losses are evaluated relative to the current state of the resource they affect, so the same absolute swing matters less as the base grows and matters decisively near depletion.",
+    "source_operator": "tenth_principle_moral_hope_log_utility",
+    "telemetry": "State variables recorded alongside each decision: resource base, capacity, and accumulated sample size."
+   }
+  },
+  {
+   "primitive_id": "risk_spreading_principle",
+   "name": "Risk spreading: distribute the danger over several parts of a benefit expected rather than exposing the entire benefit to the same danger",
+   "verbatim_quote": "The same rule leads us again to distribute the danger over several parts of a benefit expected rather than to expose the entire benefit to this danger.",
+   "page": "Chapter IV, printed p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The benefit can be divided into parts without destroying it",
+    "The dangers threatening the separate parts are not perfectly correlated"
+   ],
+   "breakdown_regime": "Breaks down when the separate dangers share one common cause, so the parts fail together and the spreading buys nothing. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Diversification: aggregate variance falls when exposure is spread across imperfectly correlated parts, so the engine prefers several partially independent positions over one concentrated exposure of the same total size.",
+    "source_operator": "risk_spreading_principle",
+    "telemetry": "Forecast-error covariances across positions or predictions, estimated from realized errors."
+   }
+  },
+  {
+   "primitive_id": "finite_difference_equations",
+   "name": "Equations of differences: the most general and direct method of resolving questions of probability is to make them depend on equations of differences in the index of the unknown function",
+   "verbatim_quote": "the most general and direct method of resolving questions of probability consists in making them depend upon equations of differences",
+   "page": "Chapter V, printed p. 29",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The probability sought can be indexed by discrete parameters such as throws remaining, points needed, or balls drawn",
+    "A recurrence connects the value at one index to values at neighboring indices, with boundary values known"
+   ],
+   "breakdown_regime": "Breaks down when the state needed to write the recurrence is too large to enumerate or boundary values cannot be fixed; Laplace then passes to generating functions and to approximations for large numbers. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "analytic methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Recurrences and dynamic programming over indexed states: sequential probability problems are solved by backward recursion from known boundary states, exactly the structure of Laplace's gambler's ruin and problem of points calculations.",
+    "source_operator": "finite_difference_equations",
+    "telemetry": "State-space sizes and boundary-condition coverage for each sequential problem class."
+   }
+  },
+  {
+   "primitive_id": "calculus_of_generating_functions",
+   "name": "Generating functions, which Laplace calls discriminant functions: a sequence of probabilities is encoded as the coefficients of a power series, and operations on the index become algebraic operations on the function",
+   "verbatim_quote": "V is what I call the discriminant function of this coefficient or of the function of the index.",
+   "page": "Chapter V, printed pp. 36-37",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sequence of interest is indexed by integers",
+    "Series operations such as differentiation and multiplication by the variable correspond to the index operations the problem requires"
+   ],
+   "breakdown_regime": "Breaks down when the generating function has no closed form and its coefficients can be extracted only numerically for small indices, which forces the large-number approximations developed in the same chapter. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "analytic methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Transform-domain bookkeeping: distributions are carried as generating functions so that convolution of independent quantities becomes multiplication and marginalization becomes coefficient extraction.",
+    "source_operator": "calculus_of_generating_functions",
+    "telemetry": "Distribution representations used per forecast: full distribution versus point summary, and extraction cost per representation."
+   }
+  },
+  {
+   "primitive_id": "approximation_of_functions_of_large_numbers",
+   "name": "Approximation of functions of large numbers: expressions involving very large numbers are converted into definite integrals and expanded into rapidly converging series, in which the square root of the ratio of the circumference to the diameter frequently appears as a factor",
+   "verbatim_quote": "Frequently the series has for a factor the square root of the ratio of the circumference to the diameter; sometimes it depends upon other transcendents whose number is infinite.",
+   "page": "Chapter V, printed p. 47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The numbers involved are large enough for the asymptotic expansion to be accurate",
+    "The function is smooth near its maximum, so the integral approximation concentrates there"
+   ],
+   "breakdown_regime": "Breaks down for small numbers, where the asymptotic series can be worse than direct computation, and near discontinuities of the underlying function.",
+   "domain": "analytic methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Asymptotic evaluation of huge combinatorial sums: when exact enumeration is impossible, evaluate the dominant integral approximation with an error check against exact computation at moderate sizes.",
+    "source_operator": "approximation_of_functions_of_large_numbers",
+    "telemetry": "Approximation error measurements against exact values across a ladder of problem sizes."
+   }
+  },
+  {
+   "primitive_id": "bernoulli_theorem_law_of_large_numbers",
+   "name": "Bernoulli's theorem: by the indefinite multiplication of events, the ratio of outcomes observed approaches the underlying ratio indefinitely closely, with probability approaching certainty however small the interval allowed",
+   "verbatim_quote": "The probability that the ratio of the number of white balls drawn to the total number of balls drawn does not deviate beyond a given interval from the ratio of the number of white balls to the total number of balls contained in the urn, approaches indefinitely to certainty by the indefinite multiplication of events, however small this interval.",
+   "page": "Chapter VIII, printed pp. 60-61",
+   "latex": "P\\left(\\left|\\frac{W}{N} - \\frac{w}{w+b}\\right| < \\delta\\right) \\to 1 \\text{ as } N \\to \\infty",
+   "symbol_and_unit_ledger": {
+    "W": "number of white balls drawn (count)",
+    "N": "total number of balls drawn (count)",
+    "w": "number of white balls contained in the urn (count)",
+    "b": "number of balls of other colors contained in the urn (count)",
+    "\\delta": "given interval half-width (dimensionless, in ratio units)",
+    "P": "probability that the observed ratio stays within the interval (dimensionless)"
+   },
+   "assumptions": [
+    "Draws are made so that the urn composition stays effectively constant",
+    "The underlying ratio does not change during the drawing"
+   ],
+   "breakdown_regime": "Breaks down for finite samples, where the deviation probability is positive and must be computed rather than assumed away, and when the underlying ratio drifts over time so no fixed limit ratio exists.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Frequency calibration over large samples: because observed ratios converge to underlying probabilities, model probabilities are audited against long-run realized frequencies, bucket by bucket, as the primary calibration test.",
+    "source_operator": "bernoulli_theorem_law_of_large_numbers",
+    "telemetry": "Calibration curves of predicted probability versus realized frequency, with sample counts per bucket."
+   }
+  },
+  {
+   "primitive_id": "constant_causes_prevail_in_the_long_run",
+   "name": "Constant causes prevail: in a series of events indefinitely prolonged, the action of regular and constant causes ought to prevail in the long run over that of irregular causes, which is why stable ratios in births, mortality, and prices reveal real structure",
+   "verbatim_quote": "It follows again from this theorem that in a series of events indefinitely prolonged the action of regular and constant causes ought to prevail in the long run over that of irregular causes.",
+   "page": "Chapter VIII, printed p. 62",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The series of events can be prolonged far enough for averaging to act",
+    "The constant causes keep acting with the same character throughout the series"
+   ],
+   "breakdown_regime": "Breaks down over horizons too short for the averaging to act, and when a supposed constant cause is itself slowly changing, so the long run converges to a moving target. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Persistent structural effects dominate irregular noise at scale: long-run performance differences are attributed first to stable structural factors, and short-run streaks are treated as irregular causes until they survive long-run averaging.",
+    "source_operator": "constant_causes_prevail_in_the_long_run",
+    "telemetry": "Long-run ratio stability measurements per factor over rolling windows of increasing length."
+   }
+  },
+  {
+   "primitive_id": "maximum_likelihood_from_repeated_events",
+   "name": "Maximum likelihood in prose: when an event has been repeated a great number of times, the possibilities of the simple events which render most probable what has been observed are those that observation indicates with the greatest probability",
+   "verbatim_quote": "When a simple event or one composed of several simple events, as, for instance, in a game, has been repeated a great number of times the possibilities of the simple events which render most probable that which has been observed are those that observation indicates with the greatest probability",
+   "page": "Chapter VIII, printed p. 64",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The event has been repeated a great number of times",
+    "The candidate possibilities form a known family, such as the compositions of an urn"
+   ],
+   "breakdown_regime": "Breaks down with few repetitions, where many possibilities render the observation nearly equally probable, and when the true possibility lies outside the candidate family. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Fit parameters by the likelihood of observed history: candidate parameter values are scored by the probability they assign to what actually happened, and the best-scoring values are adopted with their likelihood surface retained.",
+    "source_operator": "maximum_likelihood_from_repeated_events",
+    "telemetry": "Likelihood surfaces logged during model fitting, together with the observed event histories used."
+   }
+  },
+  {
+   "primitive_id": "unknown_inequality_increases_repetition_probability",
+   "name": "Unknown inequalities raise repetition probability: a constant unknown cause favoring one of two events judged equally possible always increases the probability of the repetition of the same event, in Laplace's example from one fourth to one fourth plus the square of the inequality",
+   "verbatim_quote": "We find thus generally that the constant and unknown causes which favor simple events which are judged equally possible always increase the probability of the repetition of the same simple event.",
+   "page": "Chapter VII, printed p. 57",
+   "latex": "P = \\frac{1}{4} + \\alpha^2",
+   "symbol_and_unit_ledger": {
+    "P": "probability that the same simple event occurs twice in succession (dimensionless)",
+    "1/4": "the repetition probability under exact equality of the two chances (dimensionless)",
+    "\\alpha": "increment of possibility the unknown inequality adds to the favored event (dimensionless)",
+    "\\alpha^2": "the resulting increase in repetition probability (dimensionless)"
+   },
+   "assumptions": [
+    "A constant cause favors one of the events by an unknown amount",
+    "A priori, the direction and size of the inequality are symmetric possibilities"
+   ],
+   "breakdown_regime": "Breaks down when the inequality is known rather than unknown, since the repetition probability is then computed directly, and when the favoring cause varies from trial to trial instead of remaining constant.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hidden bias inflates streak rates beyond the independence baseline: repetition frequencies observed above the product-rule baseline are treated as a diagnostic of a persistent hidden asymmetry in the generating process, not as evidence about the next trial alone.",
+    "source_operator": "unknown_inequality_increases_repetition_probability",
+    "telemetry": "Repetition and streak frequencies versus independence baselines for each generating process."
+   }
+  },
+  {
+   "primitive_id": "randomization_correction_for_unknown_inequalities",
+   "name": "Randomization correction: the influence of unknown inequalities may be corrected by submitting the inequalities themselves to the chances of hazard, as in mixing the balls well or changing hands and places at play",
+   "verbatim_quote": "One may correct the influence of these unknown inequalities by submitting them themselves to the chances of hazard.",
+   "page": "Chapter VII, printed p. 58",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The assignment of the inequality-bearing positions or instruments can itself be randomized",
+    "The unknown inequality is attached to something the randomization permutes"
+   ],
+   "breakdown_regime": "Breaks down when the inequality attaches to something randomization cannot permute, or when the randomizing device carries an unknown bias of its own. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "statistical inference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Randomization and blinding cancel unknown systematic bias: assignments are permuted so hidden asymmetries average out over repetitions instead of accumulating in one direction.",
+    "source_operator": "randomization_correction_for_unknown_inequalities",
+    "telemetry": "Assignment logs and balance checks between randomized arms of any repeated procedure."
+   }
+  },
+  {
+   "primitive_id": "least_squares_most_advantageous_combination",
+   "name": "Least squares: the rule for concluding final equations from equations of condition amounts to rendering a minimum the sum of the squares of the errors of observations, and is the most advantageous combination under the error law",
+   "verbatim_quote": "The rule which we have just given to conclude equations of condition, final equations, amount to rendering a minimum the sum of the squares of the errors of observations",
+   "page": "Chapter IX, printed pp. 77-78",
+   "latex": "\\sum_i e_i^2 \\to \\min",
+   "symbol_and_unit_ledger": {
+    "e_i": "error of observation i (units of the observed quantity)",
+    "i": "index over the equations of condition formed from the observations"
+   },
+   "assumptions": [
+    "Each observation supplies an equation of condition in the elements sought",
+    "Observation errors are independent enough that squared residuals are the right penalty"
+   ],
+   "breakdown_regime": "Breaks down under heavy-tailed or systematically biased errors, where squared penalties let single bad observations dominate the combination; Laplace himself weighs the absolute-error alternative in the same chapter.",
+   "domain": "theory of errors",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Combine noisy condition equations by squared-residual minimization: estimates are the values that make the total squared disagreement with all observations smallest, which is the fitting step for any multi-source measurement model.",
+    "source_operator": "least_squares_most_advantageous_combination",
+    "telemetry": "Residual series per observation source, with refit comparisons when sources are added or removed."
+   }
+  },
+  {
+   "primitive_id": "gaussian_law_of_error",
+   "name": "Law of facility of errors: the probability of an error is proportional to the number whose hyperbolic logarithm is unity raised to a power equal to minus a constant coefficient times the square of the error, the coefficient being the modulus of the probability of the errors",
+   "verbatim_quote": "is proportional to the number whose hyperbolic logarithm is unity raised to a power equal to the square of the error taken as a minus quantity and multiplied by a constant coefficient which may be considered as the modulus of the probability of the errors; because, the error remaining the same, its probability decreases with rapidity when the former increases",
+   "page": "Chapter IX, printed p. 75",
+   "latex": "P(\\varepsilon) \\propto e^{-k\\varepsilon^2}",
+   "symbol_and_unit_ledger": {
+    "\\varepsilon": "the error of an observation or result (units of the observed quantity)",
+    "e": "the number whose hyperbolic logarithm is unity, base of the natural logarithms (dimensionless)",
+    "k": "constant coefficient, the modulus of the probability of the errors (units: inverse squared error units)",
+    "P(\\varepsilon)": "probability (density) of the error (units: inverse error units)"
+   },
+   "assumptions": [
+    "Errors arise in the regime of many small contributing causes, where the large-number theory applies",
+    "The error law is symmetric and decreases rapidly as the error grows"
+   ],
+   "breakdown_regime": "Breaks down for observations subject to occasional gross errors or asymmetric error mechanisms, where the squared-exponential tail understates the frequency of large deviations.",
+   "domain": "theory of errors",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Gaussian error model for aggregated estimates: uncertainty around a combined result is modeled by the squared-exponential law, with its modulus estimated from residuals, giving every estimate a defensible error scale.",
+    "source_operator": "gaussian_law_of_error",
+    "telemetry": "Residual histograms and fitted modulus values per data source."
+   }
+  },
+  {
+   "primitive_id": "weight_of_a_result",
+   "name": "Weight of a result: for the same probability, the errors of results are reciprocal to the square roots of their weights, which serves to compare the precision of results obtained from different numbers of observations",
+   "verbatim_quote": "Hence it follows that for the same probability the errors of the results are reciprocal to the square roots of their weights, which serves to compare their respective precision.",
+   "page": "Chapter IX, printed pp. 76-77",
+   "latex": "\\varepsilon \\propto \\frac{1}{\\sqrt{w}}",
+   "symbol_and_unit_ledger": {
+    "\\varepsilon": "error of the result at a fixed probability level (units of the observed quantity)",
+    "w": "weight of the result (dimensionless precision measure, growing with the number and quality of the observations combined)"
+   },
+   "assumptions": [
+    "The results compared follow the same family of error law",
+    "Weight grows with the number and quality of observations entering the result"
+   ],
+   "breakdown_regime": "Breaks down when two results have error laws of different shapes, so a single weight cannot order their precision at every probability level.",
+   "domain": "theory of errors",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precision weighting: sources are combined with influence proportional to their weight, and expected error shrinks with the square root of total weight, which prices the value of additional observations before they are collected.",
+    "source_operator": "weight_of_a_result",
+    "telemetry": "Per-source effective sample sizes and historical error scales."
+   }
+  },
+  {
+   "primitive_id": "posterior_median_minimizes_expected_loss",
+   "name": "Most advantageous estimate: the value to choose for an unknown quantity is the abscissa whose ordinate divides the posterior probability curve into two equal parts, because that choice makes the expected disadvantage, proportional to the error, a minimum",
+   "verbatim_quote": "This choice ought to be determined by the condition that this disadvantage be a minimum; and a very simple calculation shows that for this, X ought to be the abscissa whose ordinate divides the curve into two equal parts",
+   "page": "Chapter XV, printed pp. 158-159",
+   "latex": "P(x \\le X) = \\frac{1}{2}",
+   "symbol_and_unit_ledger": {
+    "x": "the unknown true value (units of the quantity estimated)",
+    "X": "the value chosen as the estimate (units of the quantity estimated)",
+    "P(x \\le X)": "posterior probability, under the probability curve of x, that the true value falls at or below X (dimensionless)"
+   },
+   "assumptions": [
+    "Disadvantage is proportional to the absolute size of the error",
+    "A posterior probability curve for the unknown quantity is available"
+   ],
+   "breakdown_regime": "Breaks down under asymmetric or squared loss, where the optimal choice shifts away from the median; Laplace contrasts it with the most probable value, the largest ordinate, which other geometers had chosen.",
+   "domain": "decision theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Point estimates chosen by loss minimization: report the posterior median when the cost of error is absolute, rather than the posterior mode, and record which loss the reported point was optimized against.",
+    "source_operator": "posterior_median_minimizes_expected_loss",
+    "telemetry": "Posterior samples per estimate, with realized absolute errors tracked against the reported points."
+   }
+  },
+  {
+   "primitive_id": "testimony_probability_and_extraordinary_facts",
+   "name": "Probability of testimony: applied to extraordinary deeds, the probability of the error or falsehood of the witness becomes as much greater as the fact attested is more extraordinary, so testimony must be discounted in proportion to the extraordinariness of what it attests",
+   "verbatim_quote": "Applying this conclusion to all extraordinary deeds it results from it that the probability of the error or of the falsehood of the witness becomes as much greater as the fact attested is more extraordinary.",
+   "page": "Chapter XI, printed p. 114",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reliability of the witness on ordinary facts can be assessed",
+    "The extraordinariness of the fact is measured against the ordinary course of events"
+   ],
+   "breakdown_regime": "Breaks down as a blanket discount when many independent witnesses converge, since their combined probability can reverse the discount; Laplace computes exactly this case with witnesses announcing a drawn number. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "social applications of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Source-reliability discounting scaled by claim extraordinariness: incoming reports are weighted by the source's track record and discounted further the more the claim departs from established base rates.",
+    "source_operator": "testimony_probability_and_extraordinary_facts",
+    "telemetry": "Source track records: claims made versus claims later verified, per source and per claim class."
+   }
+  },
+  {
+   "primitive_id": "dissolution_of_pascals_wager",
+   "name": "Dissolution of Pascal's wager: the testimony supporting an infinite promised happiness comes from witnesses with the greatest interest in accrediting it, so its probability becomes infinitely small, and infinity disappears from the product that expresses the advantage, destroying the argument",
+   "verbatim_quote": "infinity would disappear from the product which expresses the advantage resultant from this promise which destroys the argument of Pascal",
+   "page": "Chapter XI, printed pp. 121-122",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Advantage is probability times promised benefit, per the principles of hope",
+    "The probability of the testimony shrinks toward zero as the witnesses' interest in the promise grows"
+   ],
+   "breakdown_regime": "Breaks down as a general refutation if the testimony's probability is small but fixed rather than vanishing relative to the promised infinity; the argument needs the probability term to collapse faster than the payoff term grows. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "social applications of probability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An unbounded promised payoff cannot rescue vanishing evidence: any expected-value argument built on an extreme payoff is audited by shrinking the evidence term to its defensible value first, not by admiring the payoff term.",
+    "source_operator": "dissolution_of_pascals_wager",
+    "telemetry": "Evidence-strength estimates attached to every extreme-payoff claim entering a decision."
+   }
+  },
+  {
+   "primitive_id": "life_annuity_present_value",
+   "name": "Present value under mortality: the actual capital equivalent to a sum payable after a number of years equals the sum multiplied by the probability that it will be paid at that time and divided by unity augmented by the rate of interest, raised to the power of the number of years",
+   "verbatim_quote": "It results from that which precedes that the actual capital equivalent to a sum which is to be paid only after a certain number of years is equal to this sum multiplied by the probability that it will be paid at that time and divided by unity augmented by the rate of interest and raised to a power expressed by the number of these years.",
+   "page": "Chapter XV, printed p. 152",
+   "latex": "A = \\frac{S p}{(1+i)^n}",
+   "symbol_and_unit_ledger": {
+    "A": "actual capital equivalent today (units of currency)",
+    "S": "sum to be paid after n years (units of currency)",
+    "p": "probability the sum will be paid at that time; for a life annuity, the probability the annuitant survives (dimensionless)",
+    "i": "annual rate of interest (per year)",
+    "n": "number of years until payment (years)"
+   },
+   "assumptions": [
+    "Interest compounds at a constant annual rate over the term",
+    "The probability of payment is known, for annuities from mortality tables"
+   ],
+   "breakdown_regime": "Breaks down when interest rates vary over the term or when the payment probability correlates with the discount factor, so the two corrections cannot be applied independently.",
+   "domain": "actuarial mathematics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Discount future values by both time and occurrence probability: a projected future benefit is worth its amount times its probability of occurring, deflated by the time factor, which is the valuation rule for any deferred and uncertain payoff.",
+    "source_operator": "life_annuity_present_value",
+    "telemetry": "Survival or occurrence curves and discount rate series used in each valuation."
+   }
+  },
+  {
+   "primitive_id": "repetition_makes_advantageous_events_certain",
+   "name": "Repetition theorem for institutions founded on probability: by the repetition of an advantageous event the real benefit becomes more and more probable and increases without ceasing, becoming certain at an infinite number of repetitions, with mean benefit per event equal to the mathematical hope",
+   "verbatim_quote": "By the repetition of an advantageous event, simple or compound, the real benefit becomes more and more probable and increases without ceasing",
+   "page": "Chapter XV, printed pp. 149-150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The event keeps a positive mathematical hope at each repetition",
+    "Repetitions are numerous enough for the large-number regime to act"
+   ],
+   "breakdown_regime": "Breaks down for a small number of repetitions: Laplace states immediately before the theorem that a single compound event does not guarantee against the fear of a loss. no_equation_domain: the work states no equation for this primitive.",
+   "domain": "actuarial mathematics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Process design over single outcomes: a small positive edge repeated many times converts into near-certain aggregate benefit, so systems are built and judged on repeatable small edges and long-run aggregates rather than on single realizations.",
+    "source_operator": "repetition_makes_advantageous_events_certain",
+    "telemetry": "Per-event realized benefit series and repetition counts, reviewed on long windows."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "dd3ab9f8360fad55-t1",
+   "think": "This essay is the founding document of probability as a reasoning discipline, and reading it whole shows a single machine assembled in stages. Laplace begins with metaphysics: the universe is deterministic, each state the effect of the previous one and the cause of the next, and the intelligence he imagines, knowing all forces and the respective situations of all beings at one instant, would need no probability at all, because past and future would be present to it in one formula. Probability exists because we are not that intelligence. It is relative, in part to our ignorance and in part to our knowledge, which means every probability in the book is indexed to an information state and is never a property of the world alone. From that stance the classical definition follows naturally: decompose an event into cases we are equally undecided about, count the favorable cases, and the ratio is the probability. The ten principles then build the working calculus in the order a reasoner needs it. First, combination: independent events multiply, dependent events multiply through the conditional factor, and unequally possible cases are handled by first weighing each case on its own and then summing the possibilities of the favorable ones. Then, inversion: the fifth principle defines the probability of an expected event drawn from an observed one, and the sixth principle, which Laplace calls the fundamental principle of this branch of the analysis of chances, passes from events to causes by normalizing the probability of the event under each cause over all the causes, with prior probabilities entering when the causes are unequally probable beforehand. The seventh principle closes the loop by predicting forward: the probability of a future event is the sum, over causes, of the posterior probability of each cause multiplied by the probability of the future event supposing that cause. The rule of succession is this same machinery applied to a uniform prior over an unknown urn composition, and Laplace is honest that the number it yields for the sunrise is a statement about our information, since astronomical knowledge changes the wager entirely. The chapters on hope turn probability into decision. Mathematical hope is probability multiplied by payoff; the eighth principle sums that product over several events and the ninth nets benefits against losses. The St. Petersburg game then breaks the rule in public: an infinite mathematical hope commands no finite stake from any reasonable person, so expectation alone cannot be the measure of advantage. The tenth principle repairs the break by making value relative to the total fortune of the person interested, which yields the logarithmic measure of moral hope, explains why equal sums matter unequally to rich and poor, and produces the practical rule that a danger should be spread over several parts of a benefit rather than concentrated on the whole. The analytical chapters supply the engine room: equations of differences for sequential problems such as the division of stakes and the duration of play, generating functions that convert manipulations of an index into algebra, and the approximation of functions of large numbers, which converts combinatorial expressions too vast to compute into definite integrals and rapidly converging series. On that foundation the second part of the essay builds statistical theory. Bernoulli's theorem guarantees that observed ratios settle onto underlying probabilities as events multiply indefinitely, so constant causes prevail over irregular ones in the long run, and the possibilities that render the observed record most probable are the ones observation indicates, which is maximum likelihood stated in prose. The chapter on unknown inequalities is a quiet warning with long reach: a constant unknown cause favoring one of two equally judged events always raises the probability of repetition above the independence baseline, so streaks are evidence about the apparatus that generates the events, and the prescribed cure is to submit the inequalities themselves to hazard by mixing, changing hands, and randomizing positions. The chapter on natural philosophy derives the squared-exponential law of facility of errors, defines the weight of a result, shows that errors at equal probability shrink with the square root of the weight, and justifies the method of least squares as the most advantageous combination of equations of condition, while honestly weighing the absolute-error alternative. The chapter on institutions founded on probability adds the decision-theoretic complement: when a value must be chosen under a posterior probability curve, the most advantageous choice under loss proportional to error is the abscissa that divides the curve into two equal parts, the posterior median, and not the most probable value other geometers had preferred. Around these cores sit the applied studies: testimony discounted as the attested fact grows extraordinary, Pascal's wager dissolved because testimony from maximally interested witnesses carries infinitely small probability, the judgments of tribunals and the votes of assemblies analyzed as error-prone instruments whose majorities must be sized accordingly, mortality tables converted into mean durations of life, and annuities priced by multiplying the probability of payment into the ordinary discount factor. What this changes for a reasoning engine is direct and structural. Probabilities must be versioned by information state, because Laplace's definition makes them functions of knowledge. Causes must be carried as an explicit posterior distribution rather than collapsed into a single best guess, because prediction is defined as an average over that posterior. Streaks must trigger a bias diagnostic before any independence assumption is used, because unknown constant inequalities manufacture repetitions. Combined estimates must be weighted by precision and reported with their error law, point estimates must be chosen against the loss actually faced, evidence thresholds must scale with the extraordinariness of the claim, and decisions with unbounded payoffs or ruinous losses must be valued relative to the holder's total position rather than by raw expectation. Where the essay breaks is equally instructive. Equipossibility is an epistemic judgment wearing the dress of a definition, so the classical foundation turns circular whenever no natural decomposition into equally undecided cases exists. The succession rule is exactly as good as its uniform prior and no better, and Laplace's own sunrise discussion shows the number dissolving once real knowledge enters. The prose form hides analytic conditions: the sizes at which the large-number approximations become trustworthy, the independence the error law quietly assumes, and the exhaustiveness the cause calculus requires are gestured at rather than delimited, and the applied chapters on tribunals inherit every one of those gaps. Read whole, the essay is not a bag of formulas. It is a complete architecture for reasoning under ignorance, definition, combination, inversion, prediction, decision, computation, and error control, and nearly every modern component of probabilistic reasoning, Bayesian inversion, posterior predictive mixtures, likelihood fitting, precision weighting, and loss-aware estimation, has its first clear statement here, which is why Laplace can close by calling the theory of probabilities common sense reduced to calculus.",
+   "retrocausal_genealogy": "The machinery Laplace codifies in 1814 was assembled across the preceding century and a half, and the essay's own historical notice traces the line. Pascal and Fermat invent the calculus of chances in 1654 over the problem of points, the fair division of stakes in an interrupted game, which is the seed both of expectation and of the difference equations Laplace later generalizes. Huygens publishes the first treatise and fixes expectation as the central quantity. Jacques Bernoulli, in the posthumous Ars Conjectandi, proves the first law of large numbers and opens inverse reasoning from observed frequencies to underlying chances. Moivre extends the binomial approximations that become Laplace's analysis of functions of large numbers. Bayes, published posthumously in 1763, states the inversion from events to causes that Laplace develops into his sixth principle and calls the fundamental principle of this branch of analysis, while Daniel Bernoulli supplies moral expectation and the logarithmic valuation that becomes the tenth principle, together with an early probabilistic analysis of inoculation. Laplace's own Théorie analytique des probabilités of 1812 then supplies the analytic machinery, generating functions and asymptotic approximations, that the 1814 essay deliberately translates into prose for a general reader.",
+   "theory_of_mind": "Laplace writes for a reader whose untutored judgment he treats as sound but unformalized, and his recurring claim is that the theory of probabilities is common sense reduced to calculus. He assumes the reader already reasons this way about testimony, lotteries, juries, and annuities, and already commits the characteristic errors: trusting numbers that are overdue, crediting ex-voto offerings while ignoring the shipwrecked who left none, and being dazzled by infinite promised advantages. So the essay argues by concrete examples before abstract principles, and places a paradox at each point where intuition provably fails, the St. Petersburg game above all, so the reader feels the failure before accepting the repair. He also models the reader as a future decision maker inside institutions, tribunals, insurance offices, and assemblies, whose votes and contracts the calculus should govern. Extraordinary claims are therefore not dismissed but taxed with proportionally stronger proofs, because he expects the reader to meet such claims in real deliberation and wants a rule for them, not a reflex.",
+   "cross_layer_veto": "Three results in the essay function as vetoes on the others, and any system built from it must enforce them as cross-checks rather than optional cautions. First, the extraordinary events rule vetoes the downstream use of any signal whose supporting evidence is weak relative to the claim's prior improbability: the testimony analysis shows that a report can lower, not raise, the probability of an extraordinary fact, so no combination rule may treat such a report as ordinary independent evidence. Second, the unknown inequalities result vetoes naive independence: wherever observed repetition frequencies exceed the product-rule baseline, the third principle's multiplication is suspended until a constant hidden cause has been modeled or randomized away, because the excess repetitions are evidence about the apparatus, not about the events. Third, moral hope vetoes raw expectation in decisions: wherever payoff distributions are unbounded, as in the St. Petersburg game, or losses approach the holder's total fortune, the sums of the eighth and ninth principles may not be used for ranking until values are made relative to that total position. Each veto is Laplace correcting his own earlier principle with a later one, which is why they belong to the trace layer that governs the whole artifact rather than to any single primitive."
+  }
+ ],
+ "universal_lens": "Laplace's universal lens is that probability is the disciplined form of reasoning under partial knowledge, and it applies to any domain where causes are hidden and only events are visible. The same operators recur in every chapter: decompose the situation into cases, weigh each case on its own evidence, invert from observed events to candidate causes by normalized likelihood, predict by averaging over the resulting posterior, let repeated events expose constant causes through stable ratios, weight combined measurements by their precision, and choose actions by expected advantage corrected for the chooser's total position. Astronomy, testimony, tribunals, mortality, insurance, and games of chance are presented not as separate subjects but as one calculus inspected from different sides. That is why the essay can close by defining the theory of probabilities as common sense reduced to calculus: the lens is a general method for converting ignorance into explicit, auditable numbers wherever a decision must be made before certainty is available.",
+ "gsi_mapping": "For a general scientific intelligence, this essay supplies the probabilistic reasoning core in domain-free form: an explicit representation of ignorance indexed to an information state, Bayesian inversion from observations to candidate causes, posterior predictive averaging for forecasts, likelihood-based fitting from repeated events, precision weighting when heterogeneous measurements are combined, a Gaussian error model whose modulus is estimated from residuals, and loss-aware point estimation through the posterior median. Its diagnostic layer is equally portable: hidden-bias detection from inflated repetition rates, randomization as the corrective for unknown systematic asymmetries, evidence thresholds that scale with the extraordinariness of a claim, and utility-relative valuation that prevents unbounded payoff arguments from dominating decisions. Any general reasoning system that ingests noisy evidence and must act before certainty is available can instantiate these operators directly, because Laplace states each one independently of the astronomical, actuarial, and judicial examples he uses to motivate it.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the value of this essay is architectural rather than topical: it specifies how a prediction system should reason, not what it should predict. Probabilities are versioned by information state, so a projection formed before availability and lineup news is a different object from the same projection formed after it, and both are kept. Candidate explanations of a team's form are carried as an explicit posterior over causes and updated by normalized likelihood as results arrive, and forecasts are posterior mixtures across those explanations rather than single-model outputs. Streaks trigger the unknown-inequality diagnostic before any independence assumption is used in combining signals. Combined estimates weight their sources by precision, reported point projections are chosen against the loss the engine actually faces, and performance is judged by the repetition theorem's standard: small real edges, repeated over many events and audited against long-run frequencies, rather than verdicts on single outcomes."
+}

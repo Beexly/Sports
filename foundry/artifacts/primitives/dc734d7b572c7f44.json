@@ -1,0 +1,640 @@
+{
+ "book_id": "dc734d7b572c7f44",
+ "source_status": "COMPLETE",
+ "source_note": "Louis P. Benezet, Three Years of Football at Dartmouth, covering the seasons of 1901, 1902 and 1903, dated St. Paul's School, Concord, April 19th, 1904. Local file is a scanned PDF held by the University of California San Diego library, with OCR extracted text of 457179 bytes and about 73606 words; OCR contains frequent letter errors in names and headings, so all quoted passages were chosen from clean prose and verified as contiguous substrings of the extracted text file. PDF size 12131479 bytes, full sha256 dc734d7b572c7f44c9a2ad727ec02bf0637b703e701981dac0cc46319fc5f439, book_id is the first 16 hex chars of the scan digest over str(size) plus the full PDF bytes. The work has no equations; all primitives carry empty latex. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "reconstruction_coaching_system_change",
+   "name": "A losing program is rebuilt by changing the head coach, shaking up the team, and wholly changing the coaching system",
+   "verbatim_quote": "the team should be shaken up and made over, the system of coaching should be wholly changed",
+   "page": "Season of 1901, Reconstruction, extracted text lines 109-112",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A new head coach with authority over selection and method is available",
+    "Players accept a full reset rather than incremental adjustment"
+   ],
+   "breakdown_regime": "Fails when the reset is cosmetic, when the new coach lacks selection authority, or when three years of losing reflect a talent gap no system change can close",
+   "domain": "coaching and program building",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a regime change flag in the reasoning engine: when coaching, system, and personnel turnover coincide, prior season priors are downweighted and the new regime is modeled as a distinct state rather than a continuation.",
+    "source_operator": "reconstruction_coaching_system_change",
+    "telemetry": "Coach identity and tenure, staff changes, returning starter share, scheme descriptors by season"
+   }
+  },
+  {
+   "primitive_id": "competent_trainer_first_time",
+   "name": "Appointing a competent trainer to care for the physical condition of the men is treated as a first time program investment with a direct share of later success",
+   "verbatim_quote": "there should be a competent trainer to care for the physical condition of the men",
+   "page": "Season of 1901, Reconstruction, extracted text lines 112-114",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physical condition is trainable and separable from playing skill",
+    "A dedicated trainer can monitor condition across a whole season"
+   ],
+   "breakdown_regime": "Fails when injuries are structural or collision driven beyond conditioning, or when no qualified trainer is actually available to a small program",
+   "domain": "sports medicine and conditioning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a health infrastructure input: teams with dedicated conditioning and training staff carry a different availability and late season durability prior than teams without that support.",
+    "source_operator": "competent_trainer_first_time",
+    "telemetry": "Trainer and medical staff presence, injury counts by week, player availability reports, late season performance splits"
+   }
+  },
+  {
+   "primitive_id": "lack_of_heavy_linemen_constraint",
+   "name": "A persistent lack of heavy men for the line is the binding roster constraint even when backs, ends, and quarter play are strong",
+   "verbatim_quote": "the great lack of heavy men was a source of anxiety to the coach all through the season",
+   "page": "Season of 1901, Reconstruction, extracted text lines 132-134",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Line weight and strength materially affect rushing and protection in this era of mass play",
+    "Skill positions cannot fully compensate for a light line against heavy opponents"
+   ],
+   "breakdown_regime": "Fails in eras or schemes where line mass is less decisive, and when quickness and technique offset weight, as the book itself later shows with a quick heavy line",
+   "domain": "roster construction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a constraint first roster model: identify the scarcest positional resource first, because that constraint caps the value of strength elsewhere on the roster.",
+    "source_operator": "lack_of_heavy_linemen_constraint",
+    "telemetry": "Roster weights by position group, opponent line weights, rushing success by direction, pressure and penetration rates"
+   }
+  },
+  {
+   "primitive_id": "hard_schedule_context",
+   "name": "Results are read against schedule difficulty, with Williams, Bowdoin, Wesleyan, Harvard, and Brown named as a hardest ever slate",
+   "verbatim_quote": "The schedule was one of the hardest that a Dartmouth team was ever called upon to play",
+   "page": "Season of 1901, Reconstruction, extracted text lines 136-138",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Opponent quality varies enough that raw wins and scores are not comparable across seasons without context",
+    "Named strong opponents are a usable difficulty signal"
+   ],
+   "breakdown_regime": "Fails when schedule labels are reputational rather than earned that season, or when a hard schedule is used to excuse every poor performance",
+   "domain": "strength of schedule",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to schedule adjusted evaluation: every result enters the engine tagged with opponent strength so that a close loss to a top team and a rout of a weak team are not scored as equivalent evidence.",
+    "source_operator": "hard_schedule_context",
+    "telemetry": "Opponent ratings, opponent results against common opponents, margin relative to opponent strength"
+   }
+  },
+  {
+   "primitive_id": "broad_tryout_evaluation",
+   "name": "Early season games are used as open trials, with all new material tried out and six men played at quarter in one game",
+   "verbatim_quote": "All the new material was tried out, and everybody was given a show",
+   "page": "Season of 1901, New Hampshire College game, extracted text lines 191-193",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early opponents are weak enough that experimentation does not risk the result",
+    "Live game reps reveal more than practice about new players"
+   ],
+   "breakdown_regime": "Fails against strong early opponents, and when constant rotation prevents any unit from developing timing and cohesion",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an exploration phase in depth chart inference: early low leverage snaps are allocated to reduce uncertainty about untested players before high leverage games demand a settled lineup.",
+    "source_operator": "broad_tryout_evaluation",
+    "telemetry": "Snap counts by player and game, rotation patterns, performance by unit combination"
+   }
+  },
+  {
+   "primitive_id": "team_work_pulling_runner",
+   "name": "Team work is shown by blockers and teammates pulling and hauling the runner along for extra yards after he is downed",
+   "verbatim_quote": "Dartmouth showed great team work, pulling and hauling the runner along many yards after he was downed",
+   "page": "Season of 1901, New Hampshire College game, extracted text lines 190-192",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mass momentum and interference were legal and central in this era",
+    "Extra yards after contact reflect collective effort, not only the ball carrier"
+   ],
+   "breakdown_regime": "Fails under modern rules limiting aiding the runner, and when second effort yards are credited to teamwork that was actually a missed tackle",
+   "domain": "team play and interference",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a collective gain attribution: yards are decomposed into carrier skill, blocking, and teammate assistance instead of being assigned to the ball carrier alone.",
+    "source_operator": "team_work_pulling_runner",
+    "telemetry": "Yards after contact, blocking grades, downfield block events, tackle breaking versus assisted yards"
+   }
+  },
+  {
+   "primitive_id": "first_down_suppression_trinity",
+   "name": "Defensive dominance is measured by how rarely the opponent makes its distance, with Trinity held to two first downs in a whole game",
+   "verbatim_quote": "Trinity made her distance but twice during the entire contest and held Dartmouth but once",
+   "page": "Season of 1901, Trinity game, extracted text lines 203-205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "First down frequency is a stable indicator of sustained offensive success",
+    "A full game sample is enough to separate dominance from a few lucky stops"
+   ],
+   "breakdown_regime": "Fails in short halves, in extreme weather, or when an opponent scores quickly so often that it rarely needs sustained drives, none of which applied here",
+   "domain": "defensive measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a drive suppression metric: opponent first downs and successful series rate are tracked as primary defensive outputs, ahead of final score alone.",
+    "source_operator": "first_down_suppression_trinity",
+    "telemetry": "Opponent first downs, series success rate, three and out rate, plays per drive allowed"
+   }
+  },
+  {
+   "primitive_id": "team_unity_dovetailing",
+   "name": "The praised team plays as one man, with backs working together as a unit and every part of the work dovetailing accurately",
+   "verbatim_quote": "It plays as one man; the backs work together like a unit, and fast is no name for the playing they do",
+   "page": "Season of 1901, Note and Comment after Bowdoin, extracted text lines 758-762",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coordinated timing can be observed and reported by neutral newspapers, not only by partisans",
+    "Unit cohesion adds value beyond the sum of individual players"
+   ],
+   "breakdown_regime": "Fails as evidence when the source is a friendly account, and cohesion claims break down when injuries force constant lineup changes",
+   "domain": "team cohesion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a cohesion term estimated from continuity and synchronized execution: stable units with many shared reps receive a coordination premium that raw talent sums miss.",
+    "source_operator": "team_unity_dovetailing",
+    "telemetry": "Shared snap counts by unit, penalty and fumble rates, missed assignment indicators, lineup continuity"
+   }
+  },
+  {
+   "primitive_id": "defense_first_fix_after_weakness",
+   "name": "After the Wesleyan game exposed defense as the weak point, the coach gave all his attention during the next week to defense, at a cost to offensive sharpness",
+   "verbatim_quote": "\"Mac\" had been giving all his attention during the week just past to defense, for the Wesleyan game had shown that this was the weak point in Dartmouth's play",
+   "page": "Season of 1901, Vermont game, extracted text lines 985-987",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Practice time is scarce and reallocating it has an opportunity cost on the other side of the ball",
+    "A single game can correctly identify the unit most in need of work"
+   ],
+   "breakdown_regime": "Fails when the identified weakness was a one game matchup effect, and the neglected side then decays, which the text itself records for the offense that week",
+   "domain": "coaching allocation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a weakest link practice allocation model with an explicit tradeoff term: improving the worst unit raises the floor but can lower the ceiling of the neglected unit in the short term.",
+    "source_operator": "defense_first_fix_after_weakness",
+    "telemetry": "Weekly performance splits by unit, injury and matchup context, subsequent game unit grades"
+   }
+  },
+  {
+   "primitive_id": "vermont_first_down_suppression",
+   "name": "A defense is credited as fierce when the opponent makes first down only twice in the whole game",
+   "verbatim_quote": "Only twice during the whole game did Vermont make first down, so fierce was Dartmouth's defense",
+   "page": "Season of 1901, Vermont game, extracted text lines 990-991",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The opponent attempted to advance normally rather than playing for a different objective",
+    "First down suppression over a full game reflects defensive play, not only offensive failure"
+   ],
+   "breakdown_regime": "Fails when weather, injuries, or a backup quarterback suppress the opponent independently of the defense",
+   "domain": "defensive measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the same drive suppression family as the Trinity case, giving the engine a repeated historical example that low opponent first down totals were already used as a headline defensive statistic in 1901.",
+    "source_operator": "vermont_first_down_suppression",
+    "telemetry": "Opponent first downs, yards per play allowed, explosive play rate allowed"
+   }
+  },
+  {
+   "primitive_id": "transitive_offense_gauge",
+   "name": "Offensive form is gauged transitively through common opponents, comparing a score against what Union and Brown did against the same teams",
+   "verbatim_quote": "How far off-color was Dartmouth's offense may be seen from the fact that Union defeated U. V. M. 21 to 5 a few",
+   "page": "Season of 1901, Note and Comment after Vermont, extracted text lines 1075-1077",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Common opponent results carry information about relative strength",
+    "Timing matters, since the comparison games happened a few days later with similar rosters"
+   ],
+   "breakdown_regime": "Fails when rosters, weather, or motivation differ between the compared games, and transitive chains longer than one link degrade quickly",
+   "domain": "comparative rating",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a common opponent adjustment: a result is scored relative to what other credible teams did against the same opponent in the same window, not against a fixed expectation.",
+    "source_operator": "transitive_offense_gauge",
+    "telemetry": "Common opponent margins, dates of comparison games, roster availability in each game"
+   }
+  },
+  {
+   "primitive_id": "injury_absence_opponent_effect",
+   "name": "An injury keeping a captain out is recorded as a material cause in his team losing a later game",
+   "verbatim_quote": "The injury to Captain Inglis kept him out of the Williams game, which Wesleyan lost, 11 to 5",
+   "page": "Season of 1901, Note and Comment after Wesleyan, extracted text lines 974-975",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A captain and key player has value beyond a generic roster spot",
+    "The counterfactual is that Wesleyan performs better with him available"
+   ],
+   "breakdown_regime": "Fails when the absence is used as a blanket excuse, or when the replacement performs at the same level",
+   "domain": "availability and player value",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an availability adjustment keyed to role and leadership, not only to position: losing a captain and central player shifts the team rating more than losing a rotation player.",
+    "source_operator": "injury_absence_opponent_effect",
+    "telemetry": "Player availability, captain and signal caller status, replacement performance, snaps missed"
+   }
+  },
+  {
+   "primitive_id": "healthy_competition_for_positions",
+   "name": "Only four starters were certain of their places before the Brown game, and close competition at nearly every other position is presented as a strength",
+   "verbatim_quote": "There had been a most healthy competition for positions on the Dartmouth team",
+   "page": "Season of 1901, Note and Comment after Brown, extracted text lines 1840-1842",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Internal competition raises practice intensity and provides tested depth",
+    "Coaches can keep places open without damaging confidence or cohesion"
+   ],
+   "breakdown_regime": "Fails when uncertainty unsettles players or prevents unit timing, and when the supposed competition is really an absence of any adequate starter",
+   "domain": "depth and competition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a depth quality input: a roster where second units are near starter level, evidenced by genuine position battles, is more robust to injury and fatigue across a season.",
+    "source_operator": "healthy_competition_for_positions",
+    "telemetry": "Depth chart movement, second team results, replacement performance when starters miss time"
+   }
+  },
+  {
+   "primitive_id": "roster_measurements_average",
+   "name": "The book publishes age, height, and weight for the men who played Brown, and reports the average age of the starting eleven as 21 years",
+   "verbatim_quote": "Average age of the eleven who began the game, 21 years",
+   "page": "Season of 1901, statistics after Brown, extracted text line 1894",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physical measurements of the actual players who appeared are relevant to evaluating a team",
+    "Averages over the starting eleven summarize team level physical profile"
+   ],
+   "breakdown_regime": "Fails when averages hide distribution, since one very heavy lineman and one very light back can average to a misleading middle",
+   "domain": "roster measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a physical profile feature set built from measured rosters rather than reputation: age, height, and weight by unit enter as data, with distribution kept visible beside the average.",
+    "source_operator": "roster_measurements_average",
+    "telemetry": "Measured height, weight, and age by player and unit, year in school, prior seasons played"
+   }
+  },
+  {
+   "primitive_id": "ranking_undercredit_bias",
+   "name": "External rankings are shown to undercredit a rising small college team until results force critics to reckon with it",
+   "verbatim_quote": "Dartmouth was not given credit for being as good as she was",
+   "page": "Season of 1901, Note and Comment after Brown, extracted text lines 1922-1924",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rankers rely on reputation and prior class membership when evidence is thin",
+    "Sustained results against ranked opponents eventually correct the bias"
+   ],
+   "breakdown_regime": "Fails as a general claim when the underrated team is simply not as good as its partisans believe, which is why the book argues from comparative results",
+   "domain": "rating bias",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a reputation lag correction: teams moving up a class carry stale priors in public ratings, so the engine separates reputation based ranking from result based rating and tracks the gap.",
+    "source_operator": "ranking_undercredit_bias",
+    "telemetry": "Public rankings versus result based ratings, class and conference history, head to head results against ranked teams"
+   }
+  },
+  {
+   "primitive_id": "season_aggregate_dominance_1901",
+   "name": "The 1901 season is summarized in aggregate as ten wins, one loss, and 291 points scored against 47 allowed",
+   "verbatim_quote": "Thus Dartmouth had won ten games and lost one, and scored 291 points to her opponents' 47",
+   "page": "Season of 1901, closing summary, extracted text lines 1980-1981",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Season aggregates summarize dominance when the schedule is broadly comparable",
+    "Points for and against together carry more information than wins alone"
+   ],
+   "breakdown_regime": "Fails when aggregates are built against a weak schedule, or when a few routs of weak teams inflate the differential",
+   "domain": "season evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a season level dominance summary used only after schedule tagging: aggregate differential is a summary display, never a substitute for game by game opponent adjusted evidence.",
+    "source_operator": "season_aggregate_dominance_1901",
+    "telemetry": "Wins, losses, points for and against, opponent adjusted differential by game"
+   }
+  },
+  {
+   "primitive_id": "eligibility_council_no_hesitation",
+   "name": "The Athletic Council barred ineligible heavy recruits at its first fall meeting without hesitation, even though playing them would have transformed the line",
+   "verbatim_quote": "the Dartmouth Athletic council never hesitated. At its first meeting in the fall the two men in question, together",
+   "page": "Season of 1902, Progress, extracted text lines 2035-2038",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Eligibility rules bind even when the competitive cost of obeying them is very high",
+    "Governance acts early, at the first meeting, before the players are integrated"
+   ],
+   "breakdown_regime": "Fails as a competitive strategy in any environment where rivals do not enforce the same rules and no external body compels them to",
+   "domain": "eligibility governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a hard eligibility gate in roster modeling: a player ruled ineligible is removed from all projections completely, not discounted, regardless of how much his presence would change the rating.",
+    "source_operator": "eligibility_council_no_hesitation",
+    "telemetry": "Eligibility rulings, enrollment and prior college history, governance decisions and their dates"
+   }
+  },
+  {
+   "primitive_id": "eligibility_cost_weight_parity_forgone",
+   "name": "Barring the two heavy men cost Dartmouth its first chance at weight parity with Yale and Harvard, whose team and line averages are given for comparison",
+   "verbatim_quote": "Thus by playing Lindsay and Turner Dartmouth would have had, for the first time in her history, a team far superior",
+   "page": "Season of 1902, Progress, extracted text lines 2031-2033",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Team and line average weights of Yale and Harvard are the benchmark for the top class",
+    "Two players can move a whole team average when the roster is small"
+   ],
+   "breakdown_regime": "Fails when weight parity is treated as equal to playing parity, since the book shows Dartmouth later beating Harvard without that parity",
+   "domain": "roster construction and governance cost",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a counterfactual roster value calculation: the engine can price a governance decision by comparing the projected team with and without the barred players, while still excluding them from the actual projection.",
+    "source_operator": "eligibility_cost_weight_parity_forgone",
+    "telemetry": "Counterfactual ratings with and without a player, unit weight averages, benchmark team profiles"
+   }
+  },
+  {
+   "primitive_id": "barred_from_athletics_full_year",
+   "name": "The barred men, together with a 190 pound fullback from Fiske University, were excluded from all athletics for the whole year, not only from one game",
+   "verbatim_quote": "were barred from participating in all further athletics during the year",
+   "page": "Season of 1902, Progress, extracted text lines 2040-2041",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ruling covered all athletics and the full year, closing any partial participation route",
+    "Prior attendance at another college was the disqualifying fact pattern in the narrative"
+   ],
+   "breakdown_regime": "Fails as precedent where eligibility rules differ by sport or where a waiver process exists and is used",
+   "domain": "eligibility governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the duration and scope fields of an eligibility record: exclusions carry a start, an end, and a scope, so downstream systems do not silently reinstate a player mid season.",
+    "source_operator": "barred_from_athletics_full_year",
+    "telemetry": "Eligibility record scope and duration, reinstatement dates, sport specific rulings"
+   }
+  },
+  {
+   "primitive_id": "rushing_yardage_dominance_williams",
+   "name": "Dominance over Williams is quantified by rushing yards split by half, 217 in the first and 218 in the second, for 435 in the game",
+   "verbatim_quote": "Dartmouth rushed the ball 217 yards in the first half, 218 in the second, a total of 435 for the whole game",
+   "page": "Season of 1903, Note and Comment after Williams, extracted text lines 5809-5811",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rushing yardage is a meaningful dominance measure in a run heavy era",
+    "Splitting by half shows the dominance was sustained, not a single burst"
+   ],
+   "breakdown_regime": "Fails when a team trails and must pass, when returns inflate rushing totals, or when yardage does not convert to scores, a gap the same note records",
+   "domain": "offensive measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a sustained production check: yardage is stored by half and by drive so the engine can separate one explosive stretch from game long control of the line of scrimmage.",
+    "source_operator": "rushing_yardage_dominance_williams",
+    "telemetry": "Rushing yards by half, yards per rush, drive outcomes, score conversion from yardage"
+   }
+  },
+  {
+   "primitive_id": "negative_average_rush_allowed",
+   "name": "Williams is shown to have gained 10 yards in six rushes and lost so much on other attempts that its average per rush for the game was about minus one and a half yards",
+   "verbatim_quote": "Williams gained a total of 10 yards in six rushes and lost so much ground on her other attempts that her average per rush for the entire game was about minus one and a half yards",
+   "page": "Season of 1903, Note and Comment after Williams, extracted text lines 5812-5815",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Negative plays are counted in the average, not discarded as failed attempts",
+    "A near zero or negative rushing average over a full game signals line dominance"
+   ],
+   "breakdown_regime": "Fails on very small samples, and when sacks or bad snaps, rather than defensive penetration, create the losses",
+   "domain": "defensive measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a stuff and negative play rate: opponent rushing is evaluated on the full distribution including losses, so a defense that creates negative plays is credited beyond yards per carry alone.",
+    "source_operator": "negative_average_rush_allowed",
+    "telemetry": "Opponent rush distribution, tackles for loss, negative play rate, yards per rush allowed"
+   }
+  },
+  {
+   "primitive_id": "wet_weather_heavier_team_exception",
+   "name": "Wet weather usually benefits the heavier team, but here wet ground and a slippery ball cost the faster team score after score through lost ball handling",
+   "verbatim_quote": "Usually it is the heavier team which is benefitted by wet weather, but on this occasion the wet ground and slippery",
+   "page": "Season of 1903, Note and Comment after Williams, extracted text lines 5816-5817",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The general rule assumes footing and power matter more than ball security in wet conditions",
+    "The exception arises when fumbles, not footing, become the dominant wet weather effect"
+   ],
+   "breakdown_regime": "Fails as a prediction when rain is light, when the heavier team also handles the ball poorly, or when the surface drains well",
+   "domain": "weather effects",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a conditional weather model: precipitation interacts with team style and ball security history instead of applying a single generic wet weather adjustment to the heavier team.",
+    "source_operator": "wet_weather_heavier_team_exception",
+    "telemetry": "Weather and surface reports, fumble rates by condition, team weight and speed profile, turnover counts"
+   }
+  },
+  {
+   "primitive_id": "defeat_attribution_discipline",
+   "name": "The book refuses to attribute the Princeton defeat to grounds, weather, officials, or luck, calling that the most unsportsmanlike response a beaten team can make",
+   "verbatim_quote": "The most unsportsmanlike thing that can be done by a beaten team or its partisans is to attribute their defeat to the grounds, the weather, the officials",
+   "page": "Season of 1903, Princeton game introduction, extracted text lines 5834-5836",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Superior play by the opponent is the default explanation the author demands be faced first",
+    "External factors can be real, but they must not be reached for before the playing gap is admitted"
+   ],
+   "breakdown_regime": "Fails when officiating or conditions genuinely decided a game, in which case the discipline becomes a refusal to record a real cause",
+   "domain": "postgame analysis discipline",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an attribution order in postgame review: opponent performance and own execution are evaluated before weather, officiating, or luck are admitted as explanations, and any external factor admitted must be evidenced.",
+    "source_operator": "defeat_attribution_discipline",
+    "telemetry": "Postgame factor reviews, officiating reports, weather logs, execution grades by unit"
+   }
+  },
+  {
+   "primitive_id": "fastest_cleanest_ball_handling_1903",
+   "name": "Caspar Whitney is quoted ranking Dartmouth by speed and ball security together, as the fastest game of the year with the cleanest handling from first to last",
+   "verbatim_quote": "Dartmouth played the fastest game of the year, and handled the ball the cleanest, from first to last",
+   "page": "Season of 1903, Summary of Season, extracted text lines 9029-9030",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Speed and ball security are separate qualities that can coincide in one team",
+    "The judgment comes from a season review by an outside editor, not from the college itself"
+   ],
+   "breakdown_regime": "Fails when early season loose work, which the same review notes at Princeton, is forgotten and the late season form is projected backward over the whole year",
+   "domain": "team quality assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a two factor form profile: pace of play and ball security are tracked as independent late season form indicators rather than merged into a single impression of quality.",
+    "source_operator": "fastest_cleanest_ball_handling_1903",
+    "telemetry": "Fumbles and lost balls by game, tempo indicators, late season versus early season splits"
+   }
+  },
+  {
+   "primitive_id": "transitive_ranking_evidence_1903",
+   "name": "The case for Dartmouth near the top rests on chained evidence, that it rushed twice as far as any team it played, buried its former class, and outplayed Harvard 11 to 0 a week before Harvard played Yale",
+   "verbatim_quote": "they rushed the ball twice as far as any team they played; they buried the colleges formerly in their class; they completely outplayed Harvard, by 11 to 0",
+   "page": "Season of 1903, Summary of Season quoting Patterson, extracted text lines 9063-9066",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Chained comparisons through common opponents are treated as legitimate ranking evidence",
+    "Timing is specified, since the Harvard game came one week before the Yale game with nearly all Harvard regulars in line"
+   ],
+   "breakdown_regime": "Fails when the chain ignores that Dartmouth itself was below its later form at Princeton, a fairness point the quoted review itself adds",
+   "domain": "comparative rating",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an evidence chain object in rating: each ranking claim must carry its comparison path, its dates, and its availability notes, so a transitive argument can be audited link by link instead of accepted as a verdict.",
+    "source_operator": "transitive_ranking_evidence_1903",
+    "telemetry": "Comparison paths between teams, game dates, rushing differentials, availability in each linked game"
+   }
+  },
+  {
+   "primitive_id": "princeton_outrush_despite_absences",
+   "name": "Against Princeton, Dartmouth is recorded as outrushing the champions 225 yards to 69 while missing seven named men through sickness and injury",
+   "verbatim_quote": "outrushed, 225 yards to 69, the best eleven that Princeton could put in the field",
+   "page": "Season of 1903, Summary of Season, extracted text lines 9006-9009",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rushing differential is offered as evidence that the defeat understated Dartmouth performance",
+    "The absences are named, so the availability claim can be checked against the game account"
+   ],
+   "breakdown_regime": "Fails when a rushing edge in a loss is overvalued, since Princeton still won the game and scoring, not yardage, decides the result",
+   "domain": "performance versus result",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a result versus process split: the engine records both the loss and the underlying yardage dominance with depleted availability, so one defeat does not erase process evidence and process evidence does not erase the defeat.",
+    "source_operator": "princeton_outrush_despite_absences",
+    "telemetry": "Yardage differentials in losses, availability lists, scoring plays, turnover and field position context"
+   }
+  },
+  {
+   "primitive_id": "harvard_attack_powerless_against_line",
+   "name": "Harvard attack that tore up Yale and gained at will through Pennsylvania was powerless against the Dartmouth line, while Dartmouth gained far more through Harvard than Yale did",
+   "verbatim_quote": "Harvard's attack, which tore up Yale and gained at will through Pennsylvania, was powerless against Dartmouth's line",
+   "page": "Season of 1903, Summary of Season, extracted text lines 9021-9023",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same attack is observed against three defenses, giving a controlled comparison",
+    "Line play is identified as the specific unit responsible for the difference"
+   ],
+   "breakdown_regime": "Fails when Harvard form, injuries, or game plan differed across those games, which a single quoted summary cannot rule out",
+   "domain": "unit matchup evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a unit level matchup record: an offense is rated against the specific defensive fronts it faced, so a line that stops a proven attack earns credit tied to that attack, not to the final score alone.",
+    "source_operator": "harvard_attack_powerless_against_line",
+    "telemetry": "Offensive production by opponent front, line grades, rushing and pressure allowed by matchup"
+   }
+  },
+  {
+   "primitive_id": "center_stability_wet_ball",
+   "name": "Hooper at center is praised as steady and unmovable, and his handling of the wet ball is separated from the backs, who made all the fumbles",
+   "verbatim_quote": "Hooper at center was as steady and unmovable as a rock. His handling of the wet ball was remarkable; all the fumbles were made by the backs",
+   "page": "Season of 1903, Note and Comment after Williams, extracted text lines 5798-5800",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ball handling errors can be assigned to the exchange and the carrier separately",
+    "Center play is evaluated on snap reliability as well as blocking"
+   ],
+   "breakdown_regime": "Fails when snap and carrier errors are entangled on the same play and the account assigns blame by reputation rather than by film or chart",
+   "domain": "player evaluation and ball security",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an error attribution split for turnovers: snap, exchange, and carrier security are separate fields, so a reliable center is not charged with backs fumbles and a fumbling backfield is not hidden by a good line.",
+    "source_operator": "center_stability_wet_ball",
+    "telemetry": "Fumble attribution by phase, snap error counts, wet ball game logs, center continuity"
+   }
+  },
+  {
+   "primitive_id": "quarterback_run_direct_pass_rule_1903",
+   "name": "The September 1903 rule allowed the quarterback to run with the ball on a direct pass, provided he did not cut in within five yards of the spot where the ball was put in play",
+   "verbatim_quote": "allowing the quarter-back to run with the ball on a direct pass, provided that he did not cut in within five yards of the spot from which the ball was put in play",
+   "page": "Foreword, rule explanation, extracted text lines 67-70",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule applies while the ball lay between the two 25 yard lines in the related seven man line provision",
+    "The five yard restriction defines the legal running lane for the quarterback"
+   ],
+   "breakdown_regime": "Fails as a description of any later era, since quarterback run rules changed repeatedly after 1903, and it must never be projected onto modern play",
+   "domain": "rules history",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to an era rules table: legal plays, formations, and scoring incentives are versioned by season, so historical game accounts are interpreted under the rules actually in force that year.",
+    "source_operator": "quarterback_run_direct_pass_rule_1903",
+    "telemetry": "Rule book versions by season, formation legality, quarterback run frequency, field position bands"
+   }
+  },
+  {
+   "primitive_id": "foreword_truth_standard",
+   "name": "The author states that no statement was altered or exaggerated to Harvard disparagement from the strict truth, while openly admitting the book is written by a Dartmouth man for Dartmouth men",
+   "verbatim_quote": "no statement has, to the slightest degree, been altered or exaggerated, to Harvard's disparagement, from the strict truth",
+   "page": "Foreword, extracted text lines 57-60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Partisanship is disclosed rather than concealed, so the reader can discount tone while trusting stated facts",
+    "Scores, lineups, and game events are checkable against newspaper accounts the book quotes"
+   ],
+   "breakdown_regime": "Fails where selection, rather than alteration, does the partisan work, since choosing which facts to print can favor one side without changing any single statement",
+   "domain": "source criticism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a provenance and bias label on historical sources: disclosed partisan sources are usable for checkable facts such as scores, lineups, and yardage, with evaluative claims discounted by the disclosed allegiance.",
+    "source_operator": "foreword_truth_standard",
+    "telemetry": "Source allegiance labels, cross checks against neutral newspapers, fact versus evaluation tagging"
+   }
+  },
+  {
+   "primitive_id": "long_travel_midseason_risk",
+   "name": "The Princeton game is singled out as the most feared fight because it fell in the uncertain mid season and required a 450 mile journey each way",
+   "verbatim_quote": "450 mile journey each way, was the fight which was feared most of all",
+   "page": "Season of 1903, schedule discussion, extracted text lines 5126-5128",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Travel distance and mid season timing combine, since the team is neither fresh from opening nor settled into late season form",
+    "The fear is stated before the game in the narrative structure, not invented after the defeat"
+   ],
+   "breakdown_regime": "Fails when travel is routine for a program, or when the journey is used after the fact to explain a loss the author elsewhere refuses to excuse",
+   "domain": "travel and scheduling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a travel load input that combines distance, timing within the season, and turnaround, rather than a flat home or away tag on the game.",
+    "source_operator": "long_travel_midseason_risk",
+    "telemetry": "Travel distance, days between games, kickoff timing, prior and following opponents"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "dc734d7b572c7f44-t1",
+   "think": "This book is a partisan but fact dense chronicle of three Dartmouth football seasons, 1901, 1902, and 1903, written by Louis P. Benezet and published in 1904, and its value to a reasoning engine is not a theorem but a complete early record of how a small college program was rebuilt, measured, governed, and finally judged against the strongest teams in the country. The narrative arc is itself a model. In 1901 the program is in reconstruction after three years of defeats by Brown and Wesleyan and a loss of prestige. The response described is structural rather than motivational: a new head coach in Walter McCornack, a team shaken up and made over, a coaching system wholly changed, and for the first time a competent trainer, J. W. Bowler, charged with the physical condition of the men. The engine lesson is that program state changes are real variables. A team entering a season after a coaching change, a system change, and a new conditioning regime should not be modeled as the same team that lost the previous November, and the book supplies the mechanism, namely new selection, new preparation, and new physical care, rather than asking the reader to believe in a vague turnaround. The second strand is measurement under primitive conditions. There are no play by play databases here, yet the author and the newspapers he quotes reach instinctively for the measures that still matter: first downs made and allowed, rushing yards by half, average per rush including negative plays, points for and against across a season, and the age, height, and weight of the actual men who played. When Dartmouth beats Williams in 1903 the note does not rest on the 17 to 0 score; it reports 435 rushing yards split almost evenly by half and an opponent average per rush of about minus one and a half yards. When the offense looks weak against Vermont in 1901, the author gauges it transitively, through what Union and then Brown did against the same opponent days later. These are the ancestors of opponent adjusted rating, and the book shows both their power and their failure modes, because the same transitive logic that ranks Dartmouth second or third in 1903 must also carry the fairness caveat that Dartmouth was below its later form when it lost to Princeton. A reasoning engine should therefore store comparison chains as auditable objects with dates and availability, not as single numbers. The third strand is constraint and governance. Every season returns to the same binding constraint, a lack of heavy men for the line, set against fast backs, swift ends, and a fine quarter. In 1902 that constraint collides with an eligibility decision: two genuinely heavy recruits, Lindsay and Turner, plus a heavy fullback, are barred by the Athletic Council at its first fall meeting, even though the text calculates plainly that playing them would have given Dartmouth weight parity with Yale and Harvard for the first time. The competitive cost is stated, not hidden, and the men are still excluded for the whole year and for all athletics. For an engine this is a clean example of a hard gate that is not a performance judgment. Eligibility removes a player from projection entirely, while a separate counterfactual calculation can still price what the decision cost. Confusing those two operations, discounting an ineligible player instead of removing him, or letting the counterfactual leak back into the real projection, is exactly the kind of error this record teaches against. The fourth strand is attribution discipline. The author is openly a Dartmouth man writing for Dartmouth men, and he says so, while also stating that no fact was altered or exaggerated against Harvard. That combination is a usable source model: disclosed allegiance, checkable facts, discounted evaluation. The same discipline appears after the Princeton defeat in 1903, where he refuses to blame grounds, weather, officials, or luck, and insists the beaten side face superior play first. Yet the book is not naive about conditions. Wet weather at Williams is analyzed carefully, the usual rule that wet ground benefits the heavier team is stated, and then the exception is documented, a slippery ball and repeated fumbles costing the faster team scores. Weather therefore enters as an interaction with style and ball security, not as a slogan. Injuries are handled the same way, as named absences with specific consequences, from Captain Inglis missing a Wesleyan game to seven men missing the Princeton game in a match Dartmouth still outrushed 225 yards to 69. Taken together, the work gives the engine a historical test bed for ideas it still uses: regime change after coaching turnover, weakest unit practice allocation with an explicit cost to the neglected unit, depth created by genuine competition for places, drive suppression measured by first downs, negative play rate as defensive evidence, travel load in an uncertain mid season, and ranking as an evidence chain rather than a reputation table. Its limits are equally clear. It is one program, one region, and one era of mass play, forward passing does not exist in these accounts, halves are timed in minutes that vary by game, and many yardage figures come from newspaper summaries rather than from a scorer chart. Every primitive drawn from it must therefore be carried as a historical mechanism with era rules attached, useful for how to reason about a team, and never as a direct numerical prior on modern football.",
+   "retrocausal_genealogy": "The ideas in this book descend from the first two decades of American intercollegiate football, when Walter Camp era rules still produced a running and kicking game of mass momentum, interference, and line dominance, and when college programs were only beginning to professionalize coaching, training, and eligibility governance. Benezet writes at the end of that formative period, in April 1904, looking back at seasons played under rules that changed even inside his three year window, including the change of goals after each score in 1902 and 1903 and the seven man line and quarterback run provisions of September 1903. The genealogy of his methods runs through the newspaper match report, the published lineup summary, and the season review by figures such as Caspar Whitney and Walter Camp, which together formed the first public rating culture in American sport. His program story also descends from an older amateur ideal in which an athletic council could bar its own best recruits on eligibility grounds and be praised for it, an ideal already under strain from the competitive value he himself calculates.",
+   "theory_of_mind": "Benezet believes his reader is a Dartmouth man who already understands the technicalities of the game, and he says a work of this kind must talk about those technicalities as though the reader thoroughly understood them. His model of the domain is that football quality is visible in line play, team work, condition, and courage, and that a season is a moral and institutional story as much as a set of results, in which a college grows out of the small college class by meeting stronger opponents on their own fields. He also models his audience as partisans who must be told the truth plainly, including defeats, injuries, and the cost of eligibility rulings, because loyalty built on altered facts would not survive the newspaper record. Opponents are treated as measures of Dartmouth rather than as subjects in their own right, which is the central bias a modern reader must correct.",
+   "cross_layer_veto": "Several elements in this work veto or constrain other layers of a reasoning system. The eligibility rulings veto roster optimism directly: a barred player contributes nothing to a projection no matter how large his measured value in a counterfactual, and any layer that reintroduces him is overruled. The era rules veto cross era transfer: formations, quarterback runs, scoring incentives, and even the meaning of a rushing total in 1903 cannot be imported into a modern model without a rules version check. The attribution discipline vetoes easy external explanations, forcing performance and execution layers to be heard before weather or officiating claims. Finally, the disclosed partisanship vetoes uncritical use of the book evaluative judgments, while leaving its scores, lineups, measurements, and quoted neutral reports available as evidence, a split that any historical source layer must preserve."
+  }
+ ],
+ "universal_lens": "Any organization trying to rise a class can use this as a template: change the leadership and the system together, invest in the physical care of the people doing the work, name the scarcest resource honestly, measure performance against the strongest available opponents, publish the measurements, and let governance rules bind even when obeying them is expensive. The same template also warns that reputation lags reality in both directions, that a single aggregate score hides the process underneath it, and that the honest summary of a rise must include the defeats, the absences, and the decisions that cost wins, because those are the parts that make the eventual standing believable to anyone checking the record.",
+ "gsi_mapping": "The Galaxy Sports Institute takes from this work a teaching case in sports history and method: how rating, measurement, and program building were practiced before formal statistics existed. Students can trace first down suppression, rushing distribution, transitive comparison, and roster measurement in their original newspaper form, study eligibility governance as an institutional choice with a priced competitive cost, and learn source criticism from a text that discloses its allegiance while claiming factual accuracy. It also supplies era rules material, since the 1902 and 1903 provisions in the foreword show how quickly the legal game itself was changing.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes mechanisms, not numbers, from this book: regime change downweighting of priors after coaching and system turnover, weakest unit allocation with an explicit tradeoff, hard eligibility removal separated from counterfactual player pricing, drive suppression and negative play rate as defensive evidence, weather as an interaction with style and ball security, travel load as a timed input, and ranking claims stored as auditable comparison chains with dates and availability. All of it is carried under the 1901 to 1903 rules version, so it informs how the engine reasons about teams without supplying any modern numerical prior."
+}

@@ -1,0 +1,720 @@
+{
+ "book_id": "adf60eb4d3ab03cf",
+ "source_status": "COMPLETE",
+ "source_note": "Knute K. Rockne, Coaching, The Devin-Adair Company, New York, copyright 1925. Local file is a scan of the revised edition (copyright page lists Revised Edition 1928 and New Revised Edition 1929) bearing a George Williams College Library stamp, 315 Drexel Avenue, Chicago; dedicated to Jesse Harper. The tasking title 'Coaching: The Way of the Winner' appears nowhere in the book; the printed title is Coaching, and the title is corrected here accordingly. PDF size 12844659 bytes; sha256 adf60eb4d3ab03cf5e0e0b698025b66303def41169eac74492e07d6b8d3cf590; book_id is the first 16 hex characters of that digest over (str(size) + file bytes). Extracted text is 496084 bytes and 79102 words of OCR: hyphenated line breaks, garbled diagram plates, two rotated schedule tables in Chapter XIX, and a two column interleaved passage near printed p. 133; body prose is largely clean. Every verbatim quote below was verified as one contiguous string in the extracted text file under whitespace normalization; no quote crosses a page break. The work contains no equations; its quantitative content is frequency tables and percentage weights, so latex is empty throughout. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "execution_is_the_essence",
+   "name": "Offense and defense reduce to blocking, tackling, ball handling, and perfection of execution in the details",
+   "verbatim_quote": "The essence of offense and defense in football is blocking, tackling, ability to handle the ball, and an execution of details so as to produce perfection of execution, timing, etc.",
+   "page": "Introduction, printed p. vii; extracted text lines 227-229",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The statement is the book's thesis: play design is subordinate to executed fundamentals.",
+    "Rockne repeats it in Chapter IV: plays themselves are of no value without execution."
+   ],
+   "breakdown_regime": "Breaks when a scheme creates structural advantage no amount of execution overcomes, a case Rockne underweights because his era had a narrow play design space.",
+   "domain": "fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "In the engine, every candidate signal or play concept carries an execution reliability term estimated from observed success, and design novelty earns nothing until execution is proven.",
+    "source_operator": "execution_is_the_essence",
+    "telemetry": "Per play success rates by concept and personnel group, error and penalty rates, timing consistency across repeated calls."
+   }
+  },
+  {
+   "primitive_id": "adaptability_first_requirement",
+   "name": "Adaptability to local conditions, personnel, and environment is a first order coaching requirement, coequal with technique",
+   "verbatim_quote": "But probably as important as anything is adaptability.",
+   "page": "Introduction, printed p. vii; extracted text line 223",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conditions, competition, and types of men vary by locality and school, in Rockne's words one hundred per cent.",
+    "The coach must adapt himself to surrounding conditions rather than import a system unchanged."
+   ],
+   "breakdown_regime": "Fails as guidance when it licenses drift: Rockne himself keeps a fixed core system and adapts its surface, a boundary he states only implicitly.",
+   "domain": "coaching method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine policies are parameterized by context (venue, weather, personnel available, opponent class) rather than hard coded, with a fixed reasoning core and adaptable surface parameters.",
+    "source_operator": "adaptability_first_requirement",
+    "telemetry": "Context features per event: surface, weather, roster availability, opponent tier, rest and travel."
+   }
+  },
+  {
+   "primitive_id": "conditioning_periodization_curve",
+   "name": "Conditioning follows a fixed curve: two easy weeks, four concentrated weeks with all scrimmage packed in, then maintenance work only",
+   "verbatim_quote": "Regardless of how the man reports the work the first two weeks should be easy.",
+   "page": "Chapter II, Conditioning, printed pp. 9-10; extracted text lines 610-611",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Men report in three states: overworked and underweight, robust from outdoor work, or soft and out of condition; the same opening load serves all three.",
+    "No scrimmage before the third week and very little after the sixth; a team should be in its best shape after six weeks."
+   ],
+   "breakdown_regime": "Tied to a 1920s college calendar and roster sizes; modern load management individualizes the curve instead of applying one curve to a whole squad.",
+   "domain": "conditioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Workload and readiness curves in the engine are phased: build, peak, maintain, with hard exposure concentrated in the build window and only maintenance stimuli after the peak.",
+    "source_operator": "conditioning_periodization_curve",
+    "telemetry": "Daily workload logs, session intensity, injury and availability records across the season."
+   }
+  },
+  {
+   "primitive_id": "staleness_detection_by_weight_and_signs",
+   "name": "Staleness is diagnosed by failure to regain weight within twenty two hours between practices plus visible signs, and the prescription is days off and light work for the rest of the season",
+   "verbatim_quote": "if he doesn’t recuperate and if he also appears languid, suffers from loss of appetite, has bad color in the eye, and is tired of football, it is then time to lay him off for several days.",
+   "page": "Chapter II, Going Stale, printed p. 10; extracted text lines 635-638",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Weight charts are the objective monitor; the visible signs (languor, loss of appetite, bad color in the eye, being tired of football) corroborate it.",
+    "High strung nervous players tolerate less work than phlegmatic types, so the threshold is individual."
+   ],
+   "breakdown_regime": "A single biomarker plus subjective signs will misclassify illness, poor sleep, and personal stress as training staleness; Rockne has no differential diagnosis step.",
+   "domain": "conditioning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A fatigue flag in the engine: when a unit's short window recovery metrics fall below its own baseline and qualitative signs agree, projected performance is discounted and rest is prescribed.",
+    "source_operator": "staleness_detection_by_weight_and_signs",
+    "telemetry": "Player weight and workload series, availability reports, snap counts, recent performance deltas versus baseline."
+   }
+  },
+  {
+   "primitive_id": "interferer_over_ball_carrier",
+   "name": "A good blocker is worth more to the team than a good ball carrier, and no one plays who cannot block",
+   "verbatim_quote": "I would far rather have a good interferer than a good ball carrier, insofar as the team is concerned.",
+   "page": "Chapter III (B) Blocking and Interfering, printed p. 14; extracted text lines 795-796",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Blocking and interfering are named the essence of offense in the same passage.",
+    "Ball carriers who cannot or will not block are excluded regardless of running talent."
+   ],
+   "breakdown_regime": "In the modern passing game a specialist receiver who rarely blocks can still be net positive; Rockne's rule is a roster construction stance of his era, not a universal law.",
+   "domain": "fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine player valuation credits enabling actions (blocks, decoy routes, picks) at team level, not only the terminal ball carrier's output.",
+    "source_operator": "interferer_over_ball_carrier",
+    "telemetry": "Blocking grades, yards before contact created, decoy route coverage drawn, per play contribution splits."
+   }
+  },
+  {
+   "primitive_id": "blocking_without_hands_six_methods",
+   "name": "Blocking is defined as keeping an opponent away from the ball carrier without arms or hands, and is taxonomized into six named methods matched to situation",
+   "verbatim_quote": "The purpose of blocking and interfering is to keep the opponent away from the man carrying the ball without the use of the arms or hands.",
+   "page": "Chapter III (B), printed p. 15; extracted text lines 800-802",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The six methods are shoulder block, Indian block, leg blocking, high back block, pivot block, and the running dive with roll.",
+    "Method choice depends on where the block is executed, the play type, and the opponent type."
+   ],
+   "breakdown_regime": "The no hands constraint is a 1920s rules artifact; modern technique legalizes hand use, so the taxonomy survives but its defining constraint does not.",
+   "domain": "fundamentals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine action taxonomies are defined by function and constraint, with each technique tagged by the situations it fits, mirroring this method to situation matching.",
+    "source_operator": "blocking_without_hands_six_methods",
+    "telemetry": "Technique tags per block event, success by technique and situation, penalty flags."
+   }
+  },
+  {
+   "primitive_id": "punt_distance_speed_not_weight",
+   "name": "How far a ball travels depends on the speed of the striking object, not its weight; hence a light shoe and a snapped knee, not a heavy shoe",
+   "verbatim_quote": "The question of how far a ball will travel depends not upon the weight of the object which hits it, but on how fast the object is traveling",
+   "page": "Chapter III (E) Kicking, Punting, printed p. 17; extracted text lines 912-914",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rockne supports it with the baseball fungo analogy: light willow bats, not iron bats.",
+    "Technique corollaries: knee slightly bent then snapped at contact, like the wrist snap in a golf swing; ball met about two and one half feet from the ground."
+   ],
+   "breakdown_regime": "A simplification: ball deformation, contact time, and launch angle also matter, and leg mass does contribute to momentum transfer; the claim is directionally right for coaching but incomplete physics.",
+   "domain": "kicking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reminder inside the engine's feature review: rate and timing features (release speed, snap speed) dominate mass and size features when the mechanism is impulse transfer.",
+    "source_operator": "punt_distance_speed_not_weight",
+    "telemetry": "Release times, kick and pass velocities, hang time and distance pairs."
+   }
+  },
+  {
+   "primitive_id": "never_outkick_your_coverage",
+   "name": "Punt distance is capped by coverage: a forty yard punt the ends can cover beats a sixty yard punt that outkicks them by twenty",
+   "verbatim_quote": "It is better to have a man punt forty yards so that the ends can be down under his punts than to kick sixty yards thereby outkicking the ends twenty yards.",
+   "page": "Chapter III (E) Kicking, Punting, printed p. 18; extracted text lines 954-956",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The kicker's three training targets are speed of getting the kick off (under two seconds), height, and placement.",
+    "A kicker must never outkick his ends; Rockne calls this extremely dangerous."
+   ],
+   "breakdown_regime": "With modern return units and directional punting the trade off is finer, and a touchback has a defined cost Rockne does not price; the principle (match the kick to coverage arrival) survives.",
+   "domain": "kicking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine evaluates any long action jointly with the support that must arrive with it; projected value is the joint outcome, never the raw distance or depth alone.",
+    "source_operator": "never_outkick_your_coverage",
+    "telemetry": "Punt distance versus return yards, coverage arrival times, hang time, returner starting position."
+   }
+  },
+  {
+   "primitive_id": "playbook_mastery_limit",
+   "name": "Ten or twelve plays well learned beat forty or fifty half learned, and no team can use more than thirty plays with perfection of execution",
+   "verbatim_quote": "Ten or twelve plays well learned will give a team a much better offense than forty or fifty plays half learned.",
+   "page": "Chapter IV, Versatility of Attack, printed p. 21; extracted text lines 1042-1043",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rockne's hard cap: no team can use more than thirty plays and have perfection in execution (Hints on Offense repeats: plays must not be over thirty in number).",
+    "Few formations, exhaustively developed, beat many formations shallowly developed."
+   ],
+   "breakdown_regime": "The cap is a function of practice time and player cognition in 1925; with modern meeting time, film, and specialization the binding constraint moves, but a constraint always binds somewhere.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine caps its active play or signal repertoire per context and expands only when measured execution of the current set clears a reliability bar.",
+    "source_operator": "playbook_mastery_limit",
+    "telemetry": "Repertoire size versus success rate curves, error rate by frequency of use, practice or sample counts per option."
+   }
+  },
+  {
+   "primitive_id": "four_methods_from_every_formation",
+   "name": "Never use a formation unless all four methods of offense can be run from it: thrust, flank, kick, and forward pass",
+   "verbatim_quote": "I don’t believe I would use a formation unless I could use all four methods of offense from it.",
+   "page": "Chapter IV, Versatility of Attack, printed p. 21; extracted text lines 1046-1047",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Formations classify into four kinds (close, open, punt, spread), each stressing one method but required to support all four.",
+    "Every play, including fakes, must itself be a strong play; deception alone is not enough."
+   ],
+   "breakdown_regime": "A formation that telegraphs one method can still work if that method is dominant enough; Rockne treats unpredictability as mandatory, which is a preference, not a theorem.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any state representation the engine acts from must keep all action families available; a formation or feature set that collapses the action space is rejected at design review.",
+    "source_operator": "four_methods_from_every_formation",
+    "telemetry": "Action distribution by formation or state cluster, success by action family within cluster."
+   }
+  },
+  {
+   "primitive_id": "no_offense_built_on_fooling",
+   "name": "Do not build an offense whose success depends on fooling someone; trick plays only keep the defense guessing",
+   "verbatim_quote": "Do not use offense which depends for success on fooling someone.",
+   "page": "Hints on Offense, printed p. 50; extracted text line 1921",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The full hint continues: depend on deception, power and superiority in execution of fundamentals, in that combination.",
+    "Trick plays are permitted as a tax on defensive certainty, not as a foundation."
+   ],
+   "breakdown_regime": "Against a defense that never guesses wrong the distinction vanishes; and some modern misdirection systems are structurally sound rather than tricks, which Rockne's wording would misclassify.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine discounts any edge whose only mechanism is opponent error; edges must survive an opponent who reads them correctly, with surprise treated as a small bonus term.",
+    "source_operator": "no_offense_built_on_fooling",
+    "telemetry": "Edge persistence after repeated exposure, success rate of trick concepts versus base concepts over time."
+   }
+  },
+  {
+   "primitive_id": "sequence_plays_strengthen_each_other",
+   "name": "Plays are called in sequence: one play may gain little itself but makes a look alike play strong, so plays depend on each other",
+   "verbatim_quote": "In other words, the use of one play may not gain much ground, but has the effect of making another play which looks much like it, very strong.",
+   "page": "Chapter IV, printed p. 28; extracted text lines 1291-1293",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A complete offense is built hole by hole (seven defensive holes) from one formation, all plays starting very much alike.",
+    "Every one of the eleven men must fulfill his assignment on every play; a good interferer never looks back."
+   ],
+   "breakdown_regime": "Sequencing value depends on the defense actually adapting; against a static defense the set up play is a pure cost, and Rockne gives no test for whether adaptation happened.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine scores an action partly on the future value it creates by shaping opponent expectations, not only on its immediate expected gain.",
+    "source_operator": "sequence_plays_strengthen_each_other",
+    "telemetry": "Play action and look alike play success as a function of prior similar calls, defensive alignment shifts after repeated looks."
+   }
+  },
+  {
+   "primitive_id": "shift_value_is_deception_not_momentum",
+   "name": "The shift's value lies mostly in deception: it denies the defense time to read placement and tips, not in physical momentum",
+   "verbatim_quote": "In fact, in my opinion, the value of the shift lies mostly in its deception.",
+   "page": "Chapter VIII, Idea of Shift, printed p. 84; extracted text lines 3249-3250",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Notre Dame shifts only the backfield, hidden behind the line; two counts in position are required so all momentum is lost before the snap.",
+    "Rockne rejects the line shift: it tires heavy linemen and adds little deception; coaches he surveyed almost unanimously found the set offense easier to defend against."
+   ],
+   "breakdown_regime": "Modern motion rules and defensive communication reduce the concealment window; motion also has diagnostic value (revealing coverage) that Rockne, using it only to hide, does not exploit.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pre snap movement in the engine is valued for the information asymmetry it creates (what it hides and what it reveals), not for any physical head start.",
+    "source_operator": "shift_value_is_deception_not_momentum",
+    "telemetry": "Motion frequency, defensive re alignment latency, success by motion type, coverage identification accuracy after motion."
+   }
+  },
+  {
+   "primitive_id": "danger_zone_punt_first_down",
+   "name": "In the danger zone near your own goal, punt on first down; rushing even once risks a fatal slip with the opponent in the shadow of your posts",
+   "verbatim_quote": "If the ball is downed in the danger zone it is best to punt on first down.",
+   "page": "Chapter V, Field Tactics, printed p. 52; extracted text lines 1989-1990",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule assumes a fair wind behind you and the Map No. 1 conditions; with the wind against you the rule reverses and the ball is rushed to offset punt exchanges.",
+    "It is one cell of the transverse zone policy: danger zone, transitional running zone, transitional forward pass zone, offensive zone, scoring zone."
+   ],
+   "breakdown_regime": "Modern expected points models often favor keeping the ball with a strong offense even deep; Rockne's rule prices the fumble catastrophe but not the certain loss of possession value.",
+   "domain": "field tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Zone conditioned policy tables: the engine's action defaults change discontinuously by field zone, with the deepest zone defaulting to the lowest variance action.",
+    "source_operator": "danger_zone_punt_first_down",
+    "telemetry": "Turnover and safety rates by field zone, expected points by action and zone, punt outcomes from deep territory."
+   }
+  },
+  {
+   "primitive_id": "conserve_strong_plays_for_offensive_zone",
+   "name": "Do not spend your strongest plays in the transitional zones; the defense will learn them, so probe cheaply and save the best plays for the offensive zone",
+   "verbatim_quote": "A team should conserve its strongest plays for the offensive zone, otherwise by the time it advances very far the defensive team, will have become accustomed to these plays and can meet and stop them.",
+   "page": "Chapter V, Conserving Strength, printed pp. 52-53; extracted text lines 2001-2004",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transitional zone plays have two limited aims: find a weakness, and give a breakaway back a chance at a long run.",
+    "The comma after 'team' is as printed in the source."
+   ],
+   "breakdown_regime": "Conservation assumes a single game horizon and a learning defense; across a season, withholding your best plays also withholds the film that forces future opponents to prepare for them, a second order effect Rockne does not weigh.",
+   "domain": "field tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exploitation timing rule: the engine rations its highest value actions in low leverage states to preserve their surprise and effectiveness for high leverage states.",
+    "source_operator": "conserve_strong_plays_for_offensive_zone",
+    "telemetry": "Success decay of a play concept with repeated use within a game, leverage index by state, concept usage distribution by zone."
+   }
+  },
+  {
+   "primitive_id": "nurse_the_weak_spot",
+   "name": "A discovered defensive weak spot is an asset to be nursed: use it only as needed early, then spend it fully in the scoring zone",
+   "verbatim_quote": "If he has found a weak spot some time previous he should have nursed it along, using it only as actually needed.",
+   "page": "Chapter V, Scoring Plays, printed p. 54; extracted text lines 2055-2056",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The quiz chapter repeats it: a weak spot used too much invites a substitution that corrects it, so nurse it for when you are in difficulties in the scoring zone.",
+    "If no weak spot exists, the quarterback must manufacture one, for example a wide play against a tight line."
+   ],
+   "breakdown_regime": "If the opponent cannot correct the weakness (no substitute, structural flaw), nursing wastes value; the rule needs a correctability test Rockne leaves to judgment.",
+   "domain": "field tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When the engine finds an opponent weakness, it logs the weakness, estimates whether the opponent can correct it, and meters exploitation to keep the edge alive until leverage is highest.",
+    "source_operator": "nurse_the_weak_spot",
+    "telemetry": "Weakness hit rate over time, opponent substitution and adjustment events, edge decay after repeated targeting."
+   }
+  },
+  {
+   "primitive_id": "fifteen_square_state_grid",
+   "name": "Overlaying the transverse zone map on the longitudinal belt map divides the field into fifteen squares, and the coach can give the quarterback explicit tactics for each square under every condition",
+   "verbatim_quote": "By placing Map No. 1 over Map No. 2, the gridiron will be divided into fifteen squares.",
+   "page": "Chapter V, printed pp. 57-58; extracted text lines 2207-2208",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Map No. 1 gives five transverse zones; Map No. 2 gives three longitudinal belts (two side belts and the middle belt), with the five yards nearest each sideline named the bad lands.",
+    "The middle belt is preferred because it affords more versatility of attack."
+   ],
+   "breakdown_regime": "A fixed 5 by 3 grid is coarse: modern state spaces are continuous, and Rockne's squares bake in era specific values (the punt's worth, pass restrictions) that must be re derived, not inherited.",
+   "domain": "field tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Direct template for the engine's state discretization: cross field position bands with situation bands to form a finite state grid, each cell carrying its own policy and value estimates.",
+    "source_operator": "fifteen_square_state_grid",
+    "telemetry": "Play by play with yard line and hash position, outcomes aggregated per grid cell."
+   }
+  },
+  {
+   "primitive_id": "tactical_situation_state_vector",
+   "name": "Defense must read a five part state, downs, yards to gain, field position, score, and time left, named the tactical situation, and anticipate different plays as it varies",
+   "verbatim_quote": "A team on defense must keep in mind the downs, the yards to gain, position on the field, score, and time left to play. These conditions are called the “tactical situation.”",
+   "page": "Chapter VII, The Tactical Situation, printed p. 68; extracted text lines 2559-2561",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rockne works examples: third down and ten argues against expecting a line plunge; third and one argues against expecting a pass; a team several touchdowns behind late will pass often.",
+    "Both sides use the same state: offensive hints tell the quarterback to call plays from the tactical situation as well as from defensive placement."
+   ],
+   "breakdown_regime": "The five variables are necessary but not sufficient: personnel, fatigue, and tendency history are missing, and Rockne treats the mapping from state to anticipation as obvious rather than estimated.",
+   "domain": "defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's state vector contract: no layer issues a recommendation without reading down, distance, field position, score, and clock first.",
+    "source_operator": "tactical_situation_state_vector",
+    "telemetry": "Full play by play state fields joined to play type and outcome, tendency tables conditioned on state."
+   }
+  },
+  {
+   "primitive_id": "meet_strength_with_strength",
+   "name": "Against a new formation, meet strength with strength and waste no defenders on things the offense cannot do from that formation",
+   "verbatim_quote": "In meeting a new formation the thing to keep in mind is to meet strength with strength and do not waste any men defending against those things which the offensive cannot do.",
+   "page": "Chapter VII, printed p. 76; extracted text lines 2913-2915",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense hints restate it as a diagnostic question: what can they not do so well from this formation, then take men away from the unthreatened point.",
+    "Resources are conserved for the threatened point; doubling an exceptional receiver is the same rule applied to personnel."
+   ],
+   "breakdown_regime": "Requires correctly reading what the formation cannot do; a misread invites the exact play you stripped coverage from, so the rule's risk concentrates in the scouting estimate.",
+   "domain": "defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Resource allocation rule for the engine: defensive attention is allocated in proportion to demonstrated threat, and zero weight is given to actions the opponent's structure cannot execute.",
+    "source_operator": "meet_strength_with_strength",
+    "telemetry": "Formation capability profiles, play type frequencies and success by formation, coverage allocation versus outcome."
+   }
+  },
+  {
+   "primitive_id": "cup_defense_charge_then_converge",
+   "name": "In the cup defense each lineman charges straight through in his own territory expecting the play at his hole, and only on the second reaction converges to the ball",
+   "verbatim_quote": "Each one of them must expect the play to be coming through his hole and play accordingly, converging towards the ball only after they have charged through the offensive line of scrimmage.",
+   "page": "Chapter VII, printed p. 71; extracted text lines 2702-2705",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rockne prefers the cup to the Pennsylvania defense (everyone commits inward and cannot change course) and the West Point defense (center becomes a single key man who can be outwitted).",
+    "The end enters without committing himself, hands up, able to fade with the play either way."
+   ],
+   "breakdown_regime": "Gap integrity first is costly against quick hitting plays and screens that punish penetration; the cup assumes the charge itself disrupts timing, which fails against a line that lets defenders run themselves out of the play.",
+   "domain": "defense",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine defensive model: local responsibility is discharged before global pursuit; agents hold their assigned region until the threat direction is observed, then converge.",
+    "source_operator": "cup_defense_charge_then_converge",
+    "telemetry": "Gap integrity metrics, yards after first contact by gap, convergence time to ball carrier."
+   }
+  },
+  {
+   "primitive_id": "play_the_man_then_the_ball",
+   "name": "In pass defense, play the man until the ball is in the air, then leave the man and play the ball entirely",
+   "verbatim_quote": "A defensive player must watch the man until the ball is in the air; he should then leave his man and play the ball.",
+   "page": "Chapter VI, section 6, Defense Against Forward Passes, printed p. 66; extracted text lines 2491-2492",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Zone defense is preferred against short passes and ordinary formations, man to man against long passes and wide spreads; a combination covers the middle cases.",
+    "The defender should maneuver to give the receiver only one path and keep the receiver between himself and the passer."
+   ],
+   "breakdown_regime": "Ball hawking after the throw fails when the defender never turned his head or lacks the speed to close; the rule presumes positioning was already correct, which is the hard part.",
+   "domain": "defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A two phase tracking rule for the engine's coverage model: shadow the assigned threat while the play develops, switch to the ball state the moment the throw event fires.",
+    "source_operator": "play_the_man_then_the_ball",
+    "telemetry": "Target tracking, throw event timestamps, separation at throw versus at arrival, interception and breakup rates."
+   }
+  },
+  {
+   "primitive_id": "grip_by_touch_no_tell",
+   "name": "The passer must grip the ball by touch alone; looking at the ball while adjusting it advertises the pass and destroys the play",
+   "verbatim_quote": "If the forward passer has to look at the ball while he adjusts it he advertises that it is a forward pass play and most of the effect of the play is lost.",
+   "page": "Chapter VI, section 1(a) Grip Pass, printed p. 60; extracted text lines 2281-2283",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The grip pass is thrown overhand with the forward point up and minimal spin; short passes arched and light, long passes fast and flat.",
+    "The whole chapter generalizes the point: passer and receiver must cover up the pass as long as possible, with ten listed passer methods and fourteen receiver methods."
+   ],
+   "breakdown_regime": "Elite defenses read shoulders, feet, and personnel more than eyes, so removing one tell is necessary but not sufficient; Rockne's catalog is era bound but the tell audit method is not.",
+   "domain": "passing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine audits its own features for tells: any observable that leaks the intended action before execution is a cost charged against that action.",
+    "source_operator": "grip_by_touch_no_tell",
+    "telemetry": "Pre snap observable features versus play type predictability, defensive reaction latency to tells."
+   }
+  },
+  {
+   "primitive_id": "when_not_to_pass_and_punt_default",
+   "name": "The first thing taught to a quarterback is when not to forward pass, with a standing default: when in doubt, punt",
+   "verbatim_quote": "The first thing I teach any quarterback is when not to forward pass. I also tell him: “When in doubt, punt.”",
+   "page": "Chapter XV, When Not to Forward Pass, printed p. 138; extracted text lines 5101-5102",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The prohibitions are enumerated: not early with the score even in your own territory, not ahead in the second half, not near the opponent's goal line, not while the running attack works, not when the defense is alert for it.",
+    "The quarterback is taught prohibitions before permissions, and corrected privately, never bawled out in front of the team."
+   ],
+   "breakdown_regime": "A punt default is era priced: with 1925 field position values it protected the team; under modern scoring rates the default over surrenders possession, so the default action must be re priced, though the prohibitions first teaching order stands.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine decision policy is taught veto first: hard prohibitions by state are encoded before any optimization, and every state has a named default action under uncertainty.",
+    "source_operator": "when_not_to_pass_and_punt_default",
+    "telemetry": "Decision logs with state, action, and outcome; prohibition violation rate; default action frequency under low confidence."
+   }
+  },
+  {
+   "primitive_id": "empirical_play_value_tables",
+   "name": "Play values are tabulated as outcome frequencies per play type, built from an analysis of about thirty games against near equal opponents",
+   "verbatim_quote": "These distances I have chosen above are purely arbitrary and they have been arrived at after an analysis of about thirty games against teams somewhat our equal.",
+   "page": "Chapter XV, Some Hints in Values for Offensive Quarterback, printed p. 150; extracted text lines 5579-5581",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The table gives gain distributions for line plunges, slant plays, and flank plays, and completion, incompletion, and interception splits for long and short forward passes; the punt should average forty yards.",
+    "Rockne flags the numbers as arbitrary and judgment based; inside the ten yard line he warns resistance stiffens into a zone of intense resistance where the table no longer applies. The OCR of the table is partly garbled; the short pass row reads complete six of eight, incomplete one of eight, intercepted one of eight."
+   ],
+   "breakdown_regime": "Thirty games, no recorded method, era specific rules, and a coach's memory as the database: the frequencies are priors at best, and several table cells are illegible in the scan, so the numbers must never be quoted as measurements.",
+   "domain": "measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's play value tables are estimated from counted outcomes with the sample size and opponent strength attached, exactly the provenance discipline this table gestures at.",
+    "source_operator": "empirical_play_value_tables",
+    "telemetry": "Play by play outcome distributions by play type and opponent strength, sample sizes per cell."
+   }
+  },
+  {
+   "primitive_id": "opponent_factor_percentage_weights",
+   "name": "An opponent is decomposed into weighted factors summing to one hundred percent, and the weights shift with the opponent's profile: a strong line with a weak backfield raises the line's defensive weight from sixty five to seventy five percent",
+   "verbatim_quote": "In that case I would say that taking the defensive factor as 100% as a whole that the value of the strong defensive line is 65% and the secondary defense is 35%.",
+   "page": "Chapter XV, printed p. 152; extracted text lines 5682-5684",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Four opponent profiles are worked: strong everywhere; strong line and punter, weak backfield and passer; strong backfield, punter, and passer with a weak line; strong line and backfield, weak punter and passer. Defensive line weight runs 65, 75, 60, 80 percent across the four.",
+    "The same decomposition is applied to his own offense: good kicker 25, line smashing back 15, fast running back 20, forward passer 15, strong charging line 25 percent against a complete opponent."
+   ],
+   "breakdown_regime": "The weights are one coach's judgment with no estimation procedure, and they are static per game; but the form, a normalized factor decomposition that re weights by opponent profile, is a working prior structure.",
+   "domain": "measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Opponent modeling in the engine uses normalized factor weights (line, secondary, specialists) that are re estimated per opponent profile, with Rockne's table as the historical prior for the form, not the values.",
+    "source_operator": "opponent_factor_percentage_weights",
+    "telemetry": "Unit level performance splits, opponent profile clusters, factor weight sensitivity of projections."
+   }
+  },
+  {
+   "primitive_id": "guards_pulling_measured_gain",
+   "name": "A within game comparison, same running play with and without the guards pulling, measured the plays at thirty five percent more efficient with the guards pulling",
+   "verbatim_quote": "plays became 35% more efficient and in an important and tight game that would have meant the difference between the plays working and not working.",
+   "page": "Chapter X, Guard, Importance of Position, printed pp. 105-106; extracted text line 3930 (the sentence crosses a page break; this half is contiguous on p. 106)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The design is stated just before the break: in one game Rockne ran the same running play in the first half without the guards pulling out and in the second half with them pulling.",
+    "Thirty five percent is his figure for efficiency; the metric behind it (yards per play, presumably) is not defined in the text."
+   ],
+   "breakdown_regime": "One game, halves confounded with fatigue, score state, and defensive adjustment, and an undefined efficiency metric: this is a suggestive field experiment, not a measurement to build on.",
+   "domain": "measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine prefers within game or within matchup comparisons for technique questions, holding the play constant and toggling one element, while logging the confounders Rockne ignored.",
+    "source_operator": "guards_pulling_measured_gain",
+    "telemetry": "Same play success with and without a technique element, half and fatigue controls, defined efficiency metric per comparison."
+   }
+  },
+  {
+   "primitive_id": "reading_tells_at_center",
+   "name": "The defensive center reads the offense's tells, small mannerisms such as a look, a lean, or a shiver at a called number, and calls them out loud to the whole defense",
+   "verbatim_quote": "These little mannerisms may consist of just a look with the eyes, just a leaning of the body, a slight shiver when a certain number is called",
+   "page": "Chapter IX, Center, On Shift Plays, printed p. 102; extracted text lines 3805-3807",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The center is positioned to see the quarterback and all three backs, and also judges whether the offensive line is shifting intact, over, or under shifting.",
+    "Calling the tell out loud both prepares the defense and, Rockne notes, can demoralize the offense."
+   ],
+   "breakdown_regime": "Tells are opponent and player specific and decay once known; a tell catalog must be re verified continuously, and Rockne gives no false positive discipline.",
+   "domain": "defense",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine maintains a tell registry: pre snap micro features with measured predictive value per opponent, each with a decay check, surfaced to the decision layer only while validated.",
+    "source_operator": "reading_tells_at_center",
+    "telemetry": "Pre snap alignment and movement features, predictive lift per feature, feature half life across games."
+   }
+  },
+  {
+   "primitive_id": "number_each_play_signal_encoding",
+   "name": "Number every play: one number gives each man his complete assignment, and structured number ranges encode shift, pass type, and formation family",
+   "verbatim_quote": "The system of numbering each play is now more generally used as being the most simple.",
+   "page": "Chapter XVIII, Signals, printed p. 182; extracted text lines 6554-6555",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Example code: 21 and 22 are end runs left and right, 23 and 24 inside tackle, 25 and 26 forward passes, 27 and 28 reverses; ranges 21-29 single shift direct pass, 41-49 no shift, 81-89 trick plays, 91-99 punt formation.",
+    "The system must stay simple enough to become reflex for the offense yet be switchable mid game if the defense cracks it; the punt number is specially concealed, five different numbers used for one punt call."
+   ],
+   "breakdown_regime": "Any fixed code leaks under enough observation, which Rockne answers with switchable digit extraction rules; the deeper limit is player working memory under noise, which caps code complexity.",
+   "domain": "signals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Play and signal encoding in the engine uses structured identifiers whose digits carry semantic fields, with a rekeying procedure when the code is compromised.",
+    "source_operator": "number_each_play_signal_encoding",
+    "telemetry": "Call logs, decode error rates, opponent anticipation rates before and after rekeying."
+   }
+  },
+  {
+   "primitive_id": "practice_time_percentage_budgets",
+   "name": "Practice time is allocated by explicit percentages per position group: centers spend forty percent of group work on passing, guards thirty five on pulling out, quarterbacks sixty on catching punts",
+   "verbatim_quote": "Now under group work for centers, I spent 40% of the time in passing, as this is the most important thing the center must be able to do.",
+   "page": "Chapter XIX, Division of Labor, Group Work, printed p. 193; extracted text lines 7038-7040",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The full budget: guards 35 pull out, 35 defensive line, 10 charge, 10 block, 10 cover kicks; tackles 50 defensive line, 25 charge, 25 block; ends 35 block tackles, 35 defense, 15 cover kicks, 15 pass defense; quarterbacks 60 catch punts, 25 pass defense, 15 interference; halfbacks 40 interference, 40 pass defense, 10 block, 10 contain the end.",
+    "Notre Dame practiced ninety minutes a day plus a forty minute noon blackboard drill; Rockne holds that ninety organized minutes beat three or four disorganized hours."
+   ],
+   "breakdown_regime": "Percentages are asserted, not derived from measured weakness; Rockne does say to reallocate once the first games reveal the team's predominant weaknesses, which is the feedback loop the static table lacks on its own.",
+   "domain": "practice design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Training and analysis time in the engine's operation is budgeted by explicit percentages per skill family and re balanced when measured weaknesses change.",
+    "source_operator": "practice_time_percentage_budgets",
+    "telemetry": "Practice or review time logs by category, weakness metrics per category over time."
+   }
+  },
+  {
+   "primitive_id": "repetition_until_reflex",
+   "name": "A skill is taught by description, demonstration slow and at full speed, rehearsal against passive resistance, individual correction, then repetition until execution becomes habit and almost reflex action",
+   "verbatim_quote": "In fact they should always keep repeating this stunt over and over again until the perfection of execution becomes a habit and almost a reflex action.",
+   "page": "Chapter XXI, The Pedagogy of Football, printed p. 210; extracted text lines 7642-7644",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The worked example is the guard's double coordination movement, taught in the five stages in order.",
+    "The coach must give a vivid graphic description first, stating frankly the two or three common faults to be avoided."
+   ],
+   "breakdown_regime": "Pure repetition entrenches whatever is practiced, including undetected faults; the method depends entirely on the correction stage catching errors before the repetition stage locks them in.",
+   "domain": "pedagogy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Skill acquisition pipelines, human or model side, follow the same gate order: specification, demonstration, low resistance rehearsal, targeted correction, then volume repetition only after correctness is verified.",
+    "source_operator": "repetition_until_reflex",
+    "telemetry": "Correction counts per stage, error rates before and after volume repetition, retention checks."
+   }
+  },
+  {
+   "primitive_id": "correct_one_fault_at_a_time",
+   "name": "Correct one fault at a time: a learner can think of but one thing at a time, so each candidate gets a single named fault until it is fixed, then the next",
+   "verbatim_quote": "I then watch the guards closely and I criticise but one fault at a time.",
+   "page": "Chapter XXI, printed pp. 211-212; extracted text lines 7700-7701",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The corrections are short and concrete, one line per boy: bend your knees, your knee is too high, your hands have no power.",
+    "No long detailed description of what is wrong is given."
+   ],
+   "breakdown_regime": "Strictly serial correction is slow when faults interact; some errors must be fixed in pairs, and Rockne's own stunt descriptions bundle simultaneous actions, a tension he does not resolve.",
+   "domain": "pedagogy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feedback loops in the engine's review tooling surface the single highest value correction per unit at a time, queueing the rest, to keep the correction actionable.",
+    "source_operator": "correct_one_fault_at_a_time",
+    "telemetry": "Correction queues, fix rates per correction issued, recurrence of corrected faults."
+   }
+  },
+  {
+   "primitive_id": "check_plays_conditional_value",
+   "name": "Plays are classified by function, and check plays are worthless until the defense adjusts to stop your strong plays; then they gain ground and drive the defense back out so the strong plays work again",
+   "verbatim_quote": "Third, check plays. These are plays which are not good until the defense changes their position to stop your strong plays.",
+   "page": "Chapter XXI, printed p. 214; extracted text lines 7798-7799",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The full taxonomy has nine classes: strongest plays, short sure gainers, check plays, gamble plays, position plays, sideline plays, goal line plays, psychological plays, trick plays.",
+    "A wide end run around a smashing end is the worked check play example; the split buck is another."
+   ],
+   "breakdown_regime": "Conditional value is real but hard to time: call the check too early and it fails on its merits, too late and the strong play has already been stopped for a series; Rockne offers feel, not a trigger metric.",
+   "domain": "offense design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine tags options with activation conditions: a check option's value is computed conditional on measured defensive adjustment to the primary option, and it is surfaced only when that condition fires.",
+    "source_operator": "check_plays_conditional_value",
+    "telemetry": "Defensive alignment response to primary plays, check play success conditioned on prior primary usage."
+   }
+  },
+  {
+   "primitive_id": "scouting_observe_before_writing",
+   "name": "A scout must not write while a play is in progress; eyes stay on the assigned structure, notes are written during stoppages and compiled after the game",
+   "verbatim_quote": "There must be no writing while the play is in progress. While the play is in progress the eyes must be focused on the things which you are looking for, and you must do nothing else but look, look, look",
+   "page": "Chapter XVII, Scouting, Methods of Scouting, printed p. 167; extracted text lines 6219-6222",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scout watches assigned structure, not the ball or the ball carrier, and a team must be scouted several times: offense shows in its easy games, defense in its hard games.",
+    "Rockne distrusts over detailed chart systems: too much detail and too many statistics do not prove anything; the kernel he insists on is strengths and weaknesses of offense and defense plus an accurate description of the forward passing system."
+   ],
+   "breakdown_regime": "Memory only notes lose exact sequences and counts; modern video removes the constraint entirely, but the attention discipline (assigned structure over ball watching) remains the transferable core.",
+   "domain": "scouting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Observation protocol for the engine's data intake: capture is structured by assigned questions, raw attention is never split between watching and recording, and synthesis happens after the event.",
+    "source_operator": "scouting_observe_before_writing",
+    "telemetry": "Scouting report completeness by assigned category, chart versus narrative yield, repeat observation consistency."
+   }
+  },
+  {
+   "primitive_id": "score_state_risk_policy",
+   "name": "Risk policy flips with score and time: behind in the second half, take any chance to win; ahead late, play safe, hold the ball, and make the play deliberate",
+   "verbatim_quote": "If you are behind in the second half, then take any chance to win.",
+   "page": "Chapter V, Take a Chance, printed p. 56; extracted text lines 2143-2144",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The paired rule, Play Safe: ahead late, do not forward pass, hold the ball as long as possible, because the other team cannot score while your team has it; with a minute to play, tackling a dangerous receiver is worth the penalty.",
+    "The quiz chapter drills the policy across dozens of score, time, and field position combinations."
+   ],
+   "breakdown_regime": "The policy is stated as absolutes; it ignores how far behind, the opponent's timeout and scoring speed, and onside possibilities, so the direction is right and the calibration is left to the quarterback's judgment.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's risk posture is a function of score differential and clock, shifting the acceptable variance of called actions, with the shift computed rather than asserted.",
+    "source_operator": "score_state_risk_policy",
+    "telemetry": "Win probability by action variance class, score and time state at decision, comeback and collapse frequencies."
+   }
+  },
+  {
+   "primitive_id": "quarterback_voice_over_intellect",
+   "name": "Given a choice between a quarterback with personality, confidence, and voice and one with keen intellect alone, choose the first, because the team will believe his calls and execute them at maximum effort",
+   "verbatim_quote": "Much against our wishes we are forced to choose the chap with the personality, confidence, and voice, because whatever plays he calls the team will believe him.",
+   "page": "Chapter XV, Importance of Voice, printed p. 137; extracted text lines 5078-5080",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The intellect only quarterback may call the right play every time, yet his team will lack strength on offense against a strong defense; the magnetic one may err tactically, but every play receives maximum effort.",
+    "The quarterback is deliberately saved from physical punishment (fair catches, out of bounds near the sideline) because the team has only one of him and his job is to run the offense."
+   ],
+   "breakdown_regime": "This prices belief and effort above decision quality, which inverts when the tactical gap is large; Rockne concedes the choice is made much against our wishes, an era judgment, not a law.",
+   "domain": "leadership",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision authority in any human machine system is partly a credibility asset: the engine's outputs are packaged so the human decision maker can commit the group, and unexplained optimal calls that nobody believes are discounted.",
+    "source_operator": "quarterback_voice_over_intellect",
+    "telemetry": "Adoption rate of recommendations, effort and execution metrics after adopted versus overridden calls."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "adf60eb4d3ab03cf-t1",
+   "think": "This book is the synopsis of Knute Rockne's coaching school, the Notre Dame system written down by its inventor for working coaches. Its twenty one chapters run from equipment and diet through fundamentals, offense, field tactics, the forward pass, defense, shifts, and one chapter per position, and they close with mental aspects, scouting, signals, the division of practice labor, the season's campaign, a pedagogy chapter, and a quiz bank of roughly one hundred eighty game situations with model answers. The unit of knowledge throughout is not the play. It is the coached behavior: an assignment, a stunt, a decision rule, each stated so a boy can execute it under pressure on Saturday. Four layers of machinery hold the system together. The first is an execution layer. Blocking and tackling are named the essence of the game, plays are declared worthless without execution, the repertoire is capped at thirty plays and in practice at ten or twelve mastered ones, and every formation must support all four methods of attack so that mastery, not variety, is what multiplies. The second is a decision layer. The field is divided twice, into five transverse zones and three longitudinal belts, producing a fifteen square grid with a policy for each cell: punt on first down in the danger zone, probe cheaply in the transitional zones, spend the best plays only in the offensive zone, nurse a discovered weak spot until the scoring zone, and flip the whole risk posture with score and time. Both sides read the same five part state, the tactical situation of down, distance, position, score, and clock. The third layer is measurement, primitive but real. Play values are tabulated as outcome frequencies from an analysis of about thirty games. An opponent is decomposed into percentage weights that shift with his profile. A within game comparison prices the pulling guard at thirty five percent. Practice time itself is budgeted in percentages per position group. The numbers are judgment, and Rockne says so, but they are numbers with provenance attached, open to revision. The fourth layer is information. Signals are treated as an encoding problem: number each play, let number ranges carry structure, conceal the punt number behind five decoys, and keep a rekeying procedure ready for the day the defense cracks the code. Scouting is observation discipline: watch structure rather than the ball, write nothing while the play runs, and distrust any chart so detailed that the kernel drowns in chaff. The defensive center reads tells the way the scout reads formations. What this changes for a reasoning engine is the shape of its decision architecture. Rockne's grid is a worked example of state discretization with a policy table per cell, built by a man who had to give the table to a nineteen year old to execute. His check plays are the cleanest early statement of conditional value in sport: an option that is worthless until the opponent adapts to your strong option, and whose success then restores the strong option. His conservation rules are exploitation timing: an edge spent early is an edge the opponent corrects, so the engine should meter its best actions and its knowledge of a weakness by leverage and by whether the weakness can be fixed. His execution cap is a repertoire governance rule: no option enters the active set until its reliability is measured, however attractive its design. His factor percentages are a prior structure for opponent decomposition, worth copying in form and re estimating in value. Two further layers deserve note. The position chapters are role contracts: each position receives an ideal build, a stance, its offensive duties, its defensive duties, and a closing hints list, so that eleven men can be specified independently and still compose into one system. The center is made the key man of the defense, charged with reading tells and calling corrections; the end is redefined as a sifting end against the smashing and waiting types his contemporaries taught. Over all of it sits a mental layer: players are handled as individuals, the sensitive boy never called down in public and the phlegmatic one thriving on abuse, the swell head treated with ridicule or humor, the team keyed up gradually across the week before the big game, and the coach cool during the game precisely because he was burning during the constructive period when the coaching was actually done. Where the book breaks must be stated as plainly. The football it describes is the football of 1925: the forward pass only recently unshackled, no free substitution, players going both ways, and a punt worth far more than any modern model prices it. Several of its quantitative tables survive only in garbled type, and the samples behind them are one coach's memory of thirty games. The percentages are asserted, never estimated. The warfare analogy is raised and then honestly rejected by the author himself, because a lost game costs nothing and a lost army costs everything, which is precisely why his risk rules cannot be imported without re pricing. What survives translation is not the technique. It is the architecture: master a small repertoire, discretize the state, read the same state on both sides, price your options from counted outcomes, hide your intentions cheaply, and spend your best knowledge only where it decides the result. The quiz bank even functions as a regression test for the whole policy: roughly one hundred eighty named states, each with the action the system prescribes, so any change in doctrine shows up at once as a changed answer.",
+   "retrocausal_genealogy": "The lineage runs through the crisis of mass football. The 1906 rules committee introduced the forward pass to open a game that was killing players with mass momentum plays; the 1910 ban on assisting the ball carrier finished the mass game off; the 1912 changes, four downs and end zones, made the modern offense possible. Jesse Harper built Notre Dame into the laboratory of the new game, and Rockne, his player and then his successor, codified what the laboratory learned. The shift carries the names of its makers, Warner, Zuppke, Howard Jones, and Dr. Spears, whose rival versions Rockne diagrams and argues with. This book is that argument settled into a teachable system, dedicated to Harper.",
+   "theory_of_mind": "Rockne believes his reader is a working coach with ninety minutes a day and boys who can think of one thing at a time. He models players as creatures of habit, emotion, and belief: they execute what has become reflex, they work twice as hard under emotional stress, and they follow the quarterback whose voice makes them believe the call. He models opponents as readers who study your tendencies and correct their weaknesses, so nothing valuable may be shown cheaply. Above all he holds that a coach's knowledge is worth only what he can teach: the book is written as transfer, not as theory.",
+   "cross_layer_veto": "Several vetoes in this book bind every other layer. The execution veto: a play not mastered does not exist, however clever its design, and complexity in shifts or signals is rejected when it steals practice from blocking and tackling. The prohibition veto: the quarterback is taught when not to pass before he is taught anything else, and the punt default overrides ambition in the danger zone. The conservation veto: the best plays and a discovered weak spot may not be spent in low leverage territory. The state veto: no fixed plan survives the tactical situation, which must be read fresh on every play."
+  }
+ ],
+ "universal_lens": "Any competitive craft can be run on this template. Master a small repertoire until it is reflex, and refuse options you cannot execute reliably. Organize the repertoire into sequences whose members set each other up. Divide your arena into a state grid and keep a policy for every cell. Count the outcomes of your own moves and decompose the opponent into weighted factors. Hide your intentions with cheap encoding, budget your preparation time in explicit percentages, correct one fault at a time, and keep your best moves, and your knowledge of the opponent's weakness, unspent until the moment they decide the outcome.",
+ "gsi_mapping": "For the Institute this book is a teaching canon from the coach who professionalized coaching education. The five stage pedagogy, describe vividly, demonstrate slow and at full speed, rehearse against passive resistance, correct one fault at a time, then repeat to reflex, is a curriculum template for any motor or analytic skill. The closing quiz is an early situational judgment test: about one hundred eighty scenarios keyed to field position, down, score, and time, each with a model answer and a reason. The psychological examination after spring practice is a ready made athlete self assessment. Together they give GSI a 1925 blueprint for coach certification, assessment design, and mental skills training that can be modernized without being replaced.",
+ "gse_mapping": "For the engine this book supplies decision architecture, not data. The fifteen square grid is a state discretization with a policy table per cell, and the tactical situation is the state vector every layer must read before it acts. Check plays formalize conditional value: an option priced only against the opponent's measured adaptation to your primary option. The factor percentage tables are an opponent decomposition prior whose form should be copied and whose values must be re estimated from modern play by play. Conservation and weak spot nursing become exploitation timing rules, and the thirty play cap becomes a repertoire gate: nothing enters the active set until its execution is measured."
+}

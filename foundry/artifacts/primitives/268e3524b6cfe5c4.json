@@ -1,0 +1,754 @@
+{
+ "book_id": "268e3524b6cfe5c4",
+ "source_status": "COMPLETE",
+ "source_note": "John William Wilce, M.D., head football coach at The Ohio State University; Football: How to Play It and How to Understand It; Charles Scribner's Sons, New York, published September 1923. The local file is a scanned copy digitized by the Internet Archive in 2022 with funding from the Kahle/Austin Foundation; the extracted text held alongside the PDF is a serviceable OCR of the full book, clean in the prose chapters with occasional garbling in headings, plate captions, and diagram pages. Full sha256 268e3524b6cfe5c4dec5cf0a36a222852ed8b4efabd6c874d75996dd626c93ca; size 8803294 bytes. Catalog title matches the title page; no correction needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "down_and_distance_possession_system",
+   "name": "Possession is retained only by gaining ten yards in four downs; the down-and-distance state governs every play choice",
+   "verbatim_quote": "If at the end of four tries B has advanced the ball ten yards or more, it is allowed to retain the ball and have the privilege of four more tries.",
+   "page": "p. 6, Chapter I (A Simple Background of Football Knowledge)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two teams of eleven on a 300 by 160 foot field",
+    "Undisputed possession until a play starts is a rule of the 1923 game",
+    "Equal-strength teams are assumed when yields are stated"
+   ],
+   "breakdown_regime": "The specific numbers are rule-bound to the 1923 code; the state structure survives every later rule change but the distances and down counts must be re-read from the current rulebook.",
+   "domain": "game_state",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps directly onto the engine state representation: every reasoning step is conditioned on down, distance, and field position, and a series is a renewal process that resets on conversion. The engine treats possession as a resource that expires unless the gain rate is met.",
+    "source_operator": "down_and_distance_possession_system",
+    "telemetry": "Play-by-play down, distance, and yard line for every snap."
+   }
+  },
+  {
+   "primitive_id": "early_kick_field_position_safety",
+   "name": "Backed up near its own goal, a team should kick early rather than risk a fumble that hands the opponent a short field",
+   "verbatim_quote": "Because of this danger of a fumble from one cause or other, many teams kick the ball away from their own goal-line as soon as they get it and so avoid the chance of fumbling it at a point so near their own goal-line that the loss of the ball might immediately result in a score by the opposing team.",
+   "page": "pp. 7-8, Chapter I",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A fumble near the own goal is likely to become an opponent score",
+    "A punt reliably moves the danger far downfield",
+    "The opponent is actively trying to strip the ball in this area"
+   ],
+   "breakdown_regime": "Fails when the punter or protection is unreliable, when wind makes the kick short, or when the offense is strong enough that the certain loss of possession costs more than the fumble risk.",
+   "domain": "field_position_policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A field-position risk kernel for the situations layer: inside a team's own territory the downside of a turnover is so large that the reasoning engine should raise the weight of the safe exit (the kick) on early downs, exactly the logic modern punt-decision models formalize.",
+    "source_operator": "early_kick_field_position_safety",
+    "telemetry": "Turnover location data, punt net yardage from backed-up positions, points scored after short-field takeaways."
+   }
+  },
+  {
+   "primitive_id": "seven_men_line_of_scrimmage_constraint",
+   "name": "Seven offensive players must be on the line of scrimmage when the ball is passed; formation legality is a hard constraint on every play design",
+   "verbatim_quote": "We are also interested in the line of scrimmage because seven offensive players are required to be on it when the ball is passed at the start of each play.",
+   "page": "p. 10, Chapter I",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The line of scrimmage is defined by the ball's position",
+    "A player counts as on the line only within one foot of it with the prescribed hands and feet"
+   ],
+   "breakdown_regime": "The count is specific to the 1923 rules; later codes changed eligibility and formation details. The constraint-satisfaction structure, not the number seven, is what transfers.",
+   "domain": "rules_constraints",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Formation legality is a constraint layer in the engine: any play hypothesis that violates the formation rules of the era being modeled is invalid before its merits are weighed, the same way Wilce treats the seven-man rule as prior to all play design.",
+    "source_operator": "seven_men_line_of_scrimmage_constraint",
+    "telemetry": "Formation diagrams and penalty records for illegal formation and off-side."
+   }
+  },
+  {
+   "primitive_id": "four_lines_of_defense",
+   "name": "Team defense is organized in four successive lines: line, fullback line, halfback line, and a last reserve line",
+   "verbatim_quote": "As shown in Defense Fig. A, there are four lines of defense.",
+   "page": "p. 158, Chapter IX (Learning Football Defense), Defense Fig. A",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Seven men form the first line at the ball",
+    "Second line about three to eight yards back, third about seven yards, fourth about thirty yards",
+    "Each line exists to stop what breaks through the line in front of it"
+   ],
+   "breakdown_regime": "Depths and personnel are era-specific and shift against spread formations and the pass; Wilce himself redraws the lines for pass and punt defense. The layered structure holds, the distances do not.",
+   "domain": "defensive_architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defense in depth is the engine template for defensive reasoning: plays are evaluated by which layer they stress and which layer is expected to make the stop, and a defense is diagnosed by the layer at which it keeps failing.",
+    "source_operator": "four_lines_of_defense",
+    "telemetry": "Tackle locations by defender position, yards after contact by defensive layer, explosive play rates."
+   }
+  },
+  {
+   "primitive_id": "team_game_complementary_abilities",
+   "name": "Football is a team game of complementary specialists: the strong block so the fast can run, and each of eleven positions demands different abilities",
+   "verbatim_quote": "Instead of a team of two men, where one blocks and the other runs with the ball, we have, then, a team of eleven men, each doing various things unselfishly so that their team may win.",
+   "page": "p. 15, Chapter I",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Individual abilities differ and are combinable",
+    "Every player must still tackle, block, handle the ball, and keep his temper within the rules",
+    "Unselfish role execution is required for any score"
+   ],
+   "breakdown_regime": "Breaks down when one role is so weak that the opponent can ignore it, or when a star's usage crowds out the complementary structure the system assumes.",
+   "domain": "team_systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine reasons about matchups as complementary systems rather than collections of individuals: a player's value is partly the space and time he creates for others, which is how blocking and decoy contributions enter the reasoning even when they never touch the ball.",
+    "source_operator": "team_game_complementary_abilities",
+    "telemetry": "Player participation, blocking assignments, and usage data that separate individual production from created production."
+   }
+  },
+  {
+   "primitive_id": "blocking_body_only_definition",
+   "name": "Offensive blocking is obstructing a defender's path to the ball carrier with the body alone; hands and arms may not be used and holding costs fifteen yards",
+   "verbatim_quote": "Blocking by members of the team which has the ball then means to prevent the other side from passing to the man with the ball. It means obstructing the way of the other side as they try to get to the man with the ball.",
+   "page": "p. 16, Chapter II (Becoming a Blocker)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only the defense may use hands and arms, and only to reach the ball or carrier",
+    "The ball carrier alone on offense may straight-arm",
+    "Arms or hands extended in a block draw a fifteen-yard penalty"
+   ],
+   "breakdown_regime": "The legal boundary moved over time as later rules allowed hands in blocking; the definition's core, obstruction without grasping, is the 1923 form of a constraint that still shapes line play.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A legality-bounded technique primitive: the engine's technique layer must model what a blocker is permitted to do in the era under study, because the same body position is a good block in one code and a foul in another.",
+    "source_operator": "blocking_body_only_definition",
+    "telemetry": "Holding penalties, block win rates, and pressure allowed by blocker."
+   }
+  },
+  {
+   "primitive_id": "driving_shoulder_block",
+   "name": "The driving shoulder block: charge low, feet comfortably apart, short driving steps, back and neck stiff, rump lower than head, and keep driving",
+   "verbatim_quote": "In all line-blocking charge low with feet comfortably apart. Take short driving steps back and neck stiff. Keep rump lower than head. Stay low, stay on your feet as long as possible, hold the block or keep driving.",
+   "page": "p. 19, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The block begins at the snap from a set stance",
+    "Low pad level beats the opponent's charge",
+    "Staying on the feet preserves the block longer than leaving them"
+   ],
+   "breakdown_regime": "Fails against a defender who sidesteps rather than accepts contact, and when the blocker lunges and loses his feet; it is a close-quarters tool, not an open-field one.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A technique kernel for line play evaluation: pad level, base width, and sustained leg drive are the observable components the engine can score from film and tracking when judging whether a line matchup favors the offense at the point of attack.",
+    "source_operator": "driving_shoulder_block",
+    "telemetry": "Pad level and drive metrics from film grading, double-team and solo block outcomes at the point of attack."
+   }
+  },
+  {
+   "primitive_id": "cross_body_block",
+   "name": "The cross-body block: hit with the shoulder, then throw the broad side of the body across the path the defender must take to reach the runner",
+   "verbatim_quote": "In order to do this he makes a cross-body block; that is, he throws the side of his body across the path that the opponent will have to take to get to the man with the ball.",
+   "page": "p. 20, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Used when the runner goes to the side rather than straight ahead",
+    "The blocker's body, not his force, is what delays the defender",
+    "Position must be held until the runner has gone by"
+   ],
+   "breakdown_regime": "Fails if the defender goes around the body quickly or if the blocker turns too early and gives up the inside path; it delays rather than displaces, so it cannot protect a slow-developing play by itself.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A path-denial kernel: the block's value is measured in time and angle denied to the defender rather than yards displaced, which is how the engine should credit seal and wall-off blocks on perimeter plays.",
+    "source_operator": "cross_body_block",
+    "telemetry": "Defender path and time-to-ball data on outside runs, seal block grades."
+   }
+  },
+  {
+   "primitive_id": "check_block",
+   "name": "The check block: a lineman checks his opponent's forward progress with the shoulder, then releases downfield to block defenders nearer the runner's path",
+   "verbatim_quote": "This line-man checks his opponent, then goes on in front of the runner and blocks others of the opponent's team who will be more directly in front of the ball.",
+   "page": "p. 20, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Used when the checked defender is too far from the play to reach the runner early",
+    "Also used before going downfield under a punt",
+    "The check must be real enough to slow the first man"
+   ],
+   "breakdown_regime": "Fails when the checked defender recovers and pursues from behind, or when the released blocker arrives late and blocks no one; it trades certainty at the line for numbers downfield.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A release-timing kernel for the engine: blockers who chip and climb create second-level numbers, and the value of the chip is the delay it buys relative to the value of the downfield block it enables.",
+    "source_operator": "check_block",
+    "telemetry": "Chip-and-climb frequency, second-level block success, pursuit tackles from behind on outside plays."
+   }
+  },
+  {
+   "primitive_id": "combination_break_block",
+   "name": "The combination break block: a low side-body block takes the defender's legs out at the same moment a shoulder block drives him over, opening a hole in the line",
+   "verbatim_quote": "The man who knocks him over in this way does not use his hands, and the man who comes in to make the side-body block simply runs or blocks so low and hard that he carries the opponent's legs out from under him.",
+   "page": "p. 22, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two blockers coordinate on one defender at the point of attack",
+    "Neither blocker uses his hands",
+    "Adjacent blockers must keep other defenders out of the opened space"
+   ],
+   "breakdown_regime": "Fails when the two blockers mistime the combination and arrive separately, or when the defender splits the pair; it also spends two blockers on one man, weakening blocking elsewhere.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The double-team kernel: concentrated force at the point of attack is bought by conceding numbers elsewhere, and the engine weighs that trade whenever it evaluates whether a run fits the defensive front it faces.",
+    "source_operator": "combination_break_block",
+    "telemetry": "Double-team rates and displacement at the point of attack, run success by blocking scheme."
+   }
+  },
+  {
+   "primitive_id": "roll_block",
+   "name": "The roll block: at about a yard from the opponent, throw the stiffened body through the air parallel to the ground, hip aimed at his knees, and roll through him",
+   "verbatim_quote": "When about a yard away, throw your stiffened body through the air parallel to the ground and at a right angle to the direction in which you are running.",
+   "page": "p. 23, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Best used in the open against a defender running toward the blocker",
+    "Worth little if applied much above the knees",
+    "Feet must never be thrown above the head and the leg below the knee may not be used, which is tripping"
+   ],
+   "breakdown_regime": "A one-shot technique: once the blocker leaves his feet he cannot adjust, so a defender who sidesteps leaves him on the ground and out of the play. Later rules restricted low blocks of this kind.",
+   "domain": "blocking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An open-field blocking kernel suited to smaller players against larger ones: the engine can treat cut and roll style blocks as high-variance, trading the blocker's continued participation for a chance to erase a bigger defender.",
+    "source_operator": "roll_block",
+    "telemetry": "Open-field block success by blocker and defender size, missed-block rates on perimeter plays."
+   }
+  },
+  {
+   "primitive_id": "interference_as_moving_blocking",
+   "name": "Interference is blocking done on the move: the backfield and fast linemen run in front of the runner and block the defensive ends and secondary",
+   "verbatim_quote": "The offensive back-field, therefore, and those linemen who can run fast and who can be spared from blocking on the line run in front of the man with the ball and try to block the defensive ends and the back-field men.",
+   "page": "p. 26, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only fast linemen who can stay ahead of the runner may leave the line",
+    "Interference targets the ends and secondary, who are freer to reach the runner than the engaged linemen",
+    "The runner stays close behind his interference"
+   ],
+   "breakdown_regime": "Every man sent in front of the runner is a man not blocking on the line, so heavy interference invites a lineman breaking through and catching the runner from behind.",
+   "domain": "blocking_systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine models interference as a resource allocation problem: blockers are divided between the line and the runner's escort, and the right split depends on the strength of the defensive line versus the secondary, which is a matchup input, not a fixed scheme choice.",
+    "source_operator": "interference_as_moving_blocking",
+    "telemetry": "Pulling lineman and lead blocker usage, run outcomes by number of blockers at the second level."
+   }
+  },
+  {
+   "primitive_id": "interference_reassignment_nearest_threat",
+   "name": "When a defender breaks through, interference must abandon its assigned man and block the man closest to the runner instead",
+   "verbatim_quote": "When this happens, the players who are supposed to make interference must block these men, who are closest to the runner, instead of going on to block the end or back they were originally assigned to block.",
+   "page": "p. 26, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Assignments are defaults, not absolutes",
+    "The nearest unblocked defender is the binding threat to the play",
+    "The runner must then find his own way past the originally assigned defender"
+   ],
+   "breakdown_regime": "Reassignment leaves the original target free, so it fails when two defenders threaten at once or when the runner cannot beat the freed man; it is a damage-limitation rule, not a cure.",
+   "domain": "blocking_systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A dynamic reassignment kernel: the engine's play reasoning should re-rank threats as a play develops rather than scoring only the pre-snap assignment picture, because one penetration reorders every blocker's correct target.",
+    "source_operator": "interference_reassignment_nearest_threat",
+    "telemetry": "Penetration and tackle-for-loss data, plays where the first threat came from an unplanned direction."
+   }
+  },
+  {
+   "primitive_id": "solo_blocker_force_multiplier",
+   "name": "A player who can block a defensive man alone in the open is a great asset, because he frees a teammate to block another defender ahead of the play",
+   "verbatim_quote": "Young men learning to play football should remember that the coach considers the player who can block a defensive player alone a great asset to a football team.",
+   "page": "pp. 29-30, Chapter II",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Solo blocking in the open demands more skill and speed of foot than line blocking",
+    "Coaches assign solo or combination blocks based on the blocker's ability and the defender's strength",
+    "Even two or three blockers are assigned to an especially strong defender when needed"
+   ],
+   "breakdown_regime": "A solo blocker who fails leaves his man completely free, so the multiplier cuts both ways; the assignment is only sound when the matchup has been honestly graded.",
+   "domain": "blocking_systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A matchup-leverage kernel: one reliable solo blocker changes the arithmetic of the whole play by releasing a second blocker downfield, so the engine should treat proven one-on-one blockers as structural advantages, not just individual grades.",
+    "source_operator": "solo_blocker_force_multiplier",
+    "telemetry": "One-on-one block win rates in space, explosive runs behind solo-blocked edges."
+   }
+  },
+  {
+   "primitive_id": "tackle_encircle_legs_definition",
+   "name": "A tackle stops forward progress by encircling the runner's legs with the arms; grabbing arms, shoulders, or belt lets the runner drag the tackler",
+   "verbatim_quote": "A tackle is the act by which a defensive player, primarily by encircling the legs of his opponent with his arms, stops his forward progress.",
+   "page": "p. 32, Chapter III (Trying the Tackle)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "As long as the runner can step, he can gain",
+    "The tackler must have one foot on the ground when making the tackle under the rules",
+    "Every defender must know at least the shoulder, cross-body, and semi-diving tackles"
+   ],
+   "breakdown_regime": "Leg tackling fails against a runner who hurdles or whose legs cannot be reached through interference; it also depends on the tackler arriving balanced enough to wrap rather than bounce off.",
+   "domain": "tackling_technique",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's tackling model starts from the same mechanism: stops happen when leg drive is removed, so missed-tackle and yards-after-contact reasoning keys on wrap and leg contact rather than on collision force alone.",
+    "source_operator": "tackle_encircle_legs_definition",
+    "telemetry": "Missed tackle rates, yards after contact, tackle location relative to the runner's legs."
+   }
+  },
+  {
+   "primitive_id": "hard_shoulder_tackle_mechanics",
+   "name": "The hard-shoulder tackle: watch the knees, drive with the legs, hit harder than the runner hits you, grip the arms around his knees, keep the back stiff, and keep driving him backward",
+   "verbatim_quote": "Watch his knees, drive with the legs and hit him harder than he can hit you. Grip your arms around his knees and hold them there, keep your feet on the ground, keep your back stiff, and keep driving him backward as long as you can until he is flat on his back with you on top of him.",
+   "page": "p. 34, Chapter III",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Aim point is just above the opponent's knees",
+    "Grasping one wrist with the opposite hand locks the grip",
+    "The tackle works meeting the runner or dropping to meet him head-on"
+   ],
+   "breakdown_regime": "Fails when the tackler aims high, stops his feet, or does not hold on after contact; Wilce lists weak and high tackling as the common faults of new and tired players.",
+   "domain": "tackling_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A tackling-technique kernel whose observable components, aim point, leg drive through contact, and grip retention, are exactly what film grading and tracking can score when the engine projects a defender's reliability in the open field.",
+    "source_operator": "hard_shoulder_tackle_mechanics",
+    "telemetry": "Tackle success by approach angle and contact point, yards allowed after first contact."
+   }
+  },
+  {
+   "primitive_id": "fumble_costly_turnover_equivalence",
+   "name": "A fumble hands the opponent the thirty to fifty yards a kick would have covered, which is why ball handling is absolutely fundamental",
+   "verbatim_quote": "When we remember the difficulties of gaining such a distance by a series of plays we realize what a costly mistake a fumble may be and how absolutely fundamental is the practice in handling the ball.",
+   "page": "p. 41, Chapter IV (Handling the Ball)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Possession should be surrendered only by kicking, as far from the own goal as possible",
+    "Gaining thirty to fifty yards by plays is slow and uncertain",
+    "Fumbles cluster at the centre exchange, on signal misunderstandings, and when the ball is carried uncovered into a tackle"
+   ],
+   "breakdown_regime": "The yardage equivalence is an average; a fumble deep in opponent territory or at the end of a half costs differently, and a recovered own fumble costs only the down and the yards lost.",
+   "domain": "ball_security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A turnover-value kernel stated in yardage: the engine can price ball-security risk on any play by the field-position swing of a fumble, which is the same currency Wilce uses when he equates a fumble to a lost punt.",
+    "source_operator": "fumble_costly_turnover_equivalence",
+    "telemetry": "Fumble rates by play type and ball carrier, field-position swing on turnovers, recovery rates."
+   }
+  },
+  {
+   "primitive_id": "punt_apex_orientation_flight_read",
+   "name": "Judge a punt's carry from the ball's attitude at its apex: front point level or slightly down means it travels farther than expected; rear point much lower means it falls short",
+   "verbatim_quote": "If, when the ball is at its highest point, it is parallel with the ground, or if the front point is a little lower than the rear point, it is very likely to travel farther than we expected it to.",
+   "page": "p. 43, Chapter IV",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Applies to a spiralling or side-turning ball, not to an end-over-end kick, which travels as expected",
+    "The catcher must get to the landing point first, then watch the ball only",
+    "Wind and a wet or muddy ball change the read"
+   ],
+   "breakdown_regime": "A human visual heuristic from the leather-ball era; modern tracking measures hang time and carry directly. The principle, that mid-flight state predicts landing point, survives the instrument change.",
+   "domain": "return_game",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A trajectory-reading kernel for the return game: the engine's return reasoning can use the same state variable Wilce's catcher used, the ball's flight attitude, generalized today to hang time, direction, and coverage distance at the catch.",
+    "source_operator": "punt_apex_orientation_flight_read",
+    "telemetry": "Punt hang time, returner fair-catch and return decisions, muff rates by coverage proximity."
+   }
+  },
+  {
+   "primitive_id": "properly_held_ball_carry",
+   "name": "The properly held ball: rear point tucked under the elbow and upper arm, forearm supporting from below, fingers covering the forward point, and the free hand clamped over it when tackled",
+   "verbatim_quote": "The ball should be tucked under the arm as soon as it is received from the centre. The rear point should be tucked under the elbow and upper arm, but should not extend beyond. The forearm should support it from below.",
+   "page": "p. 47, Chapter IV",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ball is carried in the arm farthest from the opponent so the near arm can straight-arm",
+    "Points must not stick out front or back of the arm",
+    "The grip tightens and the second hand covers the ball as the runner falls"
+   ],
+   "breakdown_regime": "Correct carriage cannot survive every hit, and excitement makes players forget it; Wilce's remedy is rehearsal under fire, with teammates trying to punch the ball out in practice.",
+   "domain": "ball_security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A ball-security technique kernel: carry position relative to contact direction is a coachable, observable input to fumble risk, which the engine can use when a runner's history shows the ball carried into contact uncovered.",
+    "source_operator": "properly_held_ball_carry",
+    "telemetry": "Fumbles by carry arm and contact side, strip attempts and successes against individual runners."
+   }
+  },
+  {
+   "primitive_id": "well_covered_punt_over_distance",
+   "name": "A shorter punt the ends can cover beats a longer one they cannot: a thirty-yard covered kick gains the same net as a forty-yard kick returned ten",
+   "verbatim_quote": "The thirty-yard kick is better, because the ends and also line-men are given the chance to tackle you as soon as you catch the ball.",
+   "page": "p. 52, Chapter V (Kicking the Ball)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Net gain is kick distance minus the return",
+    "A covered catcher is likelier to fumble under an immediate hard tackle",
+    "The exception is the kick placed over the catcher's head or to his side to roll"
+   ],
+   "breakdown_regime": "Fails when coverage is slow or the returner is dangerous in space even when covered; against a weak return unit the long kick's extra yards are real and the covered kick concedes them.",
+   "domain": "kicking_game",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The net-punt kernel: punt value is distance minus return, conditioned on coverage arrival at the catch, which is precisely the quantity the engine should use instead of gross punt distance when it reasons about the kicking game and field position.",
+    "source_operator": "well_covered_punt_over_distance",
+    "telemetry": "Gross and net punt yardage, return yards by coverage proximity at the catch, fair catch rates."
+   }
+  },
+  {
+   "primitive_id": "spiral_punt_instep_mechanics",
+   "name": "The punt is struck with the instep at or slightly behind the ball's centre, dropped parallel to the ground an inch left of the toe, producing the spiral",
+   "verbatim_quote": "The force of the kick straight forward and the slight crossing of the ball on the foot gives it a whirling or spiral motion if it is kicked with the instep at or a little back of its centre.",
+   "page": "p. 55, Chapter V",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One correct step rather than several; most kickers take too many steps",
+    "The ball is dropped, never thrown up and kicked at",
+    "The leg straightens with a snap just as the foot meets the ball at least two feet above the ground"
+   ],
+   "breakdown_regime": "With a wet ball Wilce abandons the spiral and kicks end over end for sureness; the mechanics also assume the 1923 ball and a punter standing about ten yards behind centre.",
+   "domain": "kicking_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A kicking-mechanics kernel: consistent drop and contact point produce consistent ball flight, so the engine's punter evaluation should weight repeatability of flight and placement over single longest kicks, as Wilce does.",
+    "source_operator": "spiral_punt_instep_mechanics",
+    "telemetry": "Punter consistency measures, out-of-bounds and placement rates, blocked punt rates by get-off time."
+   }
+  },
+  {
+   "primitive_id": "forward_pass_down_distance_risk_decision",
+   "name": "The forward pass is the rational risk when running has failed: third down, seven to go in two tries, justifies risking the pass because the distance probably cannot be made any other way",
+   "verbatim_quote": "Since we have seven yards to go with only two trials we will have to take a little risk and use the forward pass because it seems probable that we cannot make our distance in any other way.",
+   "page": "p. 64, Chapter VI (That Forward Pass)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One forward pass is allowed per scrimmage play under the restrictions",
+    "An incomplete pass costs only the down; an interception costs the ball",
+    "The defense has shown it can stop the run at the needed rate"
+   ],
+   "breakdown_regime": "The calculus inverts when the run game is working, when weather ruins passing, or when the interception risk near the own goal outweighs the conversion chance; Wilce's zone rules forbid most passing deep in own territory.",
+   "domain": "play_calling_decisions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decision kernel for the reasoning engine: play selection is driven by the probability of making the distance by the safe method versus the risky one, which is the seed of down-and-distance expected-value reasoning, stated here in words a generation before it was tabulated.",
+    "source_operator": "forward_pass_down_distance_risk_decision",
+    "telemetry": "Conversion rates by down, distance, and play type; interception and incompletion rates on pass calls."
+   }
+  },
+  {
+   "primitive_id": "pass_from_run_formation_deception",
+   "name": "The forward pass is best made from a formation that has also been used to run, buck, or kick, so the formation itself does not announce the play",
+   "verbatim_quote": "The forward pass is best made from a formation which has been used to run, buck, or kick from.",
+   "page": "p. 65, Chapter VI",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense reads formations before it reads the play",
+    "The passer first does something that makes the defense think he is not going to pass",
+    "A dedicated pass formation still has a place when distance matters more than surprise"
+   ],
+   "breakdown_regime": "Fails when a team's tendencies within the shared formation are themselves readable, or when personnel groupings give the play away even though the formation does not.",
+   "domain": "deception_systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The tendency-breaking isomorphism: the engine should score a play call partly by how well its formation and personnel hide it, because a defense that must defend run, kick, and pass from one picture is slower against all three.",
+    "source_operator": "pass_from_run_formation_deception",
+    "telemetry": "Play-type rates and success by formation and personnel grouping, defensive reaction times."
+   }
+  },
+  {
+   "primitive_id": "leading_the_receiver",
+   "name": "Lead the receiver: the pass must arrive within his reach at full speed so he does not have to slacken to catch it",
+   "verbatim_quote": "The pass must be made so that it comes within his reach and so that he does not have to slacken his speed to catch it.",
+   "page": "p. 68, Chapter VI",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The passer throws to where the receiver is going to be, not where he is",
+    "A slight arc floats the ball in; a rainbow is too slow and a straight line too hard to handle",
+    "Accuracy matters more than any other element of passing"
+   ],
+   "breakdown_regime": "Leading fails against a defender sitting on the route, and a pass led too far becomes uncatchable; the margin depends on the receiver's speed and the defender's position, which the passer must read before the throw.",
+   "domain": "passing_technique",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A pass-placement kernel: target the receiver's future position and preserve his speed through the catch, which is the quantity modern separation and yards-after-catch models reward; the engine should value placement that keeps the receiver in stride.",
+    "source_operator": "leading_the_receiver",
+    "telemetry": "Catch rates and yards after catch by pass placement relative to the receiver's route."
+   }
+  },
+  {
+   "primitive_id": "decoy_receiver_attention_draw",
+   "name": "The decoy: an eligible receiver runs at a defender with no intention of receiving, drawing his attention so a second receiver can catch the pass with little trouble",
+   "verbatim_quote": "The first man simply runs at the defensive player as a decoy, that is, to attract the attention of the defensive man so that the second man may receive the forward pass without much trouble.",
+   "page": "p. 75, Chapter VI",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The decoy must be a credible threat, usually an outstanding player the defense follows closely",
+    "Delayed receivers who pause before releasing are usually free because the defense's attention went with the first men out",
+    "Five or six eligible men multiply the decoy combinations"
+   ],
+   "breakdown_regime": "Fails when the defense plays zone or ball rather than man, or when the decoy is not respected and the defender stays home; a decoy who is never thrown to loses his drawing power over a season.",
+   "domain": "deception_systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An attention-manipulation kernel: routes have value beyond their own catch probability because they move defenders, and the engine should credit clear-out and decoy routes with the space they create for the actual target.",
+    "source_operator": "decoy_receiver_attention_draw",
+    "telemetry": "Coverage attention and defender displacement by route, target separation with and without clear-out routes."
+   }
+  },
+  {
+   "primitive_id": "openness_gain_loss_tradeoff",
+   "name": "The more open the play, the greater the chance of a good gain and the greater the danger of a loss: plunges average about two yards, off-tackle drives two to four, end runs three to five with more losses",
+   "verbatim_quote": "In general, the following is true, that the more open the play the greater the chance of good gain, but also the greater the danger of loss of distance.",
+   "page": "p. 109, Chapter VIII (Offensive Plays)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Yields are stated for teams of equal strength",
+    "Wider plays take longer to reach the line, giving the defense more time to read and pursue",
+    "A stronger individual matchup can move a whole play family up a class"
+   ],
+   "breakdown_regime": "The stated averages are one coach's experience, not measured league data, and they invert when the defense is much faster or much slower than the offense; the ordering of the families is more durable than the numbers.",
+   "domain": "play_evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mean-variance isomorphism for play families: the engine should carry each play type as a distribution with a stated center and a loss tail, not as a single expected number, because Wilce's families differ as much in their downside as in their average.",
+    "source_operator": "openness_gain_loss_tradeoff",
+    "telemetry": "Gain distributions by play type including tackle-for-loss rates, by team strength differential."
+   }
+  },
+  {
+   "primitive_id": "companion_plays_shared_start",
+   "name": "Companion plays are among the greatest sources of deception: plays that start the same and appear the same but finish differently, run in sequence so the first sets up the second",
+   "verbatim_quote": "The wide run is more effective, especially when paired with the whirl plunge. In pairing, one play follows the other.",
+   "page": "p. 126, Chapter VIII",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense must commit to the shared start before the finish reveals itself",
+    "Pairing works when one play follows the other closely enough that the defense's adjustment to the first is wrong for the second",
+    "Cross-blocking supports the same idea inside the line, with blockers arriving from unexpected angles"
+   ],
+   "breakdown_regime": "Fails when the shared start is itself stopped, when the defense plays the ball rather than the picture, or when the companion is run so rarely that the defense never adjusts to the first play.",
+   "domain": "deception_systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The sequencing isomorphism: the engine should reason about play calls as a series with memory, where the value of a play includes the defensive adjustment it induces and the companion that adjustment makes profitable, not as independent draws.",
+    "source_operator": "companion_plays_shared_start",
+    "telemetry": "Success rates of plays following a shown look, defensive adjustment measures across a game."
+   }
+  },
+  {
+   "primitive_id": "few_plays_well_learned_policy",
+   "name": "A few plays very well learned beat a great many plays partly learned: most college teams use about thirty plays, and every man must know his assignment exactly",
+   "verbatim_quote": "The policy of a few plays, very well learned, has proved much better than that of a great many plays only partly learned and partly executed.",
+   "page": "p. 136, Chapter VIII",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A play succeeds only if every man executes his exact assignment at the exact time",
+    "Signal misunderstandings from an overloaded playbook cause fumbles and broken plays",
+    "A player should admit he does not know his duty rather than bluff"
+   ],
+   "breakdown_regime": "A small playbook becomes predictable over a season and can be scouted; the policy holds only while the few plays are run from enough formations and companions to stay unreadable.",
+   "domain": "playbook_design",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A complexity-budget kernel for the engine's own reasoning: a model's usable playbook, like a team's, is limited by execution reliability, and adding options that cannot be executed or evaluated cleanly lowers total performance even when each option looks good alone.",
+    "source_operator": "few_plays_well_learned_policy",
+    "telemetry": "Error and penalty rates by playbook size, execution grades on new versus established plays."
+   }
+  },
+  {
+   "primitive_id": "getting_the_jump_snap_timing",
+   "name": "Getting the jump: the side that starts first at the snap usually gains; a legal starting signal gives the offense the jump without watching the ball",
+   "verbatim_quote": "The offensive team which gets the jump usually gains ground. When the defensive players get the jump and use their hands well, no straight or slant play will gain very much with teams of even strength.",
+   "page": "p. 149, Chapter IX",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense's starting pistol is the movement of the ball itself",
+    "A starting signal is a definite agreed number in the signal series, which also protects the offense against its own false starts",
+    "Unfair starting signals exist and are illegal; officials can miss the slight ones"
+   ],
+   "breakdown_regime": "The jump matters most between even teams; a large strength difference overwhelms it, and a defense that times the snap count can steal the jump back, which is why cadence variation exists.",
+   "domain": "line_play_timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A timing kernel: line outcomes are partly decided in the first fraction of a second after the snap, so the engine's line matchup reasoning should include get-off and cadence factors rather than treating the charge as simultaneous.",
+    "source_operator": "getting_the_jump_snap_timing",
+    "telemetry": "Get-off times, false start and off-side rates, line win rates by snap timing."
+   }
+  },
+  {
+   "primitive_id": "halfback_cutback_containment_discipline",
+   "name": "When the play goes to the other side, the halfback follows across slowly and never lets a runner pass the line of his crossing, staying prepared for the cut-back",
+   "verbatim_quote": "If the play goes to the other side, watch for \"cut-backs\" to your side. Follow across the field slowly. Do not allow a runner to pass the line on which you cross the field.",
+   "page": "p. 152, Chapter IX",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Overrunning toward the far side is the common fault of the new halfback",
+    "Staying outside the runner and keeping him from the sideline is the standing rule on plays to his own side",
+    "The fullback, not the halfback, carries the hardest diagnosis job in the backfield"
+   ],
+   "breakdown_regime": "Slow pursuit fails against a genuinely fast breakaway to the far side; the discipline is a bet that cut-backs and reverses are common enough to outweigh the plays lost by arriving late.",
+   "domain": "defensive_backfield_play",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A containment kernel: backside defenders who abandon their side for the flow of the play create the cut-back lane, so the engine should treat backside discipline as a measurable defensive trait rather than assuming pursuit is always good.",
+    "source_operator": "halfback_cutback_containment_discipline",
+    "telemetry": "Cut-back run frequency and success, backside defender positioning on outside runs."
+   }
+  },
+  {
+   "primitive_id": "shifted_eligibility_principle",
+   "name": "Shifted eligibility: a sudden shift just before the snap makes a different player eligible to receive a forward pass than the defense has covered, a principle Ohio State used from 1913",
+   "verbatim_quote": "The shifted-eligibility principle in several of these plays has tremendous possibilities. The principle has been used in various forms at Ohio State since 1913, and has been the basis of much well-executed successful offense.",
+   "page": "p. 172, Chapter X (Winners)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Seven men must still be on the line at the snap",
+    "Eligibility belongs to the men on the ends of the line and those a yard or more back of it when the ball is put in play",
+    "The defense assigns its coverage to the men it sees as eligible before the shift"
+   ],
+   "breakdown_regime": "Rule changes can close the exploit, and later codes did restrict shifting and eligibility games; it also fails when the defense re-identifies eligibility faster than the shift creates confusion.",
+   "domain": "deception_systems",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A rule-space kernel: the engine should treat eligibility and formation rules as an attack surface, checking who becomes eligible after motion or a shift and whether the defense's coverage assignments were made against the pre-shift picture.",
+    "source_operator": "shifted_eligibility_principle",
+    "telemetry": "Motion and shift usage, coverage busts after shifts, eligible receiver production from shifted formations."
+   }
+  },
+  {
+   "primitive_id": "zone_generalship_field_policy",
+   "name": "Zone generalship: divide the field into twenty-yard zones from goal to goal, each with its own plan for kicking, passing, and running",
+   "verbatim_quote": "So-called zone generalship is widely used. It is comparatively formal and does not consider the opponent's defense as its primary basis.",
+   "page": "p. 207, Chapter X (Generalship)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The five zones run Danger, Defensive, Middle or Zone of Offensive Change, True Offensive, and True Scoring",
+    "No forward passes in the Danger or Defensive zones and only long ones in the Middle zone, by the formal theory",
+    "Punts come on first or second down in the Danger zone and on fourth down only from the Middle zone outward"
+   ],
+   "breakdown_regime": "Wilce himself names the flaw: the system is formal and ignores the opponent's defense, so it is a default policy for an unknown opponent, not a plan for a scouted one.",
+   "domain": "play_calling_decisions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A field-position policy isomorphism: the engine's situations layer can hold a default zone policy of exactly this kind, a prior over play types by field zone, which opponent-specific evidence then modifies; Wilce states both the policy and its known limitation.",
+    "source_operator": "zone_generalship_field_policy",
+    "telemetry": "Play-type rates and outcomes by field zone, punt and pass frequency by zone across eras."
+   }
+  },
+  {
+   "primitive_id": "weak_spot_override_rule",
+   "name": "When a weak spot is found in the opponent's defense, all generalship rules are modified and the weak spot is hammered",
+   "verbatim_quote": "In general, if a weak spot is found in the opponents' defense all generalship rules are modified and the “‘weak spot” is hammered.",
+   "page": "p. 208, Chapter X (Generalship)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The weak spot must be found by observation during the game or by scouting beforehand",
+    "Hammering continues until the defense repairs the spot",
+    "The override applies to the conservative rules and the zone system alike"
+   ],
+   "breakdown_regime": "Fails when the apparent weak spot is a trap, when the defense substitutes or adjusts, or when hammering one spot makes the offense predictable enough to be jumped; the evidence for weakness is usually a small sample.",
+   "domain": "play_calling_decisions",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An exception-handling kernel that sits above the policy layer: default generalship governs until live evidence identifies a specific defensive failure, at which point the engine concentrates attack there and keeps testing whether the repair has come.",
+    "source_operator": "weak_spot_override_rule",
+    "telemetry": "Repeated-target success rates against individual defenders, adjustment speed after a matchup is attacked."
+   }
+  },
+  {
+   "primitive_id": "training_repetition_correctness_principle",
+   "name": "Practice prepares mind and muscle by doing things correctly over and over; average natural ability with much good training nearly equals excellent ability with little training",
+   "verbatim_quote": "We practise football to prepare our minds and muscles to execute certain things efficiently. We learn to do things correctly by doing them over and over again correctly.",
+   "page": "p. 209, Chapter XI (Practice and Training)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Training is common-sense living and intelligent hard work: sleep, food, cleanliness, no tobacco or other drugs",
+    "Fundamentals are practised in short rotating periods and never abandoned for scrimmage too early",
+    "The active practice period is about an hour and a half; underwork rather than overwork"
+   ],
+   "breakdown_regime": "Repetition of a wrong technique entrenches it, which is why Wilce insists on learning a thing exactly before doing it at full speed; volume without correctness or rest produces staleness and injury rather than skill.",
+   "domain": "training_science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A preparation isomorphism for the institute side and for model work alike: capability is built by correct repetitions under gradually rising difficulty, with fundamentals revisited all season, and the schedule of practice is itself a designed object with periodization and emphasis cycles.",
+    "source_operator": "training_repetition_correctness_principle",
+    "telemetry": "Practice structure records, injury and performance trends across a season, error rates after fundamentals blocks."
+   }
+  },
+  {
+   "primitive_id": "quarterback_brains_of_team",
+   "name": "The quarterback is the brains of the team: personality, leadership, and the ability to think generalship correctly under fire outrank his size and special abilities",
+   "verbatim_quote": "The quarter-back should be the \"brains of the team\" and the \"life of the football party.\"",
+   "page": "p. 87, Chapter VII (Trying for Each Position)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "He must feed the ball to the backs with absolute accuracy and without fumble",
+    "He must know the rules and all offensive and defensive generalship a step ahead of every other player",
+    "He should use his teammates rather than advance the ball himself more than necessary"
+   ],
+   "breakdown_regime": "A thinking quarterback without the physical tools to execute the offense's basic plays becomes a target; Wilce's ordering is a priority among qualified candidates, not a claim that thought replaces skill.",
+   "domain": "position_specifications",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A decision-maker specification: the engine's quarterback evaluation should weight decision quality, signal command, and morale effects as first-class traits, because the position's output is mostly the choices it makes for others, which is how Wilce specifies it.",
+    "source_operator": "quarterback_brains_of_team",
+    "telemetry": "Quarterback decision grades, audible and signal error rates, team penalty and fumble rates by quarterback."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "268e3524b6cfe5c4-t1",
+   "think": "Wilce's book is a complete operating system for a football team, written by a physician who coached Ohio State, and its machinery is worth taking apart in order. At the bottom sits a rules substrate: the field, the two lines of scrimmage, undisputed possession, the four downs in which ten yards must be gained, the seven men required on the line, and the eligibility rules that decide who may receive a forward pass. Nothing above this layer is legal until the substrate is satisfied, and Wilce treats that priority as absolute. On the substrate he builds individual technique, position by position and skill by skill. Blocking is a taxonomy, not a single act: the driving shoulder block for straight-ahead plays, the cross-body block that denies a path rather than displacing a man, the check block that trades a moment of contact for a downfield number, the combination break block that spends two men to erase one, the roll block that spends the blocker's own balance to erase a bigger man in the open. Tackling is defined by its mechanism, encircling the legs, and every other skill gets the same treatment: the properly held ball with its points covered, the punt judged by the attitude of the ball at its apex, the drop-kick and place-kick reduced to stance, drop, and follow-through. Above technique sits the play library, and here Wilce does something a reasoning engine should notice: he attaches yields to play families. Plunges should average about two yards, off-tackle drives two to four, end runs three to five, and he states the governing trade in one sentence, that the more open the play the greater the chance of good gain and the greater the danger of loss. That is a mean and variance statement about play families, made in 1923, in prose. The punt chapter does the same work for the kicking game: a forty-yard kick returned ten is a thirty-yard gain, identical to a covered thirty-yard kick, so the covered kick is better because it also threatens a fumble. A fumble itself is priced in the same currency, the thirty to fifty yards a kick would have covered. Defense is built as architecture rather than reaction: four lines, each existing to stop what breaks the line in front of it, with individual first actions that are deliberately indeterminate, charge straight ahead and hold the man off with stiff arms, followed by second actions that begin only once the ball's direction is known. Around all of this sits a deception system with several independent mechanisms. Companion plays share a start and diverge at the finish, so the defense's correct adjustment to the first play is wrong for the second. Decoys spend a credible receiver's route to move a defender away from the real target. The shifted-eligibility plays, which Wilce dates to Ohio State in 1913, change who is allowed to catch the ball after the defense has already assigned its coverage to the pre-shift picture. Signals are a small cryptographic system with decoy numbers, key numbers, digit splitting, and addition systems, plus a starting signal that functions as a shared starting pistol. Above the deception system sits generalship, the policy layer: conservative rules for fourth down and for one's own territory, a formal zone system that assigns play types to twenty-yard bands of the field, and then, explicitly, an override: when a weak spot is found in the opponent's defense, all generalship rules are modified and the weak spot is hammered. Finally there is a training science holding the whole structure up: learn each thing exactly before doing it at full speed, practise fundamentals in short rotating periods all season, divide the practice week into emphasis days, and underwork rather than overwork, because a play is an assignment graph in which one man's missed duty collapses the whole, and only correct repetition makes the graph reliable. What this changes for a reasoning engine is the shape of its football knowledge. Plays are not calls but distributions with stated centers and loss tails, conditioned on field zone, down, and the opponent's observed weaknesses. Blocking is not a single rating but a set of distinct mechanisms whose value is measured differently: displacement for the shoulder block, time and angle denied for the cross-body block, numbers created downfield for the check block. Defense is layered, and a defense is diagnosed by the layer at which it fails. Deception is not decoration but a sequencing effect: the value of a play includes the adjustment it induces. And the policy layer is honest about its own limits, since Wilce names the zone system's flaw, that it does not consider the opponent's defense, in the same chapter that teaches it. Where the work breaks is equally clear. Its numbers are one expert coach's experience, not measured data, and its techniques are bound to the 1923 code: the passer five yards back, one forward pass per play, no modern hands in blocking, leather-era equipment, and fields and balls that behaved differently. Its medicine and diet rules are period pieces. But the reasoning structures, expected yields by play family, net rather than gross kicking value, turnover cost in yards, layered defense, deception by shared starts, policy with an evidence override, are stated cleanly enough to be lifted out of their era and tested against modern data, which is the only tribute a later system should pay an earlier one.",
+   "retrocausal_genealogy": "The lineage runs from Walter Camp's mass-momentum game of the 1880s and 1890s, through the crisis of 1905 and the legalization of the forward pass in 1906, which slowly converted football from a pushing contest into an open game of space and deception. Wilce coached inside that transition at Ohio State: the shifted-eligibility plays he diagrams date to 1913, the fan pass formations to the Chic Harley years of 1916 to 1919, and the famous finishes he recounts, the 1916 Illinois game, the 1920 Wisconsin and Illinois games, are the pass era announcing itself. The training chapters descend from the same period's physical culture movement, including Camp's own Daily Dozen setting-up drills, which Wilce cites by name.",
+   "theory_of_mind": "Wilce believes the reader, whether a boy trying to make the team or a spectator in the stands, learns a complex system by reduction: two boys first, then four, then eleven, each stage adding one mechanism at a time. His model of the domain is that football is knowable and decomposable, that every play is eleven definite assignments, and that failure is usually a specific man not doing a specific thing rather than a mystery of momentum. As a physician he also models the player as a trainable body whose heart, lungs, and habits set the ceiling on skill. He assumes intelligence is a football quality: the quarterback is chosen for thinking under fire before size, and ends and tackles are specified as diagnosticians who read signs.",
+   "cross_layer_veto": "Several layers in this work veto others outright. The rules layer vetoes technique: hands in an offensive block, feet above the head in a pivot block, or a pass thrown from inside five yards back are not inferior options but illegal ones, excluded before merit is discussed. The ball-security layer vetoes ambition near a team's own goal, where the correct play is an early kick regardless of down. The execution layer vetoes playbook size: a play the team cannot run exactly does not exist for game purposes, however good it looks diagrammed. And the evidence layer vetoes the policy layer, because a found weak spot suspends the zone system and the conservative rules until the defense repairs it."
+  }
+ ],
+ "universal_lens": "Any coordinated team acting under adversarial pressure can be built the way Wilce builds a football team: a hard rule substrate, a small set of exactly rehearsed plays, roles specified by what each member must do for the others, defense arranged in successive layers, deception created by shared beginnings with divergent endings, a default policy indexed to position or state, and one explicit override that lets observed weakness in the opponent suspend the policy. The template separates what is illegal, what is unwise, and what is merely unrehearsed, and it prices mistakes in the same currency as gains.",
+ "gsi_mapping": "The Institute takes the pedagogy and the training science: teach a complex team skill by reduction from two actors to the full system, put fundamentals before live contact, train dangerous skills on dummies before bodies, rotate practice in short periods with a weekly emphasis, and treat conditioning, sleep, and diet as part of the curriculum rather than as private habits. Wilce's position specifications are also a teaching device, showing a student exactly what excellence at his own role consists of before asking him to perform it.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the reasoning structures: expected gain and loss tails by play family, net punt value after coverage and return rather than gross distance, turnover cost expressed in yards of field position, a four-layer model for diagnosing where a defense fails, deception value from companion plays, decoys, and shifted eligibility, a field-zone default policy for play selection, and the weak-spot override as an exception rule that concentrates attack on a demonstrated defensive failure until it is repaired. All of it enters as reasoning structure and prior, to be tested against modern play-by-play data, never as betting content."
+}

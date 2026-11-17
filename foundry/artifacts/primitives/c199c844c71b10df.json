@@ -1,0 +1,794 @@
+{
+ "book_id": "c199c844c71b10df",
+ "source_status": "COMPLETE",
+ "source_note": "Edited volume: Bruno Goncalves, Jorge Bravo and Hugo Folgado (eds.), Training Methods to Improve Sports Performance and Health, MDPI, Basel, 2022; printed edition of the Special Issue published in the International Journal of Environmental Research and Public Health (ISSN 1660-4601), ISBN 978-3-0365-2966-0 (PDF). Local file is the publisher PDF of the full volume: 13 articles, book pages 1-169. File size 10597834 bytes; sha256 over (str(size) encoded + full file bytes) = c199c844c71b10dfadfe1a3456b02fbfeb14606a87342db0ea35781d1cdb77a7, book_id = first 16 hex chars = c199c844c71b10df (matches the expected id). Extracted text is clean born-digital text; two short passages in the Batalha article are column-interleaved in the extraction and were not used as quote sources. The catalog filename orders the editors Goncalves-Bravo-Folgado, matching the title page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "differential_learning_fluctuation_principle",
+   "name": "Differential learning: movement fluctuations are necessary learning material, not errors to be minimized",
+   "verbatim_quote": "In contrast to the traditional training strategy, where fluctuations are considered errors that must be minimized, the DL approach considers the fluctuations in moving systems as potential sources and necessary for learning.",
+   "page": "Arede et al., Section 1, book p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Learner is a self-organizing dynamical system whose state can be destabilized productively",
+    "No two executions of a movement are identical, so a single ideal prototype is unattainable"
+   ],
+   "breakdown_regime": "Fails as a prescription when the task is safety-critical and errors carry injury cost, and when learners have no baseline pattern to perturb",
+   "domain": "motor learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine analogue: inject structured variation into scenario and simulation sampling so the reasoning system builds solutions that are robust across states instead of overfit to one canonical game script.",
+    "source_operator": "differential_learning_fluctuation_principle",
+    "telemetry": "Distribution of performance variants per athlete and per game state; variance of execution outcomes across contexts"
+   }
+  },
+  {
+   "primitive_id": "stochastic_resonance_noise_matching",
+   "name": "Stochastic resonance: added training noise should be optimized (matched to the learner's own noise), not maximized",
+   "verbatim_quote": "Hereby, the noise should be optimized rather than maximized, which is covered by the stochastic resonance principle of the DL-theory",
+   "page": "Arede et al., Section 1, book p. 25",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each learner carries an individual, momentary intrinsic noise level",
+    "Learning response to external noise is an inverted-U with an interior optimum"
+   ],
+   "breakdown_regime": "Breaks when intrinsic noise cannot be estimated; excessive noise destroys the signal and insufficient noise leaves the system in its old attractor",
+   "domain": "motor learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sets the regularization rule for model and athlete development alike: perturbation size, data augmentation strength and scenario randomness are tuned per entity to its measured residual variance, never set globally to maximum.",
+    "source_operator": "stochastic_resonance_noise_matching",
+    "telemetry": "Residual variance of an entity's recent performances; spread between predicted and observed outcomes"
+   }
+  },
+  {
+   "primitive_id": "interpolation_training_range",
+   "name": "Interpolation advantage: performance is better inside the trained range than outside it, so training must widen the range in advance",
+   "verbatim_quote": "Accordingly, the DL theory recommends increasing the range already during training to increase the probability of being able to interpolate in case of emergency or already during the next movement alone",
+   "page": "Arede et al., Section 1, book p. 24",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Test and competition situations are drawn from a wider set than any single drill covers",
+    "Skill transfers by interpolation between experienced variants more reliably than by extrapolation beyond them"
+   ],
+   "breakdown_regime": "Range widening has diminishing returns and costs training time; extreme variants far outside the plausible test range waste capacity",
+   "domain": "motor learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coverage principle for the engine: enumerate the state space a projection must cover (score states, personnel states, fatigue states) and flag any required state that lies outside the envelope supported by evidence as an extrapolation risk.",
+    "source_operator": "interpolation_training_range",
+    "telemetry": "Scenario coverage map: which game states have direct historical support and which are extrapolations"
+   }
+  },
+  {
+   "primitive_id": "optimal_theory_motor_learning",
+   "name": "OPTIMAL theory: motor learning is driven by enhanced expectancies, autonomy support, and an external focus of attention",
+   "verbatim_quote": "Lewthwaite and Wulf proposed the OPTIMAL theory of motor learning, involving two motivational variables (enhanced expectancies and support for autonomy) and an attention variable (e.g., the focus of external attention) affecting optimal performance.",
+   "page": "Oftadeh et al., Section 1, book p. 2",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Motivational and attentional conditions change the neural efficiency of the same physical practice",
+    "External focus on the movement effect outperforms internal focus on body parts"
+   ],
+   "breakdown_regime": "Effects are moderators, not substitutes for practice structure; in the futsal trial every differential learning group beat every traditional group regardless of focus",
+   "domain": "motor learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feedback design rule: present cues aimed at the intended effect in the environment rather than at internal mechanics, and frame feedback to raise expectancy; in engine terms, explain projections through game effects, not through internal model parts.",
+    "source_operator": "optimal_theory_motor_learning",
+    "telemetry": "Cue type used in feedback; athlete confidence and engagement responses after feedback"
+   }
+  },
+  {
+   "primitive_id": "dl_frontal_downregulation_stress_resistance",
+   "name": "Differential learning downregulates frontal lobe activity and is associated with higher stress resistance under pressure",
+   "verbatim_quote": "differential learning is accompanied by a downregulation of the frontal lobe that is associated with higher stress resistance",
+   "page": "Oftadeh et al., Section 2.3, book p. 5",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "EEG evidence cited is for acute and post-task effects, not yet for long-term structural change",
+    "Transfer test used added spectators as the stressor"
+   ],
+   "breakdown_regime": "Neural mechanism is inferential; EEG studies differ in timing (during single movements versus after movement series), so the causal chain is not closed",
+   "domain": "motor learning neuroscience",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Pressure-robustness prior: entities trained under variable, unstable conditions receive a smaller performance discount in high-leverage, observed, late-game states than entities trained under sterile repetition.",
+    "source_operator": "dl_frontal_downregulation_stress_resistance",
+    "telemetry": "Performance split between low-leverage and high-leverage situations; late-game execution metrics"
+   }
+  },
+  {
+   "primitive_id": "contextual_interference_effect",
+   "name": "Contextual interference: practicing skills interleaved impairs acquisition but enhances retention and learning",
+   "verbatim_quote": "The approach is typically associated with two phenomena, namely impaired acquisition on the one hand, and enhanced learning on the other",
+   "page": "Apidogo et al., Section 1, book p. 50",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Working memory load during random practice is higher, which depresses immediate performance",
+    "Retention and transfer tests, not acquisition scores, are the valid measure of learning"
+   ],
+   "breakdown_regime": "Effects are inconsistent for complex multi-degree-of-freedom sport skills in adolescents; the volleyball literature found support mainly in adults",
+   "domain": "motor learning theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evaluation discipline for the engine: never judge a method, model or athlete by blocked in-session performance; require a delayed retention or transfer measurement before promoting it.",
+    "source_operator": "contextual_interference_effect",
+    "telemetry": "Gap between practice-block performance and delayed retention or transfer performance"
+   }
+  },
+  {
+   "primitive_id": "z_standardized_multi_technique_composite",
+   "name": "Composite scoring across unlike tests by z-standardization of the individual technique scores",
+   "verbatim_quote": "To determine the combined multiple techniques, the mean values of the three individual techniques (overhand pass, underhand pass, and overhand service) were adjusted using z-standardization.",
+   "page": "Apidogo et al., Section 2.3, book p. 53",
+   "latex": "z_i = \\frac{x_i - \\bar{x}}{s}",
+   "symbol_and_unit_ledger": {
+    "z_i": "standardized score of test i (dimensionless)",
+    "x_i": "raw score on test i (points)",
+    "\\bar{x}": "group mean of test i (points)",
+    "s": "group standard deviation of test i (points)"
+   },
+   "assumptions": [
+    "Tests are on incompatible raw scales, so raw sums would be dominated by the highest-variance test",
+    "Reference group for the mean and standard deviation is the tested cohort itself"
+   ],
+   "breakdown_regime": "Composites are cohort-relative: a z-composite cannot be compared across different reference groups or across time without re-anchoring",
+   "domain": "measurement and scoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Direct kernel for combining heterogeneous indicators (jump, sprint, skill tests, or model features) into one comparable score: standardize each component against its reference distribution before any weighting or summation.",
+    "source_operator": "z_standardized_multi_technique_composite",
+    "telemetry": "Raw test battery results with cohort means and standard deviations per component"
+   }
+  },
+  {
+   "primitive_id": "differential_repeated_sprint_training_protocol",
+   "name": "Differential repeated sprint training protocol: two sets of ten 20 m sprints, 30 s between sprints, 3 min between sets, with a different instructed fluctuation before each sprint",
+   "verbatim_quote": "The differential repeated sprint training was comprised by two sets of ten sprints of 20 m with 30 s of passive recovery between sprints and 3 min of passive recovery between sets.",
+   "page": "Arede et al., Section 2.3, book p. 26",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fluctuation instructions vary joint angles, rhythms, gaze, arm and trunk positions; no instructed fluctuation is repeated within a session",
+    "Pilot evidence: nine female basketball players, four weeks; significant time effects for 0-10 m sprint, countermovement jump and single-leg jump asymmetry"
+   ],
+   "breakdown_regime": "Pilot scale with post hoc power between 0.11 and 0.25; no non-differential control group, so the differential component is not isolated from plain repeated sprint training",
+   "domain": "training protocol design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Template for variability-loaded conditioning: keep the metabolic skeleton of a session fixed and randomize the execution constraints rep by rep when the goal is adaptable speed rather than a single grooved pattern.",
+    "source_operator": "differential_repeated_sprint_training_protocol",
+    "telemetry": "Sprint split times, jump battery and asymmetry indices before and after a training block"
+   }
+  },
+  {
+   "primitive_id": "reactive_strength_index",
+   "name": "Reactive strength index: jump height divided by ground contact time in a drop jump",
+   "verbatim_quote": "The reactive strength index (RSI) was automatically calculated using Optojump Next software, version 1.12.1.0, through the following formula: jump height/contact time",
+   "page": "Arede et al., Section 2.4, book p. 28",
+   "latex": "RSI = \\frac{JH}{CT}",
+   "symbol_and_unit_ledger": {
+    "RSI": "reactive strength index (reported in m/s in the source tables)",
+    "JH": "jump height after the drop landing",
+    "CT": "ground contact time during the drop jump"
+   },
+   "assumptions": [
+    "Drop jump performed from a 30 cm box with hands on hips and instruction to jump as high as possible with the shortest contact time",
+    "Measured here with an infrared optical system (OptoJump Next)"
+   ],
+   "breakdown_regime": "Ratio hides which component moved: RSI can rise from a lower jump with much shorter contact; always inspect height and contact time separately",
+   "domain": "neuromuscular measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable kernel for explosive reactive capacity: a single ratio that prices how much height an athlete buys per unit of ground time, usable as a readiness and fatigue feature.",
+    "source_operator": "reactive_strength_index",
+    "telemetry": "Drop jump height and contact time from jump mat or optical system, per athlete per session"
+   }
+  },
+  {
+   "primitive_id": "limb_asymmetry_index_bishop",
+   "name": "Bishop limb asymmetry index: percentage shortfall of the weaker side relative to the stronger side",
+   "verbatim_quote": "The lower limb asymmetry index (ASI) was determined by adhering to the procedures described by Bishop and colleagues [40] using the following formula: ASI = 100/Max Value (right and left)*Min Value (right and left)* − 1 + 100.",
+   "page": "Arede et al., Section 2.4, book p. 28",
+   "latex": "ASI = \\frac{100}{\\max(V_R, V_L)} \\cdot \\min(V_R, V_L) \\cdot (-1) + 100",
+   "symbol_and_unit_ledger": {
+    "ASI": "asymmetry index (percent)",
+    "V_R": "right-side test value (same units as V_L)",
+    "V_L": "left-side test value (same units as V_R)",
+    "\\max, \\min": "larger and smaller of the two side values"
+   },
+   "assumptions": [
+    "Formula as printed in the source; it simplifies algebraically to 100 x (1 - min/max)",
+    "Applies to any bilateral test pair: jumps, change-of-direction times, strength"
+   ],
+   "breakdown_regime": "Percentage asymmetry is scale-free but unstable when both values are small or noisy; direction of asymmetry (which side) is discarded and must be stored separately",
+   "domain": "neuromuscular measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable kernel for bilateral imbalance: converts any left-right test pair into a 0-100 percent shortfall score that can be tracked over time and compared across different tests.",
+    "source_operator": "limb_asymmetry_index_bishop",
+    "telemetry": "Paired left and right values from unilateral jumps, 505 tests, or dynamometry"
+   }
+  },
+  {
+   "primitive_id": "change_of_direction_deficit",
+   "name": "Change-of-direction deficit: double 180 degree COD time minus 10 m sprint time, isolating turning cost from linear speed",
+   "verbatim_quote": "The COD deficit (CODD) for the double 180◦ COD test for each leg was calculated via the following formula: mean double 180◦ COD time—mean 10 m time",
+   "page": "Arede et al., Section 2.4, book p. 28",
+   "latex": "CODD = \\bar{t}_{180^{\\circ} COD} - \\bar{t}_{10m}",
+   "symbol_and_unit_ledger": {
+    "CODD": "change-of-direction deficit (s)",
+    "\\bar{t}_{180^{\\circ} COD}": "mean time of the double 180 degree change-of-direction test (s)",
+    "\\bar{t}_{10m}": "mean 10 m sprint time (s)"
+   },
+   "assumptions": [
+    "Both tests timed with the same photoelectric cell setup",
+    "Deficit attributes the time above pure sprint time to deceleration, turning and reacceleration"
+   ],
+   "breakdown_regime": "Deficit inherits error from both tests; a faster 10 m time mechanically raises the deficit even if turning is unchanged",
+   "domain": "neuromuscular measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable kernel that separates turning ability from straight-line speed, so a projection does not credit a fast sprinter with agility he does not have, or blame a good cutter for slow top speed.",
+    "source_operator": "change_of_direction_deficit",
+    "telemetry": "505 or double-180 test times and 10 m split times per athlete and per side"
+   }
+  },
+  {
+   "primitive_id": "constraints_led_task_manipulation",
+   "name": "Constraints-led approach: manipulate space, time, rules, goals or player numbers so players explore and self-organize tactical solutions",
+   "verbatim_quote": "coaches should manipulate task constraints during the SSG such as space, time, rules, goals, or number of players in order to create learning environments where players can interact with their teammates and opponents to explore opportunities for action and adapt to the specific tactical context.",
+   "page": "Gonzalez-Rodenas et al., Section 1, book p. 102",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Perception-action coupling must be preserved: the simplified task still contains the information of the real game",
+    "Coach withholds direct instructions so solutions are discovered, not copied"
+   ],
+   "breakdown_regime": "Constraint changes interact; a manipulation that helps one game principle can suppress another, so effects are principle-specific, not global",
+   "domain": "task design and ecological dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Design grammar for matchup reasoning: a game situation is a constraint set (numbers, space, rest, rules), and changing one constraint predictably re-weights which actions become available; the engine reasons over constraint sets, not over drills.",
+    "source_operator": "constraints_led_task_manipulation",
+    "telemetry": "Task constraint settings per training or game scenario with the action frequencies they produced"
+   }
+  },
+  {
+   "primitive_id": "player_number_affordances",
+   "name": "Player-number affordance law: 2v2 futsal promotes 1v1 dribbling and shooting, 3v3 promotes passing, possession and collective tactical behaviour",
+   "verbatim_quote": "game format seems to promote more 1vs1 situations, the 3vs3 game format encourages more ball possession and collective tactical behaviours.",
+   "page": "Pizarro et al., Abstract, book p. 13",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Measured as actions per minute per player under a fixed player-space ratio in U19 male futsal players",
+    "Effects are stated per game principle: progression beating a defensive line favours 2v2; progression without beating a line favours 3v3"
+   ],
+   "breakdown_regime": "Youth futsal sample; transfer to other sports and age groups is an analogy, not a measured result",
+   "domain": "task design and ecological dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Prior for personnel and lineup reasoning: reducing the number of actors on a unit raises individual creation and finishing shares, adding actors raises circulation and collective progression; lineup projections should shift action shares accordingly.",
+    "source_operator": "player_number_affordances",
+    "telemetry": "Per-format action counts (passes, dribbles, shots) classified by game principle"
+   }
+  },
+  {
+   "primitive_id": "pitch_area_per_player_invariance",
+   "name": "Pitch geometry comparison control: change pitch shape (standard, long, wide) while holding area per player constant at 132 m2",
+   "verbatim_quote": "Although the pitch configuration was changed, the area per player was maintained stable across the three formats.",
+   "page": "Gonzalez-Rodenas et al., Section 2.2, book p. 104",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Standard 53 x 38 m, long 63 x 32 m, wide 43 x 47 m in a 7 vs 7 plus floater format",
+    "Wide and long shapes produced more counterattacks, offensive penetration and goal scoring opportunities than standard at equal density"
+   ],
+   "breakdown_regime": "Shape and size are confounded in most real settings; holding density constant is an experimental control, not a property of actual venues",
+   "domain": "task design and ecological dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Normalization rule: when comparing spatial behaviour across venues or formats, first divide by area per player so shape effects are not mistaken for density effects; court and field geometry then enter projections as shape parameters.",
+    "source_operator": "pitch_area_per_player_invariance",
+    "telemetry": "Pitch dimensions, player counts, and per-shape tactical indicator rates"
+   }
+  },
+  {
+   "primitive_id": "interobserver_reliability_percent_agreement",
+   "name": "Interobserver reliability as percent agreement: agreements divided by agreements plus disagreements, times 100",
+   "verbatim_quote": "Interobserver reliability was calculated using the following formula: agreements/(agreements + disagreements) × 100.",
+   "page": "Pizarro et al., Section 2.3, book pp. 15-16",
+   "latex": "R = \\frac{A}{A + D} \\times 100",
+   "symbol_and_unit_ledger": {
+    "R": "interobserver reliability (percent)",
+    "A": "number of coding agreements between observers",
+    "D": "number of coding disagreements between observers"
+   },
+   "assumptions": [
+    "Used here as a gate before Cohen's kappa; the study required values above 0.90 kappa for coding to proceed",
+    "Percent agreement does not correct for chance agreement"
+   ],
+   "breakdown_regime": "Inflated when one category dominates the coding; must be paired with a chance-corrected statistic such as kappa before data are trusted",
+   "domain": "performance analysis measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Data-quality gate kernel: any human-coded or model-coded event stream entering the engine carries an agreement score, and streams below threshold are re-coded before they can move a projection.",
+    "source_operator": "interobserver_reliability_percent_agreement",
+    "telemetry": "Double-coded event samples with agreement and disagreement counts"
+   }
+  },
+  {
+   "primitive_id": "ischemic_preconditioning_protocol",
+   "name": "Ischemic preconditioning protocol: four cycles of 5 min cuff occlusion and 5 min reperfusion (220 mmHg local thigh; systolic plus 30 mmHg remote arm; 20 mmHg sham)",
+   "verbatim_quote": "This occlusion procedure was repeated 4 times, each separated by 5 min of reperfusion",
+   "page": "Cheng et al., Section 2.4, book p. 42",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Bilateral simultaneous occlusion at the most proximal limb segment",
+    "Local (same muscle group as the exercise) and remote (different limb) variants both tested against sham and control"
+   ],
+   "breakdown_regime": "Participants can feel the pressure difference, so blinding is incomplete and placebo or nocebo effects cannot be excluded",
+   "domain": "ergogenic intervention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Priming template: a short, repeated stress-recovery cycle applied before performance can raise the system's subsequent output ceiling; in load management this schedules preconditioning-style primers before high-value sessions.",
+    "source_operator": "ischemic_preconditioning_protocol",
+    "telemetry": "Cuff pressure, cycle count, occlusion and reperfusion durations, and subsequent session output"
+   }
+  },
+  {
+   "primitive_id": "percentage_decrement_score",
+   "name": "Percentage decrement score: fatigue across repeated sprints as 100 minus the ratio of total to ideal sprint power, times 100",
+   "verbatim_quote": "The ideal sprint power was defined as the number of sprints × highest peak/mean power output.",
+   "page": "Cheng et al., Section 2.5, book p. 42",
+   "latex": "\\%Dec = 100 - \\left( \\frac{\\sum_i P_i}{n \\cdot P_{best}} \\times 100 \\right)",
+   "symbol_and_unit_ledger": {
+    "\\%Dec": "percentage decrement score (percent)",
+    "P_i": "peak or mean power output of sprint i (W)",
+    "n": "number of sprints",
+    "P_{best}": "highest peak or mean power output among the sprints (W)"
+   },
+   "assumptions": [
+    "Total sprint power is the sum of the individual sprint outputs; ideal power assumes every sprint equals the best sprint",
+    "Applied here to six 30 s Wingate-based sprints with 4 min rests"
+   ],
+   "breakdown_regime": "Sensitive to one outlier best sprint: a single exceptional first sprint inflates the decrement of all later sprints",
+   "domain": "exercise physiology measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable fatigue kernel: one number that prices how much output an athlete loses across repeated maximal efforts, directly usable as a fourth-quarter or late-game decay feature.",
+    "source_operator": "percentage_decrement_score",
+    "telemetry": "Per-sprint peak and mean power outputs across a repeated sprint series"
+   }
+  },
+  {
+   "primitive_id": "pcr_resynthesis_kinetics",
+   "name": "Phosphocreatine recovery kinetics: about 65 percent restored after 1.5 min rest and 86 percent after 6 min rest following a 30 s maximal sprint",
+   "verbatim_quote": "PCr availability can be restored to 65% of the rest value after 1.5 min of post-exercise rest, or 86% after 6 min of post-exercise rest",
+   "page": "Cheng et al., Section 1, book p. 40",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Values cited from Bogdanis et al. for a single 30 s Wingate sprint",
+    "Explains why preconditioning showed no benefit with 10 min rest intervals: recovery was already nearly complete without it"
+   ],
+   "breakdown_regime": "Population averages from one protocol; individual resynthesis rates vary with training status and muscle mass",
+   "domain": "exercise physiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rest-interval prior for repeated-effort modelling: expected available capacity as a function of seconds since the last maximal effort, with anchor points at 1.5 and 6 minutes, governs rotation and snap-share projections.",
+    "source_operator": "pcr_resynthesis_kinetics",
+    "telemetry": "Rest intervals between maximal efforts and the output of the following effort"
+   }
+  },
+  {
+   "primitive_id": "ipc_metabolic_efficiency",
+   "name": "Ischemic preconditioning raises total work and fatigue resistance in sprint interval exercise without changing lactate or pH: a metabolic efficiency gain",
+   "verbatim_quote": "Thus, LIPC and RIPC can improve the total work and the fatigue resistance of SIE without contributing to the acidic environment in the body, which indicates that LIPC and RIPC can improve the metabolic efficiency of SIE.",
+   "page": "Cheng et al., Section 4, book p. 45",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Total work rose about 2.2 percent (local) and 2.5 percent (remote) versus control in 15 collegiate basketball players",
+    "Proposed mechanisms: faster phosphocreatine resynthesis, vasodilation and oxygen delivery, mitochondrial ATP-dependent potassium channel function"
+   ],
+   "breakdown_regime": "Benefit appears only when total exercise time is extended; single sprints under 10 s and short sprint sets show negligible effects in the cited literature",
+   "domain": "ergogenic intervention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Efficiency test for any intervention claim: output gained at equal metabolic cost is a real efficiency gain; output gained by spending more is not. The engine scores interventions on output per unit of physiological cost.",
+    "source_operator": "ipc_metabolic_efficiency",
+    "telemetry": "Total work, power outputs, blood lactate and pH before and after intervention"
+   }
+  },
+  {
+   "primitive_id": "edwards_trimp",
+   "name": "Edwards training impulse: sum over heart-rate zones of time in zone multiplied by the zone weighting factor (1 to 5 for 50-60 up to 90-100 percent HRmax)",
+   "verbatim_quote": "The method to determine the athlete's TRIMP in the current study is based on the formula proposed by Edwards [16], where the time in each HRmax% zone is multiplied by the corresponding weighting factor for that zone and the results summated",
+   "page": "Liu et al., Section 2.2, book p. 69",
+   "latex": "TRIMP = \\sum_{z=1}^{5} t_z \\cdot w_z",
+   "symbol_and_unit_ledger": {
+    "TRIMP": "training impulse (arbitrary load units)",
+    "t_z": "time spent in heart-rate zone z (min)",
+    "w_z": "weighting factor of zone z: 1, 2, 3, 4, 5 for 50-60, 60-70, 70-80, 80-90, 90-100 percent of HRmax"
+   },
+   "assumptions": [
+    "Zones are defined as percentages of the individual's measured HRmax",
+    "Weighting is linear in zone number, a deliberate simplification of the exponential Banister weighting"
+   ],
+   "breakdown_regime": "Heart rate lags and drifts: cardiac drift inflates late-session zone time, and HR does not capture neuromuscular load of sprinting or jumping",
+   "domain": "training load monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable session-load kernel: converts a heart-rate trace into one load number with intensity weighting, the basic input for workload, freshness and injury-risk features.",
+    "source_operator": "edwards_trimp",
+    "telemetry": "Second-by-second or minute-by-minute heart-rate zone distribution per session"
+   }
+  },
+  {
+   "primitive_id": "lactate_clearance_rate",
+   "name": "Lactate clearance rate at 10 min: peak-to-10-minute drop divided by the peak-to-resting span, times 100 percent",
+   "verbatim_quote": "where LA10 % means the lactate clearance rate at 10 min after testing, LAmax represents the peak lactic value after testing, LA10 is the lactate value at 10 min after testing and LArest the value of lactate before testing.",
+   "page": "Liu et al., Section 2.3.2, book pp. 70-71",
+   "latex": "LA_{10}\\% = \\frac{LA_{max} - LA_{10}}{LA_{max} - LA_{rest}} \\times 100\\%",
+   "symbol_and_unit_ledger": {
+    "LA_{10}\\%": "lactate clearance rate at 10 min after exercise (percent)",
+    "LA_{max}": "peak blood lactate after exercise (mmol/L)",
+    "LA_{10}": "blood lactate 10 min after exercise (mmol/L)",
+    "LA_{rest}": "resting blood lactate before exercise (mmol/L)"
+   },
+   "assumptions": [
+    "Blood sampled at rest and at 0, 1, 3, 5, 7 and 10 min after an incremental test to exhaustion",
+    "Sprint interval training raised the rate from 13 to 21 percent (men) and 21 to 27 percent (women) in elite badminton players"
+   ],
+   "breakdown_regime": "A single 10 min window misses the curve shape; two athletes with equal LA10 can have different early clearance, and the peak must be captured to anchor the ratio",
+   "domain": "exercise physiology measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable recovery kernel: expresses recovery as the fraction of the lactate excursion already cleared, a normalized recovery-speed feature comparable across athletes with different peak values.",
+    "source_operator": "lactate_clearance_rate",
+    "telemetry": "Serial post-exercise blood lactate values with resting baseline"
+   }
+  },
+  {
+   "primitive_id": "ventilatory_threshold_criteria",
+   "name": "Ventilatory threshold detection: the point where VE/VCO2 inflects upward non-linearly and VE/VO2 rises sharply",
+   "verbatim_quote": "In the incremental load test, the VT value is determined (i) when the ratio of ventilation (VE) to carbon dioxide production (VCO2) shows a non-linear increase in the inflection point",
+   "page": "Liu et al., Section 2.3.2, book p. 70",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two independent investigators determine the threshold; disagreements beyond a small tolerance trigger re-determination, otherwise the average is taken",
+    "Threshold expressed both absolutely (VT-VO2) and as a percentage of VO2max"
+   ],
+   "breakdown_regime": "Visual inflection detection is rater-dependent; breathing pattern irregularities can create false inflections",
+   "domain": "exercise physiology measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Threshold-detection template: a regime change is declared only when two related ratio signals agree (one inflects, the other rises sharply), and dual independent reads with an adjudication rule set the value; the same pattern governs any breakpoint feature in the engine.",
+    "source_operator": "ventilatory_threshold_criteria",
+    "telemetry": "Breath-by-breath ventilation, VO2 and VCO2 series from incremental tests"
+   }
+  },
+  {
+   "primitive_id": "position_specific_logistic_selection",
+   "name": "Position-specific logistic selection: in a 14-test battery only agility (forwards) and right handgrip strength (backs) predicted U19 rugby national team recruitment",
+   "verbatim_quote": "Better (lower) scores on the agility test were associated with an increased likelihood of being recruited to the national team",
+   "page": "Vaz et al., Section 3, book p. 83",
+   "latex": "\\operatorname{logit} P(\\mathrm{recruited}) = \\beta_0 + \\beta_1 x_1 + \\dots + \\beta_k x_k",
+   "symbol_and_unit_ledger": {
+    "P(\\mathrm{recruited})": "probability of national team selection",
+    "\\beta_0": "intercept of the position-specific model",
+    "\\beta_j": "coefficient of test j; reported values: agility beta = -0.56 for forwards, right handgrip beta = 0.13 for backs",
+    "x_j": "score on fitness or anthropometric test j"
+   },
+   "assumptions": [
+    "Separate forward logistic models per playing position (forwards n = 106, backs n = 78 of 184 players)",
+    "Models explained only 12.4 percent (forwards) and 14.3 percent (backs) of selection variance while classifying about 80 percent of cases"
+   ],
+   "breakdown_regime": "Most of selection is not in the fitness battery: technical, tactical and psychological factors dominate the unexplained share, so the model must not be read as a complete selection rule",
+   "domain": "talent identification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Selection-model template with an honesty constraint: fit sparse position-specific models, report explained variance next to accuracy, and let the unexplained share cap how much any single test can move a projection.",
+    "source_operator": "position_specific_logistic_selection",
+    "telemetry": "Fitness battery scores, playing position, and the binary selection outcome"
+   }
+  },
+  {
+   "primitive_id": "wald_predictive_coefficient",
+   "name": "Wald predictive coefficient: ten times the base-10 logarithm of the likelihood ratio of an indicator's frequency in the success group versus the comparison group",
+   "verbatim_quote": "The Wald test was used as a tool for solving the predictive problem [17,18]. The method is a predictive table, which includes predictive coefficients of signs and their informativeness.",
+   "page": "Podrihalo et al., Section 2.3, book p. 117",
+   "latex": "pc = 10 \\cdot \\log \\frac{p_1 \\cdot (d_1/s)}{p_2 \\cdot (d_2/s)}",
+   "symbol_and_unit_ledger": {
+    "pc": "predictive coefficient (points)",
+    "p_1, p_2": "probability of exceeding the group average in group 1 (athletes) and group 2 (non-athletes)",
+    "d_1, d_2": "number of persons above the average in group 1 and group 2",
+    "s": "total number of persons in the group"
+   },
+   "assumptions": [
+    "Formula as printed in the source (Gubler's form of the Wald sequential analysis)",
+    "Coefficients are computed separately for the indicator being present above the average and for it being below"
+   ],
+   "breakdown_regime": "Coefficients assume conditional independence of indicators; correlated indicators double-count evidence when summed",
+   "domain": "anthropometric prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable evidence-weight kernel: each indicator contributes a signed log-likelihood weight, the exact arithmetic of a transparent additive evidence score that an engine can audit line by line.",
+    "source_operator": "wald_predictive_coefficient",
+    "telemetry": "Per-indicator frequencies in success and comparison groups"
+   }
+  },
+  {
+   "primitive_id": "wald_informativeness_ordering",
+   "name": "Order the prediction table by descending Kullback informativeness so the most informative indicators are checked first and the procedure stops early",
+   "verbatim_quote": "The indicators in the table are arranged in descending order of informativeness. This minimizes the number of steps in the predicting procedure and reduces the number of possible errors.",
+   "page": "Podrihalo et al., Section 3, book p. 118",
+   "latex": "i = pc \\cdot 0.5 \\cdot \\frac{p_1 \\cdot (d_1/s)}{p_2 \\cdot (d_2/s)}",
+   "symbol_and_unit_ledger": {
+    "i": "informativeness of the indicator (as printed in the source)",
+    "pc": "predictive coefficient of the indicator (points)",
+    "p_1, p_2, d_1, d_2, s": "as defined for the predictive coefficient"
+   },
+   "assumptions": [
+    "Informativeness formula as printed in the source",
+    "Indicators with informativeness at or below 30.0 are treated as insignificant and excluded; the retained table held nine indicators with informativeness from 395.70 down to 31.98"
+   ],
+   "breakdown_regime": "Informativeness is estimated on the same small samples (15 per group) that supply the coefficients, so rankings carry sampling noise",
+   "domain": "anthropometric prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feature-ranking kernel: order evidence checks by expected information gain so the engine evaluates the most decisive signals first and can stop as soon as a decision threshold is crossed.",
+    "source_operator": "wald_informativeness_ordering",
+    "telemetry": "Per-indicator informativeness values computed from group frequency tables"
+   }
+  },
+  {
+   "primitive_id": "wald_threshold_decision_rule",
+   "name": "Wald sequential decision rule: sum predictive coefficients until +13 (probable success) or -13 (probable failure) at a 5 percent error level; if neither is reached, the prediction is uncertain",
+   "verbatim_quote": "Upon reaching the threshold (+13), a conclusion is made about the high probability of success and growth of athletes' skills (p < 0.05).",
+   "page": "Podrihalo et al., Section 3, book p. 118",
+   "latex": "\\sum_i pc_i \\geq +13 \\Rightarrow \\text{high probability of success}; \\quad \\sum_i pc_i \\leq -13 \\Rightarrow \\text{low probability}",
+   "symbol_and_unit_ledger": {
+    "pc_i": "predictive coefficient of indicator i (points, signed by presence or absence)",
+    "13": "decision threshold in points corresponding to a 5 percent allowable error; the source notes thresholds from 8 to 30 points trade error between 80 and 99.9 percent confidence"
+   },
+   "assumptions": [
+    "Each inspected indicator adds its availability coefficient if present and its absence coefficient if not",
+    "Seven to ten indicators are considered sufficient for a reliable table"
+   ],
+   "breakdown_regime": "The uncertain zone is a designed outcome, not a failure; forcing a verdict inside the thresholds silently raises the error rate above the stated 5 percent",
+   "domain": "anthropometric prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision architecture for the engine: accumulate signed evidence weights and act only outside pre-set thresholds, with an explicit abstention zone between them; this is the structural form of a pass discipline with a priced error rate.",
+    "source_operator": "wald_threshold_decision_rule",
+    "telemetry": "Running sum of evidence weights per decision, with threshold crossings logged"
+   }
+  },
+  {
+   "primitive_id": "erisman_index",
+   "name": "Erisman index of chest development: chest circumference at rest minus half body length",
+   "verbatim_quote": "where ie is the index, t is the chest circumference at rest (cm), and l is the body length (cm).",
+   "page": "Podrihalo et al., Section 2.2, book p. 117",
+   "latex": "i_e = t - 0.5 \\cdot l",
+   "symbol_and_unit_ledger": {
+    "i_e": "Erisman index (cm)",
+    "t": "chest circumference at rest (cm)",
+    "l": "body length (cm)"
+   },
+   "assumptions": [
+    "Negative values indicate disharmonious development relative to body length in this population",
+    "One of nine indicators in the artistic swimming prediction table (coefficient +2.4 if below 0 cm)"
+   ],
+   "breakdown_regime": "A population-specific proportionality rule; the 0.5 factor is a norm for school-age cohorts, not a biological constant",
+   "domain": "anthropometric prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable proportionality kernel: a one-line index that prices a body dimension against body size, the pattern for all size-normalized features in the engine.",
+    "source_operator": "erisman_index",
+    "telemetry": "Chest circumference at rest and body length per athlete"
+   }
+  },
+  {
+   "primitive_id": "proper_vital_capacity_formula",
+   "name": "Proper (predicted) vital lung capacity from body length and age, the denominator of the VLC ratio used as the top prediction indicator",
+   "verbatim_quote": "The proper vital lung capacity (pvlc) was calculated using the formula:",
+   "page": "Podrihalo et al., Section 2.2, book p. 117",
+   "latex": "pvlc = (l \\cdot 0.041) - (b \\cdot 0.018) - 3.7",
+   "symbol_and_unit_ledger": {
+    "pvlc": "proper (predicted) vital lung capacity, in the same units as the measured VLC",
+    "l": "body length (cm)",
+    "b": "age (years)"
+   },
+   "assumptions": [
+    "The ratio of actual VLC to proper VLC above 1 was the single most informative indicator in the table (informativeness 395.70, coefficient +10.8)",
+    "Coefficients are population norms for the studied school-age cohort"
+   ],
+   "breakdown_regime": "Prediction equations extrapolate badly outside the age and population range they were fitted on",
+   "domain": "anthropometric prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable expectation kernel: compare a measured capacity against a size-and-age predicted value and carry the ratio, not the raw value, into decisions; the same actual-over-expected pattern prices player output against expectation.",
+    "source_operator": "proper_vital_capacity_formula",
+    "telemetry": "Measured vital lung capacity, body length and age per athlete"
+   }
+  },
+  {
+   "primitive_id": "cpscods_combined_training",
+   "name": "Combined plyometric plus sprint-with-COD training, twice weekly for 8 weeks, improves jump, sprint, COD, repeated COD and balance in U15 soccer players",
+   "verbatim_quote": "Adding twice-weekly CPSCoD training to standard training improves the anaerobic performance of U15 male soccer players.",
+   "page": "Aloui et al., Abstract, book p. 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Experimental group replaced the technical-tactical part of two weekly sessions; plyometric contacts progressed from 72 to 144 per session across the 8 weeks",
+    "All performance measures showed test reliability ICC above 0.80 and CV below 5 percent in this research group's battery"
+   ],
+   "breakdown_regime": "Single team sample (17 experimental, 16 control); the repeated-COD fatigue index did not improve, so the programme does not transfer to fatigue resistance within the test",
+   "domain": "training protocol design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Programme-composition prior: pairing an explosive primer with the target quality in the same drill (jump then sprint with a turn) transfers across jump, sprint and balance outcomes simultaneously, which supports combined rather than isolated physical preparation blocks.",
+    "source_operator": "cpscods_combined_training",
+    "telemetry": "Jump, sprint, COD and balance test results before and after a training block"
+   }
+  },
+  {
+   "primitive_id": "percentage_change_metric",
+   "name": "Percentage change: post-training minus pre-training value, divided by the pre-training value, times 100",
+   "verbatim_quote": "Percentage changes were calculated as ((post-training value−pre-training value)/pre-training value) ×100.",
+   "page": "Aloui et al., Section 2.5, book p. 91",
+   "latex": "\\%\\Delta = \\frac{post - pre}{pre} \\times 100",
+   "symbol_and_unit_ledger": {
+    "\\%\\Delta": "percentage change (percent)",
+    "post": "post-training value of the measure",
+    "pre": "pre-training value of the measure (same units as post)"
+   },
+   "assumptions": [
+    "Used throughout the volume's intervention studies to express training effects on a common scale",
+    "Sign convention flips for timed tests, where a negative change is an improvement"
+   ],
+   "breakdown_regime": "Percentage change explodes when the baseline is near zero and hides absolute magnitude; report it beside the raw change",
+   "domain": "measurement and scoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable change kernel: the standard effect expression for pre-post comparisons in the engine's tracking of athletes, lines and model versions.",
+    "source_operator": "percentage_change_metric",
+    "telemetry": "Paired pre and post values of any tracked measure"
+   }
+  },
+  {
+   "primitive_id": "instability_strength_deficit",
+   "name": "Instability deficit: exercising on unstable devices decreases strength, power and movement speed versus stable execution (review average strength deficit 29 percent in the cited Behm and Colado review)",
+   "verbatim_quote": "Instability compared to a stable condition decreases the parameters of strength, power, and muscular speed in adults.",
+   "page": "Marquina et al., Section 5, book p. 146",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Systematic review of nine controlled studies on Swiss balls, semi-sphere balls and suspension devices in healthy adults",
+    "Exception in the reviewed evidence: at intensities near 1RM no strength difference was observed, and high-repetition upper-limb power could improve late in a set"
+   ],
+   "breakdown_regime": "The underlying studies are heterogeneous in load, device and contraction type, with strength losses ranging from about 6 to 75 percent, so the average deficit is a prior, not a constant",
+   "domain": "resistance training science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Trade-off prior: adding a stability demand taxes prime-mover output because stabilizers take priority; the engine applies the same logic to any dual-task cost, expecting peak output to fall when a second control task is added.",
+    "source_operator": "instability_strength_deficit",
+    "telemetry": "Force, power and velocity outputs for the same exercise under stable and unstable conditions"
+   }
+  },
+  {
+   "primitive_id": "er_ir_shoulder_balance_ratio",
+   "name": "Shoulder rotator balance ratio: external rotator strength divided by internal rotator strength, times 100",
+   "verbatim_quote": "The ER/IR ratio assessment can be a useful measure to identify muscle imbalances in the swimmers' shoulders, and it is also associated with shoulder injuries",
+   "page": "Batalha et al., Section 4, book pp. 127-128",
+   "latex": "\\text{ER/IR ratio} = \\frac{ER}{IR} \\times 100",
+   "symbol_and_unit_ledger": {
+    "ER/IR ratio": "shoulder rotator balance (percent)",
+    "ER": "maximal isometric external rotator torque or force",
+    "IR": "maximal isometric internal rotator torque or force (same units as ER)"
+   },
+   "assumptions": [
+    "Ratio defined in the source methods as [(ER/IR) x 100], measured bilaterally with a hand-held dynamometer at 90 degrees shoulder abduction, prone",
+    "Previous normative data cited in the source consider ER/IR ratios between 66 and 75 percent to be adequate; baseline ratios in the sample were about 78 percent",
+    "A single swim session did not significantly change strength or balance in males, while the female non-dominant ratio fell (p < 0.01, d = 0.366)"
+   ],
+   "breakdown_regime": "A ratio can stay constant while both sides weaken; track ER and IR absolutes alongside the ratio before clearing an athlete for post-session strength work",
+   "domain": "shoulder health monitoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable balance kernel: antagonist-to-agonist strength as a percentage, the monitoring form for any paired opposing capacities whose imbalance precedes breakdown.",
+    "source_operator": "er_ir_shoulder_balance_ratio",
+    "telemetry": "Isometric internal and external rotator strength per shoulder, dominant and non-dominant"
+   }
+  },
+  {
+   "primitive_id": "vo2peak_intensity_dose_window",
+   "name": "VO2 peak dose finding: moderate-to-vigorous and vigorous intensity give the largest CRF gains in cardiac rehabilitation, with interventions of 6 to 12 weeks most effective",
+   "verbatim_quote": "Interventions to enhance CRF in patients with CVD are most effective if conducted for 6 to 12 weeks.",
+   "page": "Goncalves et al., Section 5, book p. 166",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Meta-analysis of 16 randomized controlled trials, 969 cardiovascular patients",
+    "Relative VO2 peak SMD: moderate 0.71, moderate-to-vigorous 1.84, vigorous 1.80; vigorous interventions longer than 12 weeks lost significance"
+   ],
+   "breakdown_regime": "Headline categories carry I squared of 91 to 95 percent and the moderate-to-vigorous stratum showed significant publication bias (Egger p = 0.00), so the ranking is a prior with wide uncertainty",
+   "domain": "clinical exercise prescription",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Dose-window prior: adaptation to a stimulus is a function of intensity band and programme length jointly, with an interior optimum; more weeks at top intensity is not monotonically better, a pattern the engine applies to any training-load projection.",
+    "source_operator": "vo2peak_intensity_dose_window",
+    "telemetry": "Intervention intensity category, programme length in weeks, and pre-post VO2 peak per trial"
+   }
+  },
+  {
+   "primitive_id": "met_to_vo2_conversion",
+   "name": "MET conversion: outcomes in metabolic equivalents are converted to relative VO2 by multiplying by 3.5 mL per kg per min",
+   "verbatim_quote": "Outcomes reported in METs were converted to relative terms (METs × 3.5 mL-kg−1 -min−1 )",
+   "page": "Goncalves et al., Section 2.4, book p. 154",
+   "latex": "\\dot{V}O_2 \\; [\\mathrm{mL \\cdot kg^{-1} \\cdot min^{-1}}] = METs \\times 3.5",
+   "symbol_and_unit_ledger": {
+    "METs": "metabolic equivalents (dimensionless multiples of resting oxygen cost)",
+    "3.5": "conversion constant, mL of O2 per kg per min per MET, as applied in the source",
+    "\\dot{V}O_2": "relative oxygen uptake (mL per kg per min)"
+   },
+   "assumptions": [
+    "Used to harmonize outcomes reported in METs with outcomes reported as relative VO2 peak before pooling",
+    "The same review cites a 20 percent reduction in all-cause mortality per 1 MET improvement in cardiorespiratory fitness"
+   ],
+   "breakdown_regime": "The 3.5 constant is a population convention; measured resting oxygen cost varies individually, so converted values carry a systematic error for any single patient",
+   "domain": "clinical exercise prescription",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Computable unit kernel: one fixed exchange rate between a clinical unit and an engine unit, the pattern for every unit harmonization step before data from different sources are pooled.",
+    "source_operator": "met_to_vo2_conversion",
+    "telemetry": "Outcome values reported in METs alongside values reported in mL per kg per min"
+   }
+  },
+  {
+   "primitive_id": "acsm_intensity_strata",
+   "name": "ACSM intensity stratification: every programme is classified light, moderate or vigorous by cut-offs on percent VO2max, percent HRpeak, percent HR reserve and RPE before effects are compared",
+   "verbatim_quote": "The systematic review was stratified by intensities based on proposed cut-offs [28]. Thereby, each exercise program was ranked as light-, moderate- or vigorous-intensity aerobic exercise (Table 1).",
+   "page": "Goncalves et al., Section 2.6, book p. 155",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Table 1 bands: moderate is 46-63 percent VO2max, 64-76 percent HRpeak, 40-59 percent HR reserve, RPE 12-13; vigorous is 64-90, 77-95, 60-89, RPE 14-17",
+    "Programmes spanning two bands were placed in a separate moderate-to-vigorous category rather than forced into one"
+   ],
+   "breakdown_regime": "Heart-rate based classification is confounded by medication such as beta-blockers, which cap heart rate and dissociate it from VO2",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stratify-before-pooling rule: effects are only compared inside pre-registered intensity strata with explicit boundary handling for cases that span strata; the engine applies the same discipline before averaging any effect across contexts.",
+    "source_operator": "acsm_intensity_strata",
+    "telemetry": "Per-programme intensity prescriptions in percent VO2max, HRpeak, HR reserve and RPE"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c199c844c71b10df-t1",
+   "think": "This volume is a reprint of a special issue of the International Journal of Environmental Research and Public Health, edited by Bruno Goncalves, Jorge Bravo and Hugo Folgado of the University of Evora, collecting thirteen studies on training methods for sports performance and health. It is not a single monograph with one argument. It is a cross-section of contemporary training science, and its value to a reasoning engine is the density of transferable mechanisms it contains: how learning systems absorb variation, how task constraints channel collective behaviour, how physiological state is measured and dosed, and how selection decisions are formalized. Reading it whole, four families of machinery stand out. The first family is differential learning and its neighbours. Schoellhorn's differential learning treats movement fluctuations as the raw material of learning rather than as error. The learner is exposed to ever-changing movement variants, never repeats the ideal, and receives no corrective feedback, so that the nervous system self-organizes a solution that fits the individual. Three of the thirteen papers work this vein: a twelve-week futsal kicking trial crossing differential learning with the OPTIMAL theory of Wulf and Lewthwaite, a volleyball study teaching three techniques in parallel, and a pilot study injecting instructed fluctuations into repeated sprint training for female basketball players. Around them sits the older contextual interference literature, where random practice depresses acquisition yet improves retention, and Schmidt's variability of practice. The unifying quantitative idea is stochastic resonance: the noise added by the coach should be matched to the learner's own noise, optimized rather than maximized, because performance peaks at an intermediate noise level. A second quantitative idea is interpolation: systems perform better inside the trained range than outside it, so training should widen the range before the test demands it. The second family is constraints-led design of small-sided games. Two futsal and soccer studies manipulate the number of players, the position of floaters, and the geometry of the pitch while holding area per player constant, and then count actions per minute per player against a taxonomy of game principles: keep possession, progress without beating a line, progress beating a line, shoot. The taxonomy matters as much as the counts, because it defines what an action is before anyone argues about how many occurred. The results are clean affordance laws. Fewer players produce more one-versus-one dribbling and shooting; more players produce more passing and collective progression; floaters unbalance numbers and open passing lines that beat defensive lines; a wide pitch produces crosses and headers, a long pitch produces counterattacks and passes in behind. For an engine that reasons about matchups, these are causal levers with measured effect sizes, not coaching folklore. The third family is physiological measurement and dosing. The volume gives exact instruments: the reactive strength index as jump height over contact time, the Bishop asymmetry index, the change-of-direction deficit as the difference between a double 180 degree turn test and a 10 m sprint, Edwards' training impulse as zone time weighted by zone factor, a lactate clearance rate normalized by the resting-to-peak span, ventilatory threshold criteria based on ventilatory equivalents, the ER/IR shoulder balance ratio, and the percentage decrement score for repeated sprint fatigue. None of these instruments requires a laboratory; all of them run on timing gates, jump mats, cuffs, dynamometers and session logs, which is precisely why they matter for field reasoning. The volume also gives dosing results: ischemic preconditioning in four cycles of five minutes occlusion and five minutes reperfusion raises total work in sprint interval exercise by about two percent without changing lactate or pH, which the authors read as improved metabolic efficiency; eight weeks of sprint interval training raises ventilatory threshold and lactate clearance in elite badminton players at a fraction of the control group's training time; combined plyometric and change-of-direction sprint work improves jump, sprint and balance outcomes in under-15 soccer players; and a meta-analysis of sixteen randomized trials in cardiac rehabilitation finds moderate-to-vigorous intensity for six to twelve weeks the most effective dose for raising VO2 peak, with intensity strata defined by the ACSM cut-offs and outcomes converted at 3.5 millilitres per kilogram per minute per MET. The fourth family is prediction and selection formalism. A rugby study runs position-specific logistic regressions and finds that almost all of a fourteen-test battery is noise for selection: agility alone predicts forwards' recruitment and right handgrip strength alone predicts backs', with only twelve to fourteen percent of variance explained. An artistic swimming study builds a Wald sequential prediction table: nine morphofunctional indicators are converted to predictive coefficients by a log-likelihood formula, ranked by Kullback informativeness, and summed until a plus or minus thirteen threshold declares probable success or failure at the five percent error level. These are small, auditable, pre-statistical-learning machines for turning measurements into decisions, and their limits are printed next to their formulas. Both machines expose their arithmetic completely, which is what makes them safe to borrow. The volume's weaknesses are also instructive. Samples are small, several designs are pilots without control groups, one systematic review rests on nine heterogeneous studies, and the meta-analysis carries I squared values above ninety percent in its headline categories with significant publication bias in one stratum. The engine should therefore ingest the mechanisms and the formulas at full weight and the effect sizes at discounted weight, tagged by design quality. What the volume changes for a reasoning engine is concrete: it supplies a noise-matching principle for practice design, affordance laws for task constraints, a battery of exact field metrics with formulas, dose-response anchors for intensity and preconditioning, and two transparent selection machines whose failure modes are visible.",
+   "retrocausal_genealogy": "The lineage runs from Bernstein's repetition without repetition and Kelso's dynamical systems theory, through Schmidt's 1975 schema theory and Battig's contextual interference in verbal learning, to Schoellhorn's 1999 differential learning programme and Wulf and Lewthwaite's attentional focus and OPTIMAL work. In parallel it descends from Newell's constraints model through Davids and Araujo's ecological dynamics into constraints-led practice design; from Wald's 1947 sequential analysis and Gubler's informativeness calculus into Eastern European sports prediction tables; and from Bosco's jump testing, Edwards' training impulse and the ACSM prescription guidelines into modern load monitoring and Cochrane-style meta-analysis.",
+   "theory_of_mind": "The editors and authors write for practitioners who design training and must decide this week, with field tests rather than laboratory gold standards. Their shared model of the athlete is not a machine executing a stored ideal programme but an adaptive system whose behaviour emerges from interacting constraints, individual structure and momentary state. They distrust averages because individuals respond in opposite directions to the same intervention, and they repeatedly prefer a transparent, auditable method with stated limits over a powerful opaque one. The reader is assumed to need mechanisms with numbers attached, plus honest statements of where each mechanism stops working.",
+   "cross_layer_veto": "This work vetoes several simplifications that other layers of the engine might otherwise adopt. It vetoes judging learning by acquisition performance, since blocked practice inflates it. It vetoes maximizing noise, intensity or programme length, since each shows an interior optimum or a reversal. It vetoes pooled effects without heterogeneity accounting, since its own meta-analysis carries I squared above ninety percent in key strata. It vetoes single-battery selection decisions, since the rugby battery explains only an eighth of selection variance. And it vetoes reading acute responses as chronic adaptations, since a full swim session left strength and balance essentially unchanged."
+  }
+ ],
+ "universal_lens": "Any system that must perform under variation improves by training across a widened, noisy envelope matched to its own fluctuation level, measuring itself with ratio metrics that isolate the capacity of interest, dosing stress in cycles with planned recovery, and converting indicator batteries into decisions through transparent additive scores with pre-set thresholds and an explicit zone of abstention. The domain changes; the template does not.",
+ "gsi_mapping": "For the Institute, the volume is a curriculum and methods core: differential learning and constraints-led design as teachable coaching science, the field metric battery (reactive strength index, asymmetry index, change-of-direction deficit, TRIMP, lactate clearance, ER/IR ratio) as standard athlete monitoring, and the Wald table as an auditable teaching example of evidence accumulation for selection decisions. Its small samples and pilot designs also mark exactly where the Institute's own replication work would add the most value.",
+ "gse_mapping": "For the Edge engine, the volume supplies computable kernels and priors: stochastic resonance as the rule for matching perturbation scale to entity noise, player-number and pitch-geometry affordance laws as priors for matchup simulation, the decrement score and change-of-direction deficit as fatigue and agility features, TRIMP as a load feature, actual-over-expected ratios as the standard feature shape, and the Wald additive log-likelihood table with abstention thresholds as the structural template for transparent, auditable pick scoring."
+}

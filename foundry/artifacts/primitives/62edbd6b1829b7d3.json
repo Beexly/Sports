@@ -1,0 +1,720 @@
+{
+  "book_id": "62edbd6b1829b7d3",
+  "source_status": "COMPLETE",
+  "source_note": "Charles S. Sherrington, The Integrative Action of the Nervous System, the Silliman Memorial Lectures, Yale University Press; first published 1906. The local file is a scanned later Yale printing of the same work (the series list in the front matter records this volume at its sixth printing and lists series titles through 1918); catalog year 1906 is the first-edition year and is retained, with this printing note as the correction. Local PDF: 41687708 bytes, sha256 62edbd6b1829b7d353bb57a72ead8ddbaef35b0fb9a47b30e439b94605c9bcd1, book_id is the first 16 hex of that digest over (str(size) + bytes). Extracted text: 952846 bytes, 141282 words, 15772 lines; OCR of a scanned copy, body text generally clean and quotable, with occasional OCR garbling, footnote markers, interleaved page headers, and a few column-interleaved pages (notably parts of Lectures VIII and IX); all quotes below were verified as contiguous substrings of this text file. The work contains no equations; primitives carry empty latex accordingly. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+  "motif_lane": "MOTIF-TIERB-DRAIN-01",
+  "primitives": [
+    {
+      "primitive_id": "integrative_action_of_nervous_system",
+      "name": "The nervous system integrates separate organs into one animal individual; integration, not conduction alone, is its defining office",
+      "verbatim_quote": "This integrative action in virtue of which the nervous system unifies from separate organs an animal possess ing solidarity, an individual, is the problem before us in these lectures.",
+      "page": "Lecture I, printed p. 2 (text lines ~505-520)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The organism is a multicellular aggregate whose organs would act independently without a unifying agency",
+        "Nervous integration is distinct from mechanical integration by connective tissue and from chemical integration by blood-borne products"
+      ],
+      "breakdown_regime": "Applies to animals with a developed nervous system; plants integrate without nervous agency, and the lowest diffuse nerve-nets integrate only weakly. The work has no equations; breakdown is by regime, no_equation_domain for formalization.",
+      "domain": "systems physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine treats every incoming signal family as an organ of one body: no signal is scored in isolation, because the unit of analysis is the integrated whole (the game, the team state) that the signals jointly constitute. A projection is an act of integration across matchup, health, usage, and situation layers, not a sum of independent part-scores.",
+        "source_operator": "integrative_action_of_nervous_system",
+        "telemetry": "All ingested signal families per game: usage, health, matchup, situational, venue, and market feeds joined on one game key"
+      }
+    },
+    {
+      "primitive_id": "reflex_arc_as_unit_mechanism",
+      "name": "The reflex-arc (receptor, conductor, effector) is the unit mechanism of nervous integration",
+      "verbatim_quote": "The reflex-arc is the unit mechanism of the nervous system when that system is regarded in its integrative function.",
+      "page": "Lecture I, printed p. 7 (text lines ~655-665)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Every reflex-arc contains at least two neurones, one joined to the receptor and one to the effector",
+        "No nervous action short of a complete reflex counts as a complete act of integration"
+      ],
+      "breakdown_regime": "Compound reflexes are built from simpler reflexes, so the unit is an analytical atom, not a claim that arcs ever act alone in the intact animal. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's unit of reasoning is one complete arc: a receptor-grade observation (a verified fact about the world), a conduction path (the reasoning chain that carries it), and an effector output (a projection or a pass). A signal that cannot complete an arc, observation to reasoning to output, is cataloged but never emitted as a partial act.",
+        "source_operator": "reflex_arc_as_unit_mechanism",
+        "telemetry": "Per-signal completeness checks: source observation present, reasoning trace present, output field present"
+      }
+    },
+    {
+      "primitive_id": "simple_reflex_as_abstraction",
+      "name": "The simple reflex is a convenient fiction; no part of the nervous system ever reacts without affecting and being affected by other parts",
+      "verbatim_quote": "But the simple reflex is a convenient, if not a probable, fiction.",
+      "page": "Lecture I, printed p. 8 (text lines ~712-720)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "All parts of the nervous system are interconnected and the system is never absolutely at rest",
+        "Isolating one arc is legitimate for analysis only if the analyst remembers the isolation is artificial"
+      ],
+      "breakdown_regime": "The abstraction fails exactly where coordination matters most: whenever arcs share paths, receptors, or effectors, which in the intact organism is always. No equations in the source; no_equation_domain for formalization.",
+      "domain": "methodology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Any single-factor read (one matchup edge, one injury, one trend) is treated as a convenient fiction for analysis. Before emission it must be re-embedded in the whole system state, because in the real system no factor acts without modifying and being modified by the others.",
+        "source_operator": "simple_reflex_as_abstraction",
+        "telemetry": "Whole-state snapshots per game at reasoning time; single-factor flags marked as provisional until joined to the full state"
+      }
+    },
+    {
+      "primitive_id": "receptor_selective_excitability",
+      "name": "The receptor lowers the arc's threshold for one kind of stimulus and heightens it for all others, conferring selective excitability",
+      "verbatim_quote": "We infer, therefore, that the main contribution made to the mechanism of the reflex-arc by that part of it which constitutes the receptor is selective excitability.",
+      "page": "Lecture I, printed p. 13 (text lines ~938-945)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Each receptor is attuned to an adequate stimulus, the natural form of stimulation its adaptation fitted it for",
+        "Electrical stimulation is never the adequate stimulus for any receptor, being an artificial form absent from nature"
+      ],
+      "breakdown_regime": "Selectivity is graded, not absolute: strong or unnatural stimuli can force arcs through non-adequate channels, and some receptors (noci-ceptive) are deliberately broad in tuning. No equations in the source; no_equation_domain for formalization.",
+      "domain": "sensory physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Each ingest channel is a receptor tuned to one stimulus species: it lowers the engine's threshold for its own kind of evidence (a verified lineup change, a measured tracking split) and raises the threshold for foreign kinds (rumor, unsourced narrative) trying to enter through that channel. Channel identity is part of the evidence, not metadata.",
+        "source_operator": "receptor_selective_excitability",
+        "telemetry": "Per-channel acceptance rates by evidence species; cross-species intrusions logged as threshold violations"
+      }
+    },
+    {
+      "primitive_id": "synapse_as_surface_of_separation",
+      "name": "Between neurone and neurone there is a surface of separation, a delicate transverse membrane; reflex-arc conduction differs from nerve-trunk conduction chiefly because of these intercellular barriers",
+      "verbatim_quote": "Even should a membrane visible to the microscope not appear, the mere fact of non-confluence of the one with the other implies the existence of a surface of separation.",
+      "page": "Lecture I, printed p. 18 (text lines ~1073-1080)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Neurones are not in physical continuity at their nexus in the vertebrate gray-centred system; Wallerian degeneration stops at the neurone boundary",
+        "Within one neurone, conduction is intracellular and trunk-like; between neurones it is intercellular and modified"
+      ],
+      "breakdown_regime": "In some invertebrate cases (Medusa nerve-net) fibrils appear continuous across cells and the characteristic reflex-arc features vanish, which is the confirming contrast. No equations in the source; no_equation_domain for formalization.",
+      "domain": "cellular neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every hand-off between engine layers is a synapse, not a wire: signals do not pass unchanged from ingestion to reasoning to emission. Each boundary can delay, attenuate, sum, or block, and those boundary effects are first-class modeled quantities rather than plumbing to be assumed away.",
+        "source_operator": "synapse_as_surface_of_separation",
+        "telemetry": "Per-boundary transfer measurements: latency added, amplitude change, and drop rate at each layer interface"
+      }
+    },
+    {
+      "primitive_id": "synaptic_transmission_delay",
+      "name": "The delay of reflex conduction in gray matter is referable to transmission at the synapse itself, not to any process of setting the synapse ready",
+      "verbatim_quote": "The delay in the gray matter may be refer able, therefore, to the transmission at the synapse.",
+      "page": "Lecture I, printed p. 22 (text lines ~1178-1185)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Latencies of initial and of incremental reflexes through an already active arc are nearly equal, which excludes a connection-establishing step",
+        "The delay is inherent in transmission, and is larger for weak stimuli than for strong"
+      ],
+      "breakdown_regime": "The account is qualitative; the physical chemistry of the surface (ion restriction, double electric layer) is offered as plausible mechanism, not as measured fact. No equations in the source; no_equation_domain for formalization.",
+      "domain": "cellular neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Fresh information does not pay a setup cost in the engine: an arc already carrying a line of reasoning accepts an incremental update at nearly the same latency as a cold start, so live updates are folded into running reasoning traces instead of queueing behind re-derivation. Latency budgets are spent on transmission quality, not connection setup.",
+        "source_operator": "synaptic_transmission_delay",
+        "telemetry": "Update-to-incorporation latency for incremental facts arriving during an active reasoning window"
+      }
+    },
+    {
+      "primitive_id": "latency_inversely_as_intensity",
+      "name": "Reflex latency varies inversely with the intensity of the reflex: stronger excitation, shorter latent period",
+      "verbatim_quote": "Now the length of reflex latency is caeteris paribus inversely as the intensity of the reflex.",
+      "page": "Lecture I, printed p. 24 (text lines ~1238-1245)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Other conditions equal; the relation is stated for the reflex as produced, not for nerve-trunk propagation, whose speed is stimulus-independent",
+        "Measured on spinal reflexes of the dog (flexion-reflex latent periods from about 22 sigma at strongest to 200 sigma and beyond at weakest)"
+      ],
+      "breakdown_regime": "The inverse relation compresses at high intensity, where reflex latency approaches pure conduction time, and individual type-reflexes differ characteristically (scratch-reflex latency far exceeds flexion-reflex latency over similar distances). No equation is given in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Time-to-conclusion in the engine scales inversely with evidence strength: a strong, convergent signal set earns a fast, firm projection, while a weak set is deliberately given a longer reasoning latency, more checks, more source verification, before any output. Speed is an output of confidence, never a fixed pipeline constant.",
+        "source_operator": "latency_inversely_as_intensity",
+        "telemetry": "Reasoning latency per game plotted against evidence-strength score; inversion checked on graded samples"
+      }
+    },
+    {
+      "primitive_id": "after_discharge",
+      "name": "Reflex reactions outlast their stimulus: lengthy after-discharge, growing with stimulus intensity and with prolongation, is the universal mark distinguishing reflex-arc conduction from nerve-fibre conduction",
+      "verbatim_quote": "There is no feature of the conduction of a reflex-arc which distinguishes its mechanism more universally from that of a mere nerve-fibre tract or trunk than lengthy after-discharge.",
+      "page": "Lecture I, printed p. 33 (text lines ~1468-1475)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "After-discharge increases with intensity of stimulation, absolutely and relatively to the whole reflex, and with mere prolongation of brief stimuli",
+        "It can be cut short by inhibition, and may remanifest after a passing interruption"
+      ],
+      "breakdown_regime": "After-discharge is not inertia of the muscle: the same muscles driven through their motor nerve stop within about 15 sigma of stimulus cessation, while reflexly driven they persist for seconds. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine states have momentum: once a reasoning line is excited (a team profile, a matchup read), its influence persists after the triggering evidence stops arriving, decaying over a horizon that grows with the strength and duration of the original evidence. Projections are therefore computed on decaying state, not on instantaneous snapshots.",
+        "source_operator": "after_discharge",
+        "telemetry": "State-decay curves per signal family: influence half-life as a function of initial evidence strength and duration"
+      }
+    },
+    {
+      "primitive_id": "summation_of_subliminal_stimuli",
+      "name": "Subliminal stimuli sum in reflex-arcs: a single impulse meets high resistance, but a succession of individually ineffective stimuli forces the arc and provokes the reflex",
+      "verbatim_quote": "A striking dissimilarity, therefore, between reflex-arc conduction and nerve-trunk conduction is that in reflex-arc conduction considerable resistance is offered to the passage of a single nerve-impulse, but the resistance is easily forced by a succession of impulses ; in other words, sub liminal stimuli are summed.",
+      "page": "Lecture II, printed p. 38 (text lines ~1698-1705)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Summation is temporal (successive stimuli within the summation time) and spatial (stimuli at different points of one receptive field)",
+        "The excitatory change from one momentary stimulus persists measurably, in the scratch-reflex for some 1400 sigma, so later stimuli inherit it"
+      ],
+      "breakdown_regime": "Summation is not a property of the muscle used as index, nor of nerve-trunks; it belongs to the central arc. Below the summation window, repetition does not accumulate. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Weak signals are never discarded singly: the engine accumulates sub-threshold evidence across time and across sources inside a summation window, and a line of reasoning fires when the accumulated mass crosses threshold, even though no single item would have sufficed. This is the formal reason small edges are pooled instead of rounded to zero.",
+        "source_operator": "summation_of_subliminal_stimuli",
+        "telemetry": "Accumulated sub-threshold evidence mass per reasoning line; firing events traced to their summed components"
+      }
+    },
+    {
+      "primitive_id": "polarized_conduction_synaptic_valve",
+      "name": "Conduction in the reflex circuit is valved: intraneuronic conduction is reversible, interneuronic conduction is irreversible, plausibly because the synaptic membrane is more permeable in one direction than the other",
+      "verbatim_quote": "The explanation of the valved condition of the reflex circuit may lie in a synaptic mem brane more permeable in one direction than in the other.",
+      "page": "Lecture II, printed p. 39 (text lines ~1778-1785)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The Bell-Magendie law holds for the circuit as a whole although each fibre conducts both ways",
+        "Where cells are continuous, as in the Medusa nerve-net, conduction is reversible in both directions, confirming that polarization is a property of the junction, not of the fibre"
+      ],
+      "breakdown_regime": "The one-way permeability is an inference from function, offered as the most economical seat of irreversibility; dendritic polarization (Gad) is the rival seat the text weighs. No equations in the source; no_equation_domain for formalization.",
+      "domain": "cellular neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Information flow in the engine is deliberately one-way at layer boundaries: evidence flows from ingestion to reasoning to emission, and outputs never flow backward to rewrite the evidence that produced them. Post-hoc results grade the reasoning; they do not edit the recorded inputs, which keeps every trace auditable in the direction it actually ran.",
+        "source_operator": "polarized_conduction_synaptic_valve",
+        "telemetry": "Direction audits on data lineage: zero backward writes from emission or grading layers into ingestion records"
+      }
+    },
+    {
+      "primitive_id": "refractory_phase",
+      "name": "After excitation a mechanism passes through a refractory phase, a state in which, apart from fatigue, it shows less than its full excitability; in spinal reflexes this phase is central and paces the rhythm of discharge",
+      "verbatim_quote": "But to-day by refractory phase is understood a state during which, apart from fatigue, the mechanism shows less than its full excitability.",
+      "page": "Lecture II, printed p. 45 (text lines ~1953-1960)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Refractory phase is distinct from fatigue: excitability returns on its own time course without rest from stimulation being the variable",
+        "In nerve-trunks the phase is very brief (about 1 sigma); in reflex centres it is long enough to set the observable rhythm"
+      ],
+      "breakdown_regime": "The phase may be relative rather than absolute, as in the eyelid-reflex, where a second stimulus has a graded, time-dependent chance of success. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "After the engine commits to a projection on a game, that channel enters a refractory window: duplicate or near-duplicate triggers arriving inside the window are damped rather than re-firing the output, which prevents double-counting one event as two independent confirmations. Excitability restores on a graded curve, so genuinely new evidence late in the window still registers.",
+        "source_operator": "refractory_phase",
+        "telemetry": "Re-trigger suppression log: repeat triggers inside refractory windows, with graded re-admission by evidence novelty"
+      }
+    },
+    {
+      "primitive_id": "scratch_reflex_disynaptic_arc",
+      "name": "The scratch-reflex arc is a three-neurone, disynaptic chain: receptive neurone, long descending proprio-spinal neurone, motor neurone; its refractory phase sits intraspinally between receptive ending and motor commencement",
+      "verbatim_quote": "This chain thus consists of three neurones. It enters the gray matter twice ; that is, it has two neuronic junctions, two synapses. It is a disynaptic arc.",
+      "page": "Lecture II, printed p. 55 (text lines ~2223-2230)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The chain was inferred by the method of successive degeneration, using the neuroglial scar of old degeneration as contrast background",
+        "The refractory property is excluded from muscle, motor nerve, end-plate, and motor neurone by direct tests, leaving the intraspinal links as its seat"
+      ],
+      "breakdown_regime": "The scheme deliberately omits possible intercalated Schalt-Zellen; disynaptic is a working minimal model, and the refractory phase is called the pivot on which the whole coordinating mechanism of this reflex turns. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Complex engine behaviors are decomposed into explicit neurone chains: source node, relay node, output node, with the number of synaptic hand-offs counted, because each hand-off is where delay, summation, and veto live. A reasoning path that cannot name its relays is treated as unexamined.",
+        "source_operator": "scratch_reflex_disynaptic_arc",
+        "telemetry": "Path diagrams per projection type: node count, synapse count, and the measured behavior attributed to each relay"
+      }
+    },
+    {
+      "primitive_id": "final_common_path",
+      "name": "The motor neurone is the final common path: the terminal path into an effector, shared by every reflex-arc that can reach that effector",
+      "verbatim_quote": "The terminal path may, to distinguish it from internuncial common paths, be called the final common path. The motor nerve to a muscle is a collection of final common paths.",
+      "page": "Lecture IV, printed p. 116 (text lines ~4253-4260)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Internuncial paths are also common paths in lesser degree; the final path is distinguished by exhibiting communism in the highest degree",
+        "All impulses that are to act on a given muscle must travel this one path, whatever their source"
+      ],
+      "breakdown_regime": "Because the path is shared, its use is necessarily successive for opposed effects; the concept fails only where an effector has truly private innervation, which the text doubts exists in the intact organism. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every projection the engine emits passes through a final common path: one emission channel per output type, into which all reasoning lines converge. No line reaches publication by a private route. Convergence is what forces rival reads of the same game to be reconciled before anything is emitted, instead of leaking out in parallel.",
+        "source_operator": "final_common_path",
+        "telemetry": "Emission log: every published output traced to the single convergence point and the set of lines that fed it"
+      }
+    },
+    {
+      "primitive_id": "private_and_public_paths",
+      "name": "Architecture of the system: receptive neurones are private paths serving one source only, while the final efferent neurone is a public path common to impulses from many sources",
+      "verbatim_quote": "Therefore, while the receptive neurone forms a private path exclusively serving impulses of one source only, the final or efferent neurone is, so to say, a public path, common to impulses arising at any of many sources of reception.",
+      "page": "Lecture IV, printed p. 116 (text lines ~4213-4220)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A single receptive point may play upon many effector organs, but only through its one afferent neurone",
+        "The asymmetry is structural: many private inputs, few public outputs"
+      ],
+      "breakdown_regime": "Private paths themselves are usually common to a small group of receptors, so privacy is relative at the edges; the asymmetry of the architecture is the durable claim. No equations in the source; no_equation_domain for formalization.",
+      "domain": "systems neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine inputs are private paths: each source keeps its own channel and its own identity all the way into the centre, so provenance is never blended at ingest. Outputs are public paths: few, shared, and contended for. Blending is allowed only at convergence points designed for it, never upstream where it would destroy attribution.",
+        "source_operator": "private_and_public_paths",
+        "telemetry": "Provenance integrity checks: per-source identity preserved from ingest to convergence on sampled traces"
+      }
+    },
+    {
+      "primitive_id": "successive_use_antagonistic_exclusion",
+      "name": "Two reflexes that would use one final common path to opposed effect cannot share it simultaneously: one appears without the other; the result is this reflex or that reflex, but not the two together",
+      "verbatim_quote": "When two receptors are stimulated simultane ously, each of the receptors tending to evoke reflex action that for its end-effect employs the same final common path but em ploys it in a different way from the other, one reflex appears without the other. The result is this reflex or that reflex, but not the two together.",
+      "page": "Lecture IV, printed p. 117 (text lines ~4268-4280)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Algebraical summation of opposed influences at the common path would yield an action adapted to neither purpose and is not what occurs",
+        "Which reflex wins is decided by intensity, induction, fatigue state, and the functional species of the reflexes"
+      ],
+      "breakdown_regime": "Partial interference is possible where compound reflexes share only some components; exclusion is total only for the shared path itself. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Contradictory projections on the same game are never averaged into a mush and never both emitted: the reasoning layer runs an explicit competition, one read takes the emission channel, the other is deferred or vetoed, and the contest itself is recorded. A blended compromise output is treated as a defect, because it would be adapted to neither read.",
+        "source_operator": "successive_use_antagonistic_exclusion",
+        "telemetry": "Competition records per contested game: contenders, deciding factors, winner, and the deferred line's later fate"
+      }
+    },
+    {
+      "primitive_id": "final_common_path_aperiodicity",
+      "name": "The final common path is relatively aperiodic: it must reproduce rhythms from the slowest to the fastest of the afferent arcs that play upon it",
+      "verbatim_quote": "the final common paths must be capable of respond ing with different rhythms which different conductors impress upon it. It must be to a certain degree aperiodic.",
+      "page": "Lecture IV, printed p. 116 (text lines ~4260-4267)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "There is no essential qualitative difference between nerve-impulses arising in different afferent nerves, since they share one path",
+        "If the path's own discharge is rhythmic, its frequency ceiling must exceed that of any input rhythm"
+      ],
+      "breakdown_regime": "Aperiodicity is relative, not absolute; the path has its own refractory limits, which is why Schafer's transmuted rhythms appear in reflex (as opposed to trunk) conduction. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The emission channel carries no house rhythm of its own: it must reproduce a slow, grinding projection and a fast-breaking one with equal fidelity, at whatever cadence the reasoning layer impresses. Fixed publishing cadences that force outputs into a house tempo are treated as distortion of the signal, not as scheduling convenience.",
+        "source_operator": "final_common_path_aperiodicity",
+        "telemetry": "Output cadence distribution versus reasoning-completion cadence; forced-tempo distortions flagged"
+      }
+    },
+    {
+      "primitive_id": "convergence_and_the_funnel",
+      "name": "Afferent paths outnumber efferent paths about five to one: the receptor system stands to the final common paths as the wide ingress of a funnel to its narrow egress, and every convergence point is a mechanism of coordination",
+      "verbatim_quote": "The re ceptor system bears, therefore, to the efferent paths the relation of the wide ingress of a funnel to the narrow egress.",
+      "page": "Lecture IV, printed p. 145 (text lines ~5233-5240)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Counts are Donaldson's enumerations for the human spinal cord, roughly three to one within the cord and about five to one with cranial and optic paths added",
+        "Each receptor connects not to one efferent path but to many, through synapses of varying resistance"
+      ],
+      "breakdown_regime": "The funnel simile understates the divergence on the input side; the text betters it with an inverted funnel per receptor. Exact ratios are anatomical estimates of their period. No equations in the source; no_equation_domain for formalization.",
+      "domain": "systems neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine is built as a funnel by design: a wide ingress of ingested signals (orders of magnitude more observations than outputs) narrowing to a small egress of projections. A healthy run shows a high ingest-to-emit ratio; a run emitting nearly as much as it ingests has lost its convergence discipline and is flagged for review.",
+        "source_operator": "convergence_and_the_funnel",
+        "telemetry": "Per-run funnel ratio: records ingested, lines formed, lines converged, outputs emitted"
+      }
+    },
+    {
+      "primitive_id": "grading_of_reflex_intensity",
+      "name": "Reflex intensity is graded by stimulus intensity: increase of stimulus heightens the reflex contraction in power and amplitude, though less exactly than in nerve-trunk conduction",
+      "verbatim_quote": "Increase of intensity of stimulus heightens the reflex contraction both in power and amplitude.",
+      "page": "Lecture III, printed p. 72 (text lines ~2733-2740)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Grading shows in amplitude rather than in rhythm: the scratch-reflex keeps its beat frequency while its beats grow up to sixfold",
+        "Reflexes do not observe the all-or-nothing principle of the heart beat"
+      ],
+      "breakdown_regime": "Some reflexes grade coarsely or in steps (the crossed extension-reflex shows a sudden large augmentation at a threshold intensity), and under strychnine grading is lost and all reflexes become maximal. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Projection strength is a graded amplitude, not a binary flag: the engine scales the size and confidence of an output with the measured intensity of the underlying evidence, and reserves maximal outputs for maximal evidence. A system whose outputs are all maximal is diagnosed as poisoned, in Sherrington's sense, and its grading is recalibrated.",
+        "source_operator": "grading_of_reflex_intensity",
+        "telemetry": "Output-strength distribution against evidence-intensity distribution; all-maximal runs flagged as grading failures"
+      }
+    },
+    {
+      "primitive_id": "reflexes_of_double_sign",
+      "name": "Many reflexes are of double-sign: excitation at one locus paired with simultaneous inhibition at an interrelated locus (flexion-reflex), or excitation succeeded by inhibition at the same locus (scratch-reflex)",
+      "verbatim_quote": "Such reflex is a reflex of double-sign, but whereas the scratch-reflex and the eyelid-reflex, etc., are re flexes with successive double-sign, the flexion-reflex and reflexes of that type, e. g., the crossed extension-reflex, are reflexes with simultaneous double-sign.",
+      "page": "Lecture III, printed p. 83 (text lines ~3170-3180)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "In the flexion-reflex the excitatory state falls on the flexor motor neurones while suppression of excitatory state falls on the extensor motor neurone",
+        "The inhibitory component is an active central process, not mere absence of excitation"
+      ],
+      "breakdown_regime": "Double-sign organization is presented as widespread but not universal; simple single-sign reflexes remain the analytical starting point. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every engine output is double-signed: taking a position on one side of a game is simultaneously an inhibition of the opposed position, and both sides are computed and recorded, not just the emitted one. The suppressed side's strength is kept in the trace, because a near-tie suppressed is different information from a rout.",
+        "source_operator": "reflexes_of_double_sign",
+        "telemetry": "Paired output records: emitted strength and suppressed-side strength stored together for every projection"
+      }
+    },
+    {
+      "primitive_id": "central_inhibition",
+      "name": "In vertebrate skeletal coordination, inhibition is exerted not at the periphery but in the nerve-centres, within the gray matter of the central nervous system",
+      "verbatim_quote": "But the similar co-ordination in the taxis of the skeletal musculature of vertebrates exerts its inhibition not at the periphery but in the nerve-centres. It occurs within the gray matter of the central nervous system.",
+      "page": "Lecture III, printed p. 85 (text lines ~3243-3250)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "No efferent fibres producing inhibition of skeletal muscle contraction could be found despite search by several observers",
+        "During reflex relaxation the excitability of the relaxed muscle and its motor nerve to electrical stimuli remains undiminished (Verworn), localizing the effect centrally"
+      ],
+      "breakdown_regime": "Peripheral inhibition is real in lower forms (Astacus claw, Anodon shell, vagus on heart); the claim is specific to vertebrate skeletal taxis. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Vetoes in the engine live in the centre, not at the edges: a signal is not suppressed at ingest or at the source, it is carried into the reasoning layer and inhibited there, where the suppression can be weighed, timed, and recorded. Edge-level suppression is treated as lost evidence.",
+        "source_operator": "central_inhibition",
+        "telemetry": "Veto location audit: suppressions executed in the reasoning layer versus at ingest, with reasons for any edge suppression"
+      }
+    },
+    {
+      "primitive_id": "strychnine_conversion_of_inhibition",
+      "name": "Central inhibition can be converted into excitation by strychnine and tetanus toxin, and different spinal inhibitions differ in the ease of that conversion: the sign of a central action is state-dependent, not fixed",
+      "verbatim_quote": "That strychnine and tetanus can convert a central inhibition into an excitation, and that the various normal reflex spinal in hibitions show differences one from another in the ease with which they undergo conversion into excitation",
+      "page": "Lecture III, printed p. 113 (text lines ~4105-4112)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Conversion is demonstrated for both cutaneous and muscular afferents, so it is not referable to a difference between afferent species",
+        "Some inhibitions are particularly resistant to conversion, for example the depressor action of the hamstring nerve on the knee-extensor"
+      ],
+      "breakdown_regime": "The agents act as probes, not as physiology: normal sign stability is the rule, and conversion reveals that sign is a property of the central state rather than of the incoming fibre. No equations in the source; no_equation_domain for formalization.",
+      "domain": "pharmacology of the cord",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The sign of a signal's effect is a property of system state, not of the signal alone: the same evidence class that normally inhibits a projection can, under a changed regime (a roster shock, a market dislocation), excite it. The engine therefore re-derives sign from current state at reasoning time instead of hard-coding each factor's direction, and it logs sign flips as regime events.",
+        "source_operator": "strychnine_conversion_of_inhibition",
+        "telemetry": "Sign-flip registry: factor, prior sign, new sign, and the state change that accompanied each flip"
+      }
+    },
+    {
+      "primitive_id": "allied_reflexes",
+      "name": "Allied reflexes act harmoniously on the same final common path, reinforce one another, and exhibit mutual bahnung, even when their arcs begin in different receptive fields",
+      "verbatim_quote": "Yet the arcs are \" allied arcs,\" for they act harmoniously on the same final common path.",
+      "page": "Lecture IV, printed p. 133 (text lines ~4790-4795)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Alliance occurs between reflexes of one type, between reflexes from different receptor species in one region, and between extero-ceptive reflexes and the proprio-ceptive reflexes they secondarily excite",
+        "Alliance holds for inhibitory actions as well as for excitatory ones"
+      ],
+      "breakdown_regime": "Coalition between two allied reflexes fades as the distance between their receptive points widens; alliance is graded, not binary. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Signals that push a projection the same way are allied and are allowed to reinforce, including across families (a usage signal and a health signal converging on the same read). Reinforcement is credited only when the allied lines are genuinely independent arcs; two citations of one underlying observation are one arc, not two.",
+        "source_operator": "allied_reflexes",
+        "telemetry": "Alliance graph per projection: reinforcing lines with independence attestations for each pair"
+      }
+    },
+    {
+      "primitive_id": "neurone_threshold_at_each_synapse",
+      "name": "Resistance to the spread of reflex reaction differs by direction because synapses differ: at each synapse there is a neurone-threshold, and irradiation follows the lines of lower synaptic resistance",
+      "verbatim_quote": "The different resistance seems more probably referable to differences in the facility of conduction at different synapses. At each synapse there is a neurone-threshold.",
+      "page": "Lecture V, printed p. 155 (text lines ~5530-5540)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "At each synapse a small quantity of energy freed in transmission acts as a releasing force on a fresh store across a barrier that is always to some extent a barrier",
+        "Synapses differ individually, including in their susceptibility to strychnine and tetanus toxin"
+      ],
+      "breakdown_regime": "The older account, resistance proportional to length of gray-matter path, is set aside because gray-matter traverses are probably all short. Threshold heights in the text's diagram are schematic whole numbers, not measurements. No equations in the source; no_equation_domain for formalization.",
+      "domain": "cellular neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Spread of influence inside the engine is governed per junction, not globally: each reasoning step has its own threshold, so a strong signal propagates down low-resistance lines and dies at high-resistance ones. Tuning the engine means setting junction thresholds, and an unexpected propagation is diagnosed at the specific synapse that let it through.",
+        "source_operator": "neurone_threshold_at_each_synapse",
+        "telemetry": "Per-junction propagation rates: signals presented versus signals passed, by junction, with threshold settings versioned"
+      }
+    },
+    {
+      "primitive_id": "chain_reflexes",
+      "name": "Reflexes chain: the action of each preceding segment provides the stimulus for the reflex act of the next succeeding segment, so sequences run without any central script",
+      "verbatim_quote": "It appears that the action of each preceding segment provides a stimulus for the reflex act of the next succeeding segment.",
+      "page": "Lecture VI, printed p. 182 (text lines ~6608-6615)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Exemplified in deglutition (Mosso) and in the crawling of the earthworm (Biedermann), where severing the central paths breaks the sequence",
+        "In nature stimuli overlap in time rather than abutting, so each reflex breaks in upon a reflex equilibrium"
+      ],
+      "breakdown_regime": "Chaining explains orderly sequence only where each act mechanically or chemically generates the next stimulus; it does not by itself explain sequences whose links are purely central. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Engine workflows are chained, not scripted end to end: each stage's output is constructed to be the next stage's stimulus (an ingestion result triggers the matchup pass, whose output triggers the situation pass), so the sequence self-orders and a stage can be re-run by re-presenting its stimulus. Orchestration state is carried by the artifacts, not by a master schedule.",
+        "source_operator": "chain_reflexes",
+        "telemetry": "Chain integrity checks: every stage output carries the trigger fields the next stage requires; orphaned outputs logged"
+      }
+    },
+    {
+      "primitive_id": "immediate_induction_bahnung",
+      "name": "Immediate induction: a stimulus that excites a reflex facilitates, by central spread, the reflexes allied to it and lowers their thresholds, fortifying the reflex just established",
+      "verbatim_quote": "The stimulus which excites a reflex tends by central spread to facilitate and lower the threshold for reflexes allied to that which it particularly excites.",
+      "page": "Lecture VI, printed p. 205 (text lines ~7448-7455)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Immediate induction occurs only between allied reflexes and is strongest at or near the commencement of a reflex",
+        "It does not persist long; it prepares allied arcs to be responsive if the prepotent stimulus shifts"
+      ],
+      "breakdown_regime": "Induction is one of four factors the text names as deciding competition for the common path, alongside relative intensity, relative fatigue, and functional species of reflex. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "When a reasoning line fires, the engine briefly lowers thresholds for its allied lines: corroborating checks on the same read are run sooner and weighted readier, because the moment of establishment is when allied evidence is most diagnostic. The facilitation decays fast, so stale alliances do not keep subsidizing a line after its moment has passed.",
+        "source_operator": "immediate_induction_bahnung",
+        "telemetry": "Facilitation windows: allied-line threshold offsets applied per firing event, with decay constants and expiry logs"
+      }
+    },
+    {
+      "primitive_id": "successive_induction_and_rebound",
+      "name": "Successive induction: inhibition leaves the centre surcharged, so the inhibited action rebounds to superactivity when inhibition passes; inhibition is not a neutral process",
+      "verbatim_quote": "This molecular rearrangement would diminish activity for the time being, but lead to increase of activity afterwards. There would ensue a rebound effect.",
+      "page": "Lecture VI, printed p. 195 (text lines ~7005-7015)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The mechanism pictured is trophic: inhibition checks decomposition of an activity-yielding material, which accumulates during the inhibition (after Gaskell's vagus-heart analysis)",
+        "Rebound is obvious in spinal reciprocal inhibition, for example the crossed extension-reflex elicited at regular intervals"
+      ],
+      "breakdown_regime": "The trophic mechanism is hypothesis; the rebound phenomenon is the observation. Rebound magnitude varies by reflex and is not a conservation law. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "A vetoed line is not zeroed, it is charged: when the engine suppresses a projection, the suppressed evidence is retained at full strength, and if the vetoing condition lifts, the line is re-evaluated with a rebound allowance rather than from scratch. Sudden reversals after news breaks are modeled as rebounds of previously inhibited lines, which is why suppression records are kept at full fidelity.",
+        "source_operator": "successive_induction_and_rebound",
+        "telemetry": "Rebound registry: vetoed lines, their stored strength at veto time, and re-evaluation outcomes when vetoes lift"
+      }
+    },
+    {
+      "primitive_id": "fatigue_limits_possession_of_common_path",
+      "name": "Reflex fatigue has a coordinating use: it prevents too prolonged continuous use of a common path by any one receptor, precluding monopoly of an effector organ",
+      "verbatim_quote": "One obvious use attaching to it is the prevention of the too prolonged continuous use of a \" common path \" by any one receptor.",
+      "page": "Lecture VI, printed p. 222 (text lines ~7980-7990)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Fatigue here is central and may be a negative induction seated at the synapse; it is distinct from muscular fatigue",
+        "A fatigued reflex loses its grip on the final common path, so rivals that could not dispossess it when fresh can do so once it is tired"
+      ],
+      "breakdown_regime": "Spinal reflexes recover from local fatigue with remarkable speed, within seconds of remission, so the protection is against continuous possession, not against reuse. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "No single signal family may occupy the engine's emission channel indefinitely: influence decays with continuous use, so a family that has dominated recent outputs yields ground to rivals even if its evidence is unchanged. This is an anti-monopoly term in the competition for the common path, and it is what keeps one hot factor from becoming the whole model.",
+        "source_operator": "fatigue_limits_possession_of_common_path",
+        "telemetry": "Possession time per signal family across recent outputs; forced-yield events when possession exceeds its budget"
+      }
+    },
+    {
+      "primitive_id": "noci_ceptive_prepotency",
+      "name": "In competition between reflexes the noci-ceptive reflexes dominate with peculiar certainty: a noci-ceptive reflex dispossesses even a tonic postural reflex from the motor neurone, and reflexes from receptors of strong affective tone sit at the top of the potency scale",
+      "verbatim_quote": "The noci-ceptive reflex dominates the motor neurone previ ously held in activity by the postural reflex.",
+      "page": "Lecture VI (text lines ~8280-8287)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Noci-ceptive receptors are those attuned to agents that threaten local damage; their reflex is typically flexion, withdrawal from harm",
+        "Prepotency is relative: a fresh scratch-reflex under strong stimulation can displace a weak or fatigued flexion-reflex"
+      ],
+      "breakdown_regime": "The general rule is stated with caeteris paribus: intensity, fatigue, and induction can overturn the species ranking in particular contests. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "Damage-avoidance signals are prepotent in the engine: evidence of acute harm (a late scratch of a central player, a confirmed injury) takes the emission channel away from standing positional reads, however well established, because protecting against the damaging case outranks refining the ordinary one. Prepotency is bounded: a weak harm signal does not displace a strong fresh read.",
+        "source_operator": "noci_ceptive_prepotency",
+        "telemetry": "Prepotency events: harm-class signals, the standing read they displaced, and the comparative strengths at displacement"
+      }
+    },
+    {
+      "primitive_id": "spinal_shock",
+      "name": "Spinal shock is the temporary depression of nervous function below a transection; it takes effect almost exclusively in the aboral direction and is referable to cutting off a supraspinal influence, not to irritation by the trauma",
+      "verbatim_quote": "The whole of that depression or suppression of nervous functions which ensues forthwith upon a mechanical injury of some part of the nervous system and is of temporary nature may be conveniently included as \" shock.\"",
+      "page": "Lecture VII, printed p. 241 (text lines ~8688-8695)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A second transection below the first does not reproduce the deep depression, which excludes trauma-irritation as the cause",
+        "Severity scales with the animal's cerebral development: maximal in the monkey, slight and brief in the frog"
+      ],
+      "breakdown_regime": "Recovery is gradual and reflex-specific; noci-ceptive reflexes are relatively little depressed. The supraspinal influence whose withdrawal causes shock is identified by its effects, not isolated. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "When a feed or an upstream layer is cut, the engine expects shock: downstream reasoning degrades sharply and temporarily even though its local machinery is intact, because it has lost a tonic enabling input. Post-outage outputs are therefore discounted as shock-state outputs rather than read as true signal, and full confidence returns on a recovery curve, not at the moment the feed reconnects.",
+        "source_operator": "spinal_shock",
+        "telemetry": "Outage registry: cut points, downstream degradation depth, and time-to-recovery per affected reasoning line"
+      }
+    },
+    {
+      "primitive_id": "reflexes_as_adapted_reactions",
+      "name": "A reflex is properly understood only when its purpose as an adapted act is assigned; the adequate stimulus, and the time-relations and spatial form of the response, are the data from which purpose is read",
+      "verbatim_quote": "we do not obtain due profit from the study of any particular type-reflex unless we can discuss its immediate purpose as an adapted act.",
+      "page": "Lecture VII, printed p. 238 (text lines ~8568-8575)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Cutaneous spinal reflexes are in the main preservative: escape for parts that can withdraw, defence by adjacent motile parts for parts that cannot",
+        "Purpose inference is hazardous for small fractional reactions and firms up only with repeated observation of the whole reflex, accessory parts included"
+      ],
+      "breakdown_regime": "Teleology here is a reading discipline, not a mechanism; shock and laboratory mutilation can make a reflex's purpose illegible until its full field of distribution is seen. No equations in the source; no_equation_domain for formalization.",
+      "domain": "functional neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Every signal family in the engine carries an assigned purpose, the decision it exists to inform, read off from what it responds to and the form of its output. A metric whose purpose cannot be stated is not wired into reasoning, however elegant it is, because an unread reflex is noise with good credentials.",
+        "source_operator": "reflexes_as_adapted_reactions",
+        "telemetry": "Purpose statements per signal family, reviewed when a family's stimulus profile or output form changes"
+      }
+    },
+    {
+      "primitive_id": "decerebrate_rigidity",
+      "name": "Decerebrate rigidity is a tonic reflex state: prolonged spasm of the antigravity musculature, maintained only while the limb's afferent roots are intact, so that severing them drops the limb flaccid at once",
+      "verbatim_quote": "The rigidity is immediately due to prolonged spasm of cer tain groups of voluntary muscles.",
+      "page": "Lecture VIII, printed p. 301 (text lines ~11028-11035)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The condition ensues on removal of the forebrain by transection in the mesencephalon or hinder thalamencephalon; bulbar transection gives the opposite, flaccid, picture",
+        "The muscles affected are those that antagonize gravity in standing: extensors of hip, knee, shoulder, elbow, retractors of neck, elevators of jaw and tail"
+      ],
+      "breakdown_regime": "Rigidity is one member of a paired system: the tonic system maintains attitude while the phasic system produces movement, and most local reflexes inhibit the very extensors the tonic system excites. Cerebellar ablation does not abolish it. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neurophysiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine maintains a tonic baseline state, a standing posture toward each team and matchup that persists between events and resists casual displacement, exactly as rigidity persists between stimuli. Baseline shifts require afferent evidence from the system itself; a baseline that survives the cutting of its own evidence feed is diagnosed as pathological rigidity, not conviction.",
+        "source_operator": "decerebrate_rigidity",
+        "telemetry": "Baseline audit: standing state per team, the evidence feed sustaining it, and flaccidity tests when feeds are cut"
+      }
+    },
+    {
+      "primitive_id": "three_receptive_fields",
+      "name": "Receptors are partitioned into three fields: the extero-ceptive surface open to the environment, the intero-ceptive internal surface, and the proprio-ceptive deep field whose stimuli are events in the organism itself",
+      "verbatim_quote": "Almost all these species of receptors are distrib uted to the extero-ceptive field exclusively ; they are not known to exist in the intero-ceptive or in the proprio-ceptive fields.",
+      "page": "Lecture IX, printed p. 318 (text lines ~11675-11682)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "The extero-ceptive field far exceeds the intero-ceptive in wealth of receptor organs; the intero-ceptive field is sparsely endowed and chemically specialized",
+        "The proprio-ceptive field's adequate agent is mechanical: mass, weight, inertia, stress and strain in muscles, tendons, joints, and vessel walls"
+      ],
+      "breakdown_regime": "The partition is by circumstance of the receptive surface, not by stimulus physics; one stimulus species can appear in several fields with different significance. No equations in the source; no_equation_domain for formalization.",
+      "domain": "sensory physiology",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Engine inputs are fielded in three classes mirroring the receptive fields: extero-ceptive (the outside environment of the game: opponent, venue, weather, market), intero-ceptive (internal competition state: standings pressure, incentive, fatigue of the schedule), and proprio-ceptive (the subject's own body: health, usage load, form). A read that confuses fields, treating an internal-state signal as environmental, is a classification error caught at ingest.",
+        "source_operator": "three_receptive_fields",
+        "telemetry": "Field classification per signal family with ingest-time validation; cross-field misclassifications logged"
+      }
+    },
+    {
+      "primitive_id": "distance_receptors_precurrent_reactions",
+      "name": "The distance-receptors (eye, ear, nose) of the leading segments react to objects still remote, and their reflexes are precurrent: anticipatory reactions that prepare and lead up to the consummatory reactions of the contact receptors",
+      "verbatim_quote": "The \"distance-receptors\" initiate anticipatory, i. e. precurrent, reactions.",
+      "page": "Lecture IX, printed p. 327 (text lines ~12000-12007)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Distance-reception is acquired chiefly by lowering of receptor thresholds, as smell is taste at a distance",
+        "Sensations from distance-receptors carry projicience: they are referred without reasoning to the direction and distance of their sources"
+      ],
+      "breakdown_regime": "Precurrent reactions are less affect-laden than consummatory ones; they borrow affective tone by association with the consummatory reactions they lead to. No equations in the source; no_equation_domain for formalization.",
+      "domain": "sensory physiology",
+      "layer2": {
+        "tag": "[DERIVED KERNEL]",
+        "mapping": "The engine weights early, remote evidence as precurrent: schedule, market, and tracking signals arriving days out exist to prepare the reasoning, set its direction, and buy time for the contact-grade evidence (final health and lineup facts) that consummates it. Precurrent signals steer preparation; they are not permitted to consummate a projection alone.",
+        "source_operator": "distance_receptors_precurrent_reactions",
+        "telemetry": "Signal staging per game: precurrent set assembled early, consummatory set required before emission, with timestamps"
+      }
+    },
+    {
+      "primitive_id": "cerebellum_head_ganglion_proprioceptive_system",
+      "name": "The cerebellum is the head ganglion of the proprio-ceptive system: the central organ built up over the labyrinth, where proprio-ceptive contributions from all segments converge",
+      "verbatim_quote": "The cerebellum is the head ganglion of the proprio-ceptive system.",
+      "page": "Lecture IX, printed p. 347 (text lines ~12838-12845)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "Its size across species accords with the range and complexity of the species' habitual movements",
+        "Its destruction disturbs the organism much as injury of the labyrinth does, and it influences tonus as the simple proprio-ceptive arcs do"
+      ],
+      "breakdown_regime": "The text is explicit that knowledge is not ripe for an adequate definition of cerebellar function; the head-ganglion claim is a structural-functional placement, not a complete theory. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "Self-state estimation has one head ganglion in the engine: a single module where all proprio-ceptive evidence about the subject (health, load, form, availability) converges and is integrated before any of it reaches game reasoning. Game modules never read raw self-state feeds directly; they read the integrated estimate, so one bad feed cannot pose as the whole body state.",
+        "source_operator": "cerebellum_head_ganglion_proprioceptive_system",
+        "telemetry": "Self-state integration log: contributing feeds per estimate, convergence point, and downstream consumers"
+      }
+    },
+    {
+      "primitive_id": "cerebrum_ganglion_of_distance_receptors",
+      "name": "The cerebrum is the ganglion of the distance-receptors: it is built over the arcs of the projicient organs, and with them accrue long internuncial chains, associative memory, and control over the reflex machinery",
+      "verbatim_quote": "The cerebrum constitutes, so to say, the ganglion of the \" distance-receptors.\"",
+      "page": "Lecture IX, printed p. 349 (text lines ~12943-12950)",
+      "latex": "",
+      "symbol_and_unit_ledger": {},
+      "assumptions": [
+        "A blinded frog resembles in its reactions a frog with the cerebrum removed (Langendorff), tying the organ to distance-receptor function",
+        "Reflexes are controllable by the higher centres: they can be checked, released, or modified, and new coordinations can be acquired by training"
+      ],
+      "breakdown_regime": "Dominance of the brain is a physiological position, argued from receptive architecture, not from mentality; the text declines to make consciousness do explanatory work. No equations in the source; no_equation_domain for formalization.",
+      "domain": "neuroanatomy",
+      "layer2": {
+        "tag": "[ISOMORPHISM]",
+        "mapping": "The engine's highest layer sits over its distance-receptors: the strategic layer reads the remote, anticipatory signals (season arc, market, schedule futures) and exerts control over the reflex layer below, checking, releasing, or modifying projections. Control flows from the layer with the longest horizon, and reflex outputs that bypass it are treated as spinal accidents, fast but unexamined.",
+        "source_operator": "cerebrum_ganglion_of_distance_receptors",
+        "telemetry": "Control audit: projections checked, released, or modified by the strategic layer, with the reflex-layer original preserved"
+      }
+    }
+  ],
+  "reasoning_traces": [
+    {
+      "trace_id": "62edbd6b1829b7d3-t1",
+      "think": "The argument of the book is that the nervous system is best understood not as a telegraph network but as an integrating machine whose product is the unity of the animal. Sherrington begins by separating three physiologies that are easily confused: the nutrition of nerve-cells, the conduction of nerve-impulses, and the integrative action by which separate organs are welded into one individual. The lectures pursue the third. Its unit is the reflex-arc, receptor, conductor, and effector, and its method is to study simple reflexes in the spinal and decerebrate animal while never forgetting that the simple reflex is a convenient fiction, an abstraction from a system that is connected throughout and never at rest. From the simple reflex he extracts a set of conduction characters that nerve-trunks do not show: long and intensity-dependent latency, after-discharge, summation of subliminal stimuli, irreversibility of direction, gradation coarser than the trunk's, fatigability, and a refractory phase long enough to pace rhythm. Each character is then referred to one structural fact, the synapse, a surface of separation between neurone and neurone at which transmission is delayed, valved, thresholded, and modifiable. The synapse is the book's central mechanism: it explains why reflex conduction differs from trunk conduction, why irradiation spreads along some lines and not others, why inhibition can be central, and why poisons such as strychnine can reverse the sign of a central action. Coordination is then rebuilt from the architecture. Afferent paths are private, efferent paths are public, and the motor neurone is a final common path into which arcs converge as a funnel narrows. Because the path is common, its use by opposed reflexes is successive, not simultaneous, and the contest is decided by intensity, by induction, by fatigue, and by the species of the reflex, with noci-ceptive reflexes prepotent. Allied reflexes reinforce through the same convergence, so one anatomical fact, convergence, yields both coalition and interference, the two great modes of coordination. Time is handled as carefully as space: chain-reflexes let each act supply the next act's stimulus, immediate induction fortifies a reflex just begun, successive induction makes an inhibited action rebound, and fatigue rotates possession of the common path so that no receptor monopolizes an effector. The last lectures widen the frame. Reflexes are read as adapted reactions whose purposes are legible in their adequate stimuli; spinal shock shows what the isolated cord loses when a tonic supraspinal influence is withdrawn; decerebrate rigidity displays the tonic system that maintains posture against gravity; and the brain's dominance is derived from receptive architecture, the cerebellum as head ganglion of the proprio-ceptive system, the cerebrum as ganglion of the distance-receptors whose precurrent reactions let the animal deal with objects before contact. For a reasoning engine the yield is a complete discipline of combination: private inputs with provenance, synaptic boundaries that transform rather than transmit, graded outputs, explicit competition for one emission path, vetoes seated in the centre, state-dependent signs, and anticipatory layers that prepare what contact evidence consummates. Where the book breaks is equally instructive. Its mechanisms are qualitative; thresholds, latencies, and ratios are measured in places but no general quantitative law is proved, the trophic theory of inhibition is frankly hypothetical, and the chemical nature of synaptic transmission is beyond its reach. It also works from mutilated preparations, spinal and decerebrate animals, and repeatedly warns that the intact organism may refuse the clean separations the laboratory imposes. The engine builder should take both halves: the architecture as a proven scheme of coordination, and the numbers as placeholders awaiting measurement in the new domain. Three further strands deserve record because they carry mechanisms the headline summary can miss. The first is spread: a reflex does not stay at its focus but irradiates, and it irradiates along certain lines only, because each synapse on the way presents its own neurone-threshold; the resulting reflex figure, the constellation of muscles and inhibitions that a stimulus actually evokes, is therefore a property of the junction resistances of the whole network and not of the stimulus alone. The second is rhythm: the centre transmutes the rhythm of its input, Schafer's ten to twelve per second undulations emerging from faradic input of far higher frequency, which is further evidence that what crosses a synapse is not the incoming impulse itself but a fresh discharge generated under a threshold. The third is control from above: the motor cortex yields the same reciprocal innervation as the cord, inhibition of the antagonist paired with excitation of the agonist, yet the arrest is executed in subcortical centres, and by the final lecture reflex action and volitional action are shown on a continuum, the transition between them not abrupt and sharp, with training able to bring reflexes within the pale of the will and to dissociate ancestral coordinations into new skilled acts. Even sensation obeys the architecture: in binocular vision Talbot's law fails for the double retina treated as one surface, showing that the two corresponding points are not fused into a single receiver at the physiological level, and that union for coordination of motor reaction precedes any synthesis of sensation. Quantitatively the book is honest about its own grain: latent periods measured in sigma, after-discharges hundreds of times longer than latencies, summation windows near fifteen hundred sigma, afferent fibres outnumbering efferent about five to one. These are orders of magnitude to design by, not constants to inherit, and the engine that adopts the architecture must re-measure every one of them in its own medium, exactly as Sherrington re-measured trunk conduction inside the arc before trusting the comparison.",
+      "retrocausal_genealogy": "Sherrington's synthesis rests on a century of preparation. Descartes sketched the reflex; Marshall Hall named and systematized reflex action and noticed shock; Bell and Magendie separated the spinal roots and so founded the law of forward direction; Romanes showed the Medusa nerve-net conducting in all directions, the primitive contrast case; Cajal and the neurone doctrine supplied the cellular units and their discontinuity, with Wallerian degeneration marking their boundaries; Gaskell's work on the vagus and the heart gave inhibition a trophic interpretation and the rebound phenomenon; Verworn, Setschenov, and Stirling contributed summation, central inhibition, and the summation-time of the cord; Loeb named chain-reflexes; Pfluger had earlier framed laws of spinal irradiation. Sherrington's originality is less any single fact than the integration of these into one account of coordination, crowned by coining the synapse as the physiological seat where the characters of reflex conduction are generated.",
+      "theory_of_mind": "Sherrington writes as an experimentalist who believes the animal is a purposive unity and that physiology earns its keep only when it can say what a reaction is for. His model of the reader is a fellow physiologist who will accept teleology as a reading discipline but not as a substitute for tracings, latencies, and lesions; hence every functional claim is anchored to a myograph record or an ablation. He assumes the laboratory preparation, however mutilated, reveals real mechanisms of the intact animal, provided the analyst remembers the mutilation. His deepest commitment is that coordination, not conduction, is the explanandum: the interesting question is never how an impulse travels but how many impulses, from many receptors, become one orderly act.",
+      "cross_layer_veto": "Several results in the book act as vetoes on any simpler theory of the nervous system, and by extension on any engine built in its image. Central inhibition vetoes the idea that coordination is achieved by excitation alone or by wiring alone: with resting paths open, order requires active suppression seated in the centre. The refractory phase vetoes instantaneous re-use of a mechanism and so vetoes any model in which outputs can be re-triggered without a recovery law. Fatigue vetoes permanent possession of a shared output by one input. Spinal shock vetoes the assumption that a subsystem's silence means its local machinery is broken. And strychnine vetoes fixed sign conventions: a pathway's effect, excitatory or inhibitory, is a property of central state, so any layer that hard-codes the direction of a signal's action will eventually be reversed by the facts."
+    }
+  ],
+  "universal_lens": "Read generally, the book is a theory of how many private channels become one public act without confusion. Its pattern recurs wherever distributed sensors feed shared effectors: keep inputs attributed and private, force them through transforming junctions rather than transparent wires, let allied lines reinforce and antagonistic lines exclude, seat vetoes in the centre, rotate possession so no source monopolizes the output, and place the longest-horizon sensors in charge of preparation. Any organization, machine, or institution that must turn a crowd of signals into a single coherent action is solving Sherrington's problem, and his solution, convergence under competition with central inhibition, is the template.",
+  "gsi_mapping": "For the Galaxy Sports Institute the book supplies a founding physiology of coordination to teach from: the reflex-arc as unit, the synapse as the seat of delay, threshold, and sign, the final common path as the discipline of convergent outputs, and the three receptive fields as a classification of evidence. It also supplies a research ethic: purposes are read from adequate stimuli and response form, claims are anchored to records, and the limits of a preparation are stated as part of the result. Its historical line, from Hall and Bell through Cajal to Sherrington, is the Institute's clearest case study of a science integrating itself.",
+  "gse_mapping": "For the Galaxy Sports Edge engine the book is an architecture specification. Ingestion stays private-pathed and provenance-true; reasoning happens across synaptic boundaries that delay, threshold, sum, and veto; allied evidence reinforces, antagonistic evidence competes for one final common emission path under intensity, induction, fatigue, and species rules, with harm signals prepotent; outputs are graded, double-signed, and aperiodic; suppressed lines are stored at full strength against rebound; and a strategic layer over the distance signals checks and releases the reflex layer below. Every one of those clauses traces to a named mechanism in these lectures."
+}

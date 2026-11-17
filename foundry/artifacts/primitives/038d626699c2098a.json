@@ -1,0 +1,752 @@
+{
+ "book_id": "038d626699c2098a",
+ "source_status": "COMPLETE",
+ "source_note": "Observability Engineering: Achieving Production Excellence, Second Edition, by Charity Majors, Liz Fong-Jones, and George Miranda, with Austin Parker. Published by O'Reilly Media, Inc., second edition June 2026 (revision history: 2026-06-16 first release; ISBN 979-8-341-60841-2). Local file is the publisher PDF in the books-c-systems bucket, 15,099,859 bytes; scan digest sha256 over str(size) plus full file bytes is 038d626699c2098a3fe596497ae7daf6d4905fa24c3d94d20a9d61a1a6d169a0, and book_id is its first 16 hex characters, matching the expected value. Extracted text is clean and complete: foreword, preface, 32 chapters in six parts, and index, roughly 600 printed pages. The edition is about twice the first edition's length and mostly new or rewritten, adding chapters on AI agents, LLM observability, ontologies, frontend observability, and organizational governance. Catalog filename (Majors-FongJones-Miranda-2026-ObservabilityEngineering-2e) matches the copyright page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "kalman_observability_controllability_duality",
+   "name": "Observability and controllability are duals: a system whose internal state cannot be inferred from its outputs cannot be controlled",
+   "verbatim_quote": "A system you cannot observe is, in a precise mathematical sense, a system you cannot control, and vice versa.",
+   "page": "Chapter 1, p. 4 (The Origins of Observability)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The system emits outputs that are recorded with enough fidelity to reason about internal state",
+    "The term is borrowed from Rudolf E. Kalman's 1960 control theory paper, as the chapter states"
+   ],
+   "breakdown_regime": "Breaks when the emitted outputs were never captured in the first place: hidden state is permanently unrecoverable, per the chapter's reading of Kalman",
+   "domain": "control theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The reasoning engine inherits the duality directly: any internal state of a game, a market, or a model pipeline that is not reconstructible from recorded outputs is a state the engine cannot steer, grade, or correct. Ingestion design therefore starts from the question of which internal states must be inferable later, and captures outputs sufficient to reconstruct them.",
+    "source_operator": "kalman_observability_controllability_duality",
+    "telemetry": "Recorded engine outputs per decision: inputs snapshot, feature values, model version, and emitted result, joined by a stable decision identifier"
+   }
+  },
+  {
+   "primitive_id": "observability_seventh_dependability_property",
+   "name": "Observability is a seventh property of software dependability, added to Laprie's six: the ability to understand or debug any given system state",
+   "verbatim_quote": "The ability to understand or debug any given system state",
+   "page": "Chapter 1, pp. 6-7 (Observability Is a Property of Dependable Software)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Laprie's 1995 dependability framework (availability, reliability, maintainability, safety, confidentiality, integrity) is the base taxonomy",
+    "Dependability properties are assessed qualitatively on a spectrum, not as a numeric score"
+   ],
+   "breakdown_regime": "Degrades in partial failure regimes: the chapter notes the cloud era replaced binary up/down states with a zoo of partial degradations that monitoring alone cannot explain",
+   "domain": "software dependability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's dependability review gains a seventh axis beside accuracy and uptime: can any emitted decision state be understood and debugged after the fact, including novel states nobody anticipated. A pick, a projection, or a refusal that cannot be reconstructed and explained fails this property even if it was numerically right.",
+    "source_operator": "observability_seventh_dependability_property",
+    "telemetry": "Per-decision evidence bundles: the full input set and intermediate values that produced each published output"
+   }
+  },
+  {
+   "primitive_id": "context_value_combinatorial_growth",
+   "name": "Data is made valuable by context, and that value increases combinatorially, not linearly, with each added field",
+   "verbatim_quote": "Data is made valuable by context, and that value increases combinatorially, not linearly.",
+   "page": "Chapter 1, p. 14 (The Unified Storage Model)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fields are stored together on one record so their relationships survive to query time",
+    "The store can slice on arbitrary field combinations without prebuilt indexes for each combination"
+   ],
+   "breakdown_regime": "Fails when signals are fragmented across silos by type: the relationships between fields, which the chapter calls the most powerful part of the data, are destroyed",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every signal family attached to the same game or player record multiplies the number of questions the reasoning layer can ask of the joined record, because each new field can be crossed with every field already present. This is the formal reason the engine ingests signals onto one evidence record instead of scoring families in isolation.",
+    "source_operator": "context_value_combinatorial_growth",
+    "telemetry": "Field inventory per evidence record: count of populated context fields per game, player, and decision"
+   }
+  },
+  {
+   "primitive_id": "dimensionality_combination_growth",
+   "name": "The number of possible field combinations on a structured event grows as 2 to the n minus 1: 4 fields give 15 combinations, 8 give 255, 30 give about 1.1 billion",
+   "verbatim_quote": "If a structured log has four dimensions or attributes, you can combine them in 15 possible ways.",
+   "page": "Chapter 1, p. 15 (Dimensionality sidebar)",
+   "latex": "N_{\\mathrm{combos}} = 2^{n} - 1",
+   "symbol_and_unit_ledger": {
+    "n": "number of dimensions or attributes on one structured event (count, dimensionless)",
+    "N_combos": "number of non-empty subsets of fields that can be combined in a query (count, dimensionless)"
+   },
+   "assumptions": [
+    "Every subset of fields is a potentially meaningful query grouping",
+    "The chapter's worked values are 4 fields to 15 combinations, 8 fields to 255, 30 fields to about 1.1 billion"
+   ],
+   "breakdown_regime": "The count is an upper bound on addressable questions, not on useful ones; most subsets are never queried, and storage cost grows with width even when query value does not",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This gives the engine a sizing rule for evidence records: widening a game evidence bundle from 8 to 30 fields grows the addressable slice space from 255 to about a billion combinations, which is why matchup, situational, health, and market fields belong on one record where the reasoning layer can cross them freely.",
+    "source_operator": "dimensionality_combination_growth",
+    "telemetry": "Dimensionality count per record type, tracked as fields are added to or dropped from evidence bundles"
+   }
+  },
+  {
+   "primitive_id": "preaggregation_one_way_trip",
+   "name": "Pre-aggregation is a one-way trip: telemetry aggregated at write time can never be un-aggregated, so raw events must be stored and aggregates derived at query time",
+   "verbatim_quote": "If you aggregate your telemetry at write time, you can never un-aggregate it.",
+   "page": "Chapter 1, p. 14 (The Unified Storage Model)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Storage of raw events is affordable at the team's scale, possibly with sampling",
+    "Questions worth asking are not all knowable in advance"
+   ],
+   "breakdown_regime": "Raw retention breaks down at extreme volume or under privacy constraints; the book's own answer is sampling with recorded rates (Chapter 15), not write-time aggregation",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine pipelines must persist raw signal observations and compute rollups at read time. Any stage that stores only a pre-aggregated summary permanently deletes the cross-sections a later investigation, audit, or recalibration would need, including slices nobody thought to define when the pipeline was built.",
+    "source_operator": "preaggregation_one_way_trip",
+    "telemetry": "Pipeline audit flags: any store whose only retained form of a signal is an aggregate over a time bucket"
+   }
+  },
+  {
+   "primitive_id": "unified_storage_model",
+   "name": "The unified storage model stores all telemetry describing a request once, as arbitrarily wide structured events or traces, instead of siloing metrics, logs, and traces in separate stores",
+   "verbatim_quote": "All the telemetry that describes a request is stored once, preserving as much context and many relationships as possible, either in arbitrarily wide, structured log events, called \"canonical logs,\" or as spans and traces.",
+   "page": "Chapter 1, pp. 12-13 (The Unified Storage Model)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The team controls instrumentation of the code it writes, unlike third-party infrastructure code",
+    "A columnar store backs the unified events so high cardinality stays queryable"
+   ],
+   "breakdown_regime": "The chapter itself limits the claim: the three pillars model remains the right model for third-party code and infrastructure the team does not control",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's evidence store follows the same split: first-party signal capture lands in one unified record per unit of work, while third-party feeds the engine does not control keep their native shapes at the boundary and are normalized only on ingest.",
+    "source_operator": "unified_storage_model",
+    "telemetry": "Storage layout inventory: which signal families share one record store versus which remain in separate silos"
+   }
+  },
+  {
+   "primitive_id": "six_functional_requirements",
+   "name": "Six functional requirements for observability derived from the control theory definition: high-dimensionality data, high-cardinality data, raw storage with read-time aggregation, zoom from single request to whole system, exploratory interfaces, and query results within seconds",
+   "verbatim_quote": "Store raw events and aggregate at read time, with flexible, inferred schemas and indexes.",
+   "page": "Chapter 3, pp. 44-45 (The Control Theory Definition Made It All Click)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The goal is understanding unknown-unknowns, not only detecting known failure modes",
+    "Requirements were derived by working backward from the goal of understanding any system state from outputs alone"
+   ],
+   "breakdown_regime": "Traditional tooling satisfies known-unknown work (infrastructure monitoring, incident checklists) without meeting these requirements; the requirements bind when novel states must be understood",
+   "domain": "observability requirements",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The six requirements become an acceptance checklist for any engine data surface: if a surface cannot zoom from one decision to the whole slate, cannot be sliced on high-cardinality identifiers, or answers in minutes instead of seconds, investigations stall at exactly the novel states the engine exists to explain.",
+    "source_operator": "six_functional_requirements",
+    "telemetry": "Surface audits: query latency percentiles, maximum slice cardinality supported, and raw-versus-aggregate retention per surface"
+   }
+  },
+  {
+   "primitive_id": "durable_code_small_contained_diffs",
+   "name": "The reliable way to change durable code is a series of small, contained diffs against a baseline assumed to be good, which shrinks the blast radius when something goes wrong",
+   "verbatim_quote": "The most reliable way to change durable code is by applying a series of small, contained diffs to a baseline that is assumed to be good.",
+   "page": "Chapter 2, p. 21 (Durable Code Is a Model for Mutating and Maintaining Code in Place)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The running baseline embodies implicit commitments and user expectations that are not written down anywhere else",
+    "Each diff can be deployed and validated separately"
+   ],
+   "breakdown_regime": "Does not apply to disposable code with no maintenance horizon, where regeneration from a spec is cheaper than mutation in place",
+   "domain": "software delivery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine changes follow the same rule: model, feature, and threshold changes land as small separable diffs against the currently trusted engine version, each validated on its own, so a regression can be attributed to one change instead of a bundled release.",
+    "source_operator": "durable_code_small_contained_diffs",
+    "telemetry": "Change log granularity: number of distinct behavioral changes per deployed engine version"
+   }
+  },
+  {
+   "primitive_id": "practice_zero_keystone_observability",
+   "name": "Practice 0: rich data and precision tooling are the prerequisite for every other production practice; feature flags, canaries, and automated rollbacks are only as good as the observability underneath them",
+   "verbatim_quote": "Every other practice on this list is dramatically more valuable with high-quality observability.",
+   "page": "Chapter 2, p. 25 (Practice 0: Give Yourself the Gift of Rich Data and Precision Tooling)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The practices form a sequence in which each unlocks the next",
+    "Signal precision, meaning the ability to select arbitrary subsets and compare them, is available"
+   ],
+   "breakdown_regime": "Run on three pillars telemetry, the same practices produce mediocre results, which the chapter warns is why teams wrongly conclude the tools do not work",
+   "domain": "software delivery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sequencing rule for engine work: evidence capture and query precision are built before any promotion, gating, or automation layer, because every later mechanism inherits the quality of the signal beneath it. An automated promotion rule fed by coarse aggregates automates the wrong decisions faster.",
+    "source_operator": "practice_zero_keystone_observability",
+    "telemetry": "Dependency audit: which automated decisions consume which signal surfaces, with the precision of each surface recorded"
+   }
+  },
+  {
+   "primitive_id": "deploy_release_decoupling_feature_flags",
+   "name": "Deploys and releases are different acts: a deploy rolls out changed software, a release changes user experience, and feature flags are the mechanism that separates the two",
+   "verbatim_quote": "Deploying code and releasing code are two different acts that serve different needs; feature flags are how you separate the two.",
+   "page": "Chapter 2, p. 30 (Practice 4: Decouple Deploys from Releases Using Feature Flags)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Flag state can be changed independently of the deploy pipeline, including instant disable",
+    "Telemetry records which flag set each request or user actually experienced"
+   ],
+   "breakdown_regime": "Flag sprawl without lifecycle discipline makes behavior hard to reason about; the chapter notes flags get complicated and fiddly to manage at scale",
+   "domain": "software delivery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine model versions deploy dark and are released by flag: a new model can run in production, emit full telemetry, and be compared against the incumbent while exactly zero published output depends on it, then be enabled for a slice or disabled instantly when its behavior disappoints.",
+    "source_operator": "deploy_release_decoupling_feature_flags",
+    "telemetry": "Flag state per emitted output: model version, feature set version, and gate configuration stamped on every decision record"
+   }
+  },
+  {
+   "primitive_id": "canary_arbitrary_cohort_comparison",
+   "name": "With precision telemetry, arbitrary cohorts (new build versus old build, one endpoint, one user tier) can be compared inside a 1 percent canary, surfacing regressions that aggregate metrics hide until most traffic is affected",
+   "verbatim_quote": "When you can compare arbitrary cohorts—users on the new build versus users on the old build, filtered to a specific endpoint, broken down by user tier—you can detect a regression in 1% of traffic.",
+   "page": "Chapter 2, p. 34 (Practice 5: Invest in Progressive Delivery, Canaries, Automated Rollbacks)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Canary and baseline traffic are drawn from comparable populations",
+    "The telemetry carries the dimensions needed to form the cohorts of interest"
+   ],
+   "breakdown_regime": "Fails for threshold effects and unrepresentative samples: the chapter's own story has a canary pass cleanly and the failure appear only at 70 percent rollout through a shared row lock",
+   "domain": "software delivery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Shadow and canary evaluation of engine changes uses cohort comparison rather than global averages: a candidate model's outputs are compared with the incumbent on matched slices (same games, same market types, same confidence bands), so a regression concentrated in one slice is visible at small exposure instead of after full promotion.",
+    "source_operator": "canary_arbitrary_cohort_comparison",
+    "telemetry": "Cohort comparison reports: candidate versus incumbent outcome deltas per slice, with slice sizes recorded"
+   }
+  },
+  {
+   "primitive_id": "structured_event_building_block",
+   "name": "A structured event is an event parseable into key-value pairs, one record of everything that occurred during a unit of work; metrics, logs, and traces are all views derivable from this single substrate",
+   "verbatim_quote": "A \"structured event\" is an event that can be parsed into a set of key-value pairs that may contain many values.",
+   "page": "Chapter 5, p. 64 (What Is a Structured Event?)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Events are emitted per unit of work and stored as columns in a table-like store",
+    "Fields are flat key-value pairs, visualized in the chapter as a JSON object with no nested fields"
+   ],
+   "breakdown_regime": "If the datastore treats the event as an opaque string instead of structured data, the chapter notes the distinction collapses and query power is lost",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's unit record is the same object: one structured event per game, per player projection, and per emitted decision, carrying every input and intermediate value as named fields, so summaries, narratives, and audit trails are all derived views of one record rather than separate artifacts that can drift apart.",
+    "source_operator": "structured_event_building_block",
+    "telemetry": "Record schema registry: field lists per event type, with population rates per field"
+   }
+  },
+  {
+   "primitive_id": "average_of_averages_aggregation_loss",
+   "name": "Averaging pre-aggregated averages is mathematically unsound when group sizes differ; the correct overall mean needs per-group counts and totals, as in the chapter's worked example where the naive 183 ms average is wrong and the weighted figure is 175 ms",
+   "verbatim_quote": "there is no mathematically sensible way to combine these measurements once you have lost data by aggregating them into an average.",
+   "page": "Chapter 5, p. 67 (Metrics Are Typically Aggregated)",
+   "latex": "\\bar{x} = \\frac{\\sum_i T_i}{\\sum_i n_i} = \\frac{44710\\ \\mathrm{ms}}{255} \\approx 175\\ \\mathrm{ms}",
+   "symbol_and_unit_ledger": {
+    "T_i": "total response time summed over instance i (milliseconds); the chapter's values are 12,000, 13,110, and 19,600 ms",
+    "n_i": "number of requests served by instance i (count); the chapter's values are 100, 57, and 98",
+    "x_bar": "overall mean response time across all instances (milliseconds)"
+   },
+   "assumptions": [
+    "Per-instance request counts differ, so an unweighted mean of per-instance means weights instances equally instead of requests equally",
+    "Counts and totals are retained alongside any average, which is what the histogram metric type exists to do"
+   ],
+   "breakdown_regime": "The naive average of averages is only correct when all groups are exactly the same size; the chapter states this exception explicitly",
+   "domain": "statistics of aggregation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every rolled-up engine statistic must carry its count and its sum beside the mean: slate-level, market-level, and model-level averages are computed from summed counts and totals, never by averaging published averages, because subgroup sizes (games per slate, picks per market) always differ.",
+    "source_operator": "average_of_averages_aggregation_loss",
+    "telemetry": "Aggregate lineage: for each published average, the stored count and total it was computed from"
+   }
+  },
+  {
+   "primitive_id": "trace_five_required_fields",
+   "name": "A distributed trace needs only five data pieces per span: trace ID, span ID, parent ID, timestamp, and duration; everything else is attributes",
+   "verbatim_quote": "That's it. Those are all of the fields absolutely required in order to assemble the structure of a trace.",
+   "page": "Chapter 5, p. 75 (The Components of Tracing)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The trace ID is created by the root span and propagated to every subsequent span",
+    "The root span is identified by an absent parent ID"
+   ],
+   "breakdown_regime": "Structure assembles from these five fields, but investigative value depends on the span attributes the chapter treats as optional; bare structure without attributes shows shape, not cause",
+   "domain": "distributed tracing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine decision traces adopt the same minimal skeleton: each reasoning step is a span with a decision trace ID, its own step ID, a parent step ID, a timestamp, and a duration, so any published output can be unfolded into the exact tree of computations and judgments that produced it.",
+    "source_operator": "trace_five_required_fields",
+    "telemetry": "Trace completeness checks: share of emitted decisions whose full span tree can be reassembled from stored fields"
+   }
+  },
+  {
+   "primitive_id": "post_decide_data_shape",
+   "name": "Capture the entire set of facts and post-decide the data shape at investigation time, instead of pre-deciding the shape at collection time and pre-deciding the investigation with it",
+   "verbatim_quote": "Instead of pre-deciding the data shape and boxing yourself into pre-deciding the investigation, you capture an entire set of facts and post-decide the necessary shape.",
+   "page": "Chapter 5, pp. 82-83 (Dynamically Generating the Right System Views)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The underlying events retain the fields any later view needs, including high-context fields like user, region, build, and device in the chapter's example",
+    "Derived views are a data-processing problem once the facts are kept, including streaming quantile sketches such as t-digest or HDR histograms"
+   ],
+   "breakdown_regime": "Post-deciding fails retroactively for any field that was never captured; the discipline only protects questions whose dimensions were recorded",
+   "domain": "telemetry data modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine analysis views (per-market summaries, per-team splits, confidence band reports) are queries over stored decision facts, not pipeline outputs baked at emission time, so a new analytical question is answered by writing a new query over history rather than by re-running the engine.",
+    "source_operator": "post_decide_data_shape",
+    "telemetry": "View registry: which published reports are derived queries over the fact store versus baked pipeline outputs"
+   }
+  },
+  {
+   "primitive_id": "arbitrarily_wide_structured_event",
+   "name": "An arbitrarily wide structured event has no practical limit on captured context, combining high dimensionality and high cardinality so novel failures can be investigated by comparing outliers across fields without prejoining data",
+   "verbatim_quote": "An \"arbitrarily wide\" structured event means that there should be no practical limit to how much context can be stuffed into any single event.",
+   "page": "Chapter 6, p. 85 (Making Structured Events Arbitrarily Wide)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The store is columnar, so sparse wide records stay cheap",
+    "Instrumentation captures service, build, request, user, business, and operational context as attributes at emission time"
+   ],
+   "breakdown_regime": "Width is bounded in practice by emission cost and by one-time-use columns; Chapter 13 warns that columns used for a single row do not amortize",
+   "domain": "instrumentation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Evidence bundles are deliberately over-wide at capture: rest, travel, officiating, weather, lineup, and market context are attached to the game record even when the current model does not consume them, because the investigation that needs a field always arrives after the game, never before.",
+    "source_operator": "arbitrarily_wide_structured_event",
+    "telemetry": "Bundle width audits: populated field counts per bundle and the share of fields consumed by at least one analysis"
+   }
+  },
+  {
+   "primitive_id": "core_analysis_loop",
+   "name": "The core analysis loop is hypothesis-driven debugging: start from the observed change, verify it, search for dimensions present inside the changed region but absent in the baseline, filter to isolate, and repeat until the explanation fits",
+   "verbatim_quote": "The core analysis loop is hypothesis-driven debugging: propose, test, refine.",
+   "page": "Chapter 8, pp. 139-140 (Using the Core Analysis Loop)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Telemetry is wide enough that the discriminating dimension was captured",
+    "The investigator treats understanding as provisional until verified against data, which the chapter calls debugging from first principles"
+   ],
+   "breakdown_regime": "Correlation found by the loop is not causality; the chapter warns explicitly not to confuse the two, and multicausal failures need several loop passes",
+   "domain": "analysis workflow",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Post-slate engine review runs the same loop: isolate the region where outcomes diverged from expectation, diff the dimensions inside that region against the baseline of well-predicted games, and iterate, instead of debugging from remembered conditions or senior intuition about what usually goes wrong.",
+    "source_operator": "core_analysis_loop",
+    "telemetry": "Review worksheets: the anomalous region definition, the baseline definition, and the ranked discriminating dimensions per review"
+   }
+  },
+  {
+   "primitive_id": "automated_anomaly_baseline_diff",
+   "name": "The brute-force part of the core analysis loop is automatable: compute every dimension's values inside the anomalous region and outside it, compare the two distributions, and rank fields by percentage difference (the BubbleUp mechanism)",
+   "verbatim_quote": "BubbleUp computes the values of all dimensions both inside the box (the anomaly you care about and want to explain) and outside the box (the baseline), and it compares the two and sorts the resulting view by percentage of differences",
+   "page": "Chapter 8, p. 141 (Automating the Brute-Force Portion of the Core Analysis Loop)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An anomalous region can be isolated on some aggregate view first",
+    "Dimensions are stored per event so inside and outside distributions can both be computed"
+   ],
+   "breakdown_regime": "Ranking surfaces association, not mechanism; a dimension present in 100 percent of the anomaly may be a fellow traveler of the true cause",
+   "domain": "analysis workflow",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's miss analysis automates this diff: for any cluster of bad outcomes, every recorded dimension is compared between the cluster and the full baseline population and ranked by distributional difference, producing the next investigation targets without a human guessing which field to slice first.",
+    "source_operator": "automated_anomaly_baseline_diff",
+    "telemetry": "Per-cluster dimension rankings with inside share, baseline share, and difference for every recorded field"
+   }
+  },
+  {
+   "primitive_id": "helpful_alert_criteria",
+   "name": "An alert is helpful only if it reliably indicates degraded user experience and is solvable by a systematic debugging process; alerts failing either test should be deleted",
+   "verbatim_quote": "First, it must be a reliable indicator that the user experience (UX) of your service is in a degraded state. Second, the alert must be solvable.",
+   "page": "Chapter 11, pp. 177-178 (Threshold Alerting Is Only for Known-Unknowns)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Responders can actually debug the system in production, which is what makes symptom alerts actionable",
+    "The team is willing to delete unactionable alerts rather than layer suppression tooling over them"
+   ],
+   "breakdown_regime": "Threshold alerts remain the right tool for the chapter's known-unknowns with direct user correlation and clear remediation, such as disk nearly full or a certificate expiring",
+   "domain": "alerting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine alerting inherits the two tests: a signal pages a human only when it indicates real degradation of published output quality and when a defined investigation procedure exists for it. Vanity thresholds on internal metrics that meet neither test are removed instead of tuned.",
+    "source_operator": "helpful_alert_criteria",
+    "telemetry": "Alert inventory with per-alert records: user impact indicator yes or no, investigation procedure link, fire and action history"
+   }
+  },
+  {
+   "primitive_id": "event_based_sli",
+   "name": "Service level indicators categorize system state as good or bad per event; event-based SLIs are preferred over time-based ones because they are more reliable and more granular",
+   "verbatim_quote": "That target is measured using service level indicators (SLIs), which categorize the system state as good or bad.",
+   "page": "Chapter 11, pp. 179-180 (Reliable Alerting with Service Level Objectives)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Qualifying events and good-event conditions are defined from a critical user journey, not from system metrics",
+    "In the chapter's example, an event slower than 100 milliseconds counts as an error even when it returned a success code"
+   ],
+   "breakdown_regime": "Time-based SLIs mark whole intervals good or bad, which the chapter shows produces high false positive and false negative rates as traffic volume varies through the day",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine quality indicators are event-based: each published projection or pick is one event classified good or bad against explicit conditions (calibration band, closing line value sign, data completeness at emission), and quality targets are computed over those events rather than over time buckets of aggregate accuracy.",
+    "source_operator": "event_based_sli",
+    "telemetry": "Per-event quality classifications with the qualifying conditions and the good or bad verdict stored on each decision record"
+   }
+  },
+  {
+   "primitive_id": "decouple_what_from_why",
+   "name": "Symptom-based alerting decouples what is wrong from why it is wrong; cause-based alerts fuse the two and mislead, because the same symptom has many possible causes in a distributed system",
+   "verbatim_quote": "Decoupling \"what\" from \"why\" is one of the most important distinctions in writing good monitoring with maximum signal and minimum noise.",
+   "page": "Chapter 11, p. 180 (Reliable Alerting with Service Level Objectives)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A separate investigative capability exists to answer the why after the what fires",
+    "Symptoms are defined at the user experience surface, where impact is unambiguous"
+   ],
+   "breakdown_regime": "Without high-observability tooling the decoupled alert strands the responder: the chapter ties the approach to being able to debug from first principles",
+   "domain": "alerting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine monitoring separates detection from diagnosis in the same way: quality alerts fire on outcome symptoms (calibration drift, budget burn) with no cause baked in, and the evidence store plus the core analysis loop supply the why afterward, so a novel cause is investigated rather than forced into a prewritten cause category.",
+    "source_operator": "decouple_what_from_why",
+    "telemetry": "Alert definitions audited for embedded cause assumptions; diagnosis notes attached after investigation, not before"
+   }
+  },
+  {
+   "primitive_id": "error_budget",
+   "name": "An error budget is the count of failures an SLO permits in a window: budget equals one minus the target, times total eligible events (a 99.9 percent target over 10 million monthly requests permits 10,000 failures)",
+   "verbatim_quote": "An error budget represents the maximum amount of system unavailability that your business is willing to tolerate.",
+   "page": "Chapter 12, pp. 195-196 (Alerting Before Your Error Budget Is Empty)",
+   "latex": "B = (1 - s) \\cdot N",
+   "symbol_and_unit_ledger": {
+    "B": "error budget: maximum tolerated failed requests in the window (count)",
+    "s": "SLO target as a fraction (dimensionless; 0.999 in the chapter's example)",
+    "N": "total eligible requests in the window (count; 10,000,000 per month in the chapter's example, giving B = 10,000)"
+   },
+   "assumptions": [
+    "Eligible events and failure classification come from an event-based SLI",
+    "The budget is tracked over a sliding window, per the chapter's framing choice"
+   ],
+   "breakdown_regime": "For targets above about 99.95 percent the chapter notes burn calculations stop being preventive and become reporting, because reaction time runs out",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine runs on an explicit error budget for published output: a tolerated count of bad outcomes per rolling window derived from the quality target and the number of published events. Budget remaining, not raw recent form, governs how aggressive the emission policy is allowed to be.",
+    "source_operator": "error_budget",
+    "telemetry": "Rolling counts per window: eligible published events, failed events, budget total, and budget remaining"
+   }
+  },
+  {
+   "primitive_id": "sliding_window_time_framing",
+   "name": "Burn trajectories must be computed over a sliding trailing window, not a fixed calendar window, because fixed windows reset dramatically and leave too little data for decisions right after each reset",
+   "verbatim_quote": "The correct first choice to make when calculating burn trajectories is to frame time as a sliding window, rather than a static fixed window.",
+   "page": "Chapter 12, pp. 197-198 (Framing Time as a Sliding Window)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A 30-day window is the chapter's pragmatic default; 7 or 14 days misalign with customer memory and planning cycles, 90 days lets one bad day hide",
+    "Customer memory and recency bias do not reset at calendar boundaries, which the chapter gives as the human reason for sliding windows"
+   ],
+   "breakdown_regime": "Sliding windows age incidents out gradually, which can mask a step change in baseline quality unless trend views over longer horizons are also kept",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "All engine quality accounting uses trailing windows: calibration, budget burn, and drift are computed over the last N published events or trailing days, never per calendar month, so a bad week cannot be laundered by a month boundary and a good history ages out smoothly.",
+    "source_operator": "sliding_window_time_framing",
+    "telemetry": "Window definitions per quality metric, stored with each computed value so the framing is auditable"
+   }
+  },
+  {
+   "primitive_id": "relative_burn_alert",
+   "name": "A relative burn alert fires when failures in a short baseline window exceed a multiple of the failures the error budget proportionally allows in that window (4x on a 15-minute window with about 3.4 allowed failures means alerting above roughly 13 failures)",
+   "verbatim_quote": "A mechanism outlined in Chapter 5 of The Site Reliability Workbook is to calculate the ratio of observed and allowed errors according to the error budget during a certain baseline (or lookback) window.",
+   "page": "Chapter 12, p. 200 (Relative Burn Alerts)",
+   "latex": "r = \\frac{F_{\\mathrm{obs}}}{F_{\\mathrm{allowed}}}",
+   "symbol_and_unit_ledger": {
+    "r": "relative burn ratio (dimensionless); the chapter pages at 4x and treats 2x sustained as a non-paging alert",
+    "F_obs": "observed failed requests in the baseline window (count)",
+    "F_allowed": "failures the budget allows in that window at steady state (count); about 3.4 per 15-minute window in the chapter's example of 10,000 allowed failures across 2,880 windows per month"
+   },
+   "assumptions": [
+    "Traffic is roughly uniform across windows when the allowed-per-window figure is computed by simple division",
+    "The ratio form keeps the alert aware of total expected volume, so one failure in twenty low-traffic requests does not page spuriously"
+   ],
+   "breakdown_regime": "Strong traffic seasonality breaks the uniform division assumption; allowed failures per window must then be computed per period rather than as a flat monthly share",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Emission risk alerts use the ratio form: observed bad outcomes in the recent window divided by the budget-proportional allowance for that window. A ratio crossing 2 notifies and crossing 4 pages, independent of how large the slate was, which keeps quiet periods from manufacturing false alarms.",
+    "source_operator": "relative_burn_alert",
+    "telemetry": "Per-window observed failures, proportional allowance, and ratio, logged at each evaluation interval"
+   }
+  },
+  {
+   "primitive_id": "proportional_extrapolation_burn_forecast",
+   "name": "Predictive burn alerts must extrapolate proportionally, not linearly: a 50 percent failure rate observed on low volume projects to 50 percent of expected volume, which in the chapter's example burns 720 units against a 438 budget and exhausts it in about half a day",
+   "verbatim_quote": "If that proportional failure rate of 50% continues for the next 24 hours, you will burn 50% of 1,440 units, or 720 units—far more than your budget of 438 units.",
+   "page": "Chapter 12, p. 205 (Predictive Burn Alerts)",
+   "latex": "\\hat{F} = \\hat{p} \\cdot \\hat{N}",
+   "symbol_and_unit_ledger": {
+    "F_hat": "projected failed units over the lookahead window (count; 720 in the chapter's example)",
+    "p_hat": "observed failure proportion in the baseline window (fraction; 25 of 50 units, 0.50 in the example)",
+    "N_hat": "expected eligible units over the lookahead window (count; 1,440 per day in the example)"
+   },
+   "assumptions": [
+    "The baseline failure proportion persists over the lookahead window",
+    "Expected volume over the lookahead is estimable from typical traffic (43,800 units per 30 days in the example)"
+   ],
+   "breakdown_regime": "Linear extrapolation of raw failure counts understates risk exactly when the baseline window had low traffic, which is the failure mode this primitive exists to correct",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine exhaustion forecasts are proportional: the bad-outcome rate from the recent window is applied to the expected number of upcoming published events, not multiplied as a raw count, so a bad run during a small slate still projects correctly onto a large upcoming slate.",
+    "source_operator": "proportional_extrapolation_burn_forecast",
+    "telemetry": "Forecast inputs per alert: baseline window size, observed bad rate, expected upcoming event count, projected exhaustion time"
+   }
+  },
+  {
+   "primitive_id": "factor_of_four_extrapolation_limit",
+   "name": "A baseline window can linearly predict forward by a factor of four at most without seasonality compensation, giving the heuristic that a 24-hour alarm rests on the last 6 hours and a 4-hour alarm on the last 1 hour",
+   "verbatim_quote": "In practice, we've found that a given baseline window can linearly predict forward by a factor of four at most without needing to add compensation for seasonality",
+   "page": "Chapter 12, p. 202 (The Lookahead Window)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Traffic has cyclical patterns at minute, hour, day, week, and year scales, as the chapter enumerates",
+    "Baseline and lookahead windows should be of about the same order of magnitude"
+   ],
+   "breakdown_regime": "Beyond a factor of four, microscale noise and seasonality dominate; the chapter also notes different-baseline alerts can fire in seemingly illogical order, so multiple timescales must all be measured and any one firing must trigger action",
+   "domain": "service level objectives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine forecasting respects the same bound: a quality projection may extend at most four times the length of the evidence window behind it. Longer claims require either a longer baseline or explicit seasonal structure, such as day of week and slate size effects, modeled rather than assumed away.",
+    "source_operator": "factor_of_four_extrapolation_limit",
+    "telemetry": "Forecast metadata: baseline window length and lookahead length recorded with every projection so the ratio is checkable"
+   }
+  },
+  {
+   "primitive_id": "tsdb_cardinality_explosion",
+   "name": "Time-series databases cannot store structured events: each unique combination of tag values creates a new time series, so high-cardinality event data makes row creation cost linear in events and each series holds a single event",
+   "verbatim_quote": "This problem of cardinality explosion thus makes TSDBs unsuitable for storing structured events.",
+   "page": "Chapter 13, p. 218 (Time-Series Databases Are Inadequate for Unified Observability)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "TSDB economics depend on amortizing series creation across many appended measurements per series",
+    "Structured events are each near-unique, so that amortization never happens"
+   ],
+   "breakdown_regime": "TSDBs remain efficient for their designed workload: low-cardinality aggregated metrics where the same series are incremented repeatedly",
+   "domain": "storage engineering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Storage selection for engine evidence follows the same constraint: per-decision records keyed by unique identifiers (game, player, decision, model run) belong in a columnar event store, and any metrics store in the stack is restricted to low-cardinality aggregates derived from those events.",
+    "source_operator": "tsdb_cardinality_explosion",
+    "telemetry": "Cardinality census per store: distinct series or key counts versus event counts, watched for linear growth"
+   }
+  },
+  {
+   "primitive_id": "retriever_time_segment_partitioning",
+   "name": "Retriever partitions incoming spans into append-only time segments, finalizing a segment when one hour elapses, 250,000 records are written, or 1 GB is written, and records each segment's oldest and newest timestamps as metadata for query-time pruning",
+   "verbatim_quote": "when more than 250,000 records have been written, or when it has written more than 1 GB (gigabyte), Retriever finalizes the current segment as read-only",
+   "page": "Chapter 13, p. 224 (Partitioning Data by Time)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Events arrive close to their generation timestamps, with out-of-order arrival corrected at read time",
+    "Queries overwhelmingly specify a time range, so segment overlap pruning removes most data from most queries"
+   ],
+   "breakdown_regime": "Backfilled data with old timestamps widens segment windows and forces scans across the whole span; the chapter notes more sophisticated partitioning or post facto rewriting would be needed if that became common",
+   "domain": "storage engineering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The evidence store partitions by time into sealed segments with recorded time bounds, so historical investigations scan only overlapping segments and sealed history is never rewritten in place; late-arriving data lands in a new segment whose wide time bound is explicit metadata rather than silent corruption of old segments.",
+    "source_operator": "retriever_time_segment_partitioning",
+    "telemetry": "Segment registry: time bounds, record counts, and byte sizes per sealed segment"
+   }
+  },
+  {
+   "primitive_id": "rpc_impatience_hedged_queries",
+   "name": "RPC impatience: once 90 percent of parallel segment subqueries complete, the slowest 10 percent are re-requested in parallel without canceling the originals, and whichever attempt responds first populates the result",
+   "verbatim_quote": "These parallel attempts race each other; whichever responds first is used to populate the query result.",
+   "page": "Chapter 13, p. 233 (Making It Fast with Parallelism)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subqueries are independent and idempotent, so duplicate execution is safe",
+    "Tail latency comes from stuck storage or network paths, so a fresh attempt usually lands on a faster path"
+   ],
+   "breakdown_regime": "Hedging costs extra load (the chapter accepts roughly 10 percent more); under systemic overload rather than isolated tail latency, retries amplify the problem instead of masking it",
+   "domain": "storage engineering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine data fan-out uses hedged reads for its slowest dependency calls: when most shards of a slate-wide query have answered, the stragglers are re-issued in parallel and the first answer wins, keeping interactive investigation inside the seconds budget the analysis loop requires.",
+    "source_operator": "rpc_impatience_hedged_queries",
+    "telemetry": "Query traces: subquery completion percentiles, hedge trigger rate, and the share of results served by hedged attempts"
+   }
+  },
+  {
+   "primitive_id": "constant_probability_sampling_reconstruction",
+   "name": "Under constant-probability sampling, totals are reconstructed by weighting each kept event by the sample rate in effect for it, while distribution properties such as the median and P99 are not distorted and need no adjustment",
+   "verbatim_quote": "For a fixed sampling rate system, you can multiply each event by the sampling rate in effect to get the estimated count of total requests and sum of their latency.",
+   "page": "Chapter 15, p. 277 (Constant-Probability Sampling)",
+   "latex": "\\hat{N} = \\sum_{i \\in S} w_i",
+   "symbol_and_unit_ledger": {
+    "N_hat": "estimated total number of events in the population (count)",
+    "S": "the set of sampled (kept) events",
+    "w_i": "sample rate in effect for event i, meaning the number of similar events it represents (count per sampled event)"
+   },
+   "assumptions": [
+    "The sampling decision is independent of the values being measured",
+    "The rate in effect is recorded on or with each sampled event, since rates can change over time and differ between services"
+   ],
+   "breakdown_regime": "Constant sampling fails when errors matter more than successes, when customers differ by orders of magnitude in volume, or when traffic surges can overwhelm the backend, per the chapter's own list",
+   "domain": "sampling statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any sampled engine dataset (graded outcomes, reviewed decisions, audited slates) reconstructs population totals by weighting each kept record by its sampling rate, while percentile claims over the same sample are reported unweighted, matching the chapter's split between counts that need weights and distributions that do not.",
+    "source_operator": "constant_probability_sampling_reconstruction",
+    "telemetry": "Sample rate recorded on every kept record at collection time, with the sampling design noted per dataset"
+   }
+  },
+  {
+   "primitive_id": "target_rate_sampling_per_key",
+   "name": "Target-rate sampling sets each key's sample rate from observed volume divided by interval times target rate, so every key (error class, endpoint, customer) gets a fair, bounded share of kept events instead of being drowned by high-volume keys",
+   "verbatim_quote": "You don't need to manually flag-adjust the sampling rates for each of your services as traffic swells and sags.",
+   "page": "Chapter 15, pp. 284-289 (Target-Rate Sampling; Sampling with Dynamic Rates on Arbitrarily Many Keys)",
+   "latex": "r_k = \\frac{c_k}{\\Delta t \\cdot R_k}",
+   "symbol_and_unit_ledger": {
+    "r_k": "sample rate for key k, meaning events represented per sampled event (dimensionless ratio, floored at 1 in the chapter's code)",
+    "c_k": "events observed for key k during the interval (count)",
+    "Delta t": "length of the measurement interval (seconds; one minute in the chapter's code)",
+    "R_k": "target number of sampled events per second for key k (events per second)"
+   },
+   "assumptions": [
+    "Events can be assigned a key from their content, such as error message, backend shard, and latency bucket in the chapter's SampleKey struct",
+    "Rates are recomputed each interval from the previous interval's counts"
+   ],
+   "breakdown_regime": "A key defined too finely fragments volume until per-key rates become noise; a key defined too coarsely reintroduces the drowning problem the method solves",
+   "domain": "sampling statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine review sampling is keyed and target-rated: graded samples are allocated per market type, per model version, and per confidence band using observed volume over target rate, so rare but important categories keep a guaranteed review share instead of being crowded out by the highest-volume category.",
+    "source_operator": "target_rate_sampling_per_key",
+    "telemetry": "Per-key observed counts, target rates, computed sample rates, and kept counts each interval"
+   }
+  },
+  {
+   "primitive_id": "consistent_sampling_whole_traces",
+   "name": "Consistent sampling propagates one sampling decision, keyed to a shared trace or sampling ID, to every span of a request, so traces are kept or dropped whole and a sampled child never loses its parent context",
+   "verbatim_quote": "Consistent sampling ensures that when the sample rate is held constant, traces are either kept or sampled away in their entirety.",
+   "page": "Chapter 15, p. 283 (Consistent Sampling)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A centrally generated sampling ID is propagated downstream instead of each handler deciding independently",
+    "Child services may sample at higher rates than parents without breaking the trace, as in the chapter's Redis example"
+   ],
+   "breakdown_regime": "Decisions depending on values known only at the end of a request (status, latency) cannot be made consistently at the head; those need tail-based or collector-buffered sampling, which the chapter prices as expensive",
+   "domain": "sampling statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine sampling keeps decision traces whole: when a slate or a model run is sampled for deep review, every step of its reasoning trace is retained together, because a sampled conclusion without its upstream evidence spans is exactly the broken trace this primitive forbids.",
+    "source_operator": "consistent_sampling_whole_traces",
+    "telemetry": "Sampling audit: share of sampled decision traces that are complete from root span to emitted output"
+   }
+  },
+  {
+   "primitive_id": "ontology_invariants_semantic_firewall",
+   "name": "Domain invariants, the mathematical truths that must always hold, become runtime assertions that form a semantic firewall: AI proposals are simulated and checked against the invariants, and any violation proves the proposal flawed with certainty",
+   "verbatim_quote": "By treating these invariants as runtime assertions, you create a semantic firewall.",
+   "page": "Chapter 17, pp. 314-315 (Define the Invariants (the Rules))",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The domain has been reduced to core entities (nouns) and invariants (rules), codified as semantic conventions every service emits",
+    "A deterministic engine exists that can simulate a proposal and evaluate the invariants on the result"
+   ],
+   "breakdown_regime": "Invariants only catch violations of what was formalized; a wrong but invariant-satisfying proposal passes, so invariant coverage of the domain is the limiting factor",
+   "domain": "AI guardrails",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine outputs pass a semantic firewall of domain invariants before publication: internal consistency rules (probabilities bounded and coherent across related markets, inputs complete, identities resolved) are evaluated as runtime assertions on every candidate output, and a violation blocks emission regardless of how confident the generating model was.",
+    "source_operator": "ontology_invariants_semantic_firewall",
+    "telemetry": "Invariant check results per candidate output: which invariants ran, which failed, and the disposition of the output"
+   }
+  },
+  {
+   "primitive_id": "arithmetic_integrity_invariant",
+   "name": "Arithmetic integrity invariant: a computed total must equal the sum of its components within a floating point tolerance of plus or minus one cent, so the whole strictly equals the sum of its parts",
+   "verbatim_quote": "The \"whole\" must strictly equal the sum of its parts.",
+   "page": "Chapter 17, p. 314 (Define the Invariants (the Rules): Arithmetic (integrity))",
+   "latex": "\\left| C_{\\mathrm{total}} - \\sum_j c_j \\right| \\le 0.01",
+   "symbol_and_unit_ledger": {
+    "C_total": "the BillSet total cost as computed by the system (USD)",
+    "c_j": "the individual cost components of the BillSet (USD)",
+    "0.01": "floating point tolerance for the equality check (USD)"
+   },
+   "assumptions": [
+    "Components are enumerated completely, so the sum is over the same set the total claims to cover",
+    "A small nonzero tolerance is required because the quantities are floating point"
+   ],
+   "breakdown_regime": "The check proves internal consistency, not correctness of the inputs: a total can equal the sum of wrong components, which is why the chapter pairs it with coverage and determinism invariants",
+   "domain": "AI guardrails",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine aggregates carry the same assertion: every published total (slate record, unit accounting, exposure sum) must reconcile with the sum of its stored components within a stated tolerance, and the reconciliation runs as an automated check on the stored records rather than as a manual review step.",
+    "source_operator": "arithmetic_integrity_invariant",
+    "telemetry": "Reconciliation results per published aggregate: stored total, component sum, absolute difference, tolerance, pass or fail"
+   }
+  },
+  {
+   "primitive_id": "ai_sandwich_architecture",
+   "name": "The AI sandwich architecture places a nondeterministic AI layer between two deterministic layers: the AI proposes a structured ActionPlan, the deterministic workflow simulates and validates it against the invariants, and only validated proposals execute; the guardrail rejection rate becomes the highest-fidelity signal for AI reliability",
+   "verbatim_quote": "This architectural pattern sandwiches a nondeterministic AI layer between two layers of deterministic, rule-based logic.",
+   "page": "Chapter 17, p. 321 (Implement the AI Sandwich Architecture)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "AI output is forced into a schema (the ActionPlan) that a deterministic system can validate, instead of being executed directly",
+    "The deterministic workflow is mathematically pure: the same input produces the same output hash every run"
+   ],
+   "breakdown_regime": "The sandwich validates proposals against known invariants only; it cannot judge qualities that were never formalized, and the chapter's semantic layer (golden dialogs, confidence floors) exists for those",
+   "domain": "AI guardrails",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine architecture mirrors the sandwich: generative components propose (candidate plays, narratives, explanations) as structured objects, and a deterministic validation layer checks them against the invariant set and the evidence record before anything is published. The rejection rate of that layer is monitored as the primary health signal for the generative components.",
+    "source_operator": "ai_sandwich_architecture",
+    "telemetry": "Proposal log: proposals made, proposals rejected, rejection reasons, and the rolling rejection rate per generating component"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "038d626699c2098a-t1",
+   "think": "Observability Engineering, second edition, is a book about one question: how do you know what your system is actually doing once it leaves your hands. The authors answer by rebuilding the telemetry stack from first principles. The argument starts with Kalman's 1960 definition from control theory: observability is the degree to which internal state can be inferred from external outputs, and it is the dual of controllability. Everything else in the book is downstream of that definition. If the outputs you capture cannot reconstruct the state you care about, no dashboard, alert, or agent can save you, because the information was never recorded. The first movement of the book therefore attacks data shape. Metrics aggregate at write time and destroy exactly the fields an investigation later needs; the average-of-averages example shows the destruction is mathematical, not cosmetic, because once group counts are discarded there is no sound way to recombine group means. Logs keep narrative but scatter one unit of work across interleaved lines. Traces reconnect the narrative, and the chapter that builds a tracing library from scratch in a few dozen lines proves that a span is just a structured log with five structural fields. Once the three pillars are decomposed into one substrate, the arbitrarily wide structured event, the book's central commitments follow: store raw events once, keep every field's relationships intact, preserve high cardinality instead of engineering it away, and derive every view at query time. The dimensionality sidebar quantifies why: combinations grow as two to the n minus one, so width is not hoarding, it is the size of the question space the team is buying. The second movement is workflow. Instrumentation with OpenTelemetry, wide events by default, and then analysis as a discipline: the core analysis loop replaces intuition-led debugging with a teachable cycle of hypothesize, test against telemetry, refine. Automating the inside-versus-baseline diff turns that loop from a senior engineer's art into a mechanism any investigator, human or agent, can run. Alerting gets rebuilt on top of the same data: symptom-based SLO alerts decouple what from why, error budgets convert a reliability target into a countable resource, and the burn alert chapter does the forecasting arithmetic carefully, showing where linear extrapolation lies, why proportional extrapolation is the honest default, and why no baseline should be stretched past a factor of four. The third movement is machinery and scale: what a store must do to keep all fields equally fast (Retriever's time segments and per-column files, ClickHouse as the open source counterpoint), how sampling can cut volume without cutting fidelity when rates are recorded, weighted, consistent across a trace, and target-rated per key, and how telemetry pipelines govern the flow. The fourth movement is the one the first edition lacked: observability as an organizational and AI-era discipline. Ontologies give humans and models one vocabulary; invariants become runtime assertions; the AI sandwich puts nondeterministic proposers inside deterministic validation; evals and production traces feed each other in a loop; and the governance chapters argue that learning speed, not shipping speed, is now the binding constraint. For a reasoning engine, the transfer is direct. The engine is itself a production system whose outputs are decisions under uncertainty, and it deserves the same treatment: one wide evidence record per decision, raw signals retained, quality defined as event-based indicators with budgets, forecasts that extrapolate rates rather than counts, and generative components that propose into a deterministic validation layer instead of publishing directly. Where the book breaks or stays silent matters too. Its storage and sampling machinery assumes event volumes and budgets far beyond a small team's; its SLO mathematics assumes a defined user journey and a countable good-or-bad verdict, which maps cleanly onto published picks but awkwardly onto research outputs; and its organizational chapters presume executive sponsorship that a small operation must substitute with discipline. The book also never questions its vendor vantage completely: the unified model it advocates is the model its authors sell, and the three pillars defense it grants to infrastructure deserves the same skepticism applied in reverse when reading its claims about developer tooling. None of that weakens the core results, which are structural: information not captured cannot be recovered, aggregation is destruction, context compounds combinatorially, and validation belongs in production because production is the only place intent meets reality. Three worked examples carry more weight than the book's manifestos and deserve to be named. The shopping cart example in Chapter 5 derives a P99 latency series from stored events, then re-derives it sliced by region with no schema change and no reinstrumentation, which is the unified model proven rather than asserted: the view is a query, not a pipeline. The burn alert examples in Chapter 12 show the opposite discipline, a refusal to let simple arithmetic smuggle in false confidence: the same failure counts that look safe under linear extrapolation exhaust the budget in half a day under proportional extrapolation, and the difference is nothing but honesty about what a rate means when volume varies. And the energy billing example in Chapter 17 shows the end state of the whole argument, a system where a language model's suggestion is treated as an untrusted proposal, simulated by a deterministic engine, and rejected with a named reason when the physics disagrees, with the rejection itself recorded as the most trustworthy signal about the model. Read as one arc, the book moves from what to capture, to how to think with it, to how to govern the humans and machines doing the thinking. Its deepest claim is that observability is not a tooling category at all but a property of dependable systems, seventh on Laprie's list, and that claim survives even where its product preferences are discounted.",
+   "retrocausal_genealogy": "The lineage runs from Rudolf Kalman's 1960 control theory paper, through Jean-Claude Laprie's 1995 dependability taxonomy, into the monitoring era of SNMP metrics and time-series databases that the book treats as a resource-constrained ancestor. Facebook's Scuba and the authors' Honeycomb work in the 2010s supply the existence proof that columnar, high-cardinality event stores can answer investigative queries in seconds, and Google's SRE books contribute the SLO and error budget machinery that Chapters 11 and 12 extend. The second edition's new material is a response to the agentic turn: LLM observability, ontologies, and the AI sandwich are retrofitted onto the first edition's substrate precisely because nondeterministic producers make the original argument urgent again.",
+   "theory_of_mind": "The authors believe the reader is a builder who has been handed operator tooling and blamed for its limits. Their model of the domain is that production is not a phase after development but the most important stage of it, that developer intent is the thing being validated, and that intuition is a bottleneck to be engineered away rather than a virtue to be celebrated. They write as practitioners with a product to sell and say so in an editorial independence note, but their argumentative habit is consistent: every claim is cashed out in a mechanism, a worked numerical example, or a named failure mode, and the reader is expected to check the arithmetic.",
+   "cross_layer_veto": "This work vetoes several tempting moves in any reasoning system. It vetoes publishing aggregates whose components were discarded, because the average-of-averages result shows such numbers cannot be recombined or audited. It vetoes cause-shaped alerts and cause-shaped explanations at detection time, forcing a separation between the symptom that fires and the diagnosis that follows. It vetoes direct execution of generative output: anything an AI proposes must cross a deterministic validation layer first. And it vetoes long-range forecasts built on short baselines, capping honest extrapolation at a factor of four unless seasonality is modeled explicitly. Any layer of our own stack that does one of these things is, by this book's standard, wrong by construction."
+  }
+ ],
+ "universal_lens": "Any system that produces consequential outputs under uncertainty needs the same stack this book builds for software: capture one wide, raw record per unit of work, keep context attached because value compounds combinatorially, define quality as countable good and bad events against an explicit budget, forecast by extrapolating rates rather than counts, and never let a generative proposer publish without crossing deterministic validation. The domain changes; the information theory does not.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as a methods text for research infrastructure: evidence records with full provenance, invariants stated as checkable assertions, sampling designs that record their own rates so later analysts can reconstruct population totals, and production failures promoted into evaluation fixtures. Its ontology chapter is a template for giving a research corpus one shared vocabulary of entities and rules instead of per-project dialects.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the operational core: wide evidence bundles per game and per decision, event-based quality indicators with an explicit error budget governing emission, proportional burn forecasting over sliding windows, cohort comparison for candidate models inside small exposures, and an AI sandwich in which generative components propose structured candidates that a deterministic layer validates against invariants before anything reaches a member."
+}

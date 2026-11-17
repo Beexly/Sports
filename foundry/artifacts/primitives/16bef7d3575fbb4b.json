@@ -1,0 +1,758 @@
+{
+ "book_id": "16bef7d3575fbb4b",
+ "source_status": "COMPLETE",
+ "source_note": "Karl Pearson, The Grammar of Science. First edition 1892 (London: Adam and Charles Black); second edition 1900; the local file is the Third Edition, Part I (March 1911), published in London by Adam and Charles Black with Macmillan as agent in America, including the new chapter V material on contingency and E. Cunningham's chapter X on Modern Physical Ideas. Catalog correction: the library filename carries the first-edition year 1892, but the file's own title pages and prefaces (third-edition preface dated 19 January 1911) show this copy is the 1911 third edition, Part I only; Part II was announced but is not in this file. Local PDF: 14,929,036 bytes; sha256 over (str(size) + file bytes) = 16bef7d3575fbb4bb87847d40f110a4d45daabd0c69e78d91ed54bc6be5ee758, book_id = first 16 hex chars. Digitised copy from the Bombay Branch of the Royal Asiatic Society (digitised 29 July 2018). Extracted text is OCR of good body quality (about 162,000 words) with letter-spaced running heads, occasional split words and lost displayed fractions; all verbatim quotes were chosen from clean body passages and verified as contiguous substrings of the extracted text. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "scientific_method_classification",
+   "name": "The scientific method: classification of facts, and the formation of absolute judgments upon the basis of that classification",
+   "verbatim_quote": "The classification o f facts and the formation o f absolute judgments upon the basis o f this classification",
+   "page": "Ch. I, sec. 2, pp. 11-12",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Facts can be classified before their sequences are understood",
+    "Judgment formed by the method is free from personal bias"
+   ],
+   "breakdown_regime": "Fails where facts are too sparse or too biased in collection to classify; Pearson insists such fields confess ignorance rather than import another method",
+   "domain": "methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is the engine pipeline contract in Pearson's own terms: ingest and classify every signal first, then recognise relationships and recurring sequences. Classification precedes law; no signal is promoted to a relationship before it has been classified.",
+    "source_operator": "scientific_method_classification",
+    "telemetry": "Classified event and signal tables with sequence annotations across all ingested feeds"
+   }
+  },
+  {
+   "primitive_id": "construct_external_object",
+   "name": "An external object is a construct: a combination of immediate with past or stored sense-impressions",
+   "verbatim_quote": "an external object is in general a construct— that is, a combination of immediate with past or stored sense-impressions.",
+   "page": "Ch. II, sec. 1, p. 41",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sense-impressions leave stored traces (impresses) in the brain",
+    "The proportion of immediate to stored contribution varies with the observer's experience"
+   ],
+   "breakdown_regime": "The construct is observer-relative; two observers with different stored stocks build different objects from the same immediate impressions",
+   "domain": "epistemology of perception",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every entity the engine reasons about (a team, a player, a matchup) is a construct in this sense: a small core of fresh observation fused with a large stock of stored history. The engine must track how much of any entity is fresh signal and how much is stored prior.",
+    "source_operator": "construct_external_object",
+    "telemetry": "Fresh observation counts versus stored-history depth per entity in the knowledge base"
+   }
+  },
+  {
+   "primitive_id": "brain_telephone_exchange",
+   "name": "The brain works as a central telephone exchange routing messages between sensory senders and motor receivers, with stored information consulted for non-routine calls",
+   "verbatim_quote": "But the conception of the brain as a central exchange certainly casts considerable light not only on the action of sensory and motor nerves, but also on thought and consciousness.",
+   "page": "Ch. II, sec. 3, pp. 44-45",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sensory and motor nerves do not interchange functions",
+    "Routine messages are switched mechanically; novel ones require consulting stored lists"
+   ],
+   "breakdown_regime": "The analogy must not be pressed too far; it models routing and delay, not the content of thought",
+   "domain": "cognitive architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reasoning engine is an exchange in this sense: routine signals are switched straight through by habit, while novel signals force a lookup against stored state, and the delay between input and output is where reasoning happens. Latency and routing are first-class design objects.",
+    "source_operator": "brain_telephone_exchange",
+    "telemetry": "Signal routing logs: which inputs were switched automatically and which triggered stored-state lookups"
+   }
+  },
+  {
+   "primitive_id": "canon_inference_like_to_like",
+   "name": "Inference to the unverifiable is legitimate only from known things to unknown things of like nature in similar surroundings",
+   "verbatim_quote": "We may infer what we cannot verify by direct sense-impression only when the inference is from known things to unknown things o f the like nature in similar surroundings.",
+   "page": "Ch. II, sec. 10, canon 2, p. 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Likeness of nature and similarity of surroundings can themselves be judged",
+    "The canon governs inference, not direct verification"
+   ],
+   "breakdown_regime": "Breaks when surroundings differ in a hidden relevant respect; Pearson's own example denies inferring a man in the moon because the surroundings differ",
+   "domain": "inference discipline",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the transfer rule for the engine: a pattern learned in one context may be projected to another only when the entities are of like nature and the surroundings are similar. Out-of-distribution projection without a likeness check is illegitimate inference.",
+    "source_operator": "canon_inference_like_to_like",
+    "telemetry": "Context-similarity scores attached to every transferred pattern or model output"
+   }
+  },
+  {
+   "primitive_id": "scientific_law_brief_description",
+   "name": "Scientific law is not a command from a lawgiver but a brief description in mental shorthand of as wide a range as possible of the sequences of sense-impressions",
+   "verbatim_quote": "It is a brief description in mental shorthand o f as wide a range as possible o f the sequences of our sense-impressions.",
+   "page": "Ch. III, Summary, p. 112",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sequences of sense-impressions exhibit a routine capable of brief description",
+    "The describing mind is of practically the same type in all normal human beings"
+   ],
+   "breakdown_regime": "A law describes; it does not explain origins. Where no routine has yet been found, the honest output is confessed ignorance, not a law",
+   "domain": "philosophy of science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every model in the engine is a piece of mental shorthand: valuable exactly in proportion to the range of sequences it compresses, and never to be mistaken for a mechanism that enforces outcomes. Model cards should state range covered and compression achieved.",
+    "source_operator": "scientific_law_brief_description",
+    "telemetry": "Per-model coverage counts: number of observed sequences the formula resumes versus total observed"
+   }
+  },
+  {
+   "primitive_id": "mind_sorting_machine",
+   "name": "Natural law in the scientific sense is the conscious product of the reflective faculty analysing the working of the perceptive sorting-machine",
+   "verbatim_quote": "the conscious product of the reflective faculty, analysing the process of perception, the working of the sorting-machine.",
+   "page": "Ch. III, sec. 13, p. 107",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The perceptive faculty sorts and sifts incoming sensations, rejecting some and arranging others in place and time",
+    "Perceptive and reflective faculties are co-ordinated"
+   ],
+   "breakdown_regime": "The sorting hypothesis is offered as suggestion, not proof; Pearson is explicit that what is certain is only the routine and our capacity to resume it",
+   "domain": "cognitive architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature selection is a sorting-machine: the input stream is sifted before any law is fit, and the apparent order in the data partly reflects the sorter. The engine must audit its own intake filters, because regularities can be manufactured by what the sorter rejects.",
+    "source_operator": "mind_sorting_machine",
+    "telemetry": "Intake filter logs: signals rejected at ingestion, with reasons, auditable against later outcomes"
+   }
+  },
+  {
+   "primitive_id": "cause_stage_in_routine",
+   "name": "Cause, scientifically used, is a stage in a routine of experience, not a stage in a routine of inherent necessity",
+   "verbatim_quote": "Cause, in this sense, is a stage in a routine of experience, and not one in a routine of inherent necessity.",
+   "page": "Ch. IV, sec. 8, p. 129",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sequence in question has been experienced repeatedly as a routine",
+    "No phenomenon has only one cause; all antecedent stages are successive causes"
+   ],
+   "breakdown_regime": "Where the routine has not actually been experienced, calling an antecedent a cause is an illegitimate extension of the term",
+   "domain": "causation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Causal language in engine reasoning is licensed only where a routine has actually been observed: an antecedent earns the name cause by its place in a repeated sequence, never by narrative plausibility. Every causal claim should carry its observed repetition count.",
+    "source_operator": "cause_stage_in_routine",
+    "telemetry": "Observed sequence counts for each claimed antecedent-to-consequent routine"
+   }
+  },
+  {
+   "primitive_id": "proof_overwhelming_probability",
+   "name": "Proof in the field of perceptions is the demonstration of overwhelming probability; know is reserved for conceptions, believe for perceptions",
+   "verbatim_quote": "Proof in the field o f perceptions is the demonstration o f overwhelming probability.",
+   "page": "Ch. IV, Summary, p. 150",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Certainty and logical necessity exist only in the sphere of conceptions",
+    "Overwhelming probability is built from past experience of routine in the class as well as in the individual case"
+   ],
+   "breakdown_regime": "No finite experience converts belief about perceptions into knowledge; the distinction is permanent, not a temporary gap",
+   "domain": "probability epistemology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine outputs about the perceptual world are beliefs with probabilities attached, never knowledge claims. Confidence language must be calibrated to demonstrated probability, and the word proved is earned only at overwhelming odds.",
+    "source_operator": "proof_overwhelming_probability",
+    "telemetry": "Calibration records: stated probabilities versus realised frequencies for every class of engine claim"
+   }
+  },
+  {
+   "primitive_id": "laplace_rule_of_succession",
+   "name": "Laplace's rule: an event observed p times with q failures has probability (p+1)/(p+q+2) of occurring next time",
+   "verbatim_quote": "the odds in favour o f that routine being preserved in the immediate future, or, indeed, for any finite interval, both with regard to old and to new groups o f perceptions, are overwhelming.",
+   "page": "Ch. IV, secs. 13-17, pp. 141-149 (rule stated pp. 141-142; consequence quoted p. 149)",
+   "latex": "P(next) = \\frac{p+1}{p+q+2}",
+   "symbol_and_unit_ledger": {
+    "p": "number of past occurrences of the event (routine cases), dimensionless count",
+    "q": "number of past failures (anomies), dimensionless count",
+    "P(next)": "probability the event occurs on the next trial, dimensionless, in (0,1)"
+   },
+   "assumptions": [
+    "All constitutions of the unknown are a priori equally probable (Laplace's principle)",
+    "Trials are exchangeable: past and future draws come from the same constitution"
+   ],
+   "breakdown_regime": "The rule inherits the weakness of its prior: if constitutions are not in fact equally likely, or the process changes constitution, the succession probability misleads; Pearson also warns the sequence must be comprehensive, with truly like causes",
+   "domain": "probability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's cold-start prior for any repeated sequence: a routine seen p times without failure earns probability (p+1)/(p+2), not certainty, and a new sequence borrows strength from the whole class of routines that have never failed. Streaks are priced by counts, not by narrative.",
+    "source_operator": "laplace_rule_of_succession",
+    "telemetry": "Per-sequence success and failure counts p and q maintained for every recurring pattern the engine tracks"
+   }
+  },
+  {
+   "primitive_id": "laplace_principle_constitutions",
+   "name": "Laplace's principle: posterior probabilities of rival constitutions are proportional to the probabilities that each constitution would produce the observed result",
+   "verbatim_quote": "If a result might flow from any one o f a certain number of different constitutions, all equally probable before experience, then the several probabilities of each constitution after experience being the real constitution, are proportional to the probabilities that the result would flow from each of these constitutions.",
+   "page": "Ch. IV, sec. 15, p. 145",
+   "latex": "P(C_k \\mid result) \\propto P(result \\mid C_k)",
+   "symbol_and_unit_ledger": {
+    "C_k": "the k-th hypothetical constitution of the unknown process",
+    "P(result | C_k)": "probability of the observed result under constitution C_k, dimensionless",
+    "P(C_k | result)": "posterior probability that C_k is the real constitution, dimensionless"
+   },
+   "assumptions": [
+    "The rival constitutions are all equally probable before experience",
+    "The list of constitutions considered exhausts the possibilities entertained"
+   ],
+   "breakdown_regime": "If the true constitution is not among those entertained, the principle confidently selects the least wrong one; Boole's objection, discussed by Pearson, is that knowledge cannot be drawn from complete ignorance without an experiential basis for the equal prior",
+   "domain": "probability, Bayesian inference",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is Bayesian model comparison stated in 1892 dress: rival explanations of a signal are weighted by how well each would have produced what was actually observed. The engine's hypothesis scoring should be likelihood-proportional, with the candidate set itself audited.",
+    "source_operator": "laplace_principle_constitutions",
+    "telemetry": "Likelihood of observed outcomes under each competing model or regime hypothesis"
+   }
+  },
+  {
+   "primitive_id": "equal_distribution_of_ignorance",
+   "name": "The equal distribution of ignorance is justified empirically: constants about which nothing is known in particular do in fact take one value as often as another",
+   "verbatim_quote": "is as likely to have one value as another, is grounded upon the rough but solid experience that such constants do as a matter o f fact as often have one value as another.",
+   "page": "Ch. IV, sec. 15, p. 146 (quoting F. Y. Edgeworth)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The justification is statistical experience, not pure logic",
+    "Applies to constants about which nothing is known in particular"
+   ],
+   "breakdown_regime": "Fails for constants with known skew or structure; Pearson presents it as rough but solid experience, a working basis rather than a theorem",
+   "domain": "probability, priors",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Flat priors in the engine are not free: they are licensed only where experience shows the unknown quantity really does spread evenly. Where base rates are known to be uneven, the prior must be uneven too.",
+    "source_operator": "equal_distribution_of_ignorance",
+    "telemetry": "Empirical distributions of estimated constants across many fitted cases, checked for uniformity before a flat prior is used"
+   }
+  },
+  {
+   "primitive_id": "correlation_replaces_causation",
+   "name": "Correlation, embracing all relationship from absolute independence to complete dependence, is the wider category that must replace the old idea of causation",
+   "verbatim_quote": "It is this conception o f correlation between two occurrences embracing all relation ship from absolute independence to complete dependence, which is the wider category by which we have to replace the old idea o f causation.",
+   "page": "Ch. V, sec. 3, p. 157",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Phenomena can be classified into groups of like, though never absolutely same, occurrences",
+    "Degrees of likeness in the antecedent can be compared with degrees of likeness in the consequent"
+   ],
+   "breakdown_regime": "Absolute dependence on a single measurable antecedent is, Pearson argues, the exception if it exists at all under refined observation; the category gives graded association, not mechanism",
+   "domain": "correlation, causation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's native relation between signals is graded association, not causal assertion. Every link carries a degree between independence and dependence, and binary cause-effect language is reserved for the unattained limit.",
+    "source_operator": "correlation_replaces_causation",
+    "telemetry": "Pairwise association strengths between all tracked variables, stored as graded values rather than binary links"
+   }
+  },
+  {
+   "primitive_id": "contingency_table",
+   "name": "The contingency table is the ultimate form of a scientific statement about the relation between two things",
+   "verbatim_quote": "Such a table is termed a contingency table, and the ultimate scientific statement or description of the relation between two things can always be thrown back upon such a contingency table.",
+   "page": "Ch. V, sec. 3, p. 159",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both characters can be classified into categories, qualitative or quantitative",
+    "Counts come from a population or a sample taken to represent it"
+   ],
+   "breakdown_regime": "A table built from an unrepresentative sample misdescribes the universe it stands for; Pearson stresses precautions that the sample be a true sample",
+   "domain": "statistics, classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The contingency table is the engine's ground-truth object: before any coefficient is quoted, the joint counts exist and can be inspected. Any claimed relationship that cannot be thrown back on its table is not yet a scientific statement.",
+    "source_operator": "contingency_table",
+    "telemetry": "Joint frequency tables for every pair of classified variables the engine relates"
+   }
+  },
+  {
+   "primitive_id": "independence_proportional_distribution",
+   "name": "B is independent of A when selecting any A does not alter the proportions of the observed B's",
+   "verbatim_quote": "Clearly that whatever A we select we shall not alter the proportions o f the observed B's.",
+   "page": "Ch. V, sec. 4, p. 160",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Proportions are judged against the whole distribution of B in the population under discussion",
+    "Classification of A is fine enough to reveal alteration if it exists"
+   ],
+   "breakdown_regime": "Coarse classification can hide dependence: unobserved sub-classes of A may carry different B distributions while the aggregate looks independent",
+   "domain": "statistics, independence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Independence in the engine is a testable distributional statement, not an assumption: condition on the proposed factor and check whether the outcome distribution moves. If it does not move at the finest available classification, the factor earns independence.",
+    "source_operator": "independence_proportional_distribution",
+    "telemetry": "Conditional outcome distributions for each level of each candidate factor, compared with the marginal distribution"
+   }
+  },
+  {
+   "primitive_id": "mean_square_contingency",
+   "name": "Mean square contingency sums the squared deviations of observed cell counts from their independence values, relative to those values and to the population; it vanishes exactly under independence",
+   "verbatim_quote": "we assert that the vanishing o f the mean squared contingency is the essential condition for the independence of two characters.",
+   "page": "Ch. V, sec. 4, p. 161",
+   "latex": "S = \\sum_{p,s} \\frac{(n_{ps} - \\nu_{ps})^2}{\\nu_{ps} N}",
+   "symbol_and_unit_ledger": {
+    "n_{ps}": "observed count in cell (p,s) of the contingency table, dimensionless count",
+    "nu_{ps} (written \\nu_{ps})": "count expected in cell (p,s) under absolute independence, equal to (row total x column total)/N, dimensionless count",
+    "N": "total population or sample size, dimensionless count",
+    "S": "mean square contingency of the whole table, dimensionless"
+   },
+   "assumptions": [
+    "Expected cell counts are computed from the marginal totals under the independence hypothesis",
+    "The measure is a sum of squares, so it vanishes only if every cell deviation vanishes"
+   ],
+   "breakdown_regime": "Sparse cells make the measure unstable, and its maximum grows with the number of classes distinguished, so raw S is not comparable across tables of different fineness without correction",
+   "domain": "statistics, contingency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mean square contingency is a single-number audit of a whole joint table: it prices total departure from independence in one pass. The engine can use it to rank which variable pairs carry any association at all before fitting anything.",
+    "source_operator": "mean_square_contingency",
+    "telemetry": "Cell counts and marginal totals for every contingency table under consideration"
+   }
+  },
+  {
+   "primitive_id": "coefficient_of_contingency",
+   "name": "The coefficient of contingency C = sqrt(S/(1+S)) rescales mean square contingency onto [0,1]: zero at independence, unity at functional dependence",
+   "verbatim_quote": "this coefficient o f contingency is absolutely dependent on the mean square contingency, it is zero, if the phenomena under consideration, are absolutely in dependent, and it takes the value unity",
+   "page": "Ch. V, secs. 4-5, pp. 163-164",
+   "latex": "C = \\sqrt{\\frac{S}{1+S}}",
+   "symbol_and_unit_ledger": {
+    "S": "mean square contingency of the table, dimensionless, >= 0",
+    "C": "coefficient of contingency, dimensionless, in [0,1]"
+   },
+   "assumptions": [
+    "S is computed from a contingency table with a fixed classification",
+    "C approaches unity only as the number of distinguishable classes grows without bound"
+   ],
+   "breakdown_regime": "C depends on the number of classificatory groups and on sample size; Pearson notes corrections for these are needed in practical use, so C values from differently-grained tables are not directly comparable",
+   "domain": "statistics, association measure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A bounded association score lets the engine compare links across unlike variable pairs on one scale. C is the template: monotone in total contingency, pinned at 0 for independence and at 1 for function-like dependence.",
+    "source_operator": "coefficient_of_contingency",
+    "telemetry": "Mean square contingency per variable pair, plus table dimensions and sample size for correction"
+   }
+  },
+  {
+   "primitive_id": "fundamental_problem_correlated_variation",
+   "name": "The fundamental problem of science is to discover how the variation in one class is correlated with or contingent on the variation in a second class",
+   "verbatim_quote": "the fundamental problem of science is to discover how the variation in one class is correlated with or contingent on the variation in a second class.",
+   "page": "Ch. V, sec. 5, p. 165",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Existences are individual; classification into like classes is a human, rational process for economy of thought",
+    "Variation within classes is observable and measurable"
+   ],
+   "breakdown_regime": "The framing dissolves the search for essences; a science still hunting for what a thing is, rather than how its variation tracks other variation, is working the wrong problem on Pearson's account",
+   "domain": "correlation, scientific method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's research question is always Pearson's: not what a factor is, but how its variation tracks the variation of the target. Features earn their place by covariation under classification, not by story.",
+    "source_operator": "fundamental_problem_correlated_variation",
+    "telemetry": "Class-conditional variation summaries for candidate factors against target variation"
+   }
+  },
+  {
+   "primitive_id": "causation_conceptual_limit_of_correlation",
+   "name": "Causation is solely the conceptual limit of correlation, reached when the band of scattered observations thins until it looks like a curve",
+   "verbatim_quote": "Causation is solely the conceptual limit to correlation when the band gets so attenuated, that it looks like a curve.",
+   "page": "Ch. V, sec. 6, p. 170",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Experience always yields a scatter or belt of points, never the curve itself",
+    "The curve is produced by statistical reduction (least squares, averaging of arrays) applied to the scatter"
+   ],
+   "breakdown_regime": "The limit is never attained in experience; treating the fitted curve as the reality discards the variation in the arrays, which is the measure of how far prediction may err",
+   "domain": "correlation, causation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every fitted relationship in the engine is a thinned band, not a law of nature. The band's width travels with the fit and bounds what the fit may claim; a prediction quoted without its array variation has confused the conceptual limit with experience.",
+    "source_operator": "causation_conceptual_limit_of_correlation",
+    "telemetry": "Residual spread within arrays around every fitted relationship, reported alongside the fit"
+   }
+  },
+  {
+   "primitive_id": "multiplicity_of_causes",
+   "name": "Adding more associated factors does not compel complete determination: that B is contingent on A, C, D, E separately does not imply B is causally determined by all of them together",
+   "verbatim_quote": "it does not follow that B must be causally determined by all these things taken together.",
+   "page": "Ch. V, sec. 7, p. 172",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The added factors are themselves mutually associated, not independent",
+    "Each factor is correlatedly, not causally, associated with B"
+   ],
+   "breakdown_regime": "Pearson's empirical claim is that after the first few most highly associated phenomena, additional factors produce little reduction in the variability of B; a model that keeps adding factors expecting variation to vanish is chasing a conceptual limit",
+   "domain": "correlation, multivariate",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Feature accumulation has diminishing returns by structure, not by accident: correlated inputs share their association with the target. The engine should expect a few highly associated factors to do most of the work and should measure the marginal reduction in outcome variation per added factor.",
+    "source_operator": "multiplicity_of_causes",
+    "telemetry": "Marginal reduction in target dispersion as each factor is added, in ranked order of association"
+   }
+  },
+  {
+   "primitive_id": "prediction_seeks_highest_correlation",
+   "name": "To predict future experience, science seeks the phenomena most highly correlated with the target, where the variation of the outcome for a given antecedent is least",
+   "verbatim_quote": "in order to predict future experience it seeks out the phenomena which are most highly correlated",
+   "page": "Ch. V, sec. 8, p. 173",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A conceptual routine (average experience) and a measure of deviations from it are both required",
+    "Residual variation exists in organic and non-organic phenomena alike"
+   ],
+   "breakdown_regime": "High correlation found in past experience is itself a routine claim and inherits the probability limits of Chapter IV; it licenses prediction as belief, not certainty",
+   "domain": "prediction, correlation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Predictor selection is a search for minimum conditional dispersion: rank candidate signals by how narrow the outcome array is when they are fixed, and keep both the routine and its deviation measure in the published output.",
+    "source_operator": "prediction_seeks_highest_correlation",
+    "telemetry": "Conditional outcome dispersion per candidate signal, ranked, with the deviation measure retained"
+   }
+  },
+  {
+   "primitive_id": "standard_deviation_of_array",
+   "name": "The standard deviation of an array (the B values associated with one A) measures the variation within that array and hence the width of the belt at that point",
+   "verbatim_quote": "Clearly this standard deviation is a good measure o f the variation within the array, and the smaller this standard deviation is the narrower will be the \" belt \" at the point under consideration.",
+   "page": "Ch. V, sec. 9, p. 175",
+   "latex": "\\sigma_p^2 = \\frac{1}{n_p} \\sum (\\beta - \\bar{\\beta}_p)^2",
+   "symbol_and_unit_ledger": {
+    "beta": "an individual value of the second character B in the array for A_p, in B's measurement units",
+    "beta_p bar (\\bar{\\beta}_p)": "mean of B over the array for A_p, same units as B",
+    "n_p": "number of cases in the array for A_p, dimensionless count",
+    "sigma_p": "standard deviation of the array, same units as B"
+   },
+   "assumptions": [
+    "Deviations are measured from the array's own mean",
+    "The array contains enough cases for its dispersion to be a stable characteristic"
+   ],
+   "breakdown_regime": "For small arrays the standard deviation is itself erratic; Pearson's development assumes arrays populous enough that their means and deviations characterise the class",
+   "domain": "statistics, dispersion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conditional dispersion is the engine's uncertainty primitive: for each fixed context, the spread of outcomes around their mean is computed and carried forward. A context is only as predictive as its array is narrow.",
+    "source_operator": "standard_deviation_of_array",
+    "telemetry": "Per-context outcome means and standard deviations, with array sizes"
+   }
+  },
+  {
+   "primitive_id": "correlation_ratio",
+   "name": "The correlation ratio eta, the ratio of the standard deviation of the array means to the standard deviation of the whole universe of B, measures degree of dependence between 0 (independence) and 1 (functional dependence)",
+   "verbatim_quote": "In each case we compare the variation in any array o f B 's with that o f the whole universe o f B 's.",
+   "page": "Ch. V, sec. 9, pp. 176-177",
+   "latex": "\\eta = \\frac{\\sigma_m}{\\sigma_B}",
+   "symbol_and_unit_ledger": {
+    "sigma_m": "standard deviation of the means of the arrays, each array weighted with its number of cases, in B's units",
+    "sigma_B": "standard deviation of the whole universe (population) of B values, in B's units",
+    "eta": "correlation ratio, dimensionless, in [0,1]"
+   },
+   "assumptions": [
+    "Arrays are formed by classifying on A and weighting by their case counts",
+    "Eta equals 1 only when every array's internal variation vanishes; 0 only when every array reproduces the whole distribution"
+   ],
+   "breakdown_regime": "Eta and the coefficient of contingency agree closely only for fairly numerous cells and common distribution shapes; for sparse or coarse tables they can diverge",
+   "domain": "statistics, correlation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The correlation ratio is the engine's share-of-variation measure: how much of the target's total spread is between contexts rather than within them. It prices a classification by the dispersion it removes, which is the honest value of any segmentation.",
+    "source_operator": "correlation_ratio",
+    "telemetry": "Between-array and within-array variance components for every classification applied to a target"
+   }
+  },
+  {
+   "primitive_id": "space_mode_of_perception",
+   "name": "Space is an order or mode of perceiving coexisting groups of sense-impressions; it has no existence if the objects are withdrawn",
+   "verbatim_quote": "Space is an order or mode of perceiving objects, but it has no existence if objects are withdrawn",
+   "page": "Ch. VI, sec. 1, p. 183",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Coexisting groups of sense-impressions can be distinguished from one another",
+    "The order belongs to the perceiving, not to the impressions themselves"
+   ],
+   "breakdown_regime": "The claim is about the concept's status, not a denial of regularities; it blocks projecting space into the sphere beyond sense-impression",
+   "domain": "space and time",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Coordinate systems in the engine are modes of perceiving its data, chosen for the distinctions they make visible. A representation earns its place by the groups it separates, and no representation is the territory.",
+    "source_operator": "space_mode_of_perception",
+    "telemetry": "Separation quality metrics for each representation or embedding used on engine data"
+   }
+  },
+  {
+   "primitive_id": "time_mode_of_perception",
+   "name": "Time, like space, has no real existence in things; it is a mode of perceiving them, the order of succession among stored and immediate sense-impressions",
+   "verbatim_quote": "time as o f space we cannot assert a real existence; it is not in things, but in our mode o f perceiving them.",
+   "page": "Ch. VI, sec. 12, p. 211",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Consciousness involves association of immediate with stored sense-impressions, hence involves succession",
+    "Empty time, with no sequence of events, cannot be realised"
+   ],
+   "breakdown_regime": "The doctrine governs the concept's legitimate use; it does not supply a mechanism of time measurement, which Pearson treats separately as conceptual time built from periodic routines",
+   "domain": "space and time",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Timestamps and orderings in engine data are likewise imposed modes: sequence exists because the system stores and compares. Keeping raw event order distinct from derived timelines prevents reifying a schedule that the data never contained.",
+    "source_operator": "time_mode_of_perception",
+    "telemetry": "Raw event sequences preserved separately from every derived ordering or windowing"
+   }
+  },
+  {
+   "primitive_id": "conceptions_shorthand_models",
+   "name": "Geometrical surface, atom and ether exist only in the mind: they are shorthand methods of distinguishing, classifying and resuming phases of sense-impression, valid while they economise thought",
+   "verbatim_quote": "Geometrical surface, atom, ether, exist only in the human mind, and they are \" shorthand\" methods o f distinguishing, classifying, and resuming phases of sense-impression.",
+   "page": "Ch. VI, sec. 11, p. 206",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A conception is judged by the range of sense-impressions it classifies and resumes",
+    "Conceptions are conceptual limits of perceptual processes, suggested by perception but not found in it"
+   ],
+   "breakdown_regime": "A conception must be widened or replaced as knowledge grows; its failure to cover new phases does not falsify its valid range, and its success within a range does not make it a reality beyond sense",
+   "domain": "scientific conceptions, models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent constructs in the engine (form, strength, matchup quality) are shorthand in exactly this sense: legitimate while they compress observation, illegitimate the moment they are treated as things that enforce outcomes. Each construct needs a stated range and a retirement rule.",
+    "source_operator": "conceptions_shorthand_models",
+    "telemetry": "Coverage range and residual error per latent construct, reviewed as new data phases appear"
+   }
+  },
+  {
+   "primitive_id": "speed_slope_time_chart",
+   "name": "Speed at an instant is the slope of the tangent to the time-chart at that point, the limit of mean speeds over vanishing intervals",
+   "verbatim_quote": "the actual speed will be measured by the slope of the tangent to the time-chart",
+   "page": "Ch. VII, sec. 11, p. 245",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A time-chart (distance plotted against time) has been constructed for the motion",
+    "The tangent exists at the point: the mean speed settles to a limit as the interval shrinks"
+   ],
+   "breakdown_regime": "Where the time-chart has a corner or jump, instantaneous speed is undefined; Pearson's construction presumes the limit exists",
+   "domain": "kinematics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any rate in the engine is a slope before it is a number: define the chart (quantity against time), take differences over intervals, and only then pass to the instantaneous limit. Rates quoted without their chart and interval are undefined quantities.",
+    "source_operator": "speed_slope_time_chart",
+    "telemetry": "Time series with explicit sampling intervals behind every computed rate or trend"
+   }
+  },
+  {
+   "primitive_id": "hodograph_acceleration",
+   "name": "The hodograph turns velocity into a moving point; the velocity of that point along the hodograph is the acceleration of the original motion",
+   "verbatim_quote": "Thus the velocity o f V along the hodo graph is the measure o f how the velocity o f P relative to O is changing.",
+   "page": "Ch. VII, sec. 12, p. 248",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Velocity is fully specified by speed and bearing, so it can be drawn as a step from a fixed pole",
+    "The construction iterates: a second hodograph would measure change of acceleration"
+   ],
+   "breakdown_regime": "Pearson notes the third hodograph is rarely wanted; position, velocity and acceleration suffice to describe perceptual experience of change",
+   "domain": "kinematics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "State-space thinking in one picture: plot the state variable itself as the moving point and its rate of change becomes a velocity in that space. The engine can diagnose any tracked quantity by examining the motion of its state point, not just its level.",
+    "source_operator": "hodograph_acceleration",
+    "telemetry": "State trajectories (level and rate jointly) for tracked quantities over time"
+   }
+  },
+  {
+   "primitive_id": "spurt_and_shunt",
+   "name": "Acceleration has two fundamental factors: the spurt, change of speed in the direction of motion, and the shunt, change of bearing perpendicular to it",
+   "verbatim_quote": "Acceleration has thus two fundamental factors— the spurt and the shunt",
+   "page": "Ch. VII, sec. 13, p. 249",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Velocity decomposes into magnitude (speed) and bearing at every instant",
+    "Spurt includes retardation as a negative spurt"
+   ],
+   "breakdown_regime": "The decomposition is relative to the instantaneous direction of motion; it describes the change, and assigns no cause for it",
+   "domain": "kinematics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every change in a tracked quantity decomposes into magnitude change along its current direction and directional change across it. Reporting only the total change hides which factor moved; the engine should split trend changes into level-shift and direction-shift components.",
+    "source_operator": "spurt_and_shunt",
+    "telemetry": "Decomposed change reports: along-track and cross-track components for moving quantities"
+   }
+  },
+  {
+   "primitive_id": "normal_acceleration_curvature",
+   "name": "Shunt (normal) acceleration is the product of curvature and the square of the speed, equivalently speed squared over radius of curvature",
+   "verbatim_quote": "shunt acceleration takes place perpendicular to the direction o f motion, and is measured by the product o f the curvature and the square o f the speed.",
+   "page": "Ch. VII, secs. 15-16, pp. 257-258",
+   "latex": "a_n = \\kappa U^2 = \\frac{U^2}{\\rho}",
+   "symbol_and_unit_ledger": {
+    "U": "speed of the point, length per unit time",
+    "kappa (\\kappa)": "curvature of the path at the point, inverse length",
+    "rho (\\rho)": "radius of curvature at the point, length",
+    "a_n": "normal (shunt) acceleration, length per unit time squared"
+   },
+   "assumptions": [
+    "Curvature at a point is the inverse of its radius of curvature",
+    "The result is reached in the limit of vanishing path elements and holds whether or not the speed varies"
+   ],
+   "breakdown_regime": "Purely kinematic: it constrains how a path can bend at a given speed but says nothing about what produces the acceleration",
+   "domain": "kinematics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Turning costs grow with the square of speed: a fast-moving quantity needs quadratically more cross-track correction to change direction by the same amount. Momentum-like quantities in the engine should be expected to resist redirection in proportion to their squared rate.",
+    "source_operator": "normal_acceleration_curvature",
+    "telemetry": "Rate and direction-change measurements for fast-moving tracked quantities, tested against the quadratic law"
+   }
+  },
+  {
+   "primitive_id": "motion_fully_determined",
+   "name": "A motion is fully determined, in the descriptive sense, by the path with the time at each position, or equivalently by the velocity in one position and the acceleration in all positions",
+   "verbatim_quote": "a motion is fully determined, that is, can be conceptually described, either by giving the path and the time to each position of the path, or by giving the velocity in any one position and the acceleration in all positions.",
+   "page": "Ch. VII, sec. 16, p. 260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acceleration is known as a function of position throughout the motion",
+    "Determination means conceptual describability, not enforcement by the data"
+   ],
+   "breakdown_regime": "Pearson stresses the proposition explains nothing about why the motion takes place; read as materialist determinism it becomes the foundation of a crude metaphysics he rejects",
+   "domain": "kinematics, determinism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A forecast is a determination claim in this descriptive sense only: initial state plus a rule for how the state changes everywhere. The engine must state both parts, and must not let the completeness of the description masquerade as necessity in the world.",
+    "source_operator": "motion_fully_determined",
+    "telemetry": "Forecast specifications listing initial state and the change rule applied at every step"
+   }
+  },
+  {
+   "primitive_id": "inertia_corpuscles",
+   "name": "Inertia: the uniform motion of a corpuscle is not altered except in the presence of other corpuscles",
+   "verbatim_quote": "This characteristic which we attribute to corpuscles, namely, that their uniform motion is not altered except in the presence of other corpuscles, is scientifically termed their inertia.",
+   "page": "Ch. IX, sec. 4, p. 314",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Motion is relative to a frame fixed by other corpuscles at distances where their influence is insensible",
+    "The law is postulated for the conceptual model and justified by the perceptual routines it describes"
+   ],
+   "breakdown_regime": "For ether-elements and prime-atoms the law may flow from their structure rather than hold primitively; Pearson flags the isolated ether-element as a case where the law's meaning is unclear",
+   "domain": "laws of motion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Default persistence is the engine's null model: a quantity continues in its current state unless an identified interaction is present. Deviations from persistence must be charged to named interactions, never absorbed silently.",
+    "source_operator": "inertia_corpuscles",
+    "telemetry": "Persistence-baseline errors: outcomes versus a no-change forecast, with deviations attributed to recorded interactions"
+   }
+  },
+  {
+   "primitive_id": "acceleration_determined_by_relative_position",
+   "name": "Third law in Pearson's form: what relative position determines is not velocity but acceleration; two corpuscles pass through the same position with any velocities, but spurt and shunt each other in a definite manner depending on relative position",
+   "verbatim_quote": "What, then, must we consider as determined when we know the relative position o f two corpuscles ? It is their accelerations, the rates at which",
+   "page": "Ch. IX, sec. 5, pp. 317-318",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The statement is framed for particles in a field referred to a distant third corpuscle",
+    "Mutual accelerations are taken as functions of relative position, the working postulate of the corpuscular model"
+   ],
+   "breakdown_regime": "Pearson's appendix warns the usual third law needs caution extended to atoms and molecules, where mutual accelerations may not lie in the line joining them and may not be instantaneous",
+   "domain": "laws of motion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Configuration determines change, not state: knowing where things stand relative to each other tells you how their motion is being altered, not how fast they are moving. Models should map configurations to accelerations (changes), and integrate, rather than mapping configurations directly to velocities.",
+    "source_operator": "acceleration_determined_by_relative_position",
+    "telemetry": "Configuration snapshots paired with measured changes, used to fit configuration-to-change maps"
+   }
+  },
+  {
+   "primitive_id": "mass_ratio_of_accelerations",
+   "name": "Mass of A is the name given to the ratio of the mutual accelerations measured against the standard corpuscle Q; mass is a mere number, a ratio of accelerations",
+   "verbatim_quote": "Now we are going to give a name to this ratio; we shall call it the mass o f A relative to the standard Q, or more simply the mass of A",
+   "page": "Ch. IX, sec. 8, pp. 329-330 (definition formula (a), p. 329)",
+   "latex": "m_A = \\frac{a_{Q \\leftarrow A}}{a_{A \\leftarrow Q}}",
+   "symbol_and_unit_ledger": {
+    "m_A": "mass of corpuscle A relative to the standard corpuscle Q, dimensionless number",
+    "a_{Q <- A} (a_{Q \\leftarrow A})": "acceleration of the standard corpuscle Q due to the presence of A, length per unit time squared",
+    "a_{A <- Q} (a_{A \\leftarrow Q})": "acceleration of A due to the presence of Q, length per unit time squared"
+   },
+   "assumptions": [
+    "The ratio of mutual accelerations for a pair is constant whatever their relative position and whatever the surrounding field (fourth law)",
+    "A standard corpuscle Q is fixed and assigned unit mass"
+   ],
+   "breakdown_regime": "The definition is only as wide as the fourth and fifth laws; Pearson doubts one scale covers ether-elements and gross particles, and a prime-atom's mass might vanish with its motion",
+   "domain": "laws of motion, mass",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Weight-like quantities in the engine should be defined operationally as ratios of responses: how much the standard moves when the entity is present, over how much the entity moves under the standard. Defined this way the quantity is measurable, relative, and free of any stuff it is supposed to contain.",
+    "source_operator": "mass_ratio_of_accelerations",
+    "telemetry": "Paired response measurements between entities and a fixed reference, from which ratio scales are built"
+   }
+  },
+  {
+   "primitive_id": "force_product_mass_acceleration",
+   "name": "Force of B on A is defined as the product of the mass of A into the acceleration of A due to the presence of B, with the direction and sense of that acceleration",
+   "verbatim_quote": "we will term the product of the mass o f A into the acceleration of A due to the presence o f B, the force o f B on A",
+   "page": "Ch. IX, sec. 9, pp. 330-331",
+   "latex": "F_{B \\to A} = m_A \\, a_{A \\leftarrow B}",
+   "symbol_and_unit_ledger": {
+    "F_{B -> A} (F_{B \\to A})": "force of B on A, mass x acceleration units",
+    "m_A": "mass of A relative to the standard corpuscle, dimensionless ratio (standard = 1)",
+    "a_{A <- B} (a_{A \\leftarrow B})": "acceleration of A due to the presence of B, length per unit time squared"
+   },
+   "assumptions": [
+    "Mass has been defined by the mutual-acceleration ratio against the standard corpuscle",
+    "Mutual accelerations are inversely as masses (fifth law), which makes action and reaction equal in magnitude"
+   ],
+   "breakdown_regime": "Force is a defined product, a piece of shorthand for describing change of motion; Pearson denies it any enforcing or originating role in experience",
+   "domain": "laws of motion, force",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Influence in the engine is a product, not a primitive: an actor's effect on a target is the target's inertia-like weight times the change the actor induces. Keeping the two factors separate prevents crediting a large effect to a strong actor when it belongs to a light target.",
+    "source_operator": "force_product_mass_acceleration",
+    "telemetry": "Per-interaction records separating target weight from induced change, so influence can be factored"
+   }
+  },
+  {
+   "primitive_id": "newtonian_scheme_approximation",
+   "name": "The Newtonian scheme of dynamics is an approximation valid only for gross matter and our gross senses; an electromagnetic scheme of the constitution of matter promises to be far more comprehensive",
+   "verbatim_quote": "Newtonian scheme o f dynamics has been shown to be an approximation valid only for gross matter and our gross senses.",
+   "page": "Ch. X (E. Cunningham), Summary, p. 386",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The judgement rests on the phenomena of the previous twenty years reviewed in the chapter (radioactivity, electrons, electromagnetic theory)",
+    "Gravitation had so far defied incorporation into the electromagnetic scheme"
+   ],
+   "breakdown_regime": "An approximation is not thereby useless: it remains the valid description within its range, and is replaced only where a wider concept describes an enlarged experience",
+   "domain": "history of physics, model scope",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine framework carries a validity range set by the scale of phenomena it was built from. Success inside the range is no evidence outside it; the scope statement is part of the model, and widening scope requires a wider concept, not extrapolation.",
+    "source_operator": "newtonian_scheme_approximation",
+    "telemetry": "Out-of-scope flags raised when models are applied beyond the range of the data that built them"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "16bef7d3575fbb4b-t1",
+   "think": "The Grammar of Science is a single sustained argument about what a scientific statement is, and every chapter is that argument applied to a new territory. Pearson begins with method: science is the orderly classification of facts followed by recognition of their relationships and recurring sequences, and its unity lies in that method rather than in any subject matter. The facts themselves, examined in Chapter II, turn out to be sense-impressions. An external object is a construct, a fusion of a few immediate impressions with a large stock of stored ones, and the brain that does the fusing is pictured as a central telephone exchange, switching routine messages automatically and consulting its stored lists only when a message is not routine. From this basis Chapter III draws the first great consequence: a scientific law is not a command laid on nature by a lawgiver but a brief description in mental shorthand of the sequences of our sense-impressions. The order the law seems to find in nature may partly be contributed by the perceiving apparatus itself, which Pearson figures as a great sorting-machine that sifts and arranges the flood of sensation before reflection ever sees it. Chapter IV then dismantles cause and effect. A cause is a stage in a routine of experience, nothing more; no sequence of perceptions carries inherent necessity, and necessity lives only in the sphere of conceptions. What we call proof in the perceptual field is therefore the demonstration of overwhelming probability, and Pearson rebuilds our confidence in routine on Laplace's machinery: rival constitutions of the unknown are weighted by how well each would produce what was observed, and a routine that has never failed earns, by the rule of succession, odds that grow with the whole past experience of routines. The equal distribution of ignorance that powers this machinery is itself defended empirically, through Edgeworth: constants about which nothing is known do in fact take one value as often as another. Chapter V is the constructive centre of the book. Since antecedents are never absolutely the same, only like within a degree, the honest object of study is the contingency table: joint counts of classified A and B. From the table Pearson builds a graded calculus of association. Independence is the case where conditioning on A leaves the proportions of B untouched. Mean square contingency totals the squared departures from that case, the coefficient of contingency compresses the total onto the interval from zero to one, and the correlation ratio performs the same comparison for measurable quantities by weighing the variation within arrays against the variation of the whole. Causation survives only as the conceptual limit of correlation, the point where the belt of scattered observations thins into a curve; and adding more supposed causes does not force the belt to vanish, because the causes are themselves intercorrelated and only the first few highly associated phenomena materially narrow the array. Chapters VI and VII rebuild the stage and the motion on it. Space and time are modes of perceiving, orders imposed on coexisting and successive impressions, while surface, atom and ether are shorthand conceptions, valid exactly while they economise thought. Motion is then described purely geometrically: speed is the slope of the time-chart, velocity adds bearing to speed, the hodograph converts velocity into a moving point whose own velocity is acceleration, and acceleration splits into spurt along the motion and shunt across it, the shunt being curvature times speed squared. Given velocity at one position and acceleration at all positions, the motion is fully described; Pearson is careful that this determination is a property of the description, not a compulsion in the world. Chapters VIII and IX apply the same discipline to matter and the laws of motion. Matter dissolves into groups of sense-impressions and conceptual corpuscles, and mass, the supposed measure of material quantity, is redefined as a pure number: the ratio of the mutual accelerations of a corpuscle and a standard. Force follows as a defined product, mass times acceleration due to another's presence, and Newton's third law is recovered as the statement that mutual accelerations are inversely as masses. The closing chapter, contributed by Cunningham, shows the method judging its own inheritance: the Newtonian scheme is an approximation valid for gross matter and gross senses, already being displaced by an electromagnetic conception, exactly as the Grammar predicts every conception eventually will be. For a reasoning engine the book is a complete operating discipline. Classify before you correlate. Keep the joint counts behind every coefficient. Quote associations as graded values between independence and a limit that experience never reaches. Carry the variation within arrays as part of every prediction. Define heavyweight quantities operationally, as ratios of measured responses. Treat every construct as shorthand with a stated range, and let probability, not the grammar of certainty, be the language of every claim about the perceptual world. Two further strands deserve record. The appendix notes qualify the main text at exactly the points where later physics pressed hardest: the third law is warned against unexamined extension to atoms and molecules, where mutual action may be neither instantaneous nor central, and the field of force is recast so that the acceleration of a corpuscle in a field is fixed by the local rates of change of the field itself. Chapter VIII, on matter, makes the same point from the other side: the ether, a medium invented to carry light, ends as a structural conception whose properties are chosen for descriptive economy, and the vortex and strain accounts of matter are judged by the routines they resume, not by any insight into what matter ultimately is. The book therefore ends where it began. Whether the object under study is a table of hair colours, a corpuscle, or the ether itself, the legitimate scientific content is identical in form: classified perceptions, tabulated conjunctions, graded association, and shorthand conceptions held lightly enough to be widened when experience widens.",
+   "retrocausal_genealogy": "The lineage runs from Hume's analysis of causation as constant conjunction, through Mach's economy of thought and his critique of absolute space and mass, to Clifford, whose Common Sense of the Exact Sciences Pearson edited and whose definition of mass as a ratio of accelerations he adopts. Laplace supplies the probability machinery of Chapter IV, with Boole as the critic whose objection Pearson answers through Edgeworth. Galton, Pearson's mentor, contributes the originating insight of correlation from the study of heredity, and the contingency apparatus grew from Pearson's own biometric work with Weldon and Yule in the 1890s. The third edition's new chapter on causation and Cunningham's chapter on modern physical ideas show the doctrine absorbing relativity and electron theory without surrendering its core.",
+   "theory_of_mind": "Pearson's model of his reader is a working scientist or citizen who has inherited a vocabulary, cause, force, matter, law, that smuggles metaphysics into every sentence, and who trusts that vocabulary precisely because it feels like common sense. He assumes the reader can follow elementary geometry and algebra but has never audited the concepts those tools are applied to. His model of the domain is austere: behind sense-impression there may be chaos, and the only order certainly present is the order contributed by a perceptive faculty shaped by natural selection and a reflective faculty trained by method. He writes to convert the reader from asking what things are and what compels them, to asking how variation in one classified group tracks variation in another, and he expects resistance, because the older questions feel more satisfying.",
+   "cross_layer_veto": "The Grammar vetoes several moves that other layers of a reasoning system constantly attempt. It vetoes causal language wherever a routine has not actually been observed, and it vetoes certainty language wherever the subject is perceptual, since proof there is only overwhelming probability. It vetoes the projection of conceptions beyond their range: a construct that economises thought inside its field becomes an illegitimate thing-in-itself the moment it is said to enforce outcomes or to exist behind perception. It vetoes inference from known to unknown unless likeness of nature and similarity of surroundings are established. And it vetoes the expectation that multiplying factors must extinguish variation, which protects any downstream layer from discarding residual dispersion as mere unfinished modelling."
+  }
+ ],
+ "universal_lens": "Read as a general template, the Grammar says: whatever the field, begin by classifying the raw given into like groups, tabulate how the groups occur together, and measure graded association before speaking of influence. Treat every law as compressed description, every heavyweight quantity as an operationally defined ratio, and every model as shorthand whose value is the range it resumes and whose danger is being mistaken for a mechanism. The method transfers intact to any domain where observations repeat without ever exactly repeating, which is to say, to every empirical domain there is.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the Grammar as a founding text for research method. Its programme of tracing principle-trajectories across eras is Pearsonian in structure: classify first, measure association between variation in conditions and variation in outcomes, and refuse to let any era's vocabulary, causation included, harden into metaphysics. The Institute's inference canons, its insistence on joint counts behind every coefficient, and its treatment of constructs as revisable shorthand all descend from this book, as does its standard that a claim about the world is a probability statement or it is not yet knowledge.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes from the Grammar its core data discipline: contingency tables as the ground truth behind every relationship, graded association in place of causal assertion, conditional dispersion carried with every prediction, Laplace-style count-based priors for recurring sequences, and operational definitions for constructed quantities such as form or strength. Pearson's warning that a few highly associated factors do most of the work, and that residual variation is a permanent feature rather than a modelling failure, sets the engine's expectations for feature design and for honest uncertainty in everything it publishes."
+}

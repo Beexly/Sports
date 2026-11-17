@@ -1,0 +1,760 @@
+{
+ "book_id": "ef4143bc8b8069bf",
+ "source_status": "COMPLETE",
+ "source_note": "National Institute for Health and Care Excellence (NICE), Head injury: assessment and early management, NICE guideline NG232, published 18 May 2023 (replaces CG176; basis of QS74). Local file is the official NICE PDF of the guideline, 76 pages, ISBN 978-1-4731-5026-3; PDF size 393155 bytes, sha256 ef4143bc8b8069bf212b61bcdb7d214af6859c26f2670ccc5fe44d3fc35575a2. Extracted text is clean and complete (3458 lines, all sections including rationale and update information through March 2025 minor changes). The work is a clinical decision guideline: it contains no mathematical equations, so all primitives carry empty latex; its quantitative content is thresholds, doses, gas and pressure targets, and time windows, captured in the primitives. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "head_injury_scope_definition",
+   "name": "Scope definition: a head injury is any trauma to the head other than superficial injuries to the face",
+   "verbatim_quote": "For the purposes of this guideline, a head injury is defined as any trauma to the head other than superficial injuries to the face.",
+   "page": "Recommendations preamble, p.6 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The definition covers both closed and penetrating injuries, as the preamble states next",
+    "Babies are under 1 year and children and young people are 1 year to under 16 years for all age-stratified rules"
+   ],
+   "breakdown_regime": "The boundary excludes superficial facial injuries, so facial trauma with no head component falls outside every downstream rule; mechanism detail is not captured by the definition itself.",
+   "domain": "clinical definitions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine a hard scope gate for the health layer: an incident record enters the head injury pathway only if it is trauma to the head beyond superficial facial injury, which stops facial knocks and unrelated illness from contaminating injury features.",
+    "source_operator": "head_injury_scope_definition",
+    "telemetry": "Injury reports coded by body region and mechanism; incident narratives from team medical staff"
+   }
+  },
+  {
+   "primitive_id": "tbi_definition",
+   "name": "Traumatic brain injury defined as an alteration in brain function, or other evidence of brain pathology, caused by an external force",
+   "verbatim_quote": "An alteration in brain function, or other evidence of brain pathology, caused by an external force.",
+   "page": "Terms used in this guideline, p.46 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An external force is required; spontaneous neurological events are not TBI",
+    "Either functional alteration or pathological evidence suffices"
+   ],
+   "breakdown_regime": "The definition is categorical, not graded; it cannot by itself separate a trivial alteration from a life threatening one, which is why the guideline layers GCS bands on top of it.",
+   "domain": "clinical definitions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supplies the engine's event class definition for brain injury: a availability-relevant event exists when function changed or pathology is evidenced after an external force, separating true brain injury events from generic injury-list noise.",
+    "source_operator": "tbi_definition",
+    "telemetry": "Confirmed diagnoses, imaging findings, and documented functional changes after head impacts"
+   }
+  },
+  {
+   "primitive_id": "gcs_three_response_reporting",
+   "name": "GCS must be monitored and communicated as its 3 separate responses (eye, verbal, motor), not only as a total",
+   "verbatim_quote": "Base monitoring and exchange of information about people with a head injury on the 3 separate responses on the GCS",
+   "page": "Recommendation 1.3.1, p.11 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three components carry independent information that the summed score discards",
+    "Every communication and record should carry components alongside the total (recommendation 1.3.3)"
+   ],
+   "breakdown_regime": "Component scoring needs trained observers; interobserver variability is a known weakness the guideline later counters with second-observer confirmation of deterioration.",
+   "domain": "neurological assessment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets an engine data rule: never store or reason over a single composite severity number when the components are available. Availability and recovery models should ingest eye, verbal and motor analogues (or their sporting equivalents: responsiveness, speech, movement) as separate features because equal totals hide different states.",
+    "source_operator": "gcs_three_response_reporting",
+    "telemetry": "Component-level status reports, trainer observations, and any structured neurological checks recorded over time"
+   }
+  },
+  {
+   "primitive_id": "gcs_severe_band_boundary",
+   "name": "Severity bands on the GCS: mild 13 to 15, moderate 9 to 12, severe 8 or less; the 8-or-less line drives escalation",
+   "verbatim_quote": "Severe traumatic brain injury is a GCS score of 8 or less.",
+   "page": "Terms used in this guideline (Glasgow Coma Scale), p.41-42 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same band boundaries apply across the guideline's transfer, pre-alert and intubation rules",
+    "Bands are defined on the summed score even though components are recorded separately"
+   ],
+   "breakdown_regime": "Band edges are sharp: a score of 9 and a score of 8 sit in different bands with very different pathways, so single-point measurement error near the boundary changes management.",
+   "domain": "neurological assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine explicit severity band boundaries with a critical threshold: crossing into the lowest band flips the case into the highest escalation class. The engine should treat near-boundary cases as uncertain rather than clean members of either band.",
+    "source_operator": "gcs_severe_band_boundary",
+    "telemetry": "Severity grades in injury data, hospitalisation flags, and any score reported near the severe threshold"
+   }
+  },
+  {
+   "primitive_id": "baseline_gcs_adjustment",
+   "name": "Pre-injury baseline GCS may be below 15 (dementia, chronic neurological disorder, learning disability) and must be established and used in assessment",
+   "verbatim_quote": "In some people (for example, people with dementia, underlying chronic neurological disorders or learning disabilities), the pre-injury baseline GCS score may be less than 15.",
+   "page": "Recommendation 1.3.5, p.11 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A baseline below 15 is a pre-existing state, not injury effect",
+    "The baseline can often be established from history or records"
+   ],
+   "breakdown_regime": "When the baseline is unknown, assessors may misread a chronic deficit as acute deterioration, or miss real deterioration hidden inside an assumed low baseline.",
+   "domain": "neurological assessment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Directly transfers to player modelling: judge a post-injury state against the individual's own baseline, not the population maximum. The engine should store per-person baselines for availability features and score deviations from baseline, which prevents chronic conditions from being double counted as new injury signal.",
+    "source_operator": "baseline_gcs_adjustment",
+    "telemetry": "Pre-injury status histories, prior availability records, and documented chronic conditions per player"
+   }
+  },
+  {
+   "primitive_id": "paediatric_gcs_grimace",
+   "name": "Paediatric GCS substitutes a grimace response for the verbal score so preverbal children can be scored",
+   "verbatim_quote": "In the paediatric version of the GCS, include a 'grimace' alternative to the verbal score to enable scoring in children who are preverbal.",
+   "page": "Recommendation 1.3.4, p.11 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The construct being measured (responsiveness) is preserved while the observable channel changes",
+    "Age-appropriate instrument variants are required rather than optional"
+   ],
+   "breakdown_regime": "Proxy responses are noisier than the verbal channel they replace, and several guideline assessments (amnesia, for example) cannot be performed at all in preverbal children.",
+   "domain": "neurological assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A measurement-design rule for the engine: when the primary observable is unavailable for a class of cases, substitute a validated proxy channel for the same construct instead of dropping the cases or forcing the standard instrument.",
+    "source_operator": "paediatric_gcs_grimace",
+    "telemetry": "Proxy indicators used when primary data feeds are missing for a player or team"
+   }
+  },
+  {
+   "primitive_id": "remote_advice_emergency_referral",
+   "name": "Remote advice services must route head injury callers with any listed red flag to emergency ambulance transport",
+   "verbatim_quote": "Remote advice services (for example, NHS 111) should refer people who have sustained a head injury to the emergency ambulance services (that is, 999) for emergency transport to the emergency department if there are any of these risk factors",
+   "page": "Recommendation 1.2.2, p.7 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Remote assessment cannot examine the patient, so the flag list must be sensitive rather than specific",
+    "Any single flag suffices; flags are not weighted or summed"
+   ],
+   "breakdown_regime": "Telephone triage inherits caller reporting error; the rule deliberately accepts over-triage because the cost of a missed severe injury dominates.",
+   "domain": "pre-hospital triage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A template for low-information triage in the engine: when only remote, second-hand signal exists, a single red flag escalates the case to the highest handling class instead of averaging flags into a score.",
+    "source_operator": "remote_advice_emergency_referral",
+    "telemetry": "Second-hand injury reports, wire copy, and social reports carrying any named red-flag feature"
+   }
+  },
+  {
+   "primitive_id": "prealert_gcs8",
+   "name": "Pre-alert the receiving emergency department for anyone with a GCS score of 8 or less so experienced staff and imaging are ready",
+   "verbatim_quote": "Make pre-alert calls to the destination emergency department for anyone with a GCS score of 8 or less to ensure appropriately experienced professionals are available for their treatment and to prepare for imaging.",
+   "page": "Recommendation 1.3.10, p.12 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The receiving unit can change outcomes by preparing before arrival",
+    "The trigger is the same severe-band boundary used across the guideline"
+   ],
+   "breakdown_regime": "Pre-alerts consume senior staff and scanner readiness; applying the trigger to borderline or mis-scored patients wastes the resource the rule is protecting.",
+   "domain": "pre-hospital triage",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An advance-warning pattern: when a case crosses the severe threshold, downstream processes are warmed up before the case arrives. In engine terms, threshold crossings should trigger preparation of dependent analyses rather than waiting for the full record to land.",
+    "source_operator": "prealert_gcs8",
+    "telemetry": "Live severity updates during an event window, before final status is confirmed"
+   }
+  },
+  {
+   "primitive_id": "pain_raises_icp",
+   "name": "Uncontrolled pain can raise intracranial pressure, so effective pain management is part of brain protection",
+   "verbatim_quote": "Manage pain effectively because it can lead to a rise in intracranial pressure.",
+   "page": "Recommendation 1.3.11, p.12 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pain is a modifiable secondary insult, not just a comfort issue",
+    "Reassurance, splinting and bladder catheterisation are named as part of pain control"
+   ],
+   "breakdown_regime": "Analgesia can mask neurological signs and depress consciousness, confounding the GCS observations the rest of the pathway depends on.",
+   "domain": "secondary injury prevention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A second-order effects rule: a symptom variable (pain) is also a causal driver of the primary outcome variable (intracranial pressure). The engine should model such feedback variables explicitly instead of treating every input as an independent correlate.",
+    "source_operator": "pain_raises_icp",
+    "telemetry": "Symptom reports that plausibly feed back into the primary condition being projected"
+   }
+  },
+  {
+   "primitive_id": "direct_transport_specialist_centre",
+   "name": "Transport head injury patients directly to a major trauma centre or trauma unit able to resuscitate, investigate and manage multiple injuries",
+   "verbatim_quote": "Transport people who have sustained a head injury directly to a major trauma centre or trauma unit that has the age-appropriate resources to further resuscitate them, and to investigate and initially manage multiple injuries.",
+   "page": "Recommendation 1.3.13, p.13 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Bypassing nearer but less capable units is preferred for this injury class",
+    "The destination must be age-appropriate and able to handle multiple injuries, not head injury alone"
+   ],
+   "breakdown_regime": "The rationale section records that the trial and cohort evidence for direct specialist transport was limited and uncertain, and data collection predated the reorganised UK trauma system.",
+   "domain": "transport and routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A routing rule: send the case directly to the processor capable of the full job instead of the nearest processor, when partial handling would force a second transfer. Applies to engine pipeline design as much as to ambulances.",
+    "source_operator": "direct_transport_specialist_centre",
+    "telemetry": "Case routing decisions where capability, not distance, is the binding constraint"
+   }
+  },
+  {
+   "primitive_id": "tranexamic_acid_dose",
+   "name": "Tranexamic acid dosing for head injury without active extracranial bleeding: 2 g intravenous bolus at 16 and over; 15 to 30 mg/kg (max 2 g) under 16",
+   "verbatim_quote": "a 2 g intravenous bolus injection of tranexamic acid for people 16 and over",
+   "page": "Recommendation 1.3.17, p.13 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Applies at GCS 12 or less when active extracranial bleeding is not suspected",
+    "The under-16 range was extrapolated from adult evidence, equating 2 g at an average 70 kg adult weight to about 30 mg/kg"
+   ],
+   "breakdown_regime": "Evidence in mild TBI was uncertain, and the committee flagged clot risk there; paediatric dosing rests on extrapolation, not paediatric trials, and both uses were off-label in March 2023.",
+   "domain": "pharmacological intervention",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shows how the engine should encode an intervention rule: population gate (severity band), exclusion condition (extracranial bleeding), dose scaled by body mass for the younger group, and an explicit evidence-strength note distinguishing trial-backed from extrapolated parameters.",
+    "source_operator": "tranexamic_acid_dose",
+    "telemetry": "Intervention records with dose, recipient group, timing and exclusion flags"
+   }
+  },
+  {
+   "primitive_id": "tranexamic_acid_two_hour_window",
+   "name": "Give tranexamic acid as soon as possible within 2 hours of injury, before imaging",
+   "verbatim_quote": "Give the tranexamic acid as soon as possible within 2 hours of the injury, in the pre-hospital or hospital setting and before imaging.",
+   "page": "Recommendation 1.3.17, p.13-14 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Benefit decays with delay; the economic model found greater benefit the earlier it was given",
+    "Treatment precedes diagnostic confirmation by imaging"
+   ],
+   "breakdown_regime": "Outside the window the recommendation does not apply; inside it, treatment is given on suspicion, so some treated patients will have no bleeding to treat.",
+   "domain": "pharmacological intervention",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A time-decay rule for engine reasoning: some signals and interventions have hard validity windows measured from event time. The engine should timestamp from the event, not from when the information arrived, and expire rules whose window has closed.",
+    "source_operator": "tranexamic_acid_two_hour_window",
+    "telemetry": "Event timestamps versus information-arrival timestamps for time-sensitive cases"
+   }
+  },
+  {
+   "primitive_id": "intoxication_exclusion_rule",
+   "name": "Never attribute a depressed conscious level to intoxication until an important traumatic brain injury has been excluded",
+   "verbatim_quote": "Only assume a depressed conscious level is due to intoxication after an important traumatic brain injury has been excluded.",
+   "page": "Recommendation 1.4.2, p.15 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intoxication and brain injury frequently coexist and produce overlapping signs",
+    "The benign explanation is admissible only after the dangerous one is ruled out"
+   ],
+   "breakdown_regime": "Exclusion depends on imaging and observation capacity; in low-resource settings the rule can stall disposition, and intoxication itself remains a listed concern at admission and discharge.",
+   "domain": "diagnostic reasoning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A core reasoning veto for the engine: a convenient benign explanation for a signal may not be accepted until the dangerous explanation has been actively excluded. This ordering rule should govern any case where an availability signal has both a harmless and a serious cause.",
+    "source_operator": "intoxication_exclusion_rule",
+    "telemetry": "Confounded status signals where a benign and a serious cause are both live"
+   }
+  },
+  {
+   "primitive_id": "ed_assessment_fifteen_minutes",
+   "name": "A trained member of staff must assess every head injury arrival within a maximum of 15 minutes",
+   "verbatim_quote": "Ensure a trained member of staff assesses anyone presenting to an emergency department with a head injury within a maximum of 15 minutes of arrival at hospital.",
+   "page": "Recommendation 1.4.7, p.15 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Triage speed is treated as a safety variable, not a service nicety",
+    "People with GCS under 15 are assessed immediately (recommendation 1.4.4)"
+   ],
+   "breakdown_regime": "A fixed clock cannot flex with department load; the rule assumes staffing models that can actually meet it.",
+   "domain": "emergency assessment",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A latency budget pattern: the engine should attach maximum assessment latencies to incoming cases by severity class, with the sickest class at zero latency, rather than processing the queue in arrival order.",
+    "source_operator": "ed_assessment_fifteen_minutes",
+    "telemetry": "Queue timestamps for incoming cases, classed by severity at intake"
+   }
+  },
+  {
+   "primitive_id": "neurosurgical_discussion_trigger",
+   "name": "Discuss with a neurosurgeon the care of anyone with new and surgically significant abnormalities on imaging",
+   "verbatim_quote": "Discuss with a neurosurgeon the care of anyone with new and surgically significant abnormalities on imaging.",
+   "page": "Recommendation 1.4.15, p.17 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Local neurosurgical centres define what counts as surgically significant, agreed with referring hospitals",
+    "A separate list (recommendation 1.4.16) forces discussion regardless of imaging, for example persisting coma or deterioration"
+   ],
+   "breakdown_regime": "The trigger depends on a locally negotiated definition, so the same scan can cross the threshold at one hospital and not another.",
+   "domain": "escalation pathways",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An escalation contract pattern: define in advance which findings force a specialist consult, and let the specialist side co-own the threshold definition. The engine equivalent is a pre-agreed set of findings that force human review instead of automated disposition.",
+    "source_operator": "neurosurgical_discussion_trigger",
+    "telemetry": "Findings flagged against a pre-agreed escalation list"
+   }
+  },
+  {
+   "primitive_id": "ct_primary_investigation",
+   "name": "CT imaging of the head is the primary investigation of choice for detecting acute clinically important traumatic brain injury",
+   "verbatim_quote": "The current primary investigation of choice for detecting an acute clinically important traumatic brain injury is CT imaging of the head.",
+   "page": "Recommendation 1.5.1, p.18 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Speed, availability and sensitivity for acute bleeding drive the choice",
+    "The target is clinically important injury, not any abnormality"
+   ],
+   "breakdown_regime": "CT carries radiation dose, which the guideline elsewhere requires minimising, and it is weaker than MRI for some prognostic information.",
+   "domain": "diagnostic imaging",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A primary-instrument rule: for each decision, name one default measurement instrument optimised for the acute question, and relegate richer but slower instruments to follow-up roles.",
+    "source_operator": "ct_primary_investigation",
+    "telemetry": "Primary diagnostic results and their timestamps relative to the decision they feed"
+   }
+  },
+  {
+   "primitive_id": "mri_not_primary",
+   "name": "Do not use MRI as the primary investigation for clinically important traumatic brain injury, for safety, logistic and resource reasons",
+   "verbatim_quote": "For safety, logistic and resource reasons, do not do MRI scanning as the primary investigation for clinically important traumatic brain injury in people who have sustained a head injury.",
+   "page": "Recommendation 1.5.2, p.18 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "MRI can still add prognostically important information after the acute question is answered",
+    "Monitoring equipment and staff precautions are required if MRI is used at all in this population"
+   ],
+   "breakdown_regime": "The exclusion is about the primary acute role, not about MRI value in general; rigidly extending it would lose the prognostic information the same recommendation acknowledges.",
+   "domain": "diagnostic imaging",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pairs with the primary-instrument rule as its veto half: the highest-fidelity instrument is explicitly barred from the time-critical slot because its cost profile (time, access, monitoring risk) breaks the decision clock.",
+    "source_operator": "mri_not_primary",
+    "telemetry": "Instrument selection records where a slower high-fidelity option was considered for an urgent decision"
+   }
+  },
+  {
+   "primitive_id": "ct_head_adult_one_hour_rule",
+   "name": "Adults: CT head scan within 1 hour when any high-risk factor is identified (GCS 12 or less, GCS under 15 at 2 hours, suspected open or depressed fracture, basal skull signs, seizure, focal deficit, more than 1 vomiting episode)",
+   "verbatim_quote": "For people 16 and over who have sustained a head injury, do a CT head scan within 1 hour of any of these risk factors being identified:",
+   "page": "Recommendation 1.5.8, p.19 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Any single listed factor triggers the scan; factors are not weighted",
+    "The clock runs from identification of the factor, not from injury or arrival"
+   ],
+   "breakdown_regime": "The rule inherits the sensitivity-first design of the Canadian CT Head Rule: the rationale notes good sensitivity but poor specificity, so many scans will be negative by design.",
+   "domain": "imaging decision rule",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's clearest import from this guideline: a disjunctive trigger rule with an attached action clock. Any one high-risk feature fires the action, and the deadline is measured from feature detection. This is the shape the health layer should use for urgent re-evaluation triggers.",
+    "source_operator": "ct_head_adult_one_hour_rule",
+    "telemetry": "Feature detection timestamps and the time to the action they triggered"
+   }
+  },
+  {
+   "primitive_id": "ct_head_adult_eight_hour_rule",
+   "name": "Adults with loss of consciousness or amnesia: CT head scan within 8 hours if any secondary factor applies (age 65 or over, bleeding or clotting disorder, dangerous mechanism, retrograde amnesia over 30 minutes)",
+   "verbatim_quote": "For people 16 and over who have had some loss of consciousness or amnesia since the injury, do a CT head scan within 8 hours of the head injury",
+   "page": "Recommendation 1.5.9, p.19 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "This tier requires an entry condition (loss of consciousness or amnesia) plus one secondary factor",
+    "Late presenters get the scan within the hour instead (stated in the same recommendation)"
+   ],
+   "breakdown_regime": "Two-tier rules depend on reliable history taking; amnesia and loss of consciousness are exactly the facts an injured or intoxicated patient may report badly.",
+   "domain": "imaging decision rule",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A second-tier rule pattern: an entry condition plus any one modifier factor earns a slower action clock. The engine can use the same two-tier shape to separate immediate re-evaluation from same-window re-evaluation.",
+    "source_operator": "ct_head_adult_eight_hour_rule",
+    "telemetry": "Entry-condition flags plus modifier features, with the slower deadline tracked separately"
+   }
+  },
+  {
+   "primitive_id": "dangerous_mechanism_definition",
+   "name": "Dangerous mechanism of injury, adult CT rule: pedestrian or cyclist struck by a motor vehicle, occupant ejected, or a fall from more than 1 m or 5 stairs",
+   "verbatim_quote": "dangerous mechanism of injury (a pedestrian or cyclist struck by a motor vehicle, an occupant ejected from a motor vehicle or a fall from a height of more than 1 m or 5 stairs)",
+   "page": "Recommendation 1.5.9, p.19 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mechanism is a proxy for transferred energy when direct injury evidence is incomplete",
+    "The paediatric rule uses a different, higher fall threshold (more than 3 m), so the definition is age-specific"
+   ],
+   "breakdown_regime": "Mechanism proxies misclassify at both ends: low-energy transfers can still bleed, and dramatic mechanisms can leave no injury. The guideline keeps mechanism as a modifier, never a sole trigger for the 1-hour tier.",
+   "domain": "risk factor definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shows how to operationalise a vague feature (dangerous mechanism) into checkable cases with numeric thresholds, and to version the thresholds by population subgroup instead of using one global cut.",
+    "source_operator": "dangerous_mechanism_definition",
+    "telemetry": "Mechanism descriptions in incident reports, mapped to thresholded energy proxies"
+   }
+  },
+  {
+   "primitive_id": "ct_head_child_one_hour_rule",
+   "name": "Children: CT head scan within 1 hour when any listed factor is identified, including GCS under 14 on assessment (under 15 for babies) and suspected non-accidental injury",
+   "verbatim_quote": "For people under 16 who have sustained a head injury, do a CT head scan within 1 hour of any of these risk factors being identified:",
+   "page": "Recommendation 1.5.10, p.20 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The child rule derives from the CHALICE rule with modifications, per the rationale",
+    "A second recommendation (1.5.11) requires more than 1 factor from a softer list to trigger the same 1-hour scan"
+   ],
+   "breakdown_regime": "Radiation risk weighs heavier in children, which is why the softer list needs two factors and why an observation branch exists at all in this age group.",
+   "domain": "imaging decision rule",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A population-variant rule: same decision, different trigger structure per subgroup, including a two-factor requirement where the action itself carries more harm. The engine should expect rule variants per subgroup rather than forcing one rule onto all cases.",
+    "source_operator": "ct_head_child_one_hour_rule",
+    "telemetry": "Subgroup membership plus factor counts for cases routed through variant rules"
+   }
+  },
+  {
+   "primitive_id": "child_single_factor_observation",
+   "name": "A child with only 1 soft risk factor is observed for a minimum of 4 hours from injury instead of scanned immediately; new factors during observation trigger a scan within 1 hour",
+   "verbatim_quote": "Observe people under 16 who have sustained a head injury but have only 1 of the risk factors in recommendation 1.5.11 for a minimum of 4 hours from the time of injury.",
+   "page": "Recommendation 1.5.12, p.21 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Observation is an active diagnostic instrument, not a waiting room",
+    "Deterioration criteria during observation are specified in the same recommendation (GCS under 15, further vomiting, further abnormal drowsiness)"
+   ],
+   "breakdown_regime": "The branch depends on observation quality and staffing; a poorly observed 4 hours delivers none of the safety the rule assumes.",
+   "domain": "observation protocol",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A watch-and-escalate branch for borderline cases: instead of a binary act or dismiss, hold the case under structured observation with named escalation triggers and a minimum hold time. Directly usable for uncertain player availability cases.",
+    "source_operator": "child_single_factor_observation",
+    "telemetry": "Serial observations during a hold window, checked against named escalation triggers"
+   }
+  },
+  {
+   "primitive_id": "anticoagulant_ct_consideration",
+   "name": "People on anticoagulant or antiplatelet treatment (excluding aspirin monotherapy) with no other scan indication: consider a CT head scan within 8 hours, or within the hour if presenting later",
+   "verbatim_quote": "For people who have sustained a head injury and have no other indications for a CT head scan, but are on anticoagulant treatment (including vitamin K antagonists, direct-acting oral anticoagulants (DOACs), heparin and low molecular weight heparins) or antiplatelet treatment (excluding aspirin monotherapy), consider doing a CT head scan:",
+   "page": "Recommendation 1.5.13, p.21 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Medication status modifies bleeding risk enough to lower the scan threshold on its own",
+    "Aspirin monotherapy is explicitly carved out because the committee judged its intracranial haemorrhage risk low"
+   ],
+   "breakdown_regime": "The rationale records conflicting cohort evidence on whether these medications raise haemorrhage risk, which is why the verb is consider rather than do; the carve-out list will age as new agents appear.",
+   "domain": "imaging decision rule",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A standing-modifier pattern: a background attribute (medication class) permanently lowers the action threshold for a case even when no acute feature fires, with named exceptions. The engine should carry such background modifiers as first-class features, not footnotes.",
+    "source_operator": "anticoagulant_ct_consideration",
+    "telemetry": "Background attributes per case that adjust trigger thresholds, with exception lists"
+   }
+  },
+  {
+   "primitive_id": "cervical_ct_adult_high_risk",
+   "name": "Adults: CT cervical spine scan within 1 hour when any high-risk factor applies (including GCS 12 or less, intubation, polytrauma, or clinical suspicion plus age 65, dangerous mechanism, focal deficit or paraesthesia)",
+   "verbatim_quote": "For people 16 and over who have sustained a head injury (including people with delayed presentation), do a CT cervical spine scan within 1 hour of the risk factor being identified if any of these high-risk factors apply:",
+   "page": "Recommendation 1.6.2, p.23 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cervical rule runs in parallel with the head rule on the same patient",
+    "Plain X-ray is displaced by CT as the first test in adults because of poor sensitivity"
+   ],
+   "breakdown_regime": "Sensitivity is prioritised so heavily (per the rationale) that specificity losses and radiation exposure are accepted; the rule also depends on recognising clinical suspicion, a judgement call.",
+   "domain": "imaging decision rule",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A parallel-structure rule: a second body system gets its own trigger list and clock evaluated alongside the primary one, because the primary injury mechanism endangers both. Engine cases should likewise spawn parallel rule tracks for coupled risks.",
+    "source_operator": "cervical_ct_adult_high_risk",
+    "telemetry": "Coupled-system risk features evaluated in parallel with the primary case"
+   }
+  },
+  {
+   "primitive_id": "neck_rotation_45_test",
+   "name": "If safe neck assessment shows the person cannot actively rotate the neck 45 degrees left and right, image the cervical spine within 1 hour",
+   "verbatim_quote": "safe assessment of range of neck movement shows that the person cannot actively rotate their neck 45 degrees to the left and right",
+   "page": "Recommendation 1.6.3, p.24 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The movement test is only permitted after high-risk factors are excluded and at least 1 low-risk feature is present (recommendation 1.6.1)",
+    "45 degrees each way is the pass mark"
+   ],
+   "breakdown_regime": "The test is unsafe to apply outside its gate conditions, and pain or guarding can fail a patient whose spine is intact.",
+   "domain": "clinical examination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A functional pass/fail test with a numeric threshold, gated by safety preconditions: the engine analogue is a cheap functional check that resolves a case without the expensive instrument, valid only when its preconditions hold.",
+    "source_operator": "neck_rotation_45_test",
+    "telemetry": "Functional test results with the numeric threshold and the gate conditions recorded"
+   }
+  },
+  {
+   "primitive_id": "transfer_benefit_severe",
+   "name": "Transfer to a neuroscience unit benefits anyone with serious head injury (GCS 8 or less), irrespective of the need for neurosurgery",
+   "verbatim_quote": "transfer would benefit anyone with serious head injuries (a GCS score of 8 or less), irrespective of the need for neurosurgery",
+   "page": "Recommendation 1.8.1, p.28 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The benefit is the unit's monitoring and management capability, not only its operating theatre",
+    "If transfer is impossible, ongoing liaison with the unit over management is essential (same recommendation)"
+   ],
+   "breakdown_regime": "Transfer itself carries risk, and the transport rationale notes the outcome evidence for specialist transfer was limited and uncertain; occult extracranial injuries can make a head-only destination wrong.",
+   "domain": "transfer and routing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Escalation is justified by capability, not by a single planned procedure: the engine should route severe cases to the highest-capability handler even when no specific intervention is yet scheduled.",
+    "source_operator": "transfer_benefit_severe",
+    "telemetry": "Severity class at routing time and the capability tier of the destination"
+   }
+  },
+  {
+   "primitive_id": "stabilise_before_transfer",
+   "name": "Complete resuscitation and stabilisation before transfer; never transport persistent hypotension until its cause is found and corrected",
+   "verbatim_quote": "Do not transport someone with persistent hypotension, despite resuscitation, until the cause has been identified and they are stabilised.",
+   "page": "Recommendation 1.8.6, p.28 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Urgency does not waive the stabilisation requirement",
+    "Comprehensive monitoring must be established before the journey"
+   ],
+   "breakdown_regime": "Stabilisation can delay definitive care at the specialist unit; the rule bets that an unstable transfer loses more than the delay costs.",
+   "domain": "transfer and routing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A precondition veto on movement: a case in an unstable state may not be handed off, however urgent the destination, until the instability is explained and corrected. The engine should block downstream promotion of unstable cases the same way.",
+    "source_operator": "stabilise_before_transfer",
+    "telemetry": "Stability indicators checked at handoff points, with unresolved instability blocking transfer"
+   }
+  },
+  {
+   "primitive_id": "intubation_gas_thresholds",
+   "name": "Intubate and ventilate immediately for ventilatory insufficiency judged by blood gases: PaO2 under 13 kPa on oxygen or PaCO2 over 6 kPa",
+   "verbatim_quote": "ventilatory insufficiency, as judged by blood gases: hypoxaemia (PaO2 less than 13 kPa on oxygen) or hypercarbia (PaCO2 more than 6 kPa)",
+   "page": "Recommendation 1.8.8, p.29 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same recommendation intubates for coma (GCS 8 or less), lost laryngeal reflexes and irregular respirations",
+    "Gas thresholds are assessed on supplemental oxygen, not room air"
+   ],
+   "breakdown_regime": "Blood gas sampling lags the clinical state, and thresholds tuned for transfer decisions may not fit other settings; paediatric transfers use age-appropriate targets instead (recommendation 1.8.12).",
+   "domain": "airway and ventilation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Physiological action thresholds stated in measured units with the measurement condition attached (on oxygen). The engine should copy this discipline: every numeric trigger names its unit and the conditions under which the number was obtained.",
+    "source_operator": "intubation_gas_thresholds",
+    "telemetry": "Measured physiological values with units and measurement conditions"
+   }
+  },
+  {
+   "primitive_id": "map_target_80",
+   "name": "During transfer of an intubated patient, maintain mean arterial pressure at 80 mmHg or more with fluids and vasopressors",
+   "verbatim_quote": "Maintain the mean arterial pressure at 80 mmHg or more by infusion of fluid and vasopressors, as indicated.",
+   "page": "Recommendation 1.8.10, p.29-30 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same recommendation sets gas targets for ventilated patients: PaO2 over 13 kPa and PaCO2 4.5 to 5.0 kPa",
+    "Targets serve cerebral perfusion during the highest-risk interval, the transfer itself"
+   ],
+   "breakdown_regime": "A single MAP floor ignores individual autoregulation differences and pre-injury blood pressure; it is a transfer standard, not a complete haemodynamic strategy.",
+   "domain": "physiological targets",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A control-target pattern: during a vulnerable transition, hold a key variable at or above a floor with named actuators. The engine analogue is holding a confidence or data-freshness floor during state transitions instead of letting it sag unobserved.",
+    "source_operator": "map_target_80",
+    "telemetry": "Key variable levels during transitions, and the corrective actions taken when the floor is breached"
+   }
+  },
+  {
+   "primitive_id": "admission_gcs_not_recovered",
+   "name": "Admit anyone whose GCS has not returned to 15 or to their pre-injury baseline after imaging, regardless of imaging results",
+   "verbatim_quote": "after imaging, a GCS score that has not returned to 15 or their pre-injury baseline, regardless of the imaging results",
+   "page": "Recommendation 1.9.1, p.31 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Functional state outranks the scan: a normal image does not discharge an unrecovered patient",
+    "The comparison point is the personal baseline where one exists, echoing recommendation 1.3.5"
+   ],
+   "breakdown_regime": "Admission consumes beds and carries its own harms (the rationale notes hospital-acquired infection risk, especially in older people), so the rule is a deliberate trade of those harms against missed deterioration.",
+   "domain": "admission criteria",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A recovery gate: a case cannot exit to the low-monitoring state until the measured state returns to baseline, and a clean instrument reading cannot override an unrecovered functional state. The engine should gate player clearance the same way: imaging or test clearance alone never suffices.",
+    "source_operator": "admission_gcs_not_recovered",
+    "telemetry": "Current functional state versus stored personal baseline at disposition time"
+   }
+  },
+  {
+   "primitive_id": "observation_frequency_schedule",
+   "name": "Observation cadence for admitted patients: half-hourly until GCS 15, then half-hourly for 2 hours, hourly for 4 hours, then 2-hourly",
+   "verbatim_quote": "Carry out and record observations on a half-hourly basis until there is a GCS score of 15.",
+   "page": "Recommendation 1.9.11, p.34 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The minimum observation set is fixed: GCS, pupil size and reactivity, limb movements, respiratory rate, heart rate, blood pressure, temperature, oxygen saturation (recommendation 1.9.10)",
+    "Deterioration at any point resets the schedule to half-hourly (recommendation 1.9.12)"
+   ],
+   "breakdown_regime": "Fixed cadences assume staffing to match; the schedule decays attention over time by design, so a late deterioration depends on the trigger definitions being caught at widening intervals.",
+   "domain": "observation protocol",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decaying monitoring schedule with reset on deterioration: sample densely while state is abnormal, thin out as stability is proven, and snap back to dense sampling on any trigger. This is the right monitoring shape for engine watchlists on uncertain cases.",
+    "source_operator": "observation_frequency_schedule",
+    "telemetry": "Observation timestamps per case, current cadence tier, and reset events"
+   }
+  },
+  {
+   "primitive_id": "deterioration_drop_definition",
+   "name": "Neurological deterioration defined numerically: a sustained (30 minute) 1-point GCS drop, weighted to motor response, or a drop of 3 or more points in eye or verbal scores, or 2 or more in motor",
+   "verbatim_quote": "a sustained (that is, for at least 30 minutes) drop of 1 point in GCS score (give more weight to a drop of 1 point in the motor response score of the GCS score)",
+   "page": "Recommendation 1.9.13, p.34-35 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A drop must persist 30 minutes to count, filtering out transient noise",
+    "Component drops have asymmetric weights: motor changes matter most"
+   ],
+   "breakdown_regime": "The definition trades detection speed for noise rejection; a genuine rapid decline inside the 30-minute window is formally not yet deterioration, so clinical judgement must be able to act outside the definition.",
+   "domain": "observation protocol",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A change-detection rule with persistence and component weighting: a status change counts only if it sustains for a set duration, and changes in the most informative component count double. Directly transferable to how the engine should confirm player status changes before acting on them.",
+    "source_operator": "deterioration_drop_definition",
+    "telemetry": "Time series of component scores, with duration-weighted change detection"
+   }
+  },
+  {
+   "primitive_id": "second_observer_confirmation",
+   "name": "Confirm deterioration with a second competent staff member before involving the supervising doctor, to cut interobserver variability and unnecessary referrals",
+   "verbatim_quote": "To reduce interobserver variability and unnecessary referrals, get a second member of staff competent in observations to confirm deterioration before involving the supervising doctor.",
+   "page": "Recommendation 1.9.14, p.35 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Escalation proceeds without confirmation if no second observer is available",
+    "Only observers competent in the observation set qualify as confirmers"
+   ],
+   "breakdown_regime": "Confirmation adds delay exactly when the patient is worsening; the rule accepts that cost to protect the escalation channel from noise.",
+   "domain": "observation protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An independent-confirmation gate before escalation: a second qualified check on a deterioration signal before it consumes senior attention. The engine should require a second source to confirm a status downgrade before it changes published outputs.",
+    "source_operator": "second_observer_confirmation",
+    "telemetry": "Independent second reports on flagged cases, and escalation outcomes with and without confirmation"
+   }
+  },
+  {
+   "primitive_id": "hypopituitarism_any_severity",
+   "name": "Any severity of head injury can cause pituitary dysfunction, presenting immediately or hours, weeks or months later",
+   "verbatim_quote": "Be aware that any severity of head injury can cause pituitary dysfunction.",
+   "page": "Recommendation 1.9.6, p.33 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Low sodium or low blood pressure in an admitted patient should trigger investigation (recommendation 1.9.7)",
+    "Persistent symptoms in primary care weeks or months later warrant investigation or referral (recommendation 1.9.8)"
+   ],
+   "breakdown_regime": "Symptoms are non-specific and overlap with other conditions, and acute-phase cortisol response makes early testing hard to interpret, so the guideline leaves testing timing as an open research question.",
+   "domain": "delayed complications",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A long-tail effects rule: severity at the event does not bound the tail of consequences, and the monitoring obligation extends weeks to months past apparent recovery. The engine should keep a delayed-effects watch on recovered cases instead of closing them at first clearance.",
+    "source_operator": "hypopituitarism_any_severity",
+    "telemetry": "Late symptom reports after case closure, and biochemical flags in follow-up data"
+   }
+  },
+  {
+   "primitive_id": "discharge_gcs_gate",
+   "name": "Do not discharge until GCS is 15, or consciousness is normal on the paediatric GCS for preverbal and non-verbal children; pre-injury impairment cases must be back at their documented baseline",
+   "verbatim_quote": "Do not discharge people presenting with a head injury until their GCS score is 15 or, in preverbal and non-verbal children, consciousness is normal as assessed by the paediatric version of the GCS.",
+   "page": "Recommendation 1.10.4, p.37 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Discharge also requires supervision arrangements at home (recommendation 1.10.5) and written advice (recommendation 1.10.9)",
+    "The gate is state-based, not time-based: no minimum stay substitutes for recovery"
+   ],
+   "breakdown_regime": "Patients whose baseline is undocumented can be held by a gate they can never formally pass, which is why the guideline pairs the gate with baseline documentation duties.",
+   "domain": "discharge criteria",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An exit gate symmetric to the admission gate: release requires measured return to baseline, not elapsed time. The engine should clear availability flags on demonstrated recovery, never on schedule alone.",
+    "source_operator": "discharge_gcs_gate",
+    "telemetry": "Recovery measurements at exit decisions, compared against baseline and elapsed time"
+   }
+  },
+  {
+   "primitive_id": "cchr_foundation_adult_rule",
+   "name": "The adult imaging recommendations are largely based on the Canadian CT Head Rule, with modifications aimed at improving sensitivity",
+   "verbatim_quote": "The committee noted that the existing recommendations for clinical decision rules for head imaging in people 16 and over were largely based on the Canadian CT Head Rule (CCHR).",
+   "page": "Rationale: criteria for doing a CT head scan, p.57 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Updated evidence showed the CCHR has good sensitivity as intended but poor specificity",
+    "Cost-effectiveness evidence showed the CCHR to be the most cost effective of the decision rules assessed"
+   ],
+   "breakdown_regime": "One study of the 2014 NICE recommendations reported poorer sensitivity than the CCHR, which the committee could not explain and suspected reflected study population differences; the rules were kept anyway.",
+   "domain": "evidence provenance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Provenance discipline: the guideline names the upstream rule it derives from, states its modification goal (sensitivity), and records the performance evidence. Engine rules should carry the same lineage: source rule, modification, and measured performance, so later editors know what they are changing.",
+    "source_operator": "cchr_foundation_adult_rule",
+    "telemetry": "Rule lineage records: source, modifications, and validation performance per rule"
+   }
+  },
+  {
+   "primitive_id": "biomarker_specificity_requirement",
+   "name": "Biomarker appraisal turns on base rates: the mild head injury population is large and only a small proportion develop post-concussion syndrome, so a biomarker used to direct interventions needs high specificity or false positives swamp resources; current evidence was too limited to recommend biomarkers",
+   "verbatim_quote": "This was because the population with a mild head injury is large but only a small proportion go on to develop post-concussion syndrome.",
+   "page": "Rationale: post-concussion syndrome, p.62 of 76",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same evidence review found some biomarkers with high sensitivity for acute complications but specificity not high enough across studies",
+    "Accuracy varied widely between studies of the same biomarker on different assays and platforms"
+   ],
+   "breakdown_regime": "The verdict is evidence-limited, not a finding that biomarkers fail; the committee made it a research recommendation, so the position is explicitly provisional.",
+   "domain": "diagnostic evidence appraisal",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A base-rate appraisal rule for new signals: when the positive class is rare in a large population, specificity, not sensitivity, decides whether a new test helps or floods the system with false positives. The engine should appraise candidate signals the same way before adoption.",
+    "source_operator": "biomarker_specificity_requirement",
+    "telemetry": "Candidate signal performance split by sensitivity and specificity against the population base rate"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ef4143bc8b8069bf-t1",
+   "think": "This guideline is not a textbook of neurology. It is a complete decision system for one high stakes problem: among the very large number of people who arrive with a head injury, find the small number who will develop serious intracranial complications, act on them inside strict time limits, and safely release the rest. Its machinery is worth reading as engineering. The system is a staged funnel. Pre-hospital rules sort callers and community referrals using flat red flag lists where any single flag escalates. Scene management standardises the core measurement, the Glasgow Coma Scale, and insists the three component responses travel with the total everywhere. Emergency department assessment runs on clocks: assessment within fifteen minutes, immediate assessment below a GCS of fifteen. Imaging is governed by explicit decision rules with two action deadlines, one hour for the high risk tier and eight hours for the conditional tier, with parallel rules for the cervical spine and age specific variants for children built from a different parent rule. Transfer adds physiological control targets, a mean arterial pressure floor and blood gas thresholds, plus a stabilisation veto that forbids moving an unstable patient. Admission and observation convert monitoring into a schedule with decaying frequency, a numerical definition of deterioration that requires persistence and weights the motor component, and a second observer confirmation step before escalation. Discharge is gated on measured return to baseline rather than elapsed time, and the tail of the pathway extends months past the event through hypopituitarism vigilance and structured follow up. Several design choices generalise. First, sensitivity is deliberately bought with specificity: the committee knew the parent rules miss little and scan many negatives, and accepted that trade because the cost asymmetry is extreme. Second, every important rule carries a clock measured from the right origin, sometimes the injury, sometimes the moment a risk factor is identified. Third, judgement is scaffolded rather than trusted: benign explanations are admissible only after dangerous ones are excluded, deterioration must be confirmed by a second competent observer, and thresholds for specialist discussion are agreed in advance with the specialists. Fourth, the document is honest about its own evidence. It names its parent rules, the Canadian CT Head Rule for adults and CHALICE for children, reports their measured performance, records where evidence was thin or conflicting, as with anticoagulant risk and biomarker accuracy, and converts open questions into a numbered research agenda instead of papering over them. Where it breaks is also instructive. The rules are categorical, not probabilistic: they say scan or do not scan, never how likely a bleed is, so they cannot rank competing demands when capacity is scarce. Several load bearing judgements remain unautomated, such as clinical suspicion of cervical injury and what counts as surgically significant, which local centres must define for themselves. Whole populations sit at the edge of the evidence: recurrent head injuries, pre-injury cognitive impairment, and delayed presentation beyond twenty four hours are handled by extrapolation and flagged for research. And the entire apparatus presumes a staffed, scanner equipped, networked health system; strip that away and the clocks and confirmation steps are aspirations. For a reasoning engine, the transferable core is the discipline: decomposed scores, baseline relative judgements, disjunctive triggers with deadlines, persistence weighted change detection, independent confirmation before escalation, exit gates on recovery rather than time, and provenance recorded for every rule. The observation machinery deserves a closer look, because it is the part of the system that runs longest. The guideline fixes a minimum observation set, eight items recorded the same way everywhere, on a standard proforma with a separate version for children. Frequency starts at half hourly, decays through hourly to two hourly as stability is demonstrated, and resets instantly on deterioration. Deterioration itself is not left as a feeling: it is a sustained one point GCS drop over thirty minutes, or larger component drops, with the motor response deliberately weighted because the committee knew it carries the most signal. Even then, a second competent observer must confirm the change before the supervising doctor is pulled in, unless nobody is available, in which case escalation proceeds anyway. That is a complete signal processing chain, sampling rate, feature set, change detector, noise filter, confirmation step, and escalation path, specified in plain clinical language. The time windows are equally deliberate and they are not all the same kind. Some run from the injury, like the two hour tranexamic acid window and the four hour paediatric observation minimum. Some run from arrival, like the fifteen minute assessment. Some run from the moment a risk factor is identified, like both one hour imaging rules, which quietly solves the problem of the patient who presents late: the duty is created by knowledge, not by the accident. And one runs backwards, the forty eight hour GP letter, a deadline for handing the case to the next responsible party with the history attached. Discharge advice is treated with the same seriousness as imaging: a named responsible adult for the first twenty four hours, written return precautions, and information about delayed symptoms, because the committee understood that the pathway's failures after discharge are information failures. The paediatric material shows the system adapting rather than merely scaling: a grimace substituted for the verbal response, a two factor requirement on the softer trigger list, three view X-rays retained where adult practice has moved to CT, and safeguarding woven through every stage because a quarter to a third of head injuries in hospitalised under twos are estimated to be caused by abuse. Nothing in the document is decorative. Even the tranexamic acid dosing carries its reasoning with it, the paediatric range derived in the open from an assumed seventy kilogram adult, so a reader can see exactly which numbers are measured and which are extrapolated.",
+   "retrocausal_genealogy": "The guideline descends from NICE's own earlier head injury guidance, replacing CG176, with many recommendations carried from 2003, 2007 and 2014 versions and marked as such. Its adult imaging rule derives from the Canadian CT Head Rule developed by Stiell and colleagues, and its paediatric rule from the CHALICE study, each modified rather than adopted whole. The tranexamic acid recommendations rest on the CRASH trial programme's evidence that early antifibrinolytic treatment reduces head injury death, and the assessment sections lean on Advanced Trauma Life Support principles. The 2023 update layers new evidence reviews on tranexamic acid, transport, biomarkers and hypopituitarism over that inherited skeleton.",
+   "theory_of_mind": "The committee writes for busy clinicians whose attention is the scarcest resource in the system, and it does not trust unaided judgement under load. It assumes patients are unreliable witnesses to their own state: intoxicated, demented, amnesic, preverbal, or frightened. It assumes observers vary, so scores must be decomposed, standardised and confirmed. It assumes the dangerous miss is far costlier than the wasted scan, and prices its rules accordingly. It also assumes a system, not a hero: ambulances, scanners, neuroscience units and GP letters are all treated as parts of one pathway whose handoffs must be specified, timed and documented, because that is where patients are actually lost.",
+   "cross_layer_veto": "Several rules in this guideline exist purely to veto other layers. The imaging rules veto discharge: a patient meeting scan criteria cannot be released unscanned on a reassuring manner. The stabilisation rule vetoes transfer, however urgent the destination. The intoxication rule vetoes the benign explanation until brain injury is excluded. The deterioration definition vetoes continued routine observation and forces escalation and possible rescanning. Anticoagulant status vetoes the default no-scan pathway for otherwise low risk patients. Safeguarding suspicion vetoes routine discharge and reroutes the case entirely. The pattern is consistent: lower layers propose, specific named conditions dispose, and the veto conditions are written down in advance rather than improvised."
+  }
+ ],
+ "universal_lens": "Read away from medicine, NG232 is a template for running any high volume, high stakes triage where misses are catastrophic and capacity is finite. Decompose the severity score and keep the components. Judge every case against its own baseline. Attach deadlines to decisions and measure them from the moment the trigger is known. Define deterioration numerically, require it to persist, and have a second observer confirm it before escalation. Gate exits on demonstrated recovery, not elapsed time. Record where every rule came from and how well it has performed. Any organisation that sorts risky cases under time pressure can lift this skeleton whole.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the assessment architecture for its head injury and concussion education work: decomposed responsiveness scoring rather than a single grade, red flag lists for sideline and community settings, structured observation with named escalation triggers, and explicit teaching that late endocrine and cognitive effects can follow injuries of any severity. The guideline's research agenda also maps directly onto GSI's teaching gaps, especially recurrent head injuries in sport, which the committee singled out as evidence free. GSI material can present NG232 as the reference pathway against which sporting protocols are simplified versions, with the simplifications named.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, NG232 is a design source for the health layer. It supplies: severity recorded as components rather than one number; availability judged against the player's own baseline; disjunctive trigger lists that force re-evaluation within a set window when any one red flag appears; a persistence weighted definition of status change so one noisy report does not move a projection; second source confirmation before a downgrade is published; clearance gated on demonstrated recovery rather than the calendar; and a delayed effects watch that keeps recovered cases under light monitoring for late complications. None of this is betting content; it is the injury reasoning machinery the engine's projections stand on."
+}

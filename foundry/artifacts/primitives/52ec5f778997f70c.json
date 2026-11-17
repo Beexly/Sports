@@ -1,0 +1,724 @@
+{
+ "book_id": "52ec5f778997f70c",
+ "source_status": "COMPLETE",
+ "source_note": "Trauma and Emergency Surgery, edited by Selim Sozen and Burhan Hakan Kanat, IntechOpen, London, first published 2022 (print ISBN 978-1-83969-523-0; book DOI 10.5772/intechopen.94683). Eight chapters by multiple author teams in six sections: abdominal surgery and trauma, vascular surgery and trauma, chest trauma, head trauma, acute compartment syndrome, and burn with COVID-19. Chapters are individually DOI-registered (for example Chapter 1 at 10.5772/intechopen.98568, Chapter 6 at 10.5772/intechopen.98981, Chapter 7 at 10.5772/intechopen.97841). The local file is the publisher PDF, 5,492,497 bytes, sha256 52ec5f778997f70cd63287ea04436d35c3a1396b058fce0f130dccf65af71d91, book_id 52ec5f778997f70c. The extracted text (5,547 lines) is clean born-digital text with light line-break hyphenation; chapter reference lists are set in two columns and were not used as quote sources. The Parkland formula is named in Chapter 8 but never printed, so it is not carried as an equation; the only equation printed in the book is CPP = MAP - ICP in Chapter 6. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "deceleration_shear_forces",
+   "name": "Rapid deceleration injures organs by differential movement and shear at fixed attachment points",
+   "verbatim_quote": "Rapid deceleration causes differentiating movement among adjacent structures. As a result, shear forces are created and cause injury to hollow, solid visceral organs and vascular pedicles at relatively fixed points of attachment, for example, a hepatic tear along the ligamentum teres.",
+   "page": "Chapter 1, section 2.1, printed p. 3 (extracted text line 361)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Adjacent structures have different masses and mobilities, so a sudden stop loads their shared attachments in shear",
+    "Vascular pedicles and ligament attachments are the relatively fixed points where the shear concentrates"
+   ],
+   "breakdown_regime": "Does not describe direct crush or pressure-rupture injuries, which the same chapter treats as separate mechanisms; qualitative only, no force magnitude or threshold is given",
+   "domain": "trauma biomechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A mechanism label for injury events: when a monitored system decelerates abruptly, damage localizes at interfaces between a mobile component and a fixed anchor, so the engine should score interface points, not whole organs, as the failure sites",
+    "source_operator": "deceleration_shear_forces",
+    "telemetry": "Event kinematics (impact direction, deceleration), attachment anatomy, injury location relative to fixed points"
+   }
+  },
+  {
+   "primitive_id": "atls_instability_definition",
+   "name": "ATLS operational definition of the unstable trauma patient: SBP under 90 mmHg and heart rate over 120 bpm plus hypoperfusion signs",
+   "verbatim_quote": "According to the Advanced Trauma Life Support (ATLS) definition, a patient is \"unstable\" with blood pressure < 90 mmHg and heart rate > 120 bpm,",
+   "page": "Chapter 1, section 3, printed p. 4 (extracted text line 410)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The vital-sign cutoffs are read together with skin vasoconstriction, altered consciousness, and shortness of breath as corroborating hypoperfusion signs",
+    "A single numeric pair is treated as sufficient to switch the patient into the unstable pathway"
+   ],
+   "breakdown_regime": "Thresholds are population conventions, not patient-specific; a chronic hypertensive or a beta-blocked patient can be in shock above these cutoffs, and the chapter gives no adjustment rule",
+   "domain": "triage thresholds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A two-feature hard gate that flips a case from the evaluate pathway to the act-now pathway; the engine can reuse the shape as a regime switch where crossing a paired vital threshold changes which downstream rules are allowed to run",
+    "source_operator": "atls_instability_definition",
+    "telemetry": "Systolic blood pressure, heart rate, capillary refill, mental status"
+   }
+  },
+  {
+   "primitive_id": "efast_stability_triage_pathway",
+   "name": "Stability-first branching rule: unstable with positive eFAST goes to emergency exploration, stable goes to CT imaging",
+   "verbatim_quote": "Hemodynamically unstable patients with a positive eFAST exam will be taken up for emergency exploration, while stable patients will undergo further imaging and investigation to plan management.",
+   "page": "Chapter 1, abstract, printed p. 3 (extracted text line 324)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "eFAST is available at the bedside and its free-fluid finding is treated as actionable without further imaging in the unstable patient",
+    "The stable patient can tolerate the time cost of CT, so information is bought before intervention"
+   ],
+   "breakdown_regime": "eFAST can miss retroperitoneal and hollow viscus injuries, so a negative scan in an unstable patient does not close the question; the rule also presumes an operating theatre is immediately available",
+   "domain": "clinical decision pathway",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A resource-allocation branch: when the cost of delay is lethal, act on a cheap fast test; when the state is stable, spend time on a richer measurement before committing. The engine can reuse this as its evidence-versus-latency switch for any time-critical classification",
+    "source_operator": "efast_stability_triage_pathway",
+    "telemetry": "Hemodynamic stability flag, eFAST free-fluid result, CT availability and turnaround time"
+   }
+  },
+  {
+   "primitive_id": "splenic_nom_monitoring_preconditions",
+   "name": "Nonoperative management of splenic injury is licensed only in a setting with continuous monitoring and an immediately available operating room",
+   "verbatim_quote": "Nonoperative management of splenic injuries should only be considered in an environment that provides capabilities for continuous monitoring, such as serial clinical evaluations, serial HB estimation, serial radiological screening, and availability of an emergency operating room at any given time",
+   "page": "Chapter 1, section 4.2, printed p. 6 (extracted text lines ~503-510)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Watchful waiting is safe only because deterioration is detected early by serial examination, serial hemoglobin, and serial imaging",
+    "A rescue pathway (emergency operating room) exists at all times if monitoring fires"
+   ],
+   "breakdown_regime": "The precondition fails in low-resource settings; the chapter also notes that falling vitals or hematocrit, expanding hematoma, or ongoing bleeding void the nonoperative plan and force laparotomy",
+   "domain": "management gating",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A strategy whose validity is conditional on the surveillance stack underneath it: a passive hold is only rational when detection latency is short and a rescue action is pre-staged. The engine should attach the same precondition check to any wait-and-monitor recommendation it issues",
+    "source_operator": "splenic_nom_monitoring_preconditions",
+    "telemetry": "Monitoring cadence, serial hemoglobin trend, rescue-resource availability flag"
+   }
+  },
+  {
+   "primitive_id": "delayed_splenic_rupture_baudet_period",
+   "name": "Delayed splenic rupture: a silent latent period of hours to days after trauma, typically declaring at 4 to 8 days",
+   "verbatim_quote": "Delayed splenic rupture (DSR): latent period of Baudet in which the patient has no signs or symptoms for hours to days and presents later. DSR tends to occur 4-8 days after trauma.",
+   "page": "Chapter 1, section 4.1, printed p. 5 (extracted text line 450)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The initial injury seeds a subcapsular hematoma, clot, pseudocyst, or pseudoaneurysm that can expand or disrupt later",
+    "Absence of symptoms during the latent window is not evidence of resolution"
+   ],
+   "breakdown_regime": "Timing is a tendency, not a bound; rupture can occur outside the 4 to 8 day window, and the chapter gives no probability curve for the hazard over time",
+   "domain": "latent failure timing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A delayed-failure hazard model: an apparently recovered system carries a named silent window during which a seeded defect can declare itself, so post-event surveillance should be scheduled on the hazard window (here days 4 to 8) rather than stopped at first clearance",
+    "source_operator": "delayed_splenic_rupture_baudet_period",
+    "telemetry": "Days since injury, hematoma or pseudoaneurysm presence on imaging, symptom onset"
+   }
+  },
+  {
+   "primitive_id": "liver_nom_grade_independence",
+   "name": "For blunt liver injury, nonoperative management eligibility is set by hemodynamic stability, not by the AAST injury grade",
+   "verbatim_quote": "Patients can undergo NOM irrespective of the grade of liver injury.",
+   "page": "Chapter 1, section 5.1, printed p. 7 (extracted text line 528)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stability and absence of peritonitis or other surgical injuries are the real eligibility variables",
+    "The supporting environment (intensive monitoring, angiography, operating room, blood products) is in place, as the chapter requires for liver NOM"
+   ],
+   "breakdown_regime": "Grade still matters for complication risk (bile leak, necrosis, rebleeding) and for angiography decisions when a contrast blush is present; instability or peritonitis overrides the rule at any grade",
+   "domain": "management gating",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A warning against proxy-variable capture: an ordinal severity grade is available and tempting, but the chapter shows the operative gate is a different variable (current stability). The engine should test whether its own grade-like scores are doing real gating work or merely correlating with the variable that matters",
+    "source_operator": "liver_nom_grade_independence",
+    "telemetry": "Hemodynamic stability, peritonitis signs, contrast blush on CT angiogram, grade as a recorded covariate"
+   }
+  },
+  {
+   "primitive_id": "retroperitoneal_zone_system",
+   "name": "The retroperitoneum is partitioned into three zones with zone-specific exploration rules for hematoma",
+   "verbatim_quote": "Zone 1 is the central retroperitoneum from the diaphragm superiorly to the bifurcation of the aorta inferiorly.",
+   "page": "Chapter 1, section 9, printed p. 12 (extracted text line 866)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Zone membership predicts the likely injured structures: Zone 1 central vessels, duodenum and pancreas; Zone 2 kidneys and colon; Zone 3 iliac vessels",
+    "Management is assigned per zone and per mechanism: penetrating Zone 1 and Zone 3 are explored, blunt Zone 2 contained hematoma is not"
+   ],
+   "breakdown_regime": "Zone boundaries are anatomical conventions; injuries crossing zones and expanding hematomas break the partition logic, and the chapter makes expanding or pulsatile hematoma an exploration trigger in any zone",
+   "domain": "spatial partition and policy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A partition-then-policy pattern: divide a complex space into a few named regions, attach a default action to each region, and let region membership, not case-by-case debate, drive the first move. The engine can reuse this for any spatial or structural triage where local rules beat global reasoning under time pressure",
+    "source_operator": "retroperitoneal_zone_system",
+    "telemetry": "Hematoma location by zone, mechanism (blunt or penetrating), expansion on serial imaging"
+   }
+  },
+  {
+   "primitive_id": "rsh_epigastric_rupture_definition",
+   "name": "Rectus sheath hematoma is bleeding into the rectus sheath from rectus muscle rupture or epigastric vessel rupture, spontaneous or traumatic",
+   "verbatim_quote": "RSH is a clinical condition caused by rupture of the rectus muscle or injury or spontaneous rupture of the epigastric vessels.",
+   "page": "Chapter 2, section 2, printed p. 18 (extracted text line 1082)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The bleeding source is the superior or inferior epigastric artery or the muscle itself",
+    "Predisposing factors (anticoagulation, coagulopathy, cough, pregnancy, trauma) weaken the vessel or the muscle before the rupture event"
+   ],
+   "breakdown_regime": "The definition does not separate traumatic from spontaneous cases for management; size and extension, captured by the type classification, drive treatment instead",
+   "domain": "disease definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A contained-bleed model: a vessel failure inside a fascial envelope produces a mass that mimics an intra-abdominal emergency. For the engine it is a template for mimic diagnoses, where a benign compartment process imitates a catastrophic one and the discriminator is anatomical, not symptomatic",
+    "source_operator": "rsh_epigastric_rupture_definition",
+    "telemetry": "Anticoagulant use, palpable abdominal wall mass, pain pattern, imaging location relative to the rectus sheath"
+   }
+  },
+  {
+   "primitive_id": "carnett_sign",
+   "name": "Carnett sign: tenderness that persists or increases when the abdominal muscles are tensed localizes the pain to the abdominal wall",
+   "verbatim_quote": "Carnett's sign can help distinguish whether tenderness originates in the abdomen or the abdominal wall.",
+   "page": "Chapter 2, section 4, printed p. 19 (extracted text line 1133)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tensing the rectus muscles shields intra-abdominal viscera but stretches an abdominal wall lesion",
+    "The patient can cooperate with the maneuver and report the change in tenderness"
+   ],
+   "breakdown_regime": "The sign is a bedside discriminator, not a diagnosis; it does not identify which wall pathology is present, and it is unreliable when the patient cannot tense the muscles or has diffuse peritonitis",
+   "domain": "diagnostic sign",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A perturbation test for source localization: apply a controlled input that shields one candidate source and loads the other, then read which source the signal follows. The engine can reuse this as a general attribution probe whenever two candidate generators produce the same surface signal",
+    "source_operator": "carnett_sign",
+    "telemetry": "Tenderness before and during abdominal wall contraction, patient cooperation flag"
+   }
+  },
+  {
+   "primitive_id": "rsh_type_classification",
+   "name": "Rectus sheath hematomas are typed I to III by anatomical extension, and the type sets the management level from outpatient follow-up to possible surgery",
+   "verbatim_quote": "Type III hematoma, bleeding occurs between the muscle and the transverse fascia, in the peritoneum and also to the prevesical area.",
+   "page": "Chapter 2, section 6, printed p. 21 (extracted text line 1274)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CT defines the extension: Type I intramuscular and unilateral, Type II into the fascia plane, Type III bilateral with peritoneal and prevesical spread",
+    "Hemoglobin drop and hemodynamic deterioration track the type, per the chapter's approach table"
+   ],
+   "breakdown_regime": "Types are snapshots; a Type I or II hematoma can expand into a higher type, especially in elderly or anticoagulated patients, which is why the chapter mandates close follow-up even for Type I",
+   "domain": "severity classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An extension-based staging rule: classify by how far a process has spread across anatomical boundaries, then map each stage to a fixed resource level. The engine can reuse the shape for any spreading process where boundary crossings, not size alone, are the escalation triggers",
+    "source_operator": "rsh_type_classification",
+    "telemetry": "CT-measured hematoma extension, hemoglobin trend, hemodynamic status"
+   }
+  },
+  {
+   "primitive_id": "rsh_imaging_accuracy_gradient",
+   "name": "For rectus sheath hematoma, ultrasound sensitivity is 80 to 90 percent and operator dependent, while CT reaches 100 percent sensitivity and specificity",
+   "verbatim_quote": "Tomography can diagnose with sensitivity and specificity reaching 100%.",
+   "page": "Chapter 2, section 5, printed p. 20 (extracted text line 1184)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ultrasound is used first because it is fast and available, accepting its operator dependence",
+    "CT additionally reports size, location, origin, spread, and excludes other abdominal pathology"
+   ],
+   "breakdown_regime": "The 100 percent figure is the chapter's claim from cited literature, not a measurement made in this book; real-world CT performance depends on contrast phase and reader, and the first-line test remains ultrasound for access reasons",
+   "domain": "diagnostic test performance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A test-ladder calibration: a cheap fallible screen (80 to 90 percent, operator dependent) in front of a near-definitive confirmatory test. The engine should record both the accuracy and the dependence structure of each diagnostic it chains, because the screen's errors are correlated with operator skill, not random",
+    "source_operator": "rsh_imaging_accuracy_gradient",
+    "telemetry": "Test modality, operator experience, confirmatory CT result"
+   }
+  },
+  {
+   "primitive_id": "rsh_mortality_anticoagulation_multiplier",
+   "name": "Rectus sheath hematoma mortality is 4 percent overall but rises to 25 percent in patients on anticoagulation therapy",
+   "verbatim_quote": "The overall mortality rate in rectus hematoma is 4%. This rate rises to 25% in patients receiving anticoagulation therapy",
+   "page": "Chapter 2, section 5, printed p. 20 (extracted text line 1189)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Anticoagulated patients cannot tamponade the bleed with their own clotting, so hematomas expand further before presentation",
+    "The anticoagulated population is older and carries more comorbidity, which the chapter flags as part of the risk"
+   ],
+   "breakdown_regime": "The figures are literature aggregates quoted by the chapter, not a cohort measured here; the multiplier should not be read as a pure drug effect separated from age and comorbidity",
+   "domain": "risk stratification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A base-rate times context-multiplier structure: the same lesion carries a roughly sixfold mortality change under one background condition (anticoagulation). The engine should store risk as base rate plus named multipliers with their confounders attached, not as a single blended number",
+    "source_operator": "rsh_mortality_anticoagulation_multiplier",
+    "telemetry": "Anticoagulation status, age, comorbidity count, hematoma type"
+   }
+  },
+  {
+   "primitive_id": "tai_burden_and_scene_mortality",
+   "name": "Traumatic aortic injury is the second leading cause of death in motor vehicle crashes, about 15 percent of crash deaths, with most deaths at the scene",
+   "verbatim_quote": "Traumatic aortic injuries (TAI) represent the second leading cause of death from motor vehicle crashes, accounting for 15% of all motor vehicle accident associated deaths",
+   "page": "Chapter 3, section 1, printed p. 29 (extracted text line 1519)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter's historical series report death at the scene in 70 to 90 percent of cases, so hospital series are survivors of a severe selection filter",
+    "The aortic isthmus is the commonest site in hospital arrivals because periadventitial tissue there can temporarily contain the injury"
+   ],
+   "breakdown_regime": "Scene mortality figures come from historical case series cited by the chapter; modern prehospital care changes the mix, and the 15 percent share is specific to motor vehicle crash deaths, not all trauma",
+   "domain": "injury epidemiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A survivorship-bias primitive: the observed hospital population is the residue of a lethal pre-filter, so any rate computed on arrivals understates the event's true lethality. The engine should tag datasets assembled after a selection filter and refuse to read their outcome rates as population rates",
+    "source_operator": "tai_burden_and_scene_mortality",
+    "telemetry": "Deaths at scene versus on arrival, injury site distribution, transport times"
+   }
+  },
+  {
+   "primitive_id": "svs_tai_grading_system",
+   "name": "Society for Vascular Surgery grading of traumatic aortic injury: Grade I intimal tear, II intramural hematoma, III pseudoaneurysm, IV rupture",
+   "verbatim_quote": "Grade I: Intimal tear; grade II: Intramural hematoma; grade III: Pseudoaneurysm; grade IV: Rupture.",
+   "page": "Chapter 3, Figure 2 caption, printed p. 32 (extracted text line 1629)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The grade is read from CT morphology of the aortic wall injury",
+    "Grades were intended to order severity and guide timing of repair"
+   ],
+   "breakdown_regime": "The chapter itself reports the grading failed to correlate reliably with rupture risk or death because it is qualitative: it names the injury type but carries no size or extension parameter, which is the gap the RSI system was built to fill",
+   "domain": "severity classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A named-type taxonomy without a magnitude axis: useful for communication, weak for prediction. The engine should treat purely categorical severity labels as suspect until a quantitative dimension (size, extension, physiology) is attached, exactly the correction this chapter performs",
+    "source_operator": "svs_tai_grading_system",
+    "telemetry": "CT morphology class, lesion size and extension measurements, outcome correlation"
+   }
+  },
+  {
+   "primitive_id": "rsi_radiographic_severe_injury_criteria",
+   "name": "Radiographic Severe Injury (RSI): transection or active extravasation, or two or more of contained extravasation over 10 mm, periaortic or mediastinal hematoma over 10 mm thick, or left pleural effusion",
+   "verbatim_quote": "we classified the AI as \"Severe\" (Radiographic Severe Injury, RSI) when they included findings of [1] total/partial aortic transection (Figure 3), [2] active contrast extravasation (Figure 4)",
+   "page": "Chapter 3, section 3, printed p. 31 (extracted text lines ~1610-1620)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Imaging signs are combined as a binary severe versus non-severe variable rather than a graded score",
+    "The 10 mm size cutoffs convert a qualitative read into a measurable rule"
+   ],
+   "breakdown_regime": "Derived from the authors' own 76-patient, three-center series; the chapter's adjusted analysis weakens the association (adjusted odds ratio 2.51 with a wide interval), so the criteria are a triage heuristic, not a validated law",
+   "domain": "risk classification rule",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A composite binary classifier built from thresholded imaging features with an OR-of-catastrophes plus count-of-warnings structure: one catastrophic sign suffices, otherwise two moderate signs must coincide. The engine can reuse this exact combinator for escalation rules where single extreme features and accumulating moderate features both need a path to the same alarm",
+    "source_operator": "rsi_radiographic_severe_injury_criteria",
+    "telemetry": "CT findings (transection, extravasation size, hematoma thickness, pleural effusion), downstream mortality"
+   }
+  },
+  {
+   "primitive_id": "tai_mortality_predictor_set",
+   "name": "In the authors' series, aortic-injury mortality tracked physiology and global injury burden: high ISS, systolic pressure under 100, heart rate at or over 100, and vasopressor requirement",
+   "verbatim_quote": "We found that mortality caused by the aortic injury was associated with high ISS, SBP < 100, HR ≥ 100, and vasopressors requirement.",
+   "page": "Chapter 3, section 3, printed p. 31 (extracted text lines ~1628-1637)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reported univariate odds ratios for injury-related mortality are large: SBP under 100 at 24.00, heart rate at or over 100 at 7.48, pressors at 6.33, per the chapter's Table 1",
+    "Physiology on presentation is being used as a proxy for how much reserve the patient has left"
+   ],
+   "breakdown_regime": "Small single-series sample (76 patients) with wide confidence intervals; in the adjusted model most associations lose significance, so the set is a bedside warning cluster, not a fitted prediction equation",
+   "domain": "prognostic factor set",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A physiology-over-anatomy finding: for this injury, systemic reserve markers outpredict the lesion's own grade. The engine should check, for any local severity score it trusts, whether global state variables dominate it, and demote the local score when they do",
+    "source_operator": "tai_mortality_predictor_set",
+    "telemetry": "ISS, presenting SBP and heart rate, vasopressor use, 30-day mortality"
+   }
+  },
+  {
+   "primitive_id": "tevar_new_standard_of_care",
+   "name": "Thoracic endovascular aortic repair (TEVAR) displaced open graft replacement as the standard for traumatic aortic injury and lowered operative mortality",
+   "verbatim_quote": "The surge of TEVAR as the new standard for treatment for TAI has lowered the operative mortality for the treatment of this condition.",
+   "page": "Chapter 3, section 4 (Conclusion), printed p. 37 (extracted text line 1833)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Endovascular repair avoids thoracotomy, aortic cross-clamping, and partial bypass, cutting procedural stress in polytrauma patients",
+    "It can be delivered in the operating room under portable fluoroscopy alongside other life-saving procedures"
+   ],
+   "breakdown_regime": "TEVAR is not always feasible: the chapter lists no peripheral access, intraluminal thrombus, small femoral vessels, and total transection as reasons open repair was still chosen; long-term durability in young patients is a separate open question",
+   "domain": "treatment standard",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A technology-substitution pattern: a less invasive delivery route for the same repair changes the feasible timing and the candidate pool, not just the complication rate. The engine should model intervention options with route-dependent cost, because the cheaper route can flip a defer decision into an act decision",
+    "source_operator": "tevar_new_standard_of_care",
+    "telemetry": "Repair route chosen, access feasibility, operative mortality, paraplegia rate"
+   }
+  },
+  {
+   "primitive_id": "delayed_repair_survival_evidence",
+   "name": "The AAST prospective multicenter study (178 patients, 2005 to 2007) found delayed repair of stable blunt thoracic aortic injury associated with improved survival",
+   "verbatim_quote": "In a relatively recent prospective multicenter study sponsored by the American Association for the Surgery of Trauma (AAST), the effect of early versus delayed repair was observed in 178 patients admitted with BAI between 2005 and 2007.",
+   "page": "Chapter 3, section 3, printed p. 35 (extracted text lines ~1755-1765)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Delayed repair applies to injuries judged stable; unstable injuries still go to immediate repair",
+    "Delay buys time to treat competing lethal injuries first and to run anti-impulse therapy"
+   ],
+   "breakdown_regime": "Association from an observational prospective study, not randomization: patients selected for delay were those judged able to wait, so part of the survival gap is selection; the chapter states the ideal management of stable pseudoaneurysm still needs further study",
+   "domain": "treatment timing evidence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A sequencing result: for a stable subproblem inside a multi-problem case, deferring the fix behind higher-lethality work improved the global outcome. The engine can reuse this as a scheduling principle with the selection caveat attached: the benefit was measured on cases pre-judged stable enough to wait",
+    "source_operator": "delayed_repair_survival_evidence",
+    "telemetry": "Repair timing, injury stability class, competing injury treatment order, survival"
+   }
+  },
+  {
+   "primitive_id": "persistent_pneumothorax_definition",
+   "name": "Persistent pneumothorax is defined as a persistent air leak with pneumothorax still visible on imaging within 72 hours after chest tube placement",
+   "verbatim_quote": "Persistent pneumothorax is defined as persistent air leak and pneumothorax observed in radiology within 72 hours after chest tube setting.",
+   "page": "Chapter 4, section 2, printed p. 44 (extracted text line 2107)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A time-boxed definition: the same finding is expected early and only becomes a surgical indication after the 72 hour mark",
+    "The chapter notes about 23 percent of pneumothoraces have a persistent air leak"
+   ],
+   "breakdown_regime": "The 72 hour boundary is a convention; the chapter's cited studies intervene anywhere from 48 hours to 5 days, so the definition standardizes language more than it settles timing",
+   "domain": "clinical definition with time threshold",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A duration-qualified state definition: a signal only becomes an event after it persists past a named dwell time. The engine should encode such definitions as state plus clock, because the identical observation means watch before the deadline and act after it",
+    "source_operator": "persistent_pneumothorax_definition",
+    "telemetry": "Air leak presence, hours since tube placement, serial chest imaging"
+   }
+  },
+  {
+   "primitive_id": "retained_hemothorax_volume_threshold",
+   "name": "Retained hemothorax over 300 ml after tube drainage is an indication for surgical evacuation because of empyema and pneumonia risk",
+   "verbatim_quote": "Retained hemothorax over 300 ml should be an indication for surgery due to its' complications like empyema or pneumonia",
+   "page": "Chapter 4, section 2, printed p. 44 (extracted text line 2111)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Residual volume is estimable on imaging after chest tube insertion",
+    "Undrained collections progress: the chapter reports 40 percent of undrained hemothoraces result in fibrothorax"
+   ],
+   "breakdown_regime": "Volume estimation from imaging is imprecise, and the chapter's evidence table shows wide practice variation; VATS also becomes technically hard after about day 10 as adhesions form, so the threshold interacts with a closing window",
+   "domain": "intervention threshold",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A residue threshold with a decay window: leftover material above a set volume must be cleared, and the clearing method itself expires as the residue organizes. The engine can reuse the pair (volume cutoff, method expiry) for any cleanup decision where delay converts an easy fix into a hard one",
+    "source_operator": "retained_hemothorax_volume_threshold",
+    "telemetry": "Estimated retained volume, days since injury, drainage output trend"
+   }
+  },
+  {
+   "primitive_id": "vats_contraindication_set",
+   "name": "VATS is contraindicated by hemodynamic instability, intolerance of single-lung ventilation or lateral positioning, suspected heart or great vessel injury, and dense prior adhesions",
+   "verbatim_quote": "Contraindications for VATS include: Hemodynamic instability, intolerance to lateral decubitus position or single-lung ventilation, suspected injuries to the heart or great vessels and severe adhesions due to prior thoracic interventions",
+   "page": "Chapter 4, section 2, printed p. 46 (extracted text line 2210)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The minimally invasive route needs a stable patient who tolerates one-lung ventilation and positioning",
+    "Suspected cardiac or great vessel injury needs the exposure of open surgery, not a camera"
+   ],
+   "breakdown_regime": "The set is a gate on the technique, not on surgery itself: excluded patients go to thoracotomy; the chapter also excludes suspected pericardial injury from videothoracoscopy in its conclusion",
+   "domain": "eligibility gate",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A precondition list that routes cases between a light method and a heavy method: the light method's advantages exist only inside its eligibility envelope. The engine should attach explicit exclusion sets to any preferred low-cost method so cases outside the envelope fall back automatically instead of failing mid-procedure",
+    "source_operator": "vats_contraindication_set",
+    "telemetry": "Stability flag, ventilation tolerance, suspected injury location, prior thoracic surgery history"
+   }
+  },
+  {
+   "primitive_id": "flail_chest_definition",
+   "name": "Flail chest is defined structurally: fractures of at least 3 adjacent ribs in at least 2 different places, producing a free chest wall segment",
+   "verbatim_quote": "The flail chest is formed by fractures of at least 3 adjacent ribs in at least 2 different places.",
+   "page": "Chapter 5, section 4.3, printed p. 51 (extracted text line 2471)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The double fracture per rib is what disconnects the segment and lets it move paradoxically with breathing",
+    "Adjacency matters: scattered single fractures do not create the mechanical defect"
+   ],
+   "breakdown_regime": "The definition is anatomical; clinical severity still depends on the underlying lung contusion and pain control, and the chapter treats hypoxia development as the trigger for intubation rather than the fracture count alone",
+   "domain": "structural definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A connectivity definition: a system fails as a unit when a component is cut free at two points across three adjacent elements. The engine can reuse the pattern for structural integrity checks in any lattice-like system, where the count of cuts and their adjacency, not total damage, define the failure",
+    "source_operator": "flail_chest_definition",
+    "telemetry": "Fracture count, fracture sites per rib, adjacency map, respiratory mechanics"
+   }
+  },
+  {
+   "primitive_id": "rib_fixation_outcome_effect",
+   "name": "Surgical stabilization of rib fractures reduces pulmonary complications, shortens hospital stay and time to return to work, and improves breathing physiology",
+   "verbatim_quote": "Surgical stabilization of rib fractures reduces the possible pulmonary complications of patients.",
+   "page": "Chapter 5, section 5 (Conclusion), printed p. 55 (extracted text line 2601)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fixation restores chest wall mechanics so ventilation and secretion clearance improve",
+    "The benefit concentrates in flail chest and multiple fractures, especially intensive care patients, where the chapter reports shorter mechanical ventilation and ICU stay"
+   ],
+   "breakdown_regime": "Most rib fractures still heal conservatively in about six weeks; fixation carries its own risks (hardware problems, nerve injury, posterior fracture access difficulty), so the effect is an indication-limited one, not a default",
+   "domain": "intervention outcome claim",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A stabilization dividend: mechanically rejoining a broken structure pays out across several downstream variables at once (ventilation time, infection, stay, work return). The engine should expect such multi-output dividends from structural repairs and evaluate them on the bundle, not on the single most visible endpoint",
+    "source_operator": "rib_fixation_outcome_effect",
+    "telemetry": "Ventilator days, ICU and hospital stay, pulmonary infection rate, return to work time"
+   }
+  },
+  {
+   "primitive_id": "gcs_severity_bands",
+   "name": "Glasgow Coma Scale bands stratify head injury: 3 to 8 severe, 9 to 12 moderate, 13 to 15 mild, on a 15 point scale",
+   "verbatim_quote": "GCS score of 3 to 8 represents severe head injury.",
+   "page": "Chapter 6, section 3.1, printed p. 60 (extracted text line 2787)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The score sums eye, verbal, and motor responses and is measurable by trained providers at the bedside",
+    "Band membership drives pathway decisions in the chapter, including intubation at GCS under 9 and seizure prophylaxis risk at GCS under 10"
+   ],
+   "breakdown_regime": "Sedation, paralysis, intoxication, and intubation corrupt components of the score; the chapter warns disability assessment should precede sedatives and neuromuscular blockers, and a single early score is weaker than a trend",
+   "domain": "severity score bands",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A composite ordinal score with action bands: three sub-signals are summed into one number and fixed cut points convert it into severity classes that gate interventions. The engine can reuse the pattern but should copy the chapter's caution too: record when the inputs were pharmacologically corrupted before trusting the band",
+    "source_operator": "gcs_severity_bands",
+    "telemetry": "Eye, verbal, and motor subscores, sedation and paralysis flags, score trend"
+   }
+  },
+  {
+   "primitive_id": "cpp_equals_map_minus_icp",
+   "name": "Cerebral perfusion pressure is mean arterial pressure minus intracranial pressure: CPP = MAP - ICP",
+   "verbatim_quote": "Cerebral perfusion pressure is defined as mean arterial pressure (MAP) minus intracranial pressure (i.e., CPP=MAP-ICP)",
+   "page": "Chapter 6, section 5.2, printed p. 65 (extracted text line 3067)",
+   "latex": "$CPP = MAP - ICP$",
+   "symbol_and_unit_ledger": {
+    "CPP": "cerebral perfusion pressure, mmHg",
+    "MAP": "mean arterial pressure, mmHg",
+    "ICP": "intracranial pressure, mmHg"
+   },
+   "assumptions": [
+    "MAP and ICP are measured on the same pressure reference so their difference is the effective perfusion gradient",
+    "The injured brain's autoregulation is impaired, so flow tracks this gradient more passively than in the healthy brain"
+   ],
+   "breakdown_regime": "A single global gradient hides regional ischemia; the chapter pairs it with local measures (brain tissue oxygen, jugular saturation) because adequate CPP does not guarantee adequate tissue oxygenation everywhere",
+   "domain": "physiological derived quantity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A margin variable computed as driving pressure minus opposing pressure: the engine can compute the same kernel anywhere a flow is driven against a resisting pressure, and alarm on the margin rather than on either input alone, since either input can look acceptable while the difference is lethal",
+    "source_operator": "cpp_equals_map_minus_icp",
+    "telemetry": "Continuous arterial pressure trace, ICP monitor readings, computed CPP trend"
+   }
+  },
+  {
+   "primitive_id": "cpp_target_range",
+   "name": "Brain Trauma Foundation target: keep cerebral perfusion pressure between 50 and 70 mmHg after traumatic brain injury",
+   "verbatim_quote": "The recommended goal of CPP per BTF guideline is 50-70 mm Hg",
+   "page": "Chapter 6, section 5.2, printed p. 65 (extracted text line 3069)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both bounds bind: below the range risks ischemic secondary injury, above it the chapter links aggressive pressure augmentation to complications without added benefit",
+    "The target presumes ICP is being measured, since CPP cannot be computed without it"
+   ],
+   "breakdown_regime": "The range is a population guideline; the chapter presents the Lund concept as a competing volume-targeted philosophy, and individual optimal CPP varies with autoregulation status, which the fixed range ignores",
+   "domain": "control target range",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A two-sided control band for a derived margin: the managed variable has a floor and a ceiling, and overshoot is a failure mode, not extra safety. The engine should encode such targets as intervals with both violations logged, because one-sided alarms systematically invite overcorrection",
+    "source_operator": "cpp_target_range",
+    "telemetry": "Computed CPP, vasopressor and fluid inputs, ICP trend"
+   }
+  },
+  {
+   "primitive_id": "age_stratified_sbp_targets",
+   "name": "Brain Trauma Foundation systolic targets after TBI are age-stratified: at least 100 mmHg for ages 50 to 69, at least 110 mmHg for ages 15 to 49 and over 70",
+   "verbatim_quote": "Brain trauma foundation guidelines suggest that SBP ≥ 100 mmHg should be maintained for patients 50 to 69 years old or ≥ 110 mmHg for patients 15 to 49 years or > 70 years old to decrease mortality and improve outcomes",
+   "page": "Chapter 6, section 5.2, printed p. 65 (extracted text line 3075)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single hypotension episode worsens outcome after TBI, so the floor is defended with fluids and vasopressors",
+    "The non-monotonic age pattern (middle band lower) is taken from the guideline's outcome data as quoted by the chapter"
+   ],
+   "breakdown_regime": "Targets are floors for systolic pressure, not full hemodynamic prescriptions; they interact with the CPP target, and raising pressure pharmacologically carries its own risks in polytrauma with uncontrolled bleeding elsewhere",
+   "domain": "stratified control target",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A stratified threshold table: the same variable gets different floors by subgroup, with a non-monotonic pattern that a single global cutoff would erase. The engine should store such targets as lookup tables keyed by the stratifying variable and resist collapsing them into one number",
+    "source_operator": "age_stratified_sbp_targets",
+    "telemetry": "Patient age band, systolic pressure trend, vasopressor dose"
+   }
+  },
+  {
+   "primitive_id": "onsd_icp_correspondence",
+   "name": "Optic nerve sheath diameter over 5 to 6 mm on transocular ultrasound corresponds to intracranial pressure at or above 20 mmHg",
+   "verbatim_quote": "The studies proved that ONSD >5-6 mm corresponds to ICP ≥ 20 mmHg",
+   "page": "Chapter 6, section 4.1.2, printed p. 63 (extracted text line 2965)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The subarachnoid space around the optic nerve is continuous with intracranial CSF, so sheath diameter tracks ICP",
+    "Ultrasound measurement is available at the bedside where invasive monitors are not"
+   ],
+   "breakdown_regime": "The chapter lists the limits directly: operator dependence, and unreliability with chronic ocular disease and malignant hypertension; it is a screening correspondence, not a replacement for invasive measurement when precision matters",
+   "domain": "noninvasive proxy threshold",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A proxy-sensor calibration: an accessible surface measurement stands in for a hidden pressure through an anatomical coupling, with a stated correspondence point (5 to 6 mm maps to 20 mmHg). The engine should store proxy mappings with their coupling mechanism and their known failure populations, not as bare conversion factors",
+    "source_operator": "onsd_icp_correspondence",
+    "telemetry": "Ultrasound sheath diameter, invasive ICP when available for cross-check, ocular history"
+   }
+  },
+  {
+   "primitive_id": "mannitol_icp_dose",
+   "name": "Mannitol for acute intracranial hypertension: 20 percent mannitol at 0.25 to 1 g per kg every 6 hours",
+   "verbatim_quote": "The recommended ICP lowering dose of 20% mannitol is 0.25 to 1 g/kg every 6 hours",
+   "page": "Chapter 6, section 5.8, printed pp. 66-67 (extracted text line 3179)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The osmotic gradient from raised serum osmolality pulls water from brain interstitium to the intravascular space",
+    "Dosing is weight based and repeated on a fixed interval while monitoring osmolality and renal function"
+   ],
+   "breakdown_regime": "The chapter lists acute renal failure, electrolyte disturbance, and rebound edema as adverse effects; the same section presents hypertonic saline (target sodium 145 to 155 mEq/L) as the alternative agent, so mannitol is one arm of a two-agent strategy, not the sole option",
+   "domain": "dosing rule",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A weight-scaled, interval-scheduled intervention with a named toxicity watch: dose per kilogram, repeat every 6 hours, monitor the organ the drug stresses. The engine can reuse the template for any dosed intervention where the schedule and the surveillance target are part of the rule, not afterthoughts",
+    "source_operator": "mannitol_icp_dose",
+    "telemetry": "Patient weight, doses given, serum osmolality, renal function, ICP response"
+   }
+  },
+  {
+   "primitive_id": "posttraumatic_seizure_time_classes",
+   "name": "Post-traumatic seizures are classified by latency: immediate within 24 hours, early within 7 days, late after 7 days from injury",
+   "verbatim_quote": "PTS are classified into immediate PTS (occurring within 24 hours of injury), early PTS (occurring within 7 days after injury), and late PTS (occurring after 7 days of post injury)",
+   "page": "Chapter 6, section 5.6, printed p. 66 (extracted text line 3135)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The classes carry different management: the chapter recommends prophylaxis during the first week, aimed at immediate and early seizures",
+    "Risk is concentrated in named groups: GCS under 10, cortical contusion, depressed skull fracture, intracranial hematoma, penetrating injury, seizure in the first 24 hours"
+   ],
+   "breakdown_regime": "Prophylaxis suppresses early seizures but the classification does not by itself predict who develops late epilepsy; the time bins are conventions anchored to the prophylaxis window",
+   "domain": "temporal classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A latency-binned event taxonomy where the bin, not just the event, determines the action: prevention is funded for the first two bins and not beyond. The engine can reuse latency bins for any post-event complication whose preventability expires on a schedule",
+    "source_operator": "posttraumatic_seizure_time_classes",
+    "telemetry": "Hours and days since injury, seizure events, prophylaxis administration, risk factor flags"
+   }
+  },
+  {
+   "primitive_id": "delta_pressure_diagnostic_criterion",
+   "name": "Delta pressure (diastolic pressure minus compartment pressure) at or below 30 mmHg indicates acute compartment syndrome",
+   "verbatim_quote": "Delta pressure is the difference between diastolic pressure and compartment pressure. When delta pressure is equal to or less than 30 mg of Hg it indicates ACS.",
+   "page": "Chapter 7, section 5, printed p. 81 (extracted text line 3824)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Compartment pressure is measured within 5 cm of the fracture, not at the fracture site, and serial values beat a single reading",
+    "The criterion matters most in unconscious or uncooperative patients where the clinical signs cannot be assessed; the chapter requires checks every 4 hours in the first 24 hours for high-risk unconscious patients"
+   ],
+   "breakdown_regime": "The chapter warns that delta pressure alone over-triggers: used by itself it sends asymptomatic patients to fasciotomy, so the diagnosis must be confirmed with clinical findings and hemodynamic and metabolic parameters; the source also prints the unit as mg of Hg, an evident typo for mmHg",
+   "domain": "diagnostic margin criterion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Another margin kernel, structurally identical to CPP: a perfusion margin computed as systemic driving pressure minus local compartment pressure, with a fixed danger line at 30. The engine should recognize this recurring shape (driving minus opposing, alarm at a margin floor) and reuse one margin monitor with per-domain constants",
+    "source_operator": "delta_pressure_diagnostic_criterion",
+    "telemetry": "Diastolic pressure, compartment pressure measurements and their timestamps, clinical sign checklist"
+   }
+  },
+  {
+   "primitive_id": "fasciotomy_timing_window",
+   "name": "Fasciotomy for acute compartment syndrome should be done within 6 hours, and definitely within 12 hours, of diagnosis",
+   "verbatim_quote": "Fasciotomy should be done within 6 hours or definitely within 12 hours after diagnosis of ACS.",
+   "page": "Chapter 7, section 6, printed p. 82 (extracted text line 3884)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The clock starts at diagnosis, and the operation must decompress all compartments of the segment, including the epimysium",
+    "Indications pair with the pressure criteria: clinical findings with compartment pressure over 30 mmHg, or delta pressure at or below 30 mmHg"
+   ],
+   "breakdown_regime": "Late fasciotomy is not automatically right: the chapter excludes cases with irreversible intra-compartmental damage, and notes children tolerate delay better, with fasciotomy reported up to 24 hours after injury; paraspinal cases in the same chapter are discussed on a 7 day horizon, so the window is tissue and site specific",
+   "domain": "intervention deadline",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A two-tier deadline: a target time and a hard outer bound, after which the intervention's value collapses or reverses. The engine should encode such windows as (aim, limit, post-limit policy) triples, because a single deadline hides the difference between late and harmful",
+    "source_operator": "fasciotomy_timing_window",
+    "telemetry": "Diagnosis timestamp, compartment pressures, tissue viability findings, patient age group"
+   }
+  },
+  {
+   "primitive_id": "tissue_ischemia_tolerance_times",
+   "name": "Ischemia tolerance is tissue specific: muscle reaches irreversible necrosis by about 6 hours, nerve shows reversible neuropraxia at 1 hour and irreversible axonotmesis by about 4 hours",
+   "verbatim_quote": "Within 6 hours of acute ischemia irreversible tissue necrosis and inflammatory cascade leading to fibrosis sets in muscles.",
+   "page": "Chapter 7, section 3, printed p. 80 (extracted text line 3726)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tolerance times are measured from ischemia onset, which precedes diagnosis by an unknown interval",
+    "Reperfusion itself causes much of the injury through the xanthine oxidase free radical cascade the chapter describes, so restoring flow is not pure rescue"
+   ],
+   "breakdown_regime": "Times are approximate population values from the chapter's narrative review; collateral flow, temperature, and pressure level shift them, and they should be read as planning horizons rather than exact countdowns for an individual limb",
+   "domain": "tissue tolerance limits",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Per-component survival clocks inside one failing system: each tissue carries its own irreversibility deadline, so the binding constraint is the shortest clock among the components worth saving. The engine can reuse per-component deadline sets wherever a shared insult damages heterogeneous parts at different rates",
+    "source_operator": "tissue_ischemia_tolerance_times",
+    "telemetry": "Estimated ischemia onset, tissue type, pressure level, reperfusion timing"
+   }
+  },
+  {
+   "primitive_id": "burn_unit_screening_pillars",
+   "name": "The Padua burn unit admission protocol rests on three pillars: history, rapid testing, and isolation in a dedicated room until the test result returns",
+   "verbatim_quote": "Three principles are the pillars of this protocol: patients' history (suggestive symptoms or contact with cases are themself sufficient causes for isolation, even if the test performed is negative), rapid testing, and isolation in a dedicated room until the test response.",
+   "page": "Chapter 8, section 4 (Conclusion), printed p. 111 (extracted text line 5202)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "History alone can trigger isolation: symptoms or contact suffice even when the test is negative, because early tests carry meaningful false-negative rates",
+    "The unit's laboratory provided results in about 90 minutes, which is what makes isolate-until-result operationally possible"
+   ],
+   "breakdown_regime": "The protocol is a single-center construction from the first pandemic phase; its feasibility depends on test turnaround and isolation capacity, and the chapter's own later sections replace parts of it (double swab screening, then vaccination-era weekly molecular screening)",
+   "domain": "infection control protocol",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A defense-in-depth admission gate: a cheap fallible screen (history), a stronger test, and a physical hold that does not trust either until the result lands. The engine can reuse the pattern for admitting any untrusted input into a clean environment: screen, test, quarantine pending result, and let the screen alone trigger the hold",
+    "source_operator": "burn_unit_screening_pillars",
+    "telemetry": "Symptom and contact history, test type and turnaround, isolation bed availability, result"
+   }
+  },
+  {
+   "primitive_id": "lmwh_burn_covid_overlap",
+   "name": "Low molecular weight heparin is mandatory in the combined burn and COVID-19 patient because both conditions independently raise thrombosis risk",
+   "verbatim_quote": "Treatment with LMWH is mandatory because both burn condition and COVID-19 infection increase the risk of thrombosis.",
+   "page": "Chapter 8, section 3.1, printed p. 110 (extracted text line 4610)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The overlap logic extends across the chapter's treatment list: broad spectrum antibiotics, plasma, and immunoglobulin are each justified on both the burn side and the COVID-19 side",
+    "The stated dose in the case series is LMWH 4000 UI once daily as thromboprophylaxis, absent contraindications"
+   ],
+   "breakdown_regime": "Overlap cuts both ways: the same chapter stresses the direct conflict between burn fluid resuscitation volumes and the fluid restriction wanted in SARS-CoV-2 pneumonia, so shared treatments must be separated from opposed treatments before protocols are merged",
+   "domain": "comorbidity treatment overlap",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An intersection rule for comorbid protocols: where two condition playbooks prescribe the same action for independent reasons, that action becomes mandatory and high confidence; where they prescribe opposite actions, the conflict must be surfaced explicitly. The engine should compute both the intersection and the conflict set whenever it merges two playbooks, not just the union",
+    "source_operator": "lmwh_burn_covid_overlap",
+    "telemetry": "Active condition list, per-condition treatment sets, contraindication flags"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "52ec5f778997f70c-t1",
+   "think": "This volume is an edited collection of eight clinical review chapters on trauma and emergency surgery, and its unity is not a single theory but a single operating discipline repeated across six anatomical territories. Every chapter runs the same loop: classify the injury with a named scale, branch on the patient's current physiological state, spend the first intervention on whatever has the highest lethal potential, monitor against numeric thresholds, and act inside named time windows before a reversible problem becomes an irreversible one. Chapter 1 shows the loop in its purest form. Blunt abdominal injury is graded organ by organ with the AAST scales for spleen, liver, pancreas, and kidney, yet the chapter repeatedly subordinates the grade to hemodynamic stability: the liver chapter states that nonoperative management is available irrespective of grade, and the splenic pathway licenses watchful waiting only where continuous monitoring and an emergency operating room exist. The scale describes the lesion; the patient's state makes the decision. Chapter 3 makes the same point from the opposite direction. The Society for Vascular Surgery grades for aortic injury are presented and then criticized by the author himself for failing to predict rupture or death, because a purely morphological taxonomy carries no size, no extension, and no physiology. His replacement, the Radiographic Severe Injury criteria, adds measurement cutoffs and is then checked against a predictor set dominated by global variables: injury severity score, systolic pressure, heart rate, and vasopressor need. The lesson generalizes across the book: local severity labels are communication devices, and predictive power lives in margins, thresholds, and systemic state. Two chapters supply the book's real equations, and both are margin equations. Cerebral perfusion pressure is mean arterial pressure minus intracranial pressure, managed inside a 50 to 70 mmHg band. Delta pressure in compartment syndrome is diastolic pressure minus compartment pressure, with danger at or below 30 mmHg. The structural identity matters: in both cases neither input alone is the managed variable, the difference is, and catastrophe arrives when the difference crosses a floor while each input still looks survivable. Around these kernels the TBI chapter builds the book's densest threshold stack: GCS bands, an ICP goal under 22 mmHg, age-stratified systolic floors, an optic nerve sheath diameter that stands in for ICP at a stated correspondence, brain tissue oxygen and jugular saturation limits, weight-based mannitol dosing, and seizure classes binned by latency. Chapter 7 contributes the time architecture: tissue-specific ischemia tolerances, a fasciotomy window with a target and an outer bound, and the warning that reperfusion itself injures. Chapters 4 and 5 contribute eligibility logic: VATS and rib fixation are valuable only inside their indication envelopes, and several definitions in the book are time-qualified states rather than findings, such as persistent pneumothorax at 72 hours and retained hemothorax above 300 ml. Chapter 2 is the book's study of a mimic: a self-contained bleed that imitates a surgical abdomen, resolved by anatomical reasoning, two bedside signs, a test-accuracy ladder, and a mortality multiplier attached to one background condition. Chapter 8 changes register from physiology to systems: a burn unit under pandemic pressure builds an admission gate from history, rapid testing, and isolation pending results, then merges two treatment playbooks and carefully separates their intersection from their one direct conflict, fluid volume. For a reasoning engine, the transferable assets are the decision shapes, not the drug doses: stability-gated branching, margin kernels with floors, per-tissue deadline sets, latency-binned complications, precondition checks on passive strategies, proxy sensors with stated failure populations, and protocol merging that computes conflicts as well as overlaps. The book's limits are equally clear. It is a narrative review collection, not primary research: with the exception of the 76-patient aortic series in Chapter 3 and the six-case burn series in Chapter 8, every number is inherited from cited guidelines and literature, sometimes at one remove, and several headline figures, such as 100 percent CT accuracy for rectus sheath hematoma or the 25 percent anticoagulated mortality, should be carried as attributed claims rather than measured constants. Terminology and units are uneven across author teams, one threshold is printed with a wrong unit, and recommendations occasionally rest on single-center habit. Read as a source of reasoning patterns with attributed constants, it is strong; read as a source of constants, it must be cross-checked against the guidelines it cites. Two further patterns deserve emphasis because they recur silently across chapters. The first is seriality: almost no decision in this book is licensed by a single observation. Splenic and hepatic management run on serial examination, serial hemoglobin, and serial imaging; compartment syndrome runs on serial pressure measurement within five centimeters of the fracture, repeated on a four-hour cadence in unconscious patients; brain injury runs on trended pressures and repeated coma scores; the burn unit moves from a single swab to double swabs to scheduled weekly screening as its evidence matures. The book trusts slopes over points, and it treats the monitoring cadence itself as part of the prescription, not as background logistics. The second pattern is threshold interaction: cutoffs in this volume rarely act alone. The retained hemothorax volume threshold interacts with a closing surgical window as adhesions form; the fasciotomy deadline interacts with tissue-specific tolerance clocks that started before diagnosis; the CPP band interacts with age-stratified pressure floors and with a competing management philosophy that targets volume rather than pressure. A reasoning system that imports these numbers one at a time, as independent constants, will reproduce the book's vocabulary while losing its actual method, which is a web of coupled thresholds, clocks, and vetoes tuned to one another. That coupling, more than any single value, is what this extraction has tried to preserve in the layer2 mappings attached to each primitive.",
+   "retrocausal_genealogy": "The lineage runs through twentieth-century organized trauma care. The AAST organ injury scales descend from the scaling work of Moore and colleagues in the 1980s and 1990s, and the ATLS framework that structures Chapters 1, 3, and 6 comes from the American College of Surgeons' standardization of the primary survey in the late 1970s. The aortic chapter stands on Parmley's 1958 autopsy era, passes through the clamp-and-sew period with its paraplegia burden, and arrives at endovascular repair, which is why its author treats grading reform as unfinished business. Compartment syndrome traces to Volkmann's 1881 description and Jepson's 1924 animal work, with Whitesides' 1975 needle manometry making the delta pressure criterion measurable. The TBI thresholds descend from successive Brain Trauma Foundation guideline editions. The burn chapter is the outlier: its protocol genealogy is months deep, assembled in early 2020 from the first Chinese and Italian burn center reports.",
+   "theory_of_mind": "The editors and chapter authors write as practicing surgeons for surgical trainees and emergency physicians, and their model of the reader is someone who must act before the information is complete. That is why the book prefers operational definitions over precise ones: unstable means named vital sign cutoffs, persistent means still present at 72 hours, severe means a binary radiographic call. The authors assume the domain is a race between reversible and irreversible states, that attention is the scarcest resource in the room, and that a usable rule quoted from a guideline beats an exact model nobody can run at the bedside. They also assume institutional context silently: operating rooms on standby, angiography suites, intensive monitoring. Where those assumptions fail, several chapters say so, but the default reader is inside a resourced trauma center. Personal clinical experience is treated as a legitimate supplement to cited evidence throughout, most openly in the preface and the burn chapter.",
+   "cross_layer_veto": "Several findings in this book veto habits that other layers of a reasoning system might default to. The liver and aortic chapters jointly veto grade-driven decision making: when a severity taxonomy and a live physiological state disagree, the state wins, and any engine layer that routes by label alone is overruled. The compartment syndrome chapter vetoes single-measurement diagnosis, requiring serial values and clinical confirmation before an irreversible operation, and it vetoes late decompression once tissue damage is irreversible. The TBI chapter vetoes steroids for intracranial pressure, aggressive hyperventilation as anything but a bridge, and glucose-containing fluids, each against plausible generic defaults. The burn chapter vetoes trusting a negative screening test over a suggestive history. Taken together, the book's vetoes say that thresholds, timing, and context outrank both labels and first test results, and any synthesis layer built on it must preserve those overrides rather than averaging them away."
+  }
+ ],
+ "universal_lens": "The volume is a field manual for acting under irreversibility. Its reusable template is a five-beat loop: name the state with a scale, branch on the system's current stability rather than the label, compute the margin between driving and opposing forces, respect per-component deadlines after which repair stops helping, and pre-stage the rescue before choosing to wait. Any domain where damage compounds while you deliberate, from infrastructure incidents to ecological intervention, can be organized on the same loop, and the book's failures are instructive too: labels without magnitudes mislead, single measurements over-trigger, and protocols silently assume the resources of the institution that wrote them.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the clinical reasoning layer for injury education and research translation: how severity grading actually behaves at the bedside, why physiological state outranks anatomical grade, how latent post-injury hazards are scheduled (the Baudet window is a model for delayed declares after apparent recovery), and how monitoring thresholds are set, combined, and vetoed. It also gives GSI a protocol-design case study in the burn unit chapter: admission gating, screening cadence, and playbook merging under comorbidity, each documented with its rationale and its later revisions, suitable for teaching how clinical protocols are built and corrected under pressure.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the transferable assets are decision mechanisms for the player-health and availability models: margin kernels (driving minus opposing pressure with a floor) for tissue-risk features, latency-binned complication classes for post-injury timelines, per-tissue deadline sets for return-to-play reasoning, stability-gated branching that buys information only when the state allows delay, and proxy-sensor mappings with named failure populations. The constants enter as attributed claims from a narrative review collection, flagged for cross-checking against the underlying guidelines before any weight is placed on them, and the book's own vetoes (state over label, serial over single measurement, history over a negative screen) are carried as engine-level overrides."
+}

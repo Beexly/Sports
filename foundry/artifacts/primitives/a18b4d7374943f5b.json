@@ -1,0 +1,739 @@
+{
+ "book_id": "a18b4d7374943f5b",
+ "source_status": "COMPLETE",
+ "source_note": "OpenStax College (collection editors), with content authors CNX Anatomy and Physiology and OpenStax College: Anatomy & Physiology, OpenStax / Rice University, collection revised 2013-06-19, Creative Commons Attribution 3.0, online at cnx.org/content/col11496/1.6. The local file is the complete textbook PDF (507,168,889 bytes; sha256 a18b4d7374943f5ba2ad7e3883379043747e4f65ecee4f2ca217cc249eaab1f7; scan digest book_id a18b4d7374943f5b, matching the expected id). Extracted text (about 4.5 MB, 59,005 lines) is clean born-digital text with page headers and footers interleaved; all quotes were proven as contiguous substrings of that text file after whitespace normalization. Extraction concentrated on the core systems chapters (1, 10, 12, 17, 19, 22, 25) per the assignment; the remaining chapters are anatomical surveys whose content is structural rather than principle-bearing. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "homeostasis_set_point",
+   "name": "Homeostasis: every physiological variable is regulated around a set point within a restricted normal range",
+   "verbatim_quote": "A set point is the physiological value around which the normal range fluctuates. A normal range is the restricted set of values that is optimally healthful and stable.",
+   "page": "Chapter 1.5 Homeostasis, book p. 27 (text lines 1011-1014)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A measurable internal variable exists with a definable optimal value",
+    "Deviations from the range are detectable by the organism"
+   ],
+   "breakdown_regime": "Breaks when the set point itself is reset (fever, acclimatization) or when regulation capacity is exceeded and the variable escapes the range entirely",
+   "domain": "physiology: control systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats each tracked quantity (player workload, team pace, injury status) as a state variable with a baseline value and a normal band; deviations outside the band, not raw levels, are what carry signal, and the band is estimated per entity rather than globally.",
+    "source_operator": "homeostasis_set_point",
+    "telemetry": "Longitudinal baselines per player and team: snap counts, usage rates, rest days, practice participation"
+   }
+  },
+  {
+   "primitive_id": "negative_feedback_loop",
+   "name": "Negative feedback: a sensor, control center, and effector resist deviation and restore the set point",
+   "verbatim_quote": "Negative feedback is a mechanism that prevents a physiological response from going beyond the normal range by reversing the action once the normal range is exceeded.",
+   "page": "Chapter 1.5 Homeostasis, book p. 27 (text lines 1017-1020)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The loop has three components: a sensor that monitors the value, a control center that compares it to the normal range, and an effector that reverses the deviation",
+    "The response opposes the stimulus rather than amplifying it"
+   ],
+   "breakdown_regime": "Fails when any component is damaged (sensor loss, effector fatigue) or when the disturbance rate exceeds the loop's correction rate; chronic demand can exhaust effectors",
+   "domain": "physiology: control systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine self-correction follows the same three-part structure: monitoring compares current estimates against priors, a control step flags out-of-band drift, and an effector step (re-weighting, re-calibration) pushes estimates back toward validated ranges instead of letting errors compound.",
+    "source_operator": "negative_feedback_loop",
+    "telemetry": "Calibration residuals, rolling prediction error, drift between projected and observed player usage"
+   }
+  },
+  {
+   "primitive_id": "positive_feedback_cascade",
+   "name": "Positive feedback: deviation is amplified, not reversed, and is normal only with a definite end point",
+   "verbatim_quote": "Positive feedback intensifies a change in the body’s physiological condition rather than reversing it. A deviation from the normal range results in more change, and the system moves farther away from the normal range.",
+   "page": "Chapter 1.5 Homeostasis, book p. 29 (text lines 1084-1087)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A terminating event exists that stops the loop (delivery in childbirth, sealed vessel in clotting)",
+    "Each cycle's output increases the next cycle's stimulus"
+   ],
+   "breakdown_regime": "Without a hard end point the loop is pathological: runaway amplification destroys the system it acts on, which is why the body uses it rarely and locally",
+   "domain": "physiology: control systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Momentum-like cascades in games (scoring runs, turnover chains) behave as positive feedback with natural end points (quarter breaks, timeouts, possession changes); the engine models them as self-reinforcing but bounded processes whose termination conditions must be named, not as open-ended trends.",
+    "source_operator": "positive_feedback_cascade",
+    "telemetry": "Play-by-play sequences, scoring-run durations, turnover clustering, timeout and quarter-break timestamps"
+   }
+  },
+  {
+   "primitive_id": "resting_membrane_potential",
+   "name": "Resting membrane potential: separated ion gradients hold the cell at about -70 mV, a stored charge ready for signaling",
+   "verbatim_quote": "With the ions distributed across the membrane at these concentrations, the difference in charge is measured at -70 mV, the value described as the resting membrane potential.",
+   "page": "Chapter 12.4 The Action Potential, book p. 493 (text lines 20384-20386)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Na+ concentration is about 10 times higher outside the cell than inside, and K+ is higher inside",
+    "Leakage channels and the Na+/K+ pump continuously maintain the gradient against passive drift"
+   ],
+   "breakdown_regime": "Collapses if the pump fails or extracellular K+ rises; the potential is an actively maintained steady state, not a static property, so energy failure degrades signaling before structure fails",
+   "domain": "neurophysiology: membrane biophysics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Readiness states in the engine are maintained potentials, not free facts: a player's projected availability is a charged state held up by continuous inputs (practice reps, treatment, rest), and it decays unless maintained, which is why stale status reports must lose voltage over time.",
+    "source_operator": "resting_membrane_potential",
+    "telemetry": "Practice participation trends, injury report timestamps, treatment and rest logs"
+   }
+  },
+  {
+   "primitive_id": "action_potential_waveform",
+   "name": "Action potential waveform: Na+ influx depolarizes the membrane to +30 mV, then K+ efflux repolarizes it past rest",
+   "verbatim_quote": "As K+ starts to leave the cell, taking a positive charge with it, the membrane potential begins to move back toward its resting voltage. This is called repolarization, meaning that the membrane voltage moves back toward the -70 mV value of the resting membrane potential.",
+   "page": "Chapter 12.4 The Action Potential, book p. 493 (text lines 20402-20406)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Voltage-gated Na+ channels open first and drive the upstroke toward +30 mV",
+    "Voltage-gated K+ channels open on a delay and drive repolarization, overshooting into hyperpolarization before rest is restored",
+    "The full cycle completes in approximately 2 milliseconds"
+   ],
+   "breakdown_regime": "The waveform is stereotyped; it cannot encode information in amplitude, only in timing and frequency, and channel mutations or ion imbalances distort or abolish it",
+   "domain": "neurophysiology: membrane biophysics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Event modeling in the engine uses the same fixed-shape kernel: a player or team event (injury return, quarterback change) has a stereotyped response curve with a fast onset phase and a slower recovery phase with overshoot, and only the timing and repetition of events vary, never the shape's amplitude logic.",
+    "source_operator": "action_potential_waveform",
+    "telemetry": "Event timestamps for injuries, returns, and lineup changes; snap-level performance before and after each event"
+   }
+  },
+  {
+   "primitive_id": "threshold_all_or_none",
+   "name": "Threshold and all-or-none: depolarization must reach about -55 mV or no action potential fires; past threshold the signal is full size",
+   "verbatim_quote": "Any depolarization that does not change the membrane potential to -55 mV or higher will not reach threshold and thus will not result in an action potential.",
+   "page": "Chapter 12.4 The Action Potential, book p. 495 (text lines 20454-20456)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Voltage-gated Na+ channels open regeneratively once threshold is crossed",
+    "Every action potential peaks at the same voltage (+30 mV); stronger stimuli raise firing frequency, not signal size"
+   ],
+   "breakdown_regime": "Subthreshold inputs are invisible downstream no matter how close they come; near threshold, noise decides outcomes, so binary event data hides how close non-events were",
+   "domain": "neurophysiology: membrane biophysics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine separates graded evidence from triggered conclusions: evidence accumulates continuously, but a projection only changes state when accumulated evidence crosses a pre-set threshold, and once crossed the change is committed at full strength rather than scaled to how far past threshold the evidence went.",
+    "source_operator": "threshold_all_or_none",
+    "telemetry": "Accumulated evidence scores per projection, threshold-crossing logs, near-miss counts just below threshold"
+   }
+  },
+  {
+   "primitive_id": "refractory_period",
+   "name": "Refractory period: while an action potential runs, no new one can start; a relative phase then needs a stronger stimulus",
+   "verbatim_quote": "While an action potential is in progress, another one cannot be initiated. That effect is referred to as the refractory period.",
+   "page": "Chapter 12.4 The Action Potential, book p. 495 (text lines 20485-20487)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The absolute phase is set by inactivation of the voltage-gated Na+ channel",
+    "The relative phase follows, when K+ efflux means only a stronger-than-normal stimulus can re-trigger the cell"
+   ],
+   "breakdown_regime": "Sets a hard ceiling on firing frequency and enforces one-way propagation; pathological shortening or lengthening distorts signal timing",
+   "domain": "neurophysiology: membrane biophysics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "After the engine commits to a state change (a player ruled out, a projection revised), a refractory window applies: the same evidence stream cannot immediately re-trigger or reverse the call, and reversal inside the window requires materially stronger new evidence, which prevents oscillation on noisy feeds.",
+    "source_operator": "refractory_period",
+    "telemetry": "Revision timestamps per projection, evidence strength of each revision trigger, reversal counts"
+   }
+  },
+  {
+   "primitive_id": "saltatory_conduction",
+   "name": "Conduction: myelinated axons conduct by saltatory jumping between nodes and are fast; unmyelinated conduction is continuous and slow",
+   "verbatim_quote": "Propagation along an unmyelinated axon is referred to as continuous conduction; along the length of a myelinated axon, it is saltatory conduction.",
+   "page": "Chapter 12.4 The Action Potential, book p. 496 (text lines 20525-20527)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Voltage-gated Na+ channels are concentrated at nodes of Ranvier in myelinated axons",
+    "Node spacing is near optimal: farther apart and the depolarization decays below threshold before the next node; closer and speed is wasted",
+    "Axon diameter also sets speed through internal resistance"
+   ],
+   "breakdown_regime": "Demyelination slows or blocks propagation even with intact neurons; the signal path, not the signal source, becomes the failure point",
+   "domain": "neurophysiology: signal propagation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information latency in the engine is a property of the channel, not the event: well-instrumented data paths (official injury reports, tracking feeds) deliver near-instant state changes, while thin paths (rumor, aggregated reposts) deliver the same event slowly and with decay, so source channel quality is modeled as conduction speed.",
+    "source_operator": "saltatory_conduction",
+    "telemetry": "Source-by-source event detection lag, feed update frequencies, correction and retraction rates per source"
+   }
+  },
+  {
+   "primitive_id": "graded_potentials",
+   "name": "Graded potentials: local membrane changes whose size is proportional to stimulus size, unlike the fixed action potential",
+   "verbatim_quote": "Local changes in the membrane potential are called graded potentials and are usually associated with the dendrites of a neuron. The amount of change in the membrane potential is determined by the size of the stimulus that causes it.",
+   "page": "Chapter 12.4 The Action Potential, book p. 497 (text lines 20588-20590)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Graded potentials can depolarize or hyperpolarize depending on which ion channels open",
+    "They decay with distance and time and matter only if they summate to threshold at the initial segment"
+   ],
+   "breakdown_regime": "Because they decay, distant or weak inputs vanish before reaching the trigger zone; summation geometry decides what the cell ever learns about",
+   "domain": "neurophysiology: signal integration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Raw observations enter the engine as graded potentials: each report, chart, or tracking note shifts an internal estimate by an amount proportional to its strength and decays with age and distance from the entity it describes, and only their sum can move a projection across a decision threshold.",
+    "source_operator": "graded_potentials",
+    "telemetry": "Timestamped observation streams with per-source strength weights and decay half-lives"
+   }
+  },
+  {
+   "primitive_id": "postsynaptic_summation",
+   "name": "Postsynaptic summation: EPSPs move the membrane toward threshold, IPSPs away, and their spatial and temporal sum decides firing",
+   "verbatim_quote": "Depolarization in a postsynaptic potential is called an excitatory postsynaptic potential (EPSP) because it causes the membrane potential to move toward threshold.",
+   "page": "Chapter 12.5 Communication Between Neurons, book p. 498 (text lines 20619-20621)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Inhibitory postsynaptic potentials hyperpolarize and move the membrane away from threshold",
+    "Summation is spatial (multiple inputs at once) and temporal (repeated inputs in quick succession) and occurs at the axon hillock / initial segment"
+   ],
+   "breakdown_regime": "Balanced excitation and inhibition can cancel to silence despite heavy input traffic; counting inputs without signs gives the wrong answer",
+   "domain": "neurophysiology: signal integration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Conflicting evidence is integrated with signs, not counted: positive and negative reports about the same player or matchup are summed with spatial weight (independent sources) and temporal weight (recency and repetition) at one decision point, and cancellation is a real outcome the engine must be able to report.",
+    "source_operator": "postsynaptic_summation",
+    "telemetry": "Signed evidence items per entity, source independence graph, recency-weighted evidence sums"
+   }
+  },
+  {
+   "primitive_id": "synaptic_transmission",
+   "name": "Chemical synapse: arriving action potential opens Ca2+ channels, vesicles fuse, and neurotransmitter is released by exocytosis into the cleft",
+   "verbatim_quote": "The Ca2+ facilitates the merging of the vesicle with the presynaptic membrane so that the neurotransmitter is released through exocytosis into the small gap between the cells, known as the synaptic cleft.",
+   "page": "Chapter 12.5 Communication Between Neurons, book p. 500 (text lines 20690-20692)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Release is quantized in vesicles and triggered by Ca2+ entry, converting an electrical signal into a chemical one",
+    "Receptors are specific: a neurotransmitter binds its own receptor and not others, and the transmitter is cleared by degradation or reuptake"
+   ],
+   "breakdown_regime": "The conversion step adds delay and a failure surface (depleted vesicles, blocked receptors, failed clearance) that pure electrical transmission does not have",
+   "domain": "neurophysiology: synaptic signaling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every hand-off between engine stages is a synapse with conversion loss: a signal translated from one representation to another (report to feature, feature to projection) is quantized, delayed, and needs clearance rules, so stage interfaces are audited for the same failure modes: depletion, blockage, and stale residue.",
+    "source_operator": "synaptic_transmission",
+    "telemetry": "Stage-by-stage feature lineage, conversion timestamps, stale-feature audits"
+   }
+  },
+  {
+   "primitive_id": "excitation_contraction_coupling",
+   "name": "Excitation-contraction coupling: the muscle action potential is converted into contraction by Ca++ release from the sarcoplasmic reticulum",
+   "verbatim_quote": "The muscle fiber action potential, which sweeps along the sarcolemma as a wave, is “coupled” to the actual contraction through the release of calcium ions (Ca++) from the SR.",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 385 (text lines 15897-15899)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In skeletal muscle the excitation step is always triggered by nervous system signaling at the neuromuscular junction",
+    "Released Ca++ interacts with shielding proteins to expose actin binding sites"
+   ],
+   "breakdown_regime": "Coupling can fail independently of excitation: a fiber can fire electrically and still not contract if Ca++ release or handling is impaired, as in fatigue and several myopathies",
+   "domain": "muscle physiology: excitation and contraction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine distinguishes signal from actuation: a correct read on a situation (excitation) only produces output if the coupling layer (data completeness, lineup confirmation, market availability) releases it, and coupling failures are logged separately from signal failures so the two are never confused in review.",
+    "source_operator": "excitation_contraction_coupling",
+    "telemetry": "Signal-to-output conversion logs, blocked-output reasons, lineup confirmation status"
+   }
+  },
+  {
+   "primitive_id": "sliding_filament_model",
+   "name": "Sliding filament model: contraction is thin filaments sliding past thick filaments inside sarcomeres, shortening the fiber without filament shortening",
+   "verbatim_quote": "When signaled by a motor neuron, a skeletal muscle fiber contracts as the thin filaments are pulled and then slide past the thick filaments within the fiber’s sarcomeres. This process is known as the sliding filament model of muscle contraction",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 389 (text lines 16020-16022)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Filaments themselves do not shorten; the Z lines move closer and the I band narrows while the A band stays constant",
+    "Sliding requires exposed myosin-binding sites on actin, which requires Ca++ first"
+   ],
+   "breakdown_regime": "Force vanishes where overlap geometry fails (see length-tension), and the model is a steady cyclic picture that omits elastic and viscous elements of real muscle",
+   "domain": "muscle physiology: contraction mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Output change in the engine is modeled as relative sliding of stable components rather than creation of new substance: projections move because the overlap between a player's role and a team's scheme shifts, while the underlying player and scheme filaments stay the same objects.",
+    "source_operator": "sliding_filament_model",
+    "telemetry": "Role and scheme alignment measures, snap-share shifts within stable rosters"
+   }
+  },
+  {
+   "primitive_id": "calcium_troponin_gating",
+   "name": "Calcium gating of contraction: Ca++ binding troponin slides tropomyosin off actin's binding sites and permits cross-bridges",
+   "verbatim_quote": "The first step in the process of contraction is for Ca++ to bind to troponin so that tropomyosin can slide away from the binding sites on the actin strands. This allows the myosin heads to bind to these exposed binding sites and form cross-bridges.",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 389 (text lines 16039-16042)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At rest tropomyosin physically covers the myosin-binding sites, so contraction is off by default",
+    "Troponin has a dedicated Ca++ binding site, making Ca++ concentration the single control variable"
+   ],
+   "breakdown_regime": "If Ca++ is not re-sequestered, sites stay exposed and relaxation fails; if Ca++ release is blunted, full activation never occurs even with intact filaments",
+   "domain": "muscle physiology: contraction mechanics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine capabilities are gated off by default like covered binding sites: a signal family contributes to projections only when its specific enabling condition (data present, entity resolved, context matched) binds and uncovers it, which prevents dormant or mismatched signals from leaking into output.",
+    "source_operator": "calcium_troponin_gating",
+    "telemetry": "Per-signal enablement checks, data presence flags, entity resolution status"
+   }
+  },
+  {
+   "primitive_id": "cross_bridge_cycle",
+   "name": "Cross-bridge cycle: myosin heads pull, detach, re-cock, and re-attach in an ATP-powered ratchet; the power stroke moves actin about 10 nm",
+   "verbatim_quote": "For thin filaments to continue to slide past thick filaments during muscle contraction, myosin heads must pull the actin at the binding sites, detach, re-cock, attach to more binding sites, pull, detach, re-cock, etc. This repeated movement is known as the cross-bridge cycle.",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 389 (text lines 16047-16050)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each cycle is powered by ATP hydrolysis and moves the thin filament approximately 10 nm toward the M-line during the power stroke",
+    "A thick filament carries roughly 300 myosin molecules, so force is the sum of many asynchronous small cycles"
+   ],
+   "breakdown_regime": "The cycle stalls without ATP (see rigor primitive) and its rate limits contraction speed; it produces force only while attachment duty cycles overlap across heads",
+   "domain": "muscle physiology: contraction mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sustained engine output is a ratchet of many small verified steps rather than one large inference: each weekly cycle pulls projections a small distance, releases, and re-engages with fresh data, and total movement is the sum of cycles, which is why skipped cycles cannot be recovered by one oversized update.",
+    "source_operator": "cross_bridge_cycle",
+    "telemetry": "Per-cycle projection deltas, cycle completion logs, cumulative movement per entity"
+   }
+  },
+  {
+   "primitive_id": "atp_detachment_rigor",
+   "name": "ATP is required for detachment, not just contraction: without ATP, cross-bridges lock in place, which is rigor mortis",
+   "verbatim_quote": "In fact, it is the loss of ATP that results in the rigor mortis observed soon after someone dies. With no further ATP production possible, there is no ATP available for myosin heads to detach from the actin-binding sites, so the cross-bridges stay in place, causing the rigidity in the skeletal muscles.",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 391 (text lines 16082-16084)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ATP binding, not hydrolysis alone, causes the myosin head to detach from actin",
+    "Stored ATP in muscle powers only a few seconds of contraction, so supply must be continuous"
+   ],
+   "breakdown_regime": "Energy failure freezes the system in its last configuration instead of relaxing it to neutral: a dangerous failure mode where staleness looks like firmness",
+   "domain": "muscle physiology: energetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Stale engine states mimic rigor: when the data supply (the ATP) stops, projections do not relax to a neutral prior, they lock at their last values and look confident; the engine therefore treats feed interruption as a state to flag explicitly, never as stability.",
+    "source_operator": "atp_detachment_rigor",
+    "telemetry": "Feed heartbeat monitors, time-since-last-update per projection, stale-state flags"
+   }
+  },
+  {
+   "primitive_id": "creatine_phosphate_buffer",
+   "name": "Creatine phosphate buffer: a fast, small energy reserve regenerates ATP for roughly the first 15 seconds before slower pathways take over",
+   "verbatim_quote": "When the muscle starts to contract and needs energy, creatine phosphate transfers its phosphate back to ADP to form ATP and creatine. This reaction is catalyzed by the enzyme creatine kinase and occurs very quickly",
+   "page": "Chapter 10.3 Muscle Fiber Contraction and Relaxation, book p. 391 (text lines 16097-16099)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reserve is charged at rest from excess ATP and discharges on demand",
+    "Capacity is small (about 15 seconds of energy); glycolysis then supplies ATP more slowly, and aerobic respiration supplies about 95 percent of ATP for resting or moderately active muscle"
+   ],
+   "breakdown_regime": "The buffer hides demand spikes only briefly; once depleted, output falls to the rate of the slower pathways, so early performance overstates sustainable performance",
+   "domain": "muscle physiology: energetics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Short-horizon accuracy in the engine rides on buffers that deplete: a player's first games back or a team's first drives draw on reserve capacity (freshness, scripted plays) that cannot be extrapolated, so projections separate buffered output from the sustainable rate underneath it.",
+    "source_operator": "creatine_phosphate_buffer",
+    "telemetry": "Early-versus-late performance splits, first-quarter versus fourth-quarter rates, return-from-layoff game sequences"
+   }
+  },
+  {
+   "primitive_id": "motor_unit",
+   "name": "Motor unit: one motor neuron and all the muscle fibers it innervates is the smallest functional unit of contraction control",
+   "verbatim_quote": "The actual group of muscle fibers in a muscle innervated by a single motor neuron is called a motor unit.",
+   "page": "Chapter 10.4 Nervous System Control of Muscle Tension, book p. 395 (text lines 16247-16248)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each muscle fiber is innervated by only one motor neuron",
+    "Unit size varies by muscle: a few fibers for fine control (extraocular muscles), thousands for gross power (thigh, back)"
+   ],
+   "breakdown_regime": "Control granularity is fixed by unit size: a muscle cannot recruit half a unit, so force resolution is coarse where units are large",
+   "domain": "muscle physiology: motor control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's control granularity is set by its grouping units: players are projected in functional units (a quarterback with his receivers, a line with its backs) because those units activate together, and treating unit members as independent understates both floor and ceiling.",
+    "source_operator": "motor_unit",
+    "telemetry": "Unit-level snap and usage groupings, co-activation patterns in tracking and play data"
+   }
+  },
+  {
+   "primitive_id": "size_principle_recruitment",
+   "name": "Recruitment by size principle: small, low-threshold motor units fire first and larger units are enlisted as more force is needed",
+   "verbatim_quote": "Activation of these smaller motor units, results in a relatively small degree of contractile strength (tension) generated in the muscle. As more strength is needed, larger motor units, with bigger, higher-threshold motor neurons are enlisted to activate larger muscle fibers. This increasing activation of motor units produces an increase in muscle contraction known as recruitment.",
+   "page": "Chapter 10.4 Nervous System Control of Muscle Tension, book p. 396 (text lines 16269-16272)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Recruitment order is fixed from smallest to largest unit; the largest units can generate about 50 times the force of the smallest",
+    "Units rotate activity during sustained contraction to postpone fatigue"
+   ],
+   "breakdown_regime": "Total force is capped by the recruitable pool; once all units are active, only firing frequency can add tension, and fatigued large units cannot be substituted by small ones",
+   "domain": "muscle physiology: motor control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Workload projection follows the size principle: baseline demand is met by a player's established role, and spike demand (injuries ahead of him, game script extremes) recruits deeper capacity in a fixed order, so the engine forecasts which reserve contributors activate, in which order, as projected demand rises.",
+    "source_operator": "size_principle_recruitment",
+    "telemetry": "Depth-chart order, usage under injury scenarios, snap-share response to teammate absences"
+   }
+  },
+  {
+   "primitive_id": "length_tension_relationship",
+   "name": "Length-tension relationship: a sarcomere produces maximal tension at 80 to 120 percent of resting length, where filament overlap is optimal",
+   "verbatim_quote": "The cross-bridges can only form where thin and thick filaments already overlap, so that the length of the sarcomere has a direct influence on the force generated when the sarcomere shortens. This is called the length-tension relationship.",
+   "page": "Chapter 10.4 Nervous System Control of Muscle Tension, book p. 396 (text lines 16282-16285)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At 100 percent of resting length the medial edges of the thin filaments sit at the most medial myosin heads, maximizing binding-site overlap",
+    "Beyond 120 percent, overlap is insufficient; below 80 percent, thin filaments collide and the H zone shrinks, both reducing tension"
+   ],
+   "breakdown_regime": "The curve is an inverted U, not a monotonic law: more stretch helps only inside the window, and the same geometry governs cardiac muscle as the Frank-Starling mechanism",
+   "domain": "muscle physiology: contraction mechanics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Many engine relationships are overlap windows, not lines: a player's output peaks when role volume sits in an optimal band, and falls when volume is too low (no rhythm, no data) or too high (defensive attention, fatigue); the engine fits windowed response curves instead of assuming more input always means more output.",
+    "source_operator": "length_tension_relationship",
+    "telemetry": "Usage-versus-efficiency curves per player, volume bands, efficiency at volume extremes"
+   }
+  },
+  {
+   "primitive_id": "wave_summation_tetanus",
+   "name": "Wave summation and tetanus: raising stimulus frequency stacks twitches until relaxation disappears and contraction is continuous",
+   "verbatim_quote": "If the stimulus frequency is so high that the relaxation phase disappears completely, contractions become continuous in a process called complete tetanus",
+   "page": "Chapter 10.4 Nervous System Control of Muscle Tension, book p. 398 (text lines 16356-16358)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Summation works because a second stimulus releases more Ca++ while the muscle is still contracting from the first",
+    "Incomplete tetanus peaks at about three to four times single-twitch tension; complete tetanus holds maximum tension until fatigue"
+   ],
+   "breakdown_regime": "Sustained tetanus is impossible to maintain: Ca++ handling and ATP supply fail, and tension collapses with fatigue, so peak force is a transient, not a plateau",
+   "domain": "muscle physiology: motor control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Event frequency converts graded inputs into sustained states in the engine as well: repeated signals about the same entity within a short window stack instead of averaging out, producing a locked-in state change, and the model must include the fatigue side, where stacked demand eventually collapses output.",
+    "source_operator": "wave_summation_tetanus",
+    "telemetry": "Signal arrival rates per entity, burst windows, post-burst performance decay"
+   }
+  },
+  {
+   "primitive_id": "cardiac_output_equation",
+   "name": "Cardiac output: the volume pumped by each ventricle per minute is heart rate times stroke volume",
+   "verbatim_quote": "Cardiac output (CO) is a measurement of the amount of blood pumped by each ventricle in one minute. To calculate this value, multiply stroke volume (SV), the amount of blood pumped by each ventricle, by heart rate (HR), in contractions per minute (or beats per minute, bpm). It can be represented mathematically by the following equation:",
+   "page": "Chapter 19.4 Cardiac Physiology, book p. 818 (text lines 34425-34428)",
+   "latex": "\\mathrm{CO} = \\mathrm{HR} \\times \\mathrm{SV}",
+   "symbol_and_unit_ledger": {
+    "CO": "cardiac output, liters per minute (mean resting value about 5.25 L/min)",
+    "HR": "heart rate, beats per minute (average resting about 75 bpm)",
+    "SV": "stroke volume, milliliters per beat (mean about 70 mL, normal range 55-100 mL)"
+   },
+   "assumptions": [
+    "SV is obtained as EDV minus ESV, measured by echocardiogram or catheter",
+    "Values quoted are for a resting 70-kg individual; heart size, fitness, sex, contractility, preload, and afterload all shift them"
+   ],
+   "breakdown_regime": "The product form hides interaction: raising HR shortens filling time and can lower SV, so CO does not scale linearly with rate indefinitely",
+   "domain": "cardiovascular physiology: cardiac output",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Throughput projections in the engine are built as rate times volume per event with the interaction kept explicit: plays per game times yards per play is the same structure, and the model must carry the coupling term, since pushing rate (pace) degrades per-event yield (efficiency) past a point.",
+    "source_operator": "cardiac_output_equation",
+    "telemetry": "Pace and per-play efficiency series, drive counts, time of possession"
+   }
+  },
+  {
+   "primitive_id": "ejection_fraction",
+   "name": "Ejection fraction: the share of end-diastolic volume actually ejected per beat, normally 55 to 70 percent",
+   "verbatim_quote": "SVs are also used to calculate ejection fraction, which is the portion of the blood that is pumped or ejected from the heart with each contraction. To calculate ejection fraction, SV is divided by EDV.",
+   "page": "Chapter 19.4 Cardiac Physiology, book p. 819 (text lines 34446-34448)",
+   "latex": "\\mathrm{EF} = \\frac{\\mathrm{SV}}{\\mathrm{EDV}}",
+   "symbol_and_unit_ledger": {
+    "EF": "ejection fraction, percent (normal range about 55-70 percent, mean 58 percent)",
+    "SV": "stroke volume, milliliters per beat",
+    "EDV": "end diastolic volume, milliliters in the ventricle at the end of filling"
+   },
+   "assumptions": [
+    "EF is a ratio, so it can stay normal while absolute volumes fall, as long as SV and EDV fall together"
+   ],
+   "breakdown_regime": "As a normalized ratio it hides scale: a small heart and a large heart can share an EF with very different outputs, and EF alone cannot diagnose total performance",
+   "domain": "cardiovascular physiology: cardiac output",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine reports conversion ratios alongside absolute volumes for the same reason: red-zone touchdown rate or target-to-catch rate can look healthy while total opportunity collapses, so every ratio metric is paired with its denominator before it is allowed to move a projection.",
+    "source_operator": "ejection_fraction",
+    "telemetry": "Rate metrics with their attempt denominators, opportunity counts per game"
+   }
+  },
+  {
+   "primitive_id": "frank_starling_mechanism",
+   "name": "Frank-Starling mechanism: within physiological limits, the force of heart contraction is directly proportional to the initial length of the muscle fiber",
+   "verbatim_quote": "This principle states that, within physiological limits, the force of heart contraction is directly proportional to the initial length of the muscle fiber.",
+   "page": "Chapter 19.4 Cardiac Physiology, book p. 825 (text lines 34768-34770)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Greater ventricular filling (EDV, preload) stretches the muscle toward optimal sarcomere length, so more myosin heads can bind actin and stroke volume rises",
+    "The same length-tension geometry as skeletal muscle, applied to the ventricle"
+   ],
+   "breakdown_regime": "Beyond optimal length the force would fall, and the mechanism only matches output to filling; it cannot create output the venous return does not supply",
+   "domain": "cardiovascular physiology: stroke volume regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Self-balancing throughput: the heart answers more input with more output automatically, with no central command. The engine copies this in opportunity-driven projections, where a player's projected output scales with the input actually delivered to him (targets, carries, plays on the field) by an intrinsic response curve, instead of being set as a fixed expectation.",
+    "source_operator": "frank_starling_mechanism",
+    "telemetry": "Opportunity inputs (targets, carries, snaps) versus realized output per player"
+   }
+  },
+  {
+   "primitive_id": "baroreceptor_reflex",
+   "name": "Baroreceptor reflex: stretch receptors report blood pressure and cardiac centers rebalance sympathetic and parasympathetic output to hold pressure",
+   "verbatim_quote": "The cardiac centers monitor baroreceptor firing to maintain cardiac homeostasis, a mechanism called the baroreceptor reflex. With increased pressure and stretch, the rate of baroreceptor firing increases, and the cardiac centers decrease sympathetic stimulation and increase parasympathetic stimulation.",
+   "page": "Chapter 19.4 Cardiac Physiology, book p. 822 (text lines 34585-34588)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Baroreceptors are stretch receptors in the aortic sinus, carotid bodies, venae cavae, and elsewhere; firing rate encodes pressure",
+    "Falling pressure reverses the pattern: firing decreases, sympathetic stimulation rises, parasympathetic falls"
+   ],
+   "breakdown_regime": "The reflex defends pressure on a beat-to-beat scale but resets under chronic hypertension, defending the elevated pressure as if it were normal",
+   "domain": "cardiovascular physiology: autonomic regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine runs a baroreceptor layer over its own outputs: a fast autonomic check compares projected totals against sensed constraints (game total environment, pace, weather) and rebalances component projections in opposite directions automatically, before any slower deliberate review happens.",
+    "source_operator": "baroreceptor_reflex",
+    "telemetry": "Projected game totals versus environmental constraints, component projection balance checks"
+   }
+  },
+  {
+   "primitive_id": "renin_angiotensin_aldosterone",
+   "name": "Renin-angiotensin-aldosterone system: low blood pressure triggers a kidney-liver-lung-adrenal cascade that raises pressure fast by vasoconstriction and slowly by sodium and water retention",
+   "verbatim_quote": "When the blood pressure is low, the kidney synthesizes and releases renin. Renin converts angiotensinogen into angiotensin I, and ACE produced in the lung converts angiotensin I into biologically active angiotensin II",
+   "page": "Chapter 25.10 The Urinary System and Homeostasis, book p. 1165 (text lines 49609-49611)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The liver supplies the inactive precursor angiotensinogen continuously",
+    "Angiotensin II raises pressure immediately by widespread vasoconstriction and sustains it by stimulating aldosterone release, which drives renal Na+ reabsorption and osmotic water recovery"
+   ],
+   "breakdown_regime": "The cascade is slow and multi-organ, so it cannot correct beat-to-beat disturbances; chronic activation raises pressure persistently and contributes to hypertension, stroke, and aneurysm risk",
+   "domain": "cardiovascular and renal physiology: endocrine regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Slow multi-stage corrections in the engine mirror this cascade: a persistent deviation detected in one subsystem (say, systematically low projections for a team) triggers a chained response across layers (data audit, feature review, prior adjustment) with a fast partial correction and a slower structural one, rather than a single blunt fix.",
+    "source_operator": "renin_angiotensin_aldosterone",
+    "telemetry": "Persistent bias measurements per team and market, correction step logs, time-to-correction"
+   }
+  },
+  {
+   "primitive_id": "daltons_law_partial_pressures",
+   "name": "Dalton's law: each gas in a mixture exerts its own partial pressure, and total pressure is the sum of the partial pressures",
+   "verbatim_quote": "Dalton’s law describes the behavior of nonreactive gases in a gaseous mixture and states that a specific gas type in a mixture exerts its own pressure; thus, the total pressure exerted by a mixture of gases is the sum of the partial pressures of the gases in the mixture.",
+   "page": "Chapter 22.4 Gas Exchange, book p. 999 (text lines 42159-42161)",
+   "latex": "P_{\\mathrm{total}} = \\sum_i P_i",
+   "symbol_and_unit_ledger": {
+    "P_total": "total pressure of the gas mixture, mm Hg (760 mm Hg at sea level)",
+    "P_i": "partial pressure of gas i, mm Hg (oxygen 158.8, nitrogen 597.4 in dry air)"
+   },
+   "assumptions": [
+    "Gases are nonreactive and behave independently in the mixture",
+    "Composition percentages are fixed for atmospheric air (nitrogen 78.6 percent, oxygen 20.9 percent)"
+   ],
+   "breakdown_regime": "Independence fails when gases react or when one component (water vapor) varies with conditions, as in humidified alveolar air, where partial pressures must be recomputed",
+   "domain": "respiratory physiology: gas laws",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Composite environments decompose additively in the engine: a game's total scoring environment is the sum of independent partial contributions (pace, efficiency matchups, weather, officiating), each estimated on its own scale, and the total is only ever reported as the sum of named parts, never as an unexamined whole.",
+    "source_operator": "daltons_law_partial_pressures",
+    "telemetry": "Component environment scores per game, weather and pace components, sum-versus-actual checks"
+   }
+  },
+  {
+   "primitive_id": "partial_pressure_gradient_diffusion",
+   "name": "Diffusion follows partial-pressure gradients: gas moves from higher to lower partial pressure, faster as the gradient grows",
+   "verbatim_quote": "A gas will move from an area where its partial pressure is higher to an area where its partial pressure is lower. In addition, the greater the partial pressure difference between the two areas, the more rapid is the movement of gases.",
+   "page": "Chapter 22.4 Gas Exchange, book p. 999 (text lines 42184-42186)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exchange is passive: no energy is required to move oxygen or carbon dioxide across membranes",
+    "Alveolar oxygen partial pressure is about 104 mm Hg against about 100 mm Hg in pulmonary venous blood, keeping the gradient small but positive at rest"
+   ],
+   "breakdown_regime": "Flow stops at equilibrium regardless of need; if the gradient collapses (poor ventilation, altitude), no compensating pump exists at the membrane itself",
+   "domain": "respiratory physiology: gas exchange",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Information and opportunity in the engine flow down gradients: attention, targets, and carries move toward the largest differentials between a player's capacity and his current load, at a rate proportional to the differential, and stop when the differential closes, which predicts equalization patterns across a roster.",
+    "source_operator": "partial_pressure_gradient_diffusion",
+    "telemetry": "Capacity-versus-load differentials per player, target and carry share migration week to week"
+   }
+  },
+  {
+   "primitive_id": "henrys_law_solubility",
+   "name": "Henry's law: the concentration of a gas dissolved in a liquid is directly proportional to its solubility and its partial pressure",
+   "verbatim_quote": "Henry’s law states that the concentration of gas in a liquid is directly proportional to the solubility and partial pressure of that gas.",
+   "page": "Chapter 22.4 Gas Exchange, book p. 999 (text lines 42188-42190)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Solubility is gas-specific: carbon dioxide dissolves readily in blood while nitrogen barely dissolves at normal pressure",
+    "Dissolved gas equilibrates with the gas phase above the liquid"
+   ],
+   "breakdown_regime": "Raising partial pressure forces poorly soluble gas into solution, as with nitrogen in scuba divers, and rapid pressure release then produces dangerous bubble formation",
+   "domain": "respiratory physiology: gas laws",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Absorption capacity in the engine is proportional to both exposure and receptivity: a signal changes a projection in proportion to how much of it arrives (partial pressure) times how soluble it is in that context (a metric that applies to the scheme and opponent at hand), so identical reports move different projections by different amounts.",
+    "source_operator": "henrys_law_solubility",
+    "telemetry": "Signal exposure counts weighted by per-context applicability scores"
+   }
+  },
+  {
+   "primitive_id": "ventilation_perfusion_matching",
+   "name": "Ventilation-perfusion matching: gas exchange is efficient only when airflow and blood flow to the same alveoli are compatible, and the lung actively redirects both",
+   "verbatim_quote": "Ventilation is the movement of air into and out of the lungs, and perfusion is the flow of blood in the pulmonary capillaries. For gas exchange to be efficient, the volumes involved in ventilation and perfusion should be compatible.",
+   "page": "Chapter 22.4 Gas Exchange, book p. 1001 (text lines 42224-42227)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Poorly ventilated alveoli trigger constriction of their pulmonary arterioles, redirecting blood to better-ventilated alveoli",
+    "Bronchiole diameter responds to alveolar carbon dioxide partial pressure and arteriole diameter to oxygen partial pressure, so both flows self-adjust locally"
+   ],
+   "breakdown_regime": "Matching fails in disease, blocked ducts, or strong regional gravity effects; global averages can look adequate while local units are badly mismatched",
+   "domain": "respiratory physiology: gas exchange",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supply must meet demand locally, not on average: the engine checks matchup-level compatibility (a receiver's routes against the specific coverage he faces, a pass rush against the specific tackles) rather than team-level totals, and it models active redirection, where offenses steer plays toward the weakest local unit.",
+    "source_operator": "ventilation_perfusion_matching",
+    "telemetry": "Player-versus-specific-opponent matchup data, target distribution by coverage, pressure rates by rusher-tackle pairing"
+   }
+  },
+  {
+   "primitive_id": "bohr_effect",
+   "name": "Bohr effect: acidic pH from carbon dioxide and metabolic byproducts lowers hemoglobin's oxygen affinity and unloads oxygen where tissues are working hardest",
+   "verbatim_quote": "The Bohr effect is a phenomenon that arises from the relationship between pH and oxygen’s affinity for hemoglobin: A lower, more acidic pH promotes oxygen dissociation from hemoglobin.",
+   "page": "Chapter 22.5 Transport of Gases, book p. 1006 (text lines 42465-42467)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Highly active tissues lower local oxygen partial pressure (to about 20 mm Hg in muscle) and raise carbon dioxide, heat, and BPG, all of which shift the dissociation curve the same way",
+    "Low-activity tissues keep local partial pressure high, so fewer oxygen molecules dissociate there"
+   ],
+   "breakdown_regime": "The shift is a local modulation, not a switch: systemic pH disorders (severe acidosis or alkalosis) distort delivery everywhere at once and break the targeting",
+   "domain": "respiratory physiology: oxygen transport",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Delivery in the engine is affinity-modulated: the same carried resource (projected opportunity) is released preferentially where local conditions signal highest activity and need (defensive weakness, game script, injury vacancy), because the carrier's binding strength is itself a function of the local environment, not a constant.",
+    "source_operator": "bohr_effect",
+    "telemetry": "Local need indicators per player: defensive matchup grades, vacancy shares, game-script projections"
+   }
+  },
+  {
+   "primitive_id": "bicarbonate_transport_chloride_shift",
+   "name": "Carbon dioxide transport: about 70 percent travels as bicarbonate made by carbonic anhydrase in red cells, with chloride shifting in to keep charge balance",
+   "verbatim_quote": "Carbonic anhydrase (CA) causes carbon dioxide and water to form carbonic acid (H2CO3), which dissociates into two ions: bicarbonate (HCO3–) and hydrogen (H+).",
+   "page": "Chapter 22.5 Transport of Gases, book p. 1008 (text lines 42518-42520)",
+   "latex": "\\mathrm{CO_2 + H_2O \\leftrightarrow H_2CO_3 \\leftrightarrow H^+ + HCO_3^-}",
+   "symbol_and_unit_ledger": {
+    "CO2": "carbon dioxide picked up from tissues",
+    "H2O": "water in the erythrocyte",
+    "H2CO3": "carbonic acid, the unstable intermediate",
+    "H+": "hydrogen ion, buffered largely by hemoglobin",
+    "HCO3-": "bicarbonate ion, exported to plasma in exchange for chloride (the chloride shift)"
+   },
+   "assumptions": [
+    "About 7 to 10 percent of carbon dioxide travels dissolved and about 20 percent as carbaminohemoglobin; bicarbonate is the majority carrier",
+    "The reaction fully reverses at the pulmonary capillaries, releasing carbon dioxide for exhalation"
+   ],
+   "breakdown_regime": "The buffer consumes capacity: extreme carbon dioxide loads acidify the blood despite buffering, and the hydrogen ions must be carried by hemoglobin, coupling oxygen and carbon dioxide transport",
+   "domain": "respiratory physiology: carbon dioxide transport",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine converts hard-to-carry quantities into transportable form: a raw situational read (crowd, weather, rivalry) cannot travel through the model directly, so it is converted into a buffered numeric carrier (a context adjustment) with a defined reverse conversion at the projection step, and charge balance is kept by an explicit offsetting term.",
+    "source_operator": "bicarbonate_transport_chloride_shift",
+    "telemetry": "Context adjustment ledgers with forward and reverse conversion records per game"
+   }
+  },
+  {
+   "primitive_id": "second_messenger_cascade",
+   "name": "Second messengers: water-soluble hormones cannot cross the membrane, so they bind surface receptors and a second messenger (usually cAMP) carries the signal inside",
+   "verbatim_quote": "Hydrophilic, or water-soluble, hormones are unable to diffuse through the lipid bilayer of the cell membrane and must therefore pass on their message to a receptor located at the surface of the cell. Except for thyroid hormones, which are lipid-soluble, all amino acid–derived hormones bind to cell membrane receptors that are located, at least in part, on the extracellular surface of the cell membrane. Therefore, they do not directly affect the transcription of target genes, but instead initiate a signaling cascade that is carried out by a molecule called a second messenger.",
+   "page": "Chapter 17.2 Hormones, book p. 695 (text lines 29321-29327)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The hormone is the first messenger; cAMP is the second messenger used by most hormones",
+    "The cascade runs receptor, G protein, adenylyl cyclase, cAMP, protein kinases, then a phosphorylation cascade; phosphodiesterase deactivates cAMP so the signal is short unless hormone keeps arriving",
+    "Amplification is intrinsic: thousands of signaling events can start from a very low hormone concentration"
+   ],
+   "breakdown_regime": "Lipid-soluble hormones bypass this route entirely through intracellular receptors and transcription, so one signaling model cannot describe both classes; blocked G proteins or receptors silence the pathway despite normal hormone levels",
+   "domain": "endocrine physiology: cell signaling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "External signals that cannot enter the engine's core directly (narrative reports, coach comments) are handled by transduction: they bind at a defined interface, are converted into an internal carrier variable with amplification and a fast decay constant, and never touch the core state in their original form.",
+    "source_operator": "second_messenger_cascade",
+    "telemetry": "Transduced narrative-signal variables with amplification factors and decay constants"
+   }
+  },
+  {
+   "primitive_id": "hormone_release_stimuli",
+   "name": "Hormone release is triggered by three stimulus classes, humoral, hormonal, and neural, and is regulated primarily by negative feedback",
+   "verbatim_quote": "Humoral stimuli are changes in ion or nutrient levels in the blood. Hormonal stimuli are changes in hormone levels that initiate or inhibit the secretion of another hormone. Finally, a neural stimulus occurs when a nerve impulse prompts the secretion or inhibition of a hormone.",
+   "page": "Chapter 17.2 Hormones (chapter summary), book p. 733 (text lines 30905-30908)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Humoral stimuli read the controlled variable itself (ion or nutrient levels), closing the loop directly",
+    "Hormonal stimuli create multi-gland axes in which one hormone gates another's release"
+   ],
+   "breakdown_regime": "Mixed stimuli can conflict, and feedback delay in long axes produces oscillation; a gland can also fail while its stimulus remains normal, which stimulus data alone cannot reveal",
+   "domain": "endocrine physiology: regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine classifies its own triggers the same way: direct data triggers (the measured variable itself moved), chained triggers (another model's output changed), and fast neural-style triggers (breaking news), each with its own feedback path that shuts the response off once the controlled variable returns to range.",
+    "source_operator": "hormone_release_stimuli",
+    "telemetry": "Trigger classification logs, feedback shutoff records, per-class response latencies"
+   }
+  },
+  {
+   "primitive_id": "hypothalamic_pituitary_axis",
+   "name": "Hypothalamic-pituitary axis: the hypothalamus commands the pituitary, whose posterior lobe releases hypothalamic hormones and whose anterior lobe secretes six hormones under hypothalamic control",
+   "verbatim_quote": "The posterior lobe houses the axon terminals of hypothalamic neurons. It stores and releases into the bloodstream two hypothalamic hormones: oxytocin and antidiuretic hormone (ADH).",
+   "page": "Chapter 17.3 The Pituitary Gland and Hypothalamus (chapter summary), book p. 733 (text lines 30911-30913)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The anterior lobe produces growth hormone, TSH, ACTH, FSH, LH, and prolactin, with secretion regulated by hypothalamic releasing and inhibiting hormones delivered by vasculature in the infundibulum",
+    "The two lobes have different embryonic origins and different control mechanisms: direct neural release behind, vascular hormonal control in front"
+   ],
+   "breakdown_regime": "A single command node is a single point of failure: hypothalamic or pituitary damage distorts many endocrine axes at once, while peripheral glands remain structurally normal",
+   "domain": "endocrine physiology: regulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps one command layer with two output styles copied from this axis: direct fast release of precomputed states for time-critical outputs, and slower gated secretion where a control signal must authorize each release, so a failure in the command layer is diagnosed once instead of once per downstream output.",
+    "source_operator": "hypothalamic_pituitary_axis",
+    "telemetry": "Central configuration and release logs, downstream output dependency map"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "a18b4d7374943f5b-t1",
+   "think": "This book is a complete undergraduate anatomy and physiology text, built as a Rice University OpenStax collection, and its organizing claim is that function can be read off structure at every level of organization, from ions to organ systems. Read as a machine rather than as a catalog, it describes one control problem solved repeatedly: how a living system holds internal variables near set points while the environment pushes them around. The first chapter states the template explicitly. Every regulated variable has a set point and a normal range, a sensor reports the value, a control center compares it, and an effector acts. Negative feedback is the default correction, and positive feedback appears only where a process must run to a definite end point, as in clotting and childbirth. Everything after that chapter is this template instantiated in different materials. The nervous system chapter builds the fast electrical version: an actively maintained resting potential of about -70 mV, leakage and pumping holding a charged membrane like a battery, graded potentials that scale with stimulus size and decay with distance, summation of excitatory and inhibitory inputs at the initial segment, and a threshold that converts all of that analog accumulation into a single all-or-none event with a fixed waveform and a refractory lockout. The muscle chapter then shows the same signal converted into mechanical work: the action potential is coupled through calcium release to a molecular ratchet, the cross-bridge cycle, in which hundreds of myosin heads per filament pull in small asynchronous steps that require ATP both to stroke and, critically, to let go. Control of force is not achieved by making individual events bigger but by recruitment in a fixed size order and by raising event frequency until twitches fuse into tetanus, exactly the frequency coding the nervous chapter described. The cardiovascular chapters close the loop at organ scale. Cardiac output is a simple product, rate times volume, but the volume term is itself regulated by the same length-tension geometry that governs skeletal sarcomeres, restated as the Frank-Starling mechanism, so the heart answers increased filling with increased ejection without waiting for central command. Faster autonomic loops, the baroreceptor reflex above all, rebalance sympathetic and parasympathetic drive beat by beat, while the renin-angiotensin-aldosterone cascade handles slow pressure correction across four organs. The respiratory chapters contribute the transport physics: Dalton's law decomposes a mixture into partial pressures, gradients drive diffusion, Henry's law sets how much gas a liquid will hold, ventilation and perfusion must match locally rather than on average, and the Bohr effect makes the oxygen carrier release its cargo preferentially where local acidity reports the hardest work. The endocrine chapters supply the slow chemical network: signals that cannot cross membranes are transduced by second messengers with enormous amplification and fast shutoff, release is triggered by humoral, hormonal, or neural stimuli, and one command node, the hypothalamic-pituitary complex, supervises most of the axes. For a reasoning engine, the transfer value is not any single fact but the repeated design grammar: state variables with baselines and bands, graded evidence summed with sign, thresholds that commit discrete events, refractory windows that stop oscillation, reserves and buffers that deplete, carriers whose affinity depends on local conditions, and matched local flows instead of global averages. The book also teaches by its limits. It is a steady-state, typical-adult text: values are reference means, variability between individuals is acknowledged but rarely quantified, and dynamics are described qualitatively far more often than they are parameterized. Its equations are few and simple, mostly definitions and products, which means the quantitative spine must be supplied by measurement, not extracted from the text. A second recurring design deserves emphasis because it is easy to miss: reserves. The book keeps showing systems that carry more capacity than rest requires and meter it out under demand. Venous blood leaves the tissues still holding an oxygen reserve on hemoglobin that active tissue can draw down. The heart carries a cardiac reserve, the gap between resting and maximum output, which training enlarges. Muscle stacks three energy systems in sequence, creatine phosphate for seconds, glycolysis for minutes, aerobic respiration for the long term, each slower and larger than the one before. Even the twitch has a staircase, treppe, in which a rested muscle's first contractions are weaker than its later ones. The pattern is that performance observed at any single moment is a joint function of the demand and of which reserve layer is currently paying for it, and any measurement that ignores the layer structure will misread both peaks and collapses. A third pattern is gating by default-off design. Tropomyosin covers the binding sites until calcium arrives; voltage-gated channels stay shut until threshold; hormones circulate everywhere but act only where receptors exist. The body's default is not activity restrained but activity forbidden until a specific key turns, which is a security architecture as much as a physiological one. Used properly, it gives an engine a physiology: a vocabulary of mechanisms for how output is produced, gated, scaled, transported, and shut off, against which any specific claim about a body, or by analogy about a team, can be checked for mechanical plausibility. That checking function is the deepest reason to keep a text like this in a reasoning corpus at all: it is not a source of predictions, and it contains almost nothing that looks like a forecast, but it disciplines every forecast made downstream of it, because a projection that cannot name the sensor, the signal, the gate, the energy source, and the shutoff that would produce it is, by this book's standard, not yet a mechanism at all, only a mood.",
+   "retrocausal_genealogy": "The lineage runs from Claude Bernard's milieu interieur and Walter Cannon's homeostasis, through the Hodgkin and Huxley voltage-clamp work that made the action potential a measurable waveform, to Huxley and Hanson's sliding filament model and the Frank and Starling experiments that tied cardiac output to filling. Each generation converted a vitalistic description into a mechanism with a measurable variable, and this textbook is the consolidated sediment of that conversion: nineteenth-century control intuitions restated as twentieth-century biophysics, then frozen into a teaching canon.",
+   "theory_of_mind": "The authors assume a reader who thinks in structures and must be taught to think in processes. Their model of the domain is that every anatomical fact earns its place only when its function is stated, so chapters pair structure with mechanism and keep returning to feedback as the explanatory frame. They also assume the reader will meet this material again clinically, which is why normal ranges, failure modes, and homeostatic imbalance boxes recur: the intended reader is being trained to ask, of any finding, which loop is broken.",
+   "cross_layer_veto": "This work vetoes any higher-layer story that violates its lower-layer mechanics. A claimed performance change that requires force without recruitment, endurance without energy supply, oxygen delivery without a partial-pressure gradient, or signaling faster than refractory limits allow is not unlikely, it is mechanically excluded. Conversely, its steady-state reference values veto overconfident point predictions: because the text itself insists every variable lives in a range, any engine output that reports a physiological quantity as a single exact number contradicts the source's own framing."
+  }
+ ],
+ "universal_lens": "Any complex regulated system can be read with this book's grammar: name the state variables and their set points, find the sensors and effectors, separate graded accumulation from threshold events, identify the buffers that deplete and the carriers whose affinity shifts with local conditions, and check whether flows match locally instead of on average. Factories, power grids, software fleets, and markets all fail in the same small set of ways this physiology catalogs: lost feedback, locked actuators, exhausted reserves, mismatched local supply and demand.",
+ "gsi_mapping": "For the Galaxy Sports Institute, this text is the base layer for any teaching or research claim about athlete bodies: workload, fatigue, recovery, and injury risk must be expressed in its mechanisms, recruitment order, energy-system sequencing from creatine phosphate to glycolysis to aerobic respiration, length-tension windows, and cardiovascular reserve. It gives the Institute a peer-reviewable vocabulary for distinguishing a plausible training or recovery intervention from one that contradicts membrane, muscle, or transport physiology.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book contributes mechanism templates rather than data: set-point deviation as the signal carrier, signed summation of evidence to a threshold, refractory windows after state changes, recruitment order for depth under rising demand, rate-times-volume throughput with its coupling term, local matchup matching over global averages, and affinity that shifts with local conditions. These templates constrain how player and team projections may move, and they veto projection stories that no mechanism in the book could produce."
+}

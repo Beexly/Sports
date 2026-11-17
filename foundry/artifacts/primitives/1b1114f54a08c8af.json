@@ -1,0 +1,755 @@
+{
+ "book_id": "1b1114f54a08c8af",
+ "source_status": "COMPLETE",
+ "source_note": "Herbert Reed, Football for Public and Player, Frederick A. Stokes Company, copyright 1913; the local PDF is a later printing of the 1913 work. Local file: Reed-1913-Football-for-Public-and-Player.pdf, 22617573 bytes, sha256 1b1114f54a08c8af41ef1677e7b0390736af5dfb945816c00cb62dcda63f1e17 (scan digest over str(size) plus full file bytes; book_id is its first 16 hex characters). Extracted text is complete across all fourteen chapters, Preface through Chapter XIV, with OCR noise in diagrams and some display type; all quoted passages were verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "ammunition_doctrine",
+   "name": "A team's most effective plays are ammunition: never expend them before the eleven is within effective range of the goal",
+   "verbatim_quote": "In football the ammunition consists of the most effective plays at the team's command, and these must not be wasted until the eleven is within effective range of the enemy's goal.",
+   "page": "Chapter II, Football and Warfare; text lines 1390-1393",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense diagnoses any play it sees and adjusts to stop it",
+    "Novel plays depend on deception and precise execution, both spent on first showing",
+    "Field position defines an effective range within which a scoring play can actually score"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "play-calling resource management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a reasoning engine rule that high-information plays carry a revelation cost: each use teaches the opposing defense, so the engine prices a play by expected gain minus the value of the information its use surrenders, and holds scarce plays until field position makes their payoff reachable.",
+    "source_operator": "ammunition_doctrine",
+    "telemetry": "Play-by-play logs with play identity, field position, and subsequent defensive adjustment to the same play"
+   }
+  },
+  {
+   "primitive_id": "reconnaissance_by_kicking",
+   "name": "Kicking the ball to the enemy is reconnaissance: it puts the burden of proof on him and reveals his intentions and capacity",
+   "verbatim_quote": "putting the burden of proof on him, by kicking the ball to him as much as possible, learning in this way what he intends doing with it and what he is capable of doing with it.",
+   "page": "Chapter II, Football and Warfare; text lines 1380-1383",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Possession can be traded for information at an acceptable rate",
+    "The opponent's response to a kick reveals his return scheme, backs' positioning, and risk appetite",
+    "What is learned early governs the attack plan later"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "information gathering",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to probe actions in a reasoning engine: low-cost, low-variance plays chosen not for expected yardage but for the diagnostic value of the response they force, with the observations written back into the opponent model before committing scarce resources.",
+    "source_operator": "reconnaissance_by_kicking",
+    "telemetry": "Kick and return outcomes, returner depth and alignment, first-series play selection by the opponent"
+   }
+  },
+  {
+   "primitive_id": "tackles_storm_centers",
+   "name": "After the 1911 rule changes the tackles are the storm centers of the game and must be selected earliest",
+   "verbatim_quote": "the tackles after the radical rule changes of 1911 have become once again the storm centers of modern football. Over them, inside and outside of them much of the ground will be gained",
+   "page": "Chapter IV, Selecting Material; text lines 2428-2432",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rule changes revalue positions; value follows the rules in force, not tradition",
+    "Tackles do double duty: open the path and then engage the secondary defense",
+    "Personnel selection order should follow positional leverage"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "personnel valuation under rule change",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to feature reweighting after any regime change: when the rules of the environment change, the engine re-derives which units carry the leverage instead of carrying forward stale positional values, and allocates its scarcest resource, selection attention, to the new storm centers first.",
+    "source_operator": "tackles_storm_centers",
+    "telemetry": "Yards gained inside and outside each tackle, second-level blocks engaged, position-level success rates by season"
+   }
+  },
+  {
+   "primitive_id": "coaching_truth_telling",
+   "name": "No coaching system endures unless it is founded on truth-telling inside the staff, including protection for the lone dissenter",
+   "verbatim_quote": "No coaching system can endure that is not founded upon truth-telling among the men who have the team in their hands.",
+   "page": "Chapter V, Coaching Systems and Assets; text lines 2725-2726",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Staff members hold private information the head coach cannot see from his seat",
+    "Consensus pressure suppresses exactly the dissent that carries new information",
+    "A system built on managed agreement fails when the game exposes the suppressed fact"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "organizational epistemics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the reasoning engine's internal governance: dissenting signals and minority model outputs are preserved with their reasons attached rather than averaged away, because a pipeline that punishes internal disagreement eventually publishes confidence it has not earned.",
+    "source_operator": "coaching_truth_telling",
+    "telemetry": "Staff or model disagreement logs, cases where the minority view proved correct, correction latency"
+   }
+  },
+  {
+   "primitive_id": "slump_rest_doctrine",
+   "name": "The slump is overwork, not ignorance: the cure is complete rest until the men return eager, not more coaching",
+   "verbatim_quote": "They should have a chance to forget the game utterly for the moment, so that when they come back for the hard work it will be a thoroughly aroused body of men, eager for work",
+   "page": "Chapter VII, The Trainer; text lines 4443-4446",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Performance decline after a good test is usually fatigue of attention, not loss of knowledge",
+    "Added instruction during a slump deepens the decline",
+    "Rest restores appetite for work, which is the binding input"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "load management and recovery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to workload reasoning in the engine: a unit whose recent output degrades after heavy use is treated as fatigued rather than unskilled, and the prescribed intervention is rest and rotation, the opposite of the instinct to add repetitions or complexity.",
+    "source_operator": "slump_rest_doctrine",
+    "telemetry": "Practice and snap loads, performance trend after high-load weeks, injury and error rates by cumulative load"
+   }
+  },
+  {
+   "primitive_id": "line_fundamentals_upstream",
+   "name": "Two maxims found all line law: use your hands all the time on defense, and carry your man upstream",
+   "verbatim_quote": "It is safe to advise the line man on defense, \"Use your hands all the time,\" and on both attack and defense, \"Carry your man upstream.\"",
+   "page": "Chapter VIII, Advanced Individual Play; text lines 4616-4619",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A small set of always-true fundamentals beats a large set of situational instructions",
+    "Driving a defender upstream, away from the play's flow, removes him longer than a momentary block",
+    "Fundamentals must be drilled until they survive fatigue and confusion"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "technique fundamentals",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to the engine's invariant layer: a short list of constraints that hold in every state and are checked before any situational reasoning runs, so that elaborate plans are always built on top of verified fundamentals rather than replacing them.",
+    "source_operator": "line_fundamentals_upstream",
+    "telemetry": "Hand use and block sustain grades, yards after contact by direction of the block, fundamental-error counts per game"
+   }
+  },
+  {
+   "primitive_id": "talking_in_action",
+   "name": "Talking during the play is a coordination channel: the passer's cry at release lets receivers keep their eyes downfield until the last moment",
+   "verbatim_quote": "It is the custom under many systems for the passer to yell \"hike\" or \"ball\" or something like that the instant the ball leaves his hand",
+   "page": "Chapter IX, Advanced Team Play; text lines 5940-5943",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Receivers who turn early are covered; the cry delays the turn until the ball is away",
+    "A shared vocal signal synchronizes eleven men faster than any visual cue",
+    "The same channel serves the kicking game and blocked-kick recovery"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "real-time coordination signals",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to event signaling inside a reasoning system: a single well-timed release event, broadcast to all dependent units at the moment state changes, replaces continuous polling and lets each unit keep its attention on its own assignment until the signal fires.",
+    "source_operator": "talking_in_action",
+    "telemetry": "Pass completion by whether receivers turned before or after release, blocked-kick recovery outcomes, communication-error counts"
+   }
+  },
+  {
+   "primitive_id": "signal_system_key_number",
+   "name": "The signal system must need no arithmetic under fire: a movable key number ending in 5 or 0, then the play number, then the starting signal",
+   "verbatim_quote": "In the system to which I refer, the key number is any number ending in 5 or 0. Thus 20, 15, 5, 75, 90, are all key numbers.",
+   "page": "Chapter IX, Advanced Team Play; printed p. 147",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Players under physical stress cannot do subtraction or multiplication reliably",
+    "Recognition is faster and safer than computation at the line",
+    "A movable key preserves secrecy without adding decoding steps"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "signal encoding under cognitive load",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to interface design for any decision made under time pressure: encode choices so the operator recognizes rather than computes, keep the codebook small and movable, and treat every arithmetic step demanded in the moment as a design defect that will fail exactly when the stakes are highest.",
+    "source_operator": "signal_system_key_number",
+    "telemetry": "Signal-error and delay-of-game rates, wrong-play incidents, time from signal to snap"
+   }
+  },
+  {
+   "primitive_id": "shift_slide_standard_defense",
+   "name": "Against the shift the defense answers in kind: the backs slide with the sliding line until both reach the normal, standard defense",
+   "verbatim_quote": "the defensive backs slide with the sliding line, so that their second position combined with the second position of the line results in what I have called the normal, or standard defense.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 159",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A shift changes assignments, not the underlying defensive structure",
+    "Sliding preserves matchups and gaps instead of chasing the formation",
+    "The defense must not be caught in motion at the snap"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "defensive adjustment to shifts",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to invariant-preserving adjustment in the engine: when the opponent's presentation changes, transform the current assignment by the same motion rather than recomputing from scratch, so the structural invariants of the defense survive every cosmetic change.",
+    "source_operator": "shift_slide_standard_defense",
+    "telemetry": "Pre-snap shift frequency, yards allowed on shift plays versus static plays, motion-at-snap penalties"
+   }
+  },
+  {
+   "primitive_id": "kicking_as_attack",
+   "name": "Punting has become an attacking weapon: a strong punter with fast ends and a strong defense lets a team face the best elevens without a running game",
+   "verbatim_quote": "In recent years punting has reached a higher degree of efficiency as a factor in the actual attack than ever before, and a team that can boast of a strong punter, backed up by a drop and placement kicker, need not hesitate to tackle the best elevens provided the ends are fast and the defense strong",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 161",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field position is a scoring asset, not a surrender of one",
+    "The punt's value depends on coverage speed and defensive strength behind it",
+    "A kicking-led team concedes the running battle and wins the territory battle"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "field position strategy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to asset reclassification in the engine: an action filed as defensive or neutral is revalued as an attacking instrument when its downstream effects, opponent starting position and defensive leverage, are counted, which changes when the action is chosen.",
+    "source_operator": "kicking_as_attack",
+    "telemetry": "Net punting average, opponent average starting field position, points allowed by drive start"
+   }
+  },
+  {
+   "primitive_id": "coffin_corner_touchback_avoidance",
+   "name": "From the forty, punt out of bounds just short of the ten: the touchback is the one thing to be avoided",
+   "verbatim_quote": "Once on the forty-yard line and near the center of the field the punter should put the ball out of bounds just short of the ten-yard line.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 163",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A touchback returns the ball to a standard position and wastes the punt's placement value",
+    "Out of bounds removes the run-back entirely",
+    "Driving the ball closer risks the bounce across the goal line, especially with wind"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "punt placement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to boundary-aware action selection: near a cliff edge in the state space, the engine prefers the action with a capped downside, placement out of bounds, over the action with a slightly better mean and a catastrophic tail, the touchback.",
+    "source_operator": "coffin_corner_touchback_avoidance",
+    "telemetry": "Punts downed inside the ten, touchback rate by field position, return yards allowed"
+   }
+  },
+  {
+   "primitive_id": "punt_placement_primacy",
+   "name": "The whole success of the kicking game depends on placing, because an accurate punter's threat palpably weakens the defense against the run",
+   "verbatim_quote": "The whole success of the kicking game, these days, depends upon placing more than anything else, for the burden of the defense against an accurate punter is very heavy and means a palpable weakening of the defense against the running attack.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 164",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Accuracy outranks distance in punt value",
+    "The defense must hold men back against a placer, thinning its run defense",
+    "Threat effects are real effects even on plays where the kick never happens"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "accuracy and threat externalities",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to second-order valuation in the engine: a capability is valued not only by its direct output but by the defensive resources its mere credibility forces the opponent to withhold from other contests, so a precise punter raises the value of every running play called beside him.",
+    "source_operator": "punt_placement_primacy",
+    "telemetry": "Defensive personnel and depth against punt formations, rushing success on downs following punt threats, punt accuracy charts"
+   }
+  },
+  {
+   "primitive_id": "kick_defense_loosening_tightening",
+   "name": "Kick defense formation tightens or loosens with field position, down, and yards to go; no diagram supplants brains on the field",
+   "verbatim_quote": "The loosening or tightening of the formation depends upon the position of the kicking team on the field, the number of the down, whether first, second or third, and the number of yards to be gained, and no amount of diagramming can supplant the use of brains on the field.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 166",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same formation is right or wrong depending on game state",
+    "Down and distance change the run-pass-kick mixture the defense must honor",
+    "Fixed diagrams fail where state variables move"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "state-dependent formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to state-conditioned policy in the engine: formation and alignment are functions of field position, down, and distance rather than fixed calls, and any static lookup that ignores those variables is treated as a prior to be adjusted, never as the decision.",
+    "source_operator": "kick_defense_loosening_tightening",
+    "telemetry": "Formation by down and distance, fake-kick and run-from-kick-formation rates, yards allowed by alignment"
+   }
+  },
+  {
+   "primitive_id": "basket_defense_fourth_down",
+   "name": "The basket defense against the fourth-down kick spreads three backs twenty-five to thirty-five yards deep to cover maximum territory and interfere for the catcher",
+   "verbatim_quote": "In this case the ends may be dropped back about five yards, the fullback may take plenty of room back of the line, and the three other backs should spread out all the way from twenty-five to thirty-five yards back, ready to cover the greatest possible amount of territory, and to assist each other by interference.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 166",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "On fourth down the punt is near certain, so the defense sells out for the return",
+    "Coverage of territory outranks pressure on the kicker in this state",
+    "The backs' first duty after the catch is interference, called routes included"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "punt return structure",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to certainty-conditioned structure: when the opponent's next action is nearly known, the engine stops hedging across all branches and builds the formation that maximizes value on the known branch, accepting exposure on the branches the state has already ruled out.",
+    "source_operator": "basket_defense_fourth_down",
+    "telemetry": "Return yards by return formation, muff and fumble rates, fair catch rates by down"
+   }
+  },
+  {
+   "primitive_id": "block_kick_center_route",
+   "name": "The block-kick scheme sends the center through the shortest path while guards pull the opposing center forward and tackles clear the guards",
+   "verbatim_quote": "The guards, acting together, pull the opposing centre forward on his face, while the tackles shoot across and pull down the guards, or at least pull them away from the opening made by their own guards.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 168",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The center has the shortest distance to the kicker and must be the penetrator",
+    "Every other rusher's job is to occupy or remove a protector, not to reach the kicker",
+    "The scheme needs a powerful pair of guards and works best deep in enemy territory"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "coordinated penetration scheme",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to role decomposition in a compound play: exactly one unit is assigned the terminal action and every other unit is assigned to remove a specific obstacle on that unit's path, which the engine uses as the template for any multi-agent play where duplicated effort on the goal wastes the design.",
+    "source_operator": "block_kick_center_route",
+    "telemetry": "Kick block and pressure rates by rush scheme, protector assignments beaten, kicker hurry rates"
+   }
+  },
+  {
+   "primitive_id": "pass_threat_spreads_defense",
+   "name": "The pass as threat: one man five yards behind the line menaces the defense, which must open out whether the pass comes or not",
+   "verbatim_quote": "Any time a backfield lines up with one man five yards or more behind the line of scrimmage the defense is menaced with a forward pass. Even if the pass is not forthcoming the menace must be reckoned with and there must be an opening out of the defense.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 170",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense must honor a legal passing posture on every snap",
+    "The threat's value is collected on running plays, not only on passes",
+    "Credibility requires the pass to be actually thrown often enough to stay feared"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "option value of a threatened play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to option value in the engine's play valuation: a play's worth includes the defensive deformation its credible threat produces on every other play, so a rarely called pass can be among the most valuable entries in the book without ever being thrown.",
+    "source_operator": "pass_threat_spreads_defense",
+    "telemetry": "Defensive depth and box counts by offensive formation, rushing efficiency from pass-threatening formations, pass frequency needed to hold the threat"
+   }
+  },
+  {
+   "primitive_id": "pass_three_elements",
+   "name": "The forward pass has exactly three elements: deception, delay, protection",
+   "verbatim_quote": "The elements of the forward pass are three deception, delay, protection.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 171",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A pass fails if any one of the three elements fails",
+    "The elements are separable and can be designed and drilled independently",
+    "Formations vary; the three requirements do not"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "play decomposition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to factor decomposition in the engine: a complex play is scored as the conjunction of a small number of necessary factors, each measurable on its own, so a failed play is diagnosed to the factor that broke instead of being graded as a single undifferentiated failure.",
+    "source_operator": "pass_three_elements",
+    "telemetry": "Pass outcomes split by protection grade, time to throw, and receiver separation at release"
+   }
+  },
+  {
+   "primitive_id": "pass_delay_element",
+   "name": "Delay is the hardest element: subterfuges behind the line buy time for the maximum number of eligible men to get downfield",
+   "verbatim_quote": "The second element, delay, is the most difficult. Various subterfuges have to be resorted to behind the line to give time for as many eligible men as possible to get down the field.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 173",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense cannot cover five eligible men; it can cover two",
+    "Time, not arm strength, is the scarce input to the deep pass",
+    "Delay devices trade backfield simplicity for downfield numbers"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "time buying for route development",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to latency budgeting in the engine: the value of a developing option grows with the time it is allowed to mature, so protection and misdirection are purchased precisely to extend the decision window until the maximum number of options are open at once.",
+    "source_operator": "pass_delay_element",
+    "telemetry": "Time to throw by play type, number of routes at full depth at release, completion rate by time to throw"
+   }
+  },
+  {
+   "primitive_id": "pass_not_shortcut",
+   "name": "The pass is no short cut to victory: it must be worked up carefully in conjunction with the rest of the attack",
+   "verbatim_quote": "The pass was never intended as a short cut to victory, but as a sound football play to be carefully worked up in conjunction with the rest of the attack.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 177",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A play detached from the system around it loses its deception and protection",
+    "Novelty value decays fastest when a play is used as a rescue device",
+    "Integration with the running game is what keeps the pass credible"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "system integration of a play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a standing veto in the engine against orphan features: any signal or play that is not woven into the surrounding system is discounted, because its observed success in isolation usually measures surprise, and surprise does not survive repetition.",
+    "source_operator": "pass_not_shortcut",
+    "telemetry": "Pass efficiency by preceding play mix, efficiency trend of a new play across its first season of use"
+   }
+  },
+  {
+   "primitive_id": "zones_combination_generalship",
+   "name": "Generalship is a zone system: the running team's zones and the kicking team's zones combine into one plan for the all-round team",
+   "verbatim_quote": "If these two arrangements of zones are sound, then some combination of the two will give a reasonable plan of generalship",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 177",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The field divides into zones with different correct play in each",
+    "A team's strengths set the mixture between the kicking plan and the running plan",
+    "The plan is chosen before the game and specialized during it"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "zone-based game planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to the engine's core architecture in this book: the state space is partitioned into zones, a policy is attached to each zone, and a team's identity is the weighting it places on the zone policies, which is exactly how a modern reasoning engine turns a game plan into state-dependent decisions.",
+    "source_operator": "zones_combination_generalship",
+    "telemetry": "Play selection and success by field zone, plan adherence rates, scoring by drive start zone"
+   }
+  },
+  {
+   "primitive_id": "against_wind_doctrine",
+   "name": "Against the wind there is only one game: run for three downs, kick low, hard, and out of bounds on the fourth, and save strength for the windward half",
+   "verbatim_quote": "there is nothing for the team against the wind to do but use the running game for three downs even on its own side of the field, and kick low and hard and out of bounds on the fourth",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 178",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Wind is a resource that alternates by quarter; the against-wind team's job is survival, not scoring",
+    "Slow play and second-string backs conserve the starters for the windward period",
+    "A score against the wind, if a misplay offers it, is taken at full strength"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "environmental resource management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to environment-conditioned strategy: when a dominant external factor runs against the team, the engine switches to a damage-limitation policy with explicit resource conservation, and pre-commits to switching back to full attack the moment the factor reverses.",
+    "source_operator": "against_wind_doctrine",
+    "telemetry": "Play mix and pace by wind direction, scoring by quarter relative to wind, starter snap shares by half"
+   }
+  },
+  {
+   "primitive_id": "windward_leeward_partition",
+   "name": "With a diagonal wind the field splits lengthwise into windward and leeward zones, and nearly every step is taken with reference to that partition",
+   "verbatim_quote": "The field is divided, then, straight down the middle, into windward and leeward zones, and every step we take, or nearly every one, down that field, will have to be taken with reference to our position in one or the other of these zones.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 180",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Position has a lateral as well as a longitudinal value when wind blows across the field",
+    "Plays are spent to buy lateral position, not only yardage",
+    "The partition governs kicking, running, and passing choices alike"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "lateral field valuation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to multi-dimensional state valuation: the engine values a position by all of its coordinates, including the lateral one that most play charts ignore, because the environment, here wind, makes one side of the field worth more than the other on every snap.",
+    "source_operator": "windward_leeward_partition",
+    "telemetry": "Play direction by wind angle, kick outcomes by field side, success rates windward versus leeward"
+   }
+  },
+  {
+   "primitive_id": "two_hands_fumble_minimum",
+   "name": "Deep in your own territory, choose the play that passes the ball through the fewest hands: the quarterback run risks the least fumble",
+   "verbatim_quote": "Obviously the simplest is that in which the quarterback carries the ball, the leather thus passing through only two hands, and reducing the chance of fumbling to a minimum.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 181",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each exchange of the ball adds an independent fumble chance",
+    "In bad field position a fumble costs more than any likely gain pays",
+    "Early in a possession the team's nervousness is highest and handling least sure"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "turnover risk budgeting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to chain-risk accounting in the engine: a play's risk is computed over the whole handling chain it requires, and in high-cost states the engine selects the play with the fewest failure points even when its expected gain is lower.",
+    "source_operator": "two_hands_fumble_minimum",
+    "telemetry": "Fumble rate by number of exchanges, turnover cost by field position, early-series fumble rates"
+   }
+  },
+  {
+   "primitive_id": "qb_autonomy_scoring_territory",
+   "name": "Across the enemy forty the game passes from the coaches to the quarterback, who has learned the defense's weaknesses and plays to them by his own judgment",
+   "verbatim_quote": "the game will pass still further from the direction of the coaches into the hands of the actual general on the field, the quarterback who is running the team. By this time he will have learned whatever weaknesses may exist in the enemy's defense and should be allowed to play to them according to his best judgment",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 183",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Information about the defense accumulates during the game and lives in the quarterback, not on the sideline",
+    "Delegation should grow as local information grows",
+    "The plan constrains the menu; the field general chooses from it"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "delegation and local information",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's delegation rule: decision rights migrate toward the layer holding the freshest information, with the pre-game plan acting as a bounded menu rather than a script, so late-game choices are made by the agent who has actually observed the opponent's adjustments.",
+    "source_operator": "qb_autonomy_scoring_territory",
+    "telemetry": "Second-half play selection versus plan, success of audibles and quarterback-chosen plays, adjustment lag after defensive changes"
+   }
+  },
+  {
+   "primitive_id": "three_rules_of_generalship",
+   "name": "Three rules bind every plan: with the wind play fast, against it play slowly; never spend an original running play outside the enemy's territory",
+   "verbatim_quote": "No matter what the plan of generalship used, here are three things that every team should remember: (1) With the wind play fast: against it play slowly. (2) Never use an original or high-class running play until in opponent's territory.",
+   "page": "Chapter X, Zones of Play and Generalship; printed p. 184",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pace is a strategic variable set by the environment, not a temperament",
+    "Original plays are ammunition and obey the ammunition rule",
+    "The exception is desperation: beaten with a minute left, the rules invert"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "standing strategic rules",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to exception-aware standing rules in the engine: a tiny set of global constraints that every local decision must satisfy, each carrying its named exception state, so the system stays coherent without re-deriving first principles on every snap.",
+    "source_operator": "three_rules_of_generalship",
+    "telemetry": "Pace by wind, first use location of new plays, compliance and exception records by game state"
+   }
+  },
+  {
+   "primitive_id": "spectator_vantage_point",
+   "name": "Observation position determines what can be judged: high and central for the plan of the game, the end stand for line openings",
+   "verbatim_quote": "Near the center of the field, and well toward the top of the stand, if not actually in the top row, is the choice position.",
+   "page": "Chapter XI, Coaching for the Spectator; printed p. 186",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every viewpoint hides some events and reveals others",
+    "The scout and the coach want the same elevated view for the same reason",
+    "Choosing where to observe is the first analytic decision, made before any play is seen"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "observation design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to telemetry placement in the engine: what the system can reason about is fixed by where its sensors sit, so sensor position is chosen for the questions the system must answer, and known blind spots are recorded rather than discovered after the fact.",
+    "source_operator": "spectator_vantage_point",
+    "telemetry": "Charting accuracy by seat or camera angle, event detection rates by viewpoint, scout grade agreement"
+   }
+  },
+  {
+   "primitive_id": "wind_factor_primacy",
+   "name": "The wind is the most important factor in generalship: with all else near equal, the team that uses it better wins",
+   "verbatim_quote": "The wind is the most important factor in football generalship to-day, and all other things being nearly equal the team making the better use of it will win the game.",
+   "page": "Chapter XI, Coaching for the Spectator; printed p. 190",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Environmental factors can outweigh personnel differences",
+    "The toss winner's choice of goal is one of the most important moves of the game",
+    "Wind strength and direction must be measured, from flags and clouds, before they can be used"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "environmental factor weighting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to factor ranking in the engine: situational variables are weighted by measured effect, and a dominant environmental variable is promoted above roster variables in the decision order instead of being treated as color commentary around the matchup.",
+    "source_operator": "wind_factor_primacy",
+    "telemetry": "Scoring and kicking performance by wind speed and direction, toss choice outcomes, weather-adjusted team ratings"
+   }
+  },
+  {
+   "primitive_id": "disregard_ball_observe_line",
+   "name": "The trained observer schools himself to ignore the ball and watch the line, because plays succeed or fail in the combined work away from the ball",
+   "verbatim_quote": "As soon as possible after the kick-off he should school himself to a disregard of the ball for the time being.",
+   "page": "Chapter XI, Coaching for the Spectator; printed p. 192",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Attention follows the ball by default and must be retrained by discipline",
+    "The decisive action on most plays happens away from the ball carrier",
+    "Early line play furnishes a fair criterion for the whole afternoon"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "attention allocation in observation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to feature attention in the engine: the most salient object in the frame is rarely the most informative one, so the system is trained to grade the units away from the ball, the blocks, the coverage, the charge, and to treat ball-watching as the known failure mode of naive observation.",
+    "source_operator": "disregard_ball_observe_line",
+    "telemetry": "Line grades from the first series versus full-game grades, off-ball event detection, scout accuracy by focus protocol"
+   }
+  },
+  {
+   "primitive_id": "halftime_recap_prognosis",
+   "name": "At the half, recapitulate: the side that ran much without reaching the twenty-five, or wasted the wind, is in the worse case regardless of the score",
+   "verbatim_quote": "At the end of the first half it is a good plan to go in for a mental recapitulation that what happens in the second half may be the expected rather than the unexpected.",
+   "page": "Chapter XI, Coaching for the Spectator; printed p. 198",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Process measures from the first half predict the second better than the score does",
+    "Work done in the wrong field situations exhausts a team without buying points",
+    "A tired team's cracking shows first on defense after fruitless work"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "mid-game model revision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to scheduled model revision in the engine: at a fixed midpoint the system restates what it has observed, compares it against the pre-game expectation, and re-derives its forecast from process measures, yardage without penetration, wind use, workload, rather than from the scoreboard alone.",
+    "source_operator": "halftime_recap_prognosis",
+    "telemetry": "First-half process metrics versus second-half outcomes, workload differentials, second-half scoring by first-half efficiency"
+   }
+  },
+  {
+   "primitive_id": "type_convergence_composite",
+   "name": "Team systems converge: sound principles are adopted across schools until the ultimate system is a composite of all that is good in all systems",
+   "verbatim_quote": "it is inevitable in this day of free exchange of coaching opinion and extreme vigilance that the most cherished principles of one \"system,\" when sound, will be adopted into another \"system.\"",
+   "page": "Chapter XII, Sectional and Team Types; printed p. 209",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Free exchange of coaching knowledge destroys durable secrecy",
+    "Convergence raises the standard and shifts advantage to execution and genius",
+    "Type differences shrink toward a vanishing point without reaching it"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "knowledge diffusion and convergence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's model of its own league: any sound innovation is assumed to diffuse to every serious opponent on a short clock, so an edge is valued by its expected half-life under copying, and the durable advantage is pushed toward execution quality and adaptation speed.",
+    "source_operator": "type_convergence_composite",
+    "telemetry": "Innovation adoption lags across teams, edge decay curves for new plays and formations, league-wide scheme frequencies by season"
+   }
+  },
+  {
+   "primitive_id": "east_west_conception_gap",
+   "name": "East and West differ in conception: the Westerner thinks of offense first and prizes deception, the Easterner builds from defense and prizes execution",
+   "verbatim_quote": "First, the Western coach usually bethinks himself of the offense before he tackles defense, while the Easterner is primarily absorbed in defense; second, there does not seem to be the same sustained power in attack",
+   "page": "Chapter XII, Sectional and Team Types; printed p. 217",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Regional styles are stable enough to scout as priors",
+    "A style's strength and its blind spot are the same trait seen from two sides",
+    "Priors about style must yield to the individual team's evidence"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "style priors",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to prior construction in the engine: population-level tendencies, here sectional coaching philosophy, set the prior for an unfamiliar opponent, with the explicit warning that the prior describes the population and must be displaced by the team's own observed behavior as evidence arrives.",
+    "source_operator": "east_west_conception_gap",
+    "telemetry": "Scheme frequencies by region and program, deception versus execution play shares, prior-versus-observed adjustment rates"
+   }
+  },
+  {
+   "primitive_id": "genius_diagnosis_defense",
+   "name": "Defensive genius is diagnosis: coaching can teach play recognition far, but the born diagnostician sifts through interference by a method of his own",
+   "verbatim_quote": "Genius in defense is based largely on able diagnosis of plays. Coaching will go far toward teaching a man how to diagnose the attack, but there have been men who were born to it, and who in this respect were practically beyond coaching.",
+   "page": "Chapter XIII, Genius on the Gridiron; printed p. 231",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Recognition speed, not strength, is the scarce defensive gift",
+    "Diagnosis can be improved by teaching but has an individual ceiling",
+    "The diagnostician's value rises with the offense's deception level"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "diagnostic skill",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's valuation of recognition: the ability to classify the opponent's action early from weak cues is treated as a distinct, measurable skill, separable from physical tools, and weighted more heavily as opposing deception increases.",
+    "source_operator": "genius_diagnosis_defense",
+    "telemetry": "Play recognition latency from film grades, tackle success against misdirection, performance against deceptive versus direct offenses"
+   }
+  },
+  {
+   "primitive_id": "hyatt_plan_deviation",
+   "name": "Genius can be licensed deviation: Hyatt broke the planned generalship because from the field he saw the flaw in Yale's defense better than the coaches could",
+   "verbatim_quote": "he could not have been censured by the coaches, but from his position on the field he could see the flaw in Yale's defense far better than they, and thus violated the generalship and gained the victory.",
+   "page": "Chapter XIII, Genius on the Gridiron; printed p. 227",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The plan is made with less information than the field general holds in the moment",
+    "Deviation is justified by a specific observed flaw, not by impulse",
+    "The deviator accepts judgment by the result and by the quality of what he saw"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "plan deviation under local information",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's override protocol: a local decision layer may break the standing plan only when it can name the specific observed condition the plan did not foresee, and the override is logged with its reason so the system can learn whether its deviation license is being used well.",
+    "source_operator": "hyatt_plan_deviation",
+    "telemetry": "Audible and override frequency, override success rate, named-reason completeness in decision logs"
+   }
+  },
+  {
+   "primitive_id": "coach_mental_suggestion",
+   "name": "Handling men is a coaching technology: Beacham's repeated question bound Arnold's pride to Hyatt's safety, and one guard neutralized Navy's most dangerous downfield man all game",
+   "verbatim_quote": "All right, if you care anything about Hyatt don't you let that man Brown get down the field.",
+   "page": "Chapter XIII, Genius on the Gridiron; printed p. 235",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A player will sustain effort for a person longer than for an assignment",
+    "The suggestion was planted days ahead and revealed only when it could bind",
+    "One motivated man replaced a scheme that would have cost several men"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "motivation and man management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the human layer the engine must model rather than assume away: effort is not a constant in any unit's rating, and a reasoning system that treats motivation as fixed will misprice both the inspired performance and the flat one, so observable commitment signals belong in the state.",
+    "source_operator": "coach_mental_suggestion",
+    "telemetry": "Performance in rivalry and senior-day games, effort grades after role changes, captain and leadership indicators"
+   }
+  },
+  {
+   "primitive_id": "ethics_visitors_not_opponents",
+   "name": "The scoreboard change from opponents to visitors marks the game's ethical turn: fairness and courtesy are no longer read as softness",
+   "verbatim_quote": "A change small in itself, but unmistakable proof of the new order of things and the progress of a better feeling among the great football institutions.",
+   "page": "Chapter XIV, Ethics of the Game; printed p. 237",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Norms change through visible symbols as much as through rules",
+    "Rough play declined because officials, rules, and public sentiment moved together",
+    "The game's survival depends on keeping it on a high plane for player and spectator alike"
+   ],
+   "breakdown_regime": "no_equation_domain",
+   "domain": "norms and institutional ethics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's treatment of its own competitive environment: the norms governing the contest are themselves variables that drift over time, and a system that models only the written rules will misread eras, opponents, and officiating that operate under the norms in force.",
+    "source_operator": "ethics_visitors_not_opponents",
+    "telemetry": "Penalty and disqualification rates by era, rules-change timelines, sportsmanship norm indicators"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "1b1114f54a08c8af-t1",
+   "think": "Reed's book is the earliest complete statement in this library of football as a state-dependent decision system, and reading it whole shows that its fourteen chapters are one argument repeated at widening scales. At the smallest scale, the individual, the argument is that a few fundamentals hold in every state: the defensive line man uses his hands all the time, every blocker carries his man upstream, the back keeps his feet and goes straight into the tackler when the play is lost. Above that layer sits technique for positions, and above that the team machinery of formations, shifts, and signals. Above the machinery sits generalship, which is the book's real subject: a policy that maps field position, down, distance, wind, score, and the observed opponent onto a choice of play. The zone diagrams of Chapter X are the clearest expression of it. The field is partitioned, each zone carries its own doctrine, and the team's identity is the mixture it strikes between the kicking plan and the running plan. A team strong in punting and defense plays one book; a team strong in running plays another; the all-round team combines the two zone systems in proportion to its strengths. Nothing in the plan is decorative. Every rule in it prices something: the ammunition rule prices information, because a scoring play shown early teaches the defense to stop it at the range where it would have scored; the two-hands rule prices fumble risk along a handling chain; the out-of-bounds punt prices the touchback as the one unacceptable tail outcome; the against-wind doctrine prices energy across the halves, treating the wind as an alternating resource to be survived in one direction and exploited in the other. The forward pass, still young in 1913, is analyzed with the same discipline. Reed refuses to grade it as a single thing. It decomposes into deception, delay, and protection, each necessary, each separately designable, and its largest value is often collected without throwing it, because a backfield that shows one man five yards behind the line forces the defense to open on every snap. That is an option-value argument made decades before the vocabulary existed. The signal system chapter extends the pricing to cognition itself: a code that demands arithmetic under fire is a defective code, so the key number is designed for recognition, ending in 5 or 0, movable, with the play number following and no computation anywhere in the chain. The same respect for human limits runs through the trainer chapter, where the slump is diagnosed as overwork and the prescription is rest rather than more instruction, and through the genius chapter, where the highest praise is reserved not for spectacular runs but for diagnosis, for Hyatt's licensed deviation from a plan he could see was wrong from the field, and for a coach's patient use of suggestion to bind one guard's effort to his captain's safety. The spectator chapter is the same philosophy turned outward: observation is a skill with a technology, a chosen vantage point, a disciplined disregard of the ball, a halftime recapitulation that re-derives the forecast from process rather than score. For a reasoning engine the book therefore offers more than period tactics. It offers a template for how to build the reasoning itself: partition the state space, attach doctrines to the partitions, price information, risk, energy, and attention as real costs, decompose compound actions into necessary factors, design every interface for the cognitive state of the man who must use it under pressure, and keep a governed channel through which local observation can override the plan when the plan's premises fail. Its limits are the limits of its era. The kicking game is priced for a game in which the punt was a first-class weapon and the pass a novelty hedged by severe rules; several doctrines invert under modern rules, modern athletes, and modern substitution. Reed also reasons from a small set of famous games and named men, so his evidence is anecdote disciplined by experience rather than measurement. The engine should take his structure and re-derive his weights, which is, in the end, exactly what his own convergence chapter predicts every serious school will do with every other school's sound ideas. The earlier chapters fill in the layers beneath generalship with the same habits of mind. Selection of material is treated as a fitting problem rather than a talent hunt: the plan must be cut to the men actually at hand, the tackles are chosen first because the storm of the game passes over them, the center is chosen for the sureness of his passing because every play begins in his hands, and a backfield is valued as a combination rather than as four separate runners. The coaching chapters make the staff itself a system, with the head coach supplying the thrust, a staff of assistants holding defined provinces, the trainer guarding the men's bodies with an authority the head coach does not override, and truth-telling protected inside the staff room so that the lone dissenter is heard before the game can punish the consensus. Even the rules summary written for spectators carries the method: penalties are tabulated by cost, the safety is defined by the impetus that sent the ball across the line, and the touchback exception is stated precisely because it is the case where intuition fails, which is Reed's way of marking the exact points where a naive model of the game breaks. The sectional chapter then turns the method on the coaches themselves, treating Yale's resource, Harvard's brilliancy and fragility, Princeton's pace, Pennsylvania's variety, and the West's deception-first conception as population tendencies that explain a team until the team's own play explains it better. A reasoning engine built on this book would therefore be layered exactly as the book is layered: invariants at the bottom, personnel fitted to plan above them, an honest staff process above that, zone doctrines and priced risks at the top, and over the whole structure two governors, the scheduled recapitulation that forces the model to restate itself at the half, and the deviation license that lets the best-informed man on the field break the plan when he can name what the plan failed to foresee.",
+   "retrocausal_genealogy": "Reed writes downstream of Walter Camp's codification of the American game and of the great rules revisions that followed the brutality crisis of 1905, which legalized the forward pass in 1906 and progressively opened the field. His tactical vocabulary comes from the military literature of the nineteenth century, above all Major Wagner's writings on infantry fire tactics, whose phases of preparation, assault, and resumption, and whose doctrine of conserving ammunition until effective range, Reed imports almost unchanged into football. The coaching lineages he describes, Yale's defensive system under Sanford, Haughton's Harvard, Yost's Michigan, Stagg's Chicago, are the schools whose convergence his own later chapters then document.",
+   "theory_of_mind": "Reed believes the game is intelligible: that beneath its confusion there is a structure of zones, downs, and tendencies that a patient observer can learn, and that his double audience, the player inside the game and the public outside it, can be taught to see the same structure from their different seats. His model of the reader is respectful and demanding at once. He assumes intelligence, assumes no prior system, and builds from the ball outward to generalship and finally to the ethics and future of the institution, trusting that understanding the machinery will deepen rather than spoil the reader's pleasure in it.",
+   "cross_layer_veto": "Several of Reed's doctrines veto whole classes of otherwise attractive action. The ammunition rule vetoes any early use of a high-class play, however open it looks, because its information cost is charged against its later value. The wind vetoes play selection outright for the team facing it, reducing its legal menu to runs and the low out-of-bounds kick. Fumble arithmetic vetoes any play that routes the ball through extra hands in dangerous territory. The rules themselves, the five-yard passer, the six eligible receivers, the penalty ladder, veto formations and intentions that the other layers might otherwise choose, and Reed's ethics chapter vetoes the old violent means even where they would still work."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book is a manual for acting inside any contested, resource-limited system: partition the arena into zones with different correct behavior in each, conserve the moves whose value depends on surprise until they are inside the range where they can finish, buy information with cheap probes before spending scarce assets, price every handoff in a chain as a failure point, design signals for recognition rather than computation, and treat the energy and attention of the people executing the plan as resources that deplete and must be restored.",
+ "gsi_mapping": "The Institute takes from Reed a curriculum and a research posture. The curriculum: fundamentals first, then position technique, then team machinery, then generalship, then the study of genius and of ethics, in that order, because each layer is unintelligible without the one beneath it. The posture: observation is a trained discipline with chosen vantage points and scheduled recapitulation, systems converge as knowledge diffuses, and the honest study of how earlier eras solved the game under different rules is the fastest way to see which of the present era's certainties are merely rules artifacts.",
+ "gse_mapping": "The engine takes Reed's architecture directly: a zone-partitioned state space with a doctrine per zone, play values that include information cost and threat value collected on plays never called, chain-risk accounting over every exchange a play requires, environment variables such as wind promoted to first-class decision inputs, and a governed override channel through which the freshest local observation can break the plan for a named reason. It takes his weights only as priors from a different rules era, to be re-measured, which his own convergence doctrine instructs."
+}

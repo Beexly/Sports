@@ -1,0 +1,720 @@
+{
+ "book_id": "f5f79498b4b863e3",
+ "source_status": "COMPLETE",
+ "source_note": "B. F. Skinner, Science and Human Behavior, Macmillan, 1953 (Library of Congress Catalog Card Number 53-7045 as printed in the file). The local file is the B. F. Skinner Foundation internet edition PDF: title page carries Copyright 2005, The B.F. Skinner Foundation, and the acknowledgments state the pages were scanned by David Palmer, typos corrected by Lealah Shahin, and the Acrobat files produced by Kenneth Stephens. PDF size 19,548,030 bytes; full sha256 over (str(size) + file bytes) is f5f79498b4b863e36fa2259333097e13f8614b376a3e3075a91f936593e09dbf; book_id is its first 16 hex characters and matches the assigned value. Extracted text is 1,025,676 characters in 18,743 lines and is clean and complete for the whole book, with scattered OCR artifacts (irregular spacing, occasional garbled words such as jis for is, and mangled numerals in the table of contents); every quoted passage was chosen from clean body text and verified as a contiguous substring of the extracted text file. No catalog or title corrections needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "lawful_determined_behavior",
+   "name": "Behavior must be assumed lawful and determined before scientific methods can be applied to it",
+   "verbatim_quote": "If we are to use the methods of science in the field of human affairs, we must assume that behavior is lawful and determined.",
+   "page": "Chapter I, p. 6; text line 251",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Behavior is the result of specifiable antecedent conditions",
+    "Determinism is adopted as a working assumption, not proven in advance"
+   ],
+   "breakdown_regime": "Breaks down as a metaphysical claim if read as proven fact; Skinner needs it only as a methodological postulate, and any genuinely capricious residue would limit prediction. no_equation_domain",
+   "domain": "foundations of behavioral science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Supplies the engine's founding postulate: every target behavior is treated as a function of specifiable conditions, so unexplained variance is logged as unmeasured conditions rather than as noise or spontaneity. This licenses the search for features until the residual shrinks.",
+    "source_operator": "lawful_determined_behavior",
+    "telemetry": "Case logs pairing antecedent conditions with outcomes, audited for how much variance remains unexplained after each feature is added."
+   }
+  },
+  {
+   "primitive_id": "science_predicts_and_controls",
+   "name": "Science predicts, and to the extent conditions can be altered, it controls",
+   "verbatim_quote": "Nor is prediction the last word: to the extent that relevant conditions can be altered, or otherwise controlled, the future can be controlled.",
+   "page": "Chapter I, p. 6; text line 250",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Lawful relations between events exist and can be discovered",
+    "Relevant conditions are at least partly manipulable"
+   ],
+   "breakdown_regime": "Where conditions cannot be altered or even observed, prediction survives but control fails; the claim also says nothing about which control is desirable. no_equation_domain",
+   "domain": "foundations of behavioral science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps onto the engine's two output modes: a forecast under conditions as they stand, and a counterfactual forecast under arranged conditions. The gap between the two is the measured value of an intervention.",
+    "source_operator": "science_predicts_and_controls",
+    "telemetry": "Paired records of predicted outcomes under status quo conditions versus under each candidate intervention."
+   }
+  },
+  {
+   "primitive_id": "laws_enable_control",
+   "name": "Arranging conditions as the laws specify turns prediction into control: the event is caused to occur",
+   "verbatim_quote": "By arranging conditions in ways specified by the laws of a system, we not only predict, we control: we \"cause\" an event to occur or to assume certain characteristics.",
+   "page": "Chapter II, p. 14; text line 528",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The laws of the system are known well enough to specify sufficient conditions",
+    "The conditions can in fact be arranged in practice"
+   ],
+   "breakdown_regime": "Fails when the law is merely correlational or when arranging the conditions is impractical or prohibited; control then collapses back to prediction. no_equation_domain",
+   "domain": "foundations of behavioral science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defines the engine's intervention operator: an action is a deliberate setting of input conditions, and its expected effect is read off the same law used for prediction, keeping forecasting and control in one model rather than two.",
+    "source_operator": "laws_enable_control",
+    "telemetry": "Intervention logs with the conditions set, the law invoked, and the observed outcome for calibration."
+   }
+  },
+  {
+   "primitive_id": "functional_analysis",
+   "name": "A causal or functional analysis relates behavior as dependent variable to external conditions as independent variables",
+   "verbatim_quote": "The external variables of which behavior is a function provide for what may be called a causal or functional analysis.",
+   "page": "Chapter III, p. 35; text line 1444",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Behavior is the dependent variable and the effect to be explained",
+    "The causes are external conditions of which behavior is a function"
+   ],
+   "breakdown_regime": "A functional analysis is only as complete as the variable inventory; omitted variables leave the function underdetermined, and historical cases often lack the needed data. no_equation_domain",
+   "domain": "method of behavioral science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the engine's core schema: one dependent variable, the probability of a target response, and an open registry of independent variables with measured functional relations, replacing trait labels with condition lists.",
+    "source_operator": "functional_analysis",
+    "telemetry": "Structured case records with the dependent outcome and every measured independent condition, versioned as new variables are discovered."
+   }
+  },
+  {
+   "primitive_id": "variables_outside_organism",
+   "name": "The variables of which behavior is a function lie outside the organism, in its immediate environment and its environmental history",
+   "verbatim_quote": "These variables lie outside the organism, in its immediate environment and in its environmental history.",
+   "page": "Chapter III, p. 31; text line 1266",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "External variables have a physical status open to the usual techniques of science",
+    "Environmental history is in principle recoverable or manipulable"
+   ],
+   "breakdown_regime": "Genetic endowment and current physiology are real constraints the program brackets rather than denies; where history is unrecorded, the analysis must work from current conditions alone. no_equation_domain",
+   "domain": "method of behavioral science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Directs feature engineering outward: current context plus recorded history of contingencies, not inferred inner traits. When a prediction fails, the fix is a missing external variable, not a richer inner story.",
+    "source_operator": "variables_outside_organism",
+    "telemetry": "Timestamped environmental histories per subject: exposures, consequences delivered, and current context at decision time."
+   }
+  },
+  {
+   "primitive_id": "explanatory_fictions",
+   "name": "Inner-cause terms like hunger are redundant redescriptions of the behavior they claim to explain",
+   "verbatim_quote": "A single set of facts is described by the two statements: \"He eats\" and \"He is hungry.\"",
+   "page": "Chapter III, p. 30; text line 1246",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The inner term is inferred from the very behavior it is used to explain",
+    "No independent observation of the inner cause is supplied"
+   ],
+   "breakdown_regime": "The critique fails where an inner state is independently measured and predicts beyond the behavior used to infer it; Skinner concedes neural events will one day be described directly. no_equation_domain",
+   "domain": "method of behavioral science",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A modeling hygiene veto for the engine: any feature that is only a relabeling of the target variable is rejected as leakage. Features must be observable independently of the outcome they predict.",
+    "source_operator": "explanatory_fictions",
+    "telemetry": "Feature registry with, for each feature, its measurement procedure and proof it can be scored before the outcome is known."
+   }
+  },
+  {
+   "primitive_id": "respondent_elicited",
+   "name": "Respondent behavior is elicited by stimuli, and its prediction is especially precise",
+   "verbatim_quote": "A certain part of behavior, then, is elicited by stimuli, and our prediction of that behavior is especially precise.",
+   "page": "Chapter IV, p. 49; text line 1944",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An identifiable stimulus invariably precedes the response",
+    "The relation is largely independent of the response's consequences"
+   ],
+   "breakdown_regime": "Only a small fraction of total behavior fits this pattern; extending elicitation to all behavior was the early reflexologists' overreach and fails for emitted behavior. no_equation_domain",
+   "domain": "respondent behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Marks the engine's deterministic edge cases: stimulus-response pairs tight enough to be treated as near-certain triggers, handled by rule rather than by probability estimation.",
+    "source_operator": "respondent_elicited",
+    "telemetry": "Event logs of stimulus presentations and the latency and magnitude of the responses that follow."
+   }
+  },
+  {
+   "primitive_id": "respondent_conditioning",
+   "name": "Respondent conditioning is stimulus substitution: a neutral stimulus paired with an effective one acquires its eliciting power",
+   "verbatim_quote": "The process of conditioning, as Pavlov reported it in his book Conditioned Reflexes, is a process of stimulus substitution. A previously neutral stimulus acquires the power to elicit a response which was originally elicited by another stimulus.",
+   "page": "Chapter IV, p. 53; text line 2142",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The neutral stimulus is followed or reinforced by the effective stimulus",
+    "Timing between stimulus and reinforcement matters"
+   ],
+   "breakdown_regime": "The acquired power extinguishes when the conditioned stimulus is no longer reinforced, and higher-order transfer is limited; it also cannot create new operant repertoires. no_equation_domain",
+   "domain": "respondent behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Gives the engine a transfer rule: a cue paired reliably with a potent event inherits part of that event's effect, so novel signals can be scored from their pairing history rather than only from direct outcomes.",
+    "source_operator": "respondent_conditioning",
+    "telemetry": "Pairing logs recording which cues preceded which potent events, with intervals, plus later cue-only outcome tests."
+   }
+  },
+  {
+   "primitive_id": "operant_consequences_feedback",
+   "name": "Operant behavior is governed by its consequences, which feed back and change the probability the behavior recurs",
+   "verbatim_quote": "The consequences of behavior may \"feed back\" into the organism. When they do so, they may change the probability that the behavior which produced them will occur again.",
+   "page": "Chapter V, p. 59; text line 2408",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The consequence actually follows the behavior in time",
+    "The organism is exposed to the consequence, directly or through feedback"
+   ],
+   "breakdown_regime": "Consequences too delayed, too weak, or unattributed to the behavior fail to change probability; purely accidental pairings produce superstition instead of useful control. no_equation_domain",
+   "domain": "operant behavior",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's update rule: after each outcome, the probability of the action class that produced it is revised in the direction the consequence specifies. Learning is bookkeeping over consequence history.",
+    "source_operator": "operant_consequences_feedback",
+    "telemetry": "Action-outcome logs with delays, so each probability update can be credited to the action that earned it."
+   }
+  },
+  {
+   "primitive_id": "probability_of_response",
+   "name": "The basic datum is a continuous probability of response, observed only through frequency under specified conditions",
+   "verbatim_quote": "What we want to evaluate is the probability that he will drink. This may range from virtual certainty that drinking will occur to virtual certainty that it will not.",
+   "page": "Chapter III, pp. 31-32; text line 1288",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Probability ranges continuously between virtual certainty of occurrence and of non-occurrence",
+    "Frequencies are meaningful only when the conditions of observation are specified"
+   ],
+   "breakdown_regime": "A probability is never observed directly, only estimated from frequencies; unspecified or shifting conditions make estimates non-comparable across cases. no_equation_domain",
+   "domain": "measurement of behavior",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets the engine's output type: calibrated probabilities under explicitly stated conditions, never binary verdicts. Every prediction must carry its condition set so that scores stay comparable.",
+    "source_operator": "probability_of_response",
+    "telemetry": "Frequency counts of target responses per condition set, with denominators, retained for calibration checks."
+   }
+  },
+  {
+   "primitive_id": "operant_class",
+   "name": "An operant is a class of responses defined by a common consequence, not a single act",
+   "verbatim_quote": "The word \"operant\" will be used to describe this class. The term emphasizes the fact that the behavior operates upon the environment to generate consequences.",
+   "page": "Chapter V, p. 65; text line 2655",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Responses are grouped by the effect they produce, not by topography alone",
+    "A single instance is history; only the class can be predicted or controlled"
+   ],
+   "breakdown_regime": "Class boundaries are partly the analyst's choice; different cutoffs for the defining property yield different classes and different measured strengths. no_equation_domain",
+   "domain": "operant behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Defines the engine's unit of analysis: actions are clustered by the outcome they generate, so superficially different moves with the same consequence share one probability and one update history.",
+    "source_operator": "operant_class",
+    "telemetry": "Action taxonomies keyed to consequences, with instance counts per class."
+   }
+  },
+  {
+   "primitive_id": "operant_vs_respondent_reinforcement",
+   "name": "Operant and respondent conditioning differ by placement of the reinforcer: contingent on a response versus paired with a stimulus",
+   "verbatim_quote": "In the Pavlovian experiment, however, a reinforcer is paired with a stimulus; whereas in operant behavior it is contingent upon a response.",
+   "page": "Chapter V, p. 65; text line 2678",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A reinforcer either accompanies another stimulus or follows the organism's own behavior",
+    "These two cases exhaust the ways a reinforcer can change a probability of response"
+   ],
+   "breakdown_regime": "Real episodes often mix both placements, and an event that does neither has no conditioning effect; misclassifying the placement misassigns credit. no_equation_domain",
+   "domain": "operant behavior",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A routing rule for credit assignment: outcome follows an action, update the action class; outcome merely accompanies a cue, update the cue's associative strength. The engine keeps the two ledgers separate.",
+    "source_operator": "operant_vs_respondent_reinforcement",
+    "telemetry": "Event streams tagged by contingency type so updates are routed to the action ledger or the cue ledger correctly."
+   }
+  },
+  {
+   "primitive_id": "reinforcer_defined_by_effect",
+   "name": "A reinforcing stimulus is defined solely by its effect: it reinforces; the test is a direct change in frequency",
+   "verbatim_quote": "As the term is used here, however, the only defining characteristic of a reinforcing stimulus is that it reinforces.",
+   "page": "Chapter V, p. 72; text line 3008",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reinforcing power is relative to a particular organism under particular conditions",
+    "Classification by effect is empirical and objective, not circular, because the test is independent of the label"
+   ],
+   "breakdown_regime": "The definition gives no way to identify a reinforcer in advance for a new organism or condition; each candidate must be tested, and effects shift with deprivation and history. no_equation_domain",
+   "domain": "reinforcement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Forbids a fixed reward table in the engine: a consequence counts as a reward only if measured behavior moves when it is made contingent. Reward values are estimated per subject and condition, then retested.",
+    "source_operator": "reinforcer_defined_by_effect",
+    "telemetry": "A/B contingency tests per consequence type, recording frequency before and after the consequence is made contingent."
+   }
+  },
+  {
+   "primitive_id": "extinction_vs_forgetting",
+   "name": "Extinction requires the response to be emitted without reinforcement; forgetting is loss of the effect through mere passage of time",
+   "verbatim_quote": "In forgetting, the effect of conditioning is lost simply as time passes, whereas extinction requires that the response be emitted without reinforcement.",
+   "page": "Chapter V, p. 71; text line 2931",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In extinction the occasion for the response still arises and the response occurs unreinforced",
+    "Forgetting operates even when the response is never emitted"
+   ],
+   "breakdown_regime": "Extinction is slow when reinforcement was intermittent, and extinguished behavior can recover; confusing the two leads to wrong forecasts of how fast a tendency will decay. no_equation_domain",
+   "domain": "extinction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Separates two decay channels in the engine: active decay when actions stop paying off, and passive decay with time alone. Each has its own rate, and conflating them misprices persistence.",
+    "source_operator": "extinction_vs_forgetting",
+    "telemetry": "Per-action records of unreinforced emissions and of elapsed time since last reinforcement, fitted as separate decay terms."
+   }
+  },
+  {
+   "primitive_id": "intermittent_reinforcement_resistance",
+   "name": "Behavior reinforced only occasionally survives far longer after reinforcement stops than behavior reinforced every time",
+   "verbatim_quote": "Thus if we only occasionally reinforce a child for good behavior, the behavior survives after we discontinue reinforcement much longer than if we had reinforced every instance up to the same total number of reinforcements.",
+   "page": "Chapter V, p. 70; text line 2911",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The comparison holds total number of reinforcements constant",
+    "The organism cannot easily discriminate that reinforcement has ceased"
+   ],
+   "breakdown_regime": "The advantage reverses during acquisition, where continuous reinforcement builds behavior faster; extreme intermittency may never build the behavior at all. no_equation_domain",
+   "domain": "schedules of reinforcement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A persistence law for the engine: sparsely rewarded action classes get long extinction half-lives, so a dry spell is weak evidence that a historically intermittent strategy is dead.",
+    "source_operator": "intermittent_reinforcement_resistance",
+    "telemetry": "Reinforcement density per action class over its history, used to set its decay rate when rewards stop."
+   }
+  },
+  {
+   "primitive_id": "superstitious_behavior",
+   "name": "Accidental response-reinforcer pairings condition superstitious behavior; conditioning has no guard against non-functional contingencies",
+   "verbatim_quote": "If there is only an accidental connection between the response and the appearance of a reinforcer, the behavior is called \"superstitious.\"",
+   "page": "Chapter V, p. 85; text line 3573",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reinforcer necessarily coincides with some behavior, so something is always reinforced",
+    "A single contingency can produce a substantial change in probability"
+   ],
+   "breakdown_regime": "The effect weakens as the interval between reinforcer deliveries lengthens; and because any salient coincidence qualifies, the mechanism manufactures false patterns as readily as true ones. no_equation_domain",
+   "domain": "operant behavior",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's false-pattern warning: correlation between an action and a reward is not evidence the action produced the reward. Pattern claims require a contingency test, not just a streak.",
+    "source_operator": "superstitious_behavior",
+    "telemetry": "Streak and coincidence audits comparing rewarded action rates against base rates under shuffled outcome timings."
+   }
+  },
+  {
+   "primitive_id": "generalized_conditioned_reinforcer",
+   "name": "A conditioned reinforcer paired with more than one primary reinforcer becomes generalized and works across deprivation states",
+   "verbatim_quote": "A conditioned reinforcer is generalized when it is paired with more than one primary reinforcer.",
+   "page": "Chapter V, p. 76; text line 3211",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The stimulus has actually been paired with several distinct primary reinforcers",
+    "At least one relevant deprivation state is likely to prevail at the time of use"
+   ],
+   "breakdown_regime": "Generalized power is still borrowed power: if all pairings are withdrawn, the conditioned reinforcer loses its effect, and its strength varies with the backing reinforcers. no_equation_domain",
+   "domain": "conditioned reinforcement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Explains token-like signals in the engine's world: a score or marker backed by many real outcomes keeps its motivating force across situations, unlike a signal backed by a single outcome.",
+    "source_operator": "generalized_conditioned_reinforcer",
+    "telemetry": "Backing tables listing, for each token signal, the distinct real outcomes it has been paired with and when the pairing last occurred."
+   }
+  },
+  {
+   "primitive_id": "shaping_successive_approximations",
+   "name": "Complex operants are built by reinforcing successive approximations: differential reinforcement of slightly exceptional instances",
+   "verbatim_quote": "By reinforcing a series of successive approximations, we bring a rare response to a very high probability in a short time.",
+   "page": "Chapter VI, p. 92; text line 3884",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Behavior is continuous, so slightly exceptional instances always exist to select",
+    "The criterion is advanced only as fast as the distribution shifts"
+   ],
+   "breakdown_regime": "Some units are genetically preformed and emerge whole; and advancing the criterion too fast extinguishes the behavior instead of shaping it. no_equation_domain",
+   "domain": "shaping",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's capability-building algorithm: reach a rare target behavior by rewarding graded approximations and raising the bar as the distribution moves, rather than waiting for the full behavior to appear spontaneously.",
+    "source_operator": "shaping_successive_approximations",
+    "telemetry": "Criterion ladders per target skill with success rates at each rung, logged as the criterion advances."
+   }
+  },
+  {
+   "primitive_id": "variable_interval_schedule",
+   "name": "Variable-interval reinforcement produces remarkably stable, uniform, persistent responding",
+   "verbatim_quote": "Instead of reinforcing a response every five minutes, for example, we reinforce every five minutes on the average, where the intervening interval may be as short as a few seconds or as long as, say, ten minutes.",
+   "page": "Chapter VI, p. 102; text line 4311",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reinforcement becomes available after unpredictable intervals averaging a fixed value",
+    "Responding itself does not hasten the next reinforcement"
+   ],
+   "breakdown_regime": "Rates are moderate rather than maximal, and the schedule's persistence becomes a liability when the contingency should be abandoned. no_equation_domain",
+   "domain": "schedules of reinforcement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Predicts steady engagement under unpredictable reward timing: systems that pay off at random intervals hold behavior at a constant rate and resist extinction, a pattern the engine should expect wherever rewards arrive on no fixed clock.",
+    "source_operator": "variable_interval_schedule",
+    "telemetry": "Reward timing distributions per environment, classified as fixed, variable, or response-dependent, with observed activity rates."
+   }
+  },
+  {
+   "primitive_id": "fixed_ratio_schedule",
+   "name": "Fixed-ratio reinforcement generates a very high rate of response, with a pause after each reinforcement",
+   "verbatim_quote": "Fixed-ratio reinforcement generates a very high rate of response provided the ratio is not too high.",
+   "page": "Chapter VI, p. 102; text line 4341",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Reinforcement follows a fixed count of responses",
+    "The ratio is not so high that the organism has too far to go before the next reinforcement"
+   ],
+   "breakdown_regime": "Very high ratios produce strain, long post-reinforcement pauses, and collapse; fatigue caps the rate no matter the incentive. no_equation_domain",
+   "domain": "schedules of reinforcement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The piecework law for the engine: pay per unit of output drives maximal throughput with a predictable dip right after each payoff, so output forecasts under quota-like incentives should model the pause, not just the rate.",
+    "source_operator": "fixed_ratio_schedule",
+    "telemetry": "Output counts between successive payoffs, with pause durations, for any agent or person working under per-unit incentives."
+   }
+  },
+  {
+   "primitive_id": "three_term_contingency",
+   "name": "Environmental control of operant behavior is a three-term contingency: stimulus occasion, response, reinforcement",
+   "verbatim_quote": "We describe the contingency by saying that a stimulus (the light) is the occasion upon which a response (stretching the neck) is followed by reinforcement (with food). We must specify all three terms.",
+   "page": "Chapter VII, p. 108; text line 4535",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All three terms must be specified to describe the control",
+    "The stimulus is the occasion upon which the response is followed by reinforcement"
+   ],
+   "breakdown_regime": "Specifying fewer than three terms underdescribes the case; the same response under a different occasion or consequence is a different operant. no_equation_domain",
+   "domain": "operant discrimination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's atomic record: context, action, consequence. No prediction or update is well formed without all three fields, and histories are stored as triples rather than as outcomes alone.",
+    "source_operator": "three_term_contingency",
+    "telemetry": "Triple logs of occasion features, action class, and consequence for every observed episode."
+   }
+  },
+  {
+   "primitive_id": "discriminative_stimulus_alters_probability",
+   "name": "A discriminative stimulus does not elicit a response; it alters the probability of its occurrence",
+   "verbatim_quote": "The discriminative stimulus does not elicit a response, it simply alters a probability of occurrence.",
+   "page": "Chapter VII, p. 110; text line 4660",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A discrimination history exists in which the response was reinforced in this stimulus's presence and not in its absence",
+    "The relation is flexible and continuously graded, unlike elicitation"
+   ],
+   "breakdown_regime": "Weak or novel stimuli shift probability only slightly; treating an occasion-setter as a trigger overstates its control and misforecasts timing. no_equation_domain",
+   "domain": "operant discrimination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Context features in the engine are probability shifters, not causes that fire actions. Their weights are graded shifts on a baseline rate, which is why the same cue can matter a lot in one history and little in another.",
+    "source_operator": "discriminative_stimulus_alters_probability",
+    "telemetry": "Baseline action rates with and without each context feature, estimated per subject history."
+   }
+  },
+  {
+   "primitive_id": "emitted_not_elicited",
+   "name": "Operant behavior is emitted rather than elicited; no stimulus need precede it",
+   "verbatim_quote": "Operant behavior, in short, is emitted, rather than elicited.",
+   "page": "Chapter VII, p. 107; text line 4515",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The notion of probability of response requires behavior that occurs without an eliciting stimulus",
+    "Stimuli may be present but are not functionally connected as elicitors"
+   ],
+   "breakdown_regime": "The emitted-elicited line blurs for behavior under tight discriminative control, which can look reflex-like while having a different history and properties. no_equation_domain",
+   "domain": "operant behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Justifies the engine's generative stance: candidate actions are always being emitted at some rate, and the model's job is to rank their probabilities, not to wait for a triggering input before predicting.",
+    "source_operator": "emitted_not_elicited",
+    "telemetry": "Continuous emission-rate baselines per action class in the absence of any identified trigger."
+   }
+  },
+  {
+   "primitive_id": "stimulus_generalization",
+   "name": "Generalization is control shared across stimuli with common properties; it is a fact about stimulus control, not an act of the organism",
+   "verbatim_quote": "Induction (or generalization) is not an activity of the organism; it is simply a term which describes the fact that the control acquired by a stimulus is shared by other stimuli with common properties or, to put it another way, that control is shared by all the properties of the stimulus taken separately.",
+   "page": "Chapter VIII; text line 5646",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stimuli share specifiable properties along which control transfers",
+    "The gradient is sharpened only by differential reinforcement and extinction"
+   ],
+   "breakdown_regime": "Transfer follows physical similarity, which may be irrelevant to function; unchecked generalization spreads control to occasions where the response is not reinforced. no_equation_domain",
+   "domain": "stimulus control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's similarity rule: a learned response transfers to new situations in proportion to shared features with trained situations, giving a principled prior for unseen contexts instead of a blank slate.",
+    "source_operator": "stimulus_generalization",
+    "telemetry": "Feature-overlap measures between new contexts and trained contexts, validated against observed transfer rates."
+   }
+  },
+  {
+   "primitive_id": "deprivation_probability",
+   "name": "Deprivation and satiation move the probability of relevant behavior between near certainty and near impossibility",
+   "verbatim_quote": "We saw in Chapter III that the probability of drinking becomes very high under severe water deprivation and very low under excessive satiation.",
+   "page": "Chapter IX, p. 141; text line 5962",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The behavior in question is relevant to the commodity withheld or supplied",
+    "Probability is assessed at the first opportunity after the operation"
+   ],
+   "breakdown_regime": "Deprivation is an operation on the whole relevant class of behavior, not a stimulus; equilibrium talk adds nothing measurable beyond the probability shift itself. no_equation_domain",
+   "domain": "deprivation and satiation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A state variable for the engine: time since last satisfaction of a need scales both the value of the related reward and the rate of all behavior that has earned it, so identical offers price differently by state.",
+    "source_operator": "deprivation_probability",
+    "telemetry": "Time-since-satisfaction and recent consumption records per need, joined to offer-response rates."
+   }
+  },
+  {
+   "primitive_id": "emotion_as_predisposition",
+   "name": "An emotion name classifies a pattern of changed probabilities: raised probability of some actions, lowered probability of others",
+   "verbatim_quote": "The \"angry\" man shows an increased probability of striking, insulting, or otherwise inflicting injury and a lowered probability of aiding, favoring, comforting, or making love.",
+   "page": "Chapter X, p. 162; text line 6858",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The classification is with respect to circumstances that affect probability",
+    "Adjectival use (fearful, angry) avoids reifying a thing called an emotion"
+   ],
+   "breakdown_regime": "Predisposition talk is a summary, not an explanation; it cannot say how the state was induced or how to alter it without returning to the generating conditions. no_equation_domain",
+   "domain": "emotion",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Emotion labels enter the engine only as compressed state summaries: a bundle of signed shifts on many action probabilities at once, useful for prediction, barred from serving as causes.",
+    "source_operator": "emotion_as_predisposition",
+    "telemetry": "State annotations per episode listing which action probabilities rose and which fell, rather than a single mood label."
+   }
+  },
+  {
+   "primitive_id": "emotions_not_causes",
+   "name": "Emotional behavior is not caused by an emotion; the only valid cause is the external condition of which the whole pattern is a function",
+   "verbatim_quote": "The only valid cause is the external condition of which the behavior of neglect, as part of an emotional pattern known as anxiety or worry, can be shown to be a function.",
+   "page": "Chapter X, p. 168; text line 7121",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The emotional pattern and the behavior to be explained are both functions of the same external conditions",
+    "Remedying the behavior requires attacking the responsible circumstances"
+   ],
+   "breakdown_regime": "Skinner allows one narrow exception: an emotion defined as a pattern of behavior can cause later bodily illness, as reckless behavior can cause injury; that is behavior causing outcomes, not a state causing behavior. no_equation_domain",
+   "domain": "emotion",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A causal-graph constraint: state summaries sit downstream of conditions alongside behavior, never upstream of it. The engine routes interventions to conditions, and treats any model that explains action by mood as misspecified.",
+    "source_operator": "emotions_not_causes",
+    "telemetry": "Causal audits checking that every explanatory arrow into an action originates in a condition or history variable."
+   }
+  },
+  {
+   "primitive_id": "reinforcer_definitions",
+   "name": "Positive reinforcer: presented stimulus that strengthens contingent behavior. Negative reinforcer: stimulus whose withdrawal strengthens behavior",
+   "verbatim_quote": "We first define a positive reinforcer as any stimulus the presentation of which strengthens the behavior upon which it is made contingent. We define a negative reinforcer (an aversive stimulus) as any stimulus the withdrawal of which strengthens behavior.",
+   "page": "Chapter XII, p. 185; text line 7791",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both kinds are reinforcers in the literal sense of strengthening a response",
+    "Physical character is irrelevant; the strengthening effect is the touchstone"
+   ],
+   "breakdown_regime": "The pair of definitions makes punishment definable without new terms, as presenting a negative reinforcer or withdrawing a positive one; lay usage that treats negative reinforcement as punishment is simply wrong on this scheme. no_equation_domain",
+   "domain": "reinforcement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's signed update table: add a positive, probability up; remove an aversive, probability up; and the two punishment operations are the mirror entries. One table generates all four contingency types.",
+    "source_operator": "reinforcer_definitions",
+    "telemetry": "Contingency classification of every delivered consequence into the four cells, with measured direction of probability change."
+   }
+  },
+  {
+   "primitive_id": "avoidance_conditioned_negative_reinforcement",
+   "name": "Avoidance is escape from a conditioned aversive stimulus that precedes the real aversive event; the future event itself never acts",
+   "verbatim_quote": "When stimuli occur in this order, the first stimulus becomes a conditioned negative reinforcer, and henceforth any action which reduces it is strengthened through operant conditioning.",
+   "page": "Chapter XI, p. 176; text line 7456",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conditioned and unconditioned aversive stimuli are separated by an appreciable time interval",
+    "Reducing the conditioned stimulus is what actually reinforces the response"
+   ],
+   "breakdown_regime": "If avoidance always succeeds, the conditioned stimulus weakens and the behavior extinguishes until the real event is met again; the account also leans on the conditioned stimulus being genuinely aversive. no_equation_domain",
+   "domain": "aversion and avoidance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Explains warning-driven behavior in the engine's subjects: action is reinforced by removing the warning signal, so behavior can persist aimed at an event that, precisely because the action works, is never observed.",
+    "source_operator": "avoidance_conditioned_negative_reinforcement",
+    "telemetry": "Warning-signal and outcome logs, including the counterfactual gap: how often the warned event would have occurred without the action."
+   }
+  },
+  {
+   "primitive_id": "anxiety_conditioned_aversive",
+   "name": "Anxiety is the emotional condition generated when a stimulus characteristically precedes a strong aversive event by an appreciable interval",
+   "verbatim_quote": "They can occur, however, only when a stimulus characteristically precedes an aversive stimulus by an interval of time sufficiently great to permit behavioral changes to be observed. The condition which results is usually called anxiety.",
+   "page": "Chapter XI, p. 178; text line 7551",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The preceding stimulus has been paired with the aversive event, sometimes only once",
+    "The interval is long enough for behavioral and emotional changes to develop"
+   ],
+   "breakdown_regime": "Anxiety serves no useful purpose in Skinner's account and often disorganizes the very avoidance behavior that would deal with the threat; it is a by-product to be designed against. no_equation_domain",
+   "domain": "anxiety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A by-product predictor: wherever the engine or an institution deploys threats and warnings, it should also forecast a tax on unrelated behavior during the warning window, and count that tax as a cost of the technique.",
+    "source_operator": "anxiety_conditioned_aversive",
+    "telemetry": "Behavioral throughput measurements inside warning windows versus matched periods without warnings."
+   }
+  },
+  {
+   "primitive_id": "punishment_temporary_suppression",
+   "name": "Punishment temporarily suppresses behavior but does not reduce the total stock of responses; suppressed responses reappear when punishment stops",
+   "verbatim_quote": "The effect of punishment was a temporary suppression of the behavior, not a reduction in the total number of responses.",
+   "page": "Chapter XII, p. 184; text line 7756",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The comparison is the extinction curve: total responses available without further reinforcement",
+    "Suppression is measured while punishment is in force, recovery after it ends"
+   ],
+   "breakdown_regime": "Severe and prolonged punishment makes the full recovery hard to demonstrate, and punishment does generate real by-products (escape, retaliation, anxiety) even though it does not subtract responses. no_equation_domain",
+   "domain": "punishment",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A scoring rule for interventions: an enforcement action that only suppresses while applied must be booked as renting compliance, not buying change. Durable effect is measured after the intervention is withdrawn.",
+    "source_operator": "punishment_temporary_suppression",
+    "telemetry": "Post-intervention follow-up measurements after penalties lapse, compared with the during-penalty rate and the pre-penalty baseline."
+   }
+  },
+  {
+   "primitive_id": "self_control",
+   "name": "Self-control is one response, the controlling response, altering variables so as to change the probability of another, the controlled response",
+   "verbatim_quote": "one response, the controlling response, affects variables in such a way as to change the probability of the other, the controlled response.",
+   "page": "Chapter XV, p. 231; text line 9689",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The controlling response is itself automatically reinforced by the change it produces",
+    "The techniques mirror those used to control the behavior of others"
+   ],
+   "breakdown_regime": "Self-control is only as strong as its reinforcement; when the controlling response stops paying, the controlled response returns to its former probability. no_equation_domain",
+   "domain": "self-control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Recursion for the engine: an agent can act on its own future conditions, precommitting, removing occasions, or adding prompts, and those meta-actions are scored by the same probability machinery as first-order actions.",
+    "source_operator": "self_control",
+    "telemetry": "Logs of commitment and environment-editing actions, with the later probability of the targeted behavior as their outcome measure."
+   }
+  },
+  {
+   "primitive_id": "private_events_transfer",
+   "name": "Verbal reports of private events are built by the community from public accompaniments and by transfer from public-event language, so they are inherently unreliable",
+   "verbatim_quote": "Verbal responses which are acquired with respect to public events may be transferred to private events on the basis of common properties.",
+   "page": "Chapter XVII, p. 259; text line 10885",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "By definition the community lacks common access to the private event",
+    "Public accompaniments correlate only imperfectly with the private event"
+   ],
+   "breakdown_regime": "The privacy cannot be fully circumvented; reports of private events remain distorted by the contingencies on reporting itself, including excuses and self-presentation. no_equation_domain",
+   "domain": "private events",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sets the engine's trust level for self-report features: statements about internal states are behavior shaped by audience contingencies, so they are evidence about reporting conditions first and about the reported state only second.",
+    "source_operator": "private_events_transfer",
+    "telemetry": "Self-report streams paired with independently observed conditions, scored for agreement rates per reporter and topic."
+   }
+  },
+  {
+   "primitive_id": "social_behavior_definition",
+   "name": "Social behavior is the behavior of two or more people with respect to one another, analyzable with the same functional tools as individual behavior",
+   "verbatim_quote": "Social behavior may be defined as the behavior of two or more people with respect to one another or in concert with respect to a common environment.",
+   "page": "Chapter XIX, p. 297; text line 12275",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each participant is part of the environment of the others, usually reciprocally",
+    "No special social force beyond individual contingencies is required"
+   ],
+   "breakdown_regime": "Group-level generalizations exist that need not refer to behavior at all; the claim is that where behavior is involved, individual-level analysis remains adequate in principle. no_equation_domain",
+   "domain": "social behavior",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-agent extension: in the engine's group models, each agent's discriminative stimuli and reinforcers include the other agents' behavior, so dyads and groups are coupled contingency systems, not new substances.",
+    "source_operator": "social_behavior_definition",
+    "telemetry": "Interaction logs capturing each participant's behavior as both response and as stimulus or consequence for the others."
+   }
+  },
+  {
+   "primitive_id": "culture_as_experiment",
+   "name": "A culture is an experiment in behavior: a set of conditions whose practices are selected by the survival of the group that holds them",
+   "verbatim_quote": "A given culture is, in short, an experiment in behavior.",
+   "page": "Chapter XXVIII, p. 430; text line 17282",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cultural practices modify the behavior of group members",
+    "Resulting behavior affects the group's success in competition with other groups or the nonsocial environment"
+   ],
+   "breakdown_regime": "Survival is a shifting, competition-relative criterion and no proof of goodness; a practice can spread because it helps controllers or the group while harming individuals. no_equation_domain",
+   "domain": "culture and control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Selection at the population level mirrors reinforcement at the individual level: practices persist because of their consequences for the holding system. The engine evaluates any institution's rules by tracking which behaviors those rules actually select for over time.",
+    "source_operator": "culture_as_experiment",
+    "telemetry": "Longitudinal records of institutional rules and the distribution of member behavior, plus group outcomes under competition."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f5f79498b4b863e3-t1",
+   "think": "Science and Human Behavior is built around a single exchange. Skinner gives up every inner cause the reader is accustomed to, and in return offers one dependent variable, the probability of a response, and a classification of the external variables of which that probability is a function. The book's architecture follows the exchange exactly. Section I clears the ground: a science of behavior must assume lawfulness at the start, because prediction and control are impossible in a subject matter granted spontaneous exemptions, and the traditional free agent is shown to be a patchwork we already abandon whenever circumstances excuse an act. Section II then builds the machinery. Behavior splits into two great classes by the placement of the reinforcer. In respondent behavior a stimulus elicits a response, and conditioning is stimulus substitution. In operant behavior the response is emitted, and a reinforcer contingent on it changes its future probability. From that one contrast Skinner derives extinction, shaping by successive approximations, schedules of reinforcement with their characteristic rates and pauses, discriminative control in the three-term contingency, deprivation and satiation as operations on probability, emotion as a pattern of probability shifts rather than a cause, escape, avoidance and anxiety from conditioned aversive stimuli, and a deflationary account of punishment as temporary suppression with expensive by-products. Section III turns the machinery inward without changing it: self-control is one response manipulating the variables of another, thinking is preliminary behavior that manipulates stimuli, and private events are admitted as real events within the skin while being denied any special causal status. Sections IV through VI scale the same analysis to two people, to the great controlling agencies of government, religion, psychotherapy, economics and education, and finally to the culture as a whole, which is treated as an experiment whose practices are selected by group survival just as operants are selected by their consequences. The unity is the point. No new principle is admitted after Section II; complexity is composition, not new substance. For a reasoning engine the book therefore supplies a complete causal grammar. The state of a subject is a history of contingencies plus current conditions. A prediction is a probability stated under specified conditions. An intervention is a rearrangement of conditions, and its effect is read from the same functional relations used to predict. The grammar also carries built-in vetoes. A term inferred from the behavior it explains is leakage, not a cause. A state summary such as an emotion may classify behavior but may never be cited as its origin. Suppression under an active penalty is not elimination and must be rescored after the penalty lapses. Self-reports of private events are themselves operant behavior under audience control and inherit its distortions. The weaknesses are equally clear. The system is almost entirely qualitative: functional relations are asserted and illustrated rather than fitted, base rates come from pigeons and rats in boxes, and the extrapolation to governments and cultures proceeds by analogy and plausibility rather than by measurement at scale. Skinner also brackets physiology deliberately, which keeps the analysis clean but leaves the mechanism between condition and behavior unspecified. A modern engine should therefore take the grammar as its schema and its vetoes as modeling law, while supplying from data the parameters Skinner never estimated: the actual rates, decay constants, schedule sensitivities and transfer gradients for each subject and domain.  Consider how much of the later machinery is already contained in the decision to measure rate. Once frequency under specified conditions is the datum, a schedule of reinforcement is no longer a detail of procedure but a law-generating variable: continuous reinforcement builds fast and extinguishes fast, intermittent reinforcement builds slower and dies hard, ratio schedules drive high rates with a pause after each payoff, interval schedules settle into scallops or steadiness depending on their variability. Skinner treats these not as curiosities of the pigeon box but as the hidden wiring of wages, grades, gambling and social approval, and the analysis earns its keep each time a familiar institution turns out to be running one of his schedules without knowing it. Discrimination adds the second great complication: behavior is not simply strong or weak, it is strong here and weak there, because reinforcement has been correlated with occasions. The three-term contingency is therefore the smallest complete statement of environmental control, and most practical failures of control are failures to specify one of its terms. The treatment of emotion shows the same discipline applied to the territory where mentalism feels safest. Fear, anger and love survive as adjectives classifying probability patterns; as nouns naming inner engines they are discharged. Anxiety, the emotion with the clearest practical cost, is fully generated by a conditioned aversive stimulus and needs no further ingredient. When the book reaches the controlling agencies, the analysis becomes an audit instrument. Government leans on punishment and therefore manufactures escape, evasion and anxiety as predictable by-products. Religion maintains behavior with conditioned reinforcers and threats deferred beyond verification. Psychotherapy is largely the repair of damage done by earlier contingencies, especially punishment. Economic control works through the generalized reinforcer of money, whose power is exactly its indifference to any single deprivation. Education is the deliberate construction of discriminative repertoires. In each case the agency is not condemned or praised in moral vocabulary; it is described by the contingencies it arranges, and its long-run effects, including the counter-control it provokes in those it controls, are derived from those contingencies. That derivation of counter-control is one of the book's most modern ideas: control is never one-directional for long, because the controlled organism's behavior, escaping, avoiding, revolting, is itself part of the controller's environment. The final chapters simply refuse to stop the regress at the individual. A culture is the sum of such arrangements, practices persist because of what they do for the group that carries them, and designing a culture is presented as an engineering problem whose criterion, survival, Skinner himself flags as contestable. The honesty about that criterion matters. Having spent twenty-nine chapters insisting that values cannot substitute for analysis, he does not smuggle a value in at the end; he names survival as the value his analysis can operationalize and leaves its defense open.",
+   "retrocausal_genealogy": "The genealogy runs from nineteenth-century reflex physiology through Pavlov, whose conditioned reflex replaced psychic secretion with an objective history of pairings, and Thorndike, whose Law of Effect first stated that consequences stamp behavior in. Watson's behaviorism supplied the polemical frame, Darwin the continuity between human and animal behavior that licenses the laboratory extrapolation, and Skinner's own Behavior of Organisms of 1938 supplied the operant chamber, the rate of responding as datum, and most of the experimental results the 1953 book popularizes. Behind these stand older debates about free will and determinism that the opening chapters consciously reenact, with Copernicus and Darwin as precedents for a science that demotes human self-importance.",
+   "theory_of_mind": "Skinner believes his reader's verbal behavior has been conditioned by a community that explains action with minds, traits, feelings and intentions, and that these idioms feel like explanations precisely because they are fluent. His model of the problem is therefore pedagogical and therapeutic at once: the reader is not stupid but miscued, holding a repertoire that works for polite conversation and fails for prediction and control. The book is written as a shaping program for that repertoire, introducing each technical term only after the laboratory operation that defines it, and repeatedly translating a familiar mentalistic sentence into the conditions it conceals, until the reader begins to perform the translation unaided.",
+   "cross_layer_veto": "Three vetoes constrain every other layer of interpretation. First, the explanatory-fiction veto: nothing inferred solely from behavior may be used to explain that behavior, which kills trait, drive and mood explanations wherever they appear, including in the engine's own feature lists. Second, the punishment veto: an intervention that merely suppresses while it is applied has not reduced the stock of behavior, so any layer claiming durable change from penalties alone is overruled until post-penalty data arrive. Third, the privacy veto: reports of inner events are operant behavior shaped by listeners, so no layer may treat introspective or self-reported data as direct observation of causes. Together they force every explanation back to conditions, histories and measured probabilities."
+  }
+ ],
+ "universal_lens": "Read as a general template, the book says that any behaving system, a person, a team, an institution, a market, can be understood by listing the conditions under which its actions become more or less probable and the consequences that have historically followed those actions. Character, culture and mood dissolve into bookkeeping: what was rewarded, on what schedule, in whose presence, after what deprivation, under what threat. The template is deliberately austere. It trades the richness of inner narrative for variables that can be observed, counted and rearranged, and it predicts that systems explained in its terms can be redesigned, while systems explained by essences can only be praised or blamed.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book is a methods text. It teaches how to run a functional analysis of any human performance domain: pick a measurable class of behavior, record its frequency under specified conditions, and vary one condition at a time. Its warnings transfer directly to research practice. Do not let a label for an outcome pose as its cause, do not mistake suppression of an error under supervision for its elimination, and do not trust self-reports of process when the reporting itself is rewarded. Its schedule and shaping results also give the Institute a tested vocabulary for designing practice, feedback and incentive systems whose effects can be verified rather than assumed.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the book supplies the reasoning skeleton underneath prediction. Forecasts are probabilities under stated conditions, built from each actor's history of contingencies: what a team or player has been rewarded for doing, on what schedule, against which opponents, after what rest or deprivation, and under what aversive pressure. The three-term contingency becomes the atomic record for every play and decision, context, action, consequence. The vetoes do daily work: no explaining a performance by confidence or momentum as inner causes, no treating a slump suppressed under one matchup as cured, and no overweighting what participants say about their own states. Where the engine needs numbers Skinner never had, his grammar says exactly which numbers to go and measure."
+}

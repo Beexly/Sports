@@ -1,0 +1,772 @@
+{
+ "book_id": "faf8da5ed8778a2d",
+ "source_status": "COMPLETE",
+ "source_note": "Allen B. Downey, Think Complexity: Complexity Science and Computational Modeling, 2nd edition, Version 2.6.4 (title page of the local file), Green Tea Press, Needham, Massachusetts; copyright page dated 2016 in the local file; the catalog dates this copy 2018. The local file is the publisher's free PDF (Creative Commons Attribution-NonCommercial-ShareAlike 4.0), 6363424 bytes, sha256 over (str(size) + full file bytes) = faf8da5ed8778a2df16a877c8850cb516d99ff96d030134c0fcfd0b5ef6e4b40, book_id faf8da5ed8778a2d. Extracted text: 8790 lines, clean machine extraction; names with combining diacritics (Erdos, Renyi, Barabasi) and one garbled figure-adjacent passage in Section 7.3 were avoided as quote sources. Front matter notes a third edition in progress; Chapter 12 carries the author's version 2.6.4 note that its code inverted survival and death probabilities and that a revised chapter supersedes its results. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "complexity_science_definition",
+   "name": "Complexity science studies systems with many interacting components using discrete, rule based computational models",
+   "verbatim_quote": "Complexity science is an interdisciplinary field — at the intersection of math-\nematics, computer science and natural science — that focuses on complex\nsystems, which are systems with many interacting components.",
+   "page": "Preface (book p. xi); extracted text line 197",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Systems of interest have many components whose interactions cannot be ignored",
+    "Discrete models (graphs, cellular automatons, agent simulations) can represent the systems of interest"
+   ],
+   "breakdown_regime": "Breaks down for systems with few components and simple interactions, where classical equation based models (celestial mechanics) are strictly better",
+   "domain": "complexity foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine scope rule: any target system (a game, a season, a player network) is represented as components plus interactions first, and single actor summaries are treated as projections of that interaction system, not as the system itself.",
+    "source_operator": "complexity_science_definition",
+    "telemetry": "Rosters, matchup assignments, play by play interaction records, schedule and venue context feeds"
+   }
+  },
+  {
+   "primitive_id": "axes_of_scientific_models",
+   "name": "Scientific modeling is shifting along axes from equation based analysis toward discrete, stochastic, heterogeneous simulation",
+   "verbatim_quote": "Classical models tend to be based on continuous\n    mathematics, like calculus; models of complex systems are often based\n    on discrete mathematics, including graphs and cellular automatons.",
+   "page": "Section 1.2 (book p. 4); extracted text line 576",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The axes describe gradual shifts in consensus, not abrupt or complete replacements",
+    "More complicated models are not necessarily better; the book warns the generalizations should not be taken too seriously"
+   ],
+   "breakdown_regime": "The axes are generalizations with exceptions in both directions; treating them as laws rather than trends misclassifies hybrid models",
+   "domain": "philosophy of modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine model registry classifies every model on these axes (equation vs simulation, continuous vs discrete, deterministic vs stochastic, homogeneous vs heterogeneous) so a claim is only benchmarked against models of the same class.",
+    "source_operator": "axes_of_scientific_models",
+    "telemetry": "Model inventory metadata, per model input and output schemas, model class tags in the registry"
+   }
+  },
+  {
+   "primitive_id": "erdos_renyi_connectivity_threshold",
+   "name": "Erdos-Renyi random graph connectivity has a sharp threshold at p* = (ln n)/n",
+   "verbatim_quote": "In an ER graph, the probability that the graph is connected is very low when\np is small and nearly 1 when p is large.",
+   "page": "Section 2.3 (book p. 16); extracted text line 1007",
+   "latex": "p^* = \\frac{\\ln n}{n}",
+   "symbol_and_unit_ledger": {
+    "p^*": "critical edge probability at the connectivity transition (dimensionless)",
+    "n": "number of nodes in the graph (count)",
+    "ln": "natural logarithm"
+   },
+   "assumptions": [
+    "Edges form independently with the same probability p for every pair of nodes",
+    "The graph is undirected and n is large enough for the threshold behavior to show"
+   ],
+   "breakdown_regime": "Finite small graphs blur the transition; the result is asymptotic in n and says nothing about structured (non random) graphs",
+   "domain": "random graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Connectivity audits on interaction graphs: as edges (shared snaps, targets, defensive assignments) accumulate over a season, graph connectivity crosses a sharp threshold near p* = ln n / n, so early season graphs are fragmented and late season graphs suddenly informative; the engine gates graph features by which side of the threshold the sample sits on.",
+    "source_operator": "erdos_renyi_connectivity_threshold",
+    "telemetry": "Snap counts per player pair, targets and routes per coverage shell, cumulative edge counts per week"
+   }
+  },
+  {
+   "primitive_id": "reachable_nodes_linear_order",
+   "name": "Reachability scanning (connectedness test) runs in O(n + m) time in nodes plus edges",
+   "verbatim_quote": "Therefore, the order of growth for this function is O(n + m), which is a con-\nvenient way to say that the run time grows in proportion to either n or m,\nwhichever is bigger.",
+   "page": "Section 2.8 (book p. 24); extracted text line 1386",
+   "latex": "O(n + m)",
+   "symbol_and_unit_ledger": {
+    "n": "number of vertices (nodes) in the graph (count)",
+    "m": "number of edges in the graph (count)"
+   },
+   "assumptions": [
+    "Graph access via neighbor lists; set membership and list pop from the end are constant time",
+    "Each edge is counted twice, once from each endpoint, in the stack additions"
+   ],
+   "breakdown_regime": "The naive stack version adds each node once per neighbor; hash collisions or non constant membership structures degrade the stated order",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "All reachability and shortest path features over player and team graphs are budgeted at O(n + m); a feature job that exceeds a linear scan in nodes plus edges is treated as an implementation error, not scaled up blindly.",
+    "source_operator": "reachable_nodes_linear_order",
+    "telemetry": "Graph sizes per feature job, runtime profiles per pipeline stage"
+   }
+  },
+  {
+   "primitive_id": "watts_strogatz_rewiring_model",
+   "name": "Watts-Strogatz model: rewire each ring lattice edge with probability p, interpolating between regular (p=0) and random (p=1) graphs",
+   "verbatim_quote": "The probability that an edge is rewired is a parameter, p, that controls how\nrandom the graph is. With p = 0, the graph is regular; with p = 1 it is\ncompletely random.",
+   "page": "Section 3.2 (book p. 28); extracted text line 1543",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The starting graph is a regular ring lattice with even degree k",
+    "Rewiring forbids self loops and multiple edges"
+   ],
+   "breakdown_regime": "WS graphs have almost no degree variability (standard deviation 1.5 vs 52.4 in the Facebook data), so the model fails wherever the degree distribution matters; that failure motivates the BA model",
+   "domain": "network models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "League interaction structure is modeled as clustered local groups (divisions, repeated opponents) plus a small number of long range ties (cross conference games, traded players, shared coaches); a few rewired edges collapse path lengths, which is why scheme innovations and information spread faster than schedule locality suggests.",
+    "source_operator": "watts_strogatz_rewiring_model",
+    "telemetry": "Schedule graph, coaching tree links, player movement between teams, common opponent edges"
+   }
+  },
+  {
+   "primitive_id": "clustering_coefficient_definition",
+   "name": "Local clustering coefficient: the fraction of the k(k-1)/2 possible edges among a node's neighbors that actually exist, averaged over nodes",
+   "verbatim_quote": "The next step is to compute the clustering coefficient, which quantifies the\ntendency for the nodes to form cliques.",
+   "page": "Section 3.5 (book p. 33); extracted text line 1702",
+   "latex": "C_u = \\frac{\\text{existing edges among neighbors of } u}{k(k-1)/2}",
+   "symbol_and_unit_ledger": {
+    "C_u": "local clustering coefficient of node u (dimensionless fraction, 0 to 1)",
+    "k": "number of neighbors of node u (count)",
+    "k(k-1)/2": "number of possible edges among the neighbors of u (count)"
+   },
+   "assumptions": [
+    "Node degree k is at least 2, otherwise the coefficient is undefined and returned as NaN",
+    "The graph is undirected, so neighbor relations are symmetric"
+   ],
+   "breakdown_regime": "Undefined for degree below 2; sampling based estimates for large graphs trade accuracy for speed and can mislead on small samples",
+   "domain": "network metrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Local clustering on matchup graphs measures triadic closure among units that share opponents; high clustering with short paths flags a schedule pocket where results are mutually reinforcing and less independent than they look, so the engine discounts correlated wins inside dense clusters.",
+    "source_operator": "clustering_coefficient_definition",
+    "telemetry": "Opponent overlap matrices, shared opponent results, division game density"
+   }
+  },
+  {
+   "primitive_id": "ws_small_world_regime",
+   "name": "Small world regime: at small rewiring p, mean path length collapses quickly while clustering decays slowly, so graphs have both high clustering and short paths",
+   "verbatim_quote": "As p increases, the mean path length drops\nquickly, because even a small number of randomly rewired edges provide short-\ncuts between regions of the graph that are far apart in the lattice.",
+   "page": "Section 3.7 (book p. 36); extracted text line 1877",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Averages are taken over repeated random graphs (20 iterations per p in the book experiment)",
+    "The replicated experiment uses n=1000 and k=10"
+   ],
+   "breakdown_regime": "The regime is a property of the WS construction; real networks also need degree variability and a clustering mechanism the pure model lacks",
+   "domain": "network models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A tiny number of cross cluster links changes global distances while local structure persists; the engine therefore treats single bridge events (a star player trade, a coordinator hire) as capable of reordering league wide matchup distances without changing local cluster statistics.",
+    "source_operator": "ws_small_world_regime",
+    "telemetry": "Trade and hire events, cross conference results, strength of schedule bridge games"
+   }
+  },
+  {
+   "primitive_id": "bfs_requires_deque",
+   "name": "Breadth-first search requires a deque: popping the first element of a list is linear time, deque popleft is constant time, restoring O(n + m)",
+   "verbatim_quote": "In Python, popping the last element of a list\ntakes constant time, but popping the first element is linear in the length of\nthe list.",
+   "page": "Section 3.9 (book p. 39); extracted text line 1986",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A deque supports constant time insertion and removal at both ends",
+    "The traversal visits nodes in first in first out order, which is what makes it breadth first"
+   ],
+   "breakdown_regime": "Using list pop(0) makes BFS O(n m), much worse than O(n + m); the deque fix restores the order but constant overheads still matter at small n",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Breadth first traversals in the engine use deque semantics; list pop(0) patterns are treated as latent quadratic bugs in any graph feature code and are flagged in review.",
+    "source_operator": "bfs_requires_deque",
+    "telemetry": "Code review checks on traversal code, traversal runtimes on large graphs"
+   }
+  },
+  {
+   "primitive_id": "dijkstra_requires_bfs_order",
+   "name": "Dijkstra's shortest path algorithm is correct only when nodes are processed in distance order, which is exactly what BFS provides",
+   "verbatim_quote": "But this argument only works if we process all nodes with distance 1 before\nwe start processing nodes with distance 2, and so on. And that’s exactly what\nBFS does.",
+   "page": "Section 3.10 (book p. 41); extracted text line 2105",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "All edges have equal (unit) length in the simplified version; the general version requires non negative edge lengths",
+    "Nodes are processed in nondecreasing distance order, which BFS guarantees for unit edges"
+   ],
+   "breakdown_regime": "Fails under depth first processing order and fails with negative edge lengths; first discovery is only a shortest path under level order",
+   "domain": "graph algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any layered expansion in the engine (injury cascade depth, scheme influence hops, depth chart contagion) is only valid if layers are processed in strict distance order; out of order relaxation silently corrupts distance features, so the engine asserts BFS order in tests.",
+    "source_operator": "dijkstra_requires_bfs_order",
+    "telemetry": "Unit tests on distance features, cascade depth distributions"
+   }
+  },
+  {
+   "primitive_id": "heavy_tailed_power_law",
+   "name": "Heavy-tailed distributions: many small values and a few very large ones; a power law distribution obeys PMF(k) ~ k^-alpha, a straight line on log-log axes",
+   "verbatim_quote": "Distributions like this, with many small values and a few very large values,\nare called heavy-tailed.",
+   "page": "Section 4.4 (book p. 53); extracted text line 2490",
+   "latex": "\\mathrm{PMF}(k) \\sim k^{-\\alpha}",
+   "symbol_and_unit_ledger": {
+    "PMF(k)": "fraction of nodes with degree k (probability, dimensionless)",
+    "k": "degree (count)",
+    "alpha": "power law exponent (dimensionless)"
+   },
+   "assumptions": [
+    "The power law form is asymptotic: it describes the tail for large k, not the whole distribution",
+    "All power law distributions are heavy tailed, but not all heavy tailed distributions follow a power law"
+   ],
+   "breakdown_regime": "Power law fits are tail only; PMF log-log plots are noisy enough to fake straight lines, which is why the book switches to CDF and CCDF views",
+   "domain": "distributions",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player and team performance quantities are screened for heavy tails before any mean based summary is trusted; when the log-log PMF is near linear, the engine reports quantiles and tail probabilities instead of averages, because the average is dominated by rare extremes.",
+    "source_operator": "heavy_tailed_power_law",
+    "telemetry": "Per player game logs, explosive play rates, scoring margin distributions per season"
+   }
+  },
+  {
+   "primitive_id": "barabasi_albert_preferential_attachment",
+   "name": "Barabasi-Albert model: growth plus preferential attachment (new edges prefer high degree vertices) generates scale-free networks with power law degree distributions",
+   "verbatim_quote": "Preferential attachment: When a new edge is created, it is more likely to\n     connect to a vertex that already has a large number of edges.",
+   "page": "Section 4.5 (book p. 55); extracted text line 2574",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The network grows one vertex at a time from a small seed graph instead of starting at fixed size",
+    "Attachment probability is proportional to current degree (the rich get richer rule)"
+   ],
+   "breakdown_regime": "BA graphs have clustering near zero (0.037 vs 0.61 in the Facebook data), so the model fails wherever triadic closure matters",
+   "domain": "network models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Attention and usage concentration (targets, touches, coverage focus) is modeled as growth with preferential attachment: established high usage players attract further usage, so breakout prediction must separate genuine skill change from attachment dynamics that would have grown the share anyway.",
+    "source_operator": "barabasi_albert_preferential_attachment",
+    "telemetry": "Target and touch shares over time, snap share trajectories, new player entry dates"
+   }
+  },
+  {
+   "primitive_id": "ccdf_power_law_test",
+   "name": "Complementary CDF method: CCDF(x) = 1 - CDF(x), and a power law PMF implies a power law CCDF, straight on log-log axes with slope -alpha; CDFs are less noisy than PMFs",
+   "verbatim_quote": "CDFs are better for visualization because they are less noisy than PMFs. Once\nyou get used to interpreting CDFs, they provide a clearer picture of the shape\nof a distribution than PMFs.",
+   "page": "Section 4.7 (book p. 59); extracted text line 2781",
+   "latex": "\\mathrm{CCDF}(x) \\equiv 1 - \\mathrm{CDF}(x), \\qquad \\mathrm{CCDF}(x) \\sim \\left(\\frac{x}{x_m}\\right)^{-\\alpha}",
+   "symbol_and_unit_ledger": {
+    "CCDF(x)": "fraction of values greater than x (probability, dimensionless)",
+    "CDF(x)": "fraction of values less than or equal to x (probability, dimensionless)",
+    "x": "value (degree, count)",
+    "x_m": "minimum possible value of the distribution (count)",
+    "alpha": "power law exponent (dimensionless)"
+   },
+   "assumptions": [
+    "The CCDF is computed from the same sample as the CDF and PMF",
+    "The straight line test applies to the tail above the minimum value x_m"
+   ],
+   "breakdown_regime": "For small values the BA model visibly departs from the data CDF; a straight CCDF tail does not validate the body of the distribution",
+   "domain": "statistical method",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Distribution claims in the engine are validated on CCDF log-log plots rather than PMF plots; a claimed power law must show a straight CCDF tail with a stable slope before any tail extrapolation is allowed.",
+    "source_operator": "ccdf_power_law_test",
+    "telemetry": "Historical distribution fits, fitted exponents per metric per season, tail residual diagnostics"
+   }
+  },
+  {
+   "primitive_id": "explanatory_model_argument_by_analogy",
+   "name": "An explanatory model is an argument by analogy: system S shows observable O because S is similar to model M, M exhibits behavior B, and B is similar to O",
+   "verbatim_quote": "At its core, this is an argument by analogy, which says that if two things are\nsimilar in some ways, they are likely to be similar in other ways.",
+   "page": "Section 4.8 (book p. 62); extracted text line 2903",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "There is a correspondence between the elements of the model and the elements of the system",
+    "Every model abstracts away details judged unimportant, and many models of the same system are possible"
+   ],
+   "breakdown_regime": "Argument by analogy is not a proof; competing models can explain the same observable (weak ties versus hubs for small worlds) and analogy alone cannot choose between them",
+   "domain": "philosophy of modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every engine explanation is stored in the four step explanatory form (system, observable, model, analogous behavior) so an explanation can be audited for where the analogy is load bearing and where it is decoration; competing models for the same observable are kept side by side instead of collapsed.",
+    "source_operator": "explanatory_model_argument_by_analogy",
+    "telemetry": "Explanation records per projection, model comparison logs, analogy audit notes"
+   }
+  },
+  {
+   "primitive_id": "wolfram_four_classes",
+   "name": "Wolfram's classification: 1-D CA behavior falls into four classes, from Class 1 (uniform patterns) through Class 2 (nested structure) and Class 3 (randomness) to Class 4 (complex, universal)",
+   "verbatim_quote": "Class 1 contains the simplest (and least interesting)\nCAs, the ones that evolve from almost any starting condition to the same\nuniform pattern.",
+   "page": "Section 5.3 (book p. 69); extracted text line 3113",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rules are 1-D, two state, with a three cell neighborhood, giving 256 possible rules",
+    "Classification is by visual inspection of space time patterns"
+   ],
+   "breakdown_regime": "Classification is visual and coarse; boundary cases and long transients can be misclassified, and class membership says nothing about usefulness as a physical model",
+   "domain": "cellular automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Candidate signal generators are triaged into the four behavior classes: uniform (no information), nested periodic (calendar artifacts), pseudo random (noise floor), and structured persistent (candidate signal); only Class 4 like generators earn modeling budget.",
+    "source_operator": "wolfram_four_classes",
+    "telemetry": "Signal classification reports, autocorrelation and pattern persistence statistics per candidate feature"
+   }
+  },
+  {
+   "primitive_id": "rule30_pseudorandomness",
+   "name": "Rule 30 is a Class 3 CA whose center column is statistically indistinguishable from random, making it a pseudo-random number generator",
+   "verbatim_quote": "Programs that produce random-seeming numbers are called pseudo-random\nnumber generators (PRNGs).",
+   "page": "Section 5.4 (book p. 71); extracted text line 3148",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The generator has finite state, so its sequence must eventually repeat with some period",
+    "Statistical tests can only fail to distinguish the sequence from random; they cannot prove true randomness"
+   ],
+   "breakdown_regime": "Any finite state PRNG eventually repeats; weak generators show detectable serial correlations (the original C rand), so passing tests is always provisional",
+   "domain": "randomness",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats any deterministic generator output as pseudo random until it passes statistical randomness screens; Monte Carlo noise floors are estimated with the same suspicion, and apparent patterns inside simulated output are tested against generator artifacts before being read as signal.",
+    "source_operator": "rule30_pseudorandomness",
+    "telemetry": "Simulation seed audits, randomness test summaries for internal generators, noise floor estimates per simulation"
+   }
+  },
+  {
+   "primitive_id": "rule110_turing_completeness",
+   "name": "Rule 110 is Turing complete (proved by Matthew Cook, 1998): its spaceships act as signals and their collisions as logic gates",
+   "verbatim_quote": "Several 1-D CAs, most\nnotably Rule 110, are Turing complete, which means that they can compute\n\f74                                     Chapter 5      Cellular Automatons\n\n\n\n\n                  Figure 5.4: Rule 110 after 100 time steps.\n\nany computable function.",
+   "page": "Section 5.6 (book p. 73); extracted text line 3243",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Spaceships can be treated as signals that propagate through space and collisions as gates computing AND and OR",
+    "The CA is unbounded in space and time so arbitrary computations have room to run"
+   ],
+   "breakdown_regime": "Universality is an existence result: computation via spaceship collisions is extremely inefficient and says nothing about predicting the CA itself",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Simple local rule systems inside the engine (play sequencing rules, substitution rules, foul and fatigue accumulation) cannot be dismissed as too simple to matter; the engine assumes local rules can compose into arbitrary complexity and tests compositions rather than rules in isolation.",
+    "source_operator": "rule110_turing_completeness",
+    "telemetry": "Rule interaction test suites, emergent pattern logs from simulation runs"
+   }
+  },
+  {
+   "primitive_id": "principle_of_computational_equivalence",
+   "name": "Wolfram's principle of computational equivalence: almost all processes that are not obviously simple attain the maximal (universal) level of computational power",
+   "verbatim_quote": "Almost all processes that are not obviously simple can be viewed\n      as computations of equivalent sophistication.",
+   "page": "Section 5.7 (book p. 76); extracted text line 3340",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Classes 1 and 2, and in a sense Class 3, count as obviously simple",
+    "The claim is about the natural world, not only abstract models, which is what makes it stronger than the Church-Turing thesis"
+   ],
+   "breakdown_regime": "With qualifiers like almost and obviously simple undefined, the principle risks unfalsifiability, as the book's falsifiability discussion implies",
+   "domain": "computability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "When several unrelated subsystems (weather, injuries, scheme, attention dynamics) all reach similar behavioral complexity, the engine stops searching for a single master variable and budgets for interacting universal class dynamics instead.",
+    "source_operator": "principle_of_computational_equivalence",
+    "telemetry": "Cross subsystem complexity comparisons, failed single variable explanation logs"
+   }
+  },
+  {
+   "primitive_id": "falsifiability_criterion",
+   "name": "Popper's falsifiability: a hypothesis is scientific only if a practical experiment could contradict it if it were false; unfalsifiable hypotheses have no consequences and cannot guide prediction",
+   "verbatim_quote": "A hypothesis is falsifiable if there is\nan experiment, at least in the realm of practicality, that would contradict the\nhypothesis if it were false.",
+   "page": "Section 5.8 (book p. 77); extracted text line 3370",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The contradicting experiment must be at least in the realm of practicality",
+    "A hypothesis with no observable consequences would be unfalsifiable by construction"
+   ],
+   "breakdown_regime": "Philosophers of science do not generally accept falsifiability as a complete solution to the demarcation problem (Exercise 5.5)",
+   "domain": "philosophy of science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A narrative feature enters the engine only with a stated observation that would refute it; narratives that accommodate every outcome (momentum, chemistry, revenge games) are stored as unfalsifiable and given zero weight until operationalized into refutable form.",
+    "source_operator": "falsifiability_criterion",
+    "telemetry": "Feature registry with refutation conditions, post season falsification reviews"
+   }
+  },
+  {
+   "primitive_id": "cross_correlation_operation",
+   "name": "Cross-correlation: c_k = sum over n of a_{n+k} w_n for a window w of length N, computed by numpy.correlate and used to implement CA steps",
+   "verbatim_quote": "The NumPy correlate function takes an array, a, and a “window”, w, with\nlength N and computes a new array, c, where element k is the following sum-\nmation:",
+   "page": "Section 5.11 (book p. 82); extracted text line 3560",
+   "latex": "c_k = \\sum_{n=0}^{N-1} a_{n+k} \\cdot w_n",
+   "symbol_and_unit_ledger": {
+    "c_k": "k-th element of the cross-correlation of a and w (units of a times units of w)",
+    "a": "input array (values)",
+    "w": "window of length N (weights)",
+    "N": "window length (count)"
+   },
+   "assumptions": [
+    "Window length N is fixed and no longer than the array",
+    "With mode same, zeros are padded at both ends so the result has the same size as the array"
+   ],
+   "breakdown_regime": "mode valid shrinks the output; correlation is not convolution (the window is not flipped), and sum only (totalitic) windows cannot express position dependent rules",
+   "domain": "numerical methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The correlate operation is the engine workhorse for sliding window pattern matching over time series (rolling form, fatigue curves, usage ramps); windows are specified once and reused across metrics so window semantics stay comparable across features.",
+    "source_operator": "cross_correlation_operation",
+    "telemetry": "Rolling window statistics per player and team, window length registry"
+   }
+  },
+  {
+   "primitive_id": "game_of_life_rules",
+   "name": "Conway's Game of Life rules: a live cell survives with 2 or 3 live neighbors and dies otherwise; a dead cell is born with exactly 3 neighbors (Moore neighborhood)",
+   "verbatim_quote": "If a cell is alive, it stays alive if it has 2 or 3 neighbors, and\ndies otherwise. If a cell is dead, it stays dead unless it has exactly 3 neighbors.",
+   "page": "Section 6.1 (book p. 89); extracted text line 3817",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The grid is treated as infinite or wrapped, so edge effects are ignored",
+    "All cells update synchronously from the same previous state"
+   ],
+   "breakdown_regime": "Most rule choices for 2-D CAs stabilize quickly or grow unboundedly; GoL sits in a narrow band Conway selected deliberately so his unbounded growth conjecture would not be obviously true or false",
+   "domain": "cellular automata",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local threshold rules with survival and birth bands are the template for roster and lineup ecology features: a unit persists when its support sits in a middle band and collapses under isolation or overcrowding, which the engine mirrors in rotation stability and injury replacement analysis.",
+    "source_operator": "game_of_life_rules",
+    "telemetry": "Lineup continuity minutes, rotation overlap matrices, replacement player performance deltas"
+   }
+  },
+  {
+   "primitive_id": "reaction_diffusion_gray_scott",
+   "name": "Gray-Scott reaction-diffusion: two chemicals diffuse (ra, rb), react at rate A B^2 consuming A and producing B, with feed rate f replenishing A and kill rate (f+k) removing B; rate ratios produce spots, stripes, and coral patterns",
+   "verbatim_quote": "The term A * B**2 represents the rate that A and B react with each other.\nAssuming that the reaction consumes A and produces B, we subtract this term\nin the first equation and add it in the second.",
+   "page": "Section 7.2 (book p. 105); extracted text line 4380",
+   "latex": "A \\leftarrow A + r_a c_A - AB^2 + f(1-A), \\qquad B \\leftarrow B + r_b c_B + AB^2 - (f+k)B",
+   "symbol_and_unit_ledger": {
+    "A": "concentration of the first chemical (dimensionless, usually 0 to 1)",
+    "B": "concentration of the second chemical (dimensionless, usually 0 to 1)",
+    "r_a": "diffusion rate of A (0.5 in the book simulations)",
+    "r_b": "diffusion rate of B (0.25 in the book simulations, about half of r_a)",
+    "f": "feed rate, how quickly A is added (dimensionless rate)",
+    "k": "kill rate, how quickly B is removed (dimensionless rate)",
+    "c_A": "diffusion term for A: neighborhood average difference from the kernel (concentration units)",
+    "c_B": "diffusion term for B (concentration units)"
+   },
+   "assumptions": [
+    "Concentrations stay between 0 and 1 as long as the rate parameters are not too high",
+    "The reaction consumes A and produces B, so the reaction term is subtracted in the A update and added in the B update"
+   ],
+   "breakdown_regime": "Patterns depend sensitively on f and k; outside the studied parameter regions the system produces uniform or chaotic fields, and Turing's biological claim remains likely but not proven",
+   "domain": "physical modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Spatial spread processes on the field (coverage shells reacting to motion, pressure propagation across an offensive line) are prototyped as two component reaction diffusion systems with feed and kill rates, giving the engine a pattern formation prior: spots, stripes, and coral like structures arise from rate ratios, not from central control.",
+    "source_operator": "reaction_diffusion_gray_scott",
+    "telemetry": "Player tracking spatial densities, pressure arrival maps, coverage rotation timings"
+   }
+  },
+  {
+   "primitive_id": "percolation_phase_transition",
+   "name": "Percolation phase change: the probability of a top to bottom percolating cluster jumps from near 0 at q=0.55 to about 70 percent at q=0.60 to near 1 at q=0.65, with critical value near 0.59",
+   "verbatim_quote": "When p=0.55, the probability of a percolating cluster is near 0. At p=0.60, it\nis about 70%, and at p=0.65 it is near 1. This rapid transition suggests that\nthere is a critical value of p near 0.6.",
+   "page": "Section 7.4 (book p. 111); extracted text line 4556",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cells are porous independently with probability q; only the four cell von Neumann neighborhood transmits wetness",
+    "The simulation runs to a fixed point before percolation is judged"
+   ],
+   "breakdown_regime": "Above the critical value the cluster is compact with dimension 2; well below it the wet region scales with dimension 1; the fractal regime exists only near criticality",
+   "domain": "critical phenomena",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Connectivity dependent outcomes (a drive sustaining through a defense, a pass rush reaching the quarterback through a line) are modeled with a critical porosity threshold; near the threshold, small changes in one blocker or one rusher flip the outcome class, so the engine raises uncertainty near estimated critical points instead of interpolating smoothly.",
+    "source_operator": "percolation_phase_transition",
+    "telemetry": "Per play blocking win rates, pressure path existence per snap, drive continuation rates by defensive porosity estimates"
+   }
+  },
+  {
+   "primitive_id": "fractal_dimension_box_counting",
+   "name": "Box-counting fractal dimension: Rule 18's pattern scales with slope about 1.57 on a log-log plot of cell count vs time steps, a non integer (fractal) dimension between line (1) and area (2)",
+   "verbatim_quote": "Finally, for Rule 18 (right), the estimated slope is about 1.57, which is clearly\nnot 1, 2, or any other integer. This suggests that the pattern generated by\nRule 18 has a “fractional dimension”; that is, it is a fractal.",
+   "page": "Section 7.5 (book p. 113); extracted text line 4683",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cell counts are measured over a range of scales where the log-log plot is straight",
+    "Boundary artifacts are ignored; the Cell1D implementation used does not wrap around"
+   ],
+   "breakdown_regime": "Estimated dimension depends on the fitting range; in the sand pile analysis the level 3 estimate is indistinguishable from 2, so single estimates can overclaim fractality",
+   "domain": "fractal geometry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scaling exponents are estimated by box counting on spatial and temporal patterns (route tree occupancy, play distribution across field zones); a non integer exponent flags a self similar structure whose totals cannot be extrapolated linearly across scales.",
+    "source_operator": "fractal_dimension_box_counting",
+    "telemetry": "Zone occupancy counts at multiple resolutions, scaling exponent estimates per team per season"
+   }
+  },
+  {
+   "primitive_id": "self_organized_criticality",
+   "name": "Self-organized criticality: some systems evolve toward a critical state, and stay there, without external control or fine tuning, resolving the puzzle that unstable critical points are common in nature",
+   "verbatim_quote": "Their solution is called self-organized\ncriticality (SOC), where “self-organized” means that from any initial condition,\nthe system moves toward a critical state, and stays there, without external\ncontrol.",
+   "page": "Section 8.1 (book p. 119); extracted text line 4842",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Critical states are normally unstable and need active control, which is the puzzle SOC answers",
+    "The system is driven slowly (one grain at a time) and relaxes fully between perturbations"
+   ],
+   "breakdown_regime": "The sand pile model is not a good model of actual sand (momentum matters), so SOC explains a category of systems, not the literal pile; finite size cuts off the largest avalanches",
+   "domain": "critical phenomena",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Systems that self organize to criticality (fatigue accumulation, penalty cascades, scoring runs) are modeled as critical state systems: the engine expects heavy tailed event sizes from them by default and does not search for a special cause for the largest events.",
+    "source_operator": "self_organized_criticality",
+    "telemetry": "Scoring run size distributions, penalty and turnover cascade sizes, injury cluster timing"
+   }
+  },
+  {
+   "primitive_id": "sandpile_toppling_kernel",
+   "name": "Sand pile toppling rule: a cell whose slope exceeds K (usually 3) topples, decreasing by 4 and adding 1 to each of four neighbors (kernel [[0,1,0],[1,-4,1],[0,1,0]]), producing avalanches with heavy tailed sizes and durations",
+   "verbatim_quote": "During each time step, each cell\nis checked to see whether it exceeds a critical value, K, which is usually 3. If\nso, it “topples” and transfers sand to four neighboring cells; that is, the slope\nof the cell is decreased by 4, and each of the neighbors is increased by 1.",
+   "page": "Section 8.2 (book p. 120); extracted text line 4856",
+   "latex": "\\begin{pmatrix} 0 & 1 & 0 \\\\ 1 & -4 & 1 \\\\ 0 & 1 & 0 \\end{pmatrix}",
+   "symbol_and_unit_ledger": {
+    "K": "toppling threshold on cell slope (usually 3, slope units)",
+    "-4": "slope shed by a toppling cell per toppling event (grains)",
+    "1": "slope gained by each of the four von Neumann neighbors per toppling event (grains)",
+    "0": "no direct transfer to diagonal or farther cells (grains)"
+   },
+   "assumptions": [
+    "Perimeter cells are held at slope 0, so sand spills off the edge and the system is open",
+    "All cells above threshold topple synchronously in each step"
+   ],
+   "breakdown_regime": "Finite grids truncate avalanches; the size and duration distributions fall away from the power law above about 100, which may be a finite size effect or a genuinely non power law tail",
+   "domain": "critical phenomena",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Load redistribution features use the toppling kernel directly: when a local load (snaps, carries, defensive attention) exceeds a threshold, the excess is shed to neighbors in fixed quanta, generating avalanche statistics for workload spillover after injuries or foul trouble.",
+    "source_operator": "sandpile_toppling_kernel",
+    "telemetry": "Snap and touch redistribution after exits, per game load histograms, avalanche size logs in simulation"
+   }
+  },
+  {
+   "primitive_id": "pink_noise_power_spectrum",
+   "name": "Pink (1/f) noise: power spectrum P(f) = 1/f^beta with beta near 1, between white noise (beta=0) and red noise (beta=2); the sand pile toppling signal gives beta about 1.58",
+   "verbatim_quote": "In pink noise, low-frequency\n     components have more power than high-frequency components. Specifi-\n     cally, the power at frequency f is proportional to 1/f .",
+   "page": "Section 8.1 (book p. 120); extracted text line 4831",
+   "latex": "P(f) = \\frac{1}{f^{\\beta}}",
+   "symbol_and_unit_ledger": {
+    "P(f)": "power of the frequency component at f (power units)",
+    "f": "frequency (inverse time)",
+    "beta": "noise exponent (dimensionless): 0 white, near 1 pink, 2 red"
+   },
+   "assumptions": [
+    "The signal is long enough for Welch segment averaging (nperseg 2048 in the book)",
+    "Time units in the model are arbitrary, so frequencies are in arbitrary units"
+   ],
+   "breakdown_regime": "Short signals give noisy spectra; Welch parameters trade frequency resolution against estimate quality, and beta between 1 and 2 is a range, not a sharp classification",
+   "domain": "signal processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Time series features are screened with power spectra; a slope near minus one on the log-log spectrum marks long memory pink noise, which the engine handles with long window baselines instead of short window averages that mistake slow drift for recent change.",
+    "source_operator": "pink_noise_power_spectrum",
+    "telemetry": "Per player performance time series, spectral slope estimates, baseline window selection logs"
+   }
+  },
+  {
+   "primitive_id": "schelling_emergent_segregation",
+   "name": "Schelling segregation result: agents content with 3 of 8 similar neighbors (p=0.3) end up in neighborhoods with 6 or 7 of 8 similar, 76 percent segregation from 50 percent at random start",
+   "verbatim_quote": "Remember that when p=0.3 the agents would be happy if 3 of 8 neighbors\nwere their own color, but they end up living in neighborhoods where 6 or 7 of\ntheir neighbors are their own color, typically.",
+   "page": "Section 9.3 (book p. 146); extracted text line 5881",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Agents are happy when at least 30 percent of their neighbors are similar (the p=0.3 runs)",
+    "Unhappy agents move to a uniformly random empty cell; about 10 percent of cells are empty"
+   ],
+   "breakdown_regime": "The model demonstrates a possible cause of segregation, not the actual cause in any real city; the agents are a wild simplification of real people",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Aggregate patterns (a team identity, a consensus projection, a locker room split) are never read back as individual intent; the engine requires a micro rule model that could generate the aggregate from mild local preferences before any intent based explanation is admitted.",
+    "source_operator": "schelling_emergent_segregation",
+    "telemetry": "Aggregate pattern registry with candidate micro rule generators, preference threshold sensitivity sweeps"
+   }
+  },
+  {
+   "primitive_id": "sugarscape_lognormal_wealth",
+   "name": "Sugarscape wealth result: with finite lifespans and replacement, the stationary wealth distribution is right skewed and approximately lognormal (25th percentile about 10, median about 20, 75th about 40, max above 150)",
+   "verbatim_quote": "On a log scale the shape of the distribution resembles a Gaussian or normal\ndistribution, although the right tail is truncated. If it were actually normal on\na log scale, the distribution would be lognormal, which is a heavy-tailed dis-\ntribution.",
+   "page": "Section 9.5 (book p. 150); extracted text line 6073",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Agents have finite lifespans (uniform 60 to 100 steps) and are replaced on death, keeping the population constant",
+    "Vision, metabolism, and initial endowment are drawn uniformly and independently"
+   ],
+   "breakdown_regime": "Without finite lifespans the wealth distribution is not stationary and nothing specific can be claimed about it; the lognormal resemblance has a truncated right tail",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Resource accumulation in sports systems (usage, salary cap share, draft capital) is expected to skew lognormal even under fair rules, because multiplicative advantages compound; the engine compares observed concentration against the Sugarscape null before attributing concentration to skill or mismanagement.",
+    "source_operator": "sugarscape_lognormal_wealth",
+    "telemetry": "Usage and cap share distributions per season, null model concentration baselines"
+   }
+  },
+  {
+   "primitive_id": "computational_irreducibility_emergence",
+   "name": "Computational irreducibility: many cellular automatons admit no predictive shortcut, so the only way to get the outcome is to run the system; emergent properties are therefore fundamentally unpredictable in closed form",
+   "verbatim_quote": "But many cellular automatons are computationally irreducible, which\nmeans that there are no shortcuts. The only way to get the outcome is to\nimplement the system.",
+   "page": "Section 9.8 (book p. 155); extracted text line 6264",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Knowing all the rules of a system does not imply a shortcut for predicting it exists",
+    "Analytic solutions give constant time prediction in t; simulation costs time proportional to t, and reliability has a horizon"
+   ],
+   "breakdown_regime": "Some systems do admit shortcuts, analytic or numerical; irreducibility is a property of particular systems, not a universal excuse to stop analyzing",
+   "domain": "emergence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "For matchups flagged computationally irreducible, the engine allocates simulation budget instead of searching for a closed form shortcut, and reports prediction horizons honestly: beyond the reliable horizon it returns distributions with widening intervals rather than point calls.",
+    "source_operator": "computational_irreducibility_emergence",
+    "telemetry": "Simulation budgets per matchup, horizon dependent interval widths, shortcut search failure logs"
+   }
+  },
+  {
+   "primitive_id": "traffic_noise_capacity_collapse",
+   "name": "Traffic jam result: tiny speed noise collapses highway capacity; with 0.1 percent errors capacity falls from 25 to 20 cars, and with 1 percent errors to 10, against the noiseless bound of min(1000/n, 40)",
+   "verbatim_quote": "With 0.1% errors, the capacity of the highway drops from 25 to 20 (by “ca-\npacity” I mean the maximum number of cars that can reach and sustain the\nspeed limit).",
+   "page": "Section 10.2 (book p. 163); extracted text line 6554",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cars drive on a circular one dimensional highway and cannot pass through the car ahead",
+    "Driver behavior is fixed: always request maximum acceleration, with physics clamping speed to [0, 40] and stopping the car if its speed would exceed the gap"
+   ],
+   "breakdown_regime": "The collapse is a property of the fixed simple driver plus noise; better driver strategies (Exercise 10.1) can recover capacity, so it is not a law about highways as such",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Throughput systems with feedback (offensive pace, play volume, drive tempo) lose capacity disproportionately under small noise; the engine models tempo features with an explicit noise term and expects capacity collapse near density thresholds rather than smooth degradation.",
+    "source_operator": "traffic_noise_capacity_collapse",
+    "telemetry": "Pace and play volume by game state, tempo variance, drive outcomes by congestion proxies"
+   }
+  },
+  {
+   "primitive_id": "boids_local_rules",
+   "name": "Boids: flocking emerges from three local behaviors per agent (flock centering, collision avoidance, velocity matching), computed from local information only and combined as weighted acceleration requests",
+   "verbatim_quote": "Flock centering: Move toward the center of the flock.\n\nCollision avoidance: Avoid obstacles, including other Boids.\n\nVelocity matching: Align velocity (speed and direction) with neighboring\n     Boids.",
+   "page": "Section 10.3 (book p. 164); extracted text line 6578",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each Boid uses only local information inside its field of view, set by a radius and an angle",
+    "Behavior outputs are combined as a weighted sum of acceleration requests (avoid 10, center 3, align 1, love 10 in the book code)"
+   ],
+   "breakdown_regime": "Parameter settings change the regime entirely (flock, school, swarm); zeroing a behavior weight can destroy flocking, and the spatial units are arbitrary",
+   "domain": "agent-based models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Group movement features (coverage rotations, pursuit angles, rebound positioning) are modeled as three local rules (centering, avoidance, alignment) with local information only; the engine does not posit a central coordinator when local rules reproduce the observed flocking pattern.",
+    "source_operator": "boids_local_rules",
+    "telemetry": "Player tracking positions and velocities, neighbor radius statistics, alignment order parameters per play"
+   }
+  },
+  {
+   "primitive_id": "evolution_sufficiency_conditions",
+   "name": "Evolution sufficiency result: mutation plus differential survival and reproduction are sufficient to produce increasing fitness, increasing diversity, and a simple form of speciation",
+   "verbatim_quote": "We have seen that mutation, along with differential survival and reproduction,\nis sufficient to cause increasing fitness, increasing diversity, and a simple form\nof speciation.",
+   "page": "Section 11.10 (book p. 189); extracted text line 7568",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Genotypes are binary strings of length N; mutation flips one random bit with probability 0.05 per copy",
+    "Fitness is defined by a fixed landscape during each run segment; without mutation, diversity only decreases"
+   ],
+   "breakdown_regime": "The model is a sufficiency demonstration, not a realistic account of biological evolution, and it does not prove these mechanisms act alone in nature",
+   "domain": "evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Strategy evolution inside the engine (play calling tendencies, scheme fads) is modeled with the minimal sufficient trio: imperfect copying, variation, and differential success; if a scheme spreads, the engine first checks these three channels before invoking genius or conspiracy explanations.",
+    "source_operator": "evolution_sufficiency_conditions",
+    "telemetry": "Scheme adoption curves across teams, copying fidelity estimates from film charting, success differentials per scheme family"
+   }
+  },
+  {
+   "primitive_id": "speciation_cluster_distance",
+   "name": "Speciation criterion for asexual agents: genotype clusters count as distinct species when the distance between clusters (more than 6 bits after a landscape change) far exceeds the mean distance within clusters (near 1 bit)",
+   "verbatim_quote": "clusters are much bigger than the distances between agents in each cluster, so\nwe can interpret these clusters as distinct species.",
+   "page": "Section 11.9 (book p. 188); extracted text line 7562",
+   "latex": "d(\\ell_1, \\ell_2) = \\sum_i \\ell_{1,i} \\oplus \\ell_{2,i}",
+   "symbol_and_unit_ledger": {
+    "d": "distance between two genotypes (bits differing, count)",
+    "ell_1, ell_2": "genotypes: arrays of N binary digits (bits)",
+    "oplus": "exclusive OR: 1 where the bits differ, 0 where they agree"
+   },
+   "assumptions": [
+    "Species are identified as genotype clusters because the agents reproduce asexually, so the interbreeding definition does not apply",
+    "Distance is Hamming distance, the number of differing bits between genotypes"
+   ],
+   "breakdown_regime": "If mutation is too rare after a landscape change the population can go extinct instead of speciating, and the cluster criterion remains a modeling choice for asexual agents",
+   "domain": "evolution",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Team and player archetypes are clustered by Hamming style distances over binary trait vectors; a cluster counts as a distinct archetype only when between cluster distance clearly exceeds within cluster distance, the same criterion the book uses for species.",
+    "source_operator": "speciation_cluster_distance",
+    "telemetry": "Trait vectors per team season, pairwise distance matrices, cluster separation ratios"
+   }
+  },
+  {
+   "primitive_id": "tit_for_tat_strategy",
+   "name": "Tit for tat: cooperate in the first round, then copy the opponent's previous move; successful tournament strategies are nice, retaliating, forgiving, and non-envious",
+   "verbatim_quote": "TFT always cooperates during the first round of\nan iterated match; after that, it copies whatever the opponent did during the\nprevious round.",
+   "page": "Section 12.3 (book p. 195); extracted text line 7801",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Matches are iterated against the same opponent, so a history exists to copy",
+    "Payoffs are Axelrod's: (3,3) mutual cooperation, (5,0) temptation, (1,1) mutual defection, over repeated rounds"
+   ],
+   "breakdown_regime": "In evolving populations TFT is not specially optimal and there is probably no stable optimal strategy; one shot games remove the history TFT needs",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Repeated interaction modules (division rivals meeting twice a year, recurring playoff opponents) use tit for tat as the baseline strategy shape: open cooperative, retaliate once, forgive on return; deviations from this baseline are what the engine measures, not the baseline itself.",
+    "source_operator": "tit_for_tat_strategy",
+    "telemetry": "Repeated matchup histories, first meeting versus rematch behavior deltas, retaliation and forgiveness rates per rivalry"
+   }
+  },
+  {
+   "primitive_id": "prisoners_dilemma_dominance",
+   "name": "Prisoner's Dilemma dominance: with Axelrod payoffs ((C,C)=(3,3), (C,D)=(0,5), (D,C)=(5,0), (D,D)=(1,1)), defection is better for each player no matter what the other does, so rational play produces the mutually worse outcome",
+   "verbatim_quote": "No matter what B does, A is better off defecting. And because the game is\nsymmetric, this analysis is the same from B’s point of view: no matter what\nA does, B is better off defecting.",
+   "page": "Section 12.1 (book p. 192); extracted text line 7689",
+   "latex": "\\begin{pmatrix} (3,3) & (0,5) \\\\ (5,0) & (1,1) \\end{pmatrix}",
+   "symbol_and_unit_ledger": {
+    "rows": "the row player's choice: row 1 cooperate, row 2 defect",
+    "columns": "the column player's choice: column 1 cooperate, column 2 defect",
+    "(x, y)": "payoffs in points: x to the row player, y to the column player (points per round)"
+   },
+   "assumptions": [
+    "Players cannot communicate, negotiate, make promises, or threaten each other",
+    "Each player considers only the immediate goal of minimizing their own sentence (maximizing their own payoff)"
+   ],
+   "breakdown_regime": "The dominance argument collapses under repetition, communication, reputation, or other regarding preferences; real experimental subjects cooperate far more than the rational agent model predicts",
+   "domain": "game theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any two actor incentive table in the engine is first reduced to its dominance structure; when defection dominates for both sides, the engine predicts the mutually worse equilibrium and treats cooperative outcomes as the anomaly requiring a mechanism (repetition, reputation, enforcement).",
+    "source_operator": "prisoners_dilemma_dominance",
+    "telemetry": "Incentive tables for contract, resting, and draft position decisions; equilibrium outcome logs"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "faf8da5ed8778a2d-t1",
+   "think": "Think Complexity is a tour of complexity science conducted entirely through executable models, and its real subject is a method: when a system has many interacting components, build the smallest rule based discrete model that reproduces the puzzling aggregate behavior, run it, and interrogate which of its features are necessary. The book is organized as four movements that share this method. The network movement (Chapters 2 to 4) builds graphs from scratch: the Erdos-Renyi model delivers the first threshold phenomenon, a connectivity transition at p* = ln n / n, and the first algorithm analysis, reachability in O(n + m). Watts-Strogatz rewiring then shows that a handful of long range edges collapse path lengths while clustering survives, producing the small world regime, but the Facebook data exposes the model's failure on degree variability, which motivates Barabasi-Albert growth with preferential attachment and a power law degree distribution. Downey uses the failure productively: the WS model matches clustering and path length but not degree, the BA model matches degree and path length but not clustering, and the reader learns to judge models statistic by statistic, using CDF and CCDF views because PMF plots lie. The cellular automaton movement (Chapters 5 and 6) starts from Wolfram's 256 elementary rules and the four behavior classes, passes through Rule 30's statistical randomness and the determinism debate, and arrives at Rule 110's Turing completeness via spaceships and collisions, then Conway's Game of Life with its gliders, guns, and its own universality proof. Woven through are the philosophy chapters in miniature: computational equivalence, falsifiability, realism versus instrumentalism. The physical modeling movement (Chapters 7 and 8) turns CAs into models of the world: Gray-Scott reaction-diffusion generating animal patterns from two rates and a feed and kill parameter, percolation with its phase change near q of 0.59 and fractal percolating clusters, and the Bak-Tang-Wiesenfeld sand pile, whose toppling kernel produces heavy tailed avalanches, fractal level sets, and a pink noise spectrum with beta about 1.58, the founding example of self-organized criticality. The agent movement (Chapters 9 to 12) moves to decision making components: Schelling's segregation from mild preferences, Sugarscape's lognormal wealth from vision and metabolism lotteries, traffic jams that travel backward and lose most of their capacity to one percent noise, Boids flocking from three local rules, and finally evolution itself, where a random fitness landscape, bit flipping mutation, and differential survival are shown sufficient for adaptation, diversity, and speciation, closing with Prisoner's Dilemma populations where niceness oscillates but stays high. For a reasoning engine the transferable machinery is precise: threshold and phase change thinking instead of smooth interpolation near critical parameters; distribution first diagnostics, with heavy tails checked on CCDF plots before any mean is trusted; generative mechanism checks, where an aggregate pattern must be reproduced by a micro rule model before it is explained; local rule agent simulation for interacting actors whose global behavior has no closed form; and an irreducibility budget, because the book's deepest claim is that for Class 4 systems simulation is not a fallback but the only route to the outcome. The limits are equally clear and Downey states most of them himself. The models are deliberately abstract, so every mapping is an argument by analogy, not a proof, and competing models routinely explain the same observable. Power law claims hold only in tails. The sand pile is a poor model of sand. Schelling shows a possible cause, not the actual one. Chapter 12 in this version carries a known inversion error, flagged by the author's own note in version 2.6.4, where survival probability was treated as death probability, so its cooperation numbers must be read as superseded by the revised chapter he links. Three working habits recur so consistently that they amount to a discipline. First, every claim is tied to a measurement instrument: clustering coefficients and characteristic path lengths for networks, avalanche durations and sizes for the sand pile, mean fitness and mean distance for evolution, niceness and retaliation fractions for cooperation, each computed by an explicit Instrument object that records a metric after every step, so a conclusion is always traceable to a plotted time series rather than an impression. Second, every model is run as a controlled experiment with swept parameters: rewiring probability on a log scale, porosity around the critical point, feed and kill rates across the pattern forming region, preference thresholds in Schelling from 0.2 to 0.5, noise levels in the traffic model at 0, 0.1, and 1 percent, so the reader sees regimes and boundaries, not single runs. Third, every success is immediately followed by the failure that disciplines it: the WS model is confronted with the degree distribution it cannot match, the BA model with the clustering it cannot match, the power law PMF with the CCDF that tests it, the sand pile with real sand, and the cooperation chapter, in this printing, with the author's own erratum. A reasoning engine built on this book therefore inherits not just techniques but an audit trail: sweep the parameter, name the regime, record the metric, publish the failure next to the success. It also inherits a specific stance toward time. Analytic solutions predict in constant time, simulation pays linearly in the horizon, and irreducibility says some systems charge full price; an engine that knows which of its subsystems are Class 4 can budget computation honestly instead of promising shortcuts it does not have, and can widen its uncertainty exactly where the horizon runs out. Used with those cautions, the book is a compact operating system for modeling interacting systems: classify the behavior, find the threshold, plot the distribution correctly, simulate the local rules, and state what would falsify the story.",
+   "retrocausal_genealogy": "The lineage runs through the founding papers of each subfield. Milgram's 1960s letter passing experiment supplies the small world puzzle that Watts and Strogatz answered in Nature in 1998; Barabasi and Albert's 1999 Science paper supplies growth and preferential attachment. Wolfram's early 1980s systematic survey of elementary cellular automatons, building on von Neumann's self reproducing automata, gives the four classes, and Matthew Cook's 1998 proof gives Rule 110 its universality. Conway's 1970 Game of Life, popularized by Martin Gardner, contributes the second universal system. Turing's 1952 morphogenesis paper is the root of reaction-diffusion; Bak, Tang, and Wiesenfeld's 1987 paper founds self-organized criticality; Schelling's 1969 segregation model, Epstein and Axtell's 1996 Sugarscape, Reynolds's 1987 Boids, Axelrod's late 1970s tournaments, and Kauffman's NK landscapes complete the ancestry Downey synthesizes.",
+   "theory_of_mind": "Downey writes as a computer scientist teaching programmers, and his model of the reader is someone who understands by building. He distrusts proof only satisfaction: the Strogatz firefly anecdote is told so that the simulation, which shows synchronization emerging from local visibility, counts as the more interesting explanation even without an ironclad proof. His model of the domain is instrumentalist and pluralist: models are tools judged by purpose, criteria of good science themselves drift over time, and philosophy of science is not decoration but part of modeling practice, which is why falsifiability, realism, holism, and free will get full sections inside a programming book. Every chapter hands the reader runnable code and exercises, because for Downey a model you have not run is a claim you have not tested.",
+   "cross_layer_veto": "This book vetoes several moves that other layers of a reasoning stack are tempted to make. The heavy tail results veto Gaussian summaries: when a distribution is heavy tailed, means and standard deviations are not summaries but distortions. Self-organized criticality vetoes single cause explanations of extreme events: in a critical system the largest avalanche needs no special cause beyond the ordinary dynamics, so post hoc causal stories for outliers are rejected. Schelling vetoes intent inference: an aggregate pattern cannot be read back as the preferences of the individuals who produced it. Falsifiability vetoes narrative features that fit every outcome. Computational irreducibility vetoes demands for closed form prediction of Class 4 systems. And the WS versus BA comparison vetoes one statistic validation: a model matching a single target statistic while failing another is not confirmed, it is located."
+  }
+ ],
+ "universal_lens": "Any system built from many interacting parts can be approached the same way: resist the aggregate description, write down the smallest local rules that might generate it, and run them. Expect thresholds where behavior flips class, distributions with heavy tails where the extreme events carry the information, and patterns that belong to the system rather than to any component. Judge each model per statistic, prefer the representation that makes the tail visible, and treat every explanation as an analogy with named load bearing parts. Where no shortcut exists, simulation is not an approximation of the answer; it is the answer, delivered at the cost of running the world forward one step at a time.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the book as a methods curriculum and a research stance. Its model zoo (random graphs, small world and scale free networks, cellular automatons, percolation, sand piles, agent based models, evolutionary dynamics) becomes the Institute's shared laboratory for studying sports systems as complex systems: leagues as networks, seasons as critical systems, strategies as evolving populations. Its explanatory model discipline, four steps with the analogy made explicit, becomes the Institute's standard for research claims, and its sufficiency demonstrations become the template for showing that a proposed mechanism can in principle generate an observed sports phenomenon before anyone argues that it does.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes working machinery. From the network chapters: matchup and interaction graphs with clustering, path length, and connectivity thresholds gating when graph features are trustworthy. From the distribution chapters: heavy tail screening with CCDF validation before any player metric is averaged, and preferential attachment nulls for usage concentration. From the physical modeling chapters: percolation style threshold uncertainty near critical points and toppling kernels for load redistribution after injuries. From the agent chapters: local rule simulations for group movement and repeated game baselines for rivalries. Over all of it, the engine adopts the book's epistemics: simulate what cannot be solved, state the falsifying observation for every narrative feature, and never explain a large event with a special cause when the system sits at criticality."
+}

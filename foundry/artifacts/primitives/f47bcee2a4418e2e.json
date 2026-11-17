@@ -1,0 +1,743 @@
+{
+ "book_id": "f47bcee2a4418e2e",
+ "source_status": "COMPLETE",
+ "source_note": "Jerome H. Saltzer and M. Frans Kaashoek, Principles of Computer System Design: An Introduction, Part II (Chapters 7-11 plus problem sets), Version 5.0, dated June 24, 2009, Massachusetts Institute of Technology; the published book appeared with Morgan Kaufmann in 2009, and this local file is the authors' open manuscript of Part II, licensed Creative Commons Attribution-Noncommercial-Share Alike 3.0 United States. The front matter confirms Part II contains Chapters 7 (The Network as a System and as a System Component), 8 (Fault Tolerance), 9 (Atomicity), 10 (Consistency), and 11 (Information Security). Local PDF: 6755224 bytes, sha256 over (str(size) encoded + full file bytes) = f47bcee2a4418e2e69bc8bae58e32c033b1b0f5c43916a858ce98b9484f3d63c, book_id = first 16 hex chars. Extracted text is clean and complete (40723 lines) apart from a garbled title-page rendering and normal hyphenation and ligature artifacts; all quotes were verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "propagation_delay_speed_of_light_floor",
+   "name": "Propagation delay is a physical floor set by the finite speed of light and cannot be engineered away",
+   "verbatim_quote": "Using the most direct route, and accounting for the velocity of propagation in real-world communication media, it takes about 20 milliseconds to transmit a signal across the 2,600 miles from Boston to Los Angeles. This time is known as the propagation delay, and there is no way to avoid it without moving the two cities closer together.",
+   "page": "Ch. 7, sec. 7.1, text lines 1337-1343",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The signal travels the most direct route available in a real medium whose propagation velocity is below vacuum light speed.",
+    "The endpoints stay where they are; only path length and medium change the number."
+   ],
+   "breakdown_regime": "The floor binds only the latency component; throughput can still be raised with parallelism and wider channels, so the primitive says nothing about bandwidth-bound work.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any engine stage that waits on a remote source inherits a hard latency floor from distance and medium. The reasoning engine should budget round trips the way this text budgets propagation: a cost that no amount of local cleverness removes, so batching and prefetching beat repeated small synchronous reads.",
+    "source_operator": "propagation_delay_speed_of_light_floor",
+    "telemetry": "Measured round trip times per data source, geographic distance between engine and source, per-call latency histograms."
+   }
+  },
+  {
+   "primitive_id": "end_to_end_argument",
+   "name": "The end-to-end argument: the application knows best, so do not bury function in a lower layer",
+   "verbatim_quote": "In this case, the basic thrust of the end-to-end argument is that the application knows best what its real communication requirements are, and for a lower network layer to try to implement any feature other than transporting the data risks implementing something that isn't quite what the application needed.",
+   "page": "Ch. 7, sec. 7.2, text lines 2814-2824",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The endpoints can observe the full requirement and can reimplement a feature themselves if the lower layer gets it wrong.",
+    "Lower layer help is still allowed as a performance enhancement, never as a correctness substitute."
+   ],
+   "breakdown_regime": "It is an argument to be weighed, not an absolute decision rule; the text itself notes lower layer checksums still earn their keep as performance help.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature placement in the reasoning engine follows the same rule: correctness checks that define whether an output is right belong at the layer that consumes the output, because only that layer knows the real requirement. Intermediate layers may cache, checksum, and prefetch for speed, but the consuming layer must still verify end to end.",
+    "source_operator": "end_to_end_argument",
+    "telemetry": "Where each validation check lives in the pipeline, duplicate-check rates between layers, defects caught only at the consuming layer."
+   }
+  },
+  {
+   "primitive_id": "exponentially_weighted_moving_average",
+   "name": "EWMA: a running average that weights recent measurements more and updates with one recurrence",
+   "verbatim_quote": "In both computer systems and networks there are many situations in which it is useful to know the average value of an endless series of observations. Exponentially weighted moving averages are probably the most frequently used method.",
+   "page": "Ch. 7, Sidebar 7.6, text lines 4897-4935",
+   "latex": "A_{new} = \\alpha A_{old} + (1-\\alpha) M_{new}",
+   "symbol_and_unit_ledger": {
+    "A_{new}": "updated running average, same units as the measurements",
+    "A_{old}": "previous running average",
+    "M_{new}": "latest measurement, in the measured unit (for example milliseconds)",
+    "\\alpha": "decay factor, dimensionless, 0 < alpha < 1; smaller alpha forgets older measurements faster"
+   },
+   "assumptions": [
+    "Measurements arrive as an endless series and only the running value is retained, not the full history.",
+    "A single decay factor is chosen to trade stability against responsiveness."
+   ],
+   "breakdown_regime": "A badly chosen decay factor either lags real regime changes or chases noise; the text warns adaptive techniques are not a panacea and the first estimate still needs a chosen starting value.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine smooths noisy streaming inputs (latency estimates, source reliability scores, rate estimates) with exactly this recurrence: constant memory, one multiply and one add per observation, and a decay factor that is a declared, tunable parameter rather than a hidden constant.",
+    "source_operator": "exponentially_weighted_moving_average",
+    "telemetry": "Per-stream measurement series, chosen decay factors, estimate-versus-next-observation error."
+   }
+  },
+  {
+   "primitive_id": "exponential_backoff_doubling",
+   "name": "Exponential backoff: multiply the retry interval by a constant on each retry, doubling being the sweet spot",
+   "verbatim_quote": "Doubling the value, rather than multiplying by, say, ten, is a good choice because it gets within a factor of two of the \"right\" value quickly without overshooting too much.",
+   "page": "Ch. 7, sec. 7.5, text lines 4934-4942",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Retries are needed because the correct waiting time is unknown in advance and grows under contention.",
+    "Successive timer values multiply by a constant, for example 1, 2, 4, 8, 16 seconds."
+   ],
+   "breakdown_regime": "Backoff does not fix a permanently overloaded resource; it only spreads retries out, and an unlucky first timer value can still collide repeatedly without randomization.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every retry loop in the engine (source polling, timer setting, contention for a shared feed) uses multiplicative rather than fixed or linear retry spacing, with doubling as the default factor, so transient contention decays instead of synchronizing into a retry storm.",
+    "source_operator": "exponential_backoff_doubling",
+    "telemetry": "Retry counts per operation, interval sequences actually used, success rate by retry ordinal."
+   }
+  },
+  {
+   "primitive_id": "window_size_bandwidth_delay_product",
+   "name": "Minimum window size equals round-trip time multiplied by the bottleneck data rate",
+   "verbatim_quote": "If we multiply these two quantities, the product tells us the amount of buffering, and thus the minimum window size, needed to ensure a continuous flow of data.",
+   "page": "Ch. 7, sec. 7.5.6.2, text lines 5420-5428",
+   "latex": "W \\geq RTT \\times R_{bottleneck}",
+   "symbol_and_unit_ledger": {
+    "W": "window size, in bytes or segments in flight",
+    "RTT": "network round-trip time, in seconds",
+    "R_{bottleneck}": "bottleneck data rate, in bytes per second"
+   },
+   "assumptions": [
+    "One bottleneck dominates the path, whether it is the sender, the network, or the receiver.",
+    "The realized data rate equals window size divided by round-trip time until it reaches the bottleneck rate."
+   ],
+   "breakdown_regime": "Oversizing the window past the product buys no throughput; it only adds buffering delay and load, and draining the pipeline after an error takes longer.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pipeline sizing in the engine is set by the same product: in-flight work should equal measured round-trip latency times the slowest stage's throughput. Smaller starves the bottleneck stage; larger only queues delay and makes error recovery slower.",
+    "source_operator": "window_size_bandwidth_delay_product",
+    "telemetry": "Per-stage throughput, end-to-end latency, in-flight queue depths, drain time after injected faults."
+   }
+  },
+  {
+   "primitive_id": "self_pacing_sliding_window",
+   "name": "Self-pacing: a full sliding window automatically throttles the sender to exactly the bottleneck rate",
+   "verbatim_quote": "Because of these two considerations, the rate at which the window slides adjusts itself automatically to be equal to the bottleneck data rate, a property known as self-pacing.",
+   "page": "Ch. 7, sec. 7.5.6.3, text lines 5446-5455",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acknowledgments return only as fast as the network delivers data, so the acknowledgment stream is a clock driven by the bottleneck itself.",
+    "The sender cannot send the next element until the acknowledgment of the oldest in-window element returns."
+   ],
+   "breakdown_regime": "Self-pacing is lost when the acknowledgment clock breaks, for example when a retransmission timer expires, and the sender must fall back to a restart discipline such as slow start.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine prefers acknowledgment-clocked flow over timer-clocked flow wherever a downstream stage's completion signal exists: completions pace new admissions, so the admission rate tracks the true bottleneck without anyone estimating it.",
+    "source_operator": "self_pacing_sliding_window",
+    "telemetry": "Admission rate versus completion rate per stage, timer-expiry fallbacks, queue growth during pacing loss."
+   }
+  },
+  {
+   "primitive_id": "congestion_collapse_regenerative_overload",
+   "name": "Congestion collapse: overload waste is regenerative, so collapse can sustain itself after load drops",
+   "verbatim_quote": "Congestion collapse is dangerous because it can be self-sustaining. Once temporary congestion induces a collapse, even if the offered load drops back to a level that the resource could handle, the already-induced waste rate can continue to exceed the capacity of the resource, causing it to continue to waste the resource and thus remain congested indefinitely.",
+   "page": "Ch. 7, sec. 7.6.1, text lines 5835-5848",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Overloading the resource creates waste work (abandoned work, retransmissions, restocking) that itself consumes capacity.",
+    "Useful work falls as offered load rises past the knee, unlike the no-waste case where it merely saturates."
+   ],
+   "breakdown_regime": "Collapse needs the waste feedback loop; a resource that sheds overload cleanly degrades to saturation instead. Delay itself is not removable by management, only redistributed among waiters.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats overload as a stability problem, not a capacity problem: any stage whose overload generates retry or rework traffic can enter a self-sustaining collapse, so load shedding and admission control are correctness mechanisms, and the primary goal of resource management is to avoid collapse rather than to be fair.",
+    "source_operator": "congestion_collapse_regenerative_overload",
+    "telemetry": "Offered load versus useful completions per stage, waste-work fraction, recovery time after load spikes."
+   }
+  },
+  {
+   "primitive_id": "aimd_sawtooth_damping",
+   "name": "Additive increase and multiplicative decrease: gentle probing up, sharp halving on loss, strongly damps oscillation",
+   "verbatim_quote": "The long and variable feedback delays that inevitably accompany lost packet detection by the use of duplicate acknowledgments induce oscillations (as evidenced by the sawteeth) but the additive increase—multiplicative decrease algorithms strongly damp those oscillations.",
+   "page": "Ch. 7, text lines 6286-6294",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Loss is the congestion signal, detected through duplicate acknowledgments or timer expiry.",
+    "Independent senders cooperate by all following the same increase and decrease rules."
+   ],
+   "breakdown_regime": "The scheme was adopted because it works in practice, not because it was systematically analyzed; non-cooperating flows that ignore the rules can capture unfair share.",
+   "domain": "networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rate adaptation in the engine follows the asymmetric rule: probe upward additively when things succeed, cut multiplicatively on the first sign of overload. Symmetric rules oscillate; the asymmetry is what damps the loop when feedback is delayed and noisy.",
+    "source_operator": "aimd_sawtooth_damping",
+    "telemetry": "Window or rate trajectories per flow, loss events, oscillation amplitude before and after rule changes."
+   }
+  },
+  {
+   "primitive_id": "fault_error_failure_chain",
+   "name": "Fault, error, failure: a fault causes an error, and an unmasked error at an interface is a failure",
+   "verbatim_quote": "Not producing the intended result at an interface is the formal definition of a failure.",
+   "page": "Ch. 8, sec. 8.1, text lines 7810-7825",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The module has a specification against which its interface behavior can be judged.",
+    "A fault may stay latent indefinitely; it only matters when activated into an error."
+   ],
+   "breakdown_regime": "Formal specifications are rare in practice, so error discovery is often ad hoc; without a spec, the fault-error-failure chain cannot be applied mechanically.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's defect vocabulary follows the chain exactly: latent defects in data or code are faults, corrupted intermediate values are errors, and a wrong published output is a failure. Detection investment goes at interfaces, because that is where errors become failures and where masking is still possible.",
+    "source_operator": "fault_error_failure_chain",
+    "telemetry": "Defect logs classified by stage of the chain, interface check hit rates, failures traced back to originating faults."
+   }
+  },
+  {
+   "primitive_id": "fail_fast_module",
+   "name": "Fail-fast: detect the error and report it at the interface instead of emitting questionable output",
+   "verbatim_quote": "Detect and report the error at its interface, producing what is called a fail-fast design. Fail-fast subsystems simplify the job of detection and masking for the next higher-level subsystem.",
+   "page": "Ch. 8, sec. 8.1, text lines 7845-7852",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The module can detect its own errors reliably enough to report them.",
+    "A module that correctly reports questionable output has met its specification and has not failed."
+   ],
+   "breakdown_regime": "Fail-fast modules can still fail silently by not noticing their own errors; the property depends entirely on the quality of internal detection.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine components are built fail-fast: a stage that detects bad input or an internal inconsistency reports it at its interface and emits nothing downstream, converting a potential silent corruption into an explicit signal the next layer can mask, retry, or route around.",
+    "source_operator": "fail_fast_module",
+    "telemetry": "Per-stage error reports, silent-corruption incidents discovered downstream, mean distance between fault origin and detection."
+   }
+  },
+  {
+   "primitive_id": "fail_stop_indistinguishability",
+   "name": "Fail-stop: halting limits propagation, but a stopped module is hard to distinguish from a slow one",
+   "verbatim_quote": "A problem with fail-stop design is that it can be difficult to distinguish a stopped subsystem from one that is merely running more slowly than expected.",
+   "page": "Ch. 8, sec. 8.1, text lines 7853-7862",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The higher-level subsystem detects the stop indirectly, typically by setting a timer and responding to its expiration.",
+    "The problem is particularly acute in asynchronous systems with unbounded delays."
+   ],
+   "breakdown_regime": "Any timeout choice trades false failure declarations against slow detection; there is no setting that separates stopped from slow with certainty in an asynchronous system.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Liveness judgments in the engine carry this limit explicitly: a silent source is declared down only as a timeout decision with a stated false-positive cost, never as a fact, and recovery paths are designed to tolerate a supposedly dead component turning out to be merely slow.",
+    "source_operator": "fail_stop_indistinguishability",
+    "telemetry": "Timeout settings per source, false-down declarations, late arrivals from declared-down components."
+   }
+  },
+  {
+   "primitive_id": "availability_mttf_mttr_mtbf",
+   "name": "Availability equals MTTF divided by MTBF, with MTBF the sum of MTTF and MTTR",
+   "verbatim_quote": "The sum of these two statistics is usually called the mean time between failures (MTBF).",
+   "page": "Ch. 8, sec. 8.2, text lines 8032-8062",
+   "latex": "\\mathrm{Availability} = \\frac{\\mathrm{MTTF}}{\\mathrm{MTTF} + \\mathrm{MTTR}} = \\frac{\\mathrm{MTTF}}{\\mathrm{MTBF}}",
+   "symbol_and_unit_ledger": {
+    "MTTF": "mean time to failure, in time units (hours)",
+    "MTTR": "mean time to repair, in time units (hours)",
+    "MTBF": "mean time between failures, equal to MTTF + MTTR, in time units",
+    "Availability": "fraction of time the system operates properly, dimensionless between 0 and 1"
+   },
+   "assumptions": [
+    "Statistics are gathered over observed run-fail-repair cycles, so the measures are backward-looking.",
+    "Using them to predict the future assumes past samples adequately represent future behavior."
+   ],
+   "breakdown_regime": "For very reliable components MTTF cannot be measured directly in reasonable time, so proxies are used and the availability estimate inherits the quality of the proxy; ensemble averages can also differ from time averages when repair itself wears the system.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Service targets for engine components are set in these terms: downtime can be bought down either by raising MTTF or by cutting MTTR, and the equation prices the trade. Fast detection and restart (low MTTR) often buys the same availability as far more expensive failure prevention.",
+    "source_operator": "availability_mttf_mttr_mtbf",
+    "telemetry": "Per-component failure and repair timestamps, computed MTTF and MTTR, realized availability versus target."
+   }
+  },
+  {
+   "primitive_id": "memoryless_exponential_reliability",
+   "name": "Constant failure rate gives exponential reliability R(t) = e^(-t/MTTF), a memoryless process",
+   "verbatim_quote": "This reliability function is said to be memoryless, which simply means that the conditional failure rate is independent of how long the component has been operating.",
+   "page": "Ch. 8, sec. 8.2.2, text lines 8284-8292",
+   "latex": "R(t) = e^{-t/\\mathrm{MTTF}}",
+   "symbol_and_unit_ledger": {
+    "R(t)": "reliability, the probability the module has not yet failed by time t, dimensionless",
+    "t": "elapsed operating time, in time units",
+    "MTTF": "mean time to failure, in the same time units as t",
+    "e": "base of the natural logarithm"
+   },
+   "assumptions": [
+    "The conditional failure rate is constant over the interval of interest, the flat middle of the bathtub curve.",
+    "With constant rate, the conditional failure rate is the inverse of the MTTF."
+   ],
+   "breakdown_regime": "Real components follow a bathtub curve with infant mortality and wear-out, so the exponential is misappropriated when a quoted MTTF is inverted for a component whose rate is not constant.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Survival estimates for engine components and data sources use the exponential only where a roughly constant hazard has been observed; where hazard rises with age or drops after burn-in, the engine tracks the empirical hazard instead of inverting a headline MTTF.",
+    "source_operator": "memoryless_exponential_reliability",
+    "telemetry": "Age-at-failure distributions per component class, empirical hazard curves, forecast versus realized survival."
+   }
+  },
+  {
+   "primitive_id": "redundancy_in_time_and_space",
+   "name": "Mask errors with redundancy in time for transient faults and redundancy in space for persistent ones",
+   "verbatim_quote": "When an error is thought to be transient, as when a packet is lost in a data communication network, one method of masking is to resend it, an example of redundancy in time.",
+   "page": "Ch. 8, sec. 8.4, text lines 8643-8652",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The designer can classify expected faults as transient or persistent well enough to pick the cheaper redundancy axis.",
+    "Detection comes first: redundancy masks only errors that the design anticipates and detects."
+   ],
+   "breakdown_regime": "Redundancy applied to an undetected or unanticipated fault class buys nothing; design effort must start from the anticipated fault list, and common-mode faults defeat identical spatial copies.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine picks its redundancy axis by fault class: retries (time) for transient source failures, independent duplicate sources (space) for persistent ones, and small coded redundancy where a checksum or parity-style check can localize the error before either is spent.",
+    "source_operator": "redundancy_in_time_and_space",
+    "telemetry": "Fault classifications per incident, retry success rates, duplicate-source disagreement rates, cost per masked error."
+   }
+  },
+  {
+   "primitive_id": "hamming_distance_code_separation",
+   "name": "Hamming distance: the minimum number of bit changes separating two legitimate code patterns sets detection and correction power",
+   "verbatim_quote": "The smallest number of bits that must change to transform one legitimate pattern into another is known as the Hamming distance between those two patterns.",
+   "page": "Ch. 8, sec. 8.4.1, text lines 8660-8668",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Legitimate values are encoded as a chosen subset of all possible bit patterns.",
+    "Distance is computed by counting the ones in the XOR of the two patterns."
+   ],
+   "breakdown_regime": "A code with minimum distance 2 detects a single-bit error but cannot correct it; correction needs larger separation, and burst errors can jump the gap entirely.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The separation idea generalizes beyond bits: representations used inside the engine (encodings of states, categories, and identifiers) are chosen so that plausible single-step corruptions land on invalid representations that checks can reject, rather than on other valid values.",
+    "source_operator": "hamming_distance_code_separation",
+    "telemetry": "Encoding tables and their minimum separations, corruption incidents that landed on valid versus invalid representations."
+   }
+  },
+  {
+   "primitive_id": "n_modular_redundancy_voting",
+   "name": "N-modular redundancy: run N replicas in parallel on the same inputs and compare outputs with a voter",
+   "verbatim_quote": "The technique is to substitute in place of a single module a set of replicas of that same module, all operating in parallel with the same inputs, and compare their outputs with a device known as a voter. This basic strategy is called N-modular redundancy, or NMR.",
+   "page": "Ch. 8, sec. 8.4.3, text lines 8944-8952",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Replicas receive identical inputs and operate independently enough that their failures are not perfectly correlated.",
+    "The voter itself is simple enough to be far more reliable than the replicas it judges."
+   ],
+   "breakdown_regime": "The interconnection and voter become the new critical path; if the voter fails or replicas share a design fault, the supermodule fails with them.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Expensive or high-stakes engine computations can be replicated across independent implementations with a voter at the boundary: agreement passes through, disagreement raises an alert and triggers repair of the minority, exactly the fail-vote discipline.",
+    "source_operator": "n_modular_redundancy_voting",
+    "telemetry": "Replica agreement rates, voter alert counts, repair actions triggered per disagreement."
+   }
+  },
+  {
+   "primitive_id": "tmr_reliability_equation",
+   "name": "TMR fail-vote reliability: R_supermodule = 3R^2 - 2R^3 under independent replica failures",
+   "verbatim_quote": "If a majority of the replicas agree on the result, the voter accepts that result and passes it along to the next system component.",
+   "page": "Ch. 8, sec. 8.4.3, text lines 8972-8990",
+   "latex": "R_{supermodule} = R^{3} + 3R^{2}(1-R) = 3R^{2} - 2R^{3}",
+   "symbol_and_unit_ledger": {
+    "R": "reliability of one replica module over the mission interval, dimensionless probability",
+    "R_{supermodule}": "reliability of the triple-modular-redundant supermodule, dimensionless probability",
+    "1-R": "probability that a given replica has failed"
+   },
+   "assumptions": [
+    "Replica fault mechanisms are independent; the equation is the sum of all-three-working and exactly-one-failed cases.",
+    "The voter is treated as perfectly reliable in this calculation."
+   ],
+   "breakdown_regime": "Independence is the fragile assumption: replicas built by the same process can fail identically, and then the voter accepts the wrong result and calls for repair of the one correct replica. Voting helps only when R is already above one half per replica.",
+   "domain": "fault tolerance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Before replicating any engine computation, the engine prices it with this equation: measured per-replica reliability goes in, the supermodule reliability comes out, and replication is adopted only where the equation shows a real gain after accounting for correlated failures.",
+    "source_operator": "tmr_reliability_equation",
+    "telemetry": "Per-implementation reliability estimates, observed correlation of replica failures, predicted versus realized supermodule reliability."
+   }
+  },
+  {
+   "primitive_id": "transaction_two_atomicities",
+   "name": "A transaction is an action that is both all-or-nothing and before-or-after atomic",
+   "verbatim_quote": "The text uses the term \"transaction\" to mean an action that is both all-or-nothing and before-or-after.",
+   "page": "Ch. 9, overview, text lines 11250-11265",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Database designers use atomic mainly for all-or-nothing while hardware architects use it for before-or-after, so the qualified terms avoid the ambiguity.",
+    "Constraints and durability are separate properties that usually presuppose atomicity."
+   ],
+   "breakdown_regime": "Atomicity alone does not maintain application invariants or guarantee durability; those are layered on top in the following chapter.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-step updates inside the engine are packaged as transactions only when both halves hold: failure masking (all-or-nothing) and concurrency isolation (before-or-after). Naming which half a mechanism provides prevents the classic confusion where a mechanism supplies one and is trusted for both.",
+    "source_operator": "transaction_two_atomicities",
+    "telemetry": "Update paths classified by which atomicity halves they implement, incidents traced to a missing half."
+   }
+  },
+  {
+   "primitive_id": "before_or_after_atomicity",
+   "name": "Before-or-after atomicity: concurrent actions must appear to occur completely before or completely after one another",
+   "verbatim_quote": "Concurrent actions have the before-or-after property if their effect from the point of view of their invokers is the same as if the actions occurred either completely before or completely after one another.",
+   "page": "Ch. 9, sec. 9.1, text lines 11736-11740",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Equivalently, the actions are serializable: some serial order of them leads to the same ending state.",
+    "The property is judged from the invokers' point of view, not from internal step interleavings."
+   ],
+   "breakdown_regime": "Serializability still permits anachronisms against external evidence; applications that care need stronger models such as external time consistency or sequential consistency.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Concurrent writers in the engine are judged by this test only: if the observable result matches some serial order, the interleaving was correct, whatever the internal scheduling looked like. Stronger orderings are demanded only where an external observer could catch an anachronism.",
+    "source_operator": "before_or_after_atomicity",
+    "telemetry": "Concurrent update traces, serializability check outcomes, externally observed ordering anomalies."
+   }
+  },
+  {
+   "primitive_id": "commit_point_discipline",
+   "name": "The commit point: one single step divides an all-or-nothing action into a back-out-able phase and a must-finish phase",
+   "verbatim_quote": "The discipline starts by identifying some single step of the sequence as the commit point.",
+   "page": "Ch. 9, sec. 9.2, text lines 12482-12490",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Before the commit point it must always be possible to back out leaving no trace; after it, the action must run to the end successfully.",
+    "Starting and backing out before the commit point is an abort; passing it is a commit, and those are the only two outcomes."
+   ],
+   "breakdown_regime": "Designs with several commit points are possible but deliberately avoided here because they are harder to design and reason about; resources reserved before the point cannot be released until it passes.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every multi-step engine action names its single commit point in advance. Recovery logic then has a binary question after any crash: did the action pass its commit point? Before means erase all trace; after means drive it to completion. No third state is designed in.",
+    "source_operator": "commit_point_discipline",
+    "telemetry": "Action definitions with declared commit points, crash-recovery decisions, actions found in ambiguous states after crashes."
+   }
+  },
+  {
+   "primitive_id": "golden_rule_of_atomicity",
+   "name": "The golden rule of atomicity: never modify the only copy",
+   "verbatim_quote": "The constraint is a version of the golden rule of atomicity (never modify the only copy), known as the write-ahead log (WAL) protocol:",
+   "page": "Ch. 9, sec. 9.3.2, text lines 13283-13290",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A recoverable copy of the old value, or a log record describing the change, exists before the in-place update happens.",
+    "Logging appends while installing overwrites, so the order between them is what preserves recoverability."
+   ],
+   "breakdown_regime": "The rule protects against crashes and aborts, not against a fault that corrupts both the copy and the log together; the log itself needs careful storage.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "No engine component overwrites the sole copy of anything it may need to roll back: derived state is written beside the old state, and the switch to the new state is a separate, later act. This single rule is what makes every other recovery mechanism in the engine possible.",
+    "source_operator": "golden_rule_of_atomicity",
+    "telemetry": "Overwrite sites audited for prior copies, rollback drills, incidents where the only copy was modified."
+   }
+  },
+  {
+   "primitive_id": "write_ahead_log_protocol",
+   "name": "Write-ahead log: log the update before installing it, so recovery can redo or undo from the log after a crash",
+   "verbatim_quote": "The write-ahead-log protocol ensures that if a crash occurs, a recovery procedure can, by consulting the log, systematically find all completed and intended changes to cell storage and either restore those records to old values or set them to new values, as appropriate to the circumstance.",
+   "page": "Ch. 9, sec. 9.3.2, text lines 13290-13297",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An explicit recovery procedure runs after every crash and consults the log before normal operation resumes.",
+    "Each CHANGE log record carries the action identity and the component actions needed to install or reverse the update."
+   ],
+   "breakdown_regime": "Violating the order, installing before logging, destroys recoverability in a way no later step can repair; cache layers must not be allowed to quietly break the protocol.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine state changes are journaled before they are applied: the log record describing intent reaches durable storage first, then the install happens. Post-crash recovery is then mechanical: replay the log, finish committed installs, reverse uncommitted ones.",
+    "source_operator": "write_ahead_log_protocol",
+    "telemetry": "Log-before-install ordering audits, recovery replay counts after crashes, changes found installed but never logged."
+   }
+  },
+  {
+   "primitive_id": "two_phase_locking",
+   "name": "Two-phase locking: locks grow monotonically to the lock point, then shrink, serializing transactions in lock-point order",
+   "verbatim_quote": "The primary constraint is that the transaction may not release any locks until it passes its lock point.",
+   "page": "Ch. 9, sec. 9.5, text lines 14915-14935",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A transaction may use an object as soon as it locks it, but may not release any lock before its lock point.",
+    "A lock manager can enforce the discipline by intercepting all reads and writes and holding locks until commit or abort."
+   ],
+   "breakdown_regime": "Two-phase locking blocks some interleavings that are in fact serializable and correct, and deciding which disciplines allow all correct orderings is NP-complete; deadlock handling is a separate required mechanism.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Concurrency control in the engine follows the two-phase shape: acquire everything you will touch during the growing phase, release only after the decision point. The lock-point order then doubles as the effective serial order, which is what audit and replay logic assumes.",
+    "source_operator": "two_phase_locking",
+    "telemetry": "Lock acquisition and release traces, deadlock incidents, effective serial order versus commit order."
+   }
+  },
+  {
+   "primitive_id": "two_phase_commit_all_or_none",
+   "name": "Two-phase commit: a multiple-site transaction is correct only if all sites commit or all sites abort",
+   "verbatim_quote": "will be achieved if all the sites commit or if all the sites abort; we will have failed if some sites commit their part of a multiple-site transaction while others abort their part of that same transaction.",
+   "page": "Ch. 9, sec. 9.6.3, text lines 15560-15568",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each site can already run local transactions with all-or-nothing and before-or-after atomicity on its own.",
+    "The coordinator and workers communicate unreliably, so the protocol is built from persistent senders and duplicate suppression."
+   ],
+   "breakdown_regime": "Agreement over an unreliable channel cannot be guaranteed in bounded messages; the protocol can block when the coordinator fails at the wrong moment, which is the cost of the all-or-none guarantee.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Cross-component updates in the engine use a coordinator with a prepare phase: every participant first reaches a ready-to-commit state and reports it, and only a complete set of ready reports lets the coordinator commit everyone. A split outcome is defined as protocol failure, not as partial success.",
+    "source_operator": "two_phase_commit_all_or_none",
+    "telemetry": "Prepare and commit message counts (3N in the all-well case), blocked transactions, split-outcome incidents."
+   }
+  },
+  {
+   "primitive_id": "two_generals_dilemma",
+   "name": "The two generals dilemma: common knowledge of agreement is unattainable over a channel that can lose messages",
+   "verbatim_quote": "An important constraint on possible coordination protocols when communication is unreliable is captured in a vivid analogy, called the dilemma of the two generals.",
+   "page": "Ch. 9, sec. 9.6.4, text lines 15816-15820",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Messengers can be captured, so any message or acknowledgment may silently never arrive.",
+    "Each side refuses to act without certainty that the other side received the agreement, which recurses to acknowledgments of acknowledgments."
+   ],
+   "breakdown_regime": "The dilemma bounds what coordination protocols can promise; practical protocols accept probabilistic or eventual agreement instead of certainty.",
+   "domain": "atomicity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine never designs a step that requires certain knowledge that a remote party received and will act on a message. Where coordination matters, it uses persistent resending, duplicate suppression, and idempotent actions, accepting that agreement is approached rather than proven.",
+    "source_operator": "two_generals_dilemma",
+    "telemetry": "Message loss rates per channel, duplicate deliveries suppressed, actions designed to be idempotent versus not."
+   }
+  },
+  {
+   "primitive_id": "constraint_as_invariant",
+   "name": "A constraint is an application-defined requirement that every update preserve a specified invariant",
+   "verbatim_quote": "requirement that every update to a collection of data preserve some specified invariant.",
+   "page": "Ch. 10, sec. 10.1, text lines 16730-16734",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The application, not the storage layer, defines which invariants matter; examples range from table counts matching entries to account sums balancing.",
+    "Transactions are the usual mechanism for maintaining constraints across multi-step updates."
+   ],
+   "breakdown_regime": "An invariant that is never stated cannot be maintained or checked; replica identity is itself one such constraint and is the one most often left implicit.",
+   "domain": "consistency",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine invariants are written down as named constraints with owners, in this exact form: the collection, the invariant, and the updates obliged to preserve it. Constraint checks then run as first-class monitors instead of being rediscovered after each inconsistency incident.",
+    "source_operator": "constraint_as_invariant",
+    "telemetry": "Constraint registry, invariant check results, updates that violated a stated constraint."
+   }
+  },
+  {
+   "primitive_id": "strict_consistency_via_transactions",
+   "name": "Strict consistency: transactions make a system outwardly consistent despite failures and concurrent access",
+   "verbatim_quote": "Applications can maintain strict consistency by using transactions.",
+   "page": "Ch. 10, sec. 10.1, text lines 16786-16790",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both atomicity halves are available; all-or-nothing covers failures and before-or-after covers concurrency.",
+    "Designers strive for strict consistency where inconsistent results cause confusion or serious harm, such as banking and safety-critical systems."
+   ],
+   "breakdown_regime": "Strict consistency can force the system to refuse service while a replica is down, trading availability for the guarantee.",
+   "domain": "consistency",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Wherever an inconsistent intermediate state would be user-visible or decision-relevant, the engine pays for strict consistency with transactions; the outward appearance is the contract, and internal messiness is acceptable only while it stays invisible.",
+    "source_operator": "strict_consistency_via_transactions",
+    "telemetry": "Reads that observed intermediate states, service refusals caused by strictness, incident reviews citing visible inconsistency."
+   }
+  },
+  {
+   "primitive_id": "eventual_consistency_best_effort",
+   "name": "Eventual consistency: the invariant may be violated for an unspecified time, but the system drives toward it once updates stop",
+   "verbatim_quote": "Eventual consistency means that after a data update the constraint may not hold until some unspecified time in the future.",
+   "page": "Ch. 10, sec. 10.1, text lines 16794-16800",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Temporary inconsistency is tolerable for the application and observers can recognize and ignore it.",
+    "Once updates stop occurring, the system makes a best-effort drive toward the invariant."
+   ],
+   "breakdown_regime": "Under continuous update load the convergence moment may never arrive, and observers who cannot tolerate divergence (or cannot recognize it) will be misled.",
+   "domain": "consistency",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine chooses eventual consistency deliberately where availability and loose coupling outrank instant agreement, for example among geographically separated replicas, and pairs the choice with an explicit statement of what an observer may temporarily see.",
+    "source_operator": "eventual_consistency_best_effort",
+    "telemetry": "Replica divergence windows, observer-visible inconsistency reports, time-to-convergence after update bursts."
+   }
+  },
+  {
+   "primitive_id": "reconciliation_replica_drift",
+   "name": "Reconciliation: the mechanism that identifies differences between drifted replicas and corrects them",
+   "verbatim_quote": "The mechanism that identifies such differences and corrects them is known as reconciliation.",
+   "page": "Ch. 10, sec. 10.3, text lines 17228-17234",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Random decay and partial updates cause replicas to drift apart over time, and updates applied to drifted replicas widen the drift.",
+    "A periodic review compares replicas and initiates repairs to keep them identical."
+   ],
+   "breakdown_regime": "Identical implementation faults damage all replicas identically, and reconciliation can neither detect nor correct those errors; it fixes drift, not shared design faults.",
+   "domain": "consistency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Replicas inside the engine are never assumed identical; a standing reconciliation pass compares them, reports divergence as data, and repairs it. Drift rate itself becomes a health metric that exposes decay and partial-update bugs early.",
+    "source_operator": "reconciliation_replica_drift",
+    "telemetry": "Replica comparison results, drift counts per interval, repairs initiated, identical-error incidents reconciliation missed."
+   }
+  },
+  {
+   "primitive_id": "replicated_state_machines",
+   "name": "Replicated state machines: identical machines given the same updates in the same order reach the same new state",
+   "verbatim_quote": "If N identical state machines that all have the same prior state receive and perform the same update requests in the same order, then all N of the machines will enter the same new state.",
+   "page": "Ch. 10, sec. 10.3, Figure 10.2 caption, text lines 17250-17260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The machines start from the same prior state and the updates are deterministic.",
+    "A consensus-achieving module supplies the same update order to every machine."
+   ],
+   "breakdown_regime": "The surrounding operating environment and transient faults can make supposedly identical machines behave differently, which is why reconciliation remains necessary beside the scheme.",
+   "domain": "consistency",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Deterministic replay is the engine's replication backbone: if a component is a pure function of its ordered input log, any replica can be rebuilt by replay, and divergence between replicas localizes the fault to inputs, ordering, or nondeterminism in the component.",
+    "source_operator": "replicated_state_machines",
+    "telemetry": "Replay rebuild tests, divergence points between replicas, sources of nondeterminism found in components."
+   }
+  },
+  {
+   "primitive_id": "complete_mediation",
+   "name": "Complete mediation: every access is explicitly authenticated and authorized, including initialization, recovery, and maintenance paths",
+   "verbatim_quote": "This principle forces every access to be explicitly authenticated and authorized, including ones for initialization, recovery, shutdown, and maintenance.",
+   "page": "Ch. 11, sec. 11.1, text lines 19105-19110",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A foolproof method exists for verifying the authenticity of the origin and data of every request.",
+    "Cached authority-check results are suspect: if authority changes, cached results must be updated."
+   ],
+   "breakdown_regime": "Designing for it is hard because every access path, including ones not exercised in normal operation, must be found and mediated; economy of mechanism is what makes the search feasible.",
+   "domain": "security",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every entry point into the engine, including admin, recovery, and maintenance routes, passes the same authorization check with no side doors. A route that bypasses mediation is treated as a defect even if it is only used internally.",
+    "source_operator": "complete_mediation",
+    "telemetry": "Entry-point inventory versus mediated entry points, cached authorization staleness, bypass findings in reviews."
+   }
+  },
+  {
+   "primitive_id": "fail_safe_defaults",
+   "name": "Fail-safe defaults: base access decisions on permission rather than exclusion, so mistakes fail closed",
+   "verbatim_quote": "Access decisions should be based on permission rather than exclusion. This principle means that lack of access should be the default, and the security scheme lists conditions under which access is permitted.",
+   "page": "Ch. 11, sec. 11.1, text lines 19193-19205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Most users never change defaults, so the default itself is the security posture for most deployments.",
+    "The scheme enumerates the conditions for permitting access rather than the conditions for denying it."
+   ],
+   "breakdown_regime": "Fail-closed defaults can lock out legitimate work when the permission list is incomplete; the failure is at least visible and quickly detected, unlike fail-open mistakes that can go unnoticed.",
+   "domain": "security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine defaults deny: new data sources, new consumers, and new capabilities start with no access and are granted explicitly. Configuration errors then surface as refusals that someone notices, instead of silent overexposure that nobody does.",
+    "source_operator": "fail_safe_defaults",
+    "telemetry": "Default settings audits, access grants added per period, incidents of overexposure versus lockout."
+   }
+  },
+  {
+   "primitive_id": "least_privilege",
+   "name": "Least privilege: programs and users hold special privileges only when necessary, limiting damage from accidents and errors",
+   "verbatim_quote": "This principle limits the damage that can result from an accident or an error. Also, if fewer programs have special privileges, less code must be audited to verify the security of a system.",
+   "page": "Ch. 11, sec. 11.1, text lines 19200-19210",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Privileges can be granted for the duration of a privileged activity and withdrawn for ordinary activity.",
+    "The military need-to-know rule is the same principle in organizational form."
+   ],
+   "breakdown_regime": "Privilege that is left in place for convenience quietly widens the audit surface and the blast radius; the principle fails by erosion rather than by a single bad decision.",
+   "domain": "security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine components run with the narrowest credentials that let them do their job, and elevated rights are scoped to the operation that needs them. The audit burden argument matters as much as the damage argument: fewer privileged components means fewer components whose correctness is security-critical.",
+    "source_operator": "least_privilege",
+    "telemetry": "Credential scopes per component, privileged-code inventory, incidents involving excess privilege."
+   }
+  },
+  {
+   "primitive_id": "cryptographic_hash_function",
+   "name": "A cryptographic hash function maps arbitrary bytes to a fixed-length value that is easy to compute and hard to invert or collide",
+   "verbatim_quote": "A cryptographic hash function maps an arbitrary-sized array of bytes M to a fixed-length value V, and has the following properties:",
+   "page": "Ch. 11, sec. 11.2, text lines 20021-20023",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "For a given input it is easy to compute the hash, but difficult to recover an input from the value or to find a second input with the same value.",
+    "The output is short (typically 160 to 256 bits) yet long enough that collisions can be neglected in practice."
+   ],
+   "breakdown_regime": "Security is computational, not absolute: the functions are designed so breaking them is computationally infeasible, and a stored password hash still invites offline guessing if the password is weak.",
+   "domain": "security",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Integrity checks and stored secrets in the engine use this exact pattern: store and compare hashes rather than raw values, so verification never requires keeping the secret itself, and tampering with stored data shows up as a hash mismatch.",
+    "source_operator": "cryptographic_hash_function",
+    "telemetry": "Hash verification failures, secret-storage audits, algorithm and output-length choices per use."
+   }
+  },
+  {
+   "primitive_id": "guard_reference_monitor",
+   "name": "The guard: decompose the system into a decider and a performer, with one small opening through which all requests pass",
+   "verbatim_quote": "is typically decomposed in two parts: one part, called a guard, that specializes in deciding the answer to the question and a second part that performs the action. (In the literature, a guard that provides complete mediation is usually called a reference monitor.)",
+   "page": "Ch. 11, sec. 11.6, text lines 19360-19370",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "There is really only one way to request an action, so the guard sees every request.",
+    "The guard answers authenticity (who sent it, was it modified) before authorization (is this principal permitted this action on this object), and logs all decisions for later audit."
+   ],
+   "breakdown_regime": "If any path reaches the performer without crossing the guard, mediation is void; the guard itself must be small and simple enough to verify, or it becomes the weakest part.",
+   "domain": "security",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine gateways follow the guard shape: a small, separately auditable component decides, everything else performs. Decision logic never gets embedded inside performers, because then each performer becomes its own unaudited guard.",
+    "source_operator": "guard_reference_monitor",
+    "telemetry": "Request paths audited against the guard, decision logs, authorization logic found inside performing components."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "f47bcee2a4418e2e-t1",
+   "think": "This volume is the second half of Saltzer and Kaashoek's systems textbook, and it is organized as a descent from the most forgiving problem to the least forgiving one. Chapter 7 treats networks, where the core difficulty is physics and sharing: signals take time to arrive, links are shared, and the parameter ranges span orders of magnitude. Chapter 8 treats faults, where the difficulty is that components lie by omission and commission, and the designer must build reliable wholes from unreliable parts. Chapter 9 treats atomicity, where the difficulty is time itself: crashes interrupt multi-step actions and concurrent actions interleave. Chapter 10 treats consistency, where replicas drift and invariants must be maintained or consciously relaxed. Chapter 11 treats security, where the difficulty is an adversary who studies the design looking for the one path the designer forgot. Read as one argument, the book says that a system is a set of modules with interfaces, and that every hard problem in it is a problem about what can be promised at an interface and what machinery makes the promise true.\nThe machinery repeats across chapters in a way that matters for anyone building a reasoning engine. Redundancy is the universal solvent: redundancy in time masks transient faults, redundancy in space masks persistent ones, redundancy in a log makes atomicity recoverable, redundancy in replicas makes storage durable, and redundancy in checks makes mediation believable. But the book is disciplined about the price. Every redundancy scheme rests on an independence assumption, and the text keeps returning to the ways independence fails: replicas built by the same process fail the same way, a voter can be fooled by two identical errors, reconciliation cannot see a fault that damages all copies identically. The second recurring machine is the single decisive point: the commit point of an action, the lock point of a transaction, the guard through which all requests pass. Again and again the design move is to shrink a diffuse question (did it commit, is it authorized, which copy is right) into one place or one instant where the answer is decided and recorded. The third recurring machine is honest measurement: availability, MTTF, MTTR, and the reliability functions exist so that arguments about dependability are settled by counted cycles rather than by adjectives, and the text is blunt that these measures are backward-looking and that proxies degrade them.\nWithin chapters, the mechanisms are also built to compose rather than to compete. Chapter 9 is the clearest case: version histories, logs, and locks are not three rival answers to atomicity but three parts that interlock, with the write-ahead log depending on careful storage from Chapter 8, locking depending on the log to make aborts clean, and two-phase commit depending on single-site transactions already being correct before it tries to make several sites agree. Chapter 10 then shows the same transaction machinery being spent three different ways, on cache coherence, on geographically separated durable replicas, and on occasionally connected devices that must reconcile when they meet again. The lesson for a builder is that infrastructure mechanisms earn their keep by being reused at the next layer up, and that a mechanism which cannot be composed, audited, and reused is probably a local hack wearing a general costume. The war stories that close most chapters enforce the same point from the negative side: the failures that actually happened in running systems were rarely exotic. They were fixed timers that synchronized into collapse, replicas that were not independent, rarely used procedures that nobody had rehearsed, and human error at the console. The authors clearly intend these stories as data, not decoration: a design discipline that does not change how operators behave on their worst day has not finished its job.\nThere are also honest limits to what this volume can teach a modern builder. It gestures at consensus through replicated state machines but does not develop a consensus protocol, so a reader who needs the machinery of modern quorum systems must go elsewhere. Its treatment of eventual consistency predates the later formal work on convergence, so it offers the concept and the reconciliation obligation without a convergence calculus. Its security chapter assumes the adversary is outside the wall and the guard is trustworthy, a posture that supply-chain and insider threats have made harder to hold. None of this diminishes the core: the guarantees, the decisive points, the redundancy axes, and the measurement discipline are stated at a level of abstraction that survives the churn of specific protocols, which is exactly why the text still reads as engineering rather than as history.\nThe deepest habit the book teaches is choosing the strength of a guarantee to match the cost of being wrong. Strict consistency is available, at the price of refusing service when a replica is down. Eventual consistency is cheaper and more available, at the price of observers seeing divergent answers. Two-phase locking is safe, at the price of blocking interleavings that would have been correct. Complete mediation is safe, at the price of finding every path, including the maintenance path nobody uses. The end-to-end argument is the meta-rule for all of these choices: put the function where the knowledge is, let lower layers help with performance, and never let a lower layer's partial version of a check substitute for the check at the point of use. A reasoning engine built on these ideas would treat every signal as a module with an interface contract, every guarantee as a priced option, every redundancy as a bet on independence that must be monitored, and every decisive question as deserving one small, auditable place where it is answered. Where the book breaks is where its era shows: it assumes designers can enumerate faults and access paths in advance, it treats the adversary as external, and its coordination results show that some certainties are simply unavailable, so the mature position it finally teaches is not certainty but explicit, measured, and monitored confidence.",
+   "retrocausal_genealogy": "The lineage runs from the earliest stored-program machines forward. Hamming's codes come from 1950s Bell Labs work on error detection in relay computers. The reliability mathematics descends from wartime and aerospace practice, where bathtub curves and mean times to failure were developed for hardware that could not be repaired in flight. The end-to-end argument was articulated by Saltzer himself with Reed and Clark in 1981, growing out of the ARPANET experience that network-provided reliability never matched what applications actually needed. Two-phase commit and the write-ahead log come from 1970s database work, especially Gray's notes on database operating systems, which also gave the two generals their first printed form. The security principles descend from the 1975 Saltzer and Schroeder paper on the protection of information in computer systems, written in the Multics era, and Kerberos carries the line into networked authentication.",
+   "theory_of_mind": "The authors model the reader as a designer who will be tempted, at every step, to add a mechanism and move on. Their counter-move is to insist that the designer state the guarantee first: what exactly is promised at this interface, under which faults, at what cost. They believe the domain is unforgiving of vagueness because the failures that matter are precisely the ones the designer's mental model skipped: the latent fault, the correlated replica, the maintenance path, the slow module mistaken for a dead one. They also believe the reader over-trusts lower layers and under-prices measurement, so the text repeatedly replaces intuition with a small equation or a counted experiment, and treats every principle as an argument to be weighed rather than a rule to be obeyed.",
+   "cross_layer_veto": "Several ideas in this volume veto comfortable moves at other layers. The two generals result vetoes any design, at any layer, that requires certain knowledge that a remote party received and will act on a message. The end-to-end argument vetoes letting a lower layer's check stand in for verification at the point of use. The TMR analysis vetoes claiming that replication helps when replica failures are correlated or when single-replica reliability is below one half. Fail-stop indistinguishability vetoes treating silence as proof of death. Complete mediation vetoes any unmediated side path, however convenient, and the congestion analysis vetoes solving overload by adding capacity alone when overload itself generates waste work."
+  }
+ ],
+ "universal_lens": "Read as a general template, this volume is about making promises under adversity and pricing them honestly. Any layered enterprise, technical or not, faces the same five adversities in the same order: delay and sharing, component failure, interrupted multi-step work, drifting copies of the truth, and hostile readers of the design. The transferable moves are few and sturdy: detect before you mask, put decisive questions in one small place, buy redundancy on the axis that matches the fault, measure outcomes in counted cycles, and let the party who knows the requirement make the final check. The guarantee is never free, and the mature skill is stating its price in advance.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the volume is a curriculum in dependable reasoning infrastructure. Its measures translate directly into how a research institute should track the dependability of its own pipelines: counted failure and repair cycles for data feeds, explicit invariant registries for derived datasets, reconciliation passes over replicated stores, and security mediation over who can touch research artifacts. The institute also takes the book's epistemic stance: claims about reliability and consistency are published as measurements with stated assumptions, and known limits, such as correlated failure and unprovable message receipt, are taught as first-class results rather than footnotes.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the volume supplies the dependability layer beneath the reasoning layer. Source ingestion inherits propagation floors, self-pacing flow control, backoff, and collapse avoidance. State management inherits transactions with named commit points, write-ahead logging, and two-phase locking. Replica handling inherits strict versus eventual consistency as an explicit per-dataset choice, with reconciliation as a standing process. Access to engine internals inherits the guard shape, complete mediation, fail-safe defaults, and least privilege. None of this predicts anything by itself; it is what makes the predictions the engine does publish survivable, auditable, and honest about their own failure modes."
+}

@@ -1,0 +1,720 @@
+{
+ "book_id": "49903ffc01bdfda0",
+ "source_status": "COMPLETE",
+ "source_note": "Knute K. Rockne, The Four Winners (title page subtitle: the Head, the Hands, the Foot, the Ball), New York: The Devin-Adair Company, copyright 1925, printed in the United States by J. J. Little and Ives Company, New York; Rockne is also billed on the title page as author of Coaching. Local file is a scanned PDF of the 1925 edition: 16,842,056 bytes, sha256 49903ffc01bdfda0fa28214580a2568980a0cc19d33e6cfc98514d30d1db7d9e, book_id 49903ffc01bdfda0 computed as the scan digest over str(size) plus the full PDF bytes. Extracted text file: 423,851 bytes, 66,507 words, 8,359 lines. The work is a novel in twenty chapters; the doctrine is carried in Coach Brown's lectures and in quarterback Elmer Higgins's narration and interior analysis. Front matter (roughly the first 330 text lines) is OCR garbage from library stamps and is unusable; the body text is mostly clean with scattered OCR noise (occasional dropped line-initial letters, T printed for I), so every quote was taken from a clean passage inside one page and proven contiguous in the extracted text file before use. No equations appear anywhere in the work, so latex is empty for every primitive. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "opponent_weakness_mapping",
+   "name": "Map each opposing player to the specific direction or situation he is weak against, and sequence plays to expose it",
+   "verbatim_quote": "found that Maddocks, the left tackle, was weak against plays to the inside while the big right tackle, Mac, though a terror on close plays, was weak against plays to his outside.",
+   "page": "Ch. I; text lines 468-472",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Weaknesses are player-specific and directional, not team-wide averages",
+    "Observation in practice or prior games reveals them reliably"
+   ],
+   "breakdown_regime": "Fails when the scouting sample is small or the opponent has corrected the weakness since it was observed. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "opponent modeling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps a per-player weakness vector rather than a single team rating: each defender carries directional and situational vulnerability tags, and play value is computed against the specific men the play attacks, not against the defense as an average.",
+    "source_operator": "opponent_weakness_mapping",
+    "telemetry": "Per-player play-by-play outcomes split by direction, gap, and situation from charted game data"
+   }
+  },
+  {
+   "primitive_id": "fundamentals_before_specialization",
+   "name": "Blocking and tackling are the backbone of the game; no specialist makes the team on ball skills alone",
+   "verbatim_quote": "Football consists primarily of tackling and blocking and nobody can make this team if all he can do is carry the ball, forward pass or punt.",
+   "page": "Ch. II; text lines 782-784",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A player's value is set by his worst foundational duty, not his best highlight skill",
+    "Foundational work is unselfish and mostly invisible in summaries"
+   ],
+   "breakdown_regime": "Fails as a selection rule when a specialist's edge is so large it outweighs the foundational deficit, a case the text does not consider. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Player grading in the engine weights floor skills (blocking, tackling, assignment soundness) as a gate before ceiling skills (carrying, passing, punting) add value, so a one-skill player cannot grade out as a complete player.",
+    "source_operator": "fundamentals_before_specialization",
+    "telemetry": "Blocking win rates, missed tackle rates, and assignment error counts per player"
+   }
+  },
+  {
+   "primitive_id": "defensive_noncommitment",
+   "name": "On defense, stay alert for everything and do not commit to any single expectation",
+   "verbatim_quote": "What we ought to do is to be alert for everything and not commit ourselves to any one thing.",
+   "page": "Ch. III; text lines 1119-1121",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The offense profits exactly from the defender's premature commitment",
+    "A defender can hold multiple live hypotheses without losing reaction speed"
+   ],
+   "breakdown_regime": "Fails when noncommitment becomes passivity against a predictable offense; against a one-dimensional opponent, committing early is correct. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "defensive decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Defensive projections keep a full distribution over the opponent's next action instead of collapsing to the modal play; a defender or scheme is penalized in the model when its positioning only works against one branch of that distribution.",
+    "source_operator": "defensive_noncommitment",
+    "telemetry": "Opponent play-type frequencies by down, distance, and field position; defender alignment and first-step data"
+   }
+  },
+  {
+   "primitive_id": "eligibility_academic_gate",
+   "name": "A player who does not keep up in his classes is of no use to the school or the team, whatever his playing ability",
+   "verbatim_quote": "you are no good to the school or to me if you don't keep up in your classes.",
+   "page": "Ch. III; text lines 1340-1342",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Availability is a hard precondition that talent cannot override",
+    "The institution's standing outranks any single game"
+   ],
+   "breakdown_regime": "The gate is binary in the text; it gives no graduated response for a player close to the line. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "team governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats eligibility and availability statuses as hard vetoes applied before any projection: a player flagged ineligible or unavailable contributes zero to matchup math regardless of his rated skill, and the flag is stored with the player record rather than applied as an afterthought.",
+    "source_operator": "eligibility_academic_gate",
+    "telemetry": "Eligibility, injury, and availability status feeds joined to the player table before simulation"
+   }
+  },
+  {
+   "primitive_id": "contest_of_wits_selection",
+   "name": "Football is largely a contest of wits, so select first for men who have brains and can use them",
+   "verbatim_quote": "as football today is largely a contest of wits I want men who have them and who can use them.",
+   "page": "Ch. IV; text lines 1409-1410",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decision quality under pressure is the scarcest roster resource",
+    "Physical measurables are common; processing speed and judgment are not"
+   ],
+   "breakdown_regime": "Fails when the physical gap is so large that no decision edge closes it, as the State game nearly shows. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Quarterback and signal-caller evaluation in the engine carries an explicit decision-quality component (correct play selection rate, error rate under pressure) that is scored separately from arm and athletic metrics and can outweigh them.",
+    "source_operator": "contest_of_wits_selection",
+    "telemetry": "Play-call correctness grading, turnover-worthy decisions, and adjustment success by quarterback"
+   }
+  },
+  {
+   "primitive_id": "reflex_automation_through_repetition",
+   "name": "Constant repetition turns correct technique into reflex, and only then does a player become great",
+   "verbatim_quote": "constant repetition of these details will finally produce results, so that they will become part of their reflexes, and when all the correct ways of doing things become part of a man's reflexes then, and only then, does he become a great player.",
+   "page": "Ch. V; text lines 1807-1811",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Technique must be automatic before it survives game speed",
+    "Repetition of the correct detail, not mere repetition, is what automatizes"
+   ],
+   "breakdown_regime": "Fails when the automatized pattern is wrong for a novel situation; reflexes execute fast in the wrong direction too. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "skill acquisition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine models execution error as a function of rehearsal volume: plays and techniques with high measured repetition carry lower variance in projection, and novel or rarely run concepts carry an explicit execution-risk discount.",
+    "source_operator": "reflex_automation_through_repetition",
+    "telemetry": "Practice repetition counts by play and technique, joined to in-game execution error rates"
+   }
+  },
+  {
+   "primitive_id": "hypothetical_game_simulation_training",
+   "name": "Train the quarterback by playing hypothetical games on paper against several prepared defenses, one hour a night, all summer",
+   "verbatim_quote": "I want you to practice playing hypothetical games with these plays all summer against six or seven defenses which I am also giving you on paper.",
+   "page": "Ch. V; text lines 1819-1822",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decision skill can be trained off the field with simulated situations",
+    "The right play should suggest itself once the defense is analyzed, if the mapping has been rehearsed"
+   ],
+   "breakdown_regime": "Paper defenses are static; a live defense that disguises and adjusts breaks the rehearsed mapping. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "skill acquisition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is the direct ancestor of the engine's simulation lane: precompute decision mappings by running the playbook against a library of defensive structures in simulation, so that in the live reasoning pass the correct response to a recognized structure is retrieved rather than derived under time pressure.",
+    "source_operator": "hypothetical_game_simulation_training",
+    "telemetry": "Simulated play outcomes by offensive concept against each defensive structure in the library"
+   }
+  },
+  {
+   "primitive_id": "situational_state_checklist",
+   "name": "Down, yards to gain, field position, wind, score, and time remaining must be ever present in every player's mind, above all the quarterback's",
+   "verbatim_quote": "The question of downs, number of yards to gain, position on the field, direction of the wind, the score, and time left to play must, of course, be ever present in the mind of every man on the team",
+   "page": "Ch. V; text lines 1825-1829",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No play choice is evaluable outside its game state",
+    "State awareness is a trainable habit, not a talent"
+   ],
+   "breakdown_regime": "The checklist is necessary but not sufficient; it names the state variables and gives no weights among them. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The checklist becomes the engine's mandatory state vector: every projection and every play evaluation is conditioned on down, distance, field position, weather and wind, score differential, and clock, and any reasoning trace that omits a state element is incomplete by construction.",
+    "source_operator": "situational_state_checklist",
+    "telemetry": "Play-by-play state fields (down, distance, yard line, score, clock) and weather records for every snap"
+   }
+  },
+  {
+   "primitive_id": "pass_prohibition_set",
+   "name": "Do not pass against an alert defense, and do not pass without an expert passer; the default is prohibition, not permission",
+   "verbatim_quote": "Don't forward pass when the defensive team seems to be alert and looking for it. Don't forward pass unless you have a man executing the pass who has all the qualifications of an expert.",
+   "page": "Ch. VI; text lines 2162-2166",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The pass is a high-variance weapon whose value collapses when expected",
+    "Passer quality is a precondition, not a preference"
+   ],
+   "breakdown_regime": "The prohibition set is era-specific: it assumes a low-completion, high-interception passing game and would strangle a modern high-efficiency passing offense. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "High-variance actions in the engine carry an explicit prohibition layer: an action is suppressed when the defense's expectation of it is high or when the executing player's measured skill is below threshold, and the suppression reason is recorded with the projection.",
+    "source_operator": "pass_prohibition_set",
+    "telemetry": "Defensive tendency expectation rates, passer accuracy and decision grades, interception rates by situation"
+   }
+  },
+  {
+   "primitive_id": "psychological_moment_pass_timing",
+   "name": "Within the prohibitions, the trained instinct of the field caller picks the psychological moment for the pass",
+   "verbatim_quote": "Your instinct will tell you when the psychological moment arrives for a forward pass.",
+   "page": "Ch. VI; text lines 2167-2168",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Some timing information is real but not reducible to the written rules",
+    "Instinct here means pattern recognition built by simulation and repetition, not guesswork"
+   ],
+   "breakdown_regime": "Unfalsifiable as stated; instinct cannot be audited, and the text gives no test for distinguishing it from impulse. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine reserves a bounded discretion zone: after the prohibition layer and the state checklist pass, a learned timing signal (defensive posture drift, expectation decay since the last attempt) may trigger the high-variance action, and the trigger is logged so it can be graded afterward.",
+    "source_operator": "psychological_moment_pass_timing",
+    "telemetry": "Time since last attempt, defensive alignment drift, and expectation indicators per drive"
+   }
+  },
+  {
+   "primitive_id": "credit_to_interference_not_carrier",
+   "name": "Credit on offense belongs to the interference, not the ball carrier; a player who contributes only while carrying is worth practically nothing",
+   "verbatim_quote": "The man who can do nothing, except when he is carrying the ball, the man who, because of his inactivity, causes us to have only ten men on offense when he is not carrying the ball, such a man is worth practically nothing to this team.",
+   "page": "Ch. VI; text lines 2271-2275",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Most of a play's value is created by the ten men without the ball",
+    "A non-contributor turns eleven against eleven into ten against eleven on every other snap"
+   ],
+   "breakdown_regime": "Carried to the extreme it undervalues genuine breakaway talent that creates yards no blocking scheme produces. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "player evaluation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Yards and success in the engine are attributed across the unit: blocking and interference contributions are credited explicitly, and a ball carrier's grade is adjusted for the quality of interference in front of him rather than read off raw yardage.",
+    "source_operator": "credit_to_interference_not_carrier",
+    "telemetry": "Blocking grades, yards before contact versus after contact, and off-ball contribution tracking"
+   }
+  },
+  {
+   "primitive_id": "practice_mistakes_over_accidental_correctness",
+   "name": "Better to make mistakes in practice and profit by them than to do the right thing accidentally and save the mistakes for the big game",
+   "verbatim_quote": "But I'd rather have you make mistakes now and profit by them",
+   "page": "Ch. VI; text lines 2316-2318",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An accidental success teaches nothing and hides a defect",
+    "Practice is the cheap environment for error; the game is the expensive one"
+   ],
+   "breakdown_regime": "Fails if mistake volume destroys confidence or if practice errors are never actually reviewed and corrected. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "skill acquisition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Training and shadow evaluation in the engine prefer informative failures over lucky successes: a model or play that succeeds for the wrong reason is flagged as untested, and error exposure in low-stakes evaluation is treated as information gained, not as a defect in the record.",
+    "source_operator": "practice_mistakes_over_accidental_correctness",
+    "telemetry": "Shadow-run outcome logs with reason traces, separating process grade from result grade"
+   }
+  },
+  {
+   "primitive_id": "best_play_on_first_down",
+   "name": "Use your best play on first down, because success there puts you ahead for the remaining three downs",
+   "verbatim_quote": "Also, don't forget to use your best play on your first down. as this will put you away ahead for your remaining three downs.",
+   "page": "Ch. VII; text lines 2361-2363",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early-down success compounds: it changes the defense's problem on every later down",
+    "Saving the best play for a desperate down wastes its leverage"
+   ],
+   "breakdown_regime": "Fails when the best play is also the one the defense is most prepared for on first down specifically. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "play sequencing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Play sequencing in the engine is evaluated as a series, not as isolated calls: the value of a first-down choice includes the option value it creates for the rest of the series, so concepts are ranked by series outcome, not by single-play gain.",
+    "source_operator": "best_play_on_first_down",
+    "telemetry": "Series-level outcomes by first-down concept, including resulting down and distance distributions"
+   }
+  },
+  {
+   "primitive_id": "sacrificial_probe_quarterback",
+   "name": "Send a reserve quarterback in with two fixed plays and instructions to kick on third down, purely to reveal the defense before the starter enters",
+   "verbatim_quote": "This will give us the key to the entire defensive situation, and will let you, Shorty, go out there having clearly in your mind exactly what to do.",
+   "page": "Ch. VII; text lines 2695-2698",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A defense's response to known probe plays is diagnostic of its whole structure",
+    "One quarter of low-leverage snaps is a fair price for the defensive key"
+   ],
+   "breakdown_regime": "Fails when the opponent recognizes the probe and shows a false defense, or when the sacrificed snaps cost field position the team cannot spare. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "information gathering",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats certain early actions as probes whose return is information, not yardage: a probe is justified when the expected value of the defensive information gained exceeds the expected cost of the snaps spent, and the probe's result updates the opponent model before the main plan commits.",
+    "source_operator": "sacrificial_probe_quarterback",
+    "telemetry": "Defensive response data to scripted early plays; model update deltas after opening drives"
+   }
+  },
+  {
+   "primitive_id": "weak_spot_husbandry",
+   "name": "When you find a weak spot, nurse it: use it rarely, only when needed, and save it for when it will do the most good",
+   "verbatim_quote": "If you find a weak spot, nurse it along, use it just once in a while, when you have to, and try to save it for the time when it will do you most good.",
+   "page": "Ch. VII; text lines 2389-2391",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every use of an exploit teaches the opponent to repair it",
+    "The value of an exploit is highest at the highest-leverage moment"
+   ],
+   "breakdown_regime": "Fails when the game never produces the saved-for moment, or when early exploitation would have changed the game's whole shape. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "play sequencing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exploit usage in the engine is budgeted: each identified matchup exploit carries an exposure cost, because repeated use raises the probability the opponent adjusts, so the optimizer rations the exploit toward high-leverage states instead of spending it on first sight.",
+    "source_operator": "weak_spot_husbandry",
+    "telemetry": "Exploit success rate by times used within a game; opponent adjustment indicators after repeated attacks"
+   }
+  },
+  {
+   "primitive_id": "medical_authority_over_coach",
+   "name": "On injuries, the doctor's word governs absolutely; the coach orders the player to do exactly what the doctor says",
+   "verbatim_quote": "You do just as the doctor tells you",
+   "page": "Ch. IX; text line 3229",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Medical judgment outranks competitive judgment on availability",
+    "A premature return costs more than the absence it was meant to cure, as Elmer's reinjured knee shows in the narrative"
+   ],
+   "breakdown_regime": "The text gives the doctor absolute authority with no second-opinion path; a wrong medical call has no appeal inside the doctrine. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "team governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Availability in the engine is governed by the medical status layer, which no projection or coaching preference can override: a player under a medical restriction is modeled at his restricted capacity or out, and the restriction is a stored status, not a note.",
+    "source_operator": "medical_authority_over_coach",
+    "telemetry": "Injury designations, practice participation levels, and return-to-play timelines per player"
+   }
+  },
+  {
+   "primitive_id": "rules_exploitation_is_legitimate",
+   "name": "Taking any advantage the rules allow, including an intentional safety, is legitimate play, not poor sportsmanship",
+   "verbatim_quote": "and as long as the rules are that way, I don't blame them for taking advantage of them.",
+   "page": "Ch. XII; text lines 4291-4293",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rulebook, not custom or sentiment, defines the legal action space",
+    "A rule a team refuses to use is an advantage handed to opponents who will"
+   ],
+   "breakdown_regime": "Fails where a legal tactic violates a competition's separate conduct or safety provisions, which the text does not address. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "rules and incentives",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's action space is defined by the actual rulebook of the competition, including unintuitive legal options (intentional safeties, clock tactics, formation edge cases), and each is evaluated on its merits rather than filtered out as unsporting.",
+    "source_operator": "rules_exploitation_is_legitimate",
+    "telemetry": "Rulebook-derived situational options with their measured outcomes when used across the league"
+   }
+  },
+  {
+   "primitive_id": "no_sideline_coaching",
+   "name": "The coach does not coach from the sidelines, because doing so robs the players of the opportunity to think for themselves",
+   "verbatim_quote": "He doesn't coach from the side lines, thereby robbing the boys of the opportunity to think for themselves.",
+   "page": "Ch. XIII; text lines 4540-4541",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decision skill only develops where decisions are actually made by the player",
+    "Sideline instruction arrives too late and too coarsely to beat on-field judgment"
+   ],
+   "breakdown_regime": "Fails in the modern game where sideline communication technology makes coach input timely; the doctrine predates it. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "team governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decision rights in the engine's reasoning are pushed to the lowest competent layer: precomputed plans and principles are installed in advance, and live adjustment authority sits with the on-field caller model rather than a central controller that would arrive after the state has changed.",
+    "source_operator": "no_sideline_coaching",
+    "telemetry": "Adjustment latency and success rates for on-field calls versus sideline-directed changes"
+   }
+  },
+  {
+   "primitive_id": "hidden_trump_card_asset",
+   "name": "Keep a decisive asset completely hidden through secret practice until the game it was built for",
+   "verbatim_quote": "Aksarben has beaten us two years in a row, and Higgins here will be my trump card.",
+   "page": "Ch. XIV; text lines 4693-4695",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An asset the opponent cannot scout cannot be prepared for",
+    "Total secrecy is achievable if even the asset's name is never mentioned"
+   ],
+   "breakdown_regime": "Fails if the hidden asset is not actually ready when revealed, or if secrecy corrodes the rest of the team's preparation. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "information control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine models information asymmetry as a real asset class: an unscouted player, formation, or concept carries a surprise premium in projection that decays with every public snap it appears in, so deployment timing is part of its value.",
+    "source_operator": "hidden_trump_card_asset",
+    "telemetry": "Snap counts and film exposure per player and concept before each game; performance delta in first exposure versus later"
+   }
+  },
+  {
+   "primitive_id": "deliberate_public_misdirection",
+   "name": "Deliberately make the team look bad in public practice so opponents scout a false team",
+   "verbatim_quote": "I am purposely going to make you look bad, because I won't give the quarterbacks any plays to use",
+   "page": "Ch. XIV; text lines 4847-4849",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Opponents build their plan from what they are allowed to see",
+    "A degraded public signal is itself a designed signal"
+   ],
+   "breakdown_regime": "Fails when the misdirection also misleads the team's own supporters, selectors, or the players' confidence. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "information control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Public-facing performance data in the engine is treated as adversarially observable: what a team shows in low-stakes settings is modeled as a possibly managed signal, and opponent strength estimates discount performances that the opponent had reason to stage.",
+    "source_operator": "deliberate_public_misdirection",
+    "telemetry": "Performance splits between high-stakes and low-stakes settings; variance between practice reports and game output"
+   }
+  },
+  {
+   "primitive_id": "bench_charting_counterfactual_report",
+   "name": "A benched quarterback charts the game and files a written report of what he would have done in each situation",
+   "verbatim_quote": "I want you to sit on the bench and draw a chart of the game and make a written report to me by Monday, of what you would have done in the various situations",
+   "page": "Ch. XIV; text lines 4934-4937",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Counterfactual decisions, written down, can be graded against what actually happened",
+    "Observation with a decision obligation teaches more than observation alone"
+   ],
+   "breakdown_regime": "Fails when the counterfactual is written with hindsight and never honestly compared to the real caller's information at the time. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "skill acquisition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every engine projection run leaves a counterfactual trace: for each graded situation, what the model would have chosen and why, written before outcomes are known, so later review compares decisions to decisions instead of decisions to results.",
+    "source_operator": "bench_charting_counterfactual_report",
+    "telemetry": "Stored pre-outcome decision traces with state snapshots for post-game grading"
+   }
+  },
+  {
+   "primitive_id": "possession_as_defense_plan",
+   "name": "Against a dangerous opponent, the plan is to hold the ball all afternoon; they cannot beat you while you have it and are scoring",
+   "verbatim_quote": "Our plan next Saturday will be to get hold of the ball and to keep possession of it all afternoon. Aksarben won't be able to beat us as long as we have the ball and are scoring.",
+   "page": "Ch. XV; text lines 5281-5284",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Opponent possessions are the opponent's only scoring resource",
+    "A methodical offense is simultaneously a defensive scheme"
+   ],
+   "breakdown_regime": "Fails when the possession offense stalls: long empty drives still return the ball, and a quick-strike opponent needs few possessions. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "game management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Game plans in the engine are evaluated partly on opponent-possession suppression: a plan's value includes the number and quality of opponent drives it removes from the game, not only the points it projects to score.",
+    "source_operator": "possession_as_defense_plan",
+    "telemetry": "Time of possession, drive counts, and opponent drives per game under each plan profile"
+   }
+  },
+  {
+   "primitive_id": "known_weakness_first_play_attack",
+   "name": "When a defender is known to be helpless against a specific attack, strike him with it on the first play",
+   "verbatim_quote": "We do know, however, that he is absolutely helpless against the forward pass.",
+   "page": "Ch. XV; text lines 5584-5585",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A verified individual weakness is the highest-certainty information a plan can hold",
+    "Striking it immediately also tests whether the scouting was right, at the game's cheapest moment"
+   ],
+   "breakdown_regime": "Fails when the weakness was mis-scouted or was a staged misdirection by the opponent. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "opponent modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's opening script is built from the highest-confidence individual matchup findings: the first actions of a plan target the defender whose measured weakness carries the narrowest uncertainty, which both exploits the weakness and validates the scouting read.",
+    "source_operator": "known_weakness_first_play_attack",
+    "telemetry": "Per-defender weakness confidence intervals from charted coverage and run-fit data"
+   }
+  },
+  {
+   "primitive_id": "tendency_breaking_first_down_pass",
+   "name": "Deliberately violate the standing tendency rules (pass on first down only) when the defense has been built to expect their observance",
+   "verbatim_quote": "Don't forward pass on third down or on second down. In this game, we're going to forward pass on the first down, thus violating all the rules",
+   "page": "Ch. XV; text lines 5589-5591",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A doctrine the opponent has scouted becomes a weapon against him when broken at the chosen moment",
+    "The break works because the rules were genuinely followed before, making the tendency real"
+   ],
+   "breakdown_regime": "Fails when the tendency break becomes its own tendency, or when the broken rule was protecting against a real cost that still applies. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "play sequencing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine tracks its own team's tendencies as the opponent sees them and prices tendency-breaking actions explicitly: an action that contradicts a strong established tendency gains a surprise premium, and the premium is spent only where the targeted weakness justifies it.",
+    "source_operator": "tendency_breaking_first_down_pass",
+    "telemetry": "Own-team tendency tables by down and situation as an opponent would compute them; success rates of tendency-breaking calls"
+   }
+  },
+  {
+   "primitive_id": "single_voice_pregame_policy",
+   "name": "Only the coach talks to the team before the game; no outside speaker, however eloquent, is allowed to disturb a prepared mental state",
+   "verbatim_quote": "but I have made it a policy never to allow anyone to talk to the team except myself.",
+   "page": "Ch. XVI; text lines 5725-5727",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Preparation is completed during the week; nothing said minutes before the game can add skill",
+    "Emotional arousal from outside speakers is a cost, not a fuel"
+   ],
+   "breakdown_regime": "Fails when the team's state genuinely needs an external spark the coach cannot supply. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "team governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's pregame reasoning accepts a single authoritative plan state: late inputs from outside the preparation process are excluded by policy, because the cost of disturbing a settled plan exceeds any marginal information they carry.",
+    "source_operator": "single_voice_pregame_policy",
+    "telemetry": "Input provenance and timing logs for plan changes in the final pregame window"
+   }
+  },
+  {
+   "primitive_id": "divided_scouting_sectors",
+   "name": "Divide scouting into assigned sectors, one observer per question: line play, play selection by field position, interference type, pass defense",
+   "verbatim_quote": "Elmer, on offense I want you to make notes on what plays they use in the various parts of the field, under the varying conditions, so that you can get a definite idea of their tactics and strategy.",
+   "page": "Ch. XVIII; text lines 6389-6392",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One observer watching everything sees nothing in detail",
+    "Each sector needs its observable defined before the game starts"
+   ],
+   "breakdown_regime": "Fails when the sectors miss the interaction between units, which no single assignment owns. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "scouting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Data collection for the engine is sectorized the same way: each scouting or tracking stream has a defined observable (line play, call selection by field zone, blocking scheme type, coverage structure) and the streams are merged only at the reasoning layer, never blurred at collection.",
+    "source_operator": "divided_scouting_sectors",
+    "telemetry": "Sector-tagged charting records: line play grades, call charts by field zone, scheme labels, coverage labels"
+   }
+  },
+  {
+   "primitive_id": "personnel_invariant_over_formations",
+   "name": "Scout the personnel, not the formations: formations will change for you, but the men and their individual proficiency cannot",
+   "verbatim_quote": "It is quite likely that they will change their formations on defense, but their personnel can't change.",
+   "page": "Ch. XVIII; text lines 6436-6438",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Scheme is cheap to change; personnel skill is fixed on game day",
+    "Conclusions drawn at the player level survive scheme changes"
+   ],
+   "breakdown_regime": "Fails against deep rosters where personnel rotation itself changes the unit's properties play to play. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "scouting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Opponent models in the engine are built at the player level first and the scheme level second: projections re-derive the unit's behavior from the actual men available, so a scheme change by the opponent does not invalidate the scouting base.",
+    "source_operator": "personnel_invariant_over_formations",
+    "telemetry": "Player-level proficiency grades independent of scheme; lineup and rotation records"
+   }
+  },
+  {
+   "primitive_id": "play_by_play_tendency_charting",
+   "name": "Chart every play on a field diagram, one sheet per quarter, recording the play type called on each down",
+   "verbatim_quote": "He charted the game for each quarter, and, alongside of each down, he put the kind of play which the State quarterback used.",
+   "page": "Ch. XVIII; text lines 6580-6582",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tendencies only exist as records; memory invents them",
+    "Charting by down and field position is what turns watching into data"
+   ],
+   "breakdown_regime": "A single charted game is a small sample; the method gives no guidance on how many games a tendency needs. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "scouting",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This chart is the engine's tendency table in embryo: play selection recorded by down, distance, field zone, and quarter becomes the conditional distribution the reasoning layer reads when it prices what the opponent will do next.",
+    "source_operator": "play_by_play_tendency_charting",
+    "telemetry": "Charted play-by-play records with down, distance, field position, and play type"
+   }
+  },
+  {
+   "primitive_id": "aggressive_fullback_tell",
+   "name": "A fullback who comes up too fast on line plunges can be beaten by a fake plunge followed by a pass behind him",
+   "verbatim_quote": "comes up awfully fast on line plunges, and it's my opinion that a fake line plunge followed by a forward pass will fool him.",
+   "page": "Ch. XVIII; text lines 6631-6633",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Aggression is a commitment, and every commitment opens the space behind it",
+    "The fake works only if the plunge threat is real enough to demand his speed"
+   ],
+   "breakdown_regime": "The tell decays fast: the text itself warns he will not be susceptible to that pass very often. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "opponent modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Individual defender aggression rates in the engine generate specific counter-actions: a defender whose run-fit speed exceeds his recovery depth is assigned a play-action vulnerability value, and fakes are priced against the men who must honor them.",
+    "source_operator": "aggressive_fullback_tell",
+    "telemetry": "Defender first-step and depth data on run versus pass snaps; play-action success by targeted defender"
+   }
+  },
+  {
+   "primitive_id": "quarterback_leadership_key",
+   "name": "If the opposing quarterback physically leads every play except one, the defense can key on him and be in on every play",
+   "verbatim_quote": "Their quarterback does lead every play except the fake reverse play.",
+   "page": "Ch. XVIII; text lines 6643-6644",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single reliable key collapses the defense's read problem to one man",
+    "The exception play must be drilled separately, because the key points the wrong way on it"
+   ],
+   "breakdown_regime": "Fails catastrophically if the opponent discovers the key is being read and builds a counter off it. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "opponent modeling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine searches opponent film for single-feature keys: one player's movement that predicts play direction or type with near certainty, with the exception plays enumerated and drilled as the key's known failure set.",
+    "source_operator": "quarterback_leadership_key",
+    "telemetry": "Pre-snap and first-step movement tracking for opposing signal callers, correlated to play outcomes"
+   }
+  },
+  {
+   "primitive_id": "kicking_game_play_for_breaks",
+   "name": "Against a superior team, abandon the march: play a kicking game, defend, and take the breaks and fumbles when they come",
+   "verbatim_quote": "I therefore believe we'd better try a kicking game and play for the breaks.",
+   "page": "Ch. XVIII; text lines 6667-6668",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Field position and variance are the underdog's real weapons",
+    "A stronger opponent's offense cannot score while it is backed up and the ball is in the air"
+   ],
+   "breakdown_regime": "Fails when the opponent is also the better kicking team, or when the breaks simply never come in a low-possession game. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "game management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Underdog game plans in the engine shift weight from expected yardage to variance and field position: punt quality, coverage, and turnover probability are valued as scoring inputs, and the plan is graded on the distribution of outcomes it creates, not its median drive.",
+    "source_operator": "kicking_game_play_for_breaks",
+    "telemetry": "Punt net field position, opponent starting field position, fumble and turnover rates by game script"
+   }
+  },
+  {
+   "primitive_id": "setup_runs_draw_defender_up",
+   "name": "Crash the line for a few real gains first, to pull the aggressive defender up and open the pass behind him",
+   "verbatim_quote": "If you can make a few gains successfully it will bring Renfrew up closer, thus giving our forward pass plays a much better chance.",
+   "page": "Ch. XVIII; text lines 6680-6685",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A defender's depth is set by what he has been forced to respect",
+    "Setup plays are purchases: their return is measured in the later play they enable"
+   ],
+   "breakdown_regime": "Fails when the setup runs gain nothing; a defender who is winning at the line has no reason to change anything. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "play sequencing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequencing value in the engine is explicit: an action's worth includes the measured change it produces in a target defender's alignment and depth, so a modest gain that moves a defender is priced above a larger gain that changes nothing.",
+    "source_operator": "setup_runs_draw_defender_up",
+    "telemetry": "Defender depth and alignment tracked snap by snap within drives and across a game"
+   }
+  },
+  {
+   "primitive_id": "taper_underscrimmaged_peak",
+   "name": "Before the biggest game, stop scrimmaging: better a team under-scrimmaged and full of enthusiasm than over-scrimmaged, dull, and injured",
+   "verbatim_quote": "He said he'd rather have, the team a little under-scrimmaged, but chuck full of enthusiasm and vim, than to have them over-scrimmaged, which means they would be a little dull and listless the day of the game.",
+   "page": "Ch. XIX; text lines 6760-6764",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Late preparation trades against freshness and availability",
+    "Enthusiasm and health are performance inputs, not soft extras"
+   ],
+   "breakdown_regime": "Fails when the team is genuinely underprepared on a new opponent's looks and needs the repetitions more than the rest. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "sports science",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Workload in the engine's availability model is tapered before high-leverage games: projected performance includes a freshness term and an injury-risk term that rise with recent full-contact load, so the plan optimizes the whole week, not the practice day.",
+    "source_operator": "taper_underscrimmaged_peak",
+    "telemetry": "Practice load, contact volume, and injury incidence by week; performance splits by rest and load"
+   }
+  },
+  {
+   "primitive_id": "delegate_initiative_to_field_caller",
+   "name": "The coach's last word delegates completely: meet conditions as they arise, on your own initiative",
+   "verbatim_quote": "Meet conditions as they arise, on your Own initiative, and if you get behind, don't be discouraged.",
+   "page": "Ch. XX; text lines 7258-7260",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Game conditions will differ from every plan in ways only the man on the field can see in time",
+    "Confidence from the coach is itself an input to the caller's decision quality"
+   ],
+   "breakdown_regime": "Fails when the field caller's judgment is the weak point the plan existed to protect against. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "team governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's live reasoning layer holds delegated authority inside pre-set principles: the plan fixes the doctrine, the prohibitions, and the state checklist in advance, and the in-game layer adapts calls to observed conditions without waiting for a central decision.",
+    "source_operator": "delegate_initiative_to_field_caller",
+    "telemetry": "In-game adjustment logs: deviations from script, their triggers, and their outcomes"
+   }
+  },
+  {
+   "primitive_id": "check_number_audible",
+   "name": "A check number at the line nullifies every number called before it and installs a new play, called when the quarterback sees the defense change",
+   "verbatim_quote": "This check number, thirty-three, meant that all numbers called previously were null and void and that new numbers denoting a new play were forthcoming.",
+   "page": "Ch. XX; text lines 7795-7797",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense's final alignment is information that arrives after the play is called",
+    "A clean cancellation protocol prevents half the team running the old play"
+   ],
+   "breakdown_regime": "Fails when the check is misheard or the new call is worse than the old one against the original look; it also spends the snap's surprise. no_equation_domain: the work is a narrative coaching treatise and states no equation for this; the rule is qualitative.",
+   "domain": "decision policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The audible is the engine's live re-plan primitive: when post-call observation contradicts the assumption the called action rested on, the prior call is voided as a whole, not patched, and the replacement is selected against the newly observed state with the change logged for grading.",
+    "source_operator": "check_number_audible",
+    "telemetry": "Pre-snap defensive shifts after the call, audible frequency, and outcome deltas on changed versus unchanged calls"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "49903ffc01bdfda0-t1",
+   "think": "The Four Winners is a novel that behaves like a coaching treatise. Knute Rockne, writing in 1925 as the most famous coach in America, puts his whole system into the mouth of a fictional coach, Brown of Dulac, and into the education of a fictional quarterback, Elmer Higgins, who is cut for being too small, studies his way back, and ends by out-thinking a far stronger State team. The plot is a delivery device. What is delivered is a complete decision system for a violent, low-information game: how to select men, how to train them, how to observe an opponent, how to call plays, how to manage information, and how to behave when the plan meets a better team. Read as engineering rather than as literature, the book is a specification for a reasoning agent operating under time pressure with incomplete information, which is why it survives extraction into primitives at all.\nThe foundation is a claim about what the game is. Football, Brown says, is largely a contest of wits, and its scarcest resource is men who have brains and can use them. Everything else follows from that premise. Because the game is decided by decisions, the quarterback is built like a chief of staff: he must hold the full state of the game in mind at all times, down, yards to gain, field position, wind, score, and time left, and the book returns to that checklist twice, once as private instruction and once as a team-wide order before the final game. Because decisions are made in seconds, technique must be trained below the level of thought: constant repetition turns correct details into reflexes, and only then, Brown insists, does a man become a great player. The mental and the mechanical are not rivals in this system. Reflexes handle execution so that the mind is free for the state, the tendency, and the moment.\nThe training machinery is strikingly modern. The quarterback spends a summer playing hypothetical games on paper, running diagrammed plays against six or seven prepared defenses for an hour a night, so that when a real defense is analyzed the right play suggests itself. A benched quarterback is not rested but assigned: he charts the game from the bench and files a written report of what he would have done in every situation, a counterfactual record that can be graded against reality. Mistakes in practice are welcomed and mistakes in games are treated as tuition already paid, while doing the right thing accidentally is treated as the dangerous outcome, because it hides the defect that will surface when it costs most. Even the sacrificial use of a reserve quarterback, sent in with two fixed plays and orders to kick on third down purely so the staff can read the defense, is a training and information device at once: snaps are spent to buy knowledge, openly and at a stated price.\nThe observation machinery is equally deliberate. Scouting is divided into assigned sectors, one man on the offensive line with field glasses, one charting play selection by field position and condition, one on interference types and their tells, one on pass defense, and the results are merged in conference the same night. The chart itself, one field diagram per quarter with the play type written beside each down, is a tendency table in embryo. Two scouting conclusions carry the final game. The first is that personnel, not formations, is the invariant: State may change its defense for Dulac, but the men and their individual proficiency cannot change, so analysis is built at the level of the man. The second is the discovery of keys and tells: a fullback who comes up too fast on line plunges can be beaten by a fake plunge and a pass behind him, and a quarterback who physically leads every play except one hands the defense a read that puts it in on every play, provided the exception is drilled separately.\nOn top of observation sits an information doctrine that runs in both directions. Toward the opponent, total concealment: secret practice, a hidden quarterback whose name is never mentioned, a team deliberately made to look bad in public, a dozen plays the State scouts have never seen, and a weak opponent beaten without throwing a single pass so that nothing is shown. Toward the opponent's information, total exploitation: weaknesses are mapped man by man and direction by direction, a found weak spot is nursed along and spent only at the moment of maximum value, and the rules themselves are treated as the full legal action space, so an intentional safety by an opponent is praised as legitimate rather than resented as sharp practice.\nThe play-calling doctrine is a layered policy, and the layers matter. At the bottom is a prohibition set for the forward pass: not early, not with an even score, not in your own territory, not when ahead, not near the opponent's goal, not while the running attack works, not against an alert defense, not without an expert passer. Inside those prohibitions, timing is delegated to trained instinct, the psychological moment that the simulation training was built to produce. Sequencing is explicit: use the best play on first down, because success there governs the whole series; run plays that make other plays strong; crash the line a few times to pull a defender up before passing behind him. And at the line itself sits the check number, the audible that voids every previous call when the quarterback sees the defense change, which is how the novel's final touchdown is scored: a substitute fullback creeps onto the line, the called kick is cancelled in full, and the pass goes into the territory the substitute vacated.\nAgainst a superior team the doctrine changes shape, and the book is honest about it. Brown tells his team plainly that State has no weakness and may run through them, and then builds the only plan the evidence supports: a kicking game, field position, possession held as long as possible, fresh men rotated, a tapered week with no scrimmage so the team arrives under-scrimmaged but full of enthusiasm and uninjured, and a halftime adjustment that throws away the cautious plan and passes in volume because the first half has shown the alternative is slow defeat. Governance wraps around all of it. Eligibility and the doctor's word are hard gates that talent cannot argue with. Credit is assigned to the interference rather than the carrier, so the invisible ten are valued above the visible one. Only the coach speaks to the team before the game, and during it he does not coach from the sidelines at all, because the whole system exists to produce players who think for themselves.\nFor a reasoning engine the transfer is direct. The state checklist becomes a mandatory feature vector without which no evaluation is complete. The tendency chart becomes a conditional distribution over opponent actions, built at the level of personnel and read by situation. Probes, concealment, and tendency-breaking become priced information actions rather than color. Prohibitions become a veto layer that runs before optimization, and the check number becomes a re-plan rule: when observation voids the assumption a call rested on, cancel the call entirely rather than patch it. The book's limits are equally clear. Its evidence is one fictional season, its passing doctrine belongs to a low-efficiency era, its faith in morale and the will to win is asserted rather than measured, and its single decision maker model understates how distributed a modern sideline is. The machinery is sound; the parameters are 1925 parameters, and the extraction keeps the two separate.",
+   "retrocausal_genealogy": "The doctrine descends from the forward pass era that Rockne himself helped create: the pass was legalized in 1906, and Rockne and Gus Dorais made it famous at Notre Dame in the 1913 win over Army, the game the novel's passing climaxes quietly reenact. Behind that stands the older Walter Camp game of mass momentum and field position, which survives in the book's kicking and possession doctrines, and the military staff model Brown states outright, with the quarterback as chief of staff. Rockne published his manual Coaching in the same period, and The Four Winners is that manual recast as a story: the lectures, the blackboard school, the scouting conference, and the check number all pass from this text into the standard vocabulary of American coaching, and from coaching into modern tendency scouting, play sequencing theory, and simulation-based training.",
+   "theory_of_mind": "Rockne models the player as a thinking agent whose decisions under time pressure decide games, and the coach as a designer of that agent rather than a puppeteer. Brown refuses to coach from the sidelines, delegates the last word to his quarterback's own initiative, and builds men who analyze for themselves, because he believes judgment cannot be rented during a game; it can only be installed beforehand. The opponent is modeled the same way, as a creature of habit and expectation whose tendencies can be charted and whose confidence can be manipulated. The reader is treated as a future quarterback: the book teaches by letting him sit through the lectures, the charting, and the mistakes, so that he practices the decisions rather than merely admiring them.",
+   "cross_layer_veto": "Several layers in this work veto the layers beneath them. Eligibility and medical authority veto talent and tactics outright: a player who fails his classes or defies the doctor does not play, whatever the matchup says. The pass prohibition set vetoes aggressive optimization: a high-value pass is suppressed when the defense is alert or the passer is not expert, and the suppression needs no further argument. Information control vetoes honest public performance: what the team shows in practice is deliberately false, so any model built on public signals must discount them. And the evidence of superiority vetoes the standard plan itself: when scouting shows the opponent's line is impregnable, the march-based offense is cancelled in favor of kicking, possession, and variance, however the raw matchup numbers read."
+  }
+ ],
+ "universal_lens": "The Four Winners is a general template for building a decision-making agent in any adversarial, time-pressured domain. Install a mandatory state checklist so no choice is made state-blind. Train responses in simulation until they are reflexes, and grade counterfactual decisions in writing. Observe the opponent at the level of the individual actor, not the formation, because actors are the invariant. Treat information as a managed asset: probe cheaply, conceal what is decisive, spend exploits at maximum leverage, and break your own tendencies only when the break itself is the weapon. Put hard vetoes, eligibility, safety, prohibition sets, above optimization, and delegate live authority to the layer closest to the action, inside doctrine fixed in advance.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is a curriculum in miniature. Its teaching methods are the transferable content: hypothetical game simulation against prepared defenses, bench charting with written counterfactual reports, sector-divided observation assignments, and the deliberate preference for instructive practice mistakes over accidental success. Its governance lessons, medical authority over competitive pressure, eligibility as a hard gate, credit assigned to the invisible contributors, form an ethics and welfare layer for any athlete development program. And its scouting method, chart everything, analyze personnel over scheme, hunt for the single reliable key, is a research method students can apply to any performance domain, with the book's own limits (one season, no base rates, era-bound parameters) taught as part of the lesson.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, the book supplies doctrine at four points. First, state discipline: down, distance, field position, wind, score, and clock as a mandatory vector in every evaluation. Second, opponent modeling at the personnel level, with tendency charts by situation, per-defender weakness and aggression values, and single-feature keys with their exception plays enumerated. Third, a policy stack for action selection: prohibition vetoes first, then sequencing value (first-down leverage, setup actions that move defenders, exploit budgets), then a bounded timing signal, with a check-number re-plan rule that voids a call wholesale when its assumption breaks. Fourth, information management: probes priced as information purchases, concealment valued as a decaying surprise premium, and underdog plans graded on variance and opponent-possession suppression rather than median yardage."
+}

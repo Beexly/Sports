@@ -1,0 +1,755 @@
+{
+ "book_id": "ae68da4e1323da2a",
+ "source_status": "COMPLETE",
+ "source_note": "Walter Camp and Lorin F. Deland, Football, Boston and New York: Houghton, Mifflin and Company, 1896 (copyright 1896, The Riverside Press, Cambridge, Mass.). Local file is a scanned PDF of the 1896 edition, 28,414,626 bytes; scan digest sha256(str(size) + file bytes) = ae68da4e1323da2a22ff4d220be9363d6f409764e3f7ae291a26d7710e1cf45a, whose first 16 hex are the book_id. Extracted text (968,653 bytes) is OCR of the scan with typical artifacts: spaced punctuation, occasional misreads (for example Avill for will), and page ornaments interrupting some sentences; all quoted passages were chosen from clean text and verified as contiguous substrings of the extracted text file. The work contains no mathematical equations; its quantitative content is rules values, coaching standards, and counts stated in prose. Local catalog filename: Camp-Deland-1896-Football. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "five_yard_rule",
+   "name": "The five-yard rule: advance five yards in three downs, or retreat twenty, or surrender the ball",
+   "verbatim_quote": "The latter provided that a team holding the ball must, in three successive fairs or downs, advance it five yards or retreat with it twenty, and, failing to do this, must deliver it over to the other side.",
+   "page": "Part I, Ch. VII (Twenty Years of Football), p. 66; text line 5026",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Three downs are the trial budget for each possession segment",
+    "Retreating twenty yards also forfeits the ball, so backward movement is priced",
+    "The rule was adopted to kill the block game, in which a side could hold the ball indefinitely"
+   ],
+   "breakdown_regime": "Specific to the 1896 code; the modern game uses four downs and ten yards, so the constants do not transfer, only the structure of a bounded advance-or-lose-possession trial. no_equation_domain",
+   "domain": "rules and possession structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Possession as a bounded trial: an engine should model each series as a fixed number of attempts against a required gain, with failure transferring the initiative; the required gain and attempt count are parameters set by the governing code, not constants of nature",
+    "source_operator": "five_yard_rule",
+    "telemetry": "Down number, yards to gain, yards gained per attempt"
+   }
+  },
+  {
+   "primitive_id": "third_down_kick_logic",
+   "name": "When the first two downs fall short of their proportion of the five yards, the third down becomes a kick, a deliberate relinquishment of the ball",
+   "verbatim_quote": "It follows naturally, that if the first two efforts, or downs, are not productive of their full proportion of the five yards distance, the third effort will be a kick, which is a virtual relinquishment of the ball.",
+   "page": "Part I, Ch. II (Explanation of the Game), p. 23; text line 3012",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Ground can only be gained while in possession, so kicking is costly",
+    "The kick trades possession for field position when the rushing expectation collapses",
+    "Proportionate advance on early downs is the signal that the rushing game remains viable"
+   ],
+   "breakdown_regime": "Assumes the punt is the only relinquishment tool; later codes add the forward pass and the field goal as third-down alternatives, which change the branch values. no_equation_domain",
+   "domain": "play calling under a down budget",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A decision rule keyed to realized versus required rate of advance: if cumulative gain after n minus 1 attempts is below the pro-rata share of the target, switch from the gain strategy to the field-position strategy on the final attempt",
+    "source_operator": "third_down_kick_logic",
+    "telemetry": "Gain on each down, distance remaining, field position at the kick"
+   }
+  },
+  {
+   "primitive_id": "scoring_values",
+   "name": "1896 scoring values: touch-down 4 points, goal after touch-down 2 more, goal from the field 5, safety 2 against the side making it",
+   "verbatim_quote": "and touch it down on the ground is known as a touch-down, and scores four points for the side accomplishing the feat",
+   "page": "Part I, Ch. II, p. 24; text line 3088",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A touch-down also earns the try-at-goal, so its full value is 4 or 6",
+    "A goal from the field at 5 outvalues a bare touch-down at 4, which shapes late-game choices",
+    "Values are set by the rules committee and were repeatedly revised in this era"
+   ],
+   "breakdown_regime": "The values are historical and were superseded (the modern code reverses the touchdown and field goal relation); any engine must read scoring values from the current code rather than inherit them. no_equation_domain",
+   "domain": "scoring and objective function",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The objective function of the whole reasoning system is a small table of event values fixed by rule; strategy derivations, including when a safety or a kick is rational, are arithmetic consequences of that table and must be recomputed when the table changes",
+    "source_operator": "scoring_values",
+    "telemetry": "Score state, scoring event type, points awarded"
+   }
+  },
+  {
+   "primitive_id": "safety_pressure_relief",
+   "name": "A safety concedes two points as a deliberate purchase: it relieves a fierce attack and prevents the larger four-point touch-down",
+   "verbatim_quote": "This counts two points against the side making it, and is only resorted to as a means of relieving the pressure of a fierce attack",
+   "page": "Part I, Ch. II, p. 25; text line 3117",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The side making a safety regains possession and kicks from up to its own twenty-five-yard line",
+    "The concession is rational only when the probability of the larger score is high",
+    "It is a negative scoring method: points are scored by the opponents through your own act"
+   ],
+   "breakdown_regime": "Only available when backed up against your own goal; if the defense can hold without conceding, the purchase is wasted, and a mishandled snap can turn the relief play into the very score it was meant to prevent. no_equation_domain",
+   "domain": "risk management and concession plays",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A priced concession operator: when the expected cost of continuing a defensive stand exceeds the fixed cost of conceding a small score plus a reset of field position, take the concession; the engine should compare the two expected values explicitly instead of treating any conceded points as failure",
+    "source_operator": "safety_pressure_relief",
+    "telemetry": "Distance from own goal line, down, opponent scoring rate from short fields"
+   }
+  },
+  {
+   "primitive_id": "line_stiffness_tell",
+   "name": "Line stiffness at the snap is a readable tell: the line that yields least in the scrimmage will prove superior in forward play almost without exception",
+   "verbatim_quote": "And almost without exception the team which is the stiffer in the line will prove the superiority of its forward play during the game.",
+   "page": "Part I, Ch. III (Finer Points of the Play), p. 29; text line 3270",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The judgment is made at the instant the ball is snapped, before the play develops",
+    "Stiffness means holding ground or pushing the opponents back, not merely resisting",
+    "The claim is empirical, from observation of many games, not derived"
+   ],
+   "breakdown_regime": "A single scrimmage can mislead; the tell is reliable as an aggregate over repeated snaps and degrades when one side is deliberately varying its charge. no_equation_domain",
+   "domain": "opponent evaluation and tells",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Early-play micro-observations as estimators of a latent strength variable: the displacement of the line in the first instant after the snap is a cheap, repeatable measurement that predicts the line matchup for the rest of the contest, and should be logged from the first series onward",
+    "source_operator": "line_stiffness_tell",
+    "telemetry": "Line displacement per snap, which side yields, by position"
+   }
+  },
+  {
+   "primitive_id": "kick_prediction_tell",
+   "name": "To predict an opponent's kick, watch the opposing full-back: when he commences to run back, a kick is likely",
+   "verbatim_quote": "he can make up his mind that as soon as the full-back commences to run back there is likely to be a kick by the opponents",
+   "page": "Part I, Ch. III, pp. 29-30; text line 3307",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The full-back must know a kick is coming, so his preparation leaks the intention",
+    "Secondary tells exist: the backs stepping back and separating, the end rushers dropping farther for a quarter-back kick",
+    "No tell is certain; the method is probabilistic reading, not knowledge"
+   ],
+   "breakdown_regime": "Fails against teams drilled to hold their backs still, and against genuine fakes built on the same tell; the tell's value decays once the opponent knows it is being read. no_equation_domain",
+   "domain": "intention reading and tells",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Intention inference from the preparations of the agent who must act on the intention: in any multi-agent contest, the participant whose role forces early commitment reveals the plan; an engine should weight such forced-preparation signals above voluntary signals",
+    "source_operator": "kick_prediction_tell",
+    "telemetry": "Full-back depth and first movement, backfield spacing, end rusher depth, down and distance"
+   }
+  },
+  {
+   "primitive_id": "brains_over_muscle",
+   "name": "The book's thesis in one line: the game teaches that brains will always win over muscle",
+   "verbatim_quote": "it teaches that brains will always win over muscle",
+   "page": "Preface, p. iv; text line 165",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Stated as the great lesson of the game in the preface",
+    "The claim presumes comparable physical material on both sides",
+    "It is the warrant for the whole book: football as a subject for scientific, tactical study"
+   ],
+   "breakdown_regime": "A slogan, not a measurement; it breaks where the physical gap is extreme, and the book itself elsewhere insists on weight, condition, and strength as prerequisites. no_equation_domain",
+   "domain": "doctrine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A prior for the reasoning engine: when physical inputs are near equal, allocate explanatory weight to decision quality, preparation, and tactical design before attributing outcomes to strength; outcomes that look like luck or muscle should first be audited for a reasoning cause",
+    "source_operator": "brains_over_muscle",
+    "telemetry": "Decision quality markers: play selection by situation, preparation records, error rates"
+   }
+  },
+  {
+   "primitive_id": "triangular_relation",
+   "name": "The end, tackle, and rush-line back form a triangular defensive relation: any two may go in, but three never should",
+   "verbatim_quote": "The relation is almost a triangular one of tackle, rush-line back, and end",
+   "page": "Part II, Ch. IV (Relationships of the Positions), pp. 104-105; text line 6530",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The three share one sector: from the farthest reach of the guard out to the touch line",
+    "One of the three must always remain to cover the outside and take the runner as he comes free",
+    "Whichever of the tackle or line back has the better opportunity meets the interference first; his partner takes the second turn"
+   ],
+   "breakdown_regime": "The triangle presumes the rush-line back plays up near the line; against formations that spread the sector wider than three men can cover, the relation must be re-drawn. no_equation_domain",
+   "domain": "defensive coordination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A coverage invariant for a defensive sector: of the n agents assigned to a sector, at most n minus 1 may commit to the ball; one always holds the outlet. The engine should treat any play design or defensive call that commits every sector agent as structurally unsound",
+    "source_operator": "triangular_relation",
+    "telemetry": "Sector assignments, which agents committed, whether the outlet was held"
+   }
+  },
+  {
+   "primitive_id": "end_edge_law",
+   "name": "The end is solely responsible for the protection of the side line: one unbreakable law, guard the edge, whatever the temptation to draw in",
+   "verbatim_quote": "the end is solely responsible for the protection of the side line",
+   "page": "Part II, Ch. IV, p. 104; text line 6516",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The end may help the tackle only under conditions created by the rush-line back's presence",
+    "No excuse, provocation, or temptation to help inside overrides the edge duty",
+    "The law exists because an end drawn in concedes the whole side of the field"
+   ],
+   "breakdown_regime": "The book itself notes the rush-line back's arrival relaxes the law in defined circumstances; applied absolutely against a purely inside attack it wastes a defender. no_equation_domain",
+   "domain": "role discipline",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hard role constraints inside a reasoning system: some assignments are invariants, not tradeable weights; the edge defender's containment duty should be encoded as a constraint that play-level optimization cannot override, because its failure mode is catastrophic rather than incremental",
+    "source_operator": "end_edge_law",
+    "telemetry": "End position relative to the sideline, runs reaching the edge, contain failures"
+   }
+  },
+  {
+   "primitive_id": "one_man_through",
+   "name": "Centre-trio principle: on every defensive play, the centre, guards, and quarter coordinate to get some one man through the line unobstructed",
+   "verbatim_quote": "The principle, as will be seen in the chapter upon team play, is that of always getting some one man through on every play.",
+   "page": "Part II, Ch. IV, p. 106; text line 6623",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "One of the four is designated before the snap, by signal, as the man to be freed",
+    "Methods rotate: guards free the centre, centre and guard free the quarter, or the trio stretches the opposing line",
+    "The principle is credited to team play, not individual effort"
+   ],
+   "breakdown_regime": "If the offense diagnoses which man is designated, it can double him; the method depends on varying the designee and on the other three occupying their blockers honestly. no_equation_domain",
+   "domain": "defensive coordination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A penetration scheduler: rather than asking every defender to beat his man, designate one penetrator per play and spend the other agents' efforts on freeing him; rotating the designee keeps the attack unpredictable and concentrates force where it is most likely to arrive",
+    "source_operator": "one_man_through",
+    "telemetry": "Designated penetrator per play, whether he arrived unobstructed, time to reach the backfield"
+   }
+  },
+  {
+   "primitive_id": "breaking_through_foundations",
+   "name": "Two foundation principles of breaking through: watch the ball and go through with it; keep entirely free of the man opposite so he cannot hold or detain you",
+   "verbatim_quote": "The first rule, then, is to watch the ball, and go through the line with the ball. The second rule is to keep yourself entirely free from the man opposite to you when going through",
+   "page": "Part II, Ch. VI (Breaking Through), p. 120; text line 7241",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Losing sight of the ball for an instant is fatal, because the situation changes too quickly to relocate it",
+    "The opponent and the ball can both be kept in the field of vision at once",
+    "Ten specific methods are enumerated, but all are subordinate to the two principles and to studying the individual opponent's faults"
+   ],
+   "breakdown_regime": "Principles for line positions; backs playing at depth work under different geometry. They also presume the defender is close enough to the line to go through with the ball at all. no_equation_domain",
+   "domain": "defensive line play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Attention discipline for any agent acting under time pressure: track the state variable that decides the play (the ball) continuously, and treat engagement with the nearest obstacle as a cost to be minimized, not the task itself; methods are interchangeable, the two invariants are not",
+    "source_operator": "breaking_through_foundations",
+    "telemetry": "Eyes-on-ball compliance, time from snap to penetration, whether the defender was held or detained"
+   }
+  },
+  {
+   "primitive_id": "reach_line_adage",
+   "name": "Adage of defensive urgency: a runner allowed to reach the line before being tackled can always gain his five yards in three downs",
+   "verbatim_quote": "It is an old adage that when the runner is allowed to reach the line before being tackled, he can always gain his five yards in three downs.",
+   "page": "Part II, Ch. VI, p. 117; text line 7115",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Therefore stopping the runner at the line is not success; he must be tackled behind it",
+    "The whole object of defensive play is to tackle the runner behind his own line",
+    "The claim is stated as an old adage, that is, as accumulated coaching experience"
+   ],
+   "breakdown_regime": "An adage, not a theorem: a weak rushing team will not gain its five yards even when reaching the line, and a strong defense can still win downs at the line against average material. no_equation_domain",
+   "domain": "defensive standards",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Set the success threshold for a defensive action at disruption behind the line of scrimmage, not at contact at the line; evaluating defense by stops at the line systematically overrates it, because the offense's series expectation remains favorable from that outcome",
+    "source_operator": "reach_line_adage",
+    "telemetry": "Tackle location relative to the line, series outcomes after tackles at versus behind the line"
+   }
+  },
+  {
+   "primitive_id": "reserve_weakness_for_kick",
+   "name": "Hold a discovered opponent weakness in reserve: breaking through on a kick is worth any three ordinary scrimmage successes, so spend the exploit there",
+   "verbatim_quote": "If you have detected a certain weakness in your opponent which will permit you to break through him with comparative ease, hold it in reserve for the moment when the full-back retires for a kick.",
+   "page": "Part II, Ch. VI, p. 123; text line 7391",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A weakness once used in an ordinary scrimmage may be corrected before the kick arrives",
+    "A blocked kick doubles its value through the loss of heart and spirit it inflicts",
+    "The kicker's moment is the highest-leverage moment for a single penetration"
+   ],
+   "breakdown_regime": "If the game never reaches a kick under pressure, the reserve is never spent; and a weakness so gross it decides ordinary downs may be worth more used immediately. no_equation_domain",
+   "domain": "exploit timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exploit scheduling: information about an opponent's weakness is a depletable asset whose value depends on the leverage of the moment it is spent; an engine should bank reliable exploits for the highest-leverage situations rather than spending them at first availability",
+    "source_operator": "reserve_weakness_for_kick",
+    "telemetry": "Weaknesses identified by opponent and situation, the moment each was first used, outcome by moment type"
+   }
+  },
+  {
+   "primitive_id": "deceptive_hole",
+   "name": "A hole can be opened purely as deception, to draw the quarter and half-back to the wrong side, since backs read the appearance of the line rather than the ball",
+   "verbatim_quote": "A hole may be opened merely to deceptively draw the quarter and a half-back over to that side of the line.",
+   "page": "Part II, Ch. VII (Opening Holes in the Line), pp. 128-129; text line 7596",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Men behind the line cannot closely follow the ball and depend on the line's appearance to locate the attack",
+    "A deceptive hole should be opened early, widely, and with demonstration of force",
+    "A variant distracts attention from a projected kick"
+   ],
+   "breakdown_regime": "Only works against defenders who read the line; a ball-disciplined defense is immune, and the men spent on a false hole are unavailable for the real interference. no_equation_domain",
+   "domain": "deception and information play",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "False-signal generation aimed at the opponent's inference channel: if the opponent infers the point of attack from a proxy signal (line appearance), a cheap, loud false proxy can relocate his reserves; the engine should model which proxy each opponent actually reads before investing in deception",
+    "source_operator": "deceptive_hole",
+    "telemetry": "Defensive back movement after line demonstrations, success of plays away from demonstrated holes"
+   }
+  },
+  {
+   "primitive_id": "hole_timing_late",
+   "name": "Timing law for openings: the later the real opening comes, provided it precedes the interferers reaching the turn, the better; a trifle late beats too soon",
+   "verbatim_quote": "it is safe to say that the later the real opening comes, so long as it comes before the main interferers reach the turn, the better",
+   "page": "Part II, Ch. VII, pp. 129-130; text line 7640",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An early opening lets the rush-line half extricate himself in time to smash the interference",
+    "Interference met behind the line loses half its dash through lack of confidence",
+    "The runner reaches full effort only when he feels he has reached the striking point"
+   ],
+   "breakdown_regime": "Openings for mass plays obey the opposite constraint and must wait until the push stalls; a plunge needs only an instant's small hole. The law is specific to swinging end runs with formed interference. no_equation_domain",
+   "domain": "timing and coordination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Event timing as a controllable variable with an asymmetric cost curve: opening a channel too early lets the defense re-form, too late strands the attack; the optimum sits just before the attacking mass arrives, and the cost of earliness exceeds the cost of slight lateness",
+    "source_operator": "hole_timing_late",
+    "telemetry": "Time of opening relative to interference arrival, gain by opening timing"
+   }
+  },
+  {
+   "primitive_id": "door_opens_outward",
+   "name": "The door maxim: openings in the line must open outward for the sortie, never inward for the enemy; in mass plays the door always opens out, in tackle and guard runs it may open in with the hinge on the outside",
+   "verbatim_quote": "Don't open the door for the enemy to come in, but for the sortie to go out.",
+   "page": "Part II, Ch. VII, p. 131; text line 7701",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A door is double-hinged by the two line men forming the opening, and must never slam back into the runners",
+    "In push plays the guard and centre swing forward and out once the mass stalls",
+    "Almost all openings classify under the push-play head or the around-the-end head"
+   ],
+   "breakdown_regime": "A metaphor systematized into a classification, not a mechanism with parameters; it guides coaching language more than it computes anything. no_equation_domain",
+   "domain": "offensive line coordination",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Direction-of-opening discipline for any channel created through a defended boundary: the channel's geometry must favor the exiting side and deny re-entry, and the agents forming it must end in the opponent's territory rather than being driven back into their own formation",
+    "source_operator": "door_opens_outward",
+    "telemetry": "Opening type per play, whether defenders entered the backfield through the opening"
+   }
+  },
+  {
+   "primitive_id": "line_interference_theory",
+   "name": "Line interference, not man-to-man interference, is the correct base theory for all play development, because it rests on dividing the opponents",
+   "verbatim_quote": "the theory of line interference offers so much more possibility of practical field development that we set it down unquestionably as the one to be adopted as a basis for the general expansion of all plays",
+   "page": "Part II, Ch. VIII (Interfering for the Runner), pp. 135-136; text line 7899",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Perfect man-to-man interference is theoretically possible but the evidence of past games is against it as a base plan",
+    "Occasional man-to-man plays may still be used to advantage",
+    "Line interference aims at sections of the defense, not at named individuals"
+   ],
+   "breakdown_regime": "The verdict is experiential; against a defense that refuses to be divided and plays strict man responsibility, pure line interference loses its premise and must borrow man-to-man elements. no_equation_domain",
+   "domain": "offensive theory",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Choose the coordination scheme that attacks the opponent's structure rather than his individuals: dividing a defense into sections and cutting sections off scales across plays, while assigning each attacker to a named defender fails whenever one assignment fails",
+    "source_operator": "line_interference_theory",
+    "telemetry": "Interference type per play, yards gained, frequency of assignment failure"
+   }
+  },
+  {
+   "primitive_id": "interference_section_cutting",
+   "name": "Mechanism of line interference: the interference line cuts off a section of the opponents' team from the play; men outside that section are left alone until a second movement cuts off another section",
+   "verbatim_quote": "is to consider the interference line as cutting off a certain section of the opponents' team from participation in the play",
+   "page": "Part II, Ch. VIII, p. 136; text line 7907",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The runner moves between two converging lines of interferers and is expected to outstrip them at the outlet",
+    "Alleys should be funnel-shaped: broad at entry, narrowing to a small emergence point",
+    "A second, secondary interference forms as the primary breaks up, possibly in a new direction"
+   ],
+   "breakdown_regime": "Requires the interference to hold its spacing at speed; if the runner outruns the alley early or the lines compress, the section re-enters the play from behind. no_equation_domain",
+   "domain": "offensive coordination",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequential partitioning: neutralize a defense in slices, one section at a time, and sequence the slices along the runner's path; the engine should evaluate an interference design by which sections it removes and in what order, not by counting blockers",
+    "source_operator": "interference_section_cutting",
+    "telemetry": "Sections cut off per play, re-entry of cut-off defenders, outlet reached or not"
+   }
+  },
+  {
+   "primitive_id": "three_points_measurement",
+   "name": "Every play can be regulated by three measurement points: when the ball is put in play, when the runner receives it, and when the runner makes his break through the outlet",
+   "verbatim_quote": "There are three positions at which a measurement can be taken to define the relative places of the men who act as interferers with the runner",
+   "page": "Part II, Ch. VIII, p. 138; text line 8001",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At the first point the considerations are protecting the quarter's pass, deceiving the opponents, and quick starting",
+    "At the second, secure reception and protection against a man who broke through or a fumble",
+    "At the third, a clean opening and the means to push or drag the runner if he fails to come free; new plays are taught by walking through these points"
+   ],
+   "breakdown_regime": "A coaching analysis frame for running plays of this era; it does not by itself value outcomes, and passing plays with different time structure need additional points. no_equation_domain",
+   "domain": "play analysis and synchronization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Phase decomposition for synchronized multi-agent actions: define a play by the relative positions of all agents at a small set of canonical instants, and diagnose failures by phase; an engine that stores plays as phase snapshots can compare, teach, and repair them",
+    "source_operator": "three_points_measurement",
+    "telemetry": "Agent positions at snap, at reception, at break; failure phase per stopped play"
+   }
+  },
+  {
+   "primitive_id": "kick_hold_timing",
+   "name": "A full-back who can delay his punt safely, not merely kick quickly, adds twenty-five to fifty per cent to his team's chances, because every second held lets the ends make yards and rattles the opposing backs",
+   "verbatim_quote": "will so save his ends and rattle the opposing backs that he will add twenty-five, or even fifty, per cent, to his team's chances of success",
+   "page": "Part II, Ch. IX (Kicking), pp. 141-142; text line 8167",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The delay must remain safe: the kick must still be got in",
+    "The percentage is the authors' experienced estimate, not a measured statistic",
+    "The forwards must block long rather than release early for the delay to exist"
+   ],
+   "breakdown_regime": "Against a fast rush the delay is unavailable, and a held kick that is blocked reverses the gain entirely; the estimate is unverified by any recorded count in the book. no_equation_domain",
+   "domain": "kicking and timing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Timing variance as a weapon: an action whose moment the opponent must predict (the punt) gains value when its timing is deliberately varied within the safe window, because the defense's preparation is timed to the expected moment; log the realized delay and outcome to price the window",
+    "source_operator": "kick_hold_timing",
+    "telemetry": "Kick delay after the snap, whether blocked, return yards, end coverage position at the catch"
+   }
+  },
+  {
+   "primitive_id": "trick_series_membership",
+   "name": "A trick has value only as one movement in a series of plays from a common line-up; alone, it is familiar after one use and stopped on the second",
+   "verbatim_quote": "A trick, to be of any real value, must be one movement in a series of plays from a common line-up.",
+   "page": "Part II, Ch. XI (On the Use of Tricks), p. 163; text line 9079",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Earlier plays from the same line-up teach the opponents a diagnosis the trick then betrays",
+    "The opponents must unlearn the earlier tendency while learning the trick, a double burden",
+    "Each play of the series must itself be strong enough to gain its distance, or the series collapses"
+   ],
+   "breakdown_regime": "Against an opponent who keys on the ball rather than the line-up, series membership adds little; the deception tax is paid by defenses that diagnose from alignment. no_equation_domain",
+   "domain": "deception and play design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deception requires a cover distribution: a surprising action only deceives if it is drawn from the same observable context as established actions, so an engine should evaluate any trick by the strength and frequency of its cover plays, never on its own merits",
+    "source_operator": "trick_series_membership",
+    "telemetry": "Line-up identity across plays, opponent reaction time by play in series, gain by series position"
+   }
+  },
+  {
+   "primitive_id": "trick_variance_profile",
+   "name": "Gain profile doctrine: a straight play is more certain to gain its distance but less certain to gain an exaggerated distance; a trick that gains one yard is almost equally likely to gain five or six, and fails outright more often",
+   "verbatim_quote": "a straight play is more certain to gain its distance than a trick play. It is less certain to gain an exaggerated distance.",
+   "page": "Part II, Ch. XI, pp. 165-166; text line 9187",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The authors claim a kept count would show tricks averaging more distance but with more total failures",
+    "The profile, not the average, is the decision-relevant fact",
+    "Straight plays are the low-variance instrument; tricks are the high-variance instrument"
+   ],
+   "breakdown_regime": "Stated qualitatively; the book reports no actual count, so the magnitudes are unknown and the claim awaits the very record-keeping the authors prescribe elsewhere. no_equation_domain",
+   "domain": "risk profiles of plays",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Represent every play by a distribution, not an expectation: a reliable low-variance play and a high-variance play with the same mean are different instruments, chosen by situation; the engine should store failure rate and upside separately for each play",
+    "source_operator": "trick_variance_profile",
+    "telemetry": "Gain distribution per play: failure rate, median gain, rate of exaggerated gains"
+   }
+  },
+  {
+   "primitive_id": "trick_hazard_situations",
+   "name": "Tricks are hazards, to be used only where the situation accepts a hazard: chiefly the last three or four minutes with a slightly adverse score, after a loss on first down, or near the side line",
+   "verbatim_quote": "This teaches an important lesson, that trick plays are hazards, and that they are only to be used in situations which peculiarly adapt themselves to the acceptance of a hazard.",
+   "page": "Part II, Ch. XI, p. 166; text line 9202",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Late and slightly behind, everything may be staked because failure leaves the conditions unchanged",
+    "After a first-down loss, the direct attack's chance of gaining the enlarged distance in one try is small anyway",
+    "A team should carry only one or two tricks for heavy teams, up to five or six for light, quick teams, into final matches"
+   ],
+   "breakdown_regime": "Misuse converts possession of a trick into a positive disadvantage; the doctrine fails if the quarter-back cannot recognize the qualifying situations under pressure. no_equation_domain",
+   "domain": "situational risk acceptance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Variance seeking is state-dependent: when the low-variance path's success probability falls below the threshold the situation demands (late, behind, long distance), switch to the high-variance instrument; when ahead or on schedule, refuse the hazard regardless of its upside",
+    "source_operator": "trick_hazard_situations",
+    "telemetry": "Game state at trick calls: time, score margin, down and distance, outcome"
+   }
+  },
+  {
+   "primitive_id": "trick_testing_protocol",
+   "name": "No trick enters the play list untested: test it against at least two or three different elevens, judge it by records carefully kept and averaged, and discount every individual expert opinion given before trial",
+   "verbatim_quote": "Every trick, before it is incorporated into the team's list of plays, should be thoroughly tested against at least two or three different elevens.",
+   "page": "Part II, Ch. XI, p. 166; text line 9217",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single trial against a single team cannot gauge a deception play, because teams have off days and idiosyncratic weaknesses",
+    "Four coaches shown one play named four different men as sure to stop it; none did",
+    "If different elevens are unavailable, substitute green defenders who do not know the play"
+   ],
+   "breakdown_regime": "Testing consumes practice time and exposes the trick; a play tested too widely may arrive at the important game already familiar to the opponents. no_equation_domain",
+   "domain": "evaluation methodology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Empirical admission control for new strategies: a candidate play earns its place only through repeated trials against varied, uninformed opposition, with results recorded and averaged; prior opinion, however expert, is assigned near-zero evidentiary weight",
+    "source_operator": "trick_testing_protocol",
+    "telemetry": "Trials per candidate play, opponents faced, average gain, failure rate, admission decision"
+   }
+  },
+  {
+   "primitive_id": "backward_construction",
+   "name": "Play construction by working backward: force the desired final situation by grouping the men at the point of attack, then trace each man's path back to his line-up position and assign by distance",
+   "verbatim_quote": "trace the path of each man from his place in the group to his position in the original line-up",
+   "page": "Part II, Ch. XII (How to Construct Plays), p. 173; text line 9504",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The men who join the attack latest should be those with the longest distance to travel",
+    "The method is used when no new attack suggests itself by forward invention",
+    "A companion method draws the attack from behind the opponents' line, the paper upside down, so weaknesses are seen from the defender's seat"
+   ],
+   "breakdown_regime": "Backward construction can produce groupings no legal line-up can reach in the available time; every backward-derived play still needs a forward timing check. no_equation_domain",
+   "domain": "design methodology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Backward design from the success state: specify the configuration that wins, then derive each agent's trajectory and assignment from it, ordering arrivals by travel distance; this inverts the usual forward search and finds plays that forward tinkering misses",
+    "source_operator": "backward_construction",
+    "telemetry": "Design method per play, time to form the final grouping, legality of the line-up path"
+   }
+  },
+  {
+   "primitive_id": "bluffs_carry_ball",
+   "name": "Bluffs must be made with the ball: sending men on a fake dash without it is expensive fooling that probably will not even draw an end rusher",
+   "verbatim_quote": "You must make your bluffs with the ball that is, generally speaking",
+   "page": "Part II, Ch. XII, p. 171; text line 9419",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A demonstration in one direction with the ball going weakly the other way rarely succeeds without loss",
+    "Men spent on a ball-less fake are subtracted from the real interference",
+    "The rule is stated as general, with rare exceptions admitted"
+   ],
+   "breakdown_regime": "Modern misdirection (play fakes by the ball carrier himself, decoy routes) spends attention rather than blockers; the principle binds only where the fake consumes men needed at the true point of attack. no_equation_domain",
+   "domain": "deception economy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Deception must be credible to be worth its cost: a fake that cannot be the real play, because the decisive resource is visibly elsewhere, fools no one and taxes the real effort; an engine should only generate feints that carry the genuine threat",
+    "source_operator": "bluffs_carry_ball",
+    "telemetry": "Fake type, whether the ball accompanied it, defenders drawn, gain of the true play"
+   }
+  },
+  {
+   "primitive_id": "series_architecture",
+   "name": "Series architecture: plays are grouped so several movements share one line-up; the average series has four plays, many six or seven, some twelve, and one famous series had sixteen outlets",
+   "verbatim_quote": "The average number of plays in a series is four, but many have six or seven plays, and some have been known which had as many as twelve.",
+   "page": "Part II, Ch. XII, p. 175; text line 9606",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Two plays from one line-up are doubly valuable, each helping the other",
+    "Series spare the team learning new line-ups, which matters when substitutes enter",
+    "The first play of a series is usually the natural tendency; later plays are the strategic or deceptive operations"
+   ],
+   "breakdown_regime": "A line-up used too long becomes a tell in itself; series must be retired or re-based as opponents accumulate film on the shared alignment. no_equation_domain",
+   "domain": "playbook architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Group actions under shared observable contexts: a playbook organized as series (one context, many outlets) multiplies the opponent's diagnostic burden per context learned, and reduces the executing team's own learning cost per added play",
+    "source_operator": "series_architecture",
+    "telemetry": "Plays per series, outlets per line-up, opponent diagnosis errors by series age"
+   }
+  },
+  {
+   "primitive_id": "tackle_credit_ledger",
+   "name": "Coaching telemetry one: outside assistants record who brings down the runner on every opposing attempt, shared stops credited as half tackles, tabulated daily (Jones 17, Smith 14, Brown 13 in the example)",
+   "verbatim_quote": "in reckoning up the total of the day, they should each be credited with one half a tackle, or a whole tackle, as the coach may prefer",
+   "page": "Part III, Ch. II (Accessories of Coaching), p. 206; text line 10896",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mass stops that cannot be attributed are entered simply as scrimmage",
+    "Records run all season, in practice and, with practice, in games from the side lines",
+    "A missed-tackle record is kept in the same connection as corroborative testimony"
+   ],
+   "breakdown_regime": "Attribution from a distance is error-prone, and a tackle count rewards men near the ball rather than men whose positioning prevented the play; the authors treat it as testimony to check the coach's impressions, not as truth. no_equation_domain",
+   "domain": "measurement and telemetry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Credit assignment by independent recorders: log the finisher of every defensive play with an explicit shared-credit rule and an unattributed category, then aggregate over a season; patterns in the ledger (one man stopping plays at one point, another missing) direct coaching that unaided observation misses",
+    "source_operator": "tackle_credit_ledger",
+    "telemetry": "Tackler per play, shared credits, missed tackles, point of attack"
+   }
+  },
+  {
+   "primitive_id": "play_gain_ledger",
+   "name": "Coaching telemetry two: record the gain or loss of every play in sequence, which yields both each play's relative value and a record of the quarter-back's ordering of plays",
+   "verbatim_quote": "By keeping these records in the first-mentioned way, a double service is really performed, for beside noting the gain or loss by each play, the ordering of every afternoon's practice by the quarter-back is also made a matter of record.",
+   "page": "Part III, Ch. II, pp. 207-208; text line 10963",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Plays are numbered or lettered so a single character logs each attempt",
+    "A companion ledger records where gains are made through your own line, exposing defensive weak points",
+    "Game records kept from the side lines are admitted to be frequently inaccurate yet still worth keeping"
+   ],
+   "breakdown_regime": "Raw gain averages ignore situation; the same play called at different field positions and downs is not one sample, and the ledger must be read with its sequence context. no_equation_domain",
+   "domain": "measurement and telemetry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A play-by-play ledger with sequence preserved is two instruments in one: a value table for the plays and an audit trail for the play-caller; an engine should log calls in order with context, so both the plays and the calling policy can be evaluated and corrected",
+    "source_operator": "play_gain_ledger",
+    "telemetry": "Play called, gain or loss, down, field position, order within the practice or game"
+   }
+  },
+  {
+   "primitive_id": "weak_centre_test",
+   "name": "Diagnostic test for a weak centre: at the first impact after the snap, neither line should be driven back for an interval of one and a half to two seconds; a repeated slight giving way predicts plays failing weeks later",
+   "verbatim_quote": "both lines at this point should maintain the integrity of their position, without being forced, for at least an interval of from one and a half to two seconds after the ball has been snapped",
+   "page": "Part III, Ch. V (Testing the Development), p. 236; text line 12261",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The test is applied by watching the three centre men from beyond the end of the line",
+    "The yielding may be as small as a bending or half turning of the bodies toward the quarter-back",
+    "The remedy prescribed is immediate, severe coaching in low, hard blocking"
+   ],
+   "breakdown_regime": "The interval is a coaching standard for this era's line play, not a measured constant; against an attack aimed at the centre itself, yielding is expected and the test does not apply. no_equation_domain",
+   "domain": "diagnostics and leading indicators",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Leading-indicator diagnostics: a small, early, repeatable measurement (line integrity in the first two seconds) reveals a latent weakness long before it surfaces as failed plays; an engine should maintain such cheap probes for its own critical subsystems and act on the probe, not on the eventual failure",
+    "source_operator": "weak_centre_test",
+    "telemetry": "Centre integrity interval per snap, yielding events, subsequent play success"
+   }
+  },
+  {
+   "primitive_id": "feet_telltales",
+   "name": "Tell test: backs give away the direction of the play with their feet even when careful in every other way; coach them to stand so the feet indicate a false direction",
+   "verbatim_quote": "will often be quite unable to prevent his feet from indicating clearly the course which he is about to take",
+   "page": "Part III, Ch. V, pp. 238-239; text line 12370",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Forwards also leak: drawing back reveals the runner, extra exertion reveals the hole maker, a sprint stance reveals the interference direction",
+    "The countermeasure is an assumed attitude opposite to the true movement, practised until habitual",
+    "The test should be applied constantly, not occasionally"
+   ],
+   "breakdown_regime": "A false stance must still permit the true first step at full speed; a tell suppressed at the cost of a slow start trades one leak for a worse one. no_equation_domain",
+   "domain": "tells and counter-tells",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Audit your own side for information leakage with the same care you read the opponent's: pre-action posture is a broadcast channel, and the fix is not stillness but a controlled false signal; an engine should score its own formations for how much they reveal",
+    "source_operator": "feet_telltales",
+    "telemetry": "Pre-snap posture features, opponent reaction correctness, plays by stance type"
+   }
+  },
+  {
+   "primitive_id": "scoring_distance_probabilities",
+   "name": "Scoring distance doctrine: divide the field on probabilities, not possibilities; weighing all vicissitudes, the twenty-five-yard line is the fair boundary of scoring territory",
+   "verbatim_quote": "he must calculate upon probabilities, not possibilities. In laying out scoring territory, then, it is proper to reason in this way",
+   "page": "Part III, Ch. VI (Field Tactics), pp. 257-258; text line 13200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A touch-down is possible from anywhere, for example by a fumble run, but such plays must not enter the calculation",
+    "The boundary is a law laid down broadly, with the quarter trusted to bend it at twenty-six or twenty-seven yards",
+    "The transverse divisions are scoring territory, kicking territory between the twenty-fives, and danger territory"
+   ],
+   "breakdown_regime": "The twenty-five-yard figure belongs to 1896 scoring values and kicking ranges; the method, fixing the boundary from scoring probability, transfers, the number does not. no_equation_domain",
+   "domain": "field position and situational policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Define territory by outcome probability, not by geometric possibility: the boundary of scoring territory is where the probability of scoring on the possession becomes material, and rare long-shot events are excluded from the definition even though they are possible",
+    "source_operator": "scoring_distance_probabilities",
+    "telemetry": "Scoring rate by starting field position, kick success by distance, turnover cost by zone"
+   }
+  },
+  {
+   "primitive_id": "field_section_policy",
+   "name": "The field is divided into eighteen numbered sections (six transverse bands by three longitudinal belts), each with its own prescribed policy, for example sections 16 to 18: always kick on first down, down the side line",
+   "verbatim_quote": "With the ball in possession, and beginning at your own goal, in sections 16, 17, and 18, always kick on first down, and preferably down the side line.",
+   "page": "Part III, Ch. VI, p. 262; text line 13354",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Kicker position within the section is specified: fifteen yards out from the side line, section 16 for a right-footed kicker, 18 for a left-footer",
+    "Bands nearer midfield permit the running game under stated conditions; sections 4 to 6 forbid kicking until third down",
+    "The divisions are admitted to be arbitrary lines, used because rough calculation with distinct ideas beats treating the field as one pasture"
+   ],
+   "breakdown_regime": "The specific policies are tuned to 1896 rules and personnel; the grid is coarse (fifteen-yard longitudinal resolution) and cannot express hash-mark or boundary subtleties of later codes. no_equation_domain",
+   "domain": "situational policy tables",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A discretized state space with a policy per cell: partition the field into a small grid, attach an explicit default policy to each cell for offense and defense, and let the decision-maker override with reasons; this converts continuous judgment into an auditable table an engine can execute and a coach can teach",
+    "source_operator": "field_section_policy",
+    "telemetry": "Section per snap, policy prescribed versus action taken, outcome by section"
+   }
+  },
+  {
+   "primitive_id": "moral_physical_ratio",
+   "name": "Napoleon's ratio imported to football: the moral is to the physical as three to one, through four agents: the commander's qualities, stratagems, the elation or depression of the men, and information",
+   "verbatim_quote": "This ratio of the moral and the physical is doubtless equally great in the game of football.",
+   "page": "Part III, Ch. VIII (The Moral Factors), p. 278; text line 13996",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ratio is Napoleon's maxim as quoted by the authors, applied by analogy",
+    "Its football correlates are quarter-back generalship and the captain's influence, strategy, team confidence, and assimilated knowledge of the rules as instinct",
+    "What the public calls luck is usually one of these moral qualities, carefully nurtured by one coach and unappreciated by the other"
+   ],
+   "breakdown_regime": "The three-to-one figure is rhetoric with a pedigree, not a measurement; the chapter offers no count, and the category can absorb any unexplained outcome if used carelessly. no_equation_domain",
+   "domain": "intangible factors and attribution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maintain an explicit intangible-factors layer in the reasoning stack (leadership, confidence state, preparation depth, deception quality) with a large prior weight, and treat apparent luck as a prompt to search that layer before accepting randomness as the explanation",
+    "source_operator": "moral_physical_ratio",
+    "telemetry": "Confidence and morale indicators, preparation completeness, decisive-moment decisions and outcomes"
+   }
+  },
+  {
+   "primitive_id": "signal_system_design",
+   "name": "Signal system design: two codes (a practice code and a final code), the system fixed but its key or pass-word altered daily, signals extended to encode the snap moment itself, and hole numbering that stays unambiguous when an extra man steps into the line",
+   "verbatim_quote": "only that the key or pass-word which unlocks the system shall be altered from day to day",
+   "page": "Part III, Ch. IX (Improved Signaling), pp. 284-285; text line 14296",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "An afternoon's practice is twice as valuable if the second eleven does not know the signals",
+    "Signals should be as short as possible; single digits beat double numbers because they do not slow the play",
+    "Sequences of plays memorized in advance can remove spoken signals almost entirely at critical stages"
+   ],
+   "breakdown_regime": "Any published system must be changed before use, as the authors themselves warn; complexity beyond the quarter-back's instant recall fails under game pressure, as the book's own over-training anecdote shows. no_equation_domain",
+   "domain": "communication and information security",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Treat the play-calling channel as a cryptographic system: a stable protocol with a rotating key, minimal message length, redundancy against misreads (hole numbering invariant to formation changes), and a rehearsed fallback code; the channel also carries timing, not only content",
+    "source_operator": "signal_system_design",
+    "telemetry": "Signal length, key change frequency, misread rate, opponent anticipation rate"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ae68da4e1323da2a-t1",
+   "think": "This book, published in 1896 by Walter Camp of Yale and Lorin F. Deland of Harvard, is the first systematic treatise on American football, and its architecture is the architecture of a reasoning system. It is built in three parts, for the spectator, for the player, and for the coach, and the same machinery is examined at each level: rules first, then positions, then coordinated action, then design, then measurement, then situational policy. The foundation layer is constraint. The five-yard rule, three downs to gain five yards or surrender the ball, and the scoring table, touch-down four, goal after two, field goal five, safety two against, define the objective and the trial budget inside which everything else is optimized. Camp and Deland are explicit that strategy is arithmetic on this table: the third-down kick follows from proportionate advance, and the safety is a priced concession, two points paid to escape four. The second layer is roles. Each position is defined by duties and by relations, and the relations are the real content: the end, tackle, and rush-line back form a triangle in which any two may commit and three never may; the end holds the edge under an unbreakable law; the centre trio exists to free one designated man through on every play. The third layer is coordinated action, and its centerpiece is interference, the American invention the book exists to explain. The verdict for line interference over man-to-man interference is a structural claim: divide the defense into sections and cut the sections off in sequence, rather than assigning each blocker a man. Around that core the book builds timing laws, the opening that comes a trifle late, the door that opens outward, the three measurement points at which any play can be frozen and diagnosed. The fourth layer is design method. Plays are constructed backward from the forced final grouping, or drawn upside down from the defender's seat; bluffs must carry the ball; plays are grouped into series that share one line-up, so that deception is a property of a distribution of plays and not of a single trick. The fifth layer is measurement, and it is startlingly modern: paid assistants keep a tackle ledger with half-credit for shared stops, a gain ledger for every play in sequence, which doubles as an audit of the quarter-back's ordering, and a leak ledger for where gains are made through your own line. Tests are specified with numeric standards, the centre must hold its integrity for one and a half to two seconds, the punt must land inside a ten-yard radius circle, passes and punts are timed by stop watch against a best-practice standard that must never be fallen below in a game. The sixth layer is situational policy: the field is cut into three transverse territories and then into eighteen numbered sections, each with a prescribed policy, and the boundary of scoring territory is set by probabilities, not possibilities, at the twenty-five-yard line. Above all of it sits the moral layer, weighted by Napoleon's ratio at three to one over the physical, and a signaling layer treated as a keyed code. What this changes for a reasoning engine is the order of operations: constraints and values first, role invariants second, structure over individuals third, design by backward construction and cover distributions fourth, and everything admitted to the playbook only after recorded trials against varied opposition, with expert opinion assigned almost no weight. Where it breaks is equally clear. The rules it optimizes are dead: no forward pass, mass momentum plays being legislated away even as it prints, scoring values since reversed. Its numbers are coaching standards and experienced estimates, not measurements with samples behind them; the fifty per cent claimed for the held punt and the three-to-one moral ratio are rhetoric with pedigrees. Its telemetry is honest about its own error, side-line ledgers are frequently inaccurate, but it has no way to correct for situation when it averages a play's gains. Two further features deserve emphasis because they are easy to miss. First, the book treats information as a managed resource on both sides of the ball. Its own team is audited for leakage, feet, posture, extra exertion, with the same care it spends reading the opponent, and its signaling system is engineered like a cipher, a fixed protocol, a rotating key, minimal length, and a rehearsed reserve code, because the authors assume the channel is observed. Second, it treats the decision-maker as a trainable component with known failure modes. The quarter-back is examined like a candidate for a commission, given situations to solve aloud in minutes, warned against playing to the gallery, against losing heart when plays fail, and against selecting plays the team cannot execute, and the captain's reports after every game are filed as data. The team itself is handled as a population to be tested: men are tried at positions by recorded performance, reserves are developed deliberately because no eleven survives a season intact, and the final matches are approached with a reduced, proven subset of the playbook rather than the full catalogue. The net effect is a complete operating loop: rules define value, relations define structure, structure generates plays, plays are admitted by trial, trials are recorded, records drive selection and coaching, and field policy converts all of it into decisions under pressure. An engine that copies only the plays copies nothing; an engine that copies the loop has the book's actual content. Read as a museum of 1896 tactics it is obsolete; read as a specification for how a contest should be reasoned about, state, roles, structure, design, measurement, policy, morale, it is the founding document of the discipline.",
+   "retrocausal_genealogy": "The lineage runs from English Rugby through a series of American repairs. The Americans took over the Rugby Union laws with their on-side and off-side principles, then heeled the ball out of the scrimmage, which made the rush line's position technically illegal and forced the invention of interference. The block game, in which a side could hold the ball indefinitely, nearly killed the sport and produced the five-yard rule and the priced safety. Holding by the forwards produced its own legislation, the ban on hands and arms for the side in possession, which created blocking and hole-opening as arts. Deland brought the tactical systematizing of Harvard, Camp the rule-making and the Yale line tradition, and the moral chapter imports its framework wholesale from Napoleon's maxims and McPherson's Theory of War.",
+   "theory_of_mind": "The authors write for practitioners and assume the reader is a reasoning agent inside the contest, not a spectator of it. Their model of the opponent is of a creature of trained instinct who diagnoses plays from proxies, the appearance of the line, the posture of the backs, the movement of the full-back, and who can therefore be deceived through those proxies and must unlearn before he can learn. Their model of their own player is similar: knowledge crammed is useless, and only knowledge assimilated into instinct acts at game speed, which is why the book teaches by principles, relations, and repeated measurement rather than by catalogues of plays. The spectator, too, is treated as trainable, taught to read stiffness, tells, and field position.",
+   "cross_layer_veto": "The work is full of cross-layer vetoes, points where one layer forbids what another proposes. The rules veto tactics: the holding ban abolishes whole families of blocking, and line-up restrictions kill the wedge no matter how effective it was. Measurement vetoes opinion: no trick enters the list on any expert's say-so, only on recorded trials, and a play is not discarded until the reason it is stopped is known. Condition vetoes talent: the fragile man and the over-trained man are removed regardless of skill, and the mid-season depression is treated as a predictable state to be ridden out, not a verdict on the coaching. Field position vetoes preference: in danger territory the punt is compulsory and the long pass forbidden, whatever the quarter-back fancies. The weakest point vetoes the whole: the line is no stronger than its weakest man, so the centre test can condemn an otherwise brilliant eleven."
+  }
+ ],
+ "universal_lens": "Any contest between coordinated teams under fixed rules can be reasoned about the same way: fix the scoring values and the trial budget, define roles by their relations and invariants rather than by their occupants, attack the opposing structure in sections instead of dueling individuals, design actions backward from the winning configuration, hide intentions inside a distribution of similar-looking actions, measure everything with cheap ledgers, and write a policy for every region of the state space in advance. The book is a template for turning any such contest from folklore into an auditable system.",
+ "gsi_mapping": "For the Institute, the book is a curriculum design as much as a football text: fundamentals before relations, relations before team play, and team play before tricks, with each stage gated by explicit tests rather than by the calendar. It also supplies a teaching method worth adopting wholesale: walk new material through at low speed at defined measurement points, examine decision-makers under time pressure with situational questions, keep written reports from participants after every exercise, and preserve every sketch and failed draft in a single book because later developments give old studies new value.",
+ "gse_mapping": "For the Edge engine, the book contributes architecture, not tactics: a sectioned field state with a policy table per section, series-based play representation in which deception is scored by the cover distribution, play evaluation from an ordered ledger rather than from opinion, hazard gating that reserves high-variance plays for states that accept hazards, leading-indicator probes for latent weaknesses, and an attribution rule that treats apparent luck as a prompt to search the preparation and morale layers first. Its 1896 constants, scoring values, downs, and yardages, are read as parameters of a dead code and are never inherited as values."
+}

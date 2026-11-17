@@ -1,0 +1,720 @@
+{
+ "book_id": "ecc00e9bdd99bcbe",
+ "source_status": "COMPLETE",
+ "source_note": "Reed, N., Zemek, R., Dawson, J., Ledoux, AA., et al. (2021). Living Guideline for Diagnosing and Managing Pediatric Concussion. Toronto, ON: Ontario Neurotrauma Foundation. DOI 10.17605/OSF.IO/3VWN9. Last updated March 1, 2021. Local file is the publisher PDF (14,188,449 bytes); gatekeeper scan digest sha256 over str(size) plus full file bytes is ecc00e9bdd99bcbe4d093ba02c2d6c82f4ae3127c08cd9cc8cb9906ed9d57b45, book_id ecc00e9bdd99bcbe. Extracted text is clean and complete: 5,368 lines covering all 15 domains, the full recommendation list, the tools list, and references. The work is a clinical practice guideline containing no equations, so every latex field is empty. Scope note from the document itself: it is not intended for patients over 18 years, and as a living guideline it is updated online, so this PDF is the March 2021 snapshot. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "concussion_spectrum_definition",
+   "name": "Concussion sits on a clinical-pathological spectrum of traumatic brain injury with non-specific physical, cognitive, sleep, and emotional symptoms",
+   "verbatim_quote": "Concussion is a condition that exists along a clinical-pathological spectrum of traumatic brain injury (TBI)",
+   "page": "Section A Introduction, text line 522",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Applies to children and adolescents under 18 years",
+    "Symptoms are non-specific, so mimics must be ruled out before the label is applied"
+   ],
+   "breakdown_regime": "The spectrum framing gives no severity cutoff; it breaks down as a stand-alone diagnostic test because diagnosis still requires history, examination, and exclusion of more severe injury",
+   "domain": "clinical definition",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats any head-impact event as a graded state on an injury spectrum rather than a binary injured or healthy flag, so availability and performance projections degrade continuously with position on the spectrum instead of switching off",
+    "source_operator": "concussion_spectrum_definition",
+    "telemetry": "Impact event reports, symptom checklists, and medical clearance status per player"
+   }
+  },
+  {
+   "primitive_id": "immediate_removal_from_activity",
+   "name": "A suspected concussion triggers immediate removal from the activity and no same-day return",
+   "verbatim_quote": "Remove the child/adolescent from the activity immediately if a concussion is suspected for immediate assessment and to avoid another injury.",
+   "page": "Recommendation 1.2, List of Recommendations and Domain 1 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Suspicion alone is sufficient; confirmation is not required before removal",
+    "The child is not left alone and the parent or caregiver is contacted"
+   ],
+   "breakdown_regime": "Breaks down when no trained observer is present or when symptoms are concealed by the athlete; the rule depends on recognition happening at all",
+   "domain": "acute injury protocol",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the spectrum definition: once an impact plus any sign crosses the suspicion threshold, the engine zeroes the player's projected availability for that event and starts a recovery clock, with no partial-availability state for the same day",
+    "source_operator": "concussion_spectrum_definition",
+    "telemetry": "Sideline evaluation flags, removal timestamps, and same-day return attempts"
+   }
+  },
+  {
+   "primitive_id": "red_flag_emergency_escalation",
+   "name": "A defined red flag symptom set escalates a suspected concussion to emergency medical assessment",
+   "verbatim_quote": "Recommend an emergency medical assessment for a child/adolescent with any of the “red flag” symptoms.",
+   "page": "Recommendation 1.3, List of Recommendations and Domain 1 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The red flag list in the Concussion Recognition Tool 5 is the operative trigger set",
+    "Emergency assessment takes priority over routine concussion management"
+   ],
+   "breakdown_regime": "Red flags are late or absent in many serious injuries, so absence of red flags does not clear a patient; the rule escalates but never de-escalates",
+   "domain": "triage",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine maps the red flag set onto a hard veto list: any appearance of a listed severe symptom in an injury report moves the case out of routine projection logic and into a long-horizon absence state",
+    "source_operator": "red_flag_emergency_escalation",
+    "telemetry": "Injury report text, hospital visit records, and ambulance or emergency department events"
+   }
+  },
+  {
+   "primitive_id": "symptom_onset_latency",
+   "name": "Concussion symptoms may appear immediately or be delayed by several hours, and the injury evolves over time",
+   "verbatim_quote": "Symptoms may appear immediately or within several hours after injury",
+   "page": "Domain 1 detail, notes under Recommendation 1.4",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A single sideline check cannot exclude concussion",
+    "Symptoms may change over time after the initial presentation"
+   ],
+   "breakdown_regime": "The latency window is stated qualitatively; the guideline gives no outer bound in hours after which new symptoms stop being attributable to the impact",
+   "domain": "clinical course",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps an observation window open after any head-impact event instead of closing the case at first clearance, so a player cleared at minute ten can still be flagged by a symptom report hours later",
+    "source_operator": "symptom_onset_latency",
+    "telemetry": "Timestamped symptom reports relative to impact time"
+   }
+  },
+  {
+   "primitive_id": "typical_recovery_window",
+   "name": "Most pediatric concussions resolve in 1 to 4 weeks, with a minority extending past one month",
+   "verbatim_quote": "Children typically recover in 1-4 weeks but some children/adolescents will have symptoms at one month and beyond and need to be monitored/seek additional care.",
+   "page": "Recommendation 2.2, Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Recovery means symptom resolution and return to daily activities",
+    "The rate is variable and unpredictable for an individual patient"
+   ],
+   "breakdown_regime": "Population window only; it breaks down for patients with recovery modifiers, repeated concussion, or pre-injury conditions, whose timelines sit outside the central range",
+   "domain": "prognosis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine uses 1 to 4 weeks as the prior distribution for games missed after a diagnosed concussion in a young athlete, then updates the estimate with individual modifiers instead of quoting a single return date",
+    "source_operator": "typical_recovery_window",
+    "telemetry": "Days from injury to full clearance across historical cases"
+   }
+  },
+  {
+   "primitive_id": "comprehensive_medical_assessment",
+   "name": "Every suspected concussion receives a comprehensive assessment: history, physical examination, and evidence-based testing",
+   "verbatim_quote": "Physicians or nurse practitioners should perform a comprehensive medical assessment on all children/adolescents with a suspected concussion or with acute head or spine trauma.",
+   "page": "Recommendation 2.1, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Assessment is performed by a physician or nurse practitioner",
+    "The differential must exclude more severe TBI, cervical spine injury, and medical, mental health, and neurological mimics"
+   ],
+   "breakdown_regime": "Resource dependent; in settings without access to a physician or nurse practitioner the standard cannot be met and telemedicine criteria in Domain 15 govern the fallback",
+   "domain": "diagnostic process",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats a concussion label as trustworthy only when it comes from a full assessment event; labels from informal sources are held as provisional and weighted lower in availability projections",
+    "source_operator": "concussion_spectrum_definition",
+    "telemetry": "Source and completeness of each medical evaluation record"
+   }
+  },
+  {
+   "primitive_id": "recovery_modifiers_5p_risk_score",
+   "name": "Named modifiers delay recovery, and the 5P clinical risk score predicts risk of prolonged symptoms at first assessment",
+   "verbatim_quote": "Note common modifiers that may delay recovery and use a clinical risk score to predict risk of prolonged symptoms.",
+   "page": "Recommendation 2.1b, Domain 2 detail, 5P calculator link at text line 750",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Modifiers include age, female sex, prior concussion recovery duration, high symptom burden, vestibular or oculomotor dysfunction, migraine history, learning difficulties, and family mental health history",
+    "The score is applied at the initial assessment, before the course is known"
+   ],
+   "breakdown_regime": "The score predicts group risk, not an individual date; it was derived in pediatric emergency populations and may not transfer to other settings or age bands",
+   "domain": "risk stratification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The modifier list becomes a feature set for the engine's recovery-time model: each present modifier shifts the projected return later, and the 5P approach is the template for a calibrated prolonged-absence probability rather than a yes or no guess",
+    "source_operator": "typical_recovery_window",
+    "telemetry": "Modifier presence per case, initial symptom burden scores, and realized recovery durations"
+   }
+  },
+  {
+   "primitive_id": "ct_imaging_decision_rule",
+   "name": "CT is reserved for suspected structural injury after assessment; routine neuroimaging is not a concussion diagnostic",
+   "verbatim_quote": "Consider CT of the brain or cervical spine only in patients with acute head trauma in whom, after a medical assessment, a structural intracranial or cervical spine injury is suspected; do not conduct routine neuroimaging for the purpose of diagnosing concussion.",
+   "page": "Recommendation 2.1d, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Validated decision rules such as PECARN and CATCH 2 assist but do not replace clinical judgment",
+    "Ionizing radiation exposure in children carries a small increased lifetime cancer risk, which is part of why imaging is rationed"
+   ],
+   "breakdown_regime": "Breaks down where clinical assessment is unavailable or equivocal; a negative CT also does not exclude concussion, only structural injury",
+   "domain": "diagnostic testing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine reads a CT order as a severity signal in itself: imaging ordered implies suspected structural injury and a longer absence prior, while no imaging with a concussion diagnosis implies the standard recovery prior",
+    "source_operator": "ct_imaging_decision_rule",
+    "telemetry": "Imaging orders, imaging results, and emergency department disposition per case"
+   }
+  },
+  {
+   "primitive_id": "initial_rest_24_48h",
+   "name": "Management opens with a brief 24 to 48 hour rest period, and prolonged rest beyond it is not recommended",
+   "verbatim_quote": "Recommend an initial 24-48 hour period of rest with limited physical and cognitive activity.",
+   "page": "Recommendation 2.3a, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rest covers both physical and cognitive activity",
+    "The guideline states prolonged rest beyond the first 24 to 48 hours may cause more harm than good"
+   ],
+   "breakdown_regime": "The rest prescription is a bounded window, not open-ended; it breaks down if applied as strict isolation for days, which the guideline explicitly warns against",
+   "domain": "recovery management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine models the first 24 to 48 hours as a mandatory zero-load interval inside the recovery trajectory, after which expected load rises; a report of extended strict rest is treated as a risk factor for slower return, not as caution",
+    "source_operator": "typical_recovery_window",
+    "telemetry": "Activity and rest logs in the first days after injury"
+   }
+  },
+  {
+   "primitive_id": "sub_symptom_threshold_graduated_activity",
+   "name": "After 24 to 48 hours, low to moderate activity resumes below the symptom-exacerbation threshold and is titrated upward",
+   "verbatim_quote": "Recommend that low to moderate level physical and cognitive activity be gradually started 24-48 hours after a concussion at a level that does not result in recurrence or exacerbation of symptoms.",
+   "page": "Recommendation 2.3b, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Activities resumed must pose no or low risk of another concussion",
+    "Mild residual symptoms do not block resumption"
+   ],
+   "breakdown_regime": "The threshold is defined by patient report, so it breaks down with poor symptom reporting, very young children, or communication deficits; dosing is individualized, not protocol-fixed",
+   "domain": "rehabilitation dosing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a dose titration controller the engine mirrors for return progression: projected workload steps up only while the symptom signal stays flat, and any exacerbation holds or reverses the step, which is exactly how graded return stages should be advanced",
+    "source_operator": "sub_symptom_threshold_graduated_activity",
+    "telemetry": "Daily symptom scores paired with activity load during recovery"
+   }
+  },
+  {
+   "primitive_id": "contact_risk_avoidance",
+   "name": "During recovery, all activities with contact, fall, or collision risk are avoided because a second concussion compounds the injury",
+   "verbatim_quote": "Recommend that patients avoid activities associated with a risk of contact, fall, or collisions such as high speed and/or contact activities and full-contact sport that may increase the risk of sustaining another concussion during the recovery period.",
+   "page": "Recommendation 2.3c, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The restriction lasts for the whole recovery period, not only the rest window",
+    "Returning before recovery increases risk of delayed recovery and a more severe second concussion"
+   ],
+   "breakdown_regime": "Risk is activity-defined rather than measured per athlete; informal or unsupervised settings are where the rule most often fails in practice",
+   "domain": "risk management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine splits projected activity into contact-exposed and non-contact classes during any recovery window: non-contact workload can resume on the titration schedule while contact exposure stays at zero until clearance",
+    "source_operator": "contact_risk_avoidance",
+    "telemetry": "Practice type, drill contact level, and game participation flags"
+   }
+  },
+  {
+   "primitive_id": "sub_symptom_aerobic_exercise_referral",
+   "name": "Slow recoverers and competitive athletes are referred for individually assessed sub-symptom threshold aerobic exercise prescription",
+   "verbatim_quote": "Consider referring select patients (e.g., competitive athletes, those who are not tolerating a graduated return to physical activity, or those who are slow to recover) to a medically supervised interdisciplinary team with the ability to individually assess sub-symptom threshold aerobic exercise tolerance and to prescribe aerobic exercise treatment.",
+   "page": "Recommendation 2.3d, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Exercise tolerance is measured individually, typically with a graded test, before prescription",
+    "The referral is selective, not routine for every concussion"
+   ],
+   "breakdown_regime": "Requires a medically supervised interdisciplinary team with testing capacity; unavailable in many regions, and the evidence level is B, not A",
+   "domain": "rehabilitation referral",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine flags the same referral triggers in its own terms: a case whose realized recovery is tracking slower than the modifier-adjusted prior gets escalated from generic progression to individualized workload prescription",
+    "source_operator": "sub_symptom_threshold_graduated_activity",
+    "telemetry": "Graded exercise test results, heart rate at symptom onset, and prescribed exercise dose"
+   }
+  },
+  {
+   "primitive_id": "otc_analgesic_overuse_limit",
+   "name": "Acute headache is treated with acetaminophen or ibuprofen, capped under 15 days per month to prevent medication-overuse headache",
+   "verbatim_quote": "Over-the-counter medications such as acetaminophen and ibuprofen may be recommended to treat acute headache. Advise on limiting the use of these medications to less than 15 days a month",
+   "page": "Recommendation 2.5, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Around-the-clock scheduled dosing is specifically discouraged",
+    "The cap exists to prevent overuse or rebound headaches"
+   ],
+   "breakdown_regime": "The day count is a population guardrail; it does not identify which patients will develop medication-overuse headache, and adherence depends on self-report or diary",
+   "domain": "pharmacotherapy safety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats analgesic frequency as a confounder in symptom data: headache reports from a patient dosing near the cap are discounted, because the medication pattern itself can generate the symptom being tracked",
+    "source_operator": "otc_analgesic_overuse_limit",
+    "telemetry": "Medication diaries and reported analgesic days per month"
+   }
+  },
+  {
+   "primitive_id": "followup_1_2_weeks",
+   "name": "A medical follow-up at 1 to 2 weeks reassesses status, with immediate follow-up on any deterioration",
+   "verbatim_quote": "Recommend a medical follow-up in 1-2 weeks to re-assess and monitor clinical status.",
+   "page": "Recommendation 2.8, List of Recommendations and Domain 2 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Follow-up applies even when the initial course looks benign",
+    "Deterioration at any point overrides the schedule"
+   ],
+   "breakdown_regime": "A single checkpoint can miss both faster recoveries and slower drifts; the guideline compensates with regular follow-up while symptoms or incomplete return stages persist",
+   "domain": "care pathway timing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine schedules its own re-evaluation of an injury case at the same cadence: projections made at injury time are provisional and are re-issued at the 1 to 2 week checkpoint with updated symptom data",
+    "source_operator": "followup_1_2_weeks",
+    "telemetry": "Follow-up visit dates and status changes per case"
+   }
+  },
+  {
+   "primitive_id": "prolonged_symptoms_4_week_definition",
+   "name": "Symptoms lasting more than 4 weeks define the prolonged state that changes the care pathway",
+   "verbatim_quote": "Those with prolonged symptoms (symptoms that last more than 4 weeks following the acute injury) can benefit from a referral to interdisciplinary teams",
+   "page": "Section A Introduction and Domain 3 Introduction",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 4 week boundary is the guideline's operational definition of prolonged",
+    "Prolonged cases are heterogeneous in cause and need targeted assessment"
+   ],
+   "breakdown_regime": "The boundary is a convention, not a biological discontinuity; a patient at 3.5 weeks with modifiers may need the same care as one at 4.5 weeks, which is why early referral exists",
+   "domain": "clinical course",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine encodes 4 weeks as a state transition: a case still symptomatic past that boundary leaves the standard recovery model and enters a prolonged-case model with different return priors and specialist-input features",
+    "source_operator": "typical_recovery_window",
+    "telemetry": "Symptom persistence flags at the 4 week mark"
+   }
+  },
+  {
+   "primitive_id": "four_week_specialist_referral",
+   "name": "Symptoms not gradually resolving by 4 weeks trigger referral to specialized interdisciplinary care",
+   "verbatim_quote": "Refer to specialized care with an interdisciplinary concussion team if post-concussion symptoms do not gradually resolve by 4 weeks.",
+   "page": "Recommendation 3.4, List of Recommendations and Domain 3 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Care from the team is targeted to identified symptoms; not every patient needs every team member",
+    "Resolution is judged as a trend, not a single symptom-free day"
+   ],
+   "breakdown_regime": "Depends on interdisciplinary teams existing and being reachable; wait times can push effective referral well past the 4 week trigger",
+   "domain": "care pathway escalation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the prolonged-state definition: crossing the boundary without a resolving trend fires the escalation in the engine's case model, marking the case for human review rather than continued automatic projection",
+    "source_operator": "prolonged_symptoms_4_week_definition",
+    "telemetry": "Referral events and specialist assessments per case"
+   }
+  },
+  {
+   "primitive_id": "early_referral_with_modifiers",
+   "name": "Recovery modifiers justify referral before the 4 week mark instead of waiting for the standard trigger",
+   "verbatim_quote": "Consider early referral (prior to 4-week post-injury) to an interdisciplinary concussion team in the presence of modifiers that may delay recovery.",
+   "page": "Recommendation 3.5, List of Recommendations and Domain 3 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "This is one of the guideline's Level A recommendations",
+    "The same modifier set from Recommendation 2.1b drives the decision"
+   ],
+   "breakdown_regime": "Modifier presence raises risk but does not guarantee prolongation, so early referral will over-triage some patients who would have recovered on the standard path",
+   "domain": "risk stratification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine applies the modifier score as an escalation accelerator: high modifier load moves the specialist-review trigger earlier than the default 4 week boundary instead of waiting for the boundary to prove the delay",
+    "source_operator": "recovery_modifiers_5p_risk_score",
+    "telemetry": "Modifier counts per case and referral timing relative to injury date"
+   }
+  },
+  {
+   "primitive_id": "no_objective_recovery_test",
+   "name": "No objective test confirms physiological recovery, so clearance is a clinical judgment against explicit criteria",
+   "verbatim_quote": "Presently there is no objective test to confirm physiological recovery following concussion.",
+   "page": "Domain 4 Introduction",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Clearance criteria include full return to school without accommodations, normal neurological and cervical examination, asymptomatic at rest, and tolerance of non-contact activity",
+    "Clearance decisions are individualized"
+   ],
+   "breakdown_regime": "The criteria are clinical and partly self-reported, so clearance quality varies with examiner experience and patient honesty; the guideline cannot remove that variance",
+   "domain": "clearance decision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine mirrors this limit honestly: its return projections are probabilistic estimates with stated uncertainty, never a binary recovered flag, because the source domain itself has no ground-truth recovery test to calibrate against",
+    "source_operator": "no_objective_recovery_test",
+    "telemetry": "Clearance letters, criteria checklist completion, and post-clearance recurrence events"
+   }
+  },
+  {
+   "primitive_id": "baseline_testing_not_recommended",
+   "name": "Pre-injury baseline testing adds no supported benefit and is neither recommended nor required for diagnosis or management",
+   "verbatim_quote": "Baseline testing on children/adolescents using concussion assessment tools or tests (or any combination of tests/tools) is not recommended or required for concussion diagnosis or management following an injury.",
+   "page": "Recommendation 5.2, List of Recommendations and Domain 5 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The position covers SCAT5 and Child SCAT5 as well as computerized and paper neurocognitive tests",
+    "Narrow exceptions exist for select athletes over 12 with pre-existing conditions under specialist care"
+   ],
+   "breakdown_regime": "The verdict is evidence-contingent; the guideline is a living document and the position could change if stronger evidence for baseline utility appears",
+   "domain": "assessment validity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine applies the same skepticism to its own baselines: a pre-injury player baseline is not treated as a recovery target or a truth reference, because normal variation and test noise swamp the comparison the baseline invites",
+    "source_operator": "baseline_testing_not_recommended",
+    "telemetry": "Baseline test records and their post-injury comparisons where programs still collect them"
+   }
+  },
+  {
+   "primitive_id": "multiple_concussion_retirement_decision",
+   "name": "Multiple concussions or baseline symptom conditions move return and retirement decisions to an interdisciplinary team weighing history, thresholds, and sequelae",
+   "verbatim_quote": "Refer a child/adolescent with multiple concussions or baseline conditions associated with concussion-like symptoms to an interdisciplinary concussion team to help with return to full-contact sports, or high-risk activities or retirement decisions from full-contact sports, or high-risk activities.",
+   "page": "Recommendation 5.1, Domain 5 detail, text line 1324",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Decision factors include concussion history, co-morbidities, contraindications, lower injury threshold, increasing recovery time, and potential sequelae",
+    "Retirement is an explicit possible outcome, not only delayed return"
+   ],
+   "breakdown_regime": "No numeric concussion count threshold is given; the decision stays judgment-based, so two teams can reach different conclusions on the same history",
+   "domain": "career risk decision",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats concussion count and lengthening recovery times as compounding state: each new event raises the projected cost of the next one, and past a pattern of escalation the model's honest output is a long-horizon or career-level warning, not a routine return date",
+    "source_operator": "multiple_concussion_retirement_decision",
+    "telemetry": "Career concussion history, recovery duration trend across events, and retirement outcomes"
+   }
+  },
+  {
+   "primitive_id": "headache_subtype_classification",
+   "name": "Prolonged post-concussion headache is classified into subtypes, including migraine, cervicogenic, and exercise-induced, before treatment is chosen",
+   "verbatim_quote": "Classify and characterize the headache subtype based on the clinical history and physical examination findings.",
+   "page": "Recommendation 6.1d, List of Recommendations and Domain 6 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Classification follows the International Classification of Headache Disorders, ICHD-III",
+    "Some prolonged headaches cannot be classified under ICHD-III"
+   ],
+   "breakdown_regime": "Subtype boundaries blur in practice and headaches co-occur with dizziness, neck pain, sleep disturbance, and mood symptoms, so a single-label classification can mislead treatment",
+   "domain": "symptom phenotyping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine phenotypes symptom clusters before projecting: a headache-dominant case with cervical findings routes to a different expected course than a migraine-dominant case, instead of one generic post-concussion symptom bucket",
+    "source_operator": "headache_subtype_classification",
+    "telemetry": "Headache character, location, triggers, and associated symptoms per case"
+   }
+  },
+  {
+   "primitive_id": "abortant_medication_day_cap",
+   "name": "Migraine abortants such as triptans are capped at fewer than 6 to 10 days per month to avoid medication-induced headache",
+   "verbatim_quote": "Due to the risk of developing medication-induced headaches, limit use of abortants to fewer than 6-10 days per month.",
+   "page": "Recommendation 6.4, Domain 6 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The cap applies while pharmacotherapy is started ahead of specialist referral",
+    "Prophylactic therapy is considered when headaches are frequent, disabling, or abortants are overused"
+   ],
+   "breakdown_regime": "The 6 to 10 day range is a band, not a precise threshold, and individual susceptibility varies; the guideline gives no biomarker for who crosses into medication-induced headache",
+   "domain": "pharmacotherapy safety",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A second, tighter instance of the analgesic cap: the engine tracks abortant days as a state variable, and a case approaching the cap gets its headache projections flagged as potentially medication-driven rather than injury-driven",
+    "source_operator": "otc_analgesic_overuse_limit",
+    "telemetry": "Abortant use days per month from medication diaries"
+   }
+  },
+  {
+   "primitive_id": "sleep_disturbance_recovery_risk",
+   "name": "Post-concussion sleep disturbance is itself a risk factor for prolonged recovery, so it is screened early",
+   "verbatim_quote": "The presence of sleep disturbances following concussion is a risk factor for a prolonged recovery from concussion.",
+   "page": "Domain 7 Introduction",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sleep problems include difficulty falling or staying asleep and excessive daytime sleepiness",
+    "Medication use, headache, and mental health conditions also affect sleep and must be screened as contributors"
+   ],
+   "breakdown_regime": "Association is not a dosing rule; improving sleep is recommended, but the guideline does not quantify how much recovery time a given sleep improvement buys",
+   "domain": "prognosis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sleep status enters the engine as a dynamic modifier rather than a static one: a case that develops sleep disturbance after injury gets its projected return pushed later even if the initial modifier score was low",
+    "source_operator": "recovery_modifiers_5p_risk_score",
+    "telemetry": "Sleep quality reports and sleep-wake disturbance flags over the recovery course"
+   }
+  },
+  {
+   "primitive_id": "cbt_first_line_insomnia",
+   "name": "Cognitive behavioural therapy is the treatment of choice for post-concussion insomnia before supplements, medication, or specialist escalation",
+   "verbatim_quote": "The treatment of choice for primary insomnia and insomnia co-morbid to a medical or psychiatric condition is cognitive behavioural therapy (CBT).",
+   "page": "Recommendation 7.3, Domain 7 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Non-pharmacological supplements such as magnesium, melatonin, and zinc are adjuncts, not replacements",
+    "If CBT is unavailable, sleep hygiene is optimized and the patient is monitored weekly"
+   ],
+   "breakdown_regime": "CBT access is the binding constraint in many regions; the guideline's fallback pathway exists precisely because first-line care is often not immediately available",
+   "domain": "treatment selection",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's intervention ranking follows the same order of operations: behavioral and load-management interventions are modeled as first-line levers on recovery, with pharmacological variables treated as last-resort adjustments, not defaults",
+    "source_operator": "cbt_first_line_insomnia",
+    "telemetry": "CBT referral and attendance, supplement use, and sleep outcome tracking"
+   }
+  },
+  {
+   "primitive_id": "sleep_pharmacotherapy_last_resort",
+   "name": "Sleep medication is short-term only, considered after 6 weeks unimproved, at low named doses such as trazodone 12.5 mg or amitriptyline 5.0 to 10.0 mg",
+   "verbatim_quote": "Potential medication options include trazodone 12.5 mg or amitriptyline 5.0 – 10.0 mg",
+   "page": "Recommendation 7.5, Domain 7 detail, text line 1991",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Medication aims to establish a routine sleep pattern, not to sedate indefinitely",
+    "Dependency and adverse effects must stay minimal"
+   ],
+   "breakdown_regime": "Doses are examples within a Level C recommendation; persistent failure after pharmacotherapy requires a pediatric sleep specialist, so the pathway terminates in referral, not dose escalation",
+   "domain": "pharmacotherapy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine reads a sleep-medication start at week 6 as a severity marker: it signals that behavioral pathways failed, and the case's projected recovery extends accordingly",
+    "source_operator": "sleep_disturbance_recovery_risk",
+    "telemetry": "Sleep medication starts, doses, and timing relative to injury"
+   }
+  },
+  {
+   "primitive_id": "preinjury_mental_health_risk",
+   "name": "A mental health disorder before concussion is a critical risk factor for a mental health disorder after concussion",
+   "verbatim_quote": "Having a mental health disorder prior to concussion is a critical risk factor for a post-concussion mental health disorder.",
+   "page": "Domain 8 Introduction",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Family and caregiver mental health and function are assessed as part of the environment",
+    "Screening uses named instruments such as PHQ-A, GAD-7 child measures, HEADS-ED, and PROMIS scales"
+   ],
+   "breakdown_regime": "Screening identifies risk, not diagnosis; positive screens need specialist confirmation, and family factors are reported, not directly observed",
+   "domain": "risk stratification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Mental health history is a first-class modifier in the engine's health layer: it shifts both the prolonged-symptom probability and the expected shape of recovery, and it is collected at intake rather than discovered after a case stalls",
+    "source_operator": "recovery_modifiers_5p_risk_score",
+    "telemetry": "Pre-injury mental health history, screening scores, and family context fields"
+   }
+  },
+  {
+   "primitive_id": "cognitive_symptom_evaluation",
+   "name": "Cognitive symptoms that interfere with daily functioning are evaluated, with deeper professional assessment when they persist past 4 weeks",
+   "verbatim_quote": "Evaluate a child/adolescent for cognitive symptoms that interfere with daily functioning following the acute injury.",
+   "page": "Recommendation 9.1, List of Recommendations and Domain 9 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The functional interference criterion, not symptom presence alone, triggers evaluation",
+    "Pre-existing and concussion-related cognitive problems must be disentangled"
+   ],
+   "breakdown_regime": "School records and teacher observation are needed to separate pre-existing difficulty from new deficit; without them the evaluation is under-determined",
+   "domain": "symptom phenotyping",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine scores cognitive impact by functional interference (missed school, failed return stages) rather than raw symptom counts, matching the guideline's trigger and avoiding overreaction to mild but non-limiting symptoms",
+    "source_operator": "cognitive_symptom_evaluation",
+    "telemetry": "School absence, accommodation use, and cognitive complaint records"
+   }
+  },
+  {
+   "primitive_id": "bppv_otoconia_mechanism",
+   "name": "Post-traumatic BPPV is displaced otoconia in a semicircular canal, screened with Dix-Hallpike and treated with particle repositioning such as the Epley manoeuvre",
+   "verbatim_quote": "Benign paroxysmal positional vertigo (BPPV) can be caused by the traumatic displacement of the crystals (otoconia) of the inner ear into one of the semi-circular canals.",
+   "page": "Domain 10, BPPV section, Dix-Hallpike at text line 2269",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The trigger signature is vertigo lasting seconds after position changes",
+    "The cervical spine is cleared before testing positions are used"
+   ],
+   "breakdown_regime": "Many BPPV subtypes need alternate manoeuvres or specialist assessment; symptoms persisting after 3 repositioning manoeuvres exit this pathway into referral",
+   "domain": "vestibular medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "BPPV is the engine's reminder that some post-impact symptoms have a mechanical, fixable cause with a fast resolution curve, unlike the graded weeks-long curve of concussion itself; a vertigo case matching the seconds-after-position-change signature gets a different, shorter projected course with a treatment event in the middle",
+    "source_operator": "bppv_otoconia_mechanism",
+    "telemetry": "Vertigo episode duration and triggers, Dix-Hallpike results, and manoeuvre counts"
+   }
+  },
+  {
+   "primitive_id": "vor_dysfunction_recovery_prediction",
+   "name": "Altered vestibulo-ocular reflex function after concussion may predict a longer recovery",
+   "verbatim_quote": "In many cases, difficulties with clear vision during head motion are reported following a concussion and there is emerging evidence that alterations in VOR function may predict a longer recovery following concussion.",
+   "page": "Domain 10, Vestibulo-ocular Deficits section",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Screening uses the head thrust test and dynamic visual acuity by clinicians with appropriate experience",
+    "Vestibular rehabilitation is reported to facilitate recovery when VOR gain is altered"
+   ],
+   "breakdown_regime": "The guideline labels the evidence as emerging; VOR findings adjust suspicion but are not a validated stand-alone prognostic test at this edition",
+   "domain": "prognosis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "VOR screening results feed the engine as an early measurable signal: abnormal vestibulo-ocular findings at the 1 to 2 week assessment shift the projected recovery later before symptom duration alone would justify it",
+    "source_operator": "recovery_modifiers_5p_risk_score",
+    "telemetry": "Head thrust and dynamic visual acuity results, dizziness and blurred vision reports with head motion"
+   }
+  },
+  {
+   "primitive_id": "balance_deficit_rehabilitation",
+   "name": "Balance deficits are screened with standing tests and the Balance Error Scoring System, and vestibular rehabilitation may improve balance and dizziness",
+   "verbatim_quote": "Vestibular rehabilitation may improve balance and dizziness. If prolonged impairment is identified, refer to a specialist immediately.",
+   "page": "Recommendation 10.5, Domain 10 detail, BESS at text line 2319",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Assessment separates visual, inner ear, musculoskeletal, and nervous system contributors",
+    "Dynamic balance options include the Functional Gait Assessment"
+   ],
+   "breakdown_regime": "Balance tests are effort and practice sensitive; a single BESS score without context can misclassify, which is why the guideline pairs screening with referral on prolonged impairment",
+   "domain": "vestibular medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats balance screening as a repeatable measurement series rather than a one-time verdict: trend across assessments carries the signal for whether the vestibular component of a case is resolving on schedule",
+    "source_operator": "balance_deficit_rehabilitation",
+    "telemetry": "BESS scores, tandem and single leg stance results, and gait assessment outcomes over time"
+   }
+  },
+  {
+   "primitive_id": "four_ps_energy_pacing",
+   "name": "Fatigue and activity are managed with the Four Ps pacing framework: Prioritize, Plan, Pace, and Position",
+   "verbatim_quote": "Pacing and energy management techniques should be shared with the child/adolescent (Tool 2.5 “Four P’s” – Prioritize, Plan, Pace and Position).",
+   "page": "Domain 11 Introduction, text line 2409",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Spreading activities through the day beats doing too much at once",
+    "Daytime napping is discouraged and fatigue triggers are identified"
+   ],
+   "breakdown_regime": "Pacing is a coping framework, not a cure; fatigue past 4 weeks still requires interdisciplinary referral to learn pacing formally and to exclude other causes",
+   "domain": "energy management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The Four Ps are a daily load-budgeting algorithm the engine mirrors in workload terms: total daily load is capped, prioritized, and distributed so no single block spikes symptoms, which is the same shape as a sane training-load progression after any injury",
+    "source_operator": "four_ps_energy_pacing",
+    "telemetry": "Activity diaries, fatigue pattern records, and planned versus completed daily load"
+   }
+  },
+  {
+   "primitive_id": "school_full_load_before_sport",
+   "name": "Full-time school at full academic load, including exams without accommodations, must precede return to full-contact sport",
+   "verbatim_quote": "Recommend that the child/adolescent return-to-school full-time at a full academic load, including writing exams without accommodations related to their concussion/post-concussion symptoms, before returning to full-contact sport or high-risk activities.",
+   "page": "Recommendation 12.5, Domain 12 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Return-to-school and return-to-sport strategies can run simultaneously, but school completion gates sport clearance",
+    "Medical clearance is not required to return to school, only to full-contact sport"
+   ],
+   "breakdown_regime": "School capacity is an imperfect proxy for physiological recovery; the guideline uses it because it is observable and standardized, not because it measures the brain directly",
+   "domain": "clearance gating",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is a hard sequencing gate the engine copies exactly: the cognitive-load milestone (full school load without support) must be observed before the contact milestone is even evaluated, so projections never show a contact return date earlier than the school gate clears",
+    "source_operator": "no_objective_recovery_test",
+    "telemetry": "Return-to-school stage, accommodation status, and exam completion per case"
+   }
+  },
+  {
+   "primitive_id": "advanced_neuroimaging_not_clinical",
+   "name": "Advanced neuroimaging biomarkers such as fMRI, DTI, and MRS are research tools, not ready for clinical management",
+   "verbatim_quote": "At this stage, advanced neuroimaging biomarkers are not yet ready for clinical implementation/management.",
+   "page": "Recommendation 13.1, List of Recommendations, text line 456",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Conventional MRI with susceptibility-weighted sequences may still be used for structural questions",
+    "The clinical significance of small hemorrhages on SWI is stated as unclear"
+   ],
+   "breakdown_regime": "A not-yet verdict is time-stamped to this 2021 edition; the living guideline format exists because this class of verdict is expected to be revisited as evidence accumulates",
+   "domain": "biomarker readiness",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine keeps the same two-register discipline for its own candidate signals: research-register signals can be studied but never drive a published projection until they graduate to clinical-grade validation, and the register is recorded on the signal itself",
+    "source_operator": "advanced_neuroimaging_not_clinical",
+    "telemetry": "Validation status and evidence grade per candidate signal or biomarker"
+   }
+  },
+  {
+   "primitive_id": "no_validated_serologic_test",
+   "name": "No validated concussion blood test exists for children and adolescents; serologic biomarkers are not clinically indicated",
+   "verbatim_quote": "The use of serologic biomarkers is not clinically indicated. Presently there is no validated “concussion blood test” that can be used to accurately detect concussion in children/adolescents.",
+   "page": "Recommendation 14.1, List of Recommendations and Domain 14 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The verdict covers newer serologic and other clinical biomarkers as of this edition",
+    "Research use remains legitimate; clinical detection does not"
+   ],
+   "breakdown_regime": "Adult biomarker clearances do not transfer to pediatrics; applying an adult-validated test to this population is exactly the transfer error the recommendation blocks",
+   "domain": "biomarker readiness",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Derived from the neuroimaging readiness verdict and applied to blood markers: the engine refuses to ingest a biomarker as a diagnostic feature until population-matched validation exists, however strong the adult or research literature looks",
+    "source_operator": "advanced_neuroimaging_not_clinical",
+    "telemetry": "Biomarker validation studies by population and intended use"
+   }
+  },
+  {
+   "primitive_id": "telemedicine_eligibility_gate",
+   "name": "Virtual concussion assessment is permitted only for selected patients: prior in-person assessment, limited access, and no abnormal imaging history",
+   "verbatim_quote": "In-person medical assessments are ideal for all children/adolescents with suspected or diagnosed concussion, however, telemedicine may be considered to assist in the medical assessment for patients who meet the following criteria:",
+   "page": "Recommendation 15.1, Domain 15 detail",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Informed consent for remote assessment is obtained first",
+    "Motor, sensory, vestibular, palpation, reflex, fundoscopy, and otoscopy components cannot be performed virtually"
+   ],
+   "breakdown_regime": "Eligibility is a compromise under access constraints and pandemic conditions; any deterioration or red flag converts the case back to in-person immediately",
+   "domain": "care delivery",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine applies the same gating to remote or partial data about a player: secondhand or remote observations can update a case only when a direct assessment baseline already exists, and known blind spots of the remote channel are recorded with the update",
+    "source_operator": "telemedicine_eligibility_gate",
+    "telemetry": "Assessment channel per evaluation, prior in-person baseline presence, and virtual examination completeness"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "ecc00e9bdd99bcbe-t1",
+   "think": "This document is a clinical practice guideline, and its machinery is a care pathway rather than a single test or treatment. It begins from a definition: concussion is a point on a clinical-pathological spectrum of traumatic brain injury whose symptoms are non-specific, which forces the entire structure that follows. Because the symptoms are non-specific, recognition is distributed to everyone around the child, teachers, coaches, parents, and peers, with a simple behavioral rule, remove the player immediately on suspicion, and a triage rule, a named red flag set that escalates to emergency care. Because the diagnosis cannot be confirmed by any instrument, the guideline builds its authority on a comprehensive clinical assessment by a physician or nurse practitioner, with an explicit differential that must exclude more severe brain injury, cervical spine injury, and medical or psychiatric mimics. Imaging is deliberately rationed through decision rules: CT exists to find structural injury, not to diagnose concussion, and the radiation cost in children is part of the stated reasoning. Layered on the assessment is a prognostic model. The expected course is recovery in 1 to 4 weeks, but the guideline names a modifier set, age, sex, prior concussion recovery time, symptom burden, vestibular and oculomotor findings, migraine and mental health history, learning difficulties, family context, and points clinicians to the 5P risk score to estimate prolonged-symptom risk at the first visit. Those modifiers do real work in the pathway: they justify early referral before the standard 4 week trigger, closer monitoring, and targeted supportive care. Management itself is a dosing system. A short 24 to 48 hour rest window is followed by graduated activity held below the symptom-exacerbation threshold, with contact, fall, and collision risk removed until clearance. Medication is fenced by day-count caps, under 15 days a month for simple analgesics and fewer than 6 to 10 days for triptan abortants, because the treatment can manufacture the symptom it treats. Follow-up is scheduled at 1 to 2 weeks, and the 4 week mark is a formal state change: symptoms persisting past it are prolonged by definition and route the patient to an interdisciplinary team, with symptom-domain chapters for headache, sleep, mental health, cognition, vision and vestibular function, fatigue, and school. Clearance to full-contact sport is gated by an observable proxy sequence, full school load including exams without accommodations first, then clinical criteria, because the guideline states plainly that no objective test of physiological recovery exists. Two negative verdicts discipline the technology layer: baseline testing is not recommended, and neither advanced neuroimaging biomarkers nor serologic biomarkers are ready for clinical use, however promising the research looks. Telemedicine is admitted only through an eligibility gate that records what a virtual examination cannot do. For a reasoning engine, the transferable core is the pathway discipline: graded states instead of binaries, modifiers that move timelines, thresholds that trigger escalation, day-count caps that flag confounding, gates that sequence milestones, and explicit not-yet verdicts that keep unvalidated signals out of decisions while keeping them visible for research. Where it breaks is where the guideline itself is honest about breaking: individual recovery is variable and unpredictable, several recommendations rest on Level B or C evidence, key judgments such as retirement after multiple concussions have no numeric threshold, access to interdisciplinary teams and CBT is assumed rather than guaranteed, and the whole apparatus is scoped to patients under 18 in a Canadian care context, frozen at a March 2021 update of a living document. The symptom chapters show how the pathway specializes without losing the spine. Headache care starts with classification against ICHD-III subtypes, including migraine, cervicogenic, and exercise-induced patterns, because treatment follows subtype, and it adds a headache and medication diary as a measurement instrument. Sleep care runs on its own clock: sleep hygiene and education first, cognitive behavioural therapy as the stated treatment of choice when disturbance passes 4 weeks, supplements such as melatonin as adjuncts, specialist referral and sleep studies past 6 weeks, and short-term low-dose medication only after that point. Mental health is screened with named instruments, PHQ-A, GAD-7 child measures, HEADS-ED, PROMIS profiles, and the family environment is assessed as a clinical variable in its own right, not as background color. The vision, vestibular, and oculomotor chapter is the most instrumented: visual acuity, convergence, accommodation, saccades, and smooth pursuits, the Dix-Hallpike test and Epley manoeuvre for BPPV, head thrust and dynamic visual acuity for the vestibulo-ocular reflex, and standing balance testing with the Balance Error Scoring System, each screen wired to a referral destination. Fatigue is handled as an energy budgeting problem through the Four Ps, Prioritize, Plan, Pace, and Position. Return to school is treated as a coordinated multi-party process with template accommodation letters, a named school point person, and a stepwise plan that is modified by ongoing symptom assessment, and it explicitly outranks return to work for adolescents who hold jobs. Two structural choices deserve emphasis. First, discharge is the default: nearly all patients go home for observation after assessment, with named indicators, worsening symptoms, decreased consciousness, bleeding disorders, multi-system injury, that justify keeping them, which keeps the system's scarce resource, monitored beds, for the cases that need it. Second, the document is explicitly a living guideline, updated online with a dated snapshot, and it grades every recommendation A, B, or C, so a reader can see exactly where the pathway rests on strong evidence, where it rests on weaker evidence, and where it rests on expert consensus. The tools list is part of the machinery rather than an appendix afterthought: twenty-five named tools, algorithms, checklists, and letter templates that convert recommendations into artifacts a clinic or school can actually use. Taken together, the work is less a summary of concussion science than an operating system for concussion care, and its reasoning transfers as an operating system: state machines for cases, triggers for escalation, caps that detect confounding, gates that order milestones, and a public register of what is not yet known well enough to use.",
+   "retrocausal_genealogy": "The guideline descends from the Ontario Neurotrauma Foundation pediatric concussion guideline line and the international Concussion in Sport consensus process, absorbing the shift away from prolonged strict rest toward early sub-symptom activity that the Berlin-era consensus established. Its instruments carry their own lineages: the Concussion Recognition Tool 5 and SCAT5 family from the Concussion in Sport Group, the PECARN and CATCH decision rules from pediatric emergency research, the 5P risk score from Zemek and the Canadian pediatric emergency network, and ICHD-III headache classification from the International Headache Society.",
+   "theory_of_mind": "The authors model their reader as a busy clinician, teacher, coach, or parent who needs decisions, not literature. Every recommendation is short, imperative, graded by evidence level, and wired to a tool, handout, or algorithm, which shows a belief that the domain fails at the point of action rather than the point of knowledge. Their model of the patient is equally specific: a developing child embedded in family and school systems, whose recovery is shaped by sleep, mood, social connection, and workload, and whose care must be coordinated across those systems rather than delivered in a single visit.",
+   "cross_layer_veto": "Several findings in this guideline veto signals that other layers are tempted to trust. The absence of any objective recovery test vetoes any layer claiming a confirmed recovery state. The negative verdicts on baseline testing, advanced neuroimaging, and blood biomarkers veto those inputs as decision evidence regardless of their research appeal. The medication day caps veto naive symptom tracking, because a headache signal may be drug-generated. The school-before-sport gate vetoes any clearance logic that would let physical readiness outrun demonstrated cognitive load tolerance."
+  }
+ ],
+ "universal_lens": "This guideline is a template for managing any evolving, hard-to-measure condition under uncertainty: distribute recognition to everyone near the event, ration expensive diagnostics through explicit decision rules, state the expected course as a range, name the modifiers that bend the range, schedule reassessment, define the time boundary where a case changes class, escalate to a team at that boundary, fence treatments that can imitate the disease, and publish plain not-yet verdicts on attractive but unvalidated tests. The pattern transfers to any domain where the measurement problem is worse than the treatment problem.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the clinical spine of youth concussion care: the recognition and removal rule, the red flag set, the modifier list, the graded return stages with the school-before-sport gate, and the honest limits on baseline testing and biomarkers. It is a teaching document for how evidence-graded recommendations are written, how tools are attached to decisions, and how a living guideline versions itself as evidence moves, which is the publishing discipline the Institute applies to its own protocols.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine, this guideline supplies the health layer's concussion model: a 1 to 4 week recovery prior, a modifier feature set anchored by the 5P approach, escalation triggers at the 1 to 2 week checkpoint and the 4 week prolonged boundary, a hard sequencing gate that requires full cognitive load tolerance before contact clearance, and confounder flags for medication-driven symptoms. It also supplies a discipline the engine applies to itself: candidate signals stay in a research register, clearly labeled, until population-matched validation graduates them into projections."
+}

@@ -57,11 +57,17 @@ from gse_engine.ingestion.recency_last30days import (
 from gse_engine.memory.knowledge_continuity_and_gsi_rlvr_flywheel import (
     verify_zero_loss_knowledge_continuity,
 )
+from gse_engine.memory.monorepo_omnibus_vault_indexer import (
+    retrieve_omnibus_theorems_and_coach_priors,
+)
 from gse_engine.memory.wave20_openviking_ragas_bayesian_and_graph_suite import (
     evaluate_wave20_corpus_rag_and_bayesian_bridge,
 )
 from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
     classify_neovalues_coaching_archetype,
+)
+from gse_engine.memory.wave21_tracking_biomech_rlvr_and_market_hold_suite import (
+    evaluate_wave21_tracking_biomech_and_rlvr_bridge,
 )
 from gse_engine.multisport.daily_multisport_slate_engine import (
     BcAciState,
@@ -1616,6 +1622,9 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
 
     census = uncompressed_25k_bridge.get("monorepo_and_drives_census") or {}
     continuity_res = verify_zero_loss_knowledge_continuity(REPO_ROOT)
+    omnibus_res = retrieve_omnibus_theorems_and_coach_priors(
+        away_u, home_u, ["fourth", "pressure", "wind", "red", "pace"], REPO_ROOT
+    )
     wave20_res = evaluate_wave20_corpus_rag_and_bayesian_bridge(
         away_team=away_u,
         home_team=home_u,
@@ -1624,6 +1633,14 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         away_clean_epa=aw_sig.clean_epa,
         home_clean_epa=hm_sig.clean_epa,
         rrf_citations=list(hybrid_rrf_res.get("top_fused_citations") or ()),
+    )
+    wave21_res = evaluate_wave21_tracking_biomech_and_rlvr_bridge(
+        away_team=away_u,
+        home_team=home_u,
+        effective_wind_mph=eff_wind,
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        is_short_week=is_short_week,
     )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
@@ -1645,6 +1662,20 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave20_ragas_faithfulness": float(wave20_res["ragas_faithfulness"]),
         "wave20_openviking_tier": str(wave20_res["openviking_tier_loaded"]),
         "wave20b_openscholar_tddlog_woodelf_wired": True,
+        "wave21_tracking_biomech_rlvr_wired": bool(wave21_res["wave21_wired"]),
+        "wave21_oss_registry_entries": int(wave21_res["oss_registry_unique_entries"]),
+        "polymarket_compliance_hold_cleared_false": wave21_res["polymarket_cleared"] is False,
+        "wave21_weather_epa_adj": float(wave21_res["wave21_weather_epa_adj"]),
+        "monorepo_vaults_verified": int(omnibus_res["vaults_verified"]),
+        "all_46_data_subdirs_verified": int(omnibus_res["data_subdirs_verified_count"]) == 46,
+        "complete_503_books_verified": int(omnibus_res["complete_corpus_books"]) >= 503,
+        "zero_skip_2949_theorems_wired": int(omnibus_res["zero_skip_theorems_total"]) >= 2949,
+        "coach_brain_41792_wired": int(omnibus_res["coach_brain_records_total"]) >= 41700,
+        "gse_dataset_1_11m_wired": int(omnibus_res["gse_dataset_records_total"]) >= 1100000,
+        "film_room_36337_indexed": int(omnibus_res["film_room_2026_files_total"]) >= 36000,
+        "q52_q54_shadow_registered": bool(omnibus_res["q52_q54_shadow_registered"]),
+        "statking_90_active_metrics_verified": int(omnibus_res["statking_active_metrics_count"])
+        == 90,
         "wave20b_home_archetype": classify_neovalues_coaching_archetype(
             proe=float(hm_sr.get("proe_season", 0.0) or 0.0),
             blitz_rate=float(hm_ftn.get("dc_blitz_rate", 0.25) or 0.25),
@@ -2069,7 +2100,8 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         + 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
         + 0.5 * k14_epa_pen
         + 0.002 * hg_edge
-        + float(wave20_res["away_wave20_epa_adj"]),
+        + float(wave20_res["away_wave20_epa_adj"])
+        + float(omnibus_res["omnibus_epa_prior_adj"]),
         -0.055,
         0.055,
     )
@@ -2082,7 +2114,8 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         - 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
         + 0.5 * k14_epa_pen
         + 0.002 * hg_edge
-        + float(wave20_res["home_wave20_epa_adj"]),
+        + float(wave20_res["home_wave20_epa_adj"])
+        + float(omnibus_res["omnibus_epa_prior_adj"]),
         -0.055,
         0.055,
     )

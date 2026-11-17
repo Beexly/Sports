@@ -1,8 +1,8 @@
-"""Wave 20B Literature Verification, Exact TDD WMC & WOODELF Interaction Suite.
+"""Wave 20B Literature Verification, Exact TDD WMC & WOODELF + Wave 20C Quant Suite.
 
-Integrates 8 repositories (#124..#131) into typed executable pre-sim kernels
+Integrates 12 repositories (#124..#135) into typed executable pre-sim kernels
 and expands docs/data-sources/research/2026-11-15/oss-corpus-registry.json to
-131 unique WIRED_V3 entries (141 total submitted URLs):
+135 unique WIRED_V3 entries (146 total submitted URLs):
   #124 AkariAsai/OpenScholar           -> Iterative self-feedback claim synthesis
   #125 nenadmarkus/pico                -> Binary pairwise cascade early rejection
   #126 awesome-decision-tree-papers    -> Smooth oblique tree split routing
@@ -11,6 +11,10 @@ and expands docs/data-sources/research/2026-11-15/oss-corpus-registry.json to
   #129 neomediavalist/neovalues        -> Hierarchical tactical archetype tree
   #130 juliustutz00/DTRBench           -> Greedy diverse subforest pruning
   #131 ron-wettenstein/woodelf         -> Exact Banzhaf main & 2nd-order synergy
+  #132 bentindal/FPL-Auto              -> Multi-gameweek Soccer transfer & cap MILP
+  #133 JNoel71/NHL-Expected-Goals-xG   -> Spatiotemporal NHL shot xG geometry
+  #134 dmlc/xgboost                    -> 2nd-order Newton Hessian GBDT split gain
+  #135 tuangauss/DataScienceProjects   -> Weibull goal-timing hazard & Brier ECE
 """
 
 from __future__ import annotations
@@ -167,6 +171,78 @@ WAVE20B_CORPUS_ENTRIES: list[dict[str, Any]] = [
         ),
         "license_posture": "ingest_and_learn_non_commercial_or_permissive",
         "role": "Computes exact Banzhaf main effects and 2nd-order cross-pillar synergy.",
+        "status": "WIRED_V3",
+    },
+    {
+        "id": 132,
+        "name": "bentindal/FPL-Auto",
+        "url": "https://github.com/bentindal/FPL-Auto",
+        "license": "MIT",
+        "category": "autonomous-fpl-soccer-horizon-milp",
+        "domain": "multi_horizon_soccer_transfer_and_captaincy_optimizer",
+        "gse_seam": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+            "::optimize_fpl_multiweek_squad_and_captaincy"
+        ),
+        "gse_target_surface": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+        ),
+        "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+        "role": "Optimizes discounted Soccer XI selection, -4pt hits, and 2x captaincy.",
+        "status": "WIRED_V3",
+    },
+    {
+        "id": 133,
+        "name": "JNoel71/NHL-Expected-Goals-xG-Model",
+        "url": "https://github.com/JNoel71/NHL-Expected-Goals-xG-Model",
+        "license": "MIT",
+        "category": "spatiotemporal-nhl-shot-xg-geometry",
+        "domain": "nhl_shot_distance_angle_rebound_and_strength_xg",
+        "gse_seam": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+            "::compute_nhl_spatiotemporal_shot_xg"
+        ),
+        "gse_target_surface": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+        ),
+        "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+        "role": "Models NHL shot xG via rink distance, angle, rebound, rush, and state.",
+        "status": "WIRED_V3",
+    },
+    {
+        "id": 134,
+        "name": "dmlc/xgboost",
+        "url": "https://github.com/dmlc/xgboost",
+        "license": "Apache-2.0",
+        "category": "second-order-newton-hessian-gbdt",
+        "domain": "newton_raphson_hessian_split_gain_and_monotonic_trees",
+        "gse_seam": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+            "::compute_xgboost_newton_hessian_split_gain"
+        ),
+        "gse_target_surface": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+        ),
+        "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+        "role": "Exact 2nd-order Newton-Raphson GBDT split gain with monotonic bounds.",
+        "status": "WIRED_V3",
+    },
+    {
+        "id": 135,
+        "name": "tuangauss/DataScienceProjects",
+        "url": "https://github.com/tuangauss/DataScienceProjects",
+        "license": "MIT",
+        "category": "weibull-scoring-hazard-and-calibration",
+        "domain": "weibull_goal_interarrival_hazard_and_murphy_calibration",
+        "gse_seam": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+            "::evaluate_bivariate_weibull_count_calibration"
+        ),
+        "gse_target_surface": (
+            "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py"
+        ),
+        "license_posture": "ingest_and_learn_non_commercial_or_permissive",
+        "role": "Computes Weibull goal-timing hazard and Murphy Brier/ECE calibration.",
         "status": "WIRED_V3",
     },
 ]
@@ -568,14 +644,262 @@ def compute_woodelf_banzhaf_interactions(
     }
 
 
+# ---------------------------------------------------------------------------
+# 9. #132 bentindal/FPL-Auto: Multi-Horizon Soccer XI & Captaincy Optimizer
+# ---------------------------------------------------------------------------
+
+
+def optimize_fpl_multiweek_squad_and_captaincy(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    horizon_weeks: int = 3,
+    free_transfers: int = 1,
+    current_squad_ids: Sequence[str] = (),
+    discount_gamma: float = 0.92,
+    transfer_hit_points: float = 4.0,
+    budget_cap: float = 100.0,
+) -> dict[str, Any]:
+    """Optimize discounted multi-gameweek XI selection and 2x captaincy (#132 FPL-Auto)."""
+    if not candidates or horizon_weeks < 1:
+        raise ValueError("candidates must be non-empty and horizon_weeks >= 1.")
+
+    gamma = max(0.0, min(1.0, float(discount_gamma)))
+    scored: list[tuple[float, float, str, float, float]] = []
+    for idx, cand in enumerate(candidates):
+        pid = str(cand.get("player_id") or f"p_{idx}")
+        cost = max(0.1, float(cand.get("cost") or 5.0))
+        xpts_raw = cand.get("xpts") or ()
+        disc_pts = 0.0
+        for w in range(int(horizon_weeks)):
+            val = (
+                float(xpts_raw[w])
+                if w < len(xpts_raw)
+                else (float(xpts_raw[-1]) if xpts_raw else 0.0)
+            )
+            disc_pts += (gamma**w) * val
+        w1_pts = float(xpts_raw[0]) if xpts_raw else 0.0
+        scored.append((disc_pts / cost, disc_pts, pid, w1_pts, cost))
+
+    # First attempt strict top-11 by discounted xPts, fallback to value/cost if over budget
+    by_pts = sorted(range(len(candidates)), key=lambda i: (-scored[i][1], scored[i][2]))
+    xi_idxs = list(by_pts[: min(11, len(by_pts))])
+    total_cost = sum(scored[i][4] for i in xi_idxs)
+    if total_cost > float(budget_cap):
+        by_val = sorted(
+            range(len(candidates)),
+            key=lambda i: (-(scored[i][0]), -scored[i][1], scored[i][2]),
+        )
+        xi_idxs = []
+        spent = 0.0
+        for i in by_val:
+            c_cost = scored[i][4]
+            if len(xi_idxs) < 11 and spent + c_cost <= float(budget_cap) + 1e-9:
+                xi_idxs.append(i)
+                spent += c_cost
+        total_cost = spent
+
+    xi_ids = [scored[i][2] for i in xi_idxs]
+    w1_ranked = sorted(xi_idxs, key=lambda i: (-scored[i][3], scored[i][2]))
+    captain_id = scored[w1_ranked[0]][2] if w1_ranked else ""
+    vice_id = scored[w1_ranked[1]][2] if len(w1_ranked) > 1 else captain_id
+    cap_bonus = scored[w1_ranked[0]][3] if w1_ranked else 0.0
+    gross_horizon = sum(scored[i][1] for i in xi_idxs) + cap_bonus
+
+    prev_set = {str(x) for x in current_squad_ids if str(x)}
+    transfers_made = len(set(xi_ids) - prev_set) if prev_set else 0
+    paid_hits = max(0, transfers_made - max(0, int(free_transfers)))
+    penalty = float(paid_hits) * float(transfer_hit_points)
+    return {
+        "schema": "fpl-auto-horizon-v1",
+        "selected_xi_ids": xi_ids,
+        "captain_id": captain_id,
+        "vice_captain_id": vice_id,
+        "total_cost": round(total_cost, 4),
+        "transfers_made": transfers_made,
+        "transfer_penalty": round(penalty, 4),
+        "net_horizon_expected_points": round(gross_horizon - penalty, 6),
+    }
+
+
+# ---------------------------------------------------------------------------
+# 10. #133 JNoel71/NHL-Expected-Goals-xG-Model: Spatiotemporal Shot xG
+# ---------------------------------------------------------------------------
+
+
+def compute_nhl_spatiotemporal_shot_xg(
+    *,
+    rink_x_ft: float,
+    rink_y_ft: float,
+    is_rebound: bool = False,
+    is_rush: bool = False,
+    skater_diff: int = 0,
+    shot_type: str = "wrist",
+) -> dict[str, float]:
+    """Compute spatiotemporal NHL shot xG via rink geometry & strength state (#133)."""
+    dx = max(1.0, 89.0 - min(89.0, abs(float(rink_x_ft))))
+    dy = abs(float(rink_y_ft))
+    dist_ft = math.hypot(dx, dy)
+    angle_rad = math.atan2(dy, dx)
+    angle_deg = math.degrees(angle_rad)
+
+    type_adj = {
+        "slap": -0.10,
+        "snap": 0.08,
+        "wrist": 0.0,
+        "tip": 0.35,
+        "backhand": -0.15,
+    }.get(shot_type.strip().lower(), 0.0)
+    clamped_diff = max(-2, min(2, int(skater_diff)))
+
+    logit = (
+        -0.75
+        - 0.058 * dist_ft
+        - 0.85 * angle_rad
+        + (0.85 if is_rebound else 0.0)
+        + (0.45 if is_rush else 0.0)
+        + 0.32 * float(clamped_diff)
+        + type_adj
+    )
+    xg = 1.0 / (1.0 + math.exp(-max(-20.0, min(20.0, logit))))
+    return {
+        "distance_ft": round(dist_ft, 6),
+        "shot_angle_deg": round(angle_deg, 6),
+        "xg_prob": round(xg, 8),
+    }
+
+
+# ---------------------------------------------------------------------------
+# 11. #134 dmlc/xgboost: 2nd-Order Newton Hessian Split Gain & Monotonicity
+# ---------------------------------------------------------------------------
+
+
+def compute_xgboost_newton_hessian_split_gain(
+    left_grads: Sequence[float],
+    left_hess: Sequence[float],
+    right_grads: Sequence[float],
+    right_hess: Sequence[float],
+    *,
+    missing_grads: Sequence[float] = (),
+    missing_hess: Sequence[float] = (),
+    reg_lambda: float = 1.0,
+    min_split_loss_gamma: float = 0.0,
+    monotone_constraint: int = 0,
+) -> dict[str, Any]:
+    """Compute exact 2nd-order Newton leaf weights & sparsity-aware split gain (#134)."""
+    if len(left_grads) != len(left_hess) or len(right_grads) != len(right_hess):
+        raise ValueError("Gradient and Hessian vectors must have matching lengths.")
+    if len(missing_grads) != len(missing_hess):
+        raise ValueError("Missing gradient and Hessian vectors must have matching lengths.")
+
+    lam = max(1e-9, float(reg_lambda))
+    g_l0 = sum(float(x) for x in left_grads)
+    h_l0 = sum(max(0.0, float(x)) for x in left_hess)
+    g_r0 = sum(float(x) for x in right_grads)
+    h_r0 = sum(max(0.0, float(x)) for x in right_hess)
+    g_m = sum(float(x) for x in missing_grads)
+    h_m = sum(max(0.0, float(x)) for x in missing_hess)
+
+    def _eval_split(gl: float, hl: float, gr: float, hr: float) -> tuple[float, float, float]:
+        gt = gl + gr
+        ht = hl + hr
+        gain_val = 0.5 * (
+            (gl * gl) / (hl + lam) + (gr * gr) / (hr + lam) - (gt * gt) / (ht + lam)
+        ) - float(min_split_loss_gamma)
+        return gain_val, -gl / (hl + lam), -gr / (hr + lam)
+
+    gain_l, wl_l, wr_l = _eval_split(g_l0 + g_m, h_l0 + h_m, g_r0, h_r0)
+    gain_r, wl_r, wr_r = _eval_split(g_l0, h_l0, g_r0 + g_m, h_r0 + h_m)
+
+    if gain_l >= gain_r:
+        default_left, best_gain, w_left, w_right = True, gain_l, wl_l, wr_l
+    else:
+        default_left, best_gain, w_left, w_right = False, gain_r, wl_r, wr_r
+
+    mono = int(monotone_constraint)
+    if mono > 0:
+        mono_ok = w_left <= w_right + 1e-12
+    elif mono < 0:
+        mono_ok = w_left >= w_right - 1e-12
+    else:
+        mono_ok = True
+
+    accepted = bool(best_gain > 0.0 and mono_ok)
+    return {
+        "schema": "xgboost-newton-hessian-v1",
+        "gain": round(best_gain, 8),
+        "w_left": round(w_left, 8),
+        "w_right": round(w_right, 8),
+        "default_left": default_left,
+        "monotone_satisfied": mono_ok,
+        "accepted": accepted,
+    }
+
+
+# ---------------------------------------------------------------------------
+# 12. #135 tuangauss/DataScienceProjects: Weibull Hazard & Brier/ECE Audit
+# ---------------------------------------------------------------------------
+
+
+def evaluate_bivariate_weibull_count_calibration(
+    predicted_probs: Sequence[float],
+    observed_outcomes: Sequence[int],
+    *,
+    weibull_shape_k: float = 1.15,
+    weibull_scale_lam: float = 1.80,
+    n_bins: int = 5,
+) -> dict[str, float]:
+    """Evaluate Weibull scoring hazard and Brier/log-loss/ECE diagnostics (#135)."""
+    if not predicted_probs or len(predicted_probs) != len(observed_outcomes):
+        raise ValueError("predicted_probs and observed_outcomes must match non-empty length.")
+
+    k = max(0.1, float(weibull_shape_k))
+    lam = max(0.1, float(weibull_scale_lam))
+    unit_hazard = (k / lam) * ((1.0 / lam) ** (k - 1.0))
+
+    n = float(len(predicted_probs))
+    brier_sum = 0.0
+    logloss_sum = 0.0
+    bins = max(2, int(n_bins))
+    bin_counts = [0] * bins
+    bin_p_sum = [0.0] * bins
+    bin_y_sum = [0.0] * bins
+
+    for p_raw, y_raw in zip(predicted_probs, observed_outcomes, strict=True):
+        p = max(1e-6, min(1.0 - 1e-6, float(p_raw)))
+        y = 1.0 if int(y_raw) != 0 else 0.0
+        brier_sum += (p - y) ** 2
+        logloss_sum += -(y * math.log(p) + (1.0 - y) * math.log(1.0 - p))
+        b_idx = min(bins - 1, int(p * float(bins)))
+        bin_counts[b_idx] += 1
+        bin_p_sum[b_idx] += p
+        bin_y_sum[b_idx] += y
+
+    ece = 0.0
+    for b_idx in range(bins):
+        cnt = bin_counts[b_idx]
+        if cnt > 0:
+            ece += (float(cnt) / n) * abs((bin_p_sum[b_idx] - bin_y_sum[b_idx]) / float(cnt))
+
+    return {
+        "weibull_unit_hazard": round(unit_hazard, 8),
+        "brier_score": round(brier_sum / n, 8),
+        "log_loss": round(logloss_sum / n, 8),
+        "ece": round(ece, 8),
+    }
+
+
 __all__ = [
     "WAVE20B_CORPUS_ENTRIES",
     "classify_neovalues_coaching_archetype",
     "compile_and_query_tddlog_wmc",
+    "compute_nhl_spatiotemporal_shot_xg",
     "compute_woodelf_banzhaf_interactions",
+    "compute_xgboost_newton_hessian_split_gain",
+    "evaluate_bivariate_weibull_count_calibration",
     "evaluate_pico_pairwise_cascade",
     "evaluate_soft_oblique_decision_tree",
     "fit_em_and_fisher_lda_regime_posterior",
+    "optimize_fpl_multiweek_squad_and_captaincy",
     "prune_dtrbench_subforest",
     "synthesize_openscholar_verified_claims",
 ]

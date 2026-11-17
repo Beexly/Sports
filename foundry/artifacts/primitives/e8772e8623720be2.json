@@ -1,0 +1,718 @@
+{
+ "book_id": "e8772e8623720be2",
+ "source_status": "COMPLETE",
+ "source_note": "Egor Rogov, PostgreSQL 14 Internals, Postgres Professional, Moscow, 2023 (copyright 2022-2023), ISBN 978-5-6045970-4-0, translated from Russian by Liudmila Mantrova. The local file is the publisher's free PDF edition of the same work (the book itself states it is available at postgrespro.com/community/books/internals), 6,653,013 bytes, full sha256 e8772e8623720be21ecd36321188933a481d21841a839e1b18cf7950bd98730f, book_id e8772e8623720be2 as the first 16 hex of that digest. The extracted text is clean body prose overall, but passages set in small caps or special glyphs render with replacement characters (PostgreSQL, SQL, WAL, TID and some numerals are garbled in places, and the cover page year is garbled); every quoted passage was deliberately chosen from a clean span and verified as a contiguous substring of the extracted text file. Catalog title and author match the file; no corrections needed. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "transaction_consistency_contract",
+   "name": "A transaction moves the database between correct states only if executed in full and isolated from other transactions",
+   "verbatim_quote": "To sum it up, a transaction is a set of operations that takes the database from one correct state to another correct state (consistency), provided that it is executed in full (atomicity) and without being affected by other transactions (isolation).",
+   "page": "Chapter 2 Isolation, section 2.1, p. 40",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Consistency criteria are defined by the application, not known to the database system",
+    "The transaction executes completely or not at all"
+   ],
+   "breakdown_regime": "Breaks down when application-level consistency rules are wrong or unstated: the system enforces integrity constraints only, so a correct-looking transaction can still produce an inconsistent state.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine treats each reasoning pass as a transaction over its evidence store: a projection is emitted only from a complete, self-consistent bundle of signals, never from a half-updated state left by a concurrent ingest.",
+    "source_operator": "transaction_consistency_contract",
+    "telemetry": "Ingest batch boundaries, bundle completeness flags, per-pass commit markers in the evidence store."
+   }
+  },
+  {
+   "primitive_id": "dirty_read_anomaly",
+   "name": "A reader must never see changes made by other uncommitted transactions, or it may observe a state that never existed",
+   "verbatim_quote": "To get consistent data from the database, the application must not see any changes made by other uncommitted transactions, at the very minimum.",
+   "page": "Chapter 2 Isolation, section 2.1, p. 40",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Other transactions can still roll back, erasing the changes a reader might have seen"
+   ],
+   "breakdown_regime": "This is only the weakest guarantee: stronger anomalies (non-repeatable reads, phantoms, write skew) survive at the default Read Committed level and must be handled separately.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Uncommitted or unverified signals (a rumor-grade injury report, an unscored model output) must be invisible to the projection layer until the producing process commits them, so no published number ever rests on data that can still be rolled back.",
+    "source_operator": "dirty_read_anomaly",
+    "telemetry": "Signal commit status, source verification flags, rollback events in the ingest log."
+   }
+  },
+  {
+   "primitive_id": "snapshot_is_numbers_not_copy",
+   "name": "A snapshot is defined by a small set of numbers and visibility rules, not by a physical copy of the data",
+   "verbatim_quote": "A snapshot is not a physical copy of all the required tuples. Instead, it is defined by several numbers, while tuple visibility is determined by certain rules.",
+   "page": "Chapter 4 Snapshots, section 4.2, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tuple headers carry creator and deleter transaction identifiers",
+    "Commit status can be determined at read time"
+   ],
+   "breakdown_regime": "Visibility checks cost CPU on every tuple access, and the rules have many corner cases (subtransactions, own changes, catalog snapshots) that a simplified model gets wrong.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "An engine snapshot of a matchup is likewise a compact state descriptor (as-of timestamp, active signal set, version bounds) plus deterministic visibility rules, so any historical projection can be re-derived exactly instead of stored as a frozen copy.",
+    "source_operator": "snapshot_is_numbers_not_copy",
+    "telemetry": "Snapshot descriptors per projection run, signal version ranges, replay checksums."
+   }
+  },
+  {
+   "primitive_id": "tuple_visibility_xmin_xmax",
+   "name": "A tuple version is visible when its creating transaction is inside the snapshot and its deleting transaction is outside it",
+   "verbatim_quote": "Very roughly, we can describe them as follows: a tuple is visible in a snapshot that includes xmin transaction changes but excludes xmax transaction changes (in other words, the tuple has already appeared and has not been deleted yet).",
+   "page": "Chapter 4 Snapshots, section 4.2, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "xmin and xmax intervals of row versions do not intersect, so at most one version is visible per snapshot",
+    "Aborted transactions are visible in no snapshot"
+   ],
+   "breakdown_regime": "The rough rule omits hint bits, in-progress creators, and speculative insertion handling; production visibility logic is considerably more intricate.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every fact in the engine carries a valid-from and superseded-by marker: a player status, a line, or a rating is visible to a reasoning pass exactly when its creator event is committed inside the pass window and its superseding event is not.",
+    "source_operator": "tuple_visibility_xmin_xmax",
+    "telemetry": "Fact version chains with creator and superseder event ids, per-pass visibility audit counts."
+   }
+  },
+  {
+   "primitive_id": "snapshot_captures_active_set",
+   "name": "Creating a snapshot requires recording the status of all transactions at that moment, not just the moment itself",
+   "verbatim_quote": "So to create a snapshot, it is not enough to register the moment when it was taken: it is also necessary to collect the status of all the transactions at that moment.",
+   "page": "Chapter 4 Snapshots, section 4.3, p. 81",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Commit times are not recorded, so later reconstruction from timestamps alone is impossible",
+    "The active set is observable in shared memory at snapshot time"
+   ],
+   "breakdown_regime": "The captured active set grows stale immediately; long-lived snapshots pin old data and block cleanup, which is the cost of this design.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A pregame evidence bundle must freeze not just the clock time but the state of every in-flight process at that time (which feeds were mid-update, which reports were pending), otherwise later audits cannot tell what the engine could and could not have known.",
+    "source_operator": "snapshot_captures_active_set",
+    "telemetry": "In-flight feed states at bundle freeze, pending verification queue contents, freeze-time process registry."
+   }
+  },
+  {
+   "primitive_id": "snapshot_timing_by_isolation_level",
+   "name": "Read Committed takes a fresh snapshot per statement, while Repeatable Read and Serializable hold one snapshot for the whole transaction",
+   "verbatim_quote": "At the Repeatable Read and Serializable levels, a snapshot is taken at the beginning of the first statement of a transaction, and it remains active until the whole transaction is complete.",
+   "page": "Chapter 4 Snapshots, section 4.1, p. 80",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same passage states the Read Committed counterpart: a snapshot is taken at the beginning of each statement and stays active only for that statement's duration"
+   ],
+   "breakdown_regime": "Per-statement snapshots allow non-repeatable reads and phantoms within one transaction; per-transaction snapshots allow write skew unless dependency tracking is added.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine needs both cadences: fast intraweek updates re-snapshot per signal batch (Read Committed style), while a locked pregame projection holds one snapshot from freeze to publication (Repeatable Read style) so the reasoning never mixes two worlds.",
+    "source_operator": "snapshot_timing_by_isolation_level",
+    "telemetry": "Snapshot cadence per surface, freeze timestamps, mixed-world detection checks."
+   }
+  },
+  {
+   "primitive_id": "database_horizon",
+   "name": "The database horizon is the oldest snapshot boundary across all transactions; anything older can never be seen again",
+   "verbatim_quote": "We can also define the database horizon in a similar manner. For this purpose, we should take the horizons of all the transactions in this database and select the most remote one, which has the oldest xmin.",
+   "page": "Chapter 4 Snapshots, section 4.5, p. 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every transaction, real or virtual, with an active snapshot contributes a horizon",
+    "Visibility is monotone: versions older than the horizon are visible to all or none"
+   ],
+   "breakdown_regime": "A single long-running transaction or idle replication slot pins the horizon and blocks all cleanup behind it, causing unbounded bloat.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine computes a global evidence horizon from the oldest still-open reasoning window; source records older than every open window can be compacted into the masters, and one stuck consumer is treated as a system fault, not a reason to keep everything forever.",
+    "source_operator": "database_horizon",
+    "telemetry": "Oldest open window per consumer, compaction lag, horizon age alerts."
+   }
+  },
+  {
+   "primitive_id": "page_pruning_single_page",
+   "name": "Page pruning reclaims dead tuples inside a single heap page during ordinary reads and updates, without touching indexes or maps",
+   "verbatim_quote": "It never goes beyond a single heap page, but in return it is performed very fast.",
+   "page": "Chapter 5 Page Pruning and HOT Updates, section 5.1, p. 92",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only tuples beyond the database horizon are pruned",
+    "Index pointers to pruned tuples are left in place and resolved lazily"
+   ],
+   "breakdown_regime": "Pruning cannot reclaim space across pages and does not refresh the visibility or free space maps, so it complements but never replaces vacuuming.",
+   "domain": "storage maintenance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cheap local cleanup inside the hot path (dropping superseded facts while a bundle is being read) keeps working sets small between heavy maintenance passes, provided it never crosses the boundary of the unit being read.",
+    "source_operator": "page_pruning_single_page",
+    "telemetry": "Per-read cleanup counts, hot-path latency before and after pruning, deferred cleanup backlog."
+   }
+  },
+  {
+   "primitive_id": "hot_update_index_cost",
+   "name": "Every row modification forces an entry in every index on the table, even when no indexed column changed",
+   "verbatim_quote": "To begin with, each row modification triggers updates of all the indexes created on the table: once a new heap tuple appears, each index must include a reference to this tuple, even if the modified fields are not indexed.",
+   "page": "Chapter 5 Page Pruning and HOT Updates, section 5.2, p. 95",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Updates create a new heap tuple version rather than modifying in place",
+    "Indexes reference physical tuple identifiers"
+   ],
+   "breakdown_regime": "This is the cost HOT updates exist to avoid: when the update stays on one page and touches no indexed column, index maintenance can be skipped, but cross-page or indexed-column updates pay full price.",
+   "domain": "storage maintenance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Derived views in the engine have the same fan-out cost: one corrected source fact forces re-derivation of every index, rating table, and matchup view that references it, so update pipelines must budget for fan-out or use chain-style shortcuts for local changes.",
+    "source_operator": "hot_update_index_cost",
+    "telemetry": "Fan-out factor per source correction, re-derivation time per view, shortcut eligibility rate."
+   }
+  },
+  {
+   "primitive_id": "vacuum_phases_order",
+   "name": "Vacuuming scans for dead tuples and removes them from indexes before removing them from the table itself",
+   "verbatim_quote": "It all starts with scanning a table in search of dead tuples; if found, they are first removed from indexes and then from the table itself.",
+   "page": "Chapter 6 Vacuum and Autovacuum, section 6.3, p. 106",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dead means beyond the database horizon, invisible to every snapshot",
+    "The process runs concurrently without blocking ordinary work"
+   ],
+   "breakdown_regime": "If too many dead tuples accumulate, the cycle repeats and heap truncation may still be impossible while locks or pins are held; removal order matters because index entries must never point at reused space prematurely.",
+   "domain": "storage maintenance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Retraction in the engine follows the same order: when a source fact is withdrawn, every derived reference is removed first and the base record last, so no view ever points at evidence that no longer exists.",
+    "source_operator": "vacuum_phases_order",
+    "telemetry": "Retraction job order logs, dangling reference scans, cleanup completion per table."
+   }
+  },
+  {
+   "primitive_id": "xid_wraparound",
+   "name": "A finite 32-bit transaction counter is eventually exhausted and must wrap, which breaks naive age comparison",
+   "verbatim_quote": "Once all the numbers are used up, the counter has to be reset to start the next round (this situation is called a \"wraparound\").",
+   "page": "Chapter 7 Freezing, section 7.1, p. 123",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Transaction age is compared with modular arithmetic rather than raw identifier order",
+    "Each tuple header stores two transaction ids, so widening the counter is expensive"
+   ],
+   "breakdown_regime": "Without freezing, an old transaction eventually appears to lie in the future and its changes become invisible, which is catastrophic data loss from the reader's point of view.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any finite id or season counter in the engine (game ids, week numbers, model versions) needs an explicit epoch policy before it wraps; comparisons must be age-based inside a defined window, never raw integer order across the wrap.",
+    "source_operator": "xid_wraparound",
+    "telemetry": "Counter headroom per id space, epoch rollover tests, age-window violations."
+   }
+  },
+  {
+   "primitive_id": "tuple_freezing",
+   "name": "Frozen tuples are visible in all snapshots, so visibility checks no longer need to consult their creator transaction id",
+   "verbatim_quote": "For frozen tuples, visibility rules do not have to take xmin into account since such tuples are known to be visible in all snapshots",
+   "page": "Chapter 7 Freezing, section 7.2, p. 124",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Frozen state is encoded by a combination of hint bits while xmin itself stays unchanged",
+    "The tuple is beyond the horizon, hence visible in every possible snapshot"
+   ],
+   "breakdown_regime": "Freezing is irreversible and scan-heavy; aggressive freezing under load competes with queries, and failsafe thresholds exist because postponing it too long risks wraparound shutdown.",
+   "domain": "mvcc",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Settled historical facts in the engine get frozen: once every open window has passed a game, its evidence is marked permanently visible and immutable, which frees the live store from carrying per-window visibility state for history.",
+    "source_operator": "tuple_freezing",
+    "telemetry": "Frozen share of historical records, freeze lag after window close, immutability violations."
+   }
+  },
+  {
+   "primitive_id": "clock_sweep_eviction",
+   "name": "Buffer eviction uses a clock sweep: a hand circles the cache decrementing usage counts and clears the first unpinned buffer at zero",
+   "verbatim_quote": "Then the buffer manager will have to select one of the buffers that is already in use and evict the cached page from this buffer. It is performed using the clock sweep algorithm, which is well illustrated by the clock metaphor.",
+   "page": "Chapter 9 Buffer Cache, section 9.4, p. 154",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each buffer header tracks a usage count and a pin count",
+    "Pinned buffers are never evicted"
+   ],
+   "breakdown_regime": "If all buffers are hot, the hand makes multiple laps; the capped usage count bounds the lap length but also flattens the distinction between warm and very hot pages.",
+   "domain": "buffer management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Working-set management for live reasoning uses the same approximation: candidate signals carry a small saturating use counter, a rotating sweep demotes the coldest first, and anything currently pinned by an active projection is untouchable.",
+    "source_operator": "clock_sweep_eviction",
+    "telemetry": "Sweep laps per eviction, eviction hit rate on re-request, pinned-set size during projections."
+   }
+  },
+  {
+   "primitive_id": "usage_count_lru_approximation",
+   "name": "Incrementing a usage count on access and decrementing it during eviction search approximates least-recently-used replacement",
+   "verbatim_quote": "Thus, the usage count is incremented each time the buffer is accessed (that is, pinned), and reduced when the buffer manager is searching for pages to evict. As a result, the least recently used pages are evicted first, while those that have been accessed more often will remain in the cache longer.",
+   "page": "Chapter 9 Buffer Cache, section 9.4, p. 154",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Access frequency and recency are compressed into one small counter",
+    "The counter saturates at a small maximum"
+   ],
+   "breakdown_regime": "A burst of one-time accesses can still inflate counts, and the approximation cannot distinguish a page used once long ago from one used steadily; scan resistance needs the separate ring mechanism.",
+   "domain": "buffer management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Feature stores for the engine can rank retention with one saturating counter per signal family, incremented on use in a projection and decayed by sweeps, instead of maintaining exact access histories.",
+    "source_operator": "usage_count_lru_approximation",
+    "telemetry": "Counter distribution per signal family, retention precision versus exact LRU in replay, decay sweep cost."
+   }
+  },
+  {
+   "primitive_id": "bulk_eviction_buffer_rings",
+   "name": "Bulk operations confine their evictions to a small private ring of buffers so one-time data cannot flush the shared cache",
+   "verbatim_quote": "If bulk reads or writes are performed, there is a risk that one-time data can quickly oust useful pages from the buffer cache. As a precaution, bulk operations use rather small buffer rings, and eviction is performed within their boundaries, without affecting other buffers.",
+   "page": "Chapter 9 Buffer Cache, section 9.5, p. 156",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The operation is bulk and mostly one-pass, such as a large sequential scan",
+    "Ring buffers remain part of the shared cache and can be shared by synchronized scans"
+   ],
+   "breakdown_regime": "Rings fail when the bulk operation also modifies most pages it reads, and oversized values accessed through indexes bypass rings entirely.",
+   "domain": "buffer management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Bulk backfills and corpus imports in the engine run inside a bounded scratch budget: they may cycle their own working set freely but can never evict the hot evidence that live projections depend on.",
+    "source_operator": "bulk_eviction_buffer_rings",
+    "telemetry": "Scratch budget per bulk job, hot-set eviction events during imports, backfill throughput."
+   }
+  },
+  {
+   "primitive_id": "wal_write_ahead_rule",
+   "name": "A log record describing a page change must reach disk before the changed page itself",
+   "verbatim_quote": "A log entry related to a page modification must be written to disk ahead of the modified page itself.",
+   "page": "Chapter 10 Write-Ahead Log, section 10.1, p. 164",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Log records contain enough information to redo the change",
+    "Log writing is sequential and cheaper than random page writes"
+   ],
+   "breakdown_regime": "The rule guarantees redo, not undo discipline by itself; recovery still needs checkpoints to bound replay, and synchronous commit settings trade latency against how much acknowledged work a crash can lose.",
+   "domain": "durability",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine journals intent before mutation: every change to a rating, a status, or a published projection is written to an append-only journal first, so any derived state can be rebuilt by replay and no silent in-place edit exists.",
+    "source_operator": "wal_write_ahead_rule",
+    "telemetry": "Journal sequence coverage versus mutation log, replay rebuild checks, unjournaled change count (target zero)."
+   }
+  },
+  {
+   "primitive_id": "checkpoint_spread_over_time",
+   "name": "A checkpoint is spread over time as an interval of gradual flushing instead of a stop-the-world write of all dirty pages",
+   "verbatim_quote": "For this reason, the checkpoint is spread out over time, virtually constituting an interval.",
+   "page": "Chapter 10 Write-Ahead Log, section 10.3, p. 170",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only buffers dirty at checkpoint start are tagged and owed to disk",
+    "Pages written by the checkpoint stay in cache; only their dirty status changes"
+   ],
+   "breakdown_regime": "Recovery can only start from a completed checkpoint, so a crash mid-checkpoint falls back to the previous one and replays more log; spreading also smooths but prolongs write load.",
+   "domain": "durability",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine state snapshots for recovery are taken as intervals, not freezes: a consolidation pass tags the state as of a journal position and drains gradually while live work continues, and the recovery point advances only when the drain completes.",
+    "source_operator": "checkpoint_spread_over_time",
+    "telemetry": "Consolidation drain duration, recovery point lag, write amplification during drains."
+   }
+  },
+  {
+   "primitive_id": "lock_mode_compatibility",
+   "name": "Lock modes are defined by their compatibility matrix: exclusive conflicts with everything including itself, shared allows concurrent holders",
+   "verbatim_quote": "The exclusive mode is incompatible with all the other modes, including itself. The shared mode allows a resource to be locked by several processes at a time. The shared mode can be used for reading, while the exclusive mode is applied for writing.",
+   "page": "Chapter 12 Relation-Level Locks, section 12.1, p. 200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Compatibility is a property of mode pairs, not of the resource",
+    "More compatible modes mean more concurrency at the same granularity"
+   ],
+   "breakdown_regime": "PostgreSQL uses eight relation lock modes with a nontrivial matrix; picking a stronger mode than needed serializes work unnecessarily, and mode upgrades mid-transaction are a classic deadlock source.",
+   "domain": "locking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Concurrent engine jobs declare access modes on shared artifacts (read a rating table, append to a journal, rewrite a view) and a compatibility matrix, not job identity, decides what may run together.",
+    "source_operator": "lock_mode_compatibility",
+    "telemetry": "Mode conflict waits per artifact, unnecessary strong-mode acquisitions, upgrade attempts."
+   }
+  },
+  {
+   "primitive_id": "deadlock_wait_for_graph",
+   "name": "A deadlock is exactly a cycle in the wait-for graph of processes waiting on lock holders",
+   "verbatim_quote": "If the graph has a cycle, that is, a node can reach itself following the arrows, it means that a deadlock has occurred.",
+   "page": "Chapter 13 Row-Level Locks, section 13.6, p. 225",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Edges point from waiter to holder",
+    "All participants in the cycle are blocked, so the cycle cannot resolve itself"
+   ],
+   "breakdown_regime": "Building the graph requires freezing lock processing, so detection is run only after a wait timeout rather than on every lock request; rare false economy if timeouts are miscalibrated.",
+   "domain": "locking",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Pipeline stalls in the engine are diagnosed the same way: build the wait-for graph of jobs and data dependencies, and a cycle is proof of a structural deadlock that no amount of waiting or retrying will clear.",
+    "source_operator": "deadlock_wait_for_graph",
+    "telemetry": "Wait-for graph snapshots during stalls, cycle detection results, stall duration by cause."
+   }
+  },
+  {
+   "primitive_id": "deadlock_victim_abort",
+   "name": "When a deadlock is detected, one participant transaction is aborted to release its locks and let the others proceed",
+   "verbatim_quote": "If a deadlock is detected, one of the transactions will be forced to terminate",
+   "page": "Chapter 13 Row-Level Locks, section 13.6, p. 226",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The aborted work can be retried by the application",
+    "Usually the transaction that initiated the check is the victim, with lower-priority background work preempted first"
+   ],
+   "breakdown_regime": "Aborting wastes completed work and can livelock if the same access order is retried unchanged; the real fix is consistent lock ordering in the application.",
+   "domain": "locking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine resolves dependency cycles by sacrificing the lowest-priority job in the cycle and requeueing it with a changed order, never by letting the whole fleet wait indefinitely.",
+    "source_operator": "deadlock_victim_abort",
+    "telemetry": "Victim selections per cycle, retry success rate, repeated-cycle rate for the same job pair."
+   }
+  },
+  {
+   "primitive_id": "predicate_locks_ssi",
+   "name": "Serializable isolation is enforced by predicate locks that lock nothing; they record read and write dependencies so dangerous patterns can abort a transaction at commit",
+   "verbatim_quote": "In fact, such \"locks\" do not lock anything: they are used to track data dependencies between different transactions.",
+   "page": "Chapter 14 Miscellaneous Locks, section 14.5, p. 235",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Snapshot isolation alone permits only write skew and the read-only transaction anomaly",
+    "Tracking engages only when all interconnected transactions run at the Serializable level"
+   ],
+   "breakdown_regime": "A participant at a weaker level silently downgrades the guarantee, and dependency tracking costs memory proportional to reads, with false-positive aborts possible.",
+   "domain": "locking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Cross-signal consistency in the engine can be guarded by dependency records rather than hard locks: each projection logs what it read and what later overwrote it, and a dangerous read-write antidependency pattern blocks publication instead of blocking the writers.",
+    "source_operator": "predicate_locks_ssi",
+    "telemetry": "Dependency records per projection, dangerous-pattern hits, publication blocks by pattern type."
+   }
+  },
+  {
+   "primitive_id": "parse_tree_no_execution_order",
+   "name": "The parse tree captures syntactic structure only; it says nothing about the order in which operations should be performed",
+   "verbatim_quote": "The parse tree reflects the syntactic structure of the query, but it says nothing about the order in which the operations should be performed.",
+   "page": "Chapter 16 Query Execution Stages, section 16.2, p. 255",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Semantic analysis and rewriting transform the tree before planning",
+    "Physical execution order is decided later by the planner"
+   ],
+   "breakdown_regime": "Treating the written order of a query as an execution hint misleads; conversely the planner may reorder aggressively unless syntax constructs explicitly fence optimization.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A research question or a reasoning request in the engine is likewise structure without a plan: the stated order of sub-questions is not an execution order, and a separate planning step must choose join order, sources, and methods.",
+    "source_operator": "parse_tree_no_execution_order",
+    "telemetry": "Request parse coverage, plan divergence from written order, fence usage in complex requests."
+   }
+  },
+  {
+   "primitive_id": "cost_based_planner",
+   "name": "The optimizer estimates each candidate plan's resource use as a single numeric cost and selects the cheapest",
+   "verbatim_quote": "Normalized to a numeric value, this estimation is called the cost of the plan. Of all the considered plans, the one with the lowest cost is selected.",
+   "page": "Chapter 16 Query Execution Stages, section 16.2, p. 258",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cost units are abstract and calibrated by configuration constants, not measured seconds",
+    "Estimates rest on statistics about the data"
+   ],
+   "breakdown_regime": "The cheapest estimated plan is not necessarily the fastest in reality; bad statistics or a wrong cost constant systematically misranks plans.",
+   "domain": "query planning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine task planning scores candidate strategies in one comparable cost unit (latency, compute, staleness risk) and takes the minimum, with the constants treated as tunable calibration rather than truth.",
+    "source_operator": "cost_based_planner",
+    "telemetry": "Estimated versus actual cost per strategy, misranking rate, constant recalibration history."
+   }
+  },
+  {
+   "primitive_id": "plan_search_exponential",
+   "name": "The number of candidate join plans grows exponentially with the number of joined tables, so exhaustive search is impossible",
+   "verbatim_quote": "The problem is that the number of potentially available plans grows exponentially with the number of joined tables, so it is impossible to consider them all",
+   "page": "Chapter 16 Query Execution Stages, section 16.2, p. 258",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dynamic programming over subsets plus heuristics narrows the search",
+    "Search limits can be fenced by query structure"
+   ],
+   "breakdown_regime": "Beyond the search limits the planner switches to heuristic or genetic search and can miss the optimal plan; exhaustive quality is only guaranteed for modest join counts.",
+   "domain": "query planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Multi-signal reasoning faces the same explosion: combinations of factors, matchups, and contexts cannot be enumerated, so the engine searches with dynamic programming over reusable sub-results and explicit heuristics, and reports when it left the exhaustive regime.",
+    "source_operator": "plan_search_exponential",
+    "telemetry": "Combination counts per decision, exhaustive versus heuristic regime flag, sub-result reuse rate."
+   }
+  },
+  {
+   "primitive_id": "planner_model_fallibility",
+   "name": "An exactly optimized plan under a simplified model can still be the wrong plan, because the model and its input statistics are approximations",
+   "verbatim_quote": "An accurate solution does not guarantee that the selected plan is really the optimal one, as the planner uses simplified mathematical models and may lack reliable input data.",
+   "page": "Chapter 16 Query Execution Stages, section 16.2, p. 258",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cardinality estimates feed every cost computation",
+    "Correlations between columns are mostly unmodeled by default statistics"
+   ],
+   "breakdown_regime": "This is the standing failure mode of cost-based optimization: estimation error compounds across joins, so a mathematically optimal search can confidently pick a bad plan.",
+   "domain": "query planning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine states this limit on its own outputs: an internally optimal projection under the current model is not claimed to be right, only optimal given stated assumptions, and assumption quality is reported alongside the number.",
+    "source_operator": "planner_model_fallibility",
+    "telemetry": "Assumption registers per projection, estimate error after settlement, model limitation flags."
+   }
+  },
+  {
+   "primitive_id": "statistics_sampling",
+   "name": "Planner statistics are built from a fixed-size random sample whose size barely depends on table size",
+   "verbatim_quote": "For analysis purposes, 300× default_statistics_target random rows are sampled. The sample size required to build statistics of a particular accuracy has low dependency on the volume of analyzed data, so the size of the table is not taken into account.",
+   "page": "Chapter 17 Statistics, section 17.1, p. 271",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sampled rows come from the same number of randomly chosen pages",
+    "The default statistics target scales both sample size and stored detail"
+   ],
+   "breakdown_regime": "Sampling misses rare values and skewed tails; on rapidly changing data the statistics are stale the moment they are collected, and small samples misjudge selectivity for selective predicates.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine baselines are estimated from bounded random samples of games and plays with a fixed budget per estimate, accepting sampling error explicitly instead of pretending a full census is needed for every rate.",
+    "source_operator": "statistics_sampling",
+    "telemetry": "Sample sizes per baseline, confidence width per estimate, rare-event miss rate."
+   }
+  },
+  {
+   "primitive_id": "mcv_selectivity",
+   "name": "Selectivity of an equality predicate on a skewed column is read directly from the stored most-common-values frequency list",
+   "verbatim_quote": "To estimate the selectivity of the \"column = value\" condition, it is enough to find this value in the most_common_vals array and take its frequency from the most_common_freqs array element with the same index",
+   "page": "Chapter 17 Statistics, section 17.4, p. 278",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The value must actually appear in the most common values list",
+    "Frequencies are stored as fractions of the whole table"
+   ],
+   "breakdown_regime": "Values outside the list fall back to a uniform assumption over the remaining rows, which badly underestimates a heavy tail of moderately common values.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Skewed categorical rates in the engine (a quarterback's target share to one receiver, a team's play type on a down) are stored as explicit head lists with measured frequencies, and only the tail is modeled as uniform.",
+    "source_operator": "mcv_selectivity",
+    "telemetry": "Head list coverage share per category, tail estimation error, frequency refresh cadence."
+   }
+  },
+  {
+   "primitive_id": "histogram_buckets",
+   "name": "When distinct values are too many to list, a histogram divides them into a bounded number of buckets for range selectivity estimates",
+   "verbatim_quote": "In this case, values are distributed between several buckets of the histogram. The number of buckets is also limited by the default_statistics_target parameter.",
+   "page": "Chapter 17 Statistics, section 17.5, p. 279",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Values are assumed to spread evenly inside a bucket",
+    "Bucket boundaries are chosen from the sampled distribution"
+   ],
+   "breakdown_regime": "Within-bucket uniformity is wrong exactly where the distribution is spiky, and bucket count is capped, so narrow selective ranges on skewed data get coarse estimates.",
+   "domain": "statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Continuous engine quantities (projected yardage, pace, pressure rate) are summarized as bounded bucket histograms for fast range reasoning, with the within-bucket uniformity assumption written down as a known error source.",
+    "source_operator": "histogram_buckets",
+    "telemetry": "Bucket counts per quantity, within-bucket variance, range estimate error in replay."
+   }
+  },
+  {
+   "primitive_id": "covering_index_index_only_scan",
+   "name": "An index that contains every column a query needs is a covering index and lets the scan answer without visiting the heap",
+   "verbatim_quote": "If an index contains all the heap data required by the query, it is called a covering index for this particular query.",
+   "page": "Chapter 20 Index Scans, section 20.2, p. 337",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Covering is a property of an index relative to a specific query, not of the index alone",
+    "Visibility still has to be established, normally through the visibility map"
+   ],
+   "breakdown_regime": "Wider indexes cost storage and write maintenance, and when few pages are all-visible the scan degenerates into heap fetches anyway.",
+   "domain": "index access",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Precomputed engine summaries should be designed as covering structures for the recurring questions: if a summary holds every field the standard matchup card needs, the card renders without touching raw evidence at all.",
+    "source_operator": "covering_index_index_only_scan",
+    "telemetry": "Covering rate per recurring surface, raw-store reads avoided, summary width growth."
+   }
+  },
+  {
+   "primitive_id": "nested_loop_algorithm",
+   "name": "A nested loop join walks the outer set once and, for each outer row, searches the inner set for matches",
+   "verbatim_quote": "The basic algorithm of the nested loop join functions as follows. The outer loop traverses all the rows of the first set (called the outer set).",
+   "page": "Chapter 21 Nested Loop, section 21.2, p. 351",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each matching pair is returned immediately, so first rows arrive fast",
+    "Efficiency hinges on an access method that fetches inner rows cheaply"
+   ],
+   "breakdown_regime": "Cost scales with the outer cardinality times the inner lookup cost; with a sequential inner scan and a large outer set it is the worst of the three join methods.",
+   "domain": "join algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Per-entity enrichment in the engine is a nested loop by design: for each player or team in a small outer set, probe an indexed inner store, and keep the outer set small and the inner probe indexed or do not run it at all.",
+    "source_operator": "nested_loop_algorithm",
+    "telemetry": "Outer set sizes per enrichment, inner probe cost distribution, unindexed probe alarms."
+   }
+  },
+  {
+   "primitive_id": "hash_join_lookup",
+   "name": "A hash join builds a hash table over the inner set first, then probes it once per outer row",
+   "verbatim_quote": "A hash join searches for matching rows using a pre-built hash table.",
+   "page": "Chapter 22 Hashing, section 22.1, p. 367",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Only equality join conditions can be hashed",
+    "Probe cost is roughly constant per row when keys distribute uniformly"
+   ],
+   "breakdown_regime": "If the hash table outgrows the memory budget the join spills into batches and extra passes; skewed keys overload individual buckets and degrade probes.",
+   "domain": "join algorithms",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Bulk matching in the engine (linking reports to players, plays to situations) pre-builds a hash map on the smaller side and probes it in one pass, with spill behavior planned when the map outgrows memory.",
+    "source_operator": "hash_join_lookup",
+    "telemetry": "Build side sizes, probe counts, spill batch counts on large joins."
+   }
+  },
+  {
+   "primitive_id": "merge_join_single_pass",
+   "name": "A merge join needs only one pass over both inputs and no extra memory when both arrive sorted on the join key",
+   "verbatim_quote": "The join requires only one pass over both data sets and does not take any additional memory.",
+   "page": "Chapter 23 Sorting and Merging, section 23.1, p. 387",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Both inputs are sorted by the join key, from an index or an explicit sort",
+    "The result inherits the sorted order and can feed later merge steps"
+   ],
+   "breakdown_regime": "If inputs are not already sorted, the sort cost can exceed a hash join; duplicate-heavy keys complicate the pointer advance and can force rescans of matched groups.",
+   "domain": "join algorithms",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Time-ordered engine streams (play-by-play against a rolling context table) merge in a single pass when both sides share the ordering, avoiding materialization of either side.",
+    "source_operator": "merge_join_single_pass",
+    "telemetry": "Single-pass merge share of stream joins, sort cost avoided, duplicate-group rescan counts."
+   }
+  },
+  {
+   "primitive_id": "btree_balanced",
+   "name": "A B-tree is balanced, with every leaf at the same depth, so search time is equal for all values",
+   "verbatim_quote": "They are balanced, which means that all leaf nodes of a tree are located at the same depth. Therefore, they guarantee equal search time for all values.",
+   "page": "Chapter 25 B-tree, section 25.1, p. 421",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Nodes hold many elements, so depth stays small even for very large tables",
+    "Keys are ordered within and across nodes, and leaf pages are linked in both directions"
+   ],
+   "breakdown_regime": "Balance is bought with split and merge maintenance on writes; heavy random insert patterns fragment pages and waste space until rebuilt.",
+   "domain": "index structures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Lookup structures over engine entities should offer depth guarantees, not average-case hopes: balanced, high-fanout indexes keep worst-case retrieval for any player or game as fast as the common case.",
+    "source_operator": "btree_balanced",
+    "telemetry": "Lookup depth distribution, worst-case retrieval latency, split and fragmentation rates."
+   }
+  },
+  {
+   "primitive_id": "btree_search_descent",
+   "name": "Root-to-leaf descent picks the separator key Ki with Ki at or below the search expression and the next key above it",
+   "verbatim_quote": "It chooses the Ki key, for which Ki ⩽ expression < Ki+1 is satisfied.",
+   "page": "Chapter 25 B-tree, section 25.2, p. 422",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Separator keys partition the key space into disjoint intervals",
+    "Comparison operators exist for the indexed type"
+   ],
+   "breakdown_regime": "The rule assumes a total order; types without meaningful comparison cannot use a B-tree at all and need a generalized structure instead.",
+   "domain": "index structures",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Range routing in the engine uses the same interval descent: a query value is routed to exactly one shard or bucket by finding the separator interval that contains it, in logarithmic steps.",
+    "source_operator": "btree_search_descent",
+    "telemetry": "Routing steps per lookup, interval boundary errors, shard size balance."
+   }
+  },
+  {
+   "primitive_id": "gist_inner_predicate_union",
+   "name": "In a GiST tree, each inner entry stores a predicate that is the union of all predicates in its subtree",
+   "verbatim_quote": "In other words, the predicate of an inner entry is the union of all the predicates of its child entries.",
+   "page": "Chapter 26 GiST, section 26.1, p. 444",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Leaf entries pair a predicate with a heap tuple reference",
+    "A search can prune any subtree whose predicate is inconsistent with the condition"
+   ],
+   "breakdown_regime": "Predicates only ever expand as values are inserted and are narrowed mainly by splits or rebuilds, so update-heavy GiST indexes degrade over time.",
+   "domain": "index structures",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Hierarchical engine indexes over non-ordinal spaces (play shapes, route geometries, situation clusters) store at each node a summary predicate true of everything beneath it, so whole regions can be pruned by one consistency check.",
+    "source_operator": "gist_inner_predicate_union",
+    "telemetry": "Prune rate per search, predicate expansion over time, rebuild cadence."
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "e8772e8623720be2-t1",
+   "think": "This book is a guided tour of one production database engine taken apart subsystem by subsystem, and its real subject is not PostgreSQL trivia but a single design philosophy repeated at every layer: never copy or move more state than necessary, describe state compactly, and let deterministic rules reconstruct the rest on demand. The snapshot is the emblem. Instead of copying data for each reader, the system records a handful of numbers, the identifiers of transactions active at a moment, and derives visibility from tuple headers at read time. Everything else in the first part of the book is a consequence of that choice. Because versions accumulate, there must be a horizon below which versions are invisible to everyone; because a horizon exists, vacuum can reclaim space; because the transaction counter is finite, freezing must retire old identifiers before wraparound turns the past into the future; because cleanup must not disturb readers, pruning works inside one page and HOT chains keep updates off the indexes when they can. The second part applies the same frugality to memory and durability. The buffer cache is a shared, finite working set managed by an intentionally crude clock sweep, with private rings so that bulk traffic cannot evict the pages everyone needs. Durability is not achieved by writing pages eagerly but by writing a sequential journal first, the write-ahead rule, and by spreading checkpoints over time so that the recovery point advances without ever stopping the system. The third part, locks, shows the concurrency contract made explicit: modes are nothing but a compatibility matrix, granularity is a trade between contention and bookkeeping, deadlocks are cycles in a graph that can be detected and broken by sacrificing one participant, and even serializability is achieved not by locking harder but by recording dependencies and aborting when a dangerous pattern forms. The fourth part turns to questions rather than state. A query arrives as syntax, a tree that deliberately says nothing about execution order, and the planner's job is to search a space of physical plans that grows exponentially with the number of joins, scoring each with a single cost number derived from sampled statistics: most common values, histograms, row counts. Rogov is honest that this machinery is approximate twice over, because the search is pruned and because the model is simplified and its inputs are samples, so an optimal answer under the model is not a promise about reality. The fifth part generalizes access itself. B-tree is the special case where a total order makes routing trivial and balance guarantees uniform depth; the hash index trades order away for equality only; GiST and SP-GiST turn the tree into a framework where operator classes supply predicates, consistency checks, and penalty functions; GIN inverts compound values into element lists; BRIN abandons precision entirely and stores summaries over ranges so that most of a huge table can be skipped. Underneath the individual index types sits a second architectural idea that the middle chapters develop: access is factored through narrow interfaces. Tables are reached through a table access method, indexes through an index access method, and data types plug into both through operator classes and families, so the executor, the planner, and the storage layer can evolve independently, and new structures, from a heap variant to a GiST operator class for a new geometry type, arrive without rewriting the engine around them. The planner does not know what a B-tree is; it knows costs, ordering properties, and which operators an index can support. That separation is why the same cost machinery can choose between a sequential scan, a bitmap scan, three join methods, and five index families inside a single search. A third thread is that none of these mechanisms is allowed to remain a black box. The book keeps returning to the instruments: page inspection functions that expose tuple headers and line pointers, the visibility map that ties vacuuming directly to the cost of index-only scans, backend horizon values readable in a system view, wait events that can be sampled to see where time actually goes, and vacuum output that reports exactly how many dead versions a pass could and could not remove. The layers also share machinery in ways that reward this visibility: transaction status and subtransaction caches reuse the buffer cache design in miniature, hint bits make repeated visibility checks cheaper over time, and the single horizon concept governs pruning, vacuuming, freezing, and the safety of index-only scans at once. A change in one layer is therefore never local, and tracing those couplings is part of the book's method. Read as one argument, the book says that a serious engine is a stack of explicit trade-offs, each with a named failure regime: visibility rules fail at wraparound, clock sweep fails under uniform heat, cost models fail on correlated data, predicate summaries fail when values are not physically clustered. For a reasoning engine that ingests evidence, versions facts, plans retrievals, and publishes projections under time pressure, this is directly transferable machinery, not metaphor. The transfer works because the problems are the same shape: many concurrent writers, readers who need a consistent view, finite memory, finite identifiers, expensive exactness, and the need to prove later what the system knew at a given moment. Where the book breaks as a template is equally clear. It assumes one machine, one storage hierarchy, and workloads where correctness is defined by a formal isolation contract; a reasoning engine over sports evidence has messier truth, sources that lie or lag, and no commit protocol imposed by the world. Its numbers are also version-bound: this is PostgreSQL 14, and details like index and vacuum behavior keep evolving. But the discipline it teaches, name the invariant, state the approximation, record the regime where the approximation fails, is exactly the discipline an evidence engine needs.",
+   "retrocausal_genealogy": "The lineage runs from System R and Ingres in the 1970s, where locking-based isolation and cost-based optimization were first worked out, through the multiversion concurrency research of Reed and Bernstein, to the ARIES recovery protocol that fixed the write-ahead logging discipline this book inherits. PostgreSQL itself descends from Berkeley POSTGRES, and Rogov writes inside that tradition: snapshot isolation as popularized by Oracle-era systems, refined by Cahill's work on serializable snapshot isolation, and the generalized search tree framework from Hellerstein and colleagues. Each mechanism in the book is a dated answer to a failure an earlier generation actually hit in production.",
+   "theory_of_mind": "Rogov models his reader as a practitioner who already runs the system and has been burned by behavior that documentation describes but does not explain. His method is empirical throughout: nearly every claim is demonstrated with a live session, page inspection tools, and catalog queries, because he believes internals are believed only when they can be observed. He also models the database itself as an honest but literal machine: it enforces exactly the contract it was given, no more, so consistency beyond integrity constraints is the application's problem and isolation levels are promises with named exceptions, not vibes.",
+   "cross_layer_veto": "Several results in this book veto designs other layers might prefer. The wraparound analysis vetoes any scheme that treats finite identifiers as eternal: without an explicit retirement mechanism the system eventually corrupts visibility by itself. The exponential plan space vetoes exhaustive strategy search in any planner that joins many inputs, forcing heuristic search with stated limits. The statistics chapters veto confidence in exact-looking estimates, since sampled inputs cap the accuracy of every downstream cost decision. And the write-ahead rule vetoes any mutation path that changes state before journaling it, no matter how much latency that path would save."
+  }
+ ],
+ "universal_lens": "As a general template, the book shows how any large stateful system can be understood as five cooperating mechanisms: a versioning scheme that lets readers see consistent states without copying, a bounded shared cache with an explicit eviction policy, an append-only journal that makes durability a ordering rule rather than a writing schedule, a lock discipline expressed as compatibility rules, and a planner that searches an exponential space with sampled statistics and honest approximations. The same five mechanisms, renamed, appear in file systems, stream processors, and machine learning feature platforms.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book is a curriculum in how complex systems earn trust: every mechanism is paired with the failure it prevents and the regime where it stops working, from transaction wraparound to planner estimation error. It teaches the research habit of demanding the invariant, the approximation, and the breakdown condition for any proposed method, and it provides a shared vocabulary, horizons, snapshots, compatibility matrices, cost models, that lets analysts discuss evidence pipelines with the same precision engineers use for database pipelines.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the transfers are concrete: snapshot descriptors and xmin and xmax style version chains for evidence, so any projection can be replayed as of its freeze moment; a global horizon that tells compaction when history is safe to freeze; journaling before mutation for every rating and status change; buffer-ring isolation so bulk corpus imports never evict hot matchup evidence; cost-based planning with sampled baselines, most-common-value head lists, and histogram summaries for continuous quantities; and dependency tracking instead of hard locks to guard publication consistency across signals."
+}

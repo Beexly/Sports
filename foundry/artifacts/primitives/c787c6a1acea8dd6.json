@@ -1,0 +1,723 @@
+{
+ "book_id": "c787c6a1acea8dd6",
+ "source_status": "COMPLETE",
+ "source_note": "Hellerstein, Stonebraker and Hamilton, 'Architecture of a Database System', Foundations and Trends in Databases, Vol. 1, No. 2 (2007), pp. 141-259, DOI 10.1561/1900000002. Local file: publisher PDF of the monograph, 931364 bytes, sha256 c787c6a1acea8dd6c22114bd12ee4a3f43f0df66081560780880b1dd368311ca, book_id c787c6a1acea8dd6. Extracted text is clean born-digital text with publisher ligatures and occasional hyphenated line breaks; every verbatim quote was chosen inside a single printed page and machine-verified as a contiguous substring of the extracted text after whitespace normalization. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "five_main_components",
+   "name": "A typical RDBMS has five main components: client communications manager, process manager, relational query processor, transactional storage manager, plus shared components and utilities",
+   "verbatim_quote": "At heart, a typical RDBMS has ﬁve main components, as illustrated in Figure 1.1.",
+   "page": "Section 1.1, printed p. 144; extracted text line 118",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Relational systems are the reference architecture",
+    "The system serves concurrent clients over a network"
+   ],
+   "breakdown_regime": "Breaks down for non-relational engines (key-value stores, stream processors) whose component boundaries differ; the paper scopes its claims to relational systems.",
+   "domain": "database systems architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The GSE reasoning engine mirrors this decomposition: an ingestion front door (communications), an admission and scheduling layer (process manager), a reasoning core (query processor), a transactional evidence store (storage manager), and shared utilities such as signal catalogs and memory arenas. Keeping the five roles separate is what lets each layer be tuned and audited independently.",
+    "source_operator": "five_main_components",
+    "telemetry": "Per-layer latency, queue depth, and error counts for ingestion, scheduling, reasoning, and storage in the engine pipeline"
+   }
+  },
+  {
+   "primitive_id": "admission_control_graceful_degradation",
+   "name": "Admission control yields graceful degradation: past peak throughput an uncontrolled system thrashes, while a good admission controller holds throughput at peak and lets latency grow proportionally to arrival rate",
+   "verbatim_quote": "With a good admission controller, a system will display graceful degradation under overload: transaction latencies will increase proportionally to the arrival rate, but throughput will remain at peak.",
+   "page": "Section 2.4, printed pp. 162-163; extracted text line 760",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Memory pressure from sorting and hash joins is the typical thrashing cause",
+    "The optimizer can estimate a query's resource footprint before execution"
+   ],
+   "breakdown_regime": "Fails when resource estimates are wrong (bad cardinality estimates admit oversized queries) or when thrashing comes from lock contention and deadlock restarts rather than memory.",
+   "domain": "process models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine applies two-tier admission to its own workload: a connection-level cap plus an execution-level gate driven by the estimated memory and IO footprint of each analysis job. Jobs that would thrash the evidence store are deferred instead of being allowed to degrade every concurrent reasoning task.",
+    "source_operator": "admission_control_graceful_degradation",
+    "telemetry": "Arrival rate of analysis requests, estimated versus actual memory per job, buffer pool hit rate, throughput and latency percentiles"
+   }
+  },
+  {
+   "primitive_id": "process_per_worker_model",
+   "name": "Process per DBMS worker: each DBMS worker is an OS process, gaining OS isolation and tooling at the cost of heavy per-connection state and mandatory shared memory for the lock table and buffer pool",
+   "verbatim_quote": "The process per DBMS worker model (Figure 2.1) was used by early DBMS implementations and is still used by many commercial systems today.",
+   "page": "Section 2.1.1, printed p. 153; extracted text line 416",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "OS processes are expensive relative to threads",
+    "Shared structures (lock table, buffer pool) must live in OS shared memory"
+   ],
+   "breakdown_regime": "Scales poorly to very large connection counts because process state (security context, handle tables, memory manager state) consumes far more memory than thread state.",
+   "domain": "process models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's heavyweight isolation option: running a sensitive reasoning job in its own process when fault isolation matters more than density, accepting the memory cost per job.",
+    "source_operator": "process_per_worker_model",
+    "telemetry": "Resident memory per worker process, context switch rate, shared memory segment sizes"
+   }
+  },
+  {
+   "primitive_id": "thread_per_worker_model",
+   "name": "Thread per DBMS worker: each DBMS worker is implemented as an OS thread in a single multi-threaded process (definition given in the Figure 2.2 caption)",
+   "verbatim_quote": "Thread per DBMS worker model: each DBMS worker is implemented as an OS thread.",
+   "page": "Section 2.1.2, Figure 2.2 caption, printed p. 154; extracted text line 458",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The OS provides scalable kernel threads",
+    "Threads share one address space, so the OS does not isolate workers from each other's memory errors"
+   ],
+   "breakdown_regime": "Debugging race conditions is hard, stray pointers corrupt other workers, and thread APIs differ subtly across operating systems, hurting portability.",
+   "domain": "process models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's default in-process worker model: one thread per active reasoning session inside a single service process, chosen for density and cheap switching, with the known cost that a faulting worker can damage its neighbours.",
+    "source_operator": "thread_per_worker_model",
+    "telemetry": "Thread count, per-thread CPU, fault and crash attribution inside the shared process"
+   }
+  },
+  {
+   "primitive_id": "process_pool_model",
+   "name": "Process pool: workers are hosted by a bounded pool of processes; each request is executed to completion by one pooled process, which then returns to the pool for the next request",
+   "verbatim_quote": "With process pool (Figure 2.3), rather than allocating a full process per DBMS worker, they are hosted by a pool of processes.",
+   "page": "Section 2.1.3, printed p. 155; extracted text line 490",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Requests are independent enough to run on any pooled process",
+    "Pool size can be fixed or dynamically resized with load"
+   ],
+   "breakdown_regime": "When all pooled processes are busy, new requests wait; a pool sized for average load stalls under bursts, and per-request state must not leak between assignments.",
+   "domain": "process models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine runs stateless reasoning tasks on a bounded worker pool sized to the evidence store's safe concurrency, returning each worker to the pool after every task; this is the scheduling shape behind batch extraction and sweep processing.",
+    "source_operator": "process_pool_model",
+    "telemetry": "Pool occupancy, request wait time for a free worker, pool resize events"
+   }
+  },
+  {
+   "primitive_id": "dbms_lightweight_thread_package",
+   "name": "DBMS threads: a proprietary lightweight thread package replaces OS threads; each DBMS thread is programmed to manage its own state, perform all potentially blocking operations via non-blocking asynchronous interfaces, and yield frequently to a user-space scheduling routine",
+   "verbatim_quote": "These lightweight threads, or DBMS threads, replace the role of the OS threads described in the previous section.",
+   "page": "Section 2.2.1, printed pp. 159-160; extracted text line 640",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "OS thread support is missing, unscalable, or non-portable on target platforms",
+    "All potentially blocking operations can be issued asynchronously"
+   ],
+   "breakdown_regime": "Replicates OS logic (task switching, scheduling, thread state) inside the DBMS at high implementation and maintenance cost; one blocking call made by mistake stalls every thread in the process.",
+   "domain": "process models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Mirrors the engine's cooperative task runtime: lightweight reasoning tasks that never block, yield at IO boundaries, and are dispatched by an application-level scheduler, trading implementation effort for predictable switching costs.",
+    "source_operator": "dbms_lightweight_thread_package",
+    "telemetry": "Yield frequency, scheduler queue length, accidental blocking-call detections, task switch cost"
+   }
+  },
+  {
+   "primitive_id": "group_commit_log_flush",
+   "name": "Commit waits for the log: a transaction cannot be reported as successfully committed until a commit log record is flushed to the log device; flush requests may be postponed to batch commit records from many transactions into a single IO (group commit)",
+   "verbatim_quote": "A transaction cannot be reported as successfully committed until a commit log record is ﬂushed to the log device.",
+   "page": "Section 2.1.4, printed pp. 157-158; extracted text line 582",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The log device is the durability boundary",
+    "Resources such as locks are held until the commit flush completes"
+   ],
+   "breakdown_regime": "Batching delay adds commit latency; under low load there are too few concurrent commits to batch, so group commit saves nothing.",
+   "domain": "recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine batches durability points the same way: inference results and ledger entries are acknowledged only after their journal records are flushed, and concurrent completions are grouped into a single flush to amortize IO.",
+    "source_operator": "group_commit_log_flush",
+    "telemetry": "Commits per flush, flush latency, transactions waiting on commit, log device throughput"
+   }
+  },
+  {
+   "primitive_id": "shared_nothing_horizontal_partitioning",
+   "name": "Shared-nothing partitioning: each tuple is assigned to an individual machine, so each table is sliced horizontally (hash, range, round-robin, or hybrid partitioning) and spread across the machines in the cluster",
+   "verbatim_quote": "Each tuple in the database is assigned to an individual machine, and hence each table is sliced “horizontally” and spread across the machines.",
+   "page": "Section 3.2, printed pp. 167-168; extracted text line 918",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Machines share neither memory nor disk and coordinate only through messages",
+    "A good partitioning exists that lets processors execute independently"
+   ],
+   "breakdown_regime": "Poor partitioning forces cross-machine data shipping and skews load; distributed deadlock detection and two-phase commit add coordination cost, and a node failure removes its fraction of the data.",
+   "domain": "parallel architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine partitions its evidence corpus horizontally by entity and time across workers so each reasoning shard owns its slice outright; cross-shard questions are answered by shipping subqueries, not by shared memory.",
+    "source_operator": "shared_nothing_horizontal_partitioning",
+    "telemetry": "Per-shard data volume and query load, cross-shard tuple traffic, partition skew"
+   }
+  },
+  {
+   "primitive_id": "chained_declustering_linear_degradation",
+   "name": "Chained declustering: with tuple copies spread across multiple nodes, when one node fails the n minus 1 remaining nodes each do n/(n-1) of the original work, and this linear degradation continues as more nodes fail",
+   "verbatim_quote": "when a node does fails, the system load is distributed fairly evenly over the remaining nodes: the n − 1 remaining nodes each do n/(n − 1) of the original work,",
+   "page": "Section 3.2, printed pp. 168-169; extracted text line 969",
+   "latex": "\\frac{n}{n-1}",
+   "symbol_and_unit_ledger": {
+    "n": "number of nodes in the cluster (dimensionless count)",
+    "n/(n-1)": "share of the original total work carried by each surviving node after one node failure (dimensionless ratio)"
+   },
+   "assumptions": [
+    "Tuple copies are spread across multiple nodes before any failure",
+    "Surviving nodes have spare capacity to absorb the failed node's share"
+   ],
+   "breakdown_regime": "Requires redundancy storage overhead; correlated failures, or survivors that are already saturated, break the graceful linear degradation.",
+   "domain": "parallel architecture",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine sizes replica placement for its evidence shards with this arithmetic: losing one of n workers raises each survivor's load by the factor n/(n-1), which sets the headroom every worker must keep in reserve.",
+    "source_operator": "chained_declustering_linear_degradation",
+    "telemetry": "Node count, per-node utilization headroom, replica placement map, failover load measurements"
+   }
+  },
+  {
+   "primitive_id": "shared_disk_node_failure_isolation",
+   "name": "Shared-disk failure isolation: because all processors can access the same disks, the failure of a single DBMS processing node does not affect the other nodes' ability to access the entire database (coordination is via a distributed lock manager and a cache-coherency protocol for the distributed buffer pools)",
+   "verbatim_quote": "Another compelling feature of the shared-disk architecture is that the failure of a single DBMS processing node does not aﬀect the other nodes’ ability to access the entire database.",
+   "page": "Section 3.3, printed p. 170; extracted text line 998",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Disks are shared with roughly equal performance from all nodes, typically via a storage area network",
+    "Each machine keeps its own local memory for locks and buffer pool pages"
+   ],
+   "breakdown_regime": "Corruption introduced before data reaches the storage subsystem is visible to every node; the distributed lock manager and coherency protocol can bottleneck under high contention.",
+   "domain": "parallel architecture",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's shared evidence store follows the same shape: stateless reasoning nodes over one shared store, so losing a compute node loses no data access, while coherence coordination becomes the watched bottleneck.",
+    "source_operator": "shared_disk_node_failure_isolation",
+    "telemetry": "Lock manager latency and contention, cache coherency traffic, node failure events and recovery time"
+   }
+  },
+  {
+   "primitive_id": "numa_locality_optimization",
+   "name": "NUMA optimization rule: when the ratio of near-memory to far-memory access times rises above the 1.5:1 to 2:1 range, optimizations are required, and all follow the same approach, starting with allocating memory local to the processor that will use it (and keeping each worker scheduled on the same processor)",
+   "verbatim_quote": "These optimizations come in a variety of forms, but all follow the same basic approach: (a) when allocating memory for use by a processor, use memory local to that processor (avoid use of far memory)",
+   "page": "Section 3.4, printed pp. 171-172; extracted text line 1064",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Memory is divided into pods associated with small subsets of processors",
+    "The near-to-far access time ratio exceeds roughly 1.5:1 to 2:1; below that range non-uniformity can be ignored"
+   ],
+   "breakdown_regime": "Locality pinning fights load balancing: keeping a worker on one processor can leave other processors idle while its home processor is saturated.",
+   "domain": "parallel architecture",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats memory locality as a first-class scheduling input on many-core hosts: evidence partitions are pinned to the cores that reason over them, and workers are not migrated casually once their working set is warm.",
+    "source_operator": "numa_locality_optimization",
+    "telemetry": "Local versus remote memory access ratio, per-core cache miss rates, worker migration counts"
+   }
+  },
+  {
+   "primitive_id": "view_expansion",
+   "name": "View expansion: for each view reference in the FROM clause, the rewriter retrieves the view definition from the catalog manager and rewrites the query over the tables and predicates the view references, recursively, until the query is expressed exclusively over tables",
+   "verbatim_quote": "For each view reference that appears in the FROM clause, the rewriter retrieves the view deﬁnition from the catalog manager.",
+   "page": "Section 4.2, printed p. 179; extracted text line 1318",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "View definitions are stored in the catalog",
+    "SQL semantics for duplicates, nested queries, and NULLs are preserved during expansion"
+   ],
+   "breakdown_regime": "Expansion can blow up query size for deeply nested views, and predicates hidden inside view definitions can combine with outer predicates into unsatisfiable queries the original author never wrote.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine expands named derived signals the same way: a composite indicator referenced in a reasoning rule is replaced by its definition over base evidence, recursively, before evaluation, so every conclusion traces to base data.",
+    "source_operator": "view_expansion",
+    "telemetry": "Expansion depth per rule, expanded rule size, catalog lookup counts during compilation"
+   }
+  },
+  {
+   "primitive_id": "redundant_join_elimination",
+   "name": "Redundant join elimination: given a foreign key constraint, there is exactly one parent row for each child row and the child could not exist without the parent, so a join that uses no parent columns can be rewritten away",
+   "verbatim_quote": "it is known that there is exactly one Dept for each Emp and that the Emp tuple could not exist without a corresponding Dept tuple (the parent).",
+   "page": "Section 4.2, printed pp. 180-181; extracted text line 1370",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The foreign key constraint is enforced and the child column is constrained non-null",
+    "The query references no columns of the parent table"
+   ],
+   "breakdown_regime": "Invalid when the foreign key is nullable or unenforced, or when parent columns, aggregates, or duplicate semantics actually depend on the join.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine prunes reasoning steps with the same test: if a joined evidence source is functionally determined by a key already present and none of its attributes feed the conclusion, the join is dropped before execution.",
+    "source_operator": "redundant_join_elimination",
+    "telemetry": "Joins eliminated per compiled query, estimated versus actual row counts after elimination"
+   }
+  },
+  {
+   "primitive_id": "histogram_selectivity_estimation",
+   "name": "Selectivity estimation by histograms: optimizers analyze and summarize the distributions of values in attributes via histograms and other summary statistics, using sampling when visiting every value is too expensive",
+   "verbatim_quote": "Most systems today analyze and summarize the distributions of values in attributes via histograms and other summary statistics.",
+   "page": "Section 4.3, printed p. 184; extracted text line 1487",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Column value distributions are stable enough between statistics gatherings to be useful",
+    "Single-column statistics are the baseline; dependencies among columns need richer schemes"
+   ],
+   "breakdown_regime": "Correlated columns defeat single-column histograms, and errors in selectivity early in optimization propagate multiplicatively up the plan tree, resulting in terrible subsequent estimations.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine maintains distribution summaries of every evidence attribute it reasons over, so cost and selectivity estimates for candidate reasoning plans come from measured histograms rather than uniform-distribution guesses.",
+    "source_operator": "histogram_selectivity_estimation",
+    "telemetry": "Histogram refresh cadence, estimate versus actual selectivity per attribute, sampling rates"
+   }
+  },
+  {
+   "primitive_id": "iterator_pull_model",
+   "name": "Iterator (Volcano) execution model: iterators couple dataflow with control flow; the get_next() call is a standard procedure call, so a single thread executes the whole query graph and a tuple is returned to a parent exactly when control is returned",
+   "verbatim_quote": "An important property of iterators is that they couple dataﬂow with control ﬂow. The get next() call is a standard procedure call that returns a tuple reference to the caller via the call stack. Hence a tuple is returned to a parent in the graph exactly when control is returned.",
+   "page": "Section 4.4.1, printed pp. 189-190; extracted text line 1688",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Operators compose: any iterator subclass can be used as input to any other",
+    "Iterators do not block indefinitely on IO; prefetching hides latency in the common case"
+   ],
+   "breakdown_regime": "Blocking on IO stalls the single executing thread; parallel and remote execution require special exchange iterators that hide push-style data movement behind the pull interface.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's reasoning pipeline is a pull stream of evidence operators with the same contract: each stage requests the next item from its inputs, keeping control and data in lockstep and making every intermediate result inspectable.",
+    "source_operator": "iterator_pull_model",
+    "telemetry": "Per-operator tuple counts, get_next call latency, blocked-on-IO time per stage"
+   }
+  },
+  {
+   "primitive_id": "halloween_problem",
+   "name": "The Halloween problem and the visibility rule: SQL semantics forbid a statement from seeing its own updates; a pipelined index scan feeding an update can rediscover rows it already modified (for example, repeatedly raising salaries that move rightward in the index) and apply the update many times",
+   "verbatim_quote": "SQL semantics forbid this behavior: a single SQL statement is not allowed to “see” its own updates.",
+   "page": "Section 4.4.3, printed pp. 192-193; extracted text line 1835",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The update changes values that determine the row's position in the scanned index",
+    "The safe fix materializes the record IDs of all tuples to be modified before any update is applied"
+   ],
+   "breakdown_regime": "Avoiding indexes on updated columns is safe but inefficient; pipelined update schemes require somewhat exotic multi-version support from the storage engine.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine enforces the same visibility rule in its update passes: a batch that rewrites evidence records first materializes the target ID set, then applies changes, so a pass can never reprocess its own output.",
+    "source_operator": "halloween_problem",
+    "telemetry": "Rows materialized per update pass, reprocessing incidents, update pass duration"
+   }
+  },
+  {
+   "primitive_id": "sarg_pushdown_page_at_a_time",
+   "name": "SARG pushdown: search arguments are tested inside the access method layer a page at a time, so the repeated call/return pairs and pin/unpin or copy/delete cycles for tuples that fail the predicate are avoided",
+   "verbatim_quote": "if all this logic is done in the access method layer, the repeated pairs of call/return and either pin/unpin or copy/delete can be avoided by testing the SARGs a page at a time, and only returning from a get next() call for a tuple that satisﬁes the SARG.",
+   "page": "Section 4.5, printed p. 194; extracted text line 1895",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The access method can evaluate the predicate directly",
+    "A typical scan tests many tuples per page, so per-page amortization dominates"
+   ],
+   "breakdown_regime": "Predicates the access method cannot evaluate, such as opaque user-defined functions, cannot be pushed down and revert to per-tuple evaluation by the caller.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine pushes filters to the evidence store layer for the same reason: selection happens where the data sits, batched per page or block, instead of streaming candidate records up to the reasoning layer for rejection.",
+    "source_operator": "sarg_pushdown_page_at_a_time",
+    "telemetry": "Tuples tested at the storage layer versus returned, per-page predicate evaluation counts, copy operations avoided"
+   }
+  },
+  {
+   "primitive_id": "wal_rule_one",
+   "name": "Write-ahead logging, rule 1 of 3: each modification to a database page generates a log record, and the log record must be flushed to the log device before the database page is flushed (the other rules: log records flush in order, and a commit request returns only after its commit log record is flushed)",
+   "verbatim_quote": "Each modiﬁcation to a database page should generate a log record, and the log record must be ﬂushed to the log device before the database page is ﬂushed.",
+   "page": "Section 6.4, printed p. 228; extracted text line 3144",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Log records carry enough information to undo the actions of incomplete transactions",
+    "A flushed log write is durable on the log device"
+   ],
+   "breakdown_regime": "Any path that writes a data page before its log record, whether a buggy buffer manager or a misbehaving storage layer, silently voids atomicity after a crash.",
+   "domain": "recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine journals every change to its evidence base before applying it: the journal entry is durable before the derived state moves, which is what makes any reasoning result reproducible and any bad update reversible.",
+    "source_operator": "wal_rule_one",
+    "telemetry": "Journal flush ordering violations, journal-to-apply lag, recovery replay length"
+   }
+  },
+  {
+   "primitive_id": "steal_no_force_buffer_freedom",
+   "name": "STEAL and NOT-FORCE: the buffer manager has freedom in the choice of pages to replace (because of the STEAL property) and in the scheduling of page flushes (thanks to the NOT FORCE property), because logging absorbs the consequences",
+   "verbatim_quote": "manager has freedom in the choice of pages to replace (because of the STEAL property), and the scheduling of page ﬂushes (thanks to the NOT FORCE property).",
+   "page": "Section 6.6, printed pp. 236-237; extracted text line 3482",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Write-ahead logging is in place to undo stolen pages holding uncommitted data and to redo unforced pages of committed transactions",
+    "Pages are pinned correctly while in use"
+   ],
+   "breakdown_regime": "The freedom is bought with recovery complexity: undo of stolen pages and redo of unforced pages must both be exactly right, or durability and atomicity fail.",
+   "domain": "storage management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's cache layer takes the same bargain: it may evict or write back derived state in whatever order performs best, because the journal, not the cache, carries the correctness guarantees.",
+    "source_operator": "steal_no_force_buffer_freedom",
+    "telemetry": "Eviction choices by page type, stolen dirty page count, flush scheduling delay"
+   }
+  },
+  {
+   "primitive_id": "fuzzy_checkpoint_motivation",
+   "name": "Naive checkpoints are too slow: forcing all dirty buffer pool pages and then computing and storing the recovery LSN can cause delays of several seconds with a large buffer pool, so a fuzzy checkpoint scheme is required, with tiny checkpoint records and asynchronous write-out of old dirty pages",
+   "verbatim_quote": "checkpoint would force all dirty buﬀer pool pages and then compute and store the recovery LSN. With a large buﬀer pool, this could lead to delays of several seconds to complete the I/O of the pending pages.",
+   "page": "Section 6.4, printed p. 230; extracted text line 3228",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The buffer pool is large enough that a synchronous flush of all dirty pages is a multi-second stall",
+    "Recovery can start from the recorded recovery LSN and replay forward"
+   ],
+   "breakdown_regime": "Fuzzy checkpoints lengthen crash recovery replay; if dirty pages are written out too lazily, recovery time grows without bound.",
+   "domain": "recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine checkpoints its reasoning state the fuzzy way: it records a small recovery marker and flushes state asynchronously, so snapshotting never stalls live reasoning, at the price of bounded replay on restart.",
+    "source_operator": "fuzzy_checkpoint_motivation",
+    "telemetry": "Checkpoint marker size and cadence, dirty state outstanding, measured restart replay time"
+   }
+  },
+  {
+   "primitive_id": "lock_vs_latch_cycle_cost",
+   "name": "Locks versus latches cost law: latch calls take at most a few dozen CPU cycles whereas lock requests take hundreds of CPU cycles; latches guard internal structures briefly and latch deadlock is a bug, while locks are transactional and lock deadlock is detected and resolved by restart",
+   "verbatim_quote": "Latch calls take at most a few dozen CPU cycles whereas lock requests take hundreds of CPU cycles.",
+   "page": "Section 6.3, printed pp. 223-224; extracted text line 2974",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Latches are implemented with an atomic hardware instruction and held only for short, bounded critical sections",
+    "Lock manager work includes hash table lookup, wait queues, and per-transaction bookkeeping"
+   ],
+   "breakdown_regime": "Holding a latch across any operation that can block converts a cheap latch into a system-wide stall; latches are not tracked, so they are not released automatically if the holder faults.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine separates its synchronization the same way: cheap latches for in-memory index structures inside a reasoning worker, expensive transactional locks only at the evidence store boundary, with latch hold times budgeted in cycles.",
+    "source_operator": "lock_vs_latch_cycle_cost",
+    "telemetry": "Latch hold time distribution, latch contention counts, lock request latency, deadlock restarts"
+   }
+  },
+  {
+   "primitive_id": "phantom_problem_index_access",
+   "name": "The phantom problem: when a transaction accesses tuples via an index it locks only the tuples accessed, so other transactions can insert new tuples matching the predicate, and the new tuples appear on re-access within the same transaction",
+   "verbatim_quote": "The phantom problem can arise when a transaction accesses tuples via an index. In such cases, the transaction typically does not lock the entire table, just the tuples in the table that are accessed via the index",
+   "page": "Section 6.5.3, printed p. 234; extracted text line 3358",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Locking is at tuple granularity, not table granularity",
+    "Inserts into the scanned value range proceed concurrently"
+   ],
+   "breakdown_regime": "Table-level locking prevents phantoms but is too restrictive when transactions touch only a few tuples via an index; the practical fix, next-key locking, over-locks when keys are sparse.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's range scans over evidence have the same hazard: a concurrent ingest can insert records matching a predicate a reasoning pass already evaluated, so passes that need a stable predicate space lock the range, not just the rows read.",
+    "source_operator": "phantom_problem_index_access",
+    "telemetry": "Inserts into actively scanned ranges, repeat-scan result differences, range lock wait times"
+   }
+  },
+  {
+   "primitive_id": "snapshot_isolation_commit_rule",
+   "name": "Snapshot isolation: a transaction operates on the database as of its start timestamp, and commits only if no other transaction with an overlapping start/end timestamp pair wrote data that this transaction also wrote (first committer wins)",
+   "verbatim_quote": "The transaction commits only if no other transaction with an overlapping start/end-transaction pair wrote data that this transaction also wrote.",
+   "page": "Section 6.3.1, printed p. 227; extracted text line 3082",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Multiple versions of tuples are maintained, or old versions can be reconstructed (Oracle reconstructs them by applying undo)",
+    "Start and end timestamps come from a monotonically increasing counter"
+   ],
+   "breakdown_regime": "Snapshot isolation is not full serializability: write-skew anomalies pass the commit test because the conflicting transactions wrote different rows.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine runs long reasoning passes against a snapshot of the evidence base with the same commit rule: a pass publishes its conclusions only if no concurrent update touched the evidence it derived from.",
+    "source_operator": "snapshot_isolation_commit_rule",
+    "telemetry": "Snapshot age at read time, commit conflict rate, aborted publication attempts"
+   }
+  },
+  {
+   "primitive_id": "next_key_locking_protocol",
+   "name": "Next-key locking: insertions take an exclusive lock on the next-key tuple in the index, and readers take a shared lock on the next-key tuple beyond their range, so physical stored tuples serve as surrogates for the logical predicate space and phantoms are excluded",
+   "verbatim_quote": "This protocol ensures that subsequent insertions cannot appear in between two tuples that were returned previously to an active transaction. It also ensures that tuples cannot be inserted just below the lowest-keyed tuple previously returned.",
+   "page": "Section 6.5.3, printed pp. 234-235; extracted text line 3379",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Access is through a B+-tree index with a total key order",
+    "Full serializability, including phantom protection, is required; relaxed isolation levels do not use it"
+   ],
+   "breakdown_regime": "Over-locking: scanning keys 1 through 10 in an index holding only keys 1, 5, and 100 read-locks the entire range from 1 to 100, because 100 is the next key after 10.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine borrows the surrogate trick: to protect a logical range in an ordered evidence index, it locks the first stored record beyond the range, turning an abstract interval into a concrete lockable object.",
+    "source_operator": "next_key_locking_protocol",
+    "telemetry": "Range lock span versus rows actually matched, lock waits attributable to next-key locks"
+   }
+  },
+  {
+   "primitive_id": "latch_coupling_crabbing",
+   "name": "Latch coupling (crabbing): B+-tree traversal latches each node before it is visited and unlatches a node only when the next node has been successfully latched, so concurrent page splits cannot strand a traversal, and no transactional locks are taken on index pages",
+   "verbatim_quote": "The tree traversal logic latches each node before it is visited, only unlatching a node when the next node to be visited has been successfully latched.",
+   "page": "Section 6.5.1, printed p. 232; extracted text line 3289",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Modifications to the tree's physical structure can be made non-transactionally as long as concurrent transactions still find the correct data at the leaves",
+    "Latches are held only during traversal steps"
+   ],
+   "breakdown_regime": "Latch coupling applies only to B+-trees; it will not work for index trees over data without a single linear order, such as geographic data, where right-link schemes are used instead.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's tree-structured evidence indexes are traversed with the same hand-over-hand discipline whenever concurrent restructuring is possible, so a reader never follows a pointer into a node that is being split away.",
+    "source_operator": "latch_coupling_crabbing",
+    "telemetry": "Traversal restarts after splits, latch hold time per node, concurrent split frequency"
+   }
+  },
+  {
+   "primitive_id": "nested_top_actions",
+   "name": "Nested top actions and redo-only logging: structural changes such as B+-tree page splits and heap file extension need not be undone when the transaction aborts; ARIES nested top actions let recovery jump over those log records during undo without special-case code",
+   "verbatim_quote": "ARIES provides an elegant mechanism for these scenarios, called nested top actions, that allows the recovery process to “jump over” log records for physical structure modiﬁcations during recovery without any special-case code.",
+   "page": "Section 6.5.2, printed p. 233; extracted text line 3334",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The structural change is transactionally invisible: it does not change the tuples other transactions can see",
+    "Recovery first repeats history (redo) and then rolls back from the crash state (undo)"
+   ],
+   "breakdown_regime": "Misclassifying a change as redo-only when it does affect visible data corrupts the database after an abort; the classification depends on fine details of each access method.",
+   "domain": "recovery",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine logs index and layout maintenance on its evidence store as redo-only nested top actions: reorganizing storage never has to be rolled back when the reasoning transaction that triggered it aborts.",
+    "source_operator": "nested_top_actions",
+    "telemetry": "Redo-only records per log segment, undo records skipped during recovery, abort processing time"
+   }
+  },
+  {
+   "primitive_id": "wal_requires_strict_2pl",
+   "name": "Coupling law: write-ahead logging requires strict two-phase locking and will not operate correctly with non-strict two-phase locking, because an aborting transaction that dropped locks early may be unable to re-acquire the locks it needs to complete rollback",
+   "verbatim_quote": "Write-ahead logging requires strict two-phase locking, and will not operate correctly with non-strict two-phase locking.",
+   "page": "Section 6.6, printed pp. 235-236; extracted text line 3427",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rollback undoes a transaction's changes by processing its log records, which requires locks on the pages or tuples changed",
+    "Under strict 2PL, all locks are held until the end of the transaction"
+   ],
+   "breakdown_regime": "This is one instance of the general interdependence of transactional storage: concurrency control, recovery, and access methods cannot be designed or swapped independently.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine treats its journaling and locking as one designed unit, not swappable parts: any change to the lock discipline is reviewed against the recovery protocol, because the two are only correct together.",
+    "source_operator": "wal_requires_strict_2pl",
+    "telemetry": "Rollback lock re-acquisition failures, lock hold duration to transaction end, recovery correctness checks"
+   }
+  },
+  {
+   "primitive_id": "memory_context_alternative_to_gc",
+   "name": "Memory contexts: a context-based allocator serves as a lower-level, programmer-controllable alternative to garbage collection; phased work (parser, optimizer, executor) allocates inside a context and frees everything at once by deleting the context",
+   "verbatim_quote": "The most important is that they serve as a lower-level, programmer-controllable alternative to garbage collection.",
+   "page": "Section 7.2, printed p. 242; extracted text line 3637",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Work proceeds in phases whose allocations share a lifetime",
+    "Bulk freeing of large regions is cheaper than many individual free() calls on small objects"
+   ],
+   "breakdown_regime": "Objects that outlive their phase must be copied into a longer-lived context before deletion; deleting a context too early is a use-after-free, and long-lived contexts can still leak internally.",
+   "domain": "shared components",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine allocates per-task reasoning state in arenas with the same discipline: everything a single analysis allocates lives in its arena and is released in one operation when the task ends, eliminating per-object free bugs.",
+    "source_operator": "memory_context_alternative_to_gc",
+    "telemetry": "Arena sizes per task, allocation counts by arena type, peak memory per reasoning task"
+   }
+  },
+  {
+   "primitive_id": "catalog_stored_as_tables",
+   "name": "Self-describing catalog: the catalog records the names of basic entities (users, schemas, tables, columns, indexes) and their relationships, and is itself stored as a set of tables in the database, so metadata is managed and queried with the same code and language as data",
+   "verbatim_quote": "The catalog records the names of basic entities in the system (users, schemas, tables, columns, indexes, etc.) and their relationships, and is itself stored as a set of tables in the database.",
+   "page": "Section 7.1, printed p. 240; extracted text line 3563",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Catalog tables can be bootstrapped before user tables exist",
+    "High-traffic catalog portions are materialized in main memory in denormalized form for the parser and optimizer"
+   ],
+   "breakdown_regime": "Catalog hot spots need special-case transactional tricks, and very large catalogs strain naive scans: one major ERP application has over 60,000 tables with two or three indexes per table.",
+   "domain": "shared components",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine's registry of signals, sources, and derived indicators is stored in the same evidence store it describes, queryable with the same tools, so the system's map of itself cannot drift into a separate, stale format.",
+    "source_operator": "catalog_stored_as_tables",
+    "telemetry": "Catalog entry counts by type, catalog cache hit rate, metadata lookup latency during compilation"
+   }
+  },
+  {
+   "primitive_id": "log_based_replication_perpetual_recovery",
+   "name": "Log-based replication: a log sniffer reads log records and ships them to the target system, which is in perpetual recovery mode replaying log records as they arrive, producing transactionally consistent replicas with minimal overhead on the running system",
+   "verbatim_quote": "read log records and ship these to the target system, which is in perpetual recovery mode replaying log records as they arrive.",
+   "page": "Section 7.4, printed pp. 247-248; extracted text line 3844",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The target system can drive its replay logic from the source's log records (cross-vendor log formats make this much harder)",
+    "Incremental shipping scales with database size and update rate"
+   ],
+   "breakdown_regime": "Physical replication does not scale to large databases, and trigger-based replication imposes a performance penalty unacceptable for some workloads; log-based replication is the scheme of choice only when the log format is understood at both ends.",
+   "domain": "shared components",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine replicates its evidence base by shipping its journal to standby copies that replay continuously, so a standby is always a transactionally consistent, nearly current replica rather than a periodic dump.",
+    "source_operator": "log_based_replication_perpetual_recovery",
+    "telemetry": "Replication lag in records and seconds, replay rate at the standby, failover readiness checks"
+   }
+  },
+  {
+   "primitive_id": "lru_recency_failure_scans",
+   "name": "Recency failure under scans: for access patterns such as full table scans of relations much larger than the buffer pool, recency of reference is a poor predictor of the probability of future reference, so OS page replacement schemes like LRU and CLOCK perform poorly; systems use enhancements such as LRU-2 or policies that depend on page type",
+   "verbatim_quote": "For such access patterns, the recency of reference is a poor predictor of the probability of future reference, so OS page replacement schemes like LRU and CLOCK were well-known to perform poorly for many database access patterns [86].",
+   "page": "Section 5.3, printed p. 215; extracted text line 2656",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The workload mixes repeated random access with large sequential scans",
+    "The buffer pool is a shared array of fixed-size frames with pin counts and dirty bits"
+   ],
+   "breakdown_regime": "Pure LRU is adequate for scan-free workloads; scan-resistant policies add complexity and can underperform when the scanned data is itself the hot working set.",
+   "domain": "storage management",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine's evidence cache uses scan-resistant replacement for the same reason: a full-corpus sweep must not evict the hot working set that live reasoning depends on, so bulk passes get a segregated, limited cache region.",
+    "source_operator": "lru_recency_failure_scans",
+    "telemetry": "Cache hit rate before and during bulk scans, evictions attributable to scan traffic, hot set survival rate"
+   }
+  },
+  {
+   "primitive_id": "double_buffering_copy_cost",
+   "name": "Double buffering tax: because the DBMS must do its own buffering for correctness, OS buffering is redundant and wastes both memory and time, adding a full extra copy in each direction (disk to OS buffer to DBMS buffer pool on reads, and both copies in reverse on writes); systems bypass it with direct IO interfaces",
+   "verbatim_quote": "Second, it wastes time and processing resources, by causing an additional copying step: on reads, data is ﬁrst copied from the disk to the OS buﬀer, and then copied again to the DBMS buﬀer pool. On writes, both of these copies are required in reverse.",
+   "page": "Section 5.2, printed pp. 213-214; extracted text line 2584",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The DBMS must control the timing and ordering of writes for the write-ahead logging protocol",
+    "Once IO is balanced, main-memory copies, not disk latency, become the throughput bottleneck"
+   ],
+   "breakdown_regime": "Bypassing the OS cache forfeits OS read-ahead for access patterns the DBMS does not predict; small or IO-bound systems may see little benefit.",
+   "domain": "storage management",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine avoids double handling of evidence the same way: data moves from store to reasoning buffers in one copy under the engine's own cache policy, because at scale the copies, not the disk, become the bottleneck.",
+    "source_operator": "double_buffering_copy_cost",
+    "telemetry": "Bytes copied per query, CPU time in memory copies, cache bypass hit rates"
+   }
+  },
+  {
+   "primitive_id": "acid_terms_not_axioms",
+   "name": "ACID is a mnemonic, not an axiom system: the terms (due to Haerder and Reuter) were not formally defined and are not mathematical axioms that combine to guarantee transactional consistency; in practice isolation is implemented by locking, durability by logging and recovery, and consistency by runtime constraint checks in the query executor",
+   "verbatim_quote": "These terms were not formally deﬁned, and are not mathematical axioms that combine to guarantee transactional consistency.",
+   "page": "Section 6.1, printed p. 219; extracted text line 2784",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The acronym organizes a discussion of transaction systems rather than stating theorems",
+    "Each property maps to concrete mechanisms in a given implementation"
+   ],
+   "breakdown_regime": "Treating ACID as a formal guarantee hides the real semantics, which live in isolation levels and recovery protocols whose definitions differ across systems and are partly defined operationally in terms of locking.",
+   "domain": "concurrency control",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine documents its own guarantees with the same discipline: every named guarantee (freshness, consistency, reproducibility) is tied to the specific mechanism that implements it, never asserted as a slogan.",
+    "source_operator": "acid_terms_not_axioms",
+    "telemetry": "Guarantee-to-mechanism audit coverage, isolation level in effect per workload, constraint violation aborts"
+   }
+  },
+  {
+   "primitive_id": "bulk_loader_order_of_magnitude",
+   "name": "Bulk loading law: in round numbers, a bulk loader is an order of magnitude faster than SQL inserts, streaming records into storage without the overhead of the SQL layer and using special bulk-load methods for access methods like B+-trees",
+   "verbatim_quote": "In round numbers, a bulk loader is an order of magnitude faster than SQL inserts, and all major vendors oﬀer a high performance bulk loader.",
+   "page": "Section 4.6.2, printed p. 198; extracted text line 2046",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Loads are large enough that per-row SQL overhead dominates",
+    "Warehouse loads traditionally happen in a nightly window so answers across a query set stay compatible"
+   ],
+   "breakdown_regime": "Real-time warehouses cannot wait for bulk windows; inserts must take write locks that collide with query read locks unless multi-version isolation and historical queries are used instead of update-in-place.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine ingests evidence through a bulk path, not row-by-row inserts: sweep results and corpus batches stream through a loader that builds indexes in bulk, which is what makes large ingestion runs finish in minutes instead of hours.",
+    "source_operator": "bulk_loader_order_of_magnitude",
+    "telemetry": "Rows per second for bulk versus row-at-a-time ingestion, index build time per batch, load window duration"
+   }
+  },
+  {
+   "primitive_id": "query_plan_cache",
+   "name": "Query plan cache: because applications build SQL dynamically, DBMSs store dynamic query execution plans in a query plan cache and reuse the cached version when the same or a very similar statement is submitted, approximating precompiled static SQL without its application-model restrictions",
+   "verbatim_quote": "Because this is so common, DBMSs store these dynamic query execution plans in the query plan cache. If the same (or very similar) statement is subsequently submitted, the cached version is used.",
+   "page": "Section 4.3.1, printed pp. 186-187; extracted text line 1602",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Repeated or similar statements are common (form-driven and framework-generated queries)",
+    "Plans are removed from the cache when objects they depend on change, such as a dropped index"
+   ],
+   "breakdown_regime": "Plans optimized for typical parameter values can perform extremely poorly for atypical values; vendors split between plan stability (re-optimize only when a plan can no longer execute) and aggressive self-tuning recompilation.",
+   "domain": "query processing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine caches compiled reasoning plans keyed by the shape of the question, reusing them across identical requests and invalidating them when the underlying evidence schema or indexes change.",
+    "source_operator": "query_plan_cache",
+    "telemetry": "Plan cache hit rate, recompilation triggers by cause, latency saved per cache hit"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "c787c6a1acea8dd6-t1",
+   "think": "This monograph is the standard architectural tour of a relational database management system, written by three authors who between them built or led several of the systems discussed. Its unit of analysis is not the algorithm but the component: the paper walks a single query through its life, from client connection to result return, and then examines each subsystem that the query touches. Read as an extraction target, the load-bearing content falls into five families that match the paper's own structure: process and parallelism models, the query processor, storage management, the transactional storage manager, and shared components.\n\nThe process model material is a taxonomy with teeth. The three uniprocessor models, process per worker, thread per worker, and process pool, are not presented as history but as live options, each still the default somewhere, and the paper is precise about why: process state is heavy, thread state is light, shared structures like the lock table and buffer pool must be reachable from every worker regardless of model, and the historical absence of scalable operating system threads forced vendors to build their own lightweight thread packages. Admission control closes the section with one of the paper's clearest systems laws: past peak throughput, an uncontrolled multi-user system thrashes, and the cure is to refuse or defer work using optimizer-supplied resource estimates, with memory footprint as the key signal, so that degradation is graceful rather than catastrophic.\n\nThe parallel architecture section extends the same thinking across machines. Shared memory, shared nothing, shared disk, and NUMA are distinguished by what is shared and what must therefore be coordinated explicitly: horizontal partitioning and value-based coordination for shared nothing, a distributed lock manager and cache coherency protocol for shared disk, and locality-aware allocation and scheduling for NUMA once the near-to-far access ratio passes roughly two to one. Chained declustering gives the section its one crisp quantitative law, the n/(n-1) share of original work falling on each surviving node after a failure.\n\nThe query processor chapters are about compilation discipline. Parsing canonicalizes names and validates against the catalog; the rewriter simplifies without changing semantics, expanding views, folding constants, inferring transitive predicates, and eliminating redundant joins under foreign key constraints; the optimizer searches a plan space whose cost model rests on histogram-based selectivity estimates, knowing that estimation errors multiply up the plan tree. Execution is the iterator model, a pull protocol that fuses control flow and dataflow so a single thread runs an entire plan. The section's cautionary tales are concrete: the Halloween problem shows that a statement must never see its own updates, and search-argument pushdown shows why predicates belong inside the access method, evaluated a page at a time instead of through per-tuple call and return churn.\n\nStorage management contributes the temporal half of the design. The DBMS must control not only where blocks sit but when they move, because write-ahead logging imposes an ordering between log writes and data writes that operating system buffering would silently break, and because double buffering is a pure tax of extra copies in both directions. The buffer pool itself is a study in workload-aware replacement, since recency of reference fails exactly when scans larger than the pool sweep through it.\n\nThe transaction chapters are the monograph's center of gravity. ACID is introduced honestly, as a mnemonic rather than an axiom system, and then decomposed into mechanisms: strict two-phase locking for isolation, logging for durability and atomicity, and constraint checks for consistency. The paper insists on couplings that textbooks often hide: write-ahead logging is only correct under strict two-phase locking; index structures need latching schemes such as crabbing and right links, plus redo-only logging via nested top actions, because their changes are physical rather than logical; phantom protection needs next-key locking, a physical surrogate for a logical predicate. Snapshot isolation and Oracle read consistency show multi-version schemes living beside locking, each with a precise commit rule and known anomalies.\n\nThe shared components section argues that the unglamorous parts decide whether a system is operable: a self-describing catalog stored as tables, memory contexts that make phased allocation safe and cheap, disk subsystems that cope with RAID and SAN realities, log-based replication that keeps a standby in perpetual recovery, and online utilities that run while the system serves traffic.\n\nTwo recurring pieces of evidence discipline run through the paper and are worth naming explicitly. First, the authors repeatedly report measured comparisons rather than intuitions: raw disk access beats large-file access by only about six percent on TPC-C, direct IO overhead is reported as low as one percent, latch calls cost a few dozen cycles against hundreds for lock requests, and a bulk loader is an order of magnitude faster than SQL inserts. Second, the standard-practice summaries at the end of each section show convergence without uniformity: every major vendor supports shared-memory parallelism and write-ahead logging, yet no leading system supports both shared-nothing and shared-disk clustering in one code base, and DB2 alone carries four distinct process models. Architecture, in this account, is a set of bets about workload and customers, and the bets remain visible in the products decades later.\n\nFor a reasoning engine, the transfer value is architectural rather than algorithmic. Nearly every mechanism here answers a question that any large evidence-processing system must answer: how work is admitted, how state is journaled before it changes, how caches are kept from lying, how concurrent readers and writers are kept consistent, and how the system describes itself. The paper's limits are equally clear: it is a 2007 snapshot of relational, disk-based systems, written before flash storage became central, before column stores won the warehouse argument the paper itself foreshadows, and before distributed consensus became a default answer to coordination. Its mechanisms should be imported as design patterns with their assumptions attached, not as current product facts.",
+   "retrocausal_genealogy": "The architecture described here descends directly from System R and INGRES in the 1970s: the iterator executor, Selinger's cost-based optimizer, Gray's work on lock granularity, and the ARIES recovery protocol of the early 1990s are the ancestors of nearly every component in the paper. The authors are explicit about this lineage, citing the original sources and noting where commercial systems kept, replaced, or regretted the early choices, as with INGRES's interpreted plans and System R's compiled code. The genealogy matters because the constraints of that era, scarce memory, slow disks, and weak operating system thread support, explain structures that persist long after the constraints themselves changed.",
+   "theory_of_mind": "The authors write for a reader who already knows textbook database material and wants the oral tradition: the systems knowledge that lives in product teams rather than in papers. Their model of the domain is that a DBMS is a long-lived, multi-million-line server whose architecture is shaped as much by portability, customer skill, and administrative cost as by algorithms. Throughout, vendor choices are explained by the customers those vendors serve: IBM optimizes for predictable performance in expert shops, Microsoft for self-tuning in shops without database administrators. The reader is treated as a future builder who will face the same trade-offs, not as a student to be examined.",
+   "cross_layer_veto": "The paper's strongest cross-layer claim is that transactional storage vetoes modularity: concurrency control, recovery, and access methods cannot be designed independently, because write-ahead logging assumes strict two-phase locking, index latching assumes redo-only structural logging, and buffer manager freedom exists only because logging absorbs the consequences. Any layer that ignores these couplings produces a system that is fast in benchmarks and wrong after crashes. The veto extends upward as well: optimizer plan choices are constrained by admission control's memory estimates, and the executor's iterator model is constrained by the buffer pool's pin discipline. Correctness in this architecture is a property of the joints between components, not of the components alone."
+  }
+ ],
+ "universal_lens": "Any long-lived multi-user service that guards shared state can be read through this template: admit work explicitly or thrash, journal changes before applying them, separate cheap internal synchronization from expensive transactional synchronization, describe the system inside the system itself, and expect the unglamorous utilities to decide operability. The specific machinery is relational and disk-era, but the questions are permanent: what is shared, what is coordinated, what is logged, what is cached, and what breaks first when each assumption fails. Systems that answer these questions deliberately, with a named mechanism behind every guarantee, age well; systems that answer them accidentally inherit the failure modes this paper catalogs.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the monograph is a design reference for durable research infrastructure: a self-describing catalog of sources and derived indicators, journaled ingestion so any dataset state can be reconstructed, snapshot reads for long analyses, and bulk loading paths for corpus-scale imports. Its treatment of admission control and memory contexts speaks directly to running many concurrent research workloads on limited hardware without thrashing. The Institute takes the paper's operability lesson as doctrine: monitoring, statistics gathering, and reorganization are first-class components to design in from the start, not utilities to bolt on after the research code already works.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the transfer is the machinery of trustworthy reasoning over evidence: write-ahead journaling of every evidence change before derived state moves, admission control that defers oversized analysis instead of letting it thrash concurrent work, histogram-based selectivity estimates for planning, scan-resistant caching so bulk sweeps cannot evict the hot working set, and snapshot-isolated reasoning passes that publish only when their inputs were not concurrently rewritten. The Halloween problem and the phantom problem translate directly into update-pass and range-scan discipline for the evidence base. This is the storage and concurrency substrate that makes the engine's reasoning reproducible and auditable."
+}

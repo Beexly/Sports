@@ -1,0 +1,852 @@
+{
+ "book_id": "fa058eb96948ee19",
+ "source_status": "COMPLETE",
+ "source_note": "William L. Hamilton (McGill University), Graph Representation Learning, Synthesis Lectures on Artificial Intelligence and Machine Learning, Vol. 14, No. 3, pp. 1-159, Morgan & Claypool, 2020. The local file is the author's pre-publication draft (unedited version released with permission), PDF of 2530915 bytes, sha256 fa058eb96948ee19b2a7a85c61686662d1522b1759ad944675bfd2d452a4772b. Extracted text is clean and complete across all nine chapters plus conclusion and bibliography (6,241 lines); equation glyphs are partially mangled in extraction, so LaTeX was restored from the printed equations as rendered in the text layer and quotes were chosen from clean prose passages. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "graph_adjacency_representation",
+   "name": "A graph is a node set plus an edge set, encoded losslessly by an adjacency matrix",
+   "verbatim_quote": "Formally, a graph G = (V, E) is defined by a set of nodes V and a set of edges E between these nodes.",
+   "page": "Chapter 1, Section 1.1 (book p. 2); text line 311",
+   "latex": "A[u, v] = 1 \\text{ if } (u, v) \\in E, \\quad A[u, v] = 0 \\text{ otherwise}",
+   "symbol_and_unit_ledger": {
+    "A": "adjacency matrix in R^{|V|x|V|}, entries dimensionless (0/1 or real weights)",
+    "u, v": "node indices in V",
+    "E": "edge set"
+   },
+   "assumptions": [
+    "Simple graphs have at most one edge per node pair and no self loops",
+    "Undirected edges make A symmetric; directed edges break symmetry"
+   ],
+   "breakdown_regime": "Weighted, directed, and temporal relations overflow the plain binary matrix and need tensors or edge features",
+   "domain": "graph foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Any entity-and-relation store in the engine (players, teams, coaches, venues, situations) can be cast as nodes plus typed edges and stored as sparse adjacency, so relational queries become matrix operations instead of ad hoc joins.",
+    "source_operator": "graph_adjacency_representation",
+    "telemetry": "Rosters, matchup histories, and interaction logs that define nodes and edges"
+   }
+  },
+  {
+   "primitive_id": "multirelational_graphs",
+   "name": "Multi-relational graphs type their edges and stack per-relation adjacency matrices into an adjacency tensor",
+   "verbatim_quote": "Two important subsets of multi-relational graphs are often known as heterogeneous and multiplex graphs.",
+   "page": "Chapter 1, Section 1.1.1 (book p. 3); text line 343",
+   "latex": "(u, \\tau, v) \\in E, \\quad \\mathcal{A} \\in \\mathbb{R}^{|V| \\times |\\mathcal{R}| \\times |V|}",
+   "symbol_and_unit_ledger": {
+    "tau": "relation (edge) type",
+    "A (tensor)": "adjacency tensor, one adjacency matrix per relation",
+    "R": "set of relations"
+   },
+   "assumptions": [
+    "Node types can constrain which relations may connect which node types",
+    "Every node is assumed present in every layer of a multiplex graph"
+   ],
+   "breakdown_regime": "Relation vocabularies explode combinatorially; rare relations are too sparse to estimate reliably",
+   "domain": "graph foundations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Engine relations are not interchangeable: a pass-rush matchup edge, a coverage edge, and a coaching-tendency edge must live in separate tensor slices so the reasoning layer never averages unlike relations together.",
+    "source_operator": "multirelational_graphs",
+    "telemetry": "Typed event logs: play types, personnel groupings, coverage shells, situation tags"
+   }
+  },
+  {
+   "primitive_id": "node_classification_non_iid",
+   "name": "Node classification breaks the i.i.d. assumption because nodes are interconnected, so labels must be inferred jointly",
+   "verbatim_quote": "Node classification completely breaks this i.i.d. assumption. Rather than modeling a set of i.i.d. datapoints, we are instead modeling an interconnected set of nodes.",
+   "page": "Chapter 1, Section 1.2.1 (book pp. 4-5); text line 456",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Labels are known only on a small training subset Vtrain of one large graph",
+    "Unlabeled test nodes and their edges are visible during training (transductive, semi-supervised setup)"
+   ],
+   "breakdown_regime": "Treating connected entities as independent samples leaks information and overstates confidence; the framework also strains when the graph itself changes over time",
+   "domain": "graph machine learning tasks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Engine ratings for players and units cannot be estimated as independent rows: a player's projection is conditioned on teammates, opponents, and scheme neighbors, so inference must propagate over the matchup graph rather than score each entity alone.",
+    "source_operator": "node_classification_non_iid",
+    "telemetry": "Partial labels: graded performances for a subset of players or games, full schedule graph visible"
+   }
+  },
+  {
+   "primitive_id": "homophily_structural_equivalence",
+   "name": "Homophily, structural equivalence, and heterophily are the three relational priors that make neighbor information predictive of labels",
+   "verbatim_quote": "One particularly popular idea is to exploit homophily, which is the tendency for nodes to share attributes with their neighbors in the graph",
+   "page": "Chapter 1, Section 1.2.1 (book p. 5); text line n/a",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The operative prior must be diagnosed per dataset: homophily, structural equivalence, and heterophily imply different models",
+    "Neighbor similarity is a tendency, not a law"
+   ],
+   "breakdown_regime": "Assuming homophily on a heterophilic relation (or the reverse) actively degrades predictions below the independent baseline",
+   "domain": "graph machine learning tasks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Before propagating any signal across an engine graph, the lane must test which prior the relation obeys: similar neighbors, similar roles, or complementary opposites, because the same aggregation code helps under one prior and harms under another.",
+    "source_operator": "homophily_structural_equivalence",
+    "telemetry": "Label-agreement rates between connected entities, role-cluster statistics per relation type"
+   }
+  },
+  {
+   "primitive_id": "node_degree",
+   "name": "Node degree counts incident edges and is the most basic, often most informative, node statistic",
+   "verbatim_quote": "The most obvious and straightforward node feature to examine is degree, which is usually denoted du for a node u ∈ V and simply counts the number of edges incident to a node",
+   "page": "Chapter 2, Section 2.1.1, Eq. (2.1) (book p. 11); text line 665",
+   "latex": "d_u = \\sum_{v \\in V} A[u, v]",
+   "symbol_and_unit_ledger": {
+    "d_u": "degree of node u, unit: edge count",
+    "A[u, v]": "adjacency entry, 0/1 or weight"
+   },
+   "assumptions": [
+    "Directed graphs split degree into in-degree and out-degree by summing columns or rows",
+    "Degree is computed on the observed graph, which may be a sample of the true graph"
+   ],
+   "breakdown_regime": "Degree alone cannot distinguish a hub in a dense cluster from a bridge node with the same count",
+   "domain": "node statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Volume and involvement counts (targets, touches, snaps, shared possessions) are the degree features of sports graphs: cheap, robust first signals of centrality in any matchup network the engine builds.",
+    "source_operator": "node_degree",
+    "telemetry": "Per-entity interaction counts from play-by-play and participation data"
+   }
+  },
+  {
+   "primitive_id": "eigenvector_centrality",
+   "name": "Eigenvector centrality scores a node by the centrality of its neighbors; it is the leading eigenvector of the adjacency matrix",
+   "verbatim_quote": "In particular, we define a node’s eigenvector centrality eu via a recurrence relation in which the node’s centrality is proportional to the average centrality of its neighbors",
+   "page": "Chapter 2, Section 2.1.1, Eqs. (2.2)-(2.4) (book pp. 11-12); text line 696",
+   "latex": "\\lambda e = A e",
+   "symbol_and_unit_ledger": {
+    "e": "vector of node centrality scores, dimensionless",
+    "lambda": "largest eigenvalue of A",
+    "A": "adjacency matrix"
+   },
+   "assumptions": [
+    "Positive centrality values are required, so the Perron-Frobenius theorem selects the leading eigenvector",
+    "Power iteration e(t+1) = A e(t) converges to the centrality vector"
+   ],
+   "breakdown_regime": "Disconnected graphs and bipartite oscillation can break power-iteration convergence; centrality inherits any sampling bias in the observed edges",
+   "domain": "node statistics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Strength-of-schedule style ratings are eigenvector centrality in disguise: beating strong opponents counts more because importance flows through neighbors, which is the correct way to rank entities embedded in a results graph.",
+    "source_operator": "eigenvector_centrality",
+    "telemetry": "Win-loss and performance graphs between teams or players across a season"
+   }
+  },
+  {
+   "primitive_id": "clustering_coefficient",
+   "name": "The clustering coefficient measures the fraction of closed triangles in a node's ego graph",
+   "verbatim_quote": "This important structural distinction can be measured using variations of the clustering coefficient, which measures the proportion of closed triangles in a node’s local neighborhood.",
+   "page": "Chapter 2, Section 2.1.1, Eq. (2.5) (book p. 13); text line 763",
+   "latex": "c_u = \\frac{|\\{(v_1, v_2) \\in E : v_1, v_2 \\in \\mathcal{N}(u)\\}|}{\\binom{d_u}{2}}",
+   "symbol_and_unit_ledger": {
+    "c_u": "clustering coefficient of u, dimensionless in [0, 1]",
+    "N(u)": "neighborhood of u",
+    "d_u": "degree of u, edge count"
+   },
+   "assumptions": [
+    "Defined for undirected graphs; directed variants need separate treatment",
+    "Nodes of degree below 2 have no neighbor pairs and an undefined coefficient"
+   ],
+   "breakdown_regime": "Triangle density says nothing about larger motifs; sparse real graphs make the estimate noisy for low-degree nodes",
+   "domain": "node statistics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Local redundancy in a scheme graph (how often a player's collaborators also interact with each other) distinguishes tight units from star-shaped ones, a structural feature for unit cohesion that raw volume stats cannot see.",
+    "source_operator": "clustering_coefficient",
+    "telemetry": "Triangle counts in interaction graphs built from lineups, routes, and shared snaps"
+   }
+  },
+  {
+   "primitive_id": "weisfeiler_lehman_kernel",
+   "name": "The Weisfeiler-Lehman procedure iteratively hashes neighborhood label multisets so each label summarizes a K-hop neighborhood",
+   "verbatim_quote": "After K iterations of this labeling process, every node has a label that summarizes the structure of its K-hop neighborhood, and the collection of these labels can be used to characterize the structure of an entire graph or subgraph.",
+   "page": "Chapter 7, Section 7.3.3 (book p. 95); kernel form in Chapter 2, Section 2.1.2, Eq. (2.6); text line 4578",
+   "latex": "l^{(i)}(v) = \\mathrm{HASH}\\left(\\{\\{l^{(i-1)}(u) \\; \\forall u \\in \\mathcal{N}(v)\\}\\}\\right)",
+   "symbol_and_unit_ledger": {
+    "l(i)(v)": "label of node v after i refinement rounds",
+    "HASH": "injective map from label multisets to new labels",
+    "N(v)": "neighborhood of v"
+   },
+   "assumptions": [
+    "Initial labels are usually node degrees or discrete node features",
+    "The hash is assumed injective so distinct multisets never collide"
+   ],
+   "breakdown_regime": "1-WL cannot distinguish some non-isomorphic graphs (for example a 6-cycle versus two triangles), and histogram features discard which node held which label",
+   "domain": "graph kernels",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Iterative neighborhood hashing is a discrete prototype of the engine's layered reasoning: a matchup feature should summarize not just the two entities but the refined structure of their surrounding units, iterated a fixed number of rounds.",
+    "source_operator": "weisfeiler_lehman_kernel",
+    "telemetry": "Discrete formation, personnel, and situation labels attached to entities and plays"
+   }
+  },
+  {
+   "primitive_id": "neighborhood_overlap_measures",
+   "name": "Overlap measures score a node pair by shared neighbors, down-weighting high-degree common neighbors (Adamic-Adar, Resource Allocation)",
+   "verbatim_quote": "Both these measures give more weight to common neighbors that have low degree, with intuition that a shared low-degree neighbor is more informative than a shared high-degree one.",
+   "page": "Chapter 2, Section 2.2.1, Eqs. (2.7), (2.12), (2.13) (book pp. 16-18); text line 1002",
+   "latex": "S[u, v] = |\\mathcal{N}(u) \\cap \\mathcal{N}(v)|",
+   "symbol_and_unit_ledger": {
+    "S[u, v]": "pairwise similarity score, dimensionless",
+    "N(u), N(v)": "neighborhoods of u and v"
+   },
+   "assumptions": [
+    "Edge likelihood is taken proportional to the overlap statistic S[u, v]",
+    "Normalization (Sorensen, Salton, Jaccard) is required to control degree bias"
+   ],
+   "breakdown_regime": "Purely local: two nodes in the same community with no shared neighbors score zero, and the heuristics cannot use node features",
+   "domain": "relation prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Shared-opponent and shared-context overlap is a fast baseline for inferring unobserved relationships in engine data, and the low-degree weighting says rare shared contexts carry more information than common ones.",
+    "source_operator": "neighborhood_overlap_measures",
+    "telemetry": "Common opponents, common teammates, shared venues and situations between entity pairs"
+   }
+  },
+  {
+   "primitive_id": "katz_index",
+   "name": "The Katz index counts all paths between two nodes with geometrically decaying weights, with closed form (I - beta A)^{-1} - I",
+   "verbatim_quote": "The Katz index is the most basic global overlap statistic. To compute the Katz index we simply count the number of paths of all lengths between a pair of nodes",
+   "page": "Chapter 2, Section 2.2.2, Eqs. (2.14), (2.15) (book pp. 18-19); text line 1017",
+   "latex": "S_{\\mathrm{Katz}} = (I - \\beta A)^{-1} - I",
+   "symbol_and_unit_ledger": {
+    "S_Katz": "global similarity matrix",
+    "beta": "decay parameter in R+, must keep beta * lambda_1 < 1",
+    "A^i": "matrix power whose entries count length-i paths"
+   },
+   "assumptions": [
+    "beta < 1 down-weights long paths; convergence needs the spectral condition of Theorem 1",
+    "All path lengths are pooled into one score"
+   ],
+   "breakdown_regime": "Strongly biased toward high-degree nodes (the defect the LHN index corrects), and dense matrix inversion is O(|V|^3) naive",
+   "domain": "relation prediction",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Multi-step influence in a results or matchup graph (A beat B, B beat C) is a path-counting problem: Katz-style decayed path sums give the engine a principled transitive-strength score with an explicit decay knob.",
+    "source_operator": "katz_index",
+    "telemetry": "Chains of results and interactions of length 2 to 5 between entities"
+   }
+  },
+  {
+   "primitive_id": "personalized_pagerank",
+   "name": "Personalized PageRank restarts a random walk at the source node, yielding a source-specific stationary visit probability as similarity",
+   "verbatim_quote": "However, with this restart probability we instead obtain a measure of importance specific to the node u, since the random walks are continually being “teleported” back to that node.",
+   "page": "Chapter 2, Section 2.2.2, Eqs. (2.23)-(2.25) (book pp. 20-21); text line 1173",
+   "latex": "q_u = (1 - c)(I - cP)^{-1} e_u, \\quad P = A D^{-1}",
+   "symbol_and_unit_ledger": {
+    "q_u": "stationary visit-probability vector for walks restarted at u",
+    "c": "continuation probability, restart probability is 1 - c",
+    "e_u": "one-hot indicator vector for u",
+    "P": "column-stochastic transition matrix"
+   },
+   "assumptions": [
+    "The walk restarts at u with probability 1 - c at each step",
+    "Without restart the walk converges to a node-independent eigenvector centrality"
+   ],
+   "breakdown_regime": "Restart probability is a free knob that trades local against global structure; asymmetric scores need symmetrization for undirected similarity",
+   "domain": "relation prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Influence queries in the engine (which entities most affect this player's projection) are personalized-PageRank queries: restart at the entity of interest and read off where probability mass concentrates.",
+    "source_operator": "personalized_pagerank",
+    "telemetry": "Transition matrices built from snap shares, target shares, and interaction frequencies"
+   }
+  },
+  {
+   "primitive_id": "graph_laplacian_and_spectrum",
+   "name": "The Laplacian L = D - A is positive semi-definite, and the multiplicity of its 0 eigenvalue equals the number of connected components",
+   "verbatim_quote": "Thus, if the graph is fully connected then the eigenvector for the eigenvalue 0 will be a constant vector of ones for all nodes in the graph",
+   "page": "Chapter 2, Section 2.3.1, Eqs. (2.26), (2.29) (book pp. 21-23); text line 1242",
+   "latex": "L = D - A",
+   "symbol_and_unit_ledger": {
+    "L": "unnormalized graph Laplacian, symmetric positive semi-definite",
+    "D": "diagonal degree matrix",
+    "A": "adjacency matrix"
+   },
+   "assumptions": [
+    "Stated for simple undirected graphs; normalized variants Lsym and LRW adjust the spectrum by degree scaling",
+    "The quadratic form x^T L x sums squared differences across edges"
+   ],
+   "breakdown_regime": "Spectral quantities are global and expensive on very large graphs, and the unnormalized Laplacian is dominated by high-degree nodes",
+   "domain": "spectral methods",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The Laplacian quadratic form is a smoothness penalty the engine can reuse anywhere connected entities should have similar values: it turns 'neighbors should resemble each other' into an explicit, tunable term with spectral diagnostics attached.",
+    "source_operator": "graph_laplacian_and_spectrum",
+    "telemetry": "Any engine graph plus a candidate rating vector whose roughness needs measuring"
+   }
+  },
+  {
+   "primitive_id": "encoder_decoder_framework",
+   "name": "Node embedding methods factor into an encoder, a pairwise decoder, a similarity target, and a reconstruction loss",
+   "verbatim_quote": "In the encoder-decoder framework, we view the graph representation learning problem as involving two key operations. First, an encoder model maps each node in the graph into a low-dimensional vector or embedding.",
+   "page": "Chapter 3, Section 3.1, Eqs. (3.4), (3.5) (book pp. 30-32); text line 1532",
+   "latex": "\\mathcal{L} = \\sum_{(u, v) \\in \\mathcal{D}} \\ell\\left(\\mathrm{dec}(z_u, z_v), \\, S[u, v]\\right)",
+   "symbol_and_unit_ledger": {
+    "L (loss)": "empirical reconstruction loss",
+    "dec": "pairwise decoder Rd x Rd -> R+",
+    "S[u, v]": "graph-based similarity target",
+    "D": "training set of node pairs"
+   },
+   "assumptions": [
+    "The decoder is usually pairwise; the similarity S is a design choice (adjacency, overlap statistic, walk co-occurrence)",
+    "Optimization is typically stochastic gradient descent"
+   ],
+   "breakdown_regime": "The framework itself guarantees nothing: a poor similarity target or decoder yields embeddings that reconstruct the wrong thing perfectly",
+   "domain": "node embeddings",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The encoder-decoder split is an architecture law for engine components: separate the representation builder from the relationship scorer, and make the similarity target an explicit, auditable choice rather than an accident of implementation.",
+    "source_operator": "encoder_decoder_framework",
+    "telemetry": "Pairwise training sets of entities with observed relationship strengths"
+   }
+  },
+  {
+   "primitive_id": "shallow_embedding_lookup",
+   "name": "Shallow encoders are per-node lookup tables: no parameter sharing, no use of node features, and inherently transductive",
+   "verbatim_quote": "In most work on node embeddings, the encoder relies on what we call the shallow embedding approach, where this encoder function is simply an embedding lookup based on the node ID.",
+   "page": "Chapter 3, Sections 3.1.1, 3.4, Eq. (3.2) (book pp. 30-31, 36-37); text line 1547",
+   "latex": "\\mathrm{enc}(v) = Z[v]",
+   "symbol_and_unit_ledger": {
+    "Z": "embedding matrix in R^{|V| x d}, one trainable row per node",
+    "Z[v]": "embedding row for node v"
+   },
+   "assumptions": [
+    "Each node owns an independent parameter vector, so parameter count grows as O(|V|)",
+    "Embeddings exist only for nodes seen during training"
+   ],
+   "breakdown_regime": "Fails outright on unseen nodes and wastes statistical strength; this limitation is exactly what GNN encoders were built to remove",
+   "domain": "node embeddings",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A ratings table keyed by entity ID is a shallow embedding: the engine must treat it as a cache, not a model, because it cannot rate a newly promoted player or a reshuffled unit without a feature-driven encoder behind it.",
+    "source_operator": "shallow_embedding_lookup",
+    "telemetry": "Entity ID lists, roster churn events, first-appearance dates for new entities"
+   }
+  },
+  {
+   "primitive_id": "inner_product_factorization",
+   "name": "Inner-product decoders with squared loss are matrix factorization: learn Z so that Z Z^T approximates the similarity matrix S",
+   "verbatim_quote": "Intuitively, the goal of these methods is to learn embeddings for each node such that the inner product between the learned embedding vectors approximates some deterministic measure of node similarity.",
+   "page": "Chapter 3, Section 3.2, Eqs. (3.7)-(3.9) (book pp. 33-34); text line 1728",
+   "latex": "\\mathcal{L} \\approx \\|Z Z^{\\top} - S\\|_2^2",
+   "symbol_and_unit_ledger": {
+    "Z": "stacked node embedding matrix",
+    "S": "node-node similarity matrix (adjacency, its powers, or an overlap measure)",
+    "||.||_2^2": "squared Frobenius-style reconstruction error"
+   },
+   "assumptions": [
+    "Similarity is assumed proportional to embedding dot product",
+    "Minimization can use SVD-style factorization algorithms"
+   ],
+   "breakdown_regime": "Dot products are symmetric and grow with embedding norms, so asymmetric relations and degree effects are distorted",
+   "domain": "node embeddings",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any engine similarity matrix (shared contexts, co-performance, matchup affinity) can be compressed into embeddings by factorization, giving downstream reasoning a geometry where closeness means the chosen similarity, nothing more and nothing less.",
+    "source_operator": "inner_product_factorization",
+    "telemetry": "Pairwise similarity matrices computed from historical performance and context data"
+   }
+  },
+  {
+   "primitive_id": "random_walk_embeddings",
+   "name": "DeepWalk and node2vec train inner-product decoders so embedding similarity matches random-walk co-occurrence probability, with negative sampling for tractability",
+   "verbatim_quote": "The key innovation in these approaches is that node embeddings are optimized so that two nodes have similar embeddings if they tend to co-occur on short random walks over the graph.",
+   "page": "Chapter 3, Section 3.3, Eqs. (3.10)-(3.12) (book pp. 34-36); text line 1739",
+   "latex": "\\mathrm{dec}(z_u, z_v) = \\frac{e^{z_u^{\\top} z_v}}{\\sum_{v_k \\in V} e^{z_u^{\\top} z_{v_k}}} \\approx p_{G,T}(v \\mid u)",
+   "symbol_and_unit_ledger": {
+    "p_G,T(v|u)": "probability of visiting v on a length-T random walk from u, T typically 2 to 10",
+    "dec": "softmax inner-product decoder",
+    "gamma": "negative-sampling weight in the node2vec loss"
+   },
+   "assumptions": [
+    "Walk length T and the BFS/DFS bias parameters define the neighborhood notion",
+    "Negative sampling approximates the O(|V|) softmax denominator; DeepWalk instead uses hierarchical softmax"
+   ],
+   "breakdown_regime": "The similarity target is stochastic and asymmetric, and Qiu et al. show the method is secretly factorizing a walk-based matrix, so walk hyperparameters silently choose the matrix being factorized",
+   "domain": "node embeddings",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Sequences in sports data (drive progressions, play sequences, possession chains) can be walked like graph paths: co-occurrence embeddings over these walks give the engine representations of entities that share contexts, not just box-score similarity.",
+    "source_operator": "random_walk_embeddings",
+    "telemetry": "Ordered event sequences per game, from which walk co-occurrence pairs are sampled"
+   }
+  },
+  {
+   "primitive_id": "rescal_decoder",
+   "name": "RESCAL scores a typed triple with a bilinear form z_u^T R_tau z_v, making multi-relational embedding a tensor factorization",
+   "verbatim_quote": "If we were to optimize Equation (4.2), we would in fact be performing a kind of tensor factorization. This idea of factorizing a tensor thus generalizes the matrix factorization approaches discussed in Chapter 3.",
+   "page": "Chapter 4, Sections 4.1, 4.3, Eq. (4.1) (book pp. 39, 42); text line 1967",
+   "latex": "\\mathrm{dec}(z_u, \\tau, z_v) = z_u^{\\top} R_{\\tau} z_v",
+   "symbol_and_unit_ledger": {
+    "R_tau": "trainable d x d matrix per relation type, O(d^2) parameters per relation",
+    "z_u, z_v": "head and tail entity embeddings",
+    "A[u, tau, v]": "adjacency tensor entry, the reconstruction target"
+   },
+   "assumptions": [
+    "Similarity target is the adjacency tensor itself: immediate typed neighbors only",
+    "Trained with cross-entropy plus negative sampling or a max-margin loss"
+   ],
+   "breakdown_regime": "O(d^2) parameters per relation overfits rare relations; cost is why O(d) decoders (TransE, DistMult, ComplEx, RotatE) displaced it",
+   "domain": "knowledge graphs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Typed matchup scoring in the engine should be bilinear in spirit: the interaction between two entity embeddings must be mediated by a relation-specific operator, because the same pair interacts differently under different relation types.",
+    "source_operator": "rescal_decoder",
+    "telemetry": "Typed triple stores: entity, relation type, entity, with observed outcomes"
+   }
+  },
+  {
+   "primitive_id": "transe_decoder",
+   "name": "TransE embeds each relation as a translation vector, scoring a triple by the distance from z_u + r_tau to z_v",
+   "verbatim_quote": "The likelihood of an edge is proportional to the distance between the embedding of the head node and the tail node, after translating the head node according to the relation embedding.",
+   "page": "Chapter 4, Section 4.3.1, Eq. (4.10) (book p. 42); text line 2126",
+   "latex": "\\mathrm{dec}(z_u, \\tau, z_v) = -\\|z_u + r_{\\tau} - z_v\\|",
+   "symbol_and_unit_ledger": {
+    "r_tau": "relation embedding in R^d, O(d) parameters per relation",
+    "z_u, z_v": "head and tail embeddings"
+   },
+   "assumptions": [
+    "One translation vector must serve every pair linked by the relation",
+    "Composition is modeled by adding translation vectors, r_tau3 = r_tau1 + r_tau2"
+   ],
+   "breakdown_regime": "Cannot represent symmetric relations except with r_tau = 0, and one-to-many relations force distinct tails to the same point; TransX variants project entities before translating to compensate",
+   "domain": "knowledge graphs",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Translation scoring gives the engine a cheap consistency check for chained claims: if relation vectors compose by addition, a two-step inference can be scored against the direct relation and disagreements flagged for the reasoning layer.",
+    "source_operator": "transe_decoder",
+    "telemetry": "Relation chains in scouting and matchup data with known composite relations"
+   }
+  },
+  {
+   "primitive_id": "complex_decoder_asymmetry",
+   "name": "DistMult can only encode symmetric relations; ComplEx fixes this with complex embeddings and a conjugated tail",
+   "verbatim_quote": "This is a serious limitation as many relation types in multi-relational graphs are directed and asymmetric.",
+   "page": "Chapter 4, Section 4.3, Eqs. (4.13)-(4.16) (book pp. 43-44); text line 2176",
+   "latex": "\\mathrm{dec}(z_u, \\tau, z_v) = \\mathrm{Re}(\\langle z_u, r_{\\tau}, \\bar{z}_v \\rangle)",
+   "symbol_and_unit_ledger": {
+    "z_u, z_v, r_tau": "complex-valued embeddings in C^d",
+    "z-bar_v": "complex conjugate of the tail embedding",
+    "Re": "real part"
+   },
+   "assumptions": [
+    "Symmetry, anti-symmetry, inversion, and compositionality are the test patterns for decoder capacity (Table 4.2)",
+    "ComplEx still cannot encode compositionality; RotatE can, via unit-modulus rotations"
+   ],
+   "breakdown_regime": "Choosing a decoder whose algebra forbids the relation pattern in the data caps accuracy no matter how much training data is added",
+   "domain": "knowledge graphs",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Directional relations dominate sports reasoning (rusher versus blocker, scheme versus counter-scheme), so any embedding scorer the engine adopts must be audited for asymmetry capacity before training, exactly as Table 4.2 audits decoders.",
+    "source_operator": "complex_decoder_asymmetry",
+    "telemetry": "Directionality statistics per relation: how often the reverse triple also holds"
+   }
+  },
+  {
+   "primitive_id": "permutation_equivariance",
+   "name": "Graph functions must be permutation invariant (graph level) or equivariant (node level); node ordering is an artifact, not information",
+   "verbatim_quote": "Permutation invariance means that the function does not depend on the arbitrary ordering of the rows/columns in the adjacency matrix",
+   "page": "Chapter 5, Eqs. (5.2), (5.3) (book pp. 47-48); text line 2329",
+   "latex": "f(P A P^{\\top}) = f(A) \\quad \\text{(invariance)}, \\qquad f(P A P^{\\top}) = P f(A) \\quad \\text{(equivariance)}",
+   "symbol_and_unit_ledger": {
+    "P": "permutation matrix",
+    "A": "adjacency matrix",
+    "f": "function consuming a graph"
+   },
+   "assumptions": [
+    "Node indexing in any stored matrix is arbitrary and must not affect outputs",
+    "Set-based aggregation is the standard way to guarantee equivariance by construction"
+   ],
+   "breakdown_regime": "Adding unique node ID features breaks equivariance; relational pooling restores invariance only by averaging over permutations at O(|V|!) naive cost",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "This is a hard design law for engine features: any statistic whose value changes when the roster spreadsheet is re-sorted is measuring the spreadsheet, not the team, and must be rejected at review.",
+    "source_operator": "permutation_equivariance",
+    "telemetry": "Permutation stress tests: shuffle entity orderings and diff every engine feature output"
+   }
+  },
+  {
+   "primitive_id": "neural_message_passing",
+   "name": "GNNs iteratively update each node embedding from an aggregation of its neighbors' embeddings; the final layer defines the embedding",
+   "verbatim_quote": "During each message-passing iteration in a GNN, a hidden embedding hu corresponding to each node u ∈ V is updated according to information aggregated from u’s graph neighborhood N (u)",
+   "page": "Chapter 5, Section 5.1.1, Eqs. (5.4)-(5.6) (book pp. 48-49); text line 2363",
+   "latex": "h_u^{(k+1)} = \\mathrm{UPDATE}^{(k)}\\left(h_u^{(k)}, \\, \\mathrm{AGGREGATE}^{(k)}\\left(\\{h_v^{(k)}, \\, \\forall v \\in \\mathcal{N}(u)\\}\\right)\\right)",
+   "symbol_and_unit_ledger": {
+    "h_u(k)": "hidden embedding of node u at layer k",
+    "AGGREGATE": "permutation-invariant set function over neighbor embeddings",
+    "UPDATE": "differentiable combiner of self embedding and neighborhood message",
+    "N(u)": "graph neighborhood of u"
+   },
+   "assumptions": [
+    "Initial embeddings are the node features, h(0) = x_u",
+    "After k layers each embedding summarizes its k-hop neighborhood, in both structure and features"
+   ],
+   "breakdown_regime": "The computation graph is a tree unfolding of the neighborhood, so cycles and shared neighbors are not directly detectable; depth is capped by over-smoothing",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Message passing is the engine's core reasoning move made mechanical: an entity's state is revised by explicit messages from its relational neighbors, layer by layer, which is how matchup context should revise a base projection.",
+    "source_operator": "neural_message_passing",
+    "telemetry": "Layered context features: direct matchup, then unit-level, then scheme-level neighborhoods"
+   }
+  },
+  {
+   "primitive_id": "basic_gnn_update",
+   "name": "The basic GNN sums neighbor messages, combines them with the node's own state through separate weight matrices, and applies a nonlinearity",
+   "verbatim_quote": "We first sum the messages incoming from the neighbors; then, we combine the neighborhood information with the node’s previous embedding using a linear combination; and finally, we apply an elementwise non-linearity.",
+   "page": "Chapter 5, Section 5.1.3, Eqs. (5.7)-(5.9) (book p. 51); text line 2516",
+   "latex": "h_u^{(k)} = \\sigma\\left(W_{\\mathrm{self}}^{(k)} h_u^{(k-1)} + W_{\\mathrm{neigh}}^{(k)} \\sum_{v \\in \\mathcal{N}(u)} h_v^{(k-1)} + b^{(k)}\\right)",
+   "symbol_and_unit_ledger": {
+    "W_self, W_neigh": "trainable d(k) x d(k-1) matrices for self and neighbor channels",
+    "sigma": "elementwise nonlinearity (tanh or ReLU)",
+    "b(k)": "layer bias vector"
+   },
+   "assumptions": [
+    "Self and neighbor information use separate parameters unless self-loops force them shared",
+    "Parameters may be shared or per-layer"
+   ],
+   "breakdown_regime": "Sum aggregation makes magnitudes scale with degree, and the model is exactly as powerful as the 1-WL test and no more",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Keeping separate weights for an entity's own state and for neighbor influence is the difference between a projection that listens to context and one that is replaced by it; the engine should always be able to dial the neighbor channel down.",
+    "source_operator": "basic_gnn_update",
+    "telemetry": "Ablation runs varying the self-versus-neighbor weight balance per feature family"
+   }
+  },
+  {
+   "primitive_id": "gcn_symmetric_normalization",
+   "name": "The GCN aggregates with symmetric degree normalization over the self-looped neighborhood, a first-order spectral convolution approximation",
+   "verbatim_quote": "This approach was first outlined by Kipf and Welling [2016a] and has proved to be one of the most popular and effective baseline GNN architectures.",
+   "page": "Chapter 5, Section 5.2.1, Eq. (5.16) (book pp. 53-54); text line 2644",
+   "latex": "h_u^{(k)} = \\sigma\\left(W^{(k)} \\sum_{v \\in \\mathcal{N}(u) \\cup \\{u\\}} \\frac{h_v}{\\sqrt{|\\mathcal{N}(u)| \\, |\\mathcal{N}(v)|}}\\right)",
+   "symbol_and_unit_ledger": {
+    "W(k)": "trainable layer matrix",
+    "N(u)": "neighborhood of u, self included via self-loop",
+    "|N(.)|": "neighborhood sizes used as normalization"
+   },
+   "assumptions": [
+    "Normalization stabilizes optimization when degrees vary widely",
+    "The update is the self-loop variant: no separate self/neighbor weights"
+   ],
+   "breakdown_regime": "Normalization erases degree information, and a normalized aggregator is provably less powerful than the plain sum aggregator (Chapter 7)",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Rate normalization in engine stats is the same trade: dividing by opportunity volume stabilizes comparisons but destroys the volume signal itself, so normalized and raw channels must both be carried forward.",
+    "source_operator": "gcn_symmetric_normalization",
+    "telemetry": "Degree (volume) distributions per graph, before and after any normalization step"
+   }
+  },
+  {
+   "primitive_id": "set_pooling_universal",
+   "name": "Deep Sets pooling (an MLP per element, a sum, then an MLP) is a universal approximator for permutation-invariant set functions",
+   "verbatim_quote": "In other words, the theoretical results in Zaheer et al. [2017] show that any permutation-invariant function that maps a set of embeddings to a single embedding can be approximated to an arbitrary accuracy by a model following Equation (5.17).",
+   "page": "Chapter 5, Section 5.2.2, Eq. (5.17) (book pp. 54-55); text line 2683",
+   "latex": "m_{\\mathcal{N}(u)} = \\mathrm{MLP}_{\\theta}\\left(\\sum_{v \\in \\mathcal{N}(u)} \\mathrm{MLP}_{\\phi}(h_v)\\right)",
+   "symbol_and_unit_ledger": {
+    "MLP_phi": "per-element feed-forward network applied to each neighbor embedding",
+    "MLP_theta": "feed-forward network applied after the sum",
+    "m_N(u)": "aggregated neighborhood message"
+   },
+   "assumptions": [
+    "The reduction after the per-element MLP can be sum, mean, or elementwise max in variants",
+    "Single-hidden-layer MLPs usually suffice and limit overfitting"
+   ],
+   "breakdown_regime": "Universality is an existence result, not a sample-efficiency promise; deep per-element MLPs overfit small graphs",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Whenever the engine pools a set (a unit's players, a game's plays, a slate of matchups) into one vector, this is the reference construction: transform each element first, then reduce, then transform again, never average raw elements directly.",
+    "source_operator": "set_pooling_universal",
+    "telemetry": "Set-valued engine inputs with their cardinalities and element feature vectors"
+   }
+  },
+  {
+   "primitive_id": "graph_attention",
+   "name": "Graph attention replaces fixed aggregation weights with learned, pair-specific attention coefficients normalized over the neighborhood",
+   "verbatim_quote": "The basic idea is to assign an attention weight or importance to each neighbor, which is used to weigh this neighbor’s influence during the aggregation step.",
+   "page": "Chapter 5, Section 5.2.3, Eqs. (5.19), (5.20) (book pp. 56-57); text line 2754",
+   "latex": "m_{\\mathcal{N}(u)} = \\sum_{v \\in \\mathcal{N}(u)} \\alpha_{u,v} h_v, \\qquad \\alpha_{u,v} = \\frac{\\exp\\left(a^{\\top} [W h_u \\oplus W h_v]\\right)}{\\sum_{v' \\in \\mathcal{N}(u)} \\exp\\left(a^{\\top} [W h_u \\oplus W h_{v'}]\\right)}",
+   "symbol_and_unit_ledger": {
+    "alpha_u,v": "attention weight of neighbor v at node u, sums to 1 over the neighborhood",
+    "a": "trainable attention vector",
+    "W": "trainable projection matrix",
+    "oplus": "concatenation"
+   },
+   "assumptions": [
+    "Attention is computed per ordered pair and normalized within each neighborhood",
+    "Multi-head variants run K independent attention layers and concatenate the results"
+   ],
+   "breakdown_regime": "Attention weights are not explanations by themselves, and full pairwise attention costs O(|V|^2), the transformer regime",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Not all neighbors matter equally in a matchup: attention is the mechanism that lets the engine learn which specific opponent or teammate drives an entity's context, with the weights logged as inspectable reasoning traces.",
+    "source_operator": "graph_attention",
+    "telemetry": "Per-pair influence weights emitted by engine models for post-hoc review"
+   }
+  },
+  {
+   "primitive_id": "oversmoothing_influence_theorem",
+   "name": "In self-loop GNNs, a node's influence on another equals K-step random-walk probability, so depth washes local information out to the stationary distribution",
+   "verbatim_quote": "Over-smoothing is problematic because it makes it impossible to build deeper GNN models—which leverage longer-term dependencies in the graph—since these deep GNN models tend to just generate over-smoothed embeddings.",
+   "page": "Chapter 5, Section 5.3, Theorem 3, Eq. (5.27) (book pp. 58-59); text line 2880",
+   "latex": "I_K(u, v) \\propto p_{G,K}(u \\mid v)",
+   "symbol_and_unit_ledger": {
+    "I_K(u, v)": "influence of node u's input features on node v's layer-K embedding, from the Jacobian sum",
+    "p_G,K(u|v)": "probability that a length-K random walk from v reaches u"
+   },
+   "assumptions": [
+    "Applies directly to self-loop updates with normalized aggregation; extends asymptotically to the basic GNN when neighbor weights dominate self weights",
+    "Expander-like graphs mix in O(log |V|) steps"
+   ],
+   "breakdown_regime": "Skip connections, gated (GRU) updates, and jumping-knowledge connections mitigate but do not repeal the effect; deep stacks still trend to low-pass filters",
+   "domain": "graph neural networks theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Any iterative refinement in the engine (re-rating teams from results, then re-rating opponents, repeatedly) has an over-smoothing horizon: past a few rounds every rating converges toward the league mean, so iteration counts must be set by this theorem, not by taste.",
+    "source_operator": "oversmoothing_influence_theorem",
+    "telemetry": "Rating dispersion across entities as a function of refinement round"
+   }
+  },
+  {
+   "primitive_id": "rgcn_basis_sharing",
+   "name": "Relational GNNs use one transform per relation type, tamed by writing each relation matrix as a combination of shared basis matrices",
+   "verbatim_quote": "In this basis matrix approach, all the relation matrices are defined as linear combinations of b basis matrices B1 , ..., Bb",
+   "page": "Chapter 5, Section 5.4.1, Eqs. (5.33), (5.34) (book pp. 62-63); text line 3106",
+   "latex": "W_{\\tau} = \\sum_{i=1}^{b} \\alpha_{i,\\tau} B_i",
+   "symbol_and_unit_ledger": {
+    "W_tau": "aggregation matrix for relation tau",
+    "B_i": "shared basis matrices",
+    "alpha_i,tau": "relation-specific combination weights, the only per-relation parameters",
+    "b": "number of basis matrices"
+   },
+   "assumptions": [
+    "Relations share statistical strength through the basis; only b coefficients are learned per relation",
+    "Aggregation is performed separately per relation type, then combined"
+   ],
+   "breakdown_regime": "Too few bases underfit genuinely different relations; too many restore the original overfitting and parameter blow-up",
+   "domain": "graph neural networks",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine has many relation types but limited data per type: shared basis transforms with small per-relation coefficients are how rare matchup types borrow strength from common ones without being erased by them.",
+    "source_operator": "rgcn_basis_sharing",
+    "telemetry": "Per-relation sample counts and the fitted combination weights per relation"
+   }
+  },
+  {
+   "primitive_id": "graph_convolution_polynomial",
+   "name": "A spatial graph convolution is a polynomial of the adjacency matrix, so each layer mixes information across hop distances with learned coefficients",
+   "verbatim_quote": "Moreover, by stacking multiple message passing layers, GNNs are able to implicitly operate on higher order polynomials of the adjacency matrix.",
+   "page": "Chapter 7, Section 7.1.2, Eqs. (7.20)-(7.22) (book pp. 79-80); text line 3851",
+   "latex": "Q_h = \\alpha_0 I + \\alpha_1 A + \\alpha_2 A^2 + \\cdots + \\alpha_N A^N",
+   "symbol_and_unit_ledger": {
+    "Q_h": "convolution filter matrix",
+    "alpha_i": "coefficient weighting information from the i-hop neighborhood",
+    "A^i": "i-th power of the adjacency matrix"
+   },
+   "assumptions": [
+    "Filters are required to commute with the adjacency (or Laplacian) matrix, the graph analogue of translation equivariance",
+    "Node features are treated as channels of a graph signal"
+   ],
+   "breakdown_regime": "High powers of A emphasize the dominant eigen-directions, which is the spectral restatement of over-smoothing",
+   "domain": "graph signal processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Hop distance is a meaningful dial in sports graphs (direct opponent, opponent's usual matchup, scheme family): polynomial filters make the weight per hop an explicit learned coefficient the engine can inspect.",
+    "source_operator": "graph_convolution_polynomial",
+    "telemetry": "Performance deltas attributed to 1-hop, 2-hop, and 3-hop context features"
+   }
+  },
+  {
+   "primitive_id": "graph_fourier_transform",
+   "name": "The graph Fourier transform projects signals onto Laplacian eigenvectors, whose eigenvalues act as frequencies measuring signal variation across edges",
+   "verbatim_quote": "Together these facts imply that the smallest eigenvector of the Laplacian corresponds to a signal that varies from node to node by the least amount on the graph",
+   "page": "Chapter 7, Section 7.1.3, Eqs. (7.29)-(7.36) (book pp. 82-84); text line 4042",
+   "latex": "s = U^{\\top} f, \\qquad L = U \\Lambda U^{\\top}",
+   "symbol_and_unit_ledger": {
+    "U": "matrix of Laplacian eigenvectors, the graph Fourier modes",
+    "Lambda": "diagonal matrix of eigenvalues, the graph frequencies",
+    "s": "Fourier coefficients of signal f"
+   },
+   "assumptions": [
+    "Eigenvectors are ordered by eigenvalue; small eigenvalues give smooth, slowly varying signals",
+    "A spectral filter polynomial in Lambda is exactly a polynomial of L in the node domain"
+   ],
+   "breakdown_regime": "Eigendecomposition is O(|V|^3) and graph-specific: the Fourier basis does not transfer between different graphs",
+   "domain": "graph signal processing",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Decomposing any engine signal (form, usage, efficiency) on a matchup graph into smooth and rough components separates durable structure (smooth, low-frequency) from matchup-specific noise (rough, high-frequency) before either is trusted.",
+    "source_operator": "graph_fourier_transform",
+    "telemetry": "Eigen-spectra of engine graphs and the energy of each signal per frequency band"
+   }
+  },
+  {
+   "primitive_id": "embedded_mean_field_inference",
+   "name": "A basic GNN is exactly embedded mean-field variational inference: node embeddings are Hilbert-space summaries of factorized posterior marginals",
+   "verbatim_quote": "In this way, we can see that embedded mean-field inference exactly corresponds to a form of neural message passing over a graph!",
+   "page": "Chapter 7, Section 7.2.3, Eqs. (7.52)-(7.56) (book pp. 90-92); text line 3752",
+   "latex": "\\mu_v^{(t)} = \\sigma\\left(W_{\\mathrm{self}}^{(t)} x_v + W_{\\mathrm{neigh}}^{(t)} \\sum_{u \\in \\mathcal{N}(v)} \\mu_u^{(t-1)}\\right)",
+   "symbol_and_unit_ledger": {
+    "mu_v": "Hilbert-space embedding of the marginal distribution q_v(z_v)",
+    "Phi, Psi": "node and pairwise potential functions of the Markov random field",
+    "x_v": "observed node features"
+   },
+   "assumptions": [
+    "The posterior is assumed to factorize over nodes (the mean-field assumption)",
+    "Potentials and the feature map are learned end-to-end rather than specified from domain knowledge"
+   ],
+   "breakdown_regime": "Mean-field factorization understates posterior correlations between connected nodes, so uncertainty from such models is systematically overconfident",
+   "domain": "probabilistic graphical models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This equivalence licenses a probabilistic reading of engine message passing: each layer is one round of approximate inference about latent entity states, so the engine can attach uncertainty language to embeddings instead of treating them as exact.",
+    "source_operator": "embedded_mean_field_inference",
+    "telemetry": "Calibration of embedding-based predictions against held-out outcomes"
+   }
+  },
+  {
+   "primitive_id": "wl_bound_and_gin",
+   "name": "Message-passing GNNs are at most as powerful as the 1-WL test; injective aggregation (GIN) attains that bound",
+   "verbatim_quote": "In intuitive terms, Theorem 7.3.4 states that GNNs are no more powerful than the WL algorithm when we have discrete information as node features.",
+   "page": "Chapter 7, Sections 7.3.4, 7.3.5, Eq. (7.63) (book pp. 95-97); text line 4626",
+   "latex": "h_u^{(k)} = \\mathrm{MLP}^{(k)}\\left(\\left(1 + \\epsilon^{(k)}\\right) h_u^{(k-1)} + \\sum_{v \\in \\mathcal{N}(u)} h_v^{(k-1)}\\right)",
+   "symbol_and_unit_ledger": {
+    "MLP(k)": "layer feed-forward network providing the injective update",
+    "epsilon(k)": "trainable self-weight in the GIN update",
+    "h_u(k)": "node embedding at layer k"
+   },
+   "assumptions": [
+    "The bound is proven for discrete input features and differentiable permutation-invariant aggregators",
+    "Matching WL requires injective AGGREGATE and UPDATE functions; mean and max aggregators fall short"
+   ],
+   "breakdown_regime": "Structures invisible to 1-WL (triangles, cycles, shared neighbors) are invisible to every message-passing GNN; escaping needs k-WL-style or relational-pooling machinery at combinatorial cost",
+   "domain": "graph isomorphism theory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "This is a veto the engine must respect: if a distinction matters (for example whether two defenders share an assignment zone), a plain message-passing model cannot be trusted to see it, and the feature must be supplied explicitly instead.",
+    "source_operator": "wl_bound_and_gin",
+    "telemetry": "Known WL-blind structure pairs in engine graphs, logged as explicit hand-built features"
+   }
+  },
+  {
+   "primitive_id": "erdos_renyi_model",
+   "name": "The Erdos-Renyi model places every possible edge independently with the same probability r, controlling only graph density",
+   "verbatim_quote": "In other words, the ER model simply assumes that the probability of an edge occurring between any pairs of nodes is equal to r.",
+   "page": "Chapter 8, Section 8.2, Eq. (8.1) (book p. 104); text line 4981",
+   "latex": "P(A[u, v] = 1) = r, \\quad \\forall u, v \\in V, \\; u \\neq v",
+   "symbol_and_unit_ledger": {
+    "r": "edge probability in [0, 1], equal in expectation to average degree divided by |V|",
+    "A[u, v]": "adjacency entry"
+   },
+   "assumptions": [
+    "Edges are independent and identically distributed",
+    "Generation cost is O(|V|^2), linear in the adjacency matrix"
+   ],
+   "breakdown_regime": "Degree distribution, community structure, clustering, and motifs of ER graphs all mismatch real networks; it is a null model, not a realism model",
+   "domain": "graph generation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "ER graphs are the engine's null hypothesis for network statistics: before claiming a pattern in schedule or interaction graphs, check whether an equal-density random graph produces the same statistic by chance.",
+    "source_operator": "erdos_renyi_model",
+    "telemetry": "Observed graph statistics versus their ER null distributions at matched density"
+   }
+  },
+  {
+   "primitive_id": "preferential_attachment",
+   "name": "Preferential attachment grows a graph by connecting new nodes to existing nodes with probability proportional to degree, generating power-law degree distributions",
+   "verbatim_quote": "The key idea is that the PA model connects new nodes to existing nodes with a probability that is proportional to the existing nodes’ degrees.",
+   "page": "Chapter 8, Section 8.4, Eqs. (8.3), (8.4) (book pp. 105-106); text line 2292",
+   "latex": "P(A[u, v]) = \\frac{d_v^{(t)}}{\\sum_{v' \\in V^{(t)}} d_{v'}^{(t)}}",
+   "symbol_and_unit_ledger": {
+    "d_v(t)": "degree of existing node v at time t, edge count",
+    "V(t)": "node set added up to time t",
+    "m": "edges added per new node, m < m0"
+   },
+   "assumptions": [
+    "Growth is autoregressive: each step's probabilities depend on the current degrees",
+    "The stated process yields a power-law degree distribution with exponent alpha = 3"
+   ],
+   "breakdown_regime": "Real degree distributions are often better fit by log-normal alternatives, and pure PA has no community structure or node aging",
+   "domain": "graph generation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Rich-get-richer dynamics explain hub formation in attention and usage networks: the engine should expect heavy-tailed involvement distributions as the default, and treat a uniform distribution as the anomaly needing explanation.",
+    "source_operator": "preferential_attachment",
+    "telemetry": "Degree distribution fits (power-law versus log-normal) on engine interaction graphs"
+   }
+  },
+  {
+   "primitive_id": "graph_vae_elbo",
+   "name": "Graph VAEs train an encoder-decoder pair with the ELBO: maximize reconstruction likelihood while pulling the posterior toward the prior so new graphs can be sampled",
+   "verbatim_quote": "The second goal acts as a regularizer and ensures that we can decode meaningful graphs even when we sample latent representations from the prior p(Z).",
+   "page": "Chapter 9, Section 9.1, Eq. (9.1) (book pp. 109-111); text line 5275",
+   "latex": "\\mathcal{L} = \\sum_{G_i} \\mathbb{E}_{q_{\\theta}(Z \\mid G_i)}\\left[p_{\\theta}(G_i \\mid Z)\\right] - \\mathrm{KL}\\left(q_{\\theta}(Z \\mid G_i) \\, \\| \\, p(Z)\\right)",
+   "symbol_and_unit_ledger": {
+    "q(Z|G)": "probabilistic encoder, posterior over latents given a graph",
+    "p(G|Z)": "probabilistic decoder over adjacency matrices",
+    "p(Z)": "prior, standard Gaussian in this book",
+    "KL": "Kullback-Leibler divergence"
+   },
+   "assumptions": [
+    "Latents are Gaussian with reparameterized sampling; node-level (VGAE) and graph-level (GraphVAE) variants differ in latent granularity",
+    "Graph-level decoding assumes a maximum node count and needs a node ordering or graph matching for the loss"
+   ],
+   "breakdown_regime": "Parameter-free dot-product decoders cannot generate non-trivial structure from prior samples alone, and MLP decoders cap out at hundreds of nodes",
+   "domain": "deep generative models",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The ELBO trade is the engine's template for any latent-state model: fit the observed data hard, but keep the latent distribution close enough to a known prior that counterfactual states can be sampled and decoded on demand.",
+    "source_operator": "graph_vae_elbo",
+    "telemetry": "Reconstruction quality versus posterior-prior KL per latent dimension in engine models"
+   }
+  },
+  {
+   "primitive_id": "autoregressive_graph_generation",
+   "name": "Autoregressive generators factor the graph likelihood row by row, conditioning each new node's edges on all previously generated rows (GraphRNN, GRAN)",
+   "verbatim_quote": "Instead, in the autoregressive approach, we assume that edges are generated sequentially and that the likelihood of each edge can be conditioned on the edges that have been previously generated.",
+   "page": "Chapter 9, Section 9.3, Eq. (9.13) (book pp. 117-120); text line 5588",
+   "latex": "P(G \\mid z) = \\prod_{i=1}^{|V|} P\\left(L[v_i, :] \\mid L[v_1, :], \\ldots, L[v_{i-1}, :], z\\right)",
+   "symbol_and_unit_ledger": {
+    "L": "lower-triangular part of the adjacency matrix, carries all edge information for simple graphs",
+    "L[v_i, :]": "edge row generated at step i",
+    "z": "optional latent or conditioning vector"
+   },
+   "assumptions": [
+    "A node ordering must be fixed to compute likelihoods; BFS/DFS heuristic orderings are standard",
+    "Training uses teacher forcing on ground-truth rows"
+   ],
+   "breakdown_regime": "Ordering choices leak into the model, RNN variants backpropagate through long recurrences, and generation is sequential so it cannot be parallelized across nodes",
+   "domain": "deep generative models",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Sequential conditioning is how the engine should simulate structured objects (a game script, a rotation pattern): generate each element conditioned on what has already been generated, so dependencies like clustering and fatigue carry through instead of being averaged away.",
+    "source_operator": "autoregressive_graph_generation",
+    "telemetry": "Generated-versus-real comparisons of degree, clustering, and motif statistics (Section 9.4 protocol)"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "fa058eb96948ee19-t1",
+   "think": "This book is a synthesis, and its first service is taxonomic: nearly every method for learning on graphs is placed inside one frame, the encoder-decoder frame, in which an encoder maps nodes to vectors and a decoder reconstructs some declared notion of neighborhood similarity under a reconstruction loss. Once that frame is accepted, the bewildering zoo of named algorithms collapses into choices: shallow lookup or structure-aware encoder, inner-product or distance or bilinear decoder, adjacency or overlap statistic or random-walk co-occurrence as the similarity target, squared error or cross-entropy with negative sampling or max-margin as the loss. The book then walks the frame through three ages. The first age is hand-engineered statistics: degree, eigenvector centrality, clustering coefficients, overlap measures, Katz path counts, personalized PageRank, and the spectral machinery of the Laplacian, where the second-smallest eigenvector already contains a principled answer to clustering through the RatioCut relaxation. The second age learns the features instead: Laplacian eigenmaps and matrix factorization show that embeddings are low-rank approximations of a similarity matrix, and DeepWalk and node2vec show that even the stochastic walk methods are secretly factorizing a matrix built from walk transition powers, which ties them back to the spectrum of the normalized Laplacian. The multi-relational chapter extends the same algebra to tensors, and its decoder table is really a table of algebraic capacities: RESCAL buys expressiveness at quadratic parameter cost, TransE buys cheap composition and loses symmetry, DistMult buys simplicity and loses asymmetry, ComplEx buys asymmetry with complex conjugation, RotatE buys composition as well with unit-modulus rotations. The third age replaces the lookup table with a function of the graph itself. Neural message passing is presented abstractly first, UPDATE and AGGREGATE over neighbor sets, and only then instantiated: the basic GNN, the GCN as symmetric-normalized aggregation with self-loops, set pooling with its universality guarantee, Janossy pooling, attention, gated and residual updates, relational transforms with basis sharing, and pooling or coarsening for graph-level outputs. The practical chapter is honest about the plumbing that decides whether any of this works at scale: full-batch sparse implementations against neighborhood subsampling, parameter sharing, edge dropout, and the surprising weakness of neighborhood-reconstruction pre-training against mutual-information objectives such as Deep Graph Infomax. What elevates the book above a survey is Chapter 7, where three independent derivations of the same algorithm are laid side by side. From signal processing, message passing is a polynomial filter of the adjacency or Laplacian, and over-smoothing is simply what a low-pass filter does when applied too many times. From probabilistic graphical models, the same update is embedded mean-field inference, with embeddings standing in for factorized posterior marginals. From combinatorics, the same update is a differentiable Weisfeiler-Lehman refinement, and the accompanying theorems give a hard ceiling: no message-passing GNN distinguishes more than the 1-WL test, mean aggregators do not even reach the ceiling, and injective aggregation in the GIN does. The generative part mirrors the representation part: Erdos-Renyi, block models, and preferential attachment are the hand-built generators, and VAEs, GANs, and autoregressive models are their learned counterparts, with evaluation reduced to comparing distributions of graph statistics because likelihoods are not commensurable across families. For a reasoning engine, the transferable payload is not any single architecture. It is the set of invariants and vetoes: permutation equivariance as a correctness condition on any feature computed from relational data, the similarity target as an explicit design decision, decoder algebra audited against the relation patterns actually present, depth budgeted against the over-smoothing horizon, iteration counts for any refinement loop set by random-walk mixing rather than intuition, and null generative models used to check whether an observed network pattern is even surprising. The book also teaches a posture: Hamilton repeatedly shows a modern method to be a classical method in disguise, which means the engine should always ask what classical statistic a learned component is re-implementing, because the classical version usually comes with theorems, failure modes, and a null model attached. Where the book is thin, it says so itself: generation evaluation is primitive, molecule generation is deferred to domain literature, and the conclusion names the field's open wound directly, that message passing is bounded by WL, tied to simple polynomial filters, and restricted to tree-shaped computation, so the next paradigm must break at least one of those three facets. Two further threads deserve emphasis because they decide whether these methods survive contact with production data. The first is the transductive-inductive divide, which the book returns to in every part: shallow embeddings memorize a fixed graph, neighborhood sampling in the GraphSAGE style is what turns message passing into an inductive function that can score entities it has never seen, and the practical chapter's distinction between training nodes, transductive test nodes, and fully inductive test nodes is really a leakage taxonomy that any honest evaluation has to respect. The second thread is regularization with graph-specific meaning: edge dropout is not generic noise but a statement that the observed adjacency is itself a sample, parameter sharing across layers is a statement that the same relational law applies at every depth, and both ideas generalize into a design principle that every regularizer should encode a belief about how the data was generated. The conclusion's two frontiers follow naturally from the theory chapters. Latent graph inference attacks the assumption that the graph is given, which matters whenever the recorded relationships are incomplete or proxy-measured, and breaking the message-passing bottleneck attacks the WL ceiling, the polynomial-filter equivalence, and the tree-shaped computation graph at once, since the book argues these are three views of one limitation. A reader who internalizes those two frontiers, plus the evaluation protocol of comparing generated and real graphs through distributions of statistics rather than through a single score, has the book's complete operating system: represent relationally, derive from at least two theoretical directions before trusting a method, state the null model, and name the regime where the machinery provably cannot see.",
+   "retrocausal_genealogy": "The lineage runs from classical spectral graph theory and the Perron-Frobenius theorem, through the Weisfeiler-Lehman refinement of 1968 and Watts-Strogatz clustering in 1998, into Laplacian eigenmaps in 2002 and the factorization embeddings of 2013. The 2014 DeepWalk paper imported word2vec's skip-gram machinery into networks, node2vec added biased walks in 2016, and the same year Kipf and Welling's GCN fused spectral convolutions with message passing. GraphSAGE, the author's own 2017 work, generalized aggregation and induction; GAT added attention in 2018; the 2019 GIN and k-GNN papers closed the loop back to Weisfeiler-Lehman by proving the power ceiling.",
+   "theory_of_mind": "Hamilton writes as a synthesizer, not a partisan: he assumes a reader fluent in deep learning who has been treating relational data as flat tables, and his model of that reader is someone who needs the classical foundations re-derived before the neural methods will look inevitable rather than fashionable. His domain belief is that relationships are the signal, that node ordering is an artifact to be designed away, and that a method is understood only when its classical ancestor, its algebraic capacity, and its failure cases are all named. The pedagogy follows that belief: every chapter motivates with a concrete task, derives, and then states limitations in the open.",
+   "cross_layer_veto": "Several results in this book veto moves other layers of a system might want to make. The WL theorems veto any claim that a message-passing model can detect triangles, cycles, or shared-neighbor structure it was never given as features. Permutation equivariance vetoes order-dependent features and ID-based shortcuts. The over-smoothing theorem vetoes deep stacks and unbounded iterative refinement, because influence provably decays to the random-walk stationary distribution. The transductivity analysis vetoes deploying shallow embeddings on entities that arrive after training. And the decoder-capacity table vetoes symmetric scorers for asymmetric relations, regardless of training-set size."
+  }
+ ],
+ "universal_lens": "Read generally, the book is a template for learning over any structured object whose parts interact: declare the relational structure explicitly, choose what similarity the representation must preserve, build encoders that are invariant to arbitrary labeling choices, audit the algebra of the scoring function against the patterns in the data, and budget iterative refinement against the mixing behavior of the underlying graph. The same template applies to organizations, supply chains, codebases, and argument maps: wherever entities are defined by their connections, representation learning over the connection graph, with classical statistics as the baseline and null models as the skeptic, is the disciplined way to proceed.",
+ "gsi_mapping": "For the Galaxy Sports Institute, the book supplies the mathematical spine for studying sport as a relational system rather than a table of averages: athletes, units, schemes, coaches, and situations form multi-relational graphs; classical statistics give the interpretable baselines; spectral and walk-based methods give the geometry; and the generative models give null worlds against which real competitive structure can be measured. It also supplies the institute's standard of proof: a learned representation is publishable only alongside the classical statistic it replaces, the null model it beats, and the named regime where it breaks.",
+ "gse_mapping": "For the Galaxy Sports Edge engine, the payload is a set of buildable mechanisms and hard constraints: typed matchup graphs with relation-specific transforms that share strength through basis matrices, message passing as the explicit revision of a base projection by neighborhood context, attention weights logged as inspectable influence traces, hop-polynomial context features with learned per-hop weights, iteration budgets for re-rating loops set by random-walk mixing, factorization embeddings for any similarity matrix the engine can define, and pre-deployment audits for equivariance, asymmetry capacity, and WL-blind structures. Nothing here prices a market; all of it sharpens the reasoning that produces projections and rankings."
+}

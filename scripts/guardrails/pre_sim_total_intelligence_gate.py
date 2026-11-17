@@ -91,8 +91,10 @@ MASTER_PLAN_V3_REQUIRED_ARTIFACTS: dict[str, list[str]] = {
         "src/gse_engine/governance/simulation_hold_gate.py",
         "src/gse_engine/governance/wave19_agentic_fleet_and_registry_97.py",
         "src/gse_engine/memory/knowledge_continuity_and_gsi_rlvr_flywheel.py",
+        "src/gse_engine/memory/monorepo_omnibus_vault_indexer.py",
         "src/gse_engine/memory/wave20_openviking_ragas_bayesian_and_graph_suite.py",
         "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py",
+        "src/gse_engine/memory/wave21_tracking_biomech_rlvr_and_market_hold_suite.py",
         "src/gse_engine/cli.py",
         "packages/prediction-engine/src/ensemble/remote-model-client.ts",
     ],
@@ -221,6 +223,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave20b_openscholar_tddlog_woodelf_tree_suite",
         "src/gse_engine/memory/wave20b_openscholar_tddlog_woodelf_tree_suite.py",
     ),
+    (
+        "Pillar1_Monorepo_25Vault_Omnibus_Indexer",
+        "monorepo_omnibus_vault_indexer",
+        "src/gse_engine/memory/monorepo_omnibus_vault_indexer.py",
+    ),
+    (
+        "Pillar1_Wave21_Tracking_Biomech_RLVR_MarketHold",
+        "wave21_tracking_biomech_rlvr_and_market_hold_suite",
+        "src/gse_engine/memory/wave21_tracking_biomech_rlvr_and_market_hold_suite.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
@@ -228,14 +240,44 @@ CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
     (
         "Foundry_Compound_Corpus_Index",
         "data/engine/foundry_compound_corpus_index_2026.json",
-        10000,
+        12550,
     ),
     (
         "OSS_Ecosystem_Registry",
         "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
-        131,
+        169,
     ),
     ("Permanent_Lessons_Ledger", "data/engine/lessons_learned_permanent_ledger.jsonl", 20),
+    (
+        "Zero_Skip_2949_Theorems_Corpus",
+        "data/corpus_parsed_full/extracted_theorems_lemmas_algorithms_2026_11_06.jsonl",
+        2949,
+    ),
+    (
+        "Priority_Research_Corpus_2015",
+        "data/corpus/research_records_priority.jsonl",
+        2015,
+    ),
+    (
+        "Coach_Brain_Train_Corpus",
+        "data/coach-brain/coach-brain-train.jsonl",
+        6146,
+    ),
+    (
+        "Equation_Execution_Registry_21419",
+        "data/equations/equation_execution_registry.jsonl",
+        21419,
+    ),
+    (
+        "Identity_Entity_Tenure_12941",
+        "data/identity/canonical_entities.jsonl",
+        100,
+    ),
+    (
+        "Coach_Brain_V1_SFT_6469",
+        "data/llm/gse-coach-brain-v1-sft.jsonl",
+        6469,
+    ),
 )
 
 

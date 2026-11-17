@@ -1,0 +1,736 @@
+{
+ "book_id": "9aaa9d9714b48b13",
+ "source_status": "COMPLETE",
+ "source_note": "Edited volume: Rafael Badenes (ed.), Traumatic Brain Injury: Clinical Characteristics and Outcomes, MDPI 2022, reprint of the Journal of Clinical Medicine Special Issue (articles from J Clin Med 2021, volume 10). ISBN 978-3-0365-5527-0 hardback and 978-3-0365-5528-7 PDF. The local file is the publisher PDF of the reprint containing all eleven articles plus front matter. File size 15977519 bytes. Full sha256 over str(size) plus file bytes: 9aaa9d9714b48b13a6631068f086cec5412ad418d8f9bc62487d042ae512817a. book_id is the first 16 hex characters of that digest. Extracted text quality is good born digital text with two column abstract layouts in some articles that interleave citation blocks; all verbatim quotes were chosen from single column body passages or verified as contiguous in the extracted text file. Catalog note: the editor surname is Badenes and the file name BadenesEd-2022 matches the title page. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "secondary_injury_prevention_primacy",
+   "name": "TBI care is organized around preventing secondary brain injury after the primary insult",
+   "verbatim_quote": "Treatment of patients with TBI is primarily focused on preventing secondary brain injury.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 1 Introduction (book p. 1)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A primary injury has already occurred before care begins",
+    "Secondary injury is at least partly preventable by monitoring and timely intervention"
+   ],
+   "breakdown_regime": "Fails as a complete model when the primary injury alone determines outcome, or when no effective intervention exists for a detected secondary insult",
+   "domain": "neurocritical care framing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a two stage state model in the reasoning engine: an initial event fixes a baseline, and all later value comes from detecting and suppressing compounding secondary deterioration rather than re-litigating the initial event",
+    "source_operator": "secondary_injury_prevention_primacy",
+    "telemetry": "Time stamped secondary insult events, intervention times, and outcome trajectories"
+   }
+  },
+  {
+   "primitive_id": "cpp_from_map_minus_icp_monitoring_standard",
+   "name": "Standard TBI monitoring tracks intracranial pressure and cerebral perfusion pressure estimated from mean arterial pressure",
+   "verbatim_quote": "For many years, the standard of care for patients with TBI has been the monitoring of intracranial pressure (ICP) and cerebral perfusion pressure (CPP), estimated as the difference between ICP and mean arterial pressure (MAP) [1].",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 1 Introduction (book p. 1)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ICP and MAP are measurable continuously in the intensive care setting",
+    "A pressure difference is a usable proxy for cerebral perfusion adequacy"
+   ],
+   "breakdown_regime": "Breaks down when autoregulation is lost or spatially heterogeneous, so a single global pressure difference no longer represents regional perfusion",
+   "domain": "cerebral hemodynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to derived signal construction: a decision variable computed as the difference of two measured pressures, with the caveat that the derived variable inherits the failure modes of both inputs and of the homogeneity assumption behind it",
+    "source_operator": "cpp_from_map_minus_icp_monitoring_standard",
+    "telemetry": "ICP, MAP, and derived CPP time series with autoregulation status flags"
+   }
+  },
+  {
+   "primitive_id": "nirs_cerebral_oximetry_definition",
+   "name": "Near infrared spectroscopy cerebral oximetry gives continuous noninvasive hemoglobin oxygen saturation in the central nervous system",
+   "verbatim_quote": "Measurement of cerebral oximetry by near-infrared spectroscopy provides continuous and non-invasive information about the oxygen saturation of haemoglobin in the central nervous system.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Abstract (book p. 1)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Near infrared light penetrates scalp and skull sufficiently for cortical sampling",
+    "Absorption changes track hemoglobin oxygenation in the sampled volume"
+   ],
+   "breakdown_regime": "Fails when extracerebral tissue dominates the signal, when the lesion lies outside the sampled frontal volume, or when chromophore assumptions are violated",
+   "domain": "cerebral oximetry",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to proxy sensing in the engine: a cheap continuous noninvasive channel that estimates a hidden internal state, valuable for trend and alarm generation but never a direct measurement of the state itself",
+    "source_operator": "nirs_cerebral_oximetry_definition",
+    "telemetry": "Regional cerebral oxygen saturation streams, probe placement, and concurrent systemic saturation"
+   }
+  },
+  {
+   "primitive_id": "beer_lambert_law_nirs",
+   "name": "Beer-Lambert law relates light attenuation to chromophore concentration, extinction coefficient, and path length",
+   "verbatim_quote": "A = log( I0 /I ) = α × c × d (1) Most photons in tissues are scattered, so the path traveled by photons can be much longer than the direct distance between the optodes.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 2 Near-Infrared Spectroscopy (book p. 2)",
+   "latex": "A = \\log\\left(\\frac{I_0}{I}\\right) = \\alpha \\, c \\, d",
+   "symbol_and_unit_ledger": {
+    "A": "attenuation, dimensionless absorbance",
+    "I_0": "incident light intensity",
+    "I": "transmitted light intensity",
+    "\\alpha": "extinction coefficient of the chromophore",
+    "c": "chromophore concentration",
+    "d": "distance traveled by light in tissue, length units"
+   },
+   "assumptions": [
+    "Absorption follows a log linear relation in concentration and path length",
+    "A single effective path length summarizes photon migration"
+   ],
+   "breakdown_regime": "Breaks down in strongly scattering tissue where the effective path far exceeds the geometric distance, which is why the modified form with a pathlength factor is required",
+   "domain": "optical spectroscopy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to attenuation based inference: recovering a hidden concentration from a log ratio of input to output intensity, the same operator shape as any sensor whose signal decays exponentially along its path",
+    "source_operator": "beer_lambert_law_nirs",
+    "telemetry": "Incident and transmitted intensities by wavelength, estimated concentrations of oxyhemoglobin and deoxyhemoglobin"
+   }
+  },
+  {
+   "primitive_id": "modified_beer_lambert_dpf_g",
+   "name": "Modified Beer-Lambert law adds a differential pathlength factor and a scattering loss term G",
+   "verbatim_quote": "That is why the differential pathlength factor (DPF) and factor G, which depends on light losses other than attenuation, need to be added to the above equation [5,9]: A = log( I0 /I ) = α × c × d × DPF + G (2)",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 2 Near-Infrared Spectroscopy (book p. 2)",
+   "latex": "A = \\log\\left(\\frac{I_0}{I}\\right) = \\alpha \\, c \\, d \\, \\mathrm{DPF} + G",
+   "symbol_and_unit_ledger": {
+    "A": "attenuation, dimensionless absorbance",
+    "I_0": "incident light intensity",
+    "I": "transmitted light intensity",
+    "\\alpha": "extinction coefficient of the chromophore",
+    "c": "chromophore concentration",
+    "d": "optode separation distance, length units",
+    "DPF": "differential pathlength factor, dimensionless multiplier for scattering lengthened path",
+    "G": "loss term for scattering and geometry, dimensionless"
+   },
+   "assumptions": [
+    "Scattering lengthens the photon path by a roughly stable multiplicative factor",
+    "Residual losses can be lumped into an additive term G"
+   ],
+   "breakdown_regime": "Fails when DPF varies with tissue composition, age, or wavelength in ways a single constant cannot capture, biasing absolute saturation values while trends remain usable",
+   "domain": "optical spectroscopy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to corrected measurement models in the engine: a first principles equation plus an empirically calibrated multiplier and an additive loss term, with explicit bookkeeping of which part is physics and which part is correction",
+    "source_operator": "modified_beer_lambert_dpf_g",
+    "telemetry": "Assumed DPF values, device specific G calibration, and sensitivity of outputs to DPF perturbation"
+   }
+  },
+  {
+   "primitive_id": "nirs_optical_window_penetration",
+   "name": "Tissue is relatively translucent at 700 to 1000 nm, letting near infrared light penetrate up to 8 cm",
+   "verbatim_quote": "tissues are relatively translucent to near-infrared light with wavelengths of 700-1000 nm, and the absorption of light by tissues is low. As a result, light can penetrate to a depth of up to 8 cm and still be completely detectable.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 2 Near-Infrared Spectroscopy (book p. 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The 700 to 1000 nm band is an optical window with low tissue absorption",
+    "Detected photons have traversed the tissue volume of interest"
+   ],
+   "breakdown_regime": "Fails outside the optical window, in heavily pigmented or edematous tissue, and for deep structures beyond the effective penetration depth",
+   "domain": "optical spectroscopy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to channel selection in the engine: every sensing modality has a passband where the medium is transparent enough to carry signal, and operating outside that band yields confident looking numbers with no information",
+    "source_operator": "nirs_optical_window_penetration",
+    "telemetry": "Wavelength band used, penetration depth estimates, and signal quality indices per channel"
+   }
+  },
+  {
+   "primitive_id": "nirs_mixed_arterial_venous_sampling",
+   "name": "Cerebral oximetry samples mixed blood with an arterial to venous ratio of 15 to 85 in the brain",
+   "verbatim_quote": "The arterial to venous blood ratio in the brain is 15:85 [6]. Hemoglobin oxygenation in brain vessels is estimated using percutaneous measurements of the amount of light absorbed by hemoglobin in the cerebral cortex.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 2 Near-Infrared Spectroscopy (book p. 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The sampled compartment has a stable arterial to venous mixing ratio near 15 to 85",
+    "Cortical absorption represents the mixed compartment saturation"
+   ],
+   "breakdown_regime": "Breaks down when the true mixing ratio shifts with physiology or pathology, so the same reading corresponds to different arterial and venous saturations",
+   "domain": "cerebral oximetry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to mixture observation models: the observed value is a fixed weight blend of two hidden components, so inference must carry the mixing assumption explicitly and report how sensitive conclusions are to it",
+    "source_operator": "nirs_mixed_arterial_venous_sampling",
+    "telemetry": "Assumed mixing ratio, arterial saturation, and venous saturation estimates with sensitivity ranges"
+   }
+  },
+  {
+   "primitive_id": "nirs_optode_spacing_rule",
+   "name": "Optode spacing should be at least 2.5 to 3 cm or extracerebral tissue attenuates the light too strongly",
+   "verbatim_quote": "It is recommended that the distance between the optodes be not less than 2.5 to 3 cm, because the shorter the distance between the optodes, the more strongly the extracerebral tissues attenuate the light [5].",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 2 Near-Infrared Spectroscopy (book p. 2)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Photon path depth scales with optode separation, roughly half the separation",
+    "Extracerebral contamination falls as separation increases"
+   ],
+   "breakdown_regime": "Fails in small heads or constrained placements where the minimum spacing cannot be met, and gives no protection against contamination at any spacing in the presence of scalp hematoma or edema",
+   "domain": "cerebral oximetry instrumentation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to sensor geometry as an information decision: the physical layout of a measurement determines which layer of the system it actually samples, and shallow layouts silently measure the surface instead of the target",
+    "source_operator": "nirs_optode_spacing_rule",
+    "telemetry": "Optode separation, sampled depth estimate, and extracerebral contamination indicators"
+   }
+  },
+  {
+   "primitive_id": "nirs_complement_holistic_picture",
+   "name": "Cerebral oximetry is a complement to other monitored parameters, giving a more holistic picture despite technical imperfections",
+   "verbatim_quote": "The greatest advantage of this method is that it enables continuous and non-invasive measurement of rScO2. Despite technical imperfections, cerebral oximetry measurements can be an important complement to other parameters monitored, providing a more holistic picture of intracranial pathologies.",
+   "page": "Barud et al., J Clin Med 2021, 10, 2938, Section 5 Conclusions (book p. 10)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No single monitored parameter captures intracranial pathology completely",
+    "An imperfect additional channel still adds information when fused with the others"
+   ],
+   "breakdown_regime": "Fails when the imperfect channel is treated as a standalone truth source, or when its artifacts are correlated with the artifacts of the other channels",
+   "domain": "multimodal monitoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to signal fusion doctrine in the engine: add weak continuous channels for coverage and trend, weight them below direct measures, and never let a proxy channel veto or replace the primary measurements on its own",
+    "source_operator": "nirs_complement_holistic_picture",
+    "telemetry": "Channel inventory per case, per channel reliability flags, and fused versus single channel alarm rates"
+   }
+  },
+  {
+   "primitive_id": "early_tracheostomy_reduces_ventilation_and_stay",
+   "name": "Early tracheostomy in TBI may reduce mechanical ventilation duration and intensive care and hospital length of stay",
+   "verbatim_quote": "Our meta-analysis suggests that ET in TBI patients could help in reducing duration of mechanical ventilation, ICU and hospital LOS, contribute to a lower exposure to secondary injuries and nosocomial adverse events, increasing the opportunity of patients' early rehabilitation and discharge.",
+   "page": "Marra et al., J Clin Med 2021, 10, 3319, Section 8 Conclusions and Future Perspectives (book p. 18)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Early and late tracheostomy groups are comparable enough for pooled analysis",
+    "Shorter ventilation and stay are benefits independent of any mortality effect"
+   ],
+   "breakdown_regime": "Breaks down under heterogeneous early versus late definitions across studies and when sicker patients are systematically assigned to one timing arm",
+   "domain": "airway management meta-analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to intervention timing evaluation: an action can be valuable through exposure reduction, fewer days in a harmful state and earlier rehabilitation, even when the headline endpoint of mortality does not move",
+    "source_operator": "early_tracheostomy_reduces_ventilation_and_stay",
+    "telemetry": "Ventilation days, intensive care and hospital length of stay, nosocomial event counts by intervention timing"
+   }
+  },
+  {
+   "primitive_id": "tracheostomy_mortality_evidence_inconclusive_tsa",
+   "name": "Trial sequential analysis says current evidence is inconclusive on early tracheostomy and mortality, so more randomized trials are necessary",
+   "verbatim_quote": "results of TSA suggested that current evidence is inconclusive and that more randomized controlled trials are necessary to assess the real impact of ET on mortality.",
+   "page": "Marra et al., J Clin Med 2021, 10, 3319, Discussion (book p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Trial sequential analysis correctly accounts for repeated meta-analytic updating and sparse data",
+    "The accrued information size is below what a conclusive mortality verdict requires"
+   ],
+   "breakdown_regime": "Fails as a permanent verdict once adequately powered randomized trials accrue; inconclusive is a statement about information size, not about the absence of an effect",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to sequential evidence discipline in the engine: a pooled estimate is not a verdict until the accrued information crosses a precomputed required size, and the correct output before that point is an explicit inconclusive state",
+    "source_operator": "tracheostomy_mortality_evidence_inconclusive_tsa",
+    "telemetry": "Accrued sample size versus required information size, cumulative z curves, and boundary crossings"
+   }
+  },
+  {
+   "primitive_id": "tracheostomy_meta_analysis_limits",
+   "name": "The tracheostomy meta-analysis is limited by heterogeneity above 50 percent on key outcomes and by publication bias from published articles only",
+   "verbatim_quote": "heterogeneity more than 50% was found in 2 out of 5 considered outcomes like ICU LOS and duration of mechanical ventilation. Third, only published articles were reviewed, which might have contributed to a publication bias.",
+   "page": "Marra et al., J Clin Med 2021, 10, 3319, Discussion limitations (book p. 18)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Heterogeneity statistics identify outcomes where pooling is fragile",
+    "Unpublished studies differ systematically enough to bias a published only sample"
+   ],
+   "breakdown_regime": "The limits weaken but do not erase outcomes with low heterogeneity; treating every pooled result as equally fragile would discard usable signal",
+   "domain": "evidence synthesis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to per output confidence tagging: a synthesis carries a different trust level for each output variable depending on its heterogeneity and sampling frame, rather than one global credibility score",
+    "source_operator": "tracheostomy_meta_analysis_limits",
+    "telemetry": "Per outcome heterogeneity statistics, funnel asymmetry checks, and registry searches for unpublished studies"
+   }
+  },
+  {
+   "primitive_id": "center_tbi_tracheostomy_cohort_share",
+   "name": "In the CENTER-TBI cohort within the review, 433 of 1358 patients, 31.8 percent, had a tracheostomy",
+   "verbatim_quote": "including 1358 patients, of which 433 (31.8%) had a tracheostomy. Moreover, in our systematic review and meta-analysis, we carried out a sub-group analysis according to the type of the included studies (RCT vs. non RCT) and performed a trial sequential analysis on RCTs.",
+   "page": "Marra et al., J Clin Med 2021, 10, 3319, Discussion (book p. 17)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The CENTER-TBI prospective observational cohort is representative of European neurotrauma intensive care practice",
+    "Tracheostomy receipt marks a prolonged ventilation trajectory"
+   ],
+   "breakdown_regime": "Observational receipt shares cannot be read as need or benefit rates, because receipt is confounded by severity, local practice, and survival long enough to receive the procedure",
+   "domain": "cohort description",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to base rate anchoring: before modeling any intervention effect, record how often the intervention actually occurs in the reference cohort, so effect estimates are scaled against real exposure frequency",
+    "source_operator": "center_tbi_tracheostomy_cohort_share",
+    "telemetry": "Cohort size, intervention counts and shares, and subgroup splits by study design"
+   }
+  },
+  {
+   "primitive_id": "osmotherapy_target_window_300_320",
+   "name": "The main target of osmotherapy is to maintain plasma osmolality around 300 to 320 mOsm per kg water",
+   "verbatim_quote": "the main target of osmotherapy is to maintain plasma osmolality around 300-320 mOsm/kg H2 O [1,2].",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 4141, Section 3 Basic Knowledge (book p. 22)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Plasma osmolality in this window lowers intracranial pressure without unacceptable systemic harm for most patients",
+    "Osmolality is measurable frequently enough to steer therapy"
+   ],
+   "breakdown_regime": "The window is a population compromise; individual tolerance varies with cardiac, renal, and immune status, and harm can begin inside the window for vulnerable patients",
+   "domain": "osmotherapy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to therapeutic window control: steer a variable into a band that balances benefit against multi organ harm, with the band edges treated as soft risk gradients rather than binary safe and unsafe zones",
+    "source_operator": "osmotherapy_target_window_300_320",
+    "telemetry": "Serial plasma osmolality, agent type and dose, intracranial pressure response, and organ function markers"
+   }
+  },
+  {
+   "primitive_id": "hyperosmotic_therapy_ceiling_320",
+   "name": "Hyperosmotic therapy aims at plasma osmolality not higher than 320 mOsm per kg water",
+   "verbatim_quote": "achievement of plasma osmolality not higher than 320 mOsm/kg H2 O [1,2,7].",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 4141, Section 1 Introduction (book p. 21)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "320 mOsm per kg is an achievable ceiling with mannitol or hypertonic saline",
+    "Staying at or below the ceiling preserves most intracranial benefit"
+   ],
+   "breakdown_regime": "The ceiling is not a safety guarantee; the same review reports cardiac and immune disorders beginning above 310, so the ceiling marks maximum exposure, not a safe harbor",
+   "domain": "osmotherapy safety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to hard cap versus risk onset separation: a protocol maximum and the level where harm actually begins are two different numbers, and a reasoning system must track both instead of collapsing them into one threshold",
+    "source_operator": "hyperosmotic_therapy_ceiling_320",
+    "telemetry": "Peak osmolality per patient, time above 310 and above 320, and adverse event timing relative to peaks"
+   }
+  },
+  {
+   "primitive_id": "hyperosmolality_cardiac_harm",
+   "name": "Plasma osmolality disorders can impair cardiac function and raise the risk of life threatening arrhythmias and sudden cardiac death",
+   "verbatim_quote": "The disorders of plasma osmolality can impair cardiac function and increase the risk of life-threatening cardiac arrhythmias and sudden cardiac death [32,35-38].",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 4141, Section 4 Plasma Hyperosmolality and the Heart (book p. 25)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Evidence from acute coronary syndrome cohorts transfers at least partly to neurotrauma patients",
+    "Osmolality acts on cardiac electrophysiology and contractility, not only on volume status"
+   ],
+   "breakdown_regime": "Association in cardiac cohorts does not fix the causal share of osmolality in TBI patients receiving multiple simultaneous therapies; confounding by illness severity remains",
+   "domain": "osmotherapy safety",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to cross system side effect propagation: a therapy tuned for one organ exports risk to other organs through a shared circulating variable, so the engine must price the full organ vector, not the target organ alone",
+    "source_operator": "hyperosmolality_cardiac_harm",
+    "telemetry": "Osmolality, rhythm events, QTc measurements, troponin, and echocardiographic function during osmotherapy"
+   }
+  },
+  {
+   "primitive_id": "osmotic_nephrosis_reversibility",
+   "name": "Osmotic nephrosis is usually reversible after stopping osmotically active agents, though some patients require temporary renal replacement therapy",
+   "verbatim_quote": "The osmotic nephrosis is usually reversible after discontinuation of osmotically active agents; however, some patients require temporary renal replacement therapy [63,68-71].",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 4141, kidney section (book p. 25)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The renal lesion is driven by ongoing osmotic exposure rather than fixed structural loss in most cases",
+    "Discontinuation is clinically feasible once intracranial pressure allows"
+   ],
+   "breakdown_regime": "Reversibility fails when exposure continues, when nephrotoxic co exposures accumulate, or when baseline renal reserve is low; temporary replacement therapy marks the severe tail",
+   "domain": "osmotherapy safety",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to reversible harm accounting: side effects are graded by whether they resolve on withdrawal, persist, or escalate to replacement support, and that grade changes how aggressively the primary therapy may be pushed",
+    "source_operator": "osmotic_nephrosis_reversibility",
+    "telemetry": "Creatinine and urine output trajectories, agent discontinuation times, and renal replacement therapy use"
+   }
+  },
+  {
+   "primitive_id": "mews_auc_beats_iss_rts_si",
+   "name": "For total TBI, MEWS AUC 0.799 exceeds RTS 0.742, ISS 0.638, and Shock Index 0.524 for in hospital mortality",
+   "verbatim_quote": "Total TBI group: the AUCs of the ISS, RTS, SI, and MEWS were 0.638 (95% CI, 0.603-0.672), 0.742 (95% CI, 0.709-0.772), 0.524 (95% CI, 0.489-0.560), and 0.799 (95% CI, 0.769-0.827), respectively.",
+   "page": "Kim et al., J Clin Med 2021, 10, 1915, Figure 2 caption (book p. 37)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The emergency department cohort of 1108 patients represents the target triage population",
+    "AUC differences estimated on the same patients are comparable across scores"
+   ],
+   "breakdown_regime": "Single center retrospective discrimination does not guarantee calibration or transportability; AUC near 0.80 is fair performance, not strong individual level prediction",
+   "domain": "prognostic scoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to head to head score benchmarking on identical cases: candidate scores are ranked by discrimination on the same cohort with confidence intervals and pairwise tests, and a simple vital sign score can beat anatomy based scores for early mortality",
+    "source_operator": "mews_auc_beats_iss_rts_si",
+    "telemetry": "Per score AUC with confidence intervals, pairwise ROC comparisons, and calibration checks by subgroup"
+   }
+  },
+  {
+   "primitive_id": "mews_construction_vital_signs_avpu",
+   "name": "MEWS is calculated from vital signs and the AVPU scale on emergency department arrival",
+   "verbatim_quote": "The MEWS was calculated based on vital signs and AVPU (Alert, Voice, Pain, Unresponsive) scale data on ED arrival (Table 2) [16]. The primary outcome was in-hospital mortality.",
+   "page": "Kim et al., J Clin Med 2021, 10, 1915, Section 2 Methods (book p. 34)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Arrival vital signs and AVPU are recorded reliably enough to score every patient",
+    "A generic early warning score transfers to a TBI specific population"
+   ],
+   "breakdown_regime": "Fails when arrival physiology is already modified by prehospital treatment, sedation, or intubation, and when the neurological component is compressed into a four level AVPU response",
+   "domain": "prognostic scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to cheap feature scoring: a score built only from universally available arrival variables can be computed for every case with no missing data penalty, which is itself a decisive operational advantage over richer scores",
+    "source_operator": "mews_construction_vital_signs_avpu",
+    "telemetry": "Arrival vital signs, AVPU level, score completeness rate, and time from arrival to score"
+   }
+  },
+  {
+   "primitive_id": "mews_drivers_gcs_and_temperature",
+   "name": "The GCS score and body temperature carry a significant role in the discrimination ability of MEWS in TBI",
+   "verbatim_quote": "The GCS score and BT seemed to have a significant role in the discrimination ability of the MEWS.",
+   "page": "Kim et al., J Clin Med 2021, 10, 1915, Abstract conclusions (book p. 33)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Component level analysis can attribute a composite score performance to its inputs",
+    "Neurological status and temperature are not redundant with the hemodynamic components"
+   ],
+   "breakdown_regime": "Attribution from one cohort may reflect local case mix; in other cohorts blood pressure or respiratory components could dominate, so driver rankings must be rechecked per population",
+   "domain": "prognostic scoring",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to component attribution for composite scores: after a composite wins a benchmark, decompose which inputs carry the discrimination, because the portable part of the finding is the driver set, not the composite brand name",
+    "source_operator": "mews_drivers_gcs_and_temperature",
+    "telemetry": "Per component odds ratios, score ablation results, and driver rankings by subgroup"
+   }
+  },
+  {
+   "primitive_id": "mews_cohort_base_rate",
+   "name": "The MEWS study cohort included 1108 patients with in hospital mortality of 183 patients, 16.3 percent",
+   "verbatim_quote": "In total, 1108 patients were included, and the in-hospital mortality was 183 patients (16.3% of the cohort).",
+   "page": "Kim et al., J Clin Med 2021, 10, 1915, Abstract (book p. 33)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "TBI was defined by Abbreviated Injury Scale of 3 or higher in this severe trauma cohort",
+    "The 16.3 percent mortality base rate belongs to that severity filtered population"
+   ],
+   "breakdown_regime": "The base rate does not transfer to all comers with head injury; applying the score in a milder population changes both calibration and the meaning of any cutoff",
+   "domain": "prognostic scoring",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to base rate discipline: every discrimination claim is stored together with the cohort size and event rate that produced it, so later users cannot detach an AUC from the population where it was earned",
+    "source_operator": "mews_cohort_base_rate",
+    "telemetry": "Cohort size, event count and rate, inclusion thresholds, and severity distribution"
+   }
+  },
+  {
+   "primitive_id": "prom_reliability_satisfactory_to_excellent",
+   "name": "Reliability of each CENTER-TBI instrument was examined with Cronbach alpha, split-half reliability with Spearman-Brown correction, and alpha if an item is omitted",
+   "verbatim_quote": "To examine the reliability of each instrument, Cronbach's alpha, split-half reliability with the Spearman-Brown correction (odd vs. even items), and Cronbach's alpha if an item is omitted were reported.",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2396, Section 2 Methods psychometrics (book p. 45)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Classical test theory indices estimated at six months post injury represent the instruments generally",
+    "Comparison with the original English versions is a fair equivalence standard"
+   ],
+   "breakdown_regime": "Equivalence at group level can hide item level problems in single languages, and the RPQ factor structure exception shows that one instrument can fail replication while the battery as a whole passes",
+   "domain": "psychometrics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to measurement equivalence gating: a translated or adapted instrument earns pooling rights only after reliability and validity are rechecked in the new language, per instrument, not by battery level reputation",
+    "source_operator": "prom_reliability_satisfactory_to_excellent",
+    "telemetry": "Per instrument and per language reliability coefficients, validity correlations, and factor structure replication results"
+   }
+  },
+  {
+   "primitive_id": "gose_eight_point_scale",
+   "name": "The Glasgow Outcome Scale Extended rates functional recovery on an eight point scale from dead to upper good recovery",
+   "verbatim_quote": "The Glasgow Outcome Scale Extended (GOSE) [45] is a clinician-reported outcome (ClinRo) of functional recovery after TBI using an eight-point scale",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2396, Section 2.4 ClinRo (book p. 46)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Functional recovery after TBI can be ordered on a single ordinal ladder",
+    "Structured interview or questionnaire administration yields comparable ratings"
+   ],
+   "breakdown_regime": "A single ordinal ladder compresses multidimensional recovery; two patients at the same level can differ completely in cognition, mood, and participation",
+   "domain": "outcome measurement",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to ordinal outcome ladders: a coarse shared scale enables cross study comparison and pooling, at the known cost of hiding within level heterogeneity that finer instruments must then supply",
+    "source_operator": "gose_eight_point_scale",
+    "telemetry": "GOSE level distribution, administration mode, and concordance with finer grained outcome measures"
+   }
+  },
+  {
+   "primitive_id": "prom_battery_composition",
+   "name": "The CENTER-TBI six month battery combines GAD-7, PHQ-9, PCL-5, RPQ, QOLIBRI and SF-36 or SF-12 instruments",
+   "verbatim_quote": "The study sample comprised individuals who filled in the six-months assessments (GAD-7, PHQ-9, PCL-5, RPQ, QOLIBRI/-OS, SF-36v2/-12v2).",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2396, Abstract (book p. 43)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Anxiety, depression, post traumatic stress, post concussion symptoms, quality of life, and generic health together cover the main outcome domains",
+    "Six month assessment is a meaningful common time point"
+   ],
+   "breakdown_regime": "Battery coverage is not completeness; domains outside the battery, such as cognition measured by performance tests, need separate instruments, and respondent burden grows with every added scale",
+   "domain": "outcome measurement",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to domain coverage design: an outcome battery is specified by the list of domains it must span, with one validated instrument per domain, and gaps are recorded as missing domains rather than filled by stretching a nearby scale",
+    "source_operator": "prom_battery_composition",
+    "telemetry": "Domain to instrument mapping, completion rates per instrument, and missing data patterns"
+   }
+  },
+  {
+   "primitive_id": "translation_two_independent_forward",
+   "name": "Key instruments received two independent forward translations by native speakers, reconciled into one version",
+   "verbatim_quote": "For the GOSE, GOSE-Q, PCL-5, QOLIBRI, and QOLIBRI-OS, two independent forward translations were performed into several target languages by native speakers. The respective translations were reconciled into one version by the translation team in the target language.",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2863, Section 2.3.2 Phase 2 Translation (book p. 85)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Independent translators produce diverse renderings whose disagreements reveal ambiguous source items",
+    "Reconciliation by the target language team resolves disagreements without losing natural phrasing"
+   ],
+   "breakdown_regime": "With limited resources some instruments received a single forward translation, weakening the error detection that independence provides; the method degrades gracefully but measurably",
+   "domain": "linguistic validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to independent replication before merging: two independent renderings of the same source are produced blind, then reconciled, so disagreement itself becomes a diagnostic of source ambiguity",
+    "source_operator": "translation_two_independent_forward",
+    "telemetry": "Number of independent translations per instrument, reconciliation change counts, and unresolved disagreement logs"
+   }
+  },
+  {
+   "primitive_id": "cognitive_debriefing_purpose",
+   "name": "Cognitive debriefing tests whether participants understand the translated text as intended and whether it is culturally appropriate",
+   "verbatim_quote": "The goal of a cognitive debriefing is to determine whether participants understand the text in the same way as it is intended in the original version of the instrument and whether its translation is culturally appropriate.",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2863, Section 2.3.4 Phase 4 Cognitive Debriefing (book p. 85)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Three to five patients after TBI, preceded by healthy participants, can surface the main comprehension failures",
+    "Recorded structured interviews capture meaning, not only preference"
+   ],
+   "breakdown_regime": "Small debriefing samples miss rare misreadings and subgroup specific idiom problems; a clean debriefing is evidence of adequacy, not proof of equivalence",
+   "domain": "linguistic validation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to comprehension testing of any adapted instrument or prompt: end users verbalize what each item means to them, and mismatches with intended meaning trigger revision before any psychometric field test",
+    "source_operator": "cognitive_debriefing_purpose",
+    "telemetry": "Debriefing sample sizes, comprehension rates per item, and revision counts triggered by debriefing"
+   }
+  },
+  {
+   "primitive_id": "translation_scale_237_in_20_languages",
+   "name": "The CENTER-TBI program carried out 237 translations and 211 linguistic validations in up to 20 languages",
+   "verbatim_quote": "In total, 237 translations and 211 linguistic validations were carried out in up to 20 languages.",
+   "page": "von Steinbuechel et al., J Clin Med 2021, 10, 2863, Abstract (book p. 77)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Seventeen of nineteen selected instruments lacked translations in at least one target language at study start",
+    "International harmonization with over 150 collaborators kept language versions comparable"
+   ],
+   "breakdown_regime": "Scale numbers describe effort, not uniform depth; some languages and instruments stopped at earlier harmonization stages, so coverage matrices, not totals, show the real state",
+   "domain": "linguistic validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to coverage accounting: report adaptation work as a matrix of instrument by language with stage reached, because a single total hides exactly the cells that are missing",
+    "source_operator": "translation_scale_237_in_20_languages",
+    "telemetry": "Instrument by language coverage matrix, validation stage per cell, and harmonization participation"
+   }
+  },
+  {
+   "primitive_id": "prehospital_oxygen_mortality_gradient",
+   "name": "In 1842 severe TBI patients, in hospital mortality by prehospital oxygen group was 34.8, 32.3, 39.9, and 41.1 percent for no, low, mid, and high flow",
+   "verbatim_quote": "the in-hospital mortality rates were 34.8%, 32.3%, 39.9% and 41.1%, respectively. Basic patient demographics are shown in Table 1.",
+   "page": "Hong et al., J Clin Med 2021, 10, 4097, Results (book p. 111)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Groups are ordered as no oxygen, low flow 1 to 5, mid flow 6 to 14, and high flow 15 L per min",
+    "The cohort is severe blunt TBI without hypoxia treated by emergency medical services in 2013 and 2015"
+   ],
+   "breakdown_regime": "Raw group mortality is confounded by indication and age; the no oxygen group was older, so the gradient alone cannot be read as the causal effect of flow rate",
+   "domain": "prehospital oxygen therapy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to dose response reading with confounding flags: an ordered exposure with a non monotonic outcome pattern, lowest at low dose and highest at high dose, signals a possible therapeutic window but demands adjusted and interaction analyses before any causal claim",
+    "source_operator": "prehospital_oxygen_mortality_gradient",
+    "telemetry": "Group sizes, raw mortality by flow group, age and severity by group, and adjusted estimates"
+   }
+  },
+  {
+   "primitive_id": "oxygen_flow_saturation_interaction",
+   "name": "Low flow oxygen showed lower mortality when prehospital saturation was 94 to 98 percent, adjusted odds ratio 0.80",
+   "verbatim_quote": "low-flow oxygen showed lower mortality when prehospital saturation was 94-98% (adjusted odds ratio (AOR): 0.80 (0.67-0.95))",
+   "page": "Hong et al., J Clin Med 2021, 10, 4097, Abstract (book p. 109)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prehospital saturation strata are measured before or independent of the flow decision enough to support interaction analysis",
+    "Adjustment removes the main confounders of the flow and mortality relation"
+   ],
+   "breakdown_regime": "Interaction estimates are subgroup fragile; the same study found high flow associated with higher mortality at saturation at or above 99 percent, so a single average oxygen effect is the wrong summary",
+   "domain": "prehospital oxygen therapy",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to effect modification as a first class output: the engine stores treatment effects conditional on the state variable that modifies them, in this case saturation, instead of one pooled effect that averages benefit and harm away",
+    "source_operator": "oxygen_flow_saturation_interaction",
+    "telemetry": "Saturation strata, flow group by stratum adjusted odds ratios, and interaction test results"
+   }
+  },
+  {
+   "primitive_id": "cta_ctp_sensitivity_for_cca",
+   "name": "CTA sensitivity was 96.3 percent against DSA in 82 patients, and in a second study CTA was 86 percent while CTP was 100 percent",
+   "verbatim_quote": "we showed a sensitivity of 96.3% of CTA in a group of 82 patients. CTA was validated against DSA in this report. In the second study, CTA showed a sensitivity of 86% and CTP showed a sensitivity of 100% in a group of 50 patients.",
+   "page": "Bohatyrewicz et al., J Clin Med 2021, 10, 4237, Abstract research summary (book p. 119)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "DSA and clinical diagnosis supported by transcranial Doppler are acceptable reference standards in the two studies",
+    "Sensitivity is the governing metric because missing cerebral circulatory arrest is the costly error"
+   ],
+   "breakdown_regime": "Small single country samples limit precision; sensitivity depends on timing and protocol, and a 100 percent estimate from 50 patients carries a wide confidence interval",
+   "domain": "brain death diagnosis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to ancillary test validation: a new test earns guideline status by sensitivity measured against the incumbent reference standards in defined samples, with the sample sizes stored beside the point estimates",
+    "source_operator": "cta_ctp_sensitivity_for_cca",
+    "telemetry": "Sensitivity by test and study, reference standard used, sample size, and timing from clinical diagnosis"
+   }
+  },
+  {
+   "primitive_id": "ctp_cca_thresholds_cbf_cbv",
+   "name": "Proposed CTP criteria for cerebral circulatory arrest require cerebral blood flow below 10 mL per 100 g per min and cerebral blood volume below 1 mL per 100 g in all regions",
+   "verbatim_quote": "cerebral blood flow (CBF) < 10 mL/100 g/min and cerebral blood volume < 1 mL/100 g in regions of interest (ROIs) localized in all brain regions. Based on our research results, CTA/CTP methods were implemented in Polish BD/DNC criteria.",
+   "page": "Bohatyrewicz et al., J Clin Med 2021, 10, 4237, Abstract (book p. 119)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Regions of interest cover all brain regions, so a single preserved region defeats the criterion",
+    "The thresholds separate circulatory arrest from severely reduced but present perfusion"
+   ],
+   "breakdown_regime": "Thresholds are protocol and scanner dependent; borderline values near the cutoffs need the whole brain CTP context and clinical correlation rather than a mechanical pass or fail",
+   "domain": "brain death diagnosis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to conjunctive threshold criteria: a state is declared only when every region satisfies a strict quantitative bound, an all regions rule that trades sensitivity for protection against false declaration",
+    "source_operator": "ctp_cca_thresholds_cbf_cbv",
+    "telemetry": "Regional CBF and CBV values, region coverage, and distance of each region from its threshold"
+   }
+  },
+  {
+   "primitive_id": "covid_ed_tbi_efficiency_paradox",
+   "name": "During COVID-19 periods P1 and P2 in Taiwan, ED arrival to brain CT times were significantly shorter than pre-pandemic, 22 versus 30 min and 21 versus 27 min",
+   "verbatim_quote": "During P1 and P2, the times from ED arrival to brain CT were significantly shorter than for the respective pre-pandemic periods (P1: 22 min versus 30 min, p < 0.0001; P2: 21 min vs. 27 min, p < 0.0001).",
+   "page": "Lam et al., J Clin Med 2021, 10, 5314, Results Table 3 text (book p. 138)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Three metropolitan Taipei hospitals and electronic records for 2019, 2020, and 2021 define the comparison",
+    "Arrival to CT and arrival to surgery are valid efficiency measures for TBI care"
+   ],
+   "breakdown_regime": "Efficiency gains during a pandemic can reflect reduced ED crowding from fewer presentations rather than improved process; the finding is system and period specific and reverses when hospitals are overwhelmed",
+   "domain": "emergency department operations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to load dependent performance reading: a time to treatment metric is interpreted against the demand level that produced it, because the same process looks faster under low load without any process improvement",
+    "source_operator": "covid_ed_tbi_efficiency_paradox",
+    "telemetry": "Arrival to CT and arrival to surgery intervals, ED census and TBI volumes by period, and case severity mix"
+   }
+  },
+  {
+   "primitive_id": "esz_qtc_prolongation_and_reversal",
+   "name": "During electrographic seizures the QTc interval was pathologically prolonged, and the prolongation was significantly ameliorated 15 minutes after seizure suppression",
+   "verbatim_quote": "During ESz, the QTc interval was pathologically prolonged, and the prolongation was significantly ameliorated 15 min after ESz suppression independently of the method (automated or manual) or correction formula used in all patients (Table 1).",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 5374, Results (book p. 147)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Electrographic seizures were diagnosed with frontopolar EEG devices in deeply sedated TBI patients",
+    "Suppression was achieved with continuous thiopental infusion and confirmed electrographically"
+   ],
+   "breakdown_regime": "Only 21 patients were analyzed from 348 screened, and all remained severely impaired; the QTc reversal is a physiological association in a small selected sample, not evidence of improved survival",
+   "domain": "neuro cardiac coupling",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to coupled system monitoring: an event in the brain channel leaves a measurable signature in the cardiac channel, and successful treatment of the brain event normalizes the cardiac signature, giving a cross channel confirmation of treatment effect",
+    "source_operator": "esz_qtc_prolongation_and_reversal",
+    "telemetry": "EEG seizure events, QTc by correction formula before and after suppression, and spatial QRS-T angle"
+   }
+  },
+  {
+   "primitive_id": "esz_suppression_raises_cerebral_oxygenation",
+   "name": "Suppression of electrographic seizures was followed by significantly increased regional cerebral oxygenation in both hemispheres",
+   "verbatim_quote": "whereas the mean values of SrO2 significantly increased 15 min after treatment of ESz (Table 2).",
+   "page": "Dabrowski et al., J Clin Med 2021, 10, 5374, Results Table 2 text (book p. 149)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Regional cerebral oxygenation was measured by near infrared spectroscopy in both hemispheres",
+    "The 15 minute post suppression window captures the treatment effect rather than spontaneous fluctuation"
+   ],
+   "breakdown_regime": "The authors themselves require confirmation in larger studies; thiopental has independent hemodynamic effects that could contribute to the oxygenation change",
+   "domain": "neuro cardiac coupling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to intervention verification by a second modality: the EEG confirms seizure suppression while the oximetry channel independently registers improved oxygenation, so two unrelated sensors corroborate one physiological story",
+    "source_operator": "esz_suppression_raises_cerebral_oxygenation",
+    "telemetry": "Left and right SrO2 before and after suppression, cardiac index and lung water indices as negative controls"
+   }
+  },
+  {
+   "primitive_id": "cranioplasty_longterm_cognitive_gain",
+   "name": "After cranioplasty, all neuropsychological test scores improved significantly, with the largest differences detected after four years",
+   "verbatim_quote": "After CP, we found a significant improvement in all neuropsychological test scores. The more significant differences in cognitive recovery were detected after four years from CP.",
+   "page": "Corallo et al., J Clin Med 2021, 10, 5437, Abstract (book p. 157)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fifteen TBI subjects aged 26 to 54 with cranioplasty after decompressive craniectomy were followed yearly for five years",
+    "Repeated neuropsychological testing measures recovery rather than practice effects alone"
+   ],
+   "breakdown_regime": "A retrospective study of 15 selected subjects cannot separate the surgery effect from spontaneous recovery, rehabilitation, and practice effects; the long horizon that reveals the gain also maximizes confounding",
+   "domain": "neurorehabilitation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to long horizon outcome evaluation: some interventions show their largest measured effect years later, so evaluation windows must extend far beyond discharge, with explicit accounting for natural recovery over the same span",
+    "source_operator": "cranioplasty_longterm_cognitive_gain",
+    "telemetry": "Yearly neuropsychological battery scores from before surgery through year five, rehabilitation exposure, and attrition"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "9aaa9d9714b48b13-t1",
+   "think": "This edited volume is not a single monograph with one argument. It is a reprint of eleven Journal of Clinical Medicine papers from 2021, gathered under Rafael Badenes as editor, and its unity is clinical rather than theoretical: every paper studies traumatic brain injury as a condition whose outcome is decided less by the initial impact than by the quality of monitoring, measurement, and timed intervention afterward. Reading it as one work means extracting two layers at once. The first layer is the specific clinical machinery: cerebral oximetry by near infrared spectroscopy, osmotherapy and its systemic costs, tracheostomy timing, early warning scores, prehospital oxygen dosing, perfusion imaging for brain death determination, electrographic seizure detection and its cardiac signature, emergency department throughput under pandemic load, cranioplasty and long term cognition, and the psychometric infrastructure of the CENTER-TBI outcome program. The second layer is the recurring method pattern that makes the volume useful far beyond neurotrauma, because each paper is really a study in how to measure a hidden state, how to validate the measurement, and how to act on it without being fooled by it. The oximetry review states the pattern most cleanly. The brain state that matters, regional oxygen saturation, cannot be observed directly at the bedside, so the paper builds a proxy from physics: the Beer-Lambert law, then the modified law that admits scattering through a differential pathlength factor and a loss term. That two step structure, first principles equation followed by an explicit correction model, is the honest way to run any proxy sensor, and the paper is equally explicit about the proxy failure modes: extracerebral contamination, a fixed arterial to venous mixing assumption of 15 to 85, optode spacing that decides whether the sensor samples scalp or cortex, and absolute values that drift while trends stay informative. The conclusion the authors draw is the correct general rule for weak channels: oximetry earns its place as a complement inside a multimodal picture, never as a standalone verdict. The osmotherapy review applies the same discipline to a therapy instead of a sensor. Hyperosmotic treatment works on intracranial pressure, but the circulating variable it manipulates, plasma osmolality, touches kidney, heart, immune function, and blood brain barrier at the same time. The review therefore separates three numbers that protocols often collapse: the target window of 300 to 320, the protocol ceiling of 320, and the lower level near 310 where cardiac and immune harm may already begin. A reasoning engine that stores only the ceiling will systematically overexpose patients; storing the window, the ceiling, and the harm onset as separate facts is the transferable lesson. The tracheostomy meta-analysis and the MEWS study teach the evidence side of the pattern. The meta-analysis finds real benefits in ventilation days and length of stay, yet its trial sequential analysis refuses a mortality verdict because the accrued information size is too small, and its limitations section grades trust per outcome according to heterogeneity rather than issuing one global credibility judgment. That is exactly how a synthesis should behave: benefit where the data support it, an explicit inconclusive state where they do not, and per output confidence tags. The MEWS paper is a benchmarking exercise done properly, four scores compared on the same 1108 patients with pairwise ROC tests, and its most portable finding is not that MEWS won with an AUC of 0.799 but why: the Glasgow Coma Scale component and body temperature carried the discrimination, which tells the next builder which features matter in this population. The oxygen study adds the interaction lesson. Flow rate has no single effect; low flow is associated with lower mortality at saturation 94 to 98 percent while high flow is associated with higher mortality at saturation at or above 99 percent, so the honest output is a conditional effect table, not an average. The remaining papers extend the pattern to diagnosis, systems, and measurement infrastructure. The Polish CTA and CTP work shows an ancillary test earning guideline status through sensitivity against incumbent reference standards, then formalizes declaration of cerebral circulatory arrest as a conjunctive rule, flow and volume below strict thresholds in every region, with whole brain perfusion reserved as the tiebreaker when angiography is inconclusive. The seizure and QTc study shows cross channel corroboration: suppress the electrographic seizure and both the cardiac repolarization abnormality and the cerebral oxygenation move in the expected direction within fifteen minutes, each channel confirming the other. The Taiwan COVID study warns that throughput metrics are load dependent, since arrival to CT times shortened during a pandemic mainly because the system was not overwhelmed. The cranioplasty study stretches the evaluation horizon to five years and finds the largest cognitive differences at year four, while honestly carrying the confounding that a fifteen patient retrospective design cannot remove. Finally the two CENTER-TBI measurement papers supply the foundation everything else stands on: outcomes cannot be pooled across countries until instruments are translated with independent forward translations, reconciliation, backward translation, cognitive debriefing, and harmonization, and then revalidated psychometrically in each language, which this program did across 237 translations and up to 20 languages. For a reasoning engine the volume therefore contributes a coherent operating doctrine rather than a pile of facts. Measure hidden states with explicit proxy models and named corrections. Fuse weak continuous channels below direct measures. Separate target windows, hard ceilings, and harm onsets. Benchmark scores head to head on identical cases and decompose the winner. Store effects conditionally on the variables that modify them. Grade trust per output. Validate any adapted instrument before pooling its data. And keep an explicit inconclusive state available, because several of these papers show that the most valuable output a system can produce is a disciplined refusal to conclude. The volume breaks where all clinical literature breaks: single center cohorts, small selected samples, observational confounding, and 2021 practice patterns that later evidence may revise. Its numbers should enter the engine as dated, sourced, population tagged claims, never as timeless constants.",
+   "retrocausal_genealogy": "The lineage behind this volume runs through several distinct traditions that converge in modern neurocritical care. Cerebral oximetry descends from Jobsis in 1977 and the older Beer-Lambert absorption spectroscopy of analytical chemistry, entering practice through neonatal care and cardiac surgery before reaching adult brain injury. Osmotherapy descends from early twentieth century osmotic physiology and the mannitol era of intracranial pressure management. The outcome measurement papers descend from the Glasgow outcome tradition of the 1970s and from the CENTER-TBI collaborative program funded as a large European observational effort in the 2010s, which forced the translation and harmonization work because multinational pooling demanded it. The brain death imaging paper descends from the 1968 Harvard criteria through successive Polish national criteria in 1984, 1990, 2007, and 2020. Each paper is a late node in its own genealogy, and the volume value lies in seeing the nodes together.",
+   "theory_of_mind": "The authors write as clinician scientists addressing other clinicians, and their shared model of the reader is a practitioner who must act at the bedside with incomplete information. They assume the reader already accepts that secondary injury prevention is the goal, that monitoring is worthwhile, and that guidelines should follow measured performance rather than habit. Their model of the domain is probabilistic and instrumental: the brain is a hidden state, every number is a proxy with failure modes, every therapy is a trade across organs, and every score is a claim that must survive benchmarking on real cohorts. They also model the reader as a potential adopter who needs implementation detail, thresholds, sensitivities, cohort sizes, and limitations stated plainly enough to change a local protocol, which is why the papers foreground methods and caveats over rhetoric.",
+   "cross_layer_veto": "Several findings in this volume veto practices that other layers of a reasoning system might otherwise endorse. The osmotherapy review vetoes any plan that treats 320 mOsm per kg as safe rather than as a maximum, because harm may begin near 310. The tracheostomy trial sequential analysis vetoes any mortality claim for early tracheostomy, however strong the length of stay benefit looks. The oximetry review vetoes standalone use of regional saturation values without the surrounding monitored parameters. The oxygen interaction analysis vetoes pooled oxygen recommendations that ignore saturation strata. The psychometric papers veto pooling outcome data from unvalidated translations. And the cranioplasty and COVID papers veto short horizon and load blind readings of their own headline results. A system that ingests the benefits without these vetoes has not ingested the volume."
+  }
+ ],
+ "universal_lens": "This volume is a template for acting on a hidden state through layered proxies. A physical law gives a first estimate, a correction model admits how the medium distorts it, validation studies grade the proxy against reference standards, benchmarks rank competing scores on identical cases, and explicit inconclusive states protect the decision maker from overreading sparse evidence. Any field that must steer a system it cannot directly observe, from intensive care to infrastructure operations, can reuse the same stack: proxy, correction, validation, benchmark, conditional effect, and a disciplined refusal to conclude when information size is insufficient.",
+ "gsi_mapping": "For the Galaxy Sports Institute the transferable content is methodological. The translation and linguistic validation program is a complete protocol for adapting any measurement instrument across languages and cultures, with independent forward translation, reconciliation, backward translation, cognitive debriefing, and harmonization, followed by per language psychometric revalidation. The psychometric papers supply the gating rule that pooled multinational data require demonstrated measurement equivalence per instrument. The benchmarking and trial sequential analysis papers supply the institute level standard for comparing methods and for declaring evidence inconclusive. These protocols govern how the institute should validate its own instruments, scores, and cross population comparisons before treating their outputs as comparable.",
+ "gse_mapping": "For the Galaxy Sports Edge reasoning engine this volume contributes measurement and evidence discipline rather than domain content. It supplies the proxy sensor pattern from cerebral oximetry, the target window versus ceiling versus harm onset separation from osmotherapy, head to head score benchmarking with component attribution from the MEWS study, saturation conditional treatment effects from the oxygen study, conjunctive threshold criteria from the perfusion imaging work, cross channel corroboration from the seizure study, and per output confidence grading plus an explicit inconclusive state from the meta-analysis. Each primitive enters as a dated and population tagged claim with its breakdown regime attached, so the engine can reuse the operators while respecting the limits the source itself states."
+}

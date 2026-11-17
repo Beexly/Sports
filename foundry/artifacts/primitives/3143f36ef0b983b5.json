@@ -1,0 +1,660 @@
+{
+ "book_id": "3143f36ef0b983b5",
+ "source_status": "COMPLETE",
+ "source_note": "Amit Agrawal (editor), Brain Injury: Functional Aspects, Rehabilitation and Prevention, InTech, 2012, ISBN 978-953-51-0121-5, DOI 10.5772/2442. Twelve contributed chapters in three parts: functional and endocrine aspects, rehabilitation, and prevention. The local file is the publisher PDF of that work, 5231592 bytes, full sha256 3143f36ef0b983b5ed8dbb41ba50418da9f2a55745a3ad186236205988bf3c09, book_id is the first 16 hex characters of the scan digest sha256(str(size) plus full file bytes). Extracted text is clean and complete across all twelve chapters; the work is a clinical edited volume with statistics reported in prose and no formal equations, so all primitives carry empty latex. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "mental_fatigue_disproportionate_exhaustion",
+   "name": "Mental fatigue after brain injury is rapid mental exhaustion disproportionate to the mental activity performed",
+   "verbatim_quote": "People suffering from this kind of mental fatigue may also experience rapid mental exhaustion which is disproportionate to the expected level following mental activity.",
+   "page": "Chapter 1, section 2.1 Mental fatigue; text segment 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Mental activity level can be described by the patient or observed in daily tasks",
+    "Expected exhaustion is judged against preinjury performance"
+   ],
+   "breakdown_regime": "Fails as a discriminator when exhaustion is driven by pain, poor sleep or depression rather than mental load; the chapter separates those states by history, not by this sentence alone",
+   "domain": "neuropsychology: post-TBI fatigue",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A capacity signal that decays faster than load predicts is the same shape as a performer whose output collapses under sustained cognitive load; the engine treats disproportionate decay after ordinary load as a distinct state variable, not as low baseline ability",
+    "source_operator": "mental_fatigue_disproportionate_exhaustion",
+    "telemetry": "Self reported exhaustion after defined tasks, task duration before break, error growth over a session"
+   }
+  },
+  {
+   "primitive_id": "mental_fatigue_not_apathy",
+   "name": "Mental fatigue is not apathy: motivation stays high while available mental energy is missing",
+   "verbatim_quote": "Sometimes mental fatigue can also be mistaken for apathy, but a careful examination will show that most patients will be shown to have levels of high motivation, but the energy is missing.",
+   "page": "Chapter 1, section 2.1 Mental fatigue; text segment 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Motivation and energy are separable and both assessable in interview",
+    "The patient wants to do more than capacity allows"
+   ],
+   "breakdown_regime": "Breaks down when depression coexists and suppresses motivation as well; then the two states overlap and this distinction alone cannot assign cause",
+   "domain": "neuropsychology: differential diagnosis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Separating intent from capacity prevents a reasoning system from reading low output as low effort; the engine keeps a motivation channel and a capacity channel distinct so a drop in output is not misread as disengagement",
+    "source_operator": "mental_fatigue_not_apathy",
+    "telemetry": "Stated goals and attempted activity versus completed activity, break frequency"
+   }
+  },
+  {
+   "primitive_id": "mental_fatigue_recovery_debt",
+   "name": "Insufficient rest makes mental fatigue accumulate across the day, with a clear 24 hour variation",
+   "verbatim_quote": "If there is not enough time for rest, mental fatigue may increase over time and it is very common to experience/see an increase during the course of the day.",
+   "page": "Chapter 1, section 2.2 Mental recovery; text segment 16",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rest actually restores some mental energy",
+    "Loads accumulate when recovery intervals are too short"
+   ],
+   "breakdown_regime": "The accumulation pattern weakens when sleep is disturbed for unrelated reasons or when a single overwhelming event, not cumulative load, drives the fatigue",
+   "domain": "neuropsychology: recovery dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A state variable with incomplete recovery between loads behaves like fatigue debt; the engine models within day accumulation and overnight reset separately instead of using one static capacity score",
+    "source_operator": "mental_fatigue_recovery_debt",
+    "telemetry": "Time of day performance, rest intervals taken, morning versus evening ratings"
+   }
+  },
+  {
+   "primitive_id": "coping_hypothesis_compensation_cost",
+   "name": "The coping hypothesis: the injured brain works harder to compensate for attention and processing speed loss, and the extra effort produces fatigue",
+   "verbatim_quote": "This has been explained by the “coping hypothesis”, suggesting that the brain needs to work harder in order to compensate for impairments to cognitive functions such as attention and processing speed (Zomeren & van den Burg, 1985).",
+   "page": "Chapter 1, section 3 Mental fatigue and cognitive functions; text segment 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Compensation recruits additional neural effort for the same task",
+    "Attention and processing speed are the main impaired functions being compensated"
+   ],
+   "breakdown_regime": "Compensation cannot be sustained indefinitely and the hypothesis does not specify the point where extra effort stops buying performance; imaging correlates are indirect",
+   "domain": "cognitive neuroscience: compensation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Output held constant by rising hidden effort is a warning state; the engine tracks effort adjusted performance, so stable scores with rising cost are read as fragility rather than health",
+    "source_operator": "coping_hypothesis_compensation_cost",
+    "telemetry": "Dual task cost, subjective effort ratings, performance under added working memory load"
+   }
+  },
+  {
+   "primitive_id": "processing_speed_primary_predictor_of_fatigue",
+   "name": "Processing speed is the primary predictor of mental fatigue after mild and moderate TBI",
+   "verbatim_quote": "Mental fatigue has also been reported to correlate to decreases in processing speed and attention, both after mild and moderate TBI and processing speed was found to be the primary predictor for mental fatigue (Johansson, Berglund, & Rönnbäck, 2009).",
+   "page": "Chapter 1, section 3 Mental fatigue and cognitive functions; text segment 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Processing speed is measurable with timed neuropsychological tests",
+    "The association holds across mild and moderate injury severity"
+   ],
+   "breakdown_regime": "A predictor is not a mechanism; processing speed also falls with age, medication and sleep loss, so it cannot by itself prove post-TBI fatigue in an individual",
+   "domain": "neuropsychology: prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "One dominant measurable driver carrying most of the predictive weight is a feature selection lesson; the engine ranks candidate signals by measured predictive contribution instead of treating every signal as equal",
+    "source_operator": "processing_speed_primary_predictor_of_fatigue",
+    "telemetry": "Digit symbol coding scores, reaction time, timed attention test results"
+   }
+  },
+  {
+   "primitive_id": "prolonged_fatigue_frequency_range",
+   "name": "Prolonged fatigue after mild TBI is common but estimates vary widely, from 30 to 73 percent in follow up studies",
+   "verbatim_quote": "In follow-up studies, the frequency of prolonged fatigue varies from 30 to 73 %.",
+   "page": "Chapter 1, section 4 How common is mental fatigue after TBI; text segment 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Follow up studies define fatigue and recovery differently",
+    "The range reflects mild TBI populations in the cited studies"
+   ],
+   "breakdown_regime": "The wide range is itself the limit: method and definition differences dominate, so no single prevalence number from this literature should be used as a precise rate",
+   "domain": "epidemiology: prevalence uncertainty",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A literature range this wide is reported as an interval with method variance named, not collapsed to a point estimate; the engine carries prevalence style quantities as ranges when source studies disagree by method",
+    "source_operator": "prolonged_fatigue_frequency_range",
+    "telemetry": "Study definition used, follow up interval, cohort severity mix"
+   }
+  },
+  {
+   "primitive_id": "mfs_scale_reliability",
+   "name": "The Mental Fatigue Scale items cohere as one core problem: 14 questions with adequate internal consistency and a Cronbach alpha reliability of 0.944",
+   "verbatim_quote": "The 14 questions had adequate internal consistency. The Cronbach’s alpha scale was used, giving a reliability coefficient of 0.944 (Johansson, et al., 2009).",
+   "page": "Chapter 1, section 5.1 Self-assessment of mental fatigue; text segment 20",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Self report can be made consistent with anchored response alternatives",
+    "24 hour variation is scored separately as yes or no"
+   ],
+   "breakdown_regime": "Internal consistency does not prove the scale measures fatigue rather than general distress; the chapter pairs it with objective processing speed tests for that reason",
+   "domain": "psychometrics: scale validation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A composite score is only trusted when its items demonstrably cohere and when it is paired with an objective channel; the engine applies the same two part test to any composite signal it builds",
+    "source_operator": "mfs_scale_reliability",
+    "telemetry": "Item level responses, total score, paired timed test results"
+   }
+  },
+  {
+   "primitive_id": "no_successful_pharmacotherapy_for_mental_fatigue",
+   "name": "No pharmacological therapy has succeeded for mental fatigue itself, in the acute phase or for long term cognitive and emotional problems",
+   "verbatim_quote": "Several substances have been tested, but no pharmacological therapy has been successful in treating mental fatigue in the acute phase nor for the alleviation of long-term cognitive and emotional problems (Arcinegas, Anderson, Topkoff, & McAllister, 2005; Beauchamp, Mutlak, Smith, Shohami, & Stahel, 2008).",
+   "page": "Chapter 1, section 6 Treatment; text segment 23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Tested substances and doses in the cited reviews cover the plausible candidates of that period",
+    "Symptomatic treatment of depression or lability is a separate claim"
+   ],
+   "breakdown_regime": "A negative result bounded by 2012 evidence; later agents are outside this source, and the statement does not cover non drug treatments such as activity pacing or mindfulness based stress reduction",
+   "domain": "clinical therapeutics: negative result",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A well searched negative result is information, not absence of information; the engine records tested and failed interventions with the same permanence as successful ones so failed routes are not retried blindly",
+    "source_operator": "no_successful_pharmacotherapy_for_mental_fatigue",
+    "telemetry": "Interventions tried, phase of illness, outcome measures used"
+   }
+  },
+  {
+   "primitive_id": "left_hand_preference_and_tbi_population",
+   "name": "Left hand preference is over represented in populations of patients with traumatic brain injuries",
+   "verbatim_quote": "an increased prevalence of left hand preference was noted in a population of patients having traumatic brain injuries",
+   "page": "Chapter 2, Brain Injury and Cerebral Lateralization; text segment 28",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Hand preference was classified consistently in the cited population study",
+    "Prevalence comparison is against the general population base rate"
+   ],
+   "breakdown_regime": "Association only: the chapter lists several injury types where left handedness appears as a risk marker without establishing whether lateralization, exposure or environment drives it",
+   "domain": "neuroscience: cerebral lateralization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A subgroup marker that shifts base rates is a prior adjustment, not a verdict; the engine lets population markers move priors modestly while keeping individual evidence decisive",
+    "source_operator": "left_hand_preference_and_tbi_population",
+    "telemetry": "Handedness distribution in the injured cohort versus population base rate"
+   }
+  },
+  {
+   "primitive_id": "post_tbi_depression_prevalence",
+   "name": "Depression after TBI is reported across a very wide prevalence range, 14 to 77 percent",
+   "verbatim_quote": "The prevalence of depression following TBI has been reported to range from 14-77% (Ashman et al., 2004).",
+   "page": "Chapter 3, Introduction; text segment 38",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Estimates come from studies with different instruments and time windows",
+    "The range covers the first years after injury"
+   ],
+   "breakdown_regime": "The range is too wide for individual prediction; it establishes burden and the need to screen, not a personal probability",
+   "domain": "psychiatry: post-TBI mental health",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Burden estimates with wide method driven ranges justify screening coverage rather than precise targeting; the engine widens monitoring when a harmful state is common but imprecisely measured",
+    "source_operator": "post_tbi_depression_prevalence",
+    "telemetry": "Screening scores, time since injury, instrument used"
+   }
+  },
+  {
+   "primitive_id": "untreated_mental_health_conditions_block_rehabilitation",
+   "name": "Untreated post-TBI mental health conditions impair engagement in rehabilitation and produce poorer recoveries",
+   "verbatim_quote": "Post-TBI mental health conditions must be treated promptly as they can impair individuals from engaging in the rehabilitation process: these individuals experience poorer recoveries compared to individuals with TBI without mental health conditions (McAllister & Arciniegas, 2002; Mooney et al., 2005; Mooney & Speed, 2001).",
+   "page": "Chapter 3, Introduction; text segment 38",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rehabilitation requires active participation over weeks",
+    "Comparison groups differ mainly in mental health status"
+   ],
+   "breakdown_regime": "Confounding runs both ways, since worse injuries can cause both worse mental health and worse recovery; the chapter treats prompt treatment as warranted regardless",
+   "domain": "rehabilitation medicine: comorbidity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A blocking condition that degrades the main process must be handled inside the main process, not after it; the engine treats known blockers as first class inputs to any recovery projection",
+    "source_operator": "untreated_mental_health_conditions_block_rehabilitation",
+    "telemetry": "Mental health screening status, rehabilitation attendance and engagement"
+   }
+  },
+  {
+   "primitive_id": "web_based_family_problem_solving_rct",
+   "name": "Web based family problem solving with videoconferenced therapist support reduced parent depression, anxiety and general psychiatric symptoms versus an internet resources comparison group",
+   "verbatim_quote": "After controlling for baseline symptom levels, parents in the FPS group reported significantly less depression, anxiety, and general psychiatric symptoms as compared to those in the IRC group.",
+   "page": "Chapter 3, scoping review and survey results; text segment 47",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Randomized assignment with baseline symptom adjustment",
+    "Families of adolescents with TBI were the treated population"
+   ],
+   "breakdown_regime": "Effects are for parents in one program family; transfer to adult patients treating themselves is an extrapolation the chapter flags as thinly evidenced",
+   "domain": "digital health: randomized trial",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A remote intervention with a human in the loop beat information alone; the engine weights guided, feedback carrying channels above static information when projecting whether an intervention changes an outcome",
+    "source_operator": "web_based_family_problem_solving_rct",
+    "telemetry": "Program completion, symptom scores at follow up, comparison group assignment"
+   }
+  },
+  {
+   "primitive_id": "hypopituitarism_historically_undercounted_in_tbi",
+   "name": "Post-TBI hypopituitarism was long considered rare, accounting for less than one percent of new hypopituitarism cases, a view the chapter argues undercounts it",
+   "verbatim_quote": "Traumatic brain injury (TBI) has until recently been considered a rare cause of loss of pituitary function, accounting for less than one percent of all new cases of hypopituitarism.",
+   "page": "Chapter 4, Introduction; text segment 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Older case counting relied on diagnosed cases, not systematic screening",
+    "Newer studies screen TBI cohorts directly"
+   ],
+   "breakdown_regime": "Without agreed screening of defined TBI populations the true share stays unsettled; the chapter stresses that valid predictors and testing criteria were still missing",
+   "domain": "endocrinology: underdiagnosis",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A condition counted only when looked for will look rare; the engine discounts absence claims that come from systems that never tested for the thing claimed absent",
+    "source_operator": "hypopituitarism_historically_undercounted_in_tbi",
+    "telemetry": "Screening rate in the cohort, diagnosed cases, time since injury"
+   }
+  },
+  {
+   "primitive_id": "hypopituitarism_mechanism_primary_and_secondary_injury",
+   "name": "Posttraumatic hypopituitarism may arise from primary mechanical injury to the hypothalamic pituitary region and from secondary injury through hypotension, hypoxia, anaemia and swelling restricting hypophyseal portal flow",
+   "verbatim_quote": "The pathophysiological mechanism of posttraumatic hypopituitarism remains incompletely understood, but may include primary mechanical injury to the hypothalamic-pituitary region, as well as secondary injury from hypotension, hypoxia, anaemia and brain swelling causing restriction of flow in the hypophyseal portal vessels.",
+   "page": "Chapter 4, Pathophysiology of hypopituitarism in TBI; text segment 60",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Fatal case pathology informs but may not generalize to survivors, as the chapter notes",
+    "Portal vessel flow restriction can injure pituitary tissue without direct impact"
+   ],
+   "breakdown_regime": "Mechanism remains incompletely understood in the source itself; antibody and genetic contributions are proposed, not settled",
+   "domain": "endocrinology: pathophysiology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Damage arrives by a direct path and by a supply restriction path; the engine models secondary cascade damage separately from the initial insult when projecting delayed deficits",
+    "source_operator": "hypopituitarism_mechanism_primary_and_secondary_injury",
+    "telemetry": "Acute hypotension and hypoxia episodes, swelling, midline or deep structure lesions"
+   }
+  },
+  {
+   "primitive_id": "no_acute_phase_pituitary_axis_testing",
+   "name": "Acute phase assessment of the growth hormone, thyroid and gonadal axes after TBI is not recommended because replacement at that stage has no evidence of clinical benefit",
+   "verbatim_quote": "Acute phase assessment of the growth hormone, thyroid, and gonadal axis is not recommended, as there is no evidence of a clinical benefit from replacement therapy at this stage.",
+   "page": "Chapter 4, recommendations section; text segment 75",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Acute values are distorted by critical illness stress responses",
+    "Chronic phase assessment is a separate, recommended question"
+   ],
+   "breakdown_regime": "The recommendation is phase bound; applying it to the chronic phase would invert the chapter, which supports later assessment and replacement where deficiency is confirmed",
+   "domain": "endocrinology: test timing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The same measurement is noise in one phase and signal in another; the engine gates interpretation by phase and refuses to read acute phase values as if they were stable state",
+    "source_operator": "no_acute_phase_pituitary_axis_testing",
+    "telemetry": "Days since injury, axis tested, whether confirmatory testing was done"
+   }
+  },
+  {
+   "primitive_id": "icf_functioning_and_disability_definitions",
+   "name": "In the ICF, functioning covers body functions, body structures, activities and participation, while disability covers impairments, activity limitations and participation restrictions",
+   "verbatim_quote": "Namely, in the ICF functioning refers to body functions, body structures, activities and participation, and disability refers to impairments in body functions and body structures, limitations in activities and restrictions in participation.",
+   "page": "Chapter 5, section on the integrative model of functioning; text segment 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Functioning is described relative to a health condition and context",
+    "The terms are classification definitions, not measurements"
+   ],
+   "breakdown_regime": "Definitions alone do not grade severity; qualifiers and assessment instruments must be linked to the categories before the scheme describes an individual",
+   "domain": "rehabilitation classification: ICF",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A shared component vocabulary lets unlike observations be compared; the engine uses fixed component slots, body, activity, participation and context, when it assembles a state description from mixed sources",
+    "source_operator": "icf_functioning_and_disability_definitions",
+    "telemetry": "Which ICF components a given assessment actually covers"
+   }
+  },
+  {
+   "primitive_id": "icf_scale_1424_categories",
+   "name": "The ICF contains 1424 categories for describing the functional status of a person",
+   "verbatim_quote": "The ICF is a comprehensive classification of health-related domains containing 1424 categories that can exhaustively describe the functional status of a person or simply functioning.",
+   "page": "Chapter 5, integrative model section; text segment 86",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The count is the WHO 2001 classification as presented in the chapter",
+    "Exhaustive description is possible, not required for every use"
+   ],
+   "breakdown_regime": "Full granularity is impractical clinically, which is why Core Sets exist; using all categories by default would bury the signal the classification is meant to expose",
+   "domain": "rehabilitation classification: granularity",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A complete taxonomy needs a task sized subset to be usable; the engine keeps the full category space available but works through selected subsets matched to the question",
+    "source_operator": "icf_scale_1424_categories",
+    "telemetry": "Categories available, categories actually coded for a case"
+   }
+  },
+  {
+   "primitive_id": "icf_environmental_factors_required",
+   "name": "Environmental factors must always be taken into account when assessing functioning before and after rehabilitation",
+   "verbatim_quote": "For this reason, environmental factors must always be taken into account in when assessing functioning before and after the rehabilitation.",
+   "page": "Chapter 5, bio-psycho-social model section; text segment 87",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Environment can act as barrier or facilitator for the same impairment",
+    "Personal factors matter but were not yet classified in the ICF at that time"
+   ],
+   "breakdown_regime": "The requirement is structural, not quantitative: the chapter does not supply weights for how much each environmental factor changes functioning",
+   "domain": "rehabilitation classification: context",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Identical internal states produce different observed function under different environments; the engine never scores a state without its context fields populated",
+    "source_operator": "icf_environmental_factors_required",
+    "telemetry": "Documented barriers and facilitators, setting of assessment"
+   }
+  },
+  {
+   "primitive_id": "icf_core_set_definition",
+   "name": "An ICF Core Set selects, from the full classification, the categories matching one health condition or purpose, in comprehensive and brief forms",
+   "verbatim_quote": "An ICF Core Set is a selection of categories from the full ICF that correspond to a health condition as coded by the ICD or a particular purpose.",
+   "page": "Chapter 5, ICF Core Sets section; text segment 89",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A Comprehensive Core Set reflects the whole spectrum of typical problems",
+    "A Brief Core Set is for brief assessment and basic documentation"
+   ],
+   "breakdown_regime": "A Core Set can still miss an individual patient whose problems fall outside the typical spectrum; the chapter presents it as a guide against overlooking, not a ceiling",
+   "domain": "rehabilitation classification: subsetting",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Condition specific shortlists drawn from a master taxonomy are how a large knowledge base stays usable at decision time; the engine retrieves through curated subsets first and the full space second",
+    "source_operator": "icf_core_set_definition",
+    "telemetry": "Core Set membership, categories coded per assessment"
+   }
+  },
+  {
+   "primitive_id": "transitional_living_as_bridge",
+   "name": "Transitional living programs bridge hospital based rehabilitation and independent community living, using intensive life skills training in a therapeutic community",
+   "verbatim_quote": "Transitional living programs serve as a “bridge” between the brain-injured individual’s discharge from the hospital-based rehabilitation and their return to independent living in the community.",
+   "page": "Chapter 6, program description; text segment 113",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Participants are moderately to severely injured and not yet independent",
+    "Training is one on one plus group and milieu components"
+   ],
+   "breakdown_regime": "Bridge programs presume a discharge destination exists; where housing or family support is absent the bridge has nowhere to land",
+   "domain": "community rehabilitation: transitional living",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Staged transitions with support that fades beat abrupt handoffs; the engine models recovery as staged states with support levels, not as a single discharge event",
+    "source_operator": "transitional_living_as_bridge",
+    "telemetry": "Support hours, independence at admission versus discharge"
+   }
+  },
+  {
+   "primitive_id": "life_satisfaction_dip_then_recovery",
+   "name": "In intensive community rehabilitation, life satisfaction fell significantly at 90 day follow up and returned to baseline at one year, even as participation improved",
+   "verbatim_quote": "Subjects reported a significant decrease in satisfaction at 90 day follow-up before returning to baseline levels of life satisfaction at one year follow-up.",
+   "page": "Chapter 6, discussion; text segment 121",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Satisfaction is self reported on the Satisfaction with Life Scale",
+    "The cohort is one program evaluation, 41 subjects in the reported analysis"
+   ],
+   "breakdown_regime": "A single program cohort; the chapter itself warns that rising awareness of deficits may drive the dip, so the pattern should not be read as program failure or as universal",
+   "domain": "community rehabilitation: outcome timing",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An outcome metric can move against real progress early because awareness rises first; the engine expects a measurement dip during genuine transitions and does not grade early satisfaction as effectiveness",
+    "source_operator": "life_satisfaction_dip_then_recovery",
+    "telemetry": "Satisfaction scores at baseline, 90 days and one year, awareness measures"
+   }
+  },
+  {
+   "primitive_id": "ref_model_elementary_functions",
+   "name": "The REF model builds cognition from Elementary Functions, basic information processing modules whose recombinations form Algorithmic Strategies and surface behaviour",
+   "verbatim_quote": "At the lowest of these three levels are the basic information processing modules named Elementary Functions (EFs).",
+   "page": "Chapter 7, REF model section; text segment 137",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Three levels of analysis: Elementary Functions, Algorithmic Strategies, surface phenomena",
+    "Elementary Functions are the spared or lost units after injury"
+   ],
+   "breakdown_regime": "The model is a framework for reasoning about reorganization; the chapter presents it as a proposed account, and its level assignments for specific tasks remain interpretive",
+   "domain": "cognitive neuroscience: REF model",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Decomposing performance into reusable lower level modules that recombine is exactly how the engine represents complex behaviour: surface output is explained by which modules survive and how they are rewired",
+    "source_operator": "ref_model_elementary_functions",
+    "telemetry": "Which component functions a task requires, which are impaired"
+   }
+  },
+  {
+   "primitive_id": "ref_reorganization_creates_novel_strategies",
+   "name": "Recovery in the REF model is the creation of novel Algorithmic Strategies by reorganizing functional interactions between Elementary Functions",
+   "verbatim_quote": "The creation of a novel AS involves a reorganization of the functional interactions between EFs and is the actual “Reorganization of Elementary Functions” (REF) process.",
+   "page": "Chapter 7, REF model section; text segment 139",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At least some Elementary Functions or their interconnections survive",
+    "Experience and training drive the reorganization, in a process the chapter compares to backpropagation"
+   ],
+   "breakdown_regime": "Reorganization has limits set by which modules are lost; a novel strategy can restore task success with different speed or cost, so recovered performance is not identical performance",
+   "domain": "cognitive neuroscience: recovery mechanism",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Restored output through a different internal route is a distinct state from original function; the engine records the route, not only the score, because route determines fragility and cost",
+    "source_operator": "ref_reorganization_creates_novel_strategies",
+    "telemetry": "Task performance, strategy reported, time and effort cost of the new route"
+   }
+  },
+  {
+   "primitive_id": "communicative_deficit_beyond_linguistic_impairment",
+   "name": "Communicative deficits after TBI cannot be adequately explained as linguistic impairment; they load on pragmatic, extralinguistic and paralinguistic dimensions",
+   "verbatim_quote": "The literature has shown that traumatic brain injury, (TBI), results in a range of communicative deficits that cannot be adequately explained in terms of linguistic impairment.",
+   "page": "Chapter 8, Communicative deficit in TBI; text segment 162",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Standard language testing can miss the deficit",
+    "Discourse, gesture, prosody and exchange management are part of communication"
+   ],
+   "breakdown_regime": "Dimension level findings vary by task; the chapter notes some pragmatic tasks are relatively preserved, so a global communication verdict from one task is unsound",
+   "domain": "speech and language: pragmatics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A channel can pass narrow tests while failing in real exchange; the engine tests signals in interaction conditions, not only in isolated form, before trusting them",
+    "source_operator": "communicative_deficit_beyond_linguistic_impairment",
+    "telemetry": "Discourse organization, turn taking, gesture and prosody measures"
+   }
+  },
+  {
+   "primitive_id": "tbi_affects_family_system",
+   "name": "TBI affects the family system, not only the injured person, and family needs, especially for information, are a treatment target in their own right",
+   "verbatim_quote": "There is no doubt that TBI affects not only the person who suffered the trauma, but the family system as well (Cole et al., 2009; Hora & Sousa, 2005; Watanabe et al., 2000).",
+   "page": "Chapter 9, family needs discussion; text segment 179",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Family is treated as a system whose roles redistribute after injury",
+    "Needs were measured with the Family Needs Questionnaire in the cited work"
+   ],
+   "breakdown_regime": "Family impact varies with deficit mix; the chapter notes cognitive plus motor deficits force greater role redistribution than motor deficit alone",
+   "domain": "family systems: caregiver impact",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An event that changes one node rewires the surrounding system; the engine carries second order effects on connected people as part of an outcome, not as an afterthought",
+    "source_operator": "tbi_affects_family_system",
+    "telemetry": "Family needs scores, role changes, information needs met versus unmet"
+   }
+  },
+  {
+   "primitive_id": "caregiver_distress_one_third",
+   "name": "One third of caregivers of patients one to two years post injury were at risk for depression, anxiety or other psychological distress",
+   "verbatim_quote": "One third of caregivers of patients who were one to two years post injury were at risk for depression, anxiety, or other forms of psychological distress.",
+   "page": "Chapter 9, consequences for family; text segment 179",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Risk was screened, not diagnosed, in the cited study",
+    "The window is one to two years post injury, the post acute phase"
+   ],
+   "breakdown_regime": "Screening risk overstates confirmed disorder; still, the chapter uses it to argue family support cannot end at discharge",
+   "domain": "family systems: caregiver mental health",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Support needs peak after the formal process ends; the engine extends its monitoring horizon past the main event into the period where connected people carry the load",
+    "source_operator": "caregiver_distress_one_third",
+    "telemetry": "Caregiver screening scores, time since injury, support received"
+   }
+  },
+  {
+   "primitive_id": "employment_rates_one_year_post_tbi",
+   "name": "With clearer definitions of employment, return to employment one year after TBI ranges from approximately 30 to 61 percent across studies",
+   "verbatim_quote": "Other studies representing mild to severe injuries and with a clearer definition of employment reported rates ranging from approximately 30% to 61% (Mammi, Zaccaria, & Franceschini, 2005; Boake et al., 2005; Johnstone, Mount, & Schopp, 2003).",
+   "page": "Chapter 10, return to work rates; text segment 192",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Rates mix mild to severe injuries",
+    "Definition of employment drives much of the spread"
+   ],
+   "breakdown_regime": "Samples were not always comparable and some included students in return to work estimates, as the chapter warns; competitive and non competitive employment are often not distinguished",
+   "domain": "vocational outcomes: return to work",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An outcome rate is meaningless without its definition; the engine stores the operational definition beside every rate it ingests and refuses to average rates built on different definitions",
+    "source_operator": "employment_rates_one_year_post_tbi",
+    "telemetry": "Employment definition used, severity mix, competitive versus sheltered work"
+   }
+  },
+  {
+   "primitive_id": "demographic_predictors_of_employment_after_tbi",
+   "name": "Age, gender, race and ethnicity, marital status, education and pre-morbid employment status significantly predict employment after TBI",
+   "verbatim_quote": "various demographic variables like age, gender, race/ethnicity, marital status, education, and pre-morbid employment status significantly predict employment after TBI.",
+   "page": "Chapter 10, demographic variables section; text segment 194",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Predictors are population level associations from the reviewed studies",
+    "How variables are categorized changes the outcomes found"
+   ],
+   "breakdown_regime": "Prediction is not fairness: ethnicity effects in the chapter reflect labour market and preinjury employment differences, and using such variables uncritically would import those disparities",
+   "domain": "vocational outcomes: prediction",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Baseline variables set the prior for an outcome trajectory; the engine separates what a variable predicts from what it justifies, and flags predictors that encode structural disadvantage",
+    "source_operator": "demographic_predictors_of_employment_after_tbi",
+    "telemetry": "Preinjury employment, education, age at injury, time since injury"
+   }
+  },
+  {
+   "primitive_id": "no_best_practice_driving_guidelines_post_tbi",
+   "name": "No commonly agreed best practice guidelines exist for assessing driving ability after TBI, and generic off road cognitive tests lack evidence for predicting driving ability in survivors",
+   "verbatim_quote": "To date, no commonly agreed upon best-practice guidelines are available to direct the assessment of driving ability post TBI and significant controversy exists regarding the most appropriate way to assess fitness to drive (Yale et al., 2003).",
+   "page": "Chapter 11, assessment section; text segment 212",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The statement reflects the literature as reviewed in 2012",
+    "Generic tests were not designed for driving competency"
+   ],
+   "breakdown_regime": "Absence of guidelines is not absence of risk; clinicians still must decide, and the chapter proposes a specificity based approach to fill the gap",
+   "domain": "driving rehabilitation: assessment gap",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Where no validated proxy exists, a system must say so and route to direct assessment instead of dressing a weak proxy as a verdict; the engine marks proxy only signals explicitly",
+    "source_operator": "no_best_practice_driving_guidelines_post_tbi",
+    "telemetry": "Which assessment was used, whether on road testing followed"
+   }
+  },
+  {
+   "primitive_id": "on_road_test_gold_standard_driving",
+   "name": "The on road driving assessment, administered by a driving rehabilitation specialist, is the gold standard for driving assessment after TBI",
+   "verbatim_quote": "The on-road test which is typically administered by a driving rehabilitation specialist is the gold standard for driving assessment post TBI (Korner-Bitensky et al., 1994; Odenheimer et al., 1994).",
+   "page": "Chapter 11, assessment section; text segment 213",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A trained specialist administers and scores the test",
+    "Safety constraints limit which situations the test can include"
+   ],
+   "breakdown_regime": "The gold standard still cannot sample strategic or hazardous situations safely, which the chapter gives as the reason to add simulator work",
+   "domain": "driving rehabilitation: criterion test",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Direct performance in the real task outranks every proxy battery; the engine prefers observed task performance over inferred capacity whenever both exist",
+    "source_operator": "on_road_test_gold_standard_driving",
+    "telemetry": "On road result, compensatory strategies observed"
+   }
+  },
+  {
+   "primitive_id": "peer_belief_best_predictor_of_helmet_use",
+   "name": "Belief that friends use helmets was the best predictor of helmet use by adolescents on all occasions",
+   "verbatim_quote": "In fact, belief in helmet use by friends was the best predictor of helmet use by adolescents on all occasions.",
+   "page": "Chapter 12, results and discussion; text segment 233",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Self reported helmet use and beliefs in a Spanish adolescent sample",
+    "Family modelling showed the same direction of effect"
+   ],
+   "breakdown_regime": "Belief about peers is not peer behaviour itself, and self report inflates use; the finding supports modelling based campaigns, not a claim that information alone fails everywhere",
+   "domain": "prevention: social modelling",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Perceived peer behaviour outpredicting knowledge is a general adoption law; the engine weights visible behaviour of the reference group above stated information when projecting whether a practice spreads",
+    "source_operator": "peer_belief_best_predictor_of_helmet_use",
+    "telemetry": "Perceived peer use, family use, self reported use, age and gender"
+   }
+  },
+  {
+   "primitive_id": "helmet_campaigns_use_role_models",
+   "name": "Programmes promoting helmet use should build on the modelling effect of peer and other role models on adolescent helmet use",
+   "verbatim_quote": "Programmes and campaigns promoting helmet use should take into account the modelling effect peer role models and other models have on adolescent helmet use.",
+   "page": "Chapter 12, conclusions; text segment 234",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Campaigns can recruit visible models adolescents identify with",
+    "Comfort and design improvements are companion actions in the same conclusion list"
+   ],
+   "breakdown_regime": "Modelling is one lever among several the chapter lists, including design and enforcement context; a campaign built on modelling alone is narrower than the source recommends",
+   "domain": "prevention: campaign design",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Behaviour change interventions work through visible exemplars in the target group; the engine treats adoption interventions as social signal problems first and information problems second",
+    "source_operator": "helmet_campaigns_use_role_models",
+    "telemetry": "Campaign exposure, model visibility, use rates before and after"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "3143f36ef0b983b5-t1",
+   "think": "This edited volume is the second book of a two book set on brain injury, and its twelve chapters divide into three movements: functional and endocrine consequences, rehabilitation, and prevention. Reading it as one work rather than as twelve separate reviews, the unifying claim is that the visible lesion is the smallest part of the problem. The consequences that decide a life after traumatic brain injury are mostly invisible, delayed, distributed across systems, and mediated by context: mental fatigue that does not track injury severity, pituitary failure that is missed because its symptoms imitate the injury itself, communication failure that survives intact language scores, family systems that absorb the shock and then break quietly one to two years later, and employment and driving outcomes that are decided as much by definitions, environments and social modelling as by neurology. The first movement builds the hidden variable problem. Mental fatigue is characterized by exhaustion disproportionate to load, long recovery, and a within day accumulation curve, and the coping hypothesis explains it as the cost of compensation: the brain works harder to hold attention and processing speed, and the extra work is the fatigue. Processing speed emerges as the primary measurable predictor, which matters methodologically because it gives a subjective state an objective anchor, and the Mental Fatigue Scale work shows how a self report instrument earns trust, through internal consistency, anchored response options, and pairing with timed tests. The lateralization chapter is weaker as evidence but useful as a warning about marker research: a population association between left hand preference and injury populations is reported without a settled mechanism, so it belongs in the record as a prior shifter, never as a cause. The technology chapter then shows the intervention evidence problem in miniature. Depression after injury is common across a wide reported range, untreated mental health conditions block rehabilitation itself, and the strongest trial in the review, web based family problem solving with a therapist on videoconference, beat an information only comparison, which separates guided feedback from mere content delivery. The hypopituitarism chapter is the volume at its most clinically consequential: a condition long filed as rare because nobody screened for it, produced by both direct mechanical injury and a secondary vascular cascade, diagnosable only with phase aware testing, because acute phase hormone values are distorted by critical illness and the same test that is noise in week one is signal later. The second movement supplies the operating system for rehabilitation. The ICF chapter gives a component vocabulary, body functions and structures, activities, participation, and environmental and personal context, with 1424 categories narrowed by Core Sets into usable shortlists, and with the explicit rule that environment must always be assessed because the same impairment yields different functioning under different barriers and facilitators. The community rehabilitation chapter then demonstrates a measurement trap: an intensive transitional living program improved community participation while life satisfaction fell at ninety days and only returned to baseline at one year, plausibly because awareness of deficits rises before life reorganizes around them, so an early satisfaction dip can accompany genuine progress. The REF model chapter gives the mechanism story for cognitive recovery: surface behaviour decomposes into Algorithmic Strategies built from Elementary Functions, and recovery is the creation of novel strategies by reorganizing interactions among spared functions, which means recovered performance is a different internal route with different cost and fragility, not the original function restored. Communication, family, vocational and driving chapters each repeat the pattern in their own domain. Communication fails at the pragmatic level while language scores pass. Family needs peak in the post acute phase and information is the most wanted and least met need. Employment rates swing with the definition of employment used, and demographic predictors describe labour market structure as much as neurology. Driving has no agreed guideline and no validated generic proxy, so the honest route is direct on road assessment plus simulator work for the situations that cannot be sampled safely. The third movement, prevention, closes the loop with a behavioural law: adolescents wear helmets mainly because they believe their friends and family do, perceived peer behaviour outpredicting knowledge of effectiveness, so campaigns work through visible models. For a reasoning engine the transferable machinery is consistent across all twelve chapters. Separate state from context. Separate motivation from capacity. Treat phase as a gate on interpretation. Record definitions beside every rate. Expect secondary cascades after primary insults. Distrust absence claims from systems that never tested. Grade recovery by route and cost, not only by score. And expect outcome measures to move against progress during transitions, because awareness changes faster than life does. The volume breaks where its evidence breaks: much of it is narrative review, several chapters rest on single cohorts or single program evaluations, the prevalence ranges are wide because methods differ, and almost nothing in it is an equation. Its value is structural and clinical, a map of what must be measured and when, rather than a set of fitted parameters. Two further lessons deserve emphasis because they are easy to lose in a chapter by chapter reading. The first is that timing is a variable, not a backdrop. Caregiver distress is measured at one to two years, employment is tracked at one, two, five and up to twenty years, pituitary failure declares itself on its own schedule, and fatigue improvement is reported mainly inside the first year and then flattens, so any single follow up point systematically misdescribes the trajectory. The second is that several chapters show the treated unit quietly changing size: the patient in the fatigue chapter, the family in the problem solving trial and the family needs chapter, the peer group in the helmet chapter, and the person in an environment in the ICF chapter. Interventions succeed or fail at the level of the unit actually treated, and studies that measure only the individual miss effects that live in the system around the individual. Both lessons are stated here in clinical language, but their form is general, and they are the main reason this volume rewards a full read rather than a search for isolated effect sizes.",
+   "retrocausal_genealogy": "The lineage runs from nineteenth and twentieth century clinical neurology into three converging traditions. Fatigue and compensation thinking descends from early neuropsychology of effort and attention, formalized in the coping hypothesis of van Zomeren and van den Burg in 1985. The classification tradition descends from the World Health Organization moving from a disease and handicap scheme toward the 2001 ICF, which replaced a purely biomedical account with a bio psycho social one. The rehabilitation tradition descends from post war vocational and community reintegration work, extended by transitional living programs and by family systems research from the 1990s onward. Endocrine follow up descends from scattered case reports that only became a cohort literature after 2000, when screening studies replaced anecdote.",
+   "theory_of_mind": "The authors collectively model the reader as a clinician or researcher who already trusts lesion centred evidence and must be persuaded that invisible, delayed and contextual effects carry the outcome. Their shared assumption is that the patient is embedded: in a family, a workplace, a road system and a peer group, and that recovery is a property of that whole arrangement over years, not of a scan at discharge. Several chapters also assume the reader will act on structured instruments, scales, classifications and staged programs, so they argue by instrument and cohort rather than by single dramatic cases, and they repeatedly warn the reader against reading early measurements as final states.",
+   "cross_layer_veto": "Several findings in this volume veto shortcuts elsewhere. The hypopituitarism chapter vetoes any inference from symptoms alone, because its symptoms overlap the injury itself, and vetoes acute phase hormone reading entirely. The driving chapter vetoes proxy based clearance, because no generic cognitive battery has evidence for predicting on road performance in this population. The vocational chapter vetoes comparing employment rates across studies that define employment differently. The community chapter vetoes grading a rehabilitation program by early life satisfaction. Together they constrain any layered system that would let a convenient early or proxy signal override direct, phase correct, definition aware measurement."
+  }
+ ],
+ "universal_lens": "Read generally, this volume is a template for any system where damage is partly invisible, delayed and context dependent: measure the hidden state with paired subjective and objective instruments, gate interpretation by phase, carry definitions with every rate, model the surrounding human system as part of the outcome, and expect perceived peer behaviour to drive adoption more than information does.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the clinical structure: fatigue as compensation cost with processing speed as its measurable anchor, phase aware testing instead of one time screening, the ICF habit of scoring body, activity, participation and context separately, and the family and vocational lesson that consequences peak after the formal episode ends, so support and study horizons must extend well past discharge.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the reasoning discipline, not any clinical claim: separate motivation from capacity, track effort adjusted performance, treat secondary cascades as distinct from the initial event, record the operational definition beside every ingested rate, distrust absence produced by never testing, and grade a recovered signal by the route and cost of its recovery rather than by its surface score alone."
+}

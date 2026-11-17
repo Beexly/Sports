@@ -1,0 +1,720 @@
+{
+ "book_id": "983a128da7776dce",
+ "source_status": "COMPLETE",
+ "source_note": "Percy D. Haughton, Football and How to Watch It, Marshall Jones Company, Boston, 1922. Haughton was Harvard's head coach 1908-1916; introduction by Heywood Broun. The local file is an Internet Archive scan (archive.org/details/footballhowtowat0000perc), PDF size 10304744 bytes, full sha256 983a128da7776dceaf726a0540b0e6bdc71ad990c8b1948e61e1e71b12bbc2af, book_id 983a128da7776dce. Extracted text 350896 bytes, 7189 lines: body prose is mostly clean and quotable; plate captions are heavily garbled and partly reversed in the extraction, and the tail back matter is OCR garbage; all verbatim quotes were drawn from clean prose passages inside one printed page and verified as contiguous substrings of the extracted text file. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "repertoire_sizing_execution_over_design",
+   "name": "A team carries about twenty-five plays; execution quality, not play novelty, is what makes a play succeed",
+   "verbatim_quote": "Some teams have as many as forty plays, but far better is it to have a few plays well learned, for it is the execution rather than the nature of the play which makes it successful.",
+   "page": "Ch I How to Watch and Understand Football, printed p. 15",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The repertoire figure of about twenty-five plays (16 rushes, 7 forward passes, 2 kicks) is stated in the same passage",
+    "Execution quality is trainable and observable in practice"
+   ],
+   "breakdown_regime": "no_equation_domain: the claim is a coaching judgment, not a measured law; it weakens when an opponent has scouted the small repertoire so thoroughly that predictability costs more than execution gains",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a policy-complexity budget in the reasoning engine: a small set of well estimated options beats a large set of poorly estimated ones, because estimation error grows with option count while rehearsal depth falls. The engine should prefer plays and signals it can evaluate precisely over a wide menu it can only evaluate loosely.",
+    "source_operator": "repertoire_sizing_execution_over_design",
+    "telemetry": "Play frequency and success rate by play family from play by play data; practice and usage concentration measures"
+   }
+  },
+  {
+   "primitive_id": "fewest_mistakes_axiom",
+   "name": "Other things being equal, the team that makes the fewest mistakes usually wins",
+   "verbatim_quote": "An axiom which has held true for years is \"Other things being equal, the team which makes the fewest mistakes usually wins.\"",
+   "page": "Ch I How to Watch and Understand Football, printed pp. 21-22",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Errors of commission and omission are the mechanism by which an otherwise equal contest is decided, as the surrounding passage states",
+    "Mistake counts are comparable across teams within a game"
+   ],
+   "breakdown_regime": "no_equation_domain: the axiom is ceteris paribus; a large talent or scheme gap can outweigh the mistake margin, and the book gives no numeric exchange rate between mistakes and points",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to an error budget term in game reasoning: turnovers, penalties, and execution failures are scored as a first class negative signal rather than as noise around a talent estimate. A projection that ignores the mistake differential is missing the variable Haughton treats as decisive between equals.",
+    "source_operator": "fewest_mistakes_axiom",
+    "telemetry": "Turnovers, penalty yards, dropped passes, missed assignments, and special teams errors per game"
+   }
+  },
+  {
+   "primitive_id": "quarterback_five_considerations",
+   "name": "Play selection must weigh five inputs: climate and field, ball position, down and distance, score and time, and the defensive distribution",
+   "verbatim_quote": "1. Climatic conditions which include the direction and velocity of the wind, the position of the sun, and the condition of the field of play, i. e., whether the footing is sure or slippery. 2. The position of the ball on the field of play, i. e., with respect to the goal line and side lines. 3. Which down it is and how much distance must be gained in order to obtain a first down.",
+   "page": "Ch I How to Watch and Understand Football, printed pp. 22-23",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The list continues in the text with item 4 (score and remaining time) and item 5 (distribution and condition of the defense)",
+    "These five factors are treated as the complete state a decision maker needs before choosing a play"
+   ],
+   "breakdown_regime": "no_equation_domain: the checklist names the state variables but supplies no weights; it breaks when a factor outside the list (for example a key injury mid game) dominates all five",
+   "domain": "football decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps directly onto the engine state vector for situational reasoning: weather and surface, field position, down and distance, score and clock, and opponent alignment and health. A reasoning trace that cannot state these five before judging a play call is incomplete by Haughton's own standard.",
+    "source_operator": "quarterback_five_considerations",
+    "telemetry": "Weather feeds, field position and down distance from play by play, score and game clock, defensive alignment and personnel availability"
+   }
+  },
+  {
+   "primitive_id": "offense_confined_defense_free",
+   "name": "The rules confine how the offense may deploy, while the defense is comparatively free; constraint asymmetry shapes the contest",
+   "verbatim_quote": "Be it understood then that in the use of their weapons of attack, the offense are confined by many rules in the deployment of their players, the chief of which are that when the ball is put in play: a. At least seven men must be on the line of scrimmage.",
+   "page": "Ch I How to Watch and Understand Football, printed p. 18",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The passage continues the constraint list: one man in motion under restrictions, and only end players eligible for a forward pass",
+    "The defense labors under far fewer deployment restrictions, as the chapter argues"
+   ],
+   "breakdown_regime": "no_equation_domain: the asymmetry is era specific; later rule changes (unlimited motion, wider pass eligibility) narrowed the gap the book describes",
+   "domain": "football rules structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to constraint modeling in the engine: the attacking side of any matchup operates inside a tighter legal action set than the reacting side, so initiative must be bought with preparation and disguise rather than with freedom of formation. Matchup reasoning should price each side's legal options, not just its athletes.",
+    "source_operator": "offense_confined_defense_free",
+    "telemetry": "Formation and motion legality by era and league; eligible receiver sets; defensive alignment freedom observed in tracking data"
+   }
+  },
+  {
+   "primitive_id": "defense_hesitancy_information_disadvantage",
+   "name": "The defense must act without knowing the play, and its necessary hesitancy is the offense's initial advantage",
+   "verbatim_quote": "It is this necessary hesitancy of action which gives to the offensive an initial advantage best illustrated by the cohesive charge of the offensive line.",
+   "page": "Ch I How to Watch and Understand Football, printed p. 34",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The defense remains in ignorance of the play's nature not only before it begins but for an appreciable time after it starts, as the passage states",
+    "The advantage lasts only until the defense diagnoses the play"
+   ],
+   "breakdown_regime": "no_equation_domain: the edge decays with defensive recognition speed; a defense that reads keys instantly (or an offense that tips its plays) erases the hesitancy window",
+   "domain": "football information dynamics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to an information asymmetry term: the side that knows the plan holds a timing edge over the side that must infer it. In engine terms, disguise, cadence variation, and formation ambiguity are valuable precisely because they lengthen opponent inference time, and pre snap tells are costly because they shorten it.",
+    "source_operator": "defense_hesitancy_information_disadvantage",
+    "telemetry": "Pre snap alignment tells, time from snap to defensive commitment, play action and motion usage rates"
+   }
+  },
+  {
+   "primitive_id": "close_formation_matching_defense",
+   "name": "Each offensive formation has a matching defensive formation; the close formation can rush every point of the primary line, so the defense answers with seven men on the line",
+   "verbatim_quote": "THE offense in close formation are able to attack by rushing all points on the primary line of defense.",
+   "page": "Diagram I, printed p. 52",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Diagrams I to IV pair offensive formations (close, open, loose, wide) with defensive formations A to D",
+    "The defense rebalances toward the secondary lines as the offense spreads and its plunging strength falls"
+   ],
+   "breakdown_regime": "no_equation_domain: the pairing is schematic; real defenses mix fronts and disguise which of the four lines is reinforced",
+   "domain": "football formations",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to formation response tables in matchup reasoning: for each offensive structure there is a defensive structure that concedes the least, and the cost of a mismatch is paid at the line the offense can attack in strength. The engine should evaluate formation pairs, not formations in isolation.",
+    "source_operator": "close_formation_matching_defense",
+    "telemetry": "Formation classification from alignment data, box counts, and success rate by formation pair"
+   }
+  },
+  {
+   "primitive_id": "downs_distance_rule_1882",
+   "name": "The 1882 rule forcing five yards in three rushes (or a ten yard retreat) created the downs system and the gridiron itself",
+   "verbatim_quote": "More important was another rule which provided that the offense must, in three successive rushes, advance the ball five yards or retreat with it ten yards",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rule was adopted to end the block game, in which a team could hold the ball an entire half without attempting to advance",
+    "A companion 1882 rule awarded two points when the offense was forced over its own goal line"
+   ],
+   "breakdown_regime": "no_equation_domain: historical rule statement; the specific distances changed repeatedly afterward (ten yards in four tries by 1906)",
+   "domain": "football rules history",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to incentive design in the engine's model of any sport: a progress requirement with a turnover penalty converts stalling into a losing strategy and creates the down by down decision structure the whole reasoning layer sits on. When rules change the progress requirement, every downstream tendency must be re-estimated.",
+    "source_operator": "downs_distance_rule_1882",
+    "telemetry": "Historical rule change dates; stall and possession duration statistics before and after rule changes"
+   }
+  },
+  {
+   "primitive_id": "flying_wedge_momentum_mass",
+   "name": "The 1892 flying wedge concentrated the whole team's mass and momentum on one point, and its progeny forced the abolition of momentum mass plays in 1896",
+   "verbatim_quote": "One man was left in control of the ball, who, when all was ready, waved his hand and the two sections started on the run, so converging as to form at the time they reached him a perfect \"flying wedge.\"",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The wedge formed fifteen yards behind the ball and converged on the runner as the ball was put in play",
+    "The defense could not advance beyond the restraining line until the ball was legally in play"
+   ],
+   "breakdown_regime": "no_equation_domain: the play was a rules exploit of its era; it fails as a model once interlocked interference and momentum mass starts were banned",
+   "domain": "football rules history",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to concentration of force as an exploit pattern: any rule set that lets a side pre build momentum or numbers before the contest starts will be exploited until the rule closes. The engine's historical layer should treat each era's dominant tactic as a function of what the rules still permit.",
+    "source_operator": "flying_wedge_momentum_mass",
+    "telemetry": "Era tactic frequencies, injury reports of the period, and the rule change record"
+   }
+  },
+  {
+   "primitive_id": "rules_1906_ten_yards_pass_onside",
+   "name": "The 1906 settlement stripped rushing power, demanded ten yards in four tries, and compensated with the forward pass and the onside kick",
+   "verbatim_quote": "Not only was the offense thus stripped of all real rushing power, but it was called upon to gain ten yards in four tries as against the previous five yards in three tries.",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense, printed p. 71",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same passage states the two new features were so restricted at first that neither was seriously considered",
+    "Restrictions on interference and hurdling accompanied the change"
+   ],
+   "breakdown_regime": "no_equation_domain: the compensation only became real when later liberalizations (notably 1912) made the pass usable; the 1906 text alone overstates the immediate effect",
+   "domain": "football rules history",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to regime change handling: when the governing rules shift the required rate of advance and add a new action class, historical tendencies from the old regime are not transferable until re-measured. The engine should version its priors by rule era exactly as this chapter versions tactics by legislation.",
+    "source_operator": "rules_1906_ten_yards_pass_onside",
+    "telemetry": "Rule era boundaries, pass usage and efficiency by era, required yards per set of downs"
+   }
+  },
+  {
+   "primitive_id": "fake_kick_threat_holds_defense",
+   "name": "Fake kicks created the threat: a credible alternative action that holds the defense in check until the real maneuver is under way",
+   "verbatim_quote": "Contained in these plays were the beginnings of the so-called \"threats\" which became still more effective after the introduction of the forward pass and which today are the basis of holding the defense in check until the offensive maneuver is well under way.",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense, printed p. 74",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A threat works only if the faked action is itself dangerous enough to demand a response",
+    "The forward pass multiplied the threat structure by adding a deep alternative to every run look"
+   ],
+   "breakdown_regime": "no_equation_domain: a threat collapses when the defense prices it correctly, for example when the faked action is never actually used from that formation",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to option value in play reasoning: an action's worth includes the defensive hesitation its alternatives create. The engine should credit a play family with the value of the threats it sustains, and discount any look whose alternative is never exercised, because defenders stop honoring it.",
+    "source_operator": "fake_kick_threat_holds_defense",
+    "telemetry": "Play action and fake rates, defensive reaction time, success of the base play with and without the paired fake"
+   }
+  },
+  {
+   "primitive_id": "punting_decline_drop_kick_rise",
+   "name": "Punting fell from a full half of offensive strength to less than one third, while drop kicking skill rose; weapon shares shift as the game evolves",
+   "verbatim_quote": "whereas punting used to be a full half of the offensive strength, now it represents less than one third of its collective power.",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The passage attributes the decline partly to less practice time given to punters, with corresponding deterioration of results",
+    "The same passage records a distinct tendency toward increased skill in drop kicking"
+   ],
+   "breakdown_regime": "no_equation_domain: the shares are the author's estimates for his era, not league statistics; they invert again in later eras when punting and field position strategy are revalued",
+   "domain": "football strategy evolution",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to weapon share drift: the fraction of a team's output carried by each method is a moving quantity driven by rules, practice allocation, and opponent adaptation. The engine should track method shares over time and treat a stale share as a modeling error, not a constant.",
+    "source_operator": "punting_decline_drop_kick_rise",
+    "telemetry": "Play type shares by season, practice and usage allocation, net punting and kicking value by era"
+   }
+  },
+  {
+   "primitive_id": "possession_backbone",
+   "name": "Awarding one team possession of the ball for an organized scrimmage play is the backbone around which the whole American game is built",
+   "verbatim_quote": "the first American legislation was to allow one team possession of the ball when an offensive play was to be attempted, in other words, an organized outlet of the scrimmage. In this lies the backbone around which the entire body of American football is attached.",
+   "page": "Ch II The Fifty-Year Battle Between the Offense and Defense",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Possession followed the reduction of the game to eleven men a side",
+    "Organized possession replaced the continuous rugby style scrimmage"
+   ],
+   "breakdown_regime": "no_equation_domain: foundational description, not a testable claim; it does not by itself predict any tactic",
+   "domain": "football rules structure",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's basic unit of analysis: the discrete, possessed, planned play. Because possession is granted and a plan is chosen before each snap, football reasoning is a sequence of decisions under a known state, which is what makes per play reasoning traces possible at all.",
+    "source_operator": "possession_backbone",
+    "telemetry": "Snap level play records; possession sequences and drive structure"
+   }
+  },
+  {
+   "primitive_id": "season_begins_day_after",
+   "name": "At the larger universities one football season begins the day after the last season ends; preparation is a year round system",
+   "verbatim_quote": "At the larger universities one football season begins the day after the last season ends.",
+   "page": "Ch III Pre-Season Preparation, printed p. 38",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The preparation includes managerial and organizational work, not only player conditioning",
+    "Decisions made in the off season are made while judgment is untrammeled by the pressure of the coming campaign"
+   ],
+   "breakdown_regime": "no_equation_domain: the claim is about institutional scale; a small program without staff or candidates cannot run the same calendar",
+   "domain": "program preparation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to preparation lead time in the engine's weekly cycle: the quality of a game week output is bounded by work banked long before the week begins. Reasoning systems inherit the same law; data pipelines, opponent files, and health records must be built in the off season of each cycle, not improvised at decision time.",
+    "source_operator": "season_begins_day_after",
+    "telemetry": "Off season program activity, returning production, staff continuity, and early season performance"
+   }
+  },
+  {
+   "primitive_id": "spring_practice_scale_dependence",
+   "name": "Spring practice pays only at scale: with few candidates and few coaches its advantage is questionable",
+   "verbatim_quote": "The value of spring practice is a much-mooted question. At small colleges and schools, where the number of candidates is small and a sufficient number of coaches is lacking, it is questionable if any marked advantage accrues",
+   "page": "Ch III Pre-Season Preparation / Ch IV The Campaign",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "At the larger colleges one hundred to one hundred and fifty candidates report, making spring practice an annual custom",
+    "The benefit depends on candidate volume and coaching supply, not on the calendar itself"
+   ],
+   "breakdown_regime": "no_equation_domain: a resource threshold claim without a measured cutoff; a small program with exceptional coaching could still profit",
+   "domain": "program preparation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to scale conditional value in system design: a process that is profitable with abundant inputs can be waste at small scale. The engine should ask of any added signal or drill whether the program's data volume and staff attention cross the threshold where it pays, instead of copying big program practice wholesale.",
+    "source_operator": "spring_practice_scale_dependence",
+    "telemetry": "Roster size, staff size, spring participation, and subsequent season performance"
+   }
+  },
+  {
+   "primitive_id": "subconscious_execution_training",
+   "name": "Weeks of intensive rehearsing bring each player to perform his assignments subconsciously, which holds up when excitement and exhaustion dull conscious thought",
+   "verbatim_quote": "it takes weeks of intensive rehearsing to reach a stage of development where each player performs his various assignments subconsciously.",
+   "page": "Ch IV The Campaign, printed p. 106 region",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Starting in unison is comparatively easy to teach; subconscious assignment execution is the slow part",
+    "The asset matters most in final games, when noise distracts attention and physical exhaustion dulls the brain, as the following passage states"
+   ],
+   "breakdown_regime": "no_equation_domain: no dosage curve is given; the number of repetitions needed varies by player and assignment complexity",
+   "domain": "motor learning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to compiled versus deliberative performance in the engine: rehearsed patterns execute reliably under load precisely because they no longer consume deliberation. For a reasoning system the analog is precomputed, well tested situational responses for recurring states, reserving live deliberation for novel states; a system that must reason everything from scratch will degrade exactly when the moment is loudest.",
+    "source_operator": "subconscious_execution_training",
+    "telemetry": "Repetition counts in practice, error rates late in games versus early, performance under crowd noise and fatigue markers"
+   }
+  },
+  {
+   "primitive_id": "concussion_masked_by_subconscious",
+   "name": "A concussed player may be unable to answer simple questions yet still execute his assignments accurately, because the subconscious holds him to his tasks; impairment hides behind rehearsed performance",
+   "verbatim_quote": "a player is sometimes struck on the head, sustaining a mild concussion; and although he is unable to answer simple questions which do not pertain to his immediate duties his subconscious mind holds him to a surprisingly accurate execution of his various tasks.",
+   "page": "Ch IV The Campaign, printed p. 106",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Detection therefore requires probing cognition outside the rehearsed task set",
+    "The player who insists he is all right is the worry, per the medical chapter's doctrine"
+   ],
+   "breakdown_regime": "no_equation_domain: a clinical observation from 1922, stated without incidence data; modern concussion protocol is stricter and supersedes the era's return to play practice",
+   "domain": "sports medicine",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to a health signal veto with a measurement warning: availability and on field performance are not evidence of cognitive health, because rehearsed execution survives impairment. Any engine health layer must probe off task indicators and must never clear a player on the strength of normal looking play alone.",
+    "source_operator": "concussion_masked_by_subconscious",
+    "telemetry": "Concussion evaluations, off task cognitive screening results, snap counts after head impacts"
+   }
+  },
+  {
+   "primitive_id": "overtraining_staleness",
+   "name": "Over training produces staleness that masquerades as lost ability; the cure is rest and moderation, and some athlete turns up badly misguided every year",
+   "verbatim_quote": "This may sound like an extreme case but you may rest assured that every year some boy turns up who has been as badly misguided as John Smith.",
+   "page": "Ch V The Medical Aspect of the Game",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The case in the passage gained eighteen pounds in three weeks of moderate exercise after being over trained",
+    "Staleness signs are treated in the chapter as a medical matter, not a character flaw"
+   ],
+   "breakdown_regime": "no_equation_domain: a single case narrative; it identifies the phenomenon and the direction of the cure without a dose response relation",
+   "domain": "sports medicine",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to load management reasoning: performance decline can be a load symptom rather than a talent signal, and the correct intervention is subtraction, not more work. The engine should carry a fatigue and staleness state for players and discount projections that assume a stale athlete's recent form is his true level.",
+    "source_operator": "overtraining_staleness",
+    "telemetry": "Training load, snap counts, weight change, rest days, and performance trend breaks"
+   }
+  },
+  {
+   "primitive_id": "doctor_supreme_court_injured_list",
+   "name": "Fitness decisions belong to the doctor alone: the player does not decide, the Injured List governs, and coaches as well as players must abide by the ruling",
+   "verbatim_quote": "It is not the player's province to decide whether he is physically fit. The doctor is the Supreme Court on this subject; and all concerned, coaches as well as players, must abide by his decision.",
+   "page": "Ch V The Medical Aspect of the Game",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Every injury, however trivial, must be reported to the doctor in charge, per the surrounding passage",
+    "A copy of the Injured List circulates so no mistake is made about who is cleared"
+   ],
+   "breakdown_regime": "no_equation_domain: an authority structure, not a measurement; its quality depends entirely on the competence and independence of the medical officer",
+   "domain": "sports medicine governance",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to a hard veto layer in the engine: health clearance is not a weighted input to be traded against matchup value, it is a gate owned by an independent authority. A reasoning system that lets competitive pressure override the medical gate reproduces exactly the failure this doctrine was written to prevent.",
+    "source_operator": "doctor_supreme_court_injured_list",
+    "telemetry": "Injury reports, practice participation, clearance status, and return to play timelines"
+   }
+  },
+  {
+   "primitive_id": "scout_forecast_not_report",
+   "name": "The scout's real product is a forecast of what the opponent can do on the big game day, not a report of what it has already done",
+   "verbatim_quote": "What the scout must furnish to his chief is a forecast; an accurate estimate of what the team can do on the day of the big game with the added incentive of supreme effort which only the big game can develop.",
+   "page": "Ch VI The Intelligence Department",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Teams improve gradually but with ever increasing momentum, so past performance understates the future opponent",
+    "The scout must stay on the path of horse sense and filter irrelevant detail, per the chapter"
+   ],
+   "breakdown_regime": "no_equation_domain: forecast quality is judged by outcome, and the chapter gives no scoring rule for scout accuracy",
+   "domain": "opponent intelligence",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to forward looking opponent modeling: the engine's opponent file should estimate the opponent's future state (improvement trend, health trajectory, supreme effort in a big game) rather than replay its past outputs. A scouting layer that only summarizes what was done will systematically underestimate a rising opponent.",
+    "source_operator": "scout_forecast_not_report",
+    "telemetry": "Opponent trend lines, improvement rate across a season, personnel returns from injury, big game performance deltas"
+   }
+  },
+  {
+   "primitive_id": "intelligence_taxonomy_mental_physical",
+   "name": "Scouting information is organized under Offense and Defense, each subdivided into Mental Possibilities and Physical Probabilities",
+   "verbatim_quote": "The information to be obtained naturally falls under the two main headings of \"Offense\" and \"Defense.\"",
+   "page": "Ch VI The Intelligence Department, printed p. 141",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Each heading is subdivided into Mental Possibilities and Physical Probabilities, as the passage continues",
+    "Under these comes an endless mass of minute detail that changes from day to day"
+   ],
+   "breakdown_regime": "no_equation_domain: a filing taxonomy, not a measurement; its value depends on the detail discipline underneath it",
+   "domain": "opponent intelligence",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's opponent schema: separate what a team can physically do from what it is mentally likely to choose, on both sides of the ball. Conflating capability with tendency is the filing error this taxonomy prevents; a tendency estimate without a capability bound, or the reverse, misleads play reasoning.",
+    "source_operator": "intelligence_taxonomy_mental_physical",
+    "telemetry": "Opponent play capability sets, tendency frequencies, quarterback decision profiles, kicker range with and against wind"
+   }
+  },
+  {
+   "primitive_id": "attack_superior_force_at_point",
+   "name": "The attack concentrates a numerically and physically superior force at the chosen point while engaging the remaining defenders elsewhere",
+   "verbatim_quote": "the quarterback continually endeavors to attack a defensive position by a numerically and consequently physically superior offensive force.",
+   "page": "Ch VII The Attack, printed p. 145",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The surrounding passage requires occupying as many other defenders as possible so they cannot strengthen the point assaulted",
+    "The forward pass reduced the pure power advantage by increasing complexity, as the passage notes"
+   ],
+   "breakdown_regime": "no_equation_domain: local superiority is necessary but not sufficient; execution and the defense's rotation speed decide whether the paper advantage converts",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to local numbers reasoning in matchup analysis: evaluate the point of attack by the actual count and quality engaged there after accounting for defenders pinned elsewhere, not by team level strength. A projection built on global ratings without point of attack arithmetic misses the mechanism by which plays actually gain.",
+    "source_operator": "attack_superior_force_at_point",
+    "telemetry": "Blocker to defender ratios at the point of attack, double team rates, and gain by local numbers advantage"
+   }
+  },
+  {
+   "primitive_id": "shift_formation_haphazard_strike_point",
+   "name": "The shift formation denies the defense time to size up the play, but it is haphazard: it may strike the defense at its strongest instead of its weakest point",
+   "verbatim_quote": "This type of offense may be termed haphazard, because it may strike the defense at its strongest instead of its weakest point.",
+   "page": "Ch VII The Attack, printed p. 149 region",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The shift's first disadvantage in the chapter is that the defense's correct response cannot be determined at the snap, cutting both ways",
+    "The benefit is denying the defense an opportunity to size up the situation before the ball is put in play"
+   ],
+   "breakdown_regime": "no_equation_domain: the trade between surprise and targeting precision is stated qualitatively; a shift keyed to a called adjustment can recover targeting",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to a general trade in decision systems: moves that buy surprise by committing late also surrender target selection. The engine should price formation shifts and late adjustments by both terms, the opponent's lost preparation and the attacker's lost precision, instead of counting surprise as pure gain.",
+    "source_operator": "shift_formation_haphazard_strike_point",
+    "telemetry": "Shift and motion usage, success rate of shifted plays by target, defensive misalignment penalties drawn"
+   }
+  },
+  {
+   "primitive_id": "play_yield_table",
+   "name": "An approximate yield table prices each play family: plunges gain two yards three times in four, slants two and a half with a one yard loss on the fourth, sweeps five yards twice in four with a two yard loss on the fourth, the pass ten yards once in four with an interception once in four",
+   "verbatim_quote": "Plunges:- Should gain two yards, three times out of four. On other attempt, no gain. Slants :- Should gain two and one-half yards, three times out of four. On other attempt, one yard loss. Sweeps :- Should gain five yards two times out of four.",
+   "page": "Ch VII The Attack, printed p. 161",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The table does not pretend to be accurate, but simply approximates relative percentages of gains, as the text states",
+    "The same table prices punts at thirty five to forty yards net and drop kicks at fifty percent, placements at seventy five percent, from the twenty five to forty yard lines"
+   ],
+   "breakdown_regime": "Era bound empirical frequencies: the numbers describe 1922 football and fail as constants in any later era; the form (a yield distribution per play family, including the loss and turnover tails) is the durable part",
+   "domain": "football play evaluation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to distributional play evaluation: each play family carries a full outcome distribution (typical gain, no gain rate, loss rate, turnover rate), and selection compares distributions against down, distance, and field position rather than comparing average gains alone. This is the book's clearest quantitative kernel and the direct ancestor of expected value play reasoning.",
+    "source_operator": "play_yield_table",
+    "telemetry": "Play by play outcome distributions by play family, down, distance, and field position"
+   }
+  },
+  {
+   "primitive_id": "tackle_most_attacked_position",
+   "name": "Quarterbacks concentrate on the opposing tackle because the strongest plays can all be run at that position, and the repeated assault wears the tackle physically",
+   "verbatim_quote": "It so happens that the strongest type of plays can all be used against the opposing tackle position.",
+   "page": "Ch VII The Attack, printed p. 164",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The passage adds the physical effect on the tackle in question as a second reason for the concentration",
+    "The advice holds only while a sufficient assortment of plays can be used against that point"
+   ],
+   "breakdown_regime": "no_equation_domain: personnel dependent; an elite tackle or a defense that rotates help to him reverses the prescription",
+   "domain": "football tactics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to targeted attrition in matchup reasoning: attack selection should account for cumulative wear on the specific defender being stressed, so the value of a play includes its effect on later plays. The engine should track per defender load across a game, not treat each snap as independent.",
+    "source_operator": "tackle_most_attacked_position",
+    "telemetry": "Rush direction frequencies, per defender tackle and block faced counts, late game performance of heavily targeted defenders"
+   }
+  },
+  {
+   "primitive_id": "punt_net_value_and_use",
+   "name": "The punt is executed eight to ten yards behind the line, is used in lieu of surrendering the ball on downs, and should average about thirty five yards net",
+   "verbatim_quote": "The Punt, which is usually executed at a point from eight to ten yards back of the scrimmage line. It is invariably employed in lieu of the surrender of the ball on downs. It should average say thirty-five yards net gain.",
+   "page": "Ch I How to Watch and Understand Football",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Net gain is the operative measure, after the return and coverage are accounted",
+    "The punt's value is field position exchange, not advancement toward a score on that play"
+   ],
+   "breakdown_regime": "Era bound constant: thirty five yards net describes 1922 punting; modern net averages differ, and the decision boundary for punting versus going for it has moved with offensive efficiency",
+   "domain": "football special teams",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to exchange value reasoning on fourth down: a punt is a trade of possession for field position at a measurable net rate, to be compared against the conversion probability and the field position cost of failure. Haughton's net figure is the primitive form of that comparison.",
+    "source_operator": "punt_net_value_and_use",
+    "telemetry": "Net punting averages, fourth down conversion rates, field position value curves"
+   }
+  },
+  {
+   "primitive_id": "defensive_line_two_schools",
+   "name": "Two schools of defensive line play divide on diagnosis versus charge: upright men who read the play before committing, and crouching men who charge into the gaps at the snap",
+   "verbatim_quote": "The other school believes that these same men should assume a crouching position, with both hands on the ground. When the ball is snapped these players should charge into the spaces between the opponents opposite them.",
+   "page": "Ch VIII The Defense",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The first school keeps men upright so they can diagnose the nature of the play before committing to a direction",
+    "The crouch school aims to fill the chinks between opponents and carry them back into the offensive play"
+   ],
+   "breakdown_regime": "no_equation_domain: the trade is reaction information against penetration; the right school depends on the offense faced, and the crouch's cost is diagnosis blindness once committed",
+   "domain": "football defense",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the read versus commit trade in any defensive reasoning: committing early buys disruption at the price of information, reading buys information at the price of ground. The engine should classify defensive schemes by where they sit on this trade and expect each to fail in the opposite way.",
+    "source_operator": "defensive_line_two_schools",
+    "telemetry": "Defensive front technique, penetration rates, misdirection success against charging versus reading fronts"
+   }
+  },
+  {
+   "primitive_id": "goal_line_defense",
+   "name": "Inside their own ten yard line defenses adopt a distinct goal line defense, contracting against the plunges and slants the offense favors there and batting passes down",
+   "verbatim_quote": "some teams, when driven within their own ten yard line, adopt certain defensive tactics which for want of a better name may be termed a goal line defense.",
+   "page": "Ch VIII The Defense, printed p. 173",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The offense in this territory avoids wide sweeps early for fear of losses and leans on powerful plunges and slants, per the passage",
+    "Short field geometry changes both sides' play distributions"
+   ],
+   "breakdown_regime": "no_equation_domain: territory specific doctrine; it does not generalize beyond the compressed field where the end line itself defends the deep pass",
+   "domain": "football defense",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to state dependent scheme switching: the correct defense is a function of field position, not a fixed identity, because the offense's viable play set shrinks as the field compresses. The engine should switch its matchup expectations by territory band instead of applying one scheme grade everywhere.",
+    "source_operator": "goal_line_defense",
+    "telemetry": "Play distribution and success by field position band, goal line stand rates"
+   }
+  },
+  {
+   "primitive_id": "bat_ball_down_fourth_down",
+   "name": "On fourth down the defending back should bat the pass to the ground rather than catch it, because the failed attempt returns the ball at the point of the attempt and gains thirty valuable yards",
+   "verbatim_quote": "by batting instead of catching the ball, our team gains thirty valuable yards.",
+   "page": "Ch IX A Game in Detail, printed p. 186",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The rules of the era gave the ball to the defense at the point from which the fourth down play was attempted when the pass fell incomplete",
+    "The gain is the difference between the interception return position and the attempt point"
+   ],
+   "breakdown_regime": "Rule dependent: later rules changed where the ball is spotted after a fourth down incompletion, which can shrink or erase the thirty yard figure; the decision logic (compare outcomes under the actual rule) is the durable part",
+   "domain": "football situational play",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to rule aware decision value: the same physical act (catch versus bat) flips value depending on down and the spotting rule, so the engine must evaluate actions under the exact rule state rather than by habit. Interceptions are not automatically good; their value is relative to the alternative the rules offer.",
+    "source_operator": "bat_ball_down_fourth_down",
+    "telemetry": "Fourth down pass defense outcomes, interception field position versus attempt point, down specific decision charts"
+   }
+  },
+  {
+   "primitive_id": "error_accounting_game_summary",
+   "name": "A game is explained by its error ledger: both teams made about the same number of mistakes and showed about equal strength, so the result was a tie",
+   "verbatim_quote": "I have emphasized these mistakes, for few spectators appreciate either the number of errors which occur or how seriously they handicap the offending team.",
+   "page": "Ch IX A Game in Detail, printed p. 196",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The chapter's worked game is narrated quarter by quarter with a summary after each period isolating the decisive errors",
+    "The closing judgment weighs mistake counts alongside department by department strength"
+   ],
+   "breakdown_regime": "no_equation_domain: narrative accounting without a formal error taxonomy or weights; two errors of different kinds are treated as comparable handicaps",
+   "domain": "game analysis method",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to post game attribution in the engine: grade a result by decomposing it into strength shown and errors committed, period by period, instead of reading the score as a pure strength measure. A team that won the error ledger and lost the game is a different signal from a team that was simply outplayed.",
+    "source_operator": "error_accounting_game_summary",
+    "telemetry": "Error counts by type and period, turnover and penalty timing, score versus underlying performance differentials"
+   }
+  },
+  {
+   "primitive_id": "football_human_chess",
+   "name": "Football is a somewhat complicated game of human chess: a contest of science requiring familiarity with mathematical principles and physical execution under maximum tension",
+   "verbatim_quote": "When analyzed, football is nothing more than a somewhat complicated game of human chess. It is a contest of science requiring not only a ready familiarity with the mathematical principles involved",
+   "page": "Ch X The Wherefore of Football, printed p. 200",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Unlike chess, the pieces are human and must execute the maneuvers physically while under tension and pressure",
+    "The coach must therefore possess more than average intellectuality, per the chapter"
+   ],
+   "breakdown_regime": "no_equation_domain: an analogy, not a model; it understates the continuous, simultaneous, and physical character that separates football from a turn based board game",
+   "domain": "football epistemology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to the engine's founding posture: the game is a reasoning contest executed by bodies, so analysis must hold the plan layer and the execution layer together. A model that treats players as chess pieces will overrate scheme and underrate fatigue, nerve, and physical state, which is why the situational and health layers exist beside the tactical layer.",
+    "source_operator": "football_human_chess",
+    "telemetry": "Scheme grades versus execution grades, performance under pressure situations, late game decision quality"
+   }
+  },
+  {
+   "primitive_id": "think_and_act_under_pressure",
+   "name": "The player must be taught to think and to act at high speed while carrying full responsibility for thinking incorrectly and performing imperfectly before thousands of spectators",
+   "verbatim_quote": "Thus the individual must be taught to think as well as to act, and to do both at high speed, with a consciousness that full responsibility for thinking incorrectly and performing imperfectly is placed upon him by thousands of spectators.",
+   "page": "Ch X The Wherefore of Football, printed pp. 200-201",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The operation must be repeated when the mind is groggy, the body weary, and the whole being in revolt, per the following passage",
+    "Will power must dominate the player when physical exhaustion sets in"
+   ],
+   "breakdown_regime": "no_equation_domain: a training philosophy claim; it does not specify how much pressure exposure is optimal, and some performers degrade under exactly this responsibility framing",
+   "domain": "performance psychology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to decision making under load in the engine's player layer: evaluation should separate a player's calm state skill from his high speed, high consequence execution, because the game tests the second. Projecting from practice or low leverage performance alone repeats the error of grading only the thinking and not the acting under pressure.",
+    "source_operator": "think_and_act_under_pressure",
+    "telemetry": "Performance splits by leverage and quarter, two minute drill results, error rates under crowd and fatigue conditions"
+   }
+  },
+  {
+   "primitive_id": "team_sacrifice_concerted_action",
+   "name": "Success depends on individual sacrifice for the general good: each man confined to his assigned duty, since success rests on the perfect performance of each individual",
+   "verbatim_quote": "with an ever present realization that success is dependent upon the perfect performance of each individual.",
+   "page": "Ch X The Wherefore of Football, printed p. 204",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Not every man can run with the ball or choose his own territory to defend, per the passage",
+    "Rigid discipline is presented as the only way errors are minimized across eleven interdependent assignments"
+   ],
+   "breakdown_regime": "no_equation_domain: a coordination doctrine; it can suppress useful improvisation when an assignment is beaten and adaptation is required",
+   "domain": "team systems",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to coupled system reliability in the engine: a play is an eleven component chain whose success probability multiplies individual reliabilities, so the weakest assignment bounds the whole. Matchup reasoning should hunt the single most likely assignment failure rather than averaging team quality.",
+    "source_operator": "team_sacrifice_concerted_action",
+    "telemetry": "Per player assignment grades, blown assignment rates, chain failure attribution by play"
+   }
+  },
+  {
+   "primitive_id": "fear_mastery_self_discipline",
+   "name": "A player can be educated to master fear: exhaustion and pain are temporary, recovery is rapid, and the body properly cared for is something to command rather than to yield to",
+   "verbatim_quote": "He learns that his body, properly cared for, is something to command rather than to yield to; and soon he is able to measure properly and expend intelligently his full natural physical resources.",
+   "page": "Ch X The Wherefore of Football, printed p. 205",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Many so called quitters are men never properly taught to use the possibilities within themselves, per the passage",
+    "The discovery proceeds gradually, through realized experience of recovery"
+   ],
+   "breakdown_regime": "no_equation_domain: motivational doctrine with a hard boundary at real injury; the medical chapter's doctor gate vetoes any application of this teaching to a genuinely hurt player",
+   "domain": "performance psychology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to effort budgeting in player evaluation: perceived exhaustion is a signal with a bias, and trained athletes can expend closer to their true resources. The engine should treat late game effort decline as partly perceptual and trainable, while keeping the medical veto separate so the doctrine is never used to play an injured man.",
+    "source_operator": "fear_mastery_self_discipline",
+    "telemetry": "Second half and second effort performance, snap load versus output decline curves, conditioning measures"
+   }
+  },
+  {
+   "primitive_id": "rules_committee_sportsmanship_legislation",
+   "name": "The Rules Committee has constantly endeavored to put the game upon a higher plane of sportsmanship, legislating out the practices that produced injuries and brutality",
+   "verbatim_quote": "The Rules Committee has constantly endeavored to put the game upon a higher plane of sportsmanship.",
+   "page": "Ch X The Wherefore of Football, printed p. 199",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The barred practices named in the chapter include clipping, piling on, tripping, hurdling, and roughing the kicker or passer",
+    "Coaches and officials cooperated, and contestants learned that supreme effort does not require regarding opponents as enemies"
+   ],
+   "breakdown_regime": "no_equation_domain: institutional history; the direction of legislation is not guaranteed and later eras re-litigate the same practices under new names",
+   "domain": "football governance",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Maps to governance as a system layer: the rules body is an active optimizer of the game itself, trading spectacle, safety, and fairness across seasons. A reasoning engine that treats the rulebook as fixed background will be surprised by the one actor whose whole function is to change it.",
+    "source_operator": "rules_committee_sportsmanship_legislation",
+    "telemetry": "Rule change history, injury rate trends by practice category, penalty enforcement emphasis by season"
+   }
+  },
+  {
+   "primitive_id": "terminal_down_odds_goal_line",
+   "name": "With one try left at the goal line and three broad options (kick, run, or pass), the odds are two to one against accomplishing whatever is attempted",
+   "verbatim_quote": "therefore, theoretically, the odds are two to one against your successfully accomplishing whatever you attempt.",
+   "page": "Ch I How to Watch and Understand Football, printed p. 51",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scenario is fourth down at the two yard line, score 6 to 3 against, less than two minutes to play, as the chapter sets it",
+    "The reasoning counts the three option classes and treats only one as usable in the last remaining try"
+   ],
+   "breakdown_regime": "Crude counting argument: it assumes the three options are equally likely to be the right one and ignores their different success rates and payoffs, which the book's own yield table elsewhere contradicts; useful as a humility bound, not as a probability",
+   "domain": "football decision making",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Maps to terminal state humility in the engine: on a final play the choice set collapses and base rates turn against the decider, so confidence should fall and the value of the option that keeps multiple outcomes alive (score, retain a chance, avoid the worst tail) should rise. Any model that prices a last play like an ordinary down is misreading the state.",
+    "source_operator": "terminal_down_odds_goal_line",
+    "telemetry": "Goal line fourth down attempts and success by play type, end of game decision outcomes"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "983a128da7776dce-t1",
+   "think": "This book is a spectator's manual written by the most successful college coach of his era, and its real subject is not how to watch but how a football game is decided. Haughton builds the game from a small set of load bearing parts and then shows them interacting. The first part is a taxonomy of attack: rushes divided into plunges, slants, sweeps, reverses and tricks, the forward pass in its classes, the punt, and the drop and placement kicks. Around that taxonomy he wraps a repertoire doctrine, roughly twenty five plays carried and deeply learned, because execution rather than novelty is what converts a play. The second part is structural: four offensive formations, close, open, loose and wide, each answered by a matching defensive formation, with the defense organized in four lines whose reinforcement shifts as the offense spreads and surrenders plunging strength. The third part is a decision doctrine placed in the quarterback's head: five considerations (climate and field, ball position, down and distance, score and time, and the distribution and condition of the defense) that together form a complete state description before any play is chosen, and a field position tactics table that changes the permitted play set by territory. The fourth part is quantitative in an early, honest form: a yield table that prices each play family as a distribution of outcomes, gains at stated frequencies, no gain and loss tails, and an interception tail on the pass, plus a net figure for the punt and success percentages for kicks. The fifth part is historical dynamics: a fifty year arms race between offense and defense conducted through the rulebook, from the 1882 downs rule through the flying wedge, the abolition of momentum mass plays, the 1906 restrictions, and the pass, whose threat value defeated the legislators' intent. The sixth part is the human system around the game: a preparation calendar that begins the day after the season ends, training carried to subconscious execution so performance survives noise and exhaustion, a medical government in which the doctor is the supreme court and the Injured List rules availability, and an intelligence department whose product is not a report but a forecast of what the opponent will be on the big day. The worked game in the penultimate chapter then audits all of it: four quarters narrated and summarized, with the result explained by an error ledger, both teams making about the same number of mistakes, and the axiom that the fewest mistakes win doing the final accounting. For a reasoning engine the book changes three habits. First, it insists that reasoning start from a complete state and a priced option set, not from a favorite play: the five considerations and the yield table are a checklist against partial reasoning. Second, it treats information as a physical quantity in the game: the offense's advantage is the defense's necessary hesitancy, threats are valuable because they extend that hesitancy, and scouting exists to shrink one's own uncertainty about a future opponent rather than to archive the past. Third, it refuses to separate the plan from the body: subconscious execution, staleness, concussion that hides behind rehearsed performance, and a medical veto that no coach may override are all modeled as part of the same system that chooses plays. The defense chapters add a further layer the attack chapters presuppose: defense is organized as four successive lines, each with a distinct job, and its recurring instructions are geometric and informational at once, drive the runner toward the center where help concentrates, hurry the passer so the throw leaves before the pattern matures, and diagnose before committing, because a defender who commits blind has spent his one asset. The alternative punt defense, blocking the coverage men rather than rushing the kicker, shows the same mind at work on special teams: attack the part of the play the opponent has left thin because everyone else assumed the kicker was the target. The campaign chapter contributes a knowledge audit that any reasoning organization should copy: when the squad was examined by being made to diagram every play, only the captain and the two quarterbacks could state every man's assignment, which told the coach exactly where his teaching had failed and whose understanding actually carried the system. Preparation, in other words, is not finished when the material has been presented; it is finished when each participant can reproduce the whole assignment structure unaided, and the gap between presentation and reproduction is measurable. The worked game then functions as the book's verification pass: a full contest decomposed into four periods, each closed by a summary that names the decisive errors and the turning exchanges, so the reader can check the doctrine against a concrete sequence rather than against the author's authority. Where it breaks is equally clear. Every number in it is era bound to 1922 rules, equipment, and athlete preparation, and several of its proudest mechanisms, the wedge's descendants and the fourth down batting rule among them, were legislated away. Its evidence is a great coach's experience rather than recorded samples, so its frequencies are priors to be re measured, not constants to be inherited. And its psychology, for all its insight, belongs to a period that returned concussed men to games; the modern reader must keep its detection insight and discard its tolerance. Read as a template rather than a rulebook, it remains a complete architecture for reasoning about a football game: state, options with priced distributions, opponent forecast, error budget, human limits, and a governor on availability.",
+   "retrocausal_genealogy": "Haughton's ideas descend from the rugby game Harvard adopted in the 1870s and from the legislative battles that followed: Walter Camp's downs and distance settlement of 1882, the mass momentum era that produced the flying wedge in 1892 and its abolition in 1896, the 1906 reforms that introduced the forward pass under heavy restriction, and the 1910 and 1912 liberalizations that made the modern open game possible. Haughton coached Harvard from 1908 to 1916 and wrote as the systematizer of that tradition, converting two generations of rule driven tactical evolution into a teachable doctrine for spectators. The military framing of the attack chapter and the intelligence department chapter reflects the First World War's recent vocabulary of staffs, scouts, and forecasts, imported into coaching practice.",
+   "theory_of_mind": "Haughton believes the spectator, the player, and the coach all suffer from the same defect: they watch the ball instead of the system. His model of the reader is a intelligent layman who can be promoted to analyst by being given the quarterback's state checklist, the formation diagrams, and the yield table, after which the game becomes legible. His model of the domain is that football is a governed contest of constrained initiative: the rules confine the offense, free the defense, and tax mistakes, so victory belongs to the side that prepares longest, errs least, and knows the opponent's future rather than its past. He trusts institutions, the Rules Committee, the doctor, the scout, more than individual brilliance, and he writes stars down and systems up throughout.",
+   "cross_layer_veto": "This work vetoes several tempting moves in any reasoning stack built on top of it. Its medical doctrine vetoes availability by reputation or by a player's own say so: the doctor's list governs, and rehearsed performance cannot clear a concussed player, so the health layer can override the matchup layer outright. Its repertoire doctrine vetoes novelty as a virtue: a signal or play the system cannot execute precisely is worse than a smaller set executed subconsciously, which constrains how much new machinery may be added per cycle. Its error axiom vetoes pure strength ratings as an explanation of results, forcing an error budget into every projection. And its era bound numbers veto the import of any of its constants into a modern model without re measurement under current rules."
+  }
+ ],
+ "universal_lens": "Any contest between a constrained initiator and a freer reactor is governed by the same architecture this book lays out: a complete state description before action, a small repertoire of options each priced as an outcome distribution rather than an average, an opponent model aimed at the future instead of the past, an error budget that decides between equals, preparation deep enough to run under stress without deliberation, and an independent authority that can veto participation on welfare grounds regardless of competitive value.",
+ "gsi_mapping": "The Institute takes the book as a teaching architecture: the five considerations as the canonical pre decision checklist, the yield table as the historical root of distributional play evaluation, the intelligence department's forecast doctrine as the standard for opponent study, the diagram examination as a model for auditing whether students can reproduce a whole system rather than recognize parts of it, and the medical chapters as an early, partly dated but structurally sound model of independent health governance, including the detection warning that rehearsed performance can mask concussion and the governance rule that fitness belongs to the doctor alone.",
+ "gse_mapping": "The engine takes the state vector (weather and surface, field position, down and distance, score and clock, defensive distribution and health), the formation pairing tables, distributional play pricing with loss and turnover tails, the mistake differential as a first class signal, opponent forecasting over opponent history, territory dependent scheme switching, the read versus commit classification of defensive fronts, per defender attrition tracking at the point of attack, and the hard medical veto on availability. All numeric constants in the book are treated as 1922 era priors to be re measured under current rules, never as inherited values, and its yield distributions are re estimated from modern play by play before any use."
+}

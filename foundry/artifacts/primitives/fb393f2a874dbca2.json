@@ -1,0 +1,721 @@
+{
+ "book_id": "fb393f2a874dbca2",
+ "source_status": "COMPLETE",
+ "source_note": "Rudolf Virchow, Cellular Pathology as based upon Physiological and Pathological Histology: twenty lectures delivered in the Pathological Institute of Berlin during February, March and April 1858. This local file is the English edition translated from the second edition of the original by Frank Chance, B.A., M.B. Cantab., with notes and numerous emendations principally from MS notes of the author; New York: Robert M. De Witt, Publisher, 13 Frankfort Street. The PDF is the Internet Archive scan (archive.org/details/cellularpatholog00virc), digitized by the Internet Archive in 2011 with funding from Open Knowledge Commons and Harvard Medical School. PDF size 46264735 bytes; full sha256 over (str(size) + file bytes) = fb393f2a874dbca25731a82814b94dafe0d30ac600c9993ed3c4991dd613fac7, book_id fb393f2a874dbca2, matching the expected id. Extracted text file 1309134 bytes, 25142 lines; OCR quality is serviceable but noisy, with occasional merged or split words, residual hyphenation at line breaks, and a few pages (notably in Lecture XIX) where two-column layout interleaves lines. All verbatim quotes were chosen from clean single-column passages and verified as contiguous substrings of the extracted text after the verifier's normalization. Printed page numbers cited are those of this edition as shown in the text. No catalog or title correction is required; the title page confirms author, translator, and edition. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "cell_ultimate_morphological_element",
+   "name": "The cell is the ultimate morphological element of life; real action must not be located beyond the cell",
+   "verbatim_quote": "the cell is really the ultimate morphological element in which there is any manifestation of life, and that we must not transfer the seat of real action to any point beyond the cell",
+   "page": "Lecture I, printed p. 29 (text lines ~1300-1310)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Histological elements, not fluids or gross organs, are the seats of vital action",
+    "What holds for physiological action holds for pathological action"
+   ],
+   "breakdown_regime": "The doctrine fixes the level of analysis but does not by itself say which cellular change is cause and which is consequence in a given lesion. no_equation_domain",
+   "domain": "cell theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Every higher-level signal in the engine must be decomposable into unit-level states before it is allowed to explain an outcome; no explanation may terminate at an aggregate (a fluid, a system, a whole organ) when a unit-level account exists. This is the engine's rule for choosing the grain at which evidence is stored and reasoned over.",
+    "source_operator": "cell_ultimate_morphological_element",
+    "telemetry": "Unit-level observations: per-element state records, counts, and local condition flags rather than bulk summaries"
+   }
+  },
+  {
+   "primitive_id": "rejection_of_free_cell_formation",
+   "name": "Cells do not form freely out of a structureless blastema or cytoblastema; the Schleiden-Schwann free cell-formation theory is abandoned",
+   "verbatim_quote": "a theory of development which has now been almost entirely abandoned, and in support of the correctness of which not one single fact can with certainty be adduced",
+   "page": "Lecture I, printed p. 36 (text lines ~1620-1645)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "A developmental theory requires at least one certainly adducible fact in its support",
+    "The nucleolus-first sequence described by Schleiden was an interpretation, not an observation of cell origin"
+   ],
+   "breakdown_regime": "The rejection is empirical and dated 1858; it rules out spontaneous generation of cells from fluids but does not specify the positive mechanism, which the division doctrine supplies. no_equation_domain",
+   "domain": "cell theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "No entity in the engine's world model may appear without a parent entity and a recorded transformation step. New nodes require a lineage pointer; an unparented appearance is treated as a data error, not as an event.",
+    "source_operator": "rejection_of_free_cell_formation",
+    "telemetry": "Lineage records: every derived record carries a parent identifier and a transformation label"
+   }
+  },
+  {
+   "primitive_id": "nucleus_governs_maintenance_and_multiplication",
+   "name": "The nucleus is bound up with the maintenance and multiplication of the cell rather than its specific function; growth always starts from nucleated elements",
+   "verbatim_quote": "we are acquainted with no part which grows or multiplies, either in a physiological or pathological manner, in which nucleated elements cannot invariably be demonstrated as the starting-points of the change, and in which the first decisive alterations which display themselves, do not involve the nucleus itself",
+   "page": "Lecture I, printed p. 38 (text lines ~1700-1725)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Elements that lose their nucleus (red blood-corpuscles, desquamating cuticle cells) are transitory and do not multiply",
+    "The first decisive alterations of a growing part involve the nucleus"
+   ],
+   "breakdown_regime": "Stated as an invariable empirical rule of 1858 microscopy; it does not identify the chemical nature of the nuclear contribution. no_equation_domain",
+   "domain": "cell structure and growth",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Each unit in the engine carries a persistent identity core that governs its persistence and its capacity to produce successor units, distinct from the payload that determines its current behaviour. Loss of the core means the unit can still act briefly but cannot be renewed, so forecasts must treat coreless units as terminal.",
+    "source_operator": "nucleus_governs_maintenance_and_multiplication",
+    "telemetry": "Per-unit identity and renewal status: which units retain a core, division events, and time since last renewal"
+   }
+  },
+  {
+   "primitive_id": "cell_contents_determine_specific_function",
+   "name": "The specific functional differences of tissues depend on the varying properties of the cell-contents, not on the constant membrane and nucleus",
+   "verbatim_quote": "the special peculiarities which individual cells exhibit in particular places, under particular circumstances, are in general dependent upon the varying properties of the cell-contents",
+   "page": "Lecture I, printed p. 39 (text lines ~1760-1790)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Membrane and nucleus recur with great constancy across tissues",
+    "Pigment, contractile substance, and medullary substance are contents or deposits, not the cell in its abstract form"
+   ],
+   "breakdown_regime": "Contents explain functional difference but not persistence; a contents-only account misses why the element survives its own activity. no_equation_domain",
+   "domain": "cell structure and function",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Units sharing the same chassis differ in behaviour because of their variable payload. The engine therefore separates invariant unit structure from payload features when it generalises: patterns learned about payloads transfer across unit types, patterns about the chassis transfer across payloads.",
+    "source_operator": "cell_contents_determine_specific_function",
+    "telemetry": "Payload feature vectors per unit: composition, stored materials, and current functional outputs"
+   }
+  },
+  {
+   "primitive_id": "body_as_sum_of_vital_unities",
+   "name": "Every animal is a sum of vital unities, each element manifesting the characteristics of life and performing its own special action",
+   "verbatim_quote": "Every animal presents itself as a sum of vital unities, every one of which manifests all the characteristics of life",
+   "page": "Lecture I, printed p. 40 (text lines ~1815-1830)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The characteristics and unity of life cannot be limited to one spot, such as the brain",
+    "Elements are mutually dependent yet each alone effects the performance of its duties"
+   ],
+   "breakdown_regime": "The social analogy describes distributed life but does not quantify coupling between elements; coordination phenomena still need their own account. no_equation_domain",
+   "domain": "organism organisation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The modelled system is a federation of semi-autonomous units, not a single central process. The engine aggregates unit-level states upward instead of imposing top-down states, and it expects local behaviour to persist when central coordination signals are removed.",
+    "source_operator": "body_as_sum_of_vital_unities",
+    "telemetry": "Unit-level activity logs that continue to be recorded when system-level summaries are unavailable"
+   }
+  },
+  {
+   "primitive_id": "cell_territories",
+   "name": "The body is portioned into cell-territories: each cell rules a definite district of intercellular substance around it",
+   "verbatim_quote": "any given district of intercellular substance is ruled over by the cell, which lies in the middle of it and exercises influence upon the neighbouring parts",
+   "page": "Lecture I, printed p. 42 (text lines ~1885-1895)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Intercellular substance is dependent on cells, not an independent cytoblastema",
+    "Pathological processes reveal the boundaries of territories sharply"
+   ],
+   "breakdown_regime": "Territory boundaries are clearest where intercellular substance is abundant; in tissues of closely packed cells the district shrinks to the cell itself. no_equation_domain",
+   "domain": "tissue organisation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every spatial or logical district in the engine's model is assigned to exactly one governing unit, and changes in the district are attributed to that unit first. Neighbouring districts are affected only through recorded boundary interactions, which localises both explanation and error.",
+    "source_operator": "cell_territories",
+    "telemetry": "District-to-unit assignment maps and boundary-crossing event counts"
+   }
+  },
+  {
+   "primitive_id": "omnis_cellula_e_cellula",
+   "name": "Omnis cellula e cellula: where a cell arises, a cell must previously have existed; no cell builds itself out of non-cellular substance",
+   "verbatim_quote": "Where a cell arises, there a cell must have previously existed (omnis cellula e cellula), just as an animal can spring only from an animal, a plant only from a plant",
+   "page": "Lecture II, printed p. 54 (text lines ~2425-2440)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same rejection of equivocal generation applies to parts as to whole organisms",
+    "A few spots in the body still lacked absolute demonstration in 1858, without weakening the principle"
+   ],
+   "breakdown_regime": "A principle of continuity, not a mechanism; it constrains admissible histories but does not say how division is triggered. no_equation_domain",
+   "domain": "cell theory foundations",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The engine enforces a conservation rule on populations: every unit present at time t+1 must trace to a unit at time t by division, transformation, or recorded import. Apparent spontaneous appearances trigger a search for the missed parent or the missed import channel.",
+    "source_operator": "omnis_cellula_e_cellula",
+    "telemetry": "Population censuses across time with parent links, import logs, and unexplained-appearance counts"
+   }
+  },
+  {
+   "primitive_id": "law_of_continuous_development",
+   "name": "An eternal law of continuous development prevails through the whole series of living things; there is no discontinuity by which a new generation starts a new series",
+   "verbatim_quote": "in the whole series of living things, whether they be entire plants or animal organisms, or essential constituents of the same, an eternal law of continuous development prevails",
+   "page": "Lecture II, printed p. 55 (text lines ~2455-2470)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "No developed tissue can be traced back to any simple element unless it be a cell",
+    "Development is proliferation of cells carried on without a break"
+   ],
+   "breakdown_regime": "Continuity is asserted at the level of descent; it does not deny abrupt changes of form, only unparented ones. no_equation_domain",
+   "domain": "development",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "State histories in the engine are continuous chains: regime changes are modelled as transformations of an existing state with a recorded operator, never as resets. When the data show a jump, the engine inserts a search for the intermediate states instead of accepting a discontinuity.",
+    "source_operator": "law_of_continuous_development",
+    "telemetry": "Time series with gap detection: intervals where intermediate states are missing are flagged for reconstruction"
+   }
+  },
+  {
+   "primitive_id": "three_categories_of_tissues",
+   "name": "General histology divides tissues into three categories: pure cellular tissues, connective tissues with intercellular substance, and the higher specific animal tissues",
+   "verbatim_quote": "one cell is regularly separated from the other by a certain amount of matter (intercellular intermediate substance), and, therefore, a kind of uniting medium exists, which, while it visibly connects the individual elements, yet holds them separate",
+   "page": "Lecture II, printed p. 55 (text lines ~2440-2455)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Classification rests on the relation of cells to intercellular substance and on specific higher development",
+    "Bichat's twenty-one tissues belong mostly to special, not general, histology"
+   ],
+   "breakdown_regime": "Transitional forms (cylindrical epithelium shading into connective tissue) blur the boundaries; the categories grade into one another. no_equation_domain",
+   "domain": "histological classification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The engine classifies structures by their composition pattern before reasoning about them: packed units with no medium, units embedded in a shared medium, and specialised units with dedicated machinery. Each class carries different propagation rules for change, so classification precedes prediction.",
+    "source_operator": "three_categories_of_tissues",
+    "telemetry": "Structural inventories: unit density, medium fraction, and specialisation markers per structure"
+   }
+  },
+  {
+   "primitive_id": "anastomosing_cell_canal_system",
+   "name": "Where connective-tissue cells anastomose they form a system of tubes or canals supplementing the blood and lymphatic vessels, replacing the fictitious vasa serosa",
+   "verbatim_quote": "wherever one cell is connected with another, it may with some degree of certainty be demonstrated that these anastomoses constitute a peculiar system of tubes or canals which must be classed with the great canalicular system of the body",
+   "page": "Lecture II, printed p. 76 (text lines ~3330-3355)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The reticular arrangement occurs in cartilage, connective tissue, bone, and mucous tissue",
+    "Tissues with such anastomoses conduct morbid processes with greater energy"
+   ],
+   "breakdown_regime": "Demonstration is by anatomical preparation; the canals are inaccessible to injection from vessels, so flow through them is inferred, not directly measured. no_equation_domain",
+   "domain": "nutrition channels",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Beyond the primary transport network there is a secondary mesh formed by the units themselves, and it carries real traffic especially where the primary network is absent. The engine models both networks; a district cut off from the primary network is not treated as isolated until the secondary mesh is also checked.",
+    "source_operator": "anastomosing_cell_canal_system",
+    "telemetry": "Secondary-network connectivity maps: unit-to-unit links in districts with sparse primary supply"
+   }
+  },
+  {
+   "primitive_id": "heterology_heterotopia_heterochronia_heterometria",
+   "name": "Heterology in morbid structures is only abnormality of origin: heterotopia (wrong place), heterochronia (wrong time), or heterometria (wrong quantity); it must not be confused with malignity",
+   "verbatim_quote": "there is no other kind of heterology in morbid structures than the abnormal manner in which they arise, and that this abnormity consists either in the production of a structure at a point where it has no business, or at a time when it ought not to be produced, or to an extent which is at variance with the typical formation of the body",
+   "page": "Lecture III, printed p. 92 (text lines ~4010-4030)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pathological structures reproduce physiological types; their tissue composition alone does not make them heterologous",
+    "Prognosis turns on the relation between the new formation and its parent soil"
+   ],
+   "breakdown_regime": "The three aberrations classify origin, not danger; a heterotopic formation may be harmless and a homotopic one destructive. no_equation_domain",
+   "domain": "pathological classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Anomalies in the engine are typed by which coordinate is violated: location, timing, or magnitude. A normal pattern in the wrong place, at the wrong time, or at the wrong scale is flagged as anomalous even though its content matches a known good pattern, and the three types route to different checks.",
+    "source_operator": "heterology_heterotopia_heterochronia_heterometria",
+    "telemetry": "Per-event coordinates: place, time, and magnitude of each observed pattern against its expected ranges"
+   }
+  },
+  {
+   "primitive_id": "hypertrophy_element_enlargement",
+   "name": "Hypertrophy is enlargement of the individual elements by taking up more matter, with no new formation of elements",
+   "verbatim_quote": "Hypertrophy, according to the meaning which I attach to the word, designates those cases in which the individual elements af a structure take up a considerable amount of matter, and thereby become larger",
+   "page": "Lecture III, printed p. 93 (text lines ~4065-4085)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The elements themselves persist; only their size and content increase",
+    "Organ swelling follows from simultaneous enlargement of many elements"
+   ],
+   "breakdown_regime": "Pure hypertrophy is an ideal limit; in practice it mixes with numerical increase, and the two must be separated by counting elements, not by measuring the organ. The printed text reads 'af' for 'of' (OCR artifact retained verbatim). no_equation_domain",
+   "domain": "growth processes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Growth of an aggregate is decomposed into intensive growth (existing units enlarge) and extensive growth (unit count rises). The engine never reports aggregate growth without the decomposition, because the two components have different causes and different reversibility.",
+    "source_operator": "hypertrophy_element_enlargement",
+    "telemetry": "Per-unit size distributions and unit counts over time for the growing aggregate"
+   }
+  },
+  {
+   "primitive_id": "hyperplasia_numerical_increase",
+   "name": "Hyperplasia (numerical hypertrophy) is enlargement by increase in the number of elements, and always produces tissue similar to the original part",
+   "verbatim_quote": "Hyperplastic processes (numerical hypertrophy) in all cases produce a tissue similar to that of the original part ; hyperplasia of the liver gives rise to new hepatic cells",
+   "page": "Lecture III, printed p. 95 (text lines ~4110-4122)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "New elements arise by division of pre-existing ones of the same type",
+    "The product keeps the type of the parent tissue"
+   ],
+   "breakdown_regime": "If the product departs from the parent type, the process is no longer hyperplasia but heteroplasia; the boundary is judged on the developed product, not the first rudiment. no_equation_domain",
+   "domain": "growth processes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Count-driven growth with type fidelity: when an aggregate grows by replication, the engine expects offspring to match the parent type distribution. A drift in offspring type during replication is a separate signal from the growth itself and is reported independently.",
+    "source_operator": "hyperplasia_numerical_increase",
+    "telemetry": "Offspring type distributions per replication event compared with parent type distributions"
+   }
+  },
+  {
+   "primitive_id": "heteroplasia_type_change",
+   "name": "Heteroplasia engenders elements corresponding to natural forms, but arising from a change in the original type of the parent tissue, not from increase of like elements",
+   "verbatim_quote": "A heteroplastic process, on the contrary, engenders histological elements which correspond, indeed, to natural forms, elements, for example, resembling in structure those peculiar to glands, nerve-substance, the connective and epithelial tissues, but these elements do not arise in consequence of a simple increase in the number of such as previously existed, but in consequence of a change in the original type of the parent tissue",
+   "page": "Lecture III, printed p. 95 (text lines ~4120-4145)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The heteroplastic product is itself a normal form somewhere in the body (hair, epidermis, cartilage)",
+    "The parent tissue contained no elements of the product's type before the change"
+   ],
+   "breakdown_regime": "Requires proof that the product's type was absent from the parent tissue; where a few such elements pre-existed, heteroplasia and hyperplasia are hard to separate. no_equation_domain",
+   "domain": "growth processes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A population can change by conversion as well as by replication: units switch type under local conditions. The engine tracks conversion flows between types separately from birth and death flows, because a rising type may mean conversion of neighbours rather than growth of its own lineage.",
+    "source_operator": "heteroplasia_type_change",
+    "telemetry": "Type-transition matrices between successive censuses of the same district"
+   }
+  },
+  {
+   "primitive_id": "vascular_territories",
+   "name": "Definite territories of tissue depend on definite vessels; occlusion of a vessel marks out its territory as a vascular unity, within which cell-territories subdivide further",
+   "verbatim_quote": "a certain dependency of definite territories of tissue upon definite vessels must undoubtedly be admitted, the most beautiful illustrations are afforded us in the doctrine of metastases, in the study of the changes which are effected by the occlusion of single capillary vessels",
+   "page": "Lecture IV, printed p. 113 (text lines ~4840-4858)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Elements supplied by one vessel share essentially similar conditions of life",
+    "Metastases and capillary embolia reveal territory boundaries experimentally"
+   ],
+   "breakdown_regime": "The vascular unity is compound, not ultimate; treating the vessel as the active agent overstates its role, since the cells mediate what the supply effects. no_equation_domain",
+   "domain": "nutrition and circulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Supply infrastructure partitions the system into dependency districts: everything downstream of one supply node shares its fate. The engine uses occlusion and failure events to map these districts empirically, then predicts the spatial extent of any new supply failure from the map.",
+    "source_operator": "vascular_territories",
+    "telemetry": "Supply-to-district maps derived from failure events: which districts changed when a given supply node failed"
+   }
+  },
+  {
+   "primitive_id": "capillary_membrane_continuity",
+   "name": "The vascular system is everywhere closed by continuous membranes; blood cannot pass the capillary wall without rupture, so transudation or diapedesis of corpuscles is inadmissible",
+   "verbatim_quote": "The capillary membrane is seen to be quite uniform, absolutely homogeneous and continuous",
+   "page": "Lecture VI, printed p. 143 (text lines ~6062-6068)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Porosity of the capillary membrane is admissible only in a physical sense, as molecular interstices",
+    "Where blood is found outside vessels, a hole in the wall is to be assumed even when the exact site cannot be pointed out"
+   ],
+   "breakdown_regime": "A structural claim of 1858 microscopy; it governs formed elements (corpuscles), while fluids and dissolved matters still cross by diffusion and specific affinity. no_equation_domain",
+   "domain": "circulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Boundaries in the engine are treated as continuous unless a breach event is recorded. Material found on the wrong side of a boundary is evidence of a breach, and the reasoning step is to locate the breach, not to postulate passive leaking of discrete objects through intact walls.",
+    "source_operator": "capillary_membrane_continuity",
+    "telemetry": "Boundary-crossing logs distinguishing dissolved-matter transfer from discrete-object transfer, plus breach event records"
+   }
+  },
+  {
+   "primitive_id": "specific_action_of_tissue_elements",
+   "name": "Tissues act specifically: elements derive material from the vessels according to their several special requirements and transform it within themselves",
+   "verbatim_quote": "it seems necessary to me that great prominence should be assigned to this specific action of the elements of tissues, in opposition to the specific action of the vessels",
+   "page": "Lecture VI, printed p. 161 (text lines ~6760-6778)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Uptake is an act of the elements, not a passive inundation from the vessels",
+    "After uptake, elements derive new matter, accumulate substances, or decay, according to their own nature"
+   ],
+   "breakdown_regime": "Specific action explains selective uptake but presupposes supply; where supply fails entirely, specificity has nothing to act on. no_equation_domain",
+   "domain": "nutrition",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Exposure is not uptake. The engine models each unit's selective intake function separately from the supply stream, so two units in the same stream can legitimately show opposite responses. Predicting a unit's state requires its intake function, not just ambient levels.",
+    "source_operator": "specific_action_of_tissue_elements",
+    "telemetry": "Per-unit intake profiles: what each unit type absorbs, transforms, stores, or rejects from a common stream"
+   }
+  },
+  {
+   "primitive_id": "dyscrasia_has_local_origin",
+   "name": "Every dyscrasia depends on a permanent supply of noxious ingredients from definite local sources; the blood is not the seat of the dyscrasia",
+   "verbatim_quote": "every dyscrasia is dependent upon a permanent supply of noxious ingredients from certain sources",
+   "page": "Lecture VI, printed p. 163 (text lines ~6845-6860)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The blood is in constant dependence on other parts and does not regenerate itself out of itself",
+    "Remove the supply and restore the injured organs, and the dyscrasia terminates, as with the drunkard's dyscrasia"
+   ],
+   "breakdown_regime": "In many cases the local source could not yet be found in 1858 (scurvy, purpura); the doctrine directs the search but does not guarantee its success. no_equation_domain",
+   "domain": "general pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A persistent abnormality in a circulating medium is traced to a persistent source, never attributed to the medium itself. The engine, on seeing a sustained bad reading in a shared stream, searches upstream sources in order and treats the stream value as a symptom with a location to be found.",
+    "source_operator": "dyscrasia_has_local_origin",
+    "telemetry": "Stream composition time series paired with per-source output records, so sustained stream changes can be matched to source changes"
+   }
+  },
+  {
+   "primitive_id": "leukaemia_permanent_progressive_leucocytosis",
+   "name": "Leukaemia is a permanent, progressive leucocytosis, in splenic and lymphatic forms, while simple leucocytosis is a transitory process tied to fluctuating organ conditions",
+   "verbatim_quote": "Leukaemia is thus a sort of permanent, pro gressive leucocytosis, whilst this on the other hand in its simple forms constitutes a transitory process, connected with fluctuating conditions in certain organs",
+   "page": "Lecture VIII, printed p. 205 (text lines ~8630-8648)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The spleen is the essentially diseased organ in the ordinary form; lymphatic glands in the lymphatic form",
+    "The characteristic blood elements resemble the cells of the organ from which the form takes its name",
+    "The extracted text splits the word progressive as 'pro gressive' (OCR artifact retained verbatim in the quote)"
+   ],
+   "breakdown_regime": "The splenic and lymphatic forms are frequently combined; the distinction rests on the starting point and on the morphology of the elements, both of which can be ambiguous in a given case. no_equation_domain",
+   "domain": "blood pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The same measured elevation means different things by its time course: a transitory rise tied to a passing condition versus a permanent, progressive rise driven by a changed source organ. The engine classifies elevations by persistence and trend before assigning significance, and never pools the two classes.",
+    "source_operator": "leukaemia_permanent_progressive_leucocytosis",
+    "telemetry": "Longitudinal counts with persistence and trend features, plus the state of candidate source organs at each reading"
+   }
+  },
+  {
+   "primitive_id": "spleen_and_lymph_glands_blood_forming",
+   "name": "The spleen and lymphatic glands are blood-making organs: the corpuscular constituents of the blood are descendants of their cellular bodies, set free and conveyed into the current",
+   "verbatim_quote": "the corpuscular constituents of this fluid are really descendants of the cellular bodies of the lymphatic glands and the spleen which have been set free in their interior and conveyed into the current of the blood",
+   "page": "Lecture VIII, printed p. 206 (text lines ~8680-8700)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The lymphatic glands interrupt the lymph current, the afferent vessel resolving into the gland parenchyma like a filter",
+    "Chemical evidence (hypoxanthine, leucine, uric, lactic, and formic acids in leukaemic blood, matching spleen contents) supports the splenic connection"
+   ],
+   "breakdown_regime": "The origin of the red corpuscles remained obscure in 1858; the doctrine is demonstrated for the colourless corpuscles and extended by analogy. no_equation_domain",
+   "domain": "blood formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some nodes in the engine are producers, not conduits: they manufacture the units that later appear in the stream. Counting stream units without modelling producer output misattributes changes; the engine ties stream composition shifts to producer states first.",
+    "source_operator": "spleen_and_lymph_glands_blood_forming",
+    "telemetry": "Producer-node output rates and product composition, matched against downstream stream composition"
+   }
+  },
+  {
+   "primitive_id": "pyaemia_rejected_as_morphological_entity",
+   "name": "A morphological pyaemia has never been demonstrated; colourless blood-corpuscles cannot be distinguished from pus-corpuscles, so the name, as a definite change in the blood, must be abandoned",
+   "verbatim_quote": "succeeded in demonstrating, by arguments capable of supporting even gentle criticism, the existence of a morphological pyaemia. This name therefore must, as designating a definite change in the blood, be entirely abandoned",
+   "page": "Lecture IX, printed p. 229 (text lines ~9650-9670)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Physiological leucocytosis (digestion, pregnancy) puts pus-like corpuscles into normal blood",
+    "Pus entering a vein is a rare, mostly single event, not a persistent blood state"
+   ],
+   "breakdown_regime": "The refutation is morphological only; pyaemia survives as a collective name for metastatic processes whose mechanism is thrombosis and embolia, treated in Lecture X. no_equation_domain",
+   "domain": "blood pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "When two categories are indistinguishable by the available measurement, the engine refuses to let the label do causal work. It collapses the pair into one measured class and requires a different observable (here, developmental history) before any split is reintroduced.",
+    "source_operator": "pyaemia_rejected_as_morphological_entity",
+    "telemetry": "Confusion records: cases where two labels compete for the same observation, and which additional observable resolved them"
+   }
+  },
+  {
+   "primitive_id": "thrombosis_local_coagulation",
+   "name": "Thrombosis: the affection misnamed phlebitis or arteritis consists essentially in a real coagulation of the blood at a certain fixed spot",
+   "verbatim_quote": "it seems most convenient to comprehend the whole of this process under the term Thrombosis. I have proposed to substitute this term for the different names, phlebitis, arteritis, etc., inasmuch as the affection essentially consists in a real coagulation of the blood at a certain fixed spot",
+   "page": "Lecture X, printed p. 233 (text lines ~9820-9840)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Before any trace of inflammation of the wall, a clot is present (Cruveilhier's observation)",
+    "Inflammation has no necessary connection with coagulation; stasis doctrine rests on misinterpretations"
+   ],
+   "breakdown_regime": "The term names the local coagulation only; the fate of the thrombus (softening, prolongation, organisation) determines the consequences and needs separate tracking. no_equation_domain",
+   "domain": "vascular pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A blockage event is recorded as a local state change at a fixed site, with the site and the material as primary facts, before any downstream interpretation. Naming the event by its mechanism rather than by its presumed cause keeps later causal reasoning honest.",
+    "source_operator": "thrombosis_local_coagulation",
+    "telemetry": "Blockage registry: site, extent, material, and time of onset for each occlusive event"
+   }
+  },
+  {
+   "primitive_id": "puriform_softening_is_not_pus",
+   "name": "The pus-like mass inside a softening thrombus is not pus and not secreted by the wall; it is a direct chemical transformation of the central layers of the clot itself",
+   "verbatim_quote": "the puriform mass which is met with in their interior does not originate in the wall, but is produced by a direct transformation of the central layers of the clots themselves, a transformation indeed which is of a chemical nature",
+   "page": "Lecture X, printed p. 233 (text lines ~9835-9855)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Pus by definition contains cellular elements; the softened mass is chiefly fine granular debris of disintegrated fibrine",
+    "Colourless corpuscles found in the mass pre-existed in the clot and are set free by its softening"
+   ],
+   "breakdown_regime": "Where debris is scanty and corpuscles numerous, only the developmental history of the mass distinguishes it from true pus. no_equation_domain",
+   "domain": "vascular pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Resemblance is not identity: a product that looks like a known category is classified by its origin and composition, not its appearance. The engine stores provenance for every classified mass, and appearance-only matches are marked provisional.",
+    "source_operator": "puriform_softening_is_not_pus",
+    "telemetry": "Composition assays and origin records for ambiguous masses, with appearance-only classifications flagged"
+   }
+  },
+  {
+   "primitive_id": "embolia_detached_fragments",
+   "name": "Embolia: fragments detached from the end of a softening thrombus are carried by the blood current into remote vessels and occlude them",
+   "verbatim_quote": "by the detachment of larger or smaller fragments from the end of the softening thrombus which are carried along by the current of blood and driven into remote vessels. This gives rise to the very frequent process upon which I have bestowed the name of Embolia",
+   "page": "Lecture X, printed p. 238 (text lines ~10035-10052)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Prolonged thrombi, growing by apposition beyond the mouth of a branch into the trunk, are the dangerous source",
+    "The embolus lodges where the vessel calibre narrows, classically astride a division spur"
+   ],
+   "breakdown_regime": "Embolia explains mechanical secondary occlusion; the varying character of metastases (simple, puriform, specific) depends on what the fragment carries with it. no_equation_domain",
+   "domain": "vascular pathology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Remote failures are traced to transported fragments of a local failure, not to independent remote causes. When a downstream site fails, the engine searches upstream for a shedding source and models fragment transport along the flow network, including lodging at branch points.",
+    "source_operator": "embolia_detached_fragments",
+    "telemetry": "Flow-network topology with branch calibres, upstream lesion registry, and downstream occlusion times for transport matching"
+   }
+  },
+  {
+   "primitive_id": "neuro_glia_nerve_cement",
+   "name": "Neuro-glia: the interstitial tissue of the brain and cord is a peculiar connective tissue, the nerve-cement binding the nervous elements, with cellular elements of its own",
+   "verbatim_quote": "This peculiarity of the membrane, namely, that it becomes continuous with the interstitial matter, the real cement, which binds the nervous elements together, and that in all its properties it constitutes a tissue different from the other forms of connective tissue, has induced me to give it a new name, that of neuro-glia* (nervecement)",
+   "page": "Lecture XIII, printed p. 315 (text lines ~13265-13285)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The ependyma of the ventricles becomes continuous with this interstitial matter",
+    "A middle course is required: neither are all its cells nerve-cells (against Bidder) nor is it amorphous and cell-free (against Jacubowitsch)"
+   ],
+   "breakdown_regime": "The boundary between its cellular elements and true nerve-cells was contested in 1858; misclassification in either direction distorts the account of nervous disease. no_equation_domain",
+   "domain": "nervous system histology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Every specialised network sits in a supporting matrix that is easy to mistake for part of the network or for nothing at all. The engine inventories the matrix as a first-class component with its own elements and states, because many apparent network behaviours are matrix behaviours.",
+    "source_operator": "neuro_glia_nerve_cement",
+    "telemetry": "Matrix inventories per network: support-element counts, states, and changes during network events"
+   }
+  },
+  {
+   "primitive_id": "irritability_criterion_of_life",
+   "name": "Every vital action presupposes an excitation; the irritability of a part is the criterion by which we judge whether it is alive or dead",
+   "verbatim_quote": "Every vital action presupposes an excitation, or if you like an irritation. The irritability of a part, therefore appears to us the criterion, by which we can judge whether it is alive or not",
+   "page": "Lecture XIV, printed p. 325 (text lines ~13715-13732)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Structure alone cannot decide life: a muscle's structure persists in parts that perished years before",
+    "No vital action is carried on by a cause allotted to the part from the beginning without excitation"
+   ],
+   "breakdown_regime": "Irritability grades off with fatigue and after death; the criterion is a test applied at a moment, not a permanent property. no_equation_domain",
+   "domain": "vital activity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Liveness of a unit is tested by response to a probe, not inferred from its static appearance. The engine schedules probe-response checks for units whose status matters, and treats an intact-looking but unresponsive unit as dead for planning purposes.",
+    "source_operator": "irritability_criterion_of_life",
+    "telemetry": "Probe-response records per unit: stimulus, response magnitude, latency, and time since last confirmed response"
+   }
+  },
+  {
+   "primitive_id": "three_forms_of_vital_activity",
+   "name": "Every excited action is a manifestation of one of three forms of vital activity: function, nutrition, or formation, with transitional stages between them",
+   "verbatim_quote": "When, namely, a given action is called into play, we have to deal with a manifestation either of the function, the nutrition, or the formation of a part",
+   "page": "Lecture XIV, printed p. 326 (text lines ~13805-13818)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The internal changes differ according as the part only functions, is specially nourished, or becomes the seat of formative processes",
+    "Tissues differ in their capacity to respond to each kind of excitation"
+   ],
+   "breakdown_regime": "Boundaries disappear at transitional points (nutritive to formative, functional to nutritive); classification of a given response can be genuinely intermediate. no_equation_domain",
+   "domain": "vital activity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Responses are typed before they are measured: a unit under stimulus is performing, consuming and maintaining, or producing new units. The engine routes each response to the matching ledger, because the same stimulus magnitude means different things in the three ledgers.",
+    "source_operator": "three_forms_of_vital_activity",
+    "telemetry": "Response typing per stimulus event: performance output, material balance, and new-unit production recorded separately"
+   }
+  },
+  {
+   "primitive_id": "tissue_activity_independent_of_vessels_and_nerves",
+   "name": "The active processes of tissues are founded in the special action of the elementary parts and can continue entirely independent of increased afflux of blood or excitation of nerves",
+   "verbatim_quote": "foundation in the special action of the elementary parts, an action which does not depend upon an increased afflux of blood or any excitation of the nerves, but which is certainly promoted by them, though it can also continue entirely independent of them",
+   "page": "Lecture XIV, printed p. 351 (text lines ~14830-14848)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Section of the sympathetic raises afflux, redness, and temperature for weeks without enlarging cells or exciting proliferation",
+    "Absorption into cells is an act of the cells themselves; the same changes occur in parts with no vessels and no nerves (cornea, cartilage)"
+   ],
+   "breakdown_regime": "Independence is from necessity, not from influence: vessels and nerves promote the processes, and in vascular parts the two are usually entangled in practice. no_equation_domain",
+   "domain": "vital activity",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Correlation with supply or control signals does not establish dependence. The engine tests dependence by the counterfactual: does the process continue when the signal is removed or held constant? Processes that persist are modelled as unit-driven with the signal as a promoter, not a cause.",
+    "source_operator": "tissue_activity_independent_of_vessels_and_nerves",
+    "telemetry": "Ablation and hold-constant records: process rates with the candidate driver removed, blocked, or clamped"
+   }
+  },
+  {
+   "primitive_id": "necrobiosis_death_from_altered_life",
+   "name": "Necrobiosis: the category of processes in which the cells are destroyed in the course of the process itself, a gradual wearing out and dissolution distinct from necrosis, in which the part is preserved in form",
+   "verbatim_quote": "This latter category, where the cells are destroyed during the course of the process, I proposed a few years ago to designate by a term which has been employed to express disease generally by K. H. Schultz, viz., Necrobiosis",
+   "page": "Lecture XV, printed p. 358 (text lines ~15115-15132)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "In necrosis the mortified part keeps its external form; in necrobiosis the part vanishes and nothing of the previous tissue is preserved",
+    "Necrobiotic processes are in general attended by softening as their ultimate result"
+   ],
+   "breakdown_regime": "Where only scattered elements in a compound organ are affected, the softening is microscopic only and is commonly misnamed simple atrophy. no_equation_domain",
+   "domain": "passive processes and degeneration",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "End-of-life is typed by what remains: a unit can be destroyed in place with its form preserved, or consumed by its own process leaving nothing. The engine records the residue class, because preserved-form deaths can be inspected afterwards and consumed deaths cannot.",
+    "source_operator": "necrobiosis_death_from_altered_life",
+    "telemetry": "Death records per unit with residue class: form preserved, softened residue, or complete disappearance"
+   }
+  },
+  {
+   "primitive_id": "cloudy_swelling_precedes_fatty_degeneration",
+   "name": "Secondary fatty degeneration is preceded by a stage of cloudy swelling, an active absorption of matter by the elements; the fatty stage announces commencing disintegration",
+   "verbatim_quote": "it nearly always turns out, that the stage of fatty degeneration has been preceded by another stage, namely that of cloudy swelling, in which the parts enlarge and increase in extent and density, in consequence of their absorbing a large quantity of matter into themselves",
+   "page": "Lecture XVI, printed p. 392 (text lines ~16645-16662)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Absorption is the part's own act, not an inundation by exudation from vessels; the same sequence occurs in parts without vessels",
+    "Primary and secondary fatty degeneration are distinguished by whether another perceptible disturbance went before"
+   ],
+   "breakdown_regime": "Once the fatty stage is reached in muscle, kidney epithelium, or brain, restitution of that element is as a rule impossible; the sequence is a staging tool, not a reversible pathway. no_equation_domain",
+   "domain": "degeneration staging",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Degeneration is staged, and the stage is read from the sequence, not the snapshot: an absorbing, swelling stage precedes the disintegration stage. The engine stages decline by detecting the early absorptive signature, which is the last point at which the process is a disturbance of a living element rather than its dissolution.",
+    "source_operator": "cloudy_swelling_precedes_fatty_degeneration",
+    "telemetry": "Stage markers over time per element: size, density, absorbed-matter load, then fat appearance and debris formation"
+   }
+  },
+  {
+   "primitive_id": "amyloid_degeneration_begins_in_minute_arteries",
+   "name": "Amyloid (lardaceous) degeneration begins in the smallest arteries and extends from their changed walls to the surrounding parenchyma; its substance is known by its iodine and sulphuric acid reactions",
+   "verbatim_quote": "These changes can be best followed in those structures which must on the whole be regarded as the most frequent and the earliest seat of this change, namely the smallest arteries. These first undergo the transformation, and only after the constitution of their walls has become changed, is the infiltration wont to extend to the surrounding parenchyma",
+   "page": "Lecture XVII, printed p. 416 (text lines ~17645-17662)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The amyloid substance colours yellowish red with iodine alone and blue or violet when iodine is followed by cautious sulphuric acid, distinguishing it from starch and from cellulose",
+    "The change is comparable to calcification and to the lignification of a plant cell"
+   ],
+   "breakdown_regime": "Chemical nature unsettled in 1858 (albuminous per Kekule and Schmidt's analyses of whole organs, which Virchow distrusts); concentric corpora amylacea must not be confounded with the true parenchymatous degeneration. no_equation_domain",
+   "domain": "degeneration",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some infiltrations have a fixed port of entry and a characteristic spread order: vessel wall first, parenchyma second. The engine uses the earliest-affected structure as the detection point, since by the time the bulk tissue shows the change the process is advanced.",
+    "source_operator": "amyloid_degeneration_begins_in_minute_arteries",
+    "telemetry": "Earliest-site sampling: state of the smallest supply vessels in each district, sampled before bulk-tissue state"
+   }
+  },
+  {
+   "primitive_id": "inflammation_as_irritated_tissue_absorption",
+   "name": "Inflammation begins when an irritated part, its composition altered, attracts and absorbs a larger quantity of matter than usual and transforms it; exudation is a consequence of the activity of the tissues, not of hyperaemia alone",
+   "verbatim_quote": "it may be assumed that it begins as an inflammation from the moment that this increased absorption of matters into the tissue takes place, and the further transformation of these matters commences",
+   "page": "Lecture XVII, printed p. 431 (text lines ~18285-18302)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The same inflammatory processes occur in non-vascular parts (cornea, cartilage, tendon) and cannot there depend on hyperaemia",
+    "Lesion of function follows from changes in the composition of the cellular elements"
+   ],
+   "breakdown_regime": "Inflammation is a compound phenomenon (functional, nutritive, and formative irritation combined); reducing it to any single cardinal symptom or to the vessels alone breaks down on the non-vascular cases. no_equation_domain",
+   "domain": "inflammation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The defining event of the inflammatory class is a change in the affected unit's intake and transformation behaviour, not a change in its supply lines. The engine detects the class by unit-side absorption anomalies, so cases with no supply change are still caught, and supply changes without unit response are not counted.",
+    "source_operator": "inflammation_as_irritated_tissue_absorption",
+    "telemetry": "Per-unit absorption rates and transformation products around an irritant event, compared with supply-side flow records"
+   }
+  },
+  {
+   "primitive_id": "connective_tissue_germ_stock",
+   "name": "Connective tissue and its equivalents are the common stock of germs (Keimstock) of the body, the general source of new formations, replacing the plastic lymph, blastema, and exudation of the older writers",
+   "verbatim_quote": "connective tissue with its equivalents as the common stock of germs (Keimstock) of the body, and directly trace to it as the general source the development of new-formations",
+   "page": "Lecture XVIII, printed p. 441 (text lines ~18705-18722)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Scarcely any part of the body lacks cellular elements; bone-corpuscles are real cells and connective tissue everywhere contains them",
+    "New formations in brain and liver do not arise from nerve matter or hepatic cells but from the connective framework in which they are embedded"
+   ],
+   "breakdown_regime": "Epithelial formations and the higher specific tissues are partial exceptions; the rule holds with trifling restriction, not absolutely. no_equation_domain",
+   "domain": "new formation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The system keeps a general-purpose substrate population from which most new structures are actually built, whatever their final type. When a new structure appears, the engine looks first to the substrate population of that district, not to the specialised units the structure resembles.",
+    "source_operator": "connective_tissue_germ_stock",
+    "telemetry": "Substrate population maps per district: density and state of general-purpose units available for new formation"
+   }
+  },
+  {
+   "primitive_id": "parasitism_and_autonomy_of_new_formations",
+   "name": "A new formation is parasitical in degree, not in kind: it withdraws matter from the body, destroys its parent structures from the outset, and plays a destructive part at its commencement and a depredatory one throughout its course",
+   "verbatim_quote": "Every one of their elements will withdraw matters from the body which might be used for other purposes, and as it has at the very outset destroyed normal parts and even its first development presupposes the destruction of its parent structures it both plays a destructive part at the commencement of its career, and a depredatory one throughout its course",
+   "page": "Lecture XIX, printed p. 506 (text lines ~21635-21652)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Autonomy belongs to every part of the body; parasitism differs from it only in degree",
+    "A part becomes a parasite when it becomes foreign or injurious to the body, not while it is useful to the other parts"
+   ],
+   "breakdown_regime": "The epithet applies to all heteroplastic forms that yield no homologous useful product; it is a functional verdict on a formation, not a histological class. no_equation_domain",
+   "domain": "tumour biology",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Autonomy is a continuum, and the engine scores each growing formation on two ledgers: resources withdrawn from the host and damage done to parent structures, from its first appearance onward. A formation is treated as parasitic when both ledgers run against the host, whatever its type label says.",
+    "source_operator": "parasitism_and_autonomy_of_new_formations",
+    "telemetry": "Per-formation resource draw and parent-structure damage records, tracked from first detection"
+   }
+  },
+  {
+   "primitive_id": "classification_by_developmental_type",
+   "name": "New formations are classified by the type of development they display during their actual development, not by their appearance in retrograde metamorphosis; heterologous tissues also have physiological types",
+   "verbatim_quote": "there remains nothing else to assist us in coming to a right conclusion than the investigation of the type of development displayed, by the individual new-formations during the stages of their actual development, not during those of their retrograde metamorphosis",
+   "page": "Lecture XX, printed p. 525 (text lines ~22455-22472)",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The nature of tubercle cannot be studied after it becomes cheesy; an earlier, proliferating period must be chosen",
+    "Every pathological formation corresponds to some normal type (myxoma to the mucous tissue of the umbilical cord, tubercle to lymphatic gland corpuscles)"
+   ],
+   "breakdown_regime": "Requires catching the formation between origin and culminating point; material taken only in decay forces classification by debris, where different formations converge to identical histories. no_equation_domain",
+   "domain": "pathological classification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Classification uses the growth-phase signature, not the decay-phase residue, because decay makes unlike things alike. The engine timestamps observations against the formation's life stage and downweights late-stage evidence when assigning type.",
+    "source_operator": "classification_by_developmental_type",
+    "telemetry": "Life-stage stamps on observations (origin, growth, culmination, decay) with type evidence weighted by stage"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "fb393f2a874dbca2-t1",
+   "think": "This book is the founding document of cellular pathology, and its machinery is a single argument pursued through twenty lectures: every vital and morbid process must be traced to cells, because the cell is the ultimate morphological element in which life manifests, and nothing beyond the cell may be made the seat of action. Virchow builds the argument in layers. First the unit is defined with deliberate severity: strip away everything added by later development, such as the capsule of the cartilage cell, and there remains a simple structure of membrane, contents, and nucleus, recurring with extraordinary constancy through all living things. The nucleus is then assigned its office: not the specific function of the cell, which resides in the variable contents, but the maintenance and multiplication of the element, so that whatever grows or multiplies invariably starts from nucleated elements, and whatever loses its nucleus is transitory. On this unit Virchow erects his developmental law. The older theory of free cell formation out of a cytoblastema is dismissed as a theory without a single certainly adducible fact, and in its place stand omnis cellula e cellula and the eternal law of continuous development: no development begins de novo, in the history of a part any more than in the history of an organism. The organism is then re-described as a sum of vital unities, a social arrangement in which each element has its own special action, portioned into cell-territories, each cell ruling a district of intercellular substance, and the territories grouped again into vascular territories defined by supply. Nutrition is re-thought accordingly: the vessels deliver, but the elements act specifically, taking up material according to their several requirements and transforming it within themselves, with a secondary canal system of anastomosing connective-tissue cells carrying juices where vessels do not reach. This is why the humoral pathology collapses in his hands. The blood is not an independent, self-regenerating tissue; it is in constant dependence on other parts, its corpuscles are manufactured in the spleen and lymphatic glands, and every dyscrasia is a local disease whose products are continuously supplied to the blood from definite organs. Leukaemia is the showcase: a permanent, progressive leucocytosis driven by a diseased spleen or diseased glands, against the transitory leucocytosis of digestion and pregnancy. Pyaemia, by contrast, is dissolved: nobody has demonstrated pus as a persistent morphological state of the blood, and the phenomena gathered under the name are re-founded on thrombosis and embolia, the local coagulation of blood at a fixed spot and the transport of detached fragments into remote vessels. The second half of the book turns the same unit logic onto process. Life in a part is known by irritability: every vital action presupposes an excitation, and the response falls under function, nutrition, or formation. Because the response belongs to the elementary parts themselves, it proceeds in cornea and cartilage without vessels or nerves, and increased afflux of blood alone, however long maintained, produces no swelling and no proliferation. Inflammation is thereby redefined as the irritated tissue's increased absorption and transformation of matter, with exudation a consequence of tissue activity. Degeneration is staged and typed: cloudy swelling before fatty metamorphosis, fatty infiltration distinguished from necrobiotic fatty change, necrobiosis named for the processes in which the element is consumed by its own altered life, amyloid degeneration tracked from the minute arteries outward. Growth, finally, is decomposed into hypertrophy of elements, hyperplasia of their number, and heteroplasia of their type, all of it arising overwhelmingly from connective tissue as the common germ stock of the body, and all tumours are classified by the physiological type their development displays. The classification lectures add a second discipline that is easy to miss: prognosis and type are argued from development, never from decay. A tumour is what its growth displays; tubercle must be studied while it proliferates, not after it turns cheesy, because in retrograde metamorphosis unlike formations converge to the same debris and every classification built on debris is worthless. Heterology itself is dissolved into three coordinate errors, production in the wrong place, at the wrong time, or to the wrong extent, and is formally separated from malignity, so that a formation is judged by its relation to its parent soil and by what it does to its neighbours, not by the mere strangeness of its elements. Even parasitism is made a matter of degree: every part is autonomous, and a part earns the name of parasite only when it withdraws matter the body needs and destroys the structures that bore it. The same severity governs his handling of names throughout: a term survives only while the thing it names can be demonstrated, which is why phlebitis yields to thrombosis, pyaemia is struck out as a blood state, and the plastic lymph of the older writers is replaced by the connective-tissue germ stock that can actually be shown under the microscope. For a reasoning engine the book contributes a discipline rather than a dataset: decompose to units, demand lineage for every new entity, type anomalies by place, time, and quantity, trace stream abnormalities to local sources, classify by developmental history rather than by decayed appearance, and never let an aggregate label do the work that a unit-level account can do. Its limits are the limits of 1858: no chemistry of the nucleus, no micro-organisms, capillary continuity asserted beyond what later work sustained, and several mechanisms, such as the manufacture of red corpuscles, frankly left obscure. But the architecture, units, territories, lineage, staged processes, source tracing, is complete and internally enforced, which is why the lectures still organise how a pathological fact is stated.",
+   "retrocausal_genealogy": "The lineage runs from the Alexandrian anatomists through Vesalius and Bichat's general anatomy to Schleiden's botanical cell theory and Schwann's extension of it to animals, the immediate inheritance Virchow both uses and corrects. Robert Brown's nucleus, Schleiden's cytoblast, and Schwann's cytoblastema supplied the theory of free cell formation that the lectures dismantle, replacing it with the continuity doctrine associated with Remak's observations of division and with Virchow's own earlier papers on thrombosis, embolia, leukaemia, and tubercle in his Archiv. Reichert's connective-tissue group and Johannes Muller's law of correspondence between embryonic and pathological development are absorbed and re-founded on the cell. The book is therefore a consolidation point: everything before it is re-stated in cellular terms, and cellular pathology after it works inside its vocabulary.",
+   "theory_of_mind": "Virchow's model of his reader is a practising physician whose head is full of humoral and neuristic doctrine and who has little time at the microscope; the lectures therefore demonstrate preparations, argue from what can be seen, and repeatedly translate doctrine into bedside distinctions such as prognosis. His model of the domain is anti-systematic: he distrusts any single controlling principle, whether blood, nerves, or an organizing idea, and expects the truth to be distributed, local, and compositional. He assumes the reader will accept a claim when its anatomical demonstration is produced and will abandon a name, however traditional, when the thing named cannot be shown. Tradition is respected as a source of observations but never as authority over interpretation.",
+   "cross_layer_veto": "The work vetoes several moves that other layers of reasoning might attempt. It vetoes explanations that terminate in a fluid or a system: a dyscrasia claim is invalid until a local source is produced. It vetoes unparented novelty: any proposed new formation without a lineage from pre-existing elements is rejected as spontaneous generation. It vetoes classification by decayed appearance and by gross resemblance, requiring developmental type instead. It vetoes vascular and nervous sufficiency: increased blood flow or nerve excitation alone cannot be credited with proliferation or inflammation. And it vetoes the confusion of heterology with malignity, forcing prognosis to be argued from the relation of a formation to its parent soil rather than from its mere foreignness."
+  }
+ ],
+ "universal_lens": "Read as a general template, the lectures teach a method for any science of complex organised systems: find the smallest unit that still manifests the phenomenon, forbid explanations that stop at aggregates, require every new entity to show its parentage, divide the whole into territories ruled by units and supplied by infrastructure, type every anomaly by place, time, or quantity, and judge processes by their developmental history rather than by their decayed remains. The method transfers intact to any domain where fluids, centres, or systems are lazily credited with what distributed units actually do.",
+ "gsi_mapping": "For the Galaxy Sports Institute the book is a methods text on evidence discipline: how a field replaces a plausible system-level doctrine with unit-level demonstration, how names are reformed when knowledge changes, and how to keep a research programme honest by demanding that every claimed entity be shown and every claimed process be traced to its local source. It also supplies a teaching arc, from unit, to territory, to process, to classification, for training analysts to decompose before they aggregate.",
+ "gse_mapping": "For the Galaxy Sports Edge engine the lectures contribute architecture, not data: unit-grain evidence storage, lineage enforcement for every derived entity, territory maps for supply and dependency, anomaly typing by place, time, and magnitude, source tracing for persistent stream abnormalities, staged decline detection, and classification by growth-phase signature rather than late residue. These are reasoning constraints that veto whole classes of shallow explanation before any domain signal is even considered."
+}

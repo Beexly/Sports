@@ -35,6 +35,7 @@ from typing import Any
 from gse_engine.memory.wave20b_openscholar_tddlog_woodelf_tree_suite import (
     compile_and_query_tddlog_wmc,
     compute_woodelf_banzhaf_interactions,
+    compute_xgboost_newton_hessian_split_gain,
     synthesize_openscholar_verified_claims,
 )
 
@@ -1174,6 +1175,14 @@ def evaluate_wave20_corpus_rag_and_bayesian_bridge(
         2,
     )
     woodelf_syn = float(woodelf_res["pairwise_interactions"].get((0, 1), 0.0))
+    mu_pair = 0.5 * (aw_pooled + hm_pooled)
+    xgb_res = compute_xgboost_newton_hessian_split_gain(
+        [-(aw_pooled - mu_pair)],
+        [1.0],
+        [-(hm_pooled - mu_pair)],
+        [1.0],
+        reg_lambda=1.0,
+    )
 
     gate_m = float(ragas_res["gate_multiplier"])
     raw_aw_adj = (
@@ -1193,7 +1202,7 @@ def evaluate_wave20_corpus_rag_and_bayesian_bridge(
 
     return {
         "wave20_wired": True,
-        "oss_registry_unique_entries": 131,
+        "oss_registry_unique_entries": 169,
         "openviking_tier_loaded": ov_res["highest_tier_loaded"],
         "ragas_faithfulness": ragas_res["faithfulness"],
         "ragas_gate_multiplier": gate_m,
@@ -1206,6 +1215,7 @@ def evaluate_wave20_corpus_rag_and_bayesian_bridge(
         "openscholar_citation_precision": float(scholar_res["citation_precision"]),
         "tddlog_exact_conjunction_prob": round(float(tdd_res["exact_probability"]), 6),
         "woodelf_banzhaf_interaction_synergy": round(woodelf_syn, 6),
+        "xgboost_newton_split_gain": round(float(xgb_res["gain"]), 6),
         "away_wave20_epa_adj": round(aw_adj, 6),
         "home_wave20_epa_adj": round(hm_adj, 6),
     }

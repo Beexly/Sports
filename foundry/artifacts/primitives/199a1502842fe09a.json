@@ -1,0 +1,735 @@
+{
+ "book_id": "199a1502842fe09a",
+ "source_status": "COMPLETE",
+ "source_note": "Frank Hildebrand and Klemens Horst (eds.), 'New Diagnostic and Therapeutic Approaches for the Care of the Severely Injured Patient', printed edition of the Journal of Clinical Medicine special issue, MDPI, Basel, 2020. ISBN 978-3-03943-777-1 (hardback), 978-3-03943-778-8 (PDF). Catalog correction: the local file name shortens the title to 'Severely Injured Patient'; the printed title is the full 'New Diagnostic and Therapeutic Approaches...' title above. The volume contains an editorial plus 25 articles (book pages 1 to about 300). Local file: HildebrandHorstEds-2020-SeverelyInjuredPatient-MDPI.pdf, 15706640 bytes, sha256 over (str(size) + file bytes) = 199a1502842fe09a74a1795646ed7bb43481d5a2534dd1878aa24660c175cd5a, book_id = first 16 hex chars. Extracted text quality is high and complete (about 153,000 words) with intact abstracts, tables and equations; ligatures and journal page footers are present in the text layer and quotes were taken from single pages to stay contiguous. Motif-lane extraction (MOTIF-TIERB-DRAIN-01) of the same work for sync-cloud reconciliation.",
+ "motif_lane": "MOTIF-TIERB-DRAIN-01",
+ "primitives": [
+  {
+   "primitive_id": "abcde_priority_algorithm",
+   "name": "ATLS ABCDE scheme orders trauma assessment by lethality: airway, then breathing, then circulation",
+   "verbatim_quote": "According to this algorithm, securing the airway (A-problem) and ensuring ventilation (B-problem) are the ﬁrst priorities when approaching a severely injured patient.",
+   "page": "book p. 1 (article), text line 301",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "The scheme assumes a single patient assessed by a trained team following the ATLS guideline sequence",
+    "Priorities are ordered by time-to-death of the untreated problem, not by frequency"
+   ],
+   "breakdown_regime": "The editorial itself notes the scheme is only the basis: individual factors such as age and gender modulate the immune response and outcome, so the fixed order does not capture patient-specific trajectories",
+   "domain": "trauma triage framework",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A fixed priority order for checking failure modes, ranked by how fast each one kills, maps directly onto a pre-analysis triage pass in a reasoning engine: confirm the highest-criticality inputs first (player availability, then quarterback status, then line health) before spending computation on downstream estimates that are worthless if a top-priority input is wrong.",
+    "source_operator": "abcde_priority_algorithm",
+    "telemetry": "Timestamped confirmation status of each critical input, ordered by positional criticality"
+   }
+  },
+  {
+   "primitive_id": "iss_quadratic_severity_aggregation",
+   "name": "Injury Severity Score: sum of the squares of the AIS grades of the three most injured body regions",
+   "verbatim_quote": "The Injury Severity Score (ISS) was calculated by adding up the squares of the AIS codes of the three most injured body regions",
+   "page": "book p. 100 (article), text line 5326",
+   "latex": "\\mathrm{ISS} = a_1^{2} + a_2^{2} + a_3^{2}",
+   "symbol_and_unit_ledger": {
+    "a_1, a_2, a_3": "AIS severity grades of the three most severely injured body regions, dimensionless ordinal codes",
+    "ISS": "Injury Severity Score, dimensionless, range 0 to 75"
+   },
+   "assumptions": [
+    "AIS grades are ordinal severity codes assigned per body region from documented diagnoses and imaging",
+    "Only the three most injured regions enter the score"
+   ],
+   "breakdown_regime": "The flail chest paper itself flags the known limitation: the score behaves badly for patients whose injuries sit in a single region, which is why that study additionally required the Berlin Definition of polytrauma",
+   "domain": "severity quantification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Quadratic aggregation makes the single worst component dominate the total instead of averaging out. The same aggregation rule applies to injury load on a roster: one severe absence at a critical position should outweigh several minor ones, so impact scores should square, not sum, graded absences.",
+    "source_operator": "iss_quadratic_severity_aggregation",
+    "telemetry": "Per-player injury grades by body system, from which the three largest are selected and squared"
+   }
+  },
+  {
+   "primitive_id": "bmi_definition",
+   "name": "Body mass index defined as weight in kilograms divided by the square of height in metres",
+   "verbatim_quote": "Weight disorders were assessed using the body mass index (BMI), an index of weight for height, which is deﬁned as weight in kilograms divided by the square of height in metres (kg/m2 )",
+   "page": "book p. 21 (article), text line 1284",
+   "latex": "\\mathrm{BMI} = \\frac{m}{h^{2}}",
+   "symbol_and_unit_ledger": {
+    "m": "body mass, kilograms",
+    "h": "height, metres",
+    "BMI": "body mass index, kg/m^2"
+   },
+   "assumptions": [
+    "Weight and height were measured or recorded for every included patient",
+    "Categories used in the study: BMI below 18.5 underweight, 18.5 to 25 normal, 25 to 30 overweight, above 30 obesity, as printed in the methods"
+   ],
+   "breakdown_regime": "BMI cannot distinguish muscle mass from fat mass, so in athletic or muscular patients the index misclassifies body composition",
+   "domain": "anthropometric normalization",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A raw load measure becomes comparable across individuals only after division by a size baseline. The engine analogue is normalizing any physical workload or exposure measure by an opportunity or size denominator before comparing athletes or teams.",
+    "source_operator": "bmi_definition",
+    "telemetry": "Athlete mass in kilograms and height in metres, or any load measure with its natural size denominator"
+   }
+  },
+  {
+   "primitive_id": "overweight_chest_trauma_survival_benefit",
+   "name": "Overweight patients with severe chest trauma show an independent survival benefit (OR 0.158, p = 0.037)",
+   "verbatim_quote": "For overweight patients with severe chest trauma, an independent survival beneﬁt was found (OR 0.158; p = 0.037).",
+   "page": "book p. 21 (article), text line 1196",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "338 severely injured patients, multivariate regression separated severe chest trauma (AIS at least 3) from minor chest trauma",
+    "Median BMI of the cohort was 25.1 and median ISS was 24"
+   ],
+   "breakdown_regime": "Single registry cohort; the authors offer only hypotheses (nutritive advantage, unknown immunological aspects), and the result contradicts other studies that found harm or no effect of overweight",
+   "domain": "outcome moderation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A reserve stock variable can flip the sign of a stressor effect inside a subgroup: overweight worsens many baselines yet protected patients with severe chest trauma. For the engine this means interaction terms between a stressor and a reserve proxy (depth, rest, redundancy) must be modeled explicitly, because main effects alone give the wrong sign for the subgroup.",
+    "source_operator": "overweight_chest_trauma_survival_benefit",
+    "telemetry": "Outcome rates stratified jointly by stressor severity and reserve proxy status"
+   }
+  },
+  {
+   "primitive_id": "rnase1_rnh1_aki_association",
+   "name": "RNase 1 and RNH1 serum levels at 12, 24 and 48 h after TAAA repair are significantly associated with acute kidney injury",
+   "verbatim_quote": "elevated RNase 1 and RNH1 serum levels 12, 24, and 48 h after surgery were shown to be signiﬁcantly associated with AKI (all p < 0.05).",
+   "page": "book p. 7 (article), text line 563",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Small cohort: 14 open and 19 endovascular TAAA repairs",
+    "AKI is one of the most common organ failures after TAAA repair, with incidence between 13 and 42 percent as cited in the introduction"
+   ],
+   "breakdown_regime": "Association in 33 patients is not a validated prediction rule; no cutoff or discrimination metric is claimed, and the mechanism linking ribonuclease biology to kidney injury is not established",
+   "domain": "biomarker kinetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A circulating marker sampled on a fixed early schedule (12, 24, 48 h) predicts a later organ-failure state. This is the leading-indicator pattern: define the sampling times in advance, and the marker becomes an early-warning feature for a state that is not yet clinically visible.",
+    "source_operator": "rnase1_rnh1_aki_association",
+    "telemetry": "Serial serum RNase 1 and RNH1 values at 12, 24 and 48 hours after the index event"
+   }
+  },
+  {
+   "primitive_id": "videolaryngoscopy_first_pass_success",
+   "name": "C-MAC videolaryngoscopy beats direct laryngoscopy on first pass success in prehospital intubation and is recommended for physician-based rescue systems",
+   "verbatim_quote": "Regarding improved ﬁrst pass success in ETI with the VL, we would recommend the use of VL for prehospital airway management in physician-based rescue systems.",
+   "page": "book p. 29 (article), text line 1648",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Monocentric randomized prospective trial on a physician-staffed German air ambulance with consecutive on-scene randomization by sealed envelope",
+    "Operators were prehospital physicians, not exclusively anesthetists"
+   ],
+   "breakdown_regime": "Single center and a single videolaryngoscope model; results may not transfer to paramedic-based systems or other devices",
+   "domain": "procedural performance trial",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Under field conditions, the tool that raises first-attempt success beats the tool with the better theoretical ceiling. The engine analogue is interface and pipeline choice for critical observations: prefer the route with the highest first-pass yield of usable data, because failed first attempts consume the time budget and add error.",
+    "source_operator": "videolaryngoscopy_first_pass_success",
+    "telemetry": "First-attempt success rate and attempt duration per operator and per device"
+   }
+  },
+  {
+   "primitive_id": "si_screw_neurological_impairment_risk",
+   "name": "Percutaneous SI-screw fixation: iatrogenic neurological impairment in 2.47 percent, correlated with screw misplacement",
+   "verbatim_quote": "Iatrogenic neurological impairment was documented in 2.47% and correlated with screw misplacement.",
+   "page": "book p. 39 (article), text line 2184",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Single center retrospective cohort over 15 years, 2005 to March 2020",
+    "Risk was higher in AO type C than type B injuries and in FFP II than FFP III/IV"
+   ],
+   "breakdown_regime": "Retrospective design across 15 years mixes eras of imaging and navigation technology, so the 2.47 percent figure is an average over changing practice",
+   "domain": "surgical safety series",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A gold-standard procedure carries a small catastrophic risk that traces to one measurable precision variable, placement accuracy. The transferable structure is risk accounting: find the precision variable that generates the rare severe errors and monitor it directly instead of tracking the error rate alone.",
+    "source_operator": "si_screw_neurological_impairment_risk",
+    "telemetry": "Placement accuracy assessments and neurological adverse events across 642 screws in 448 patients"
+   }
+  },
+  {
+   "primitive_id": "cement_augmentation_ffp_benefit",
+   "name": "Cement augmentation of SI screws in fragility fractures: 25 percent shorter hospital stay and reduced complication risk",
+   "verbatim_quote": "Cement-augmented FFP patients showed a 25% reduced stay in hospital and a reduced complication risk.",
+   "page": "book p. 39 (article), text line 2186",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cement-associated complications were seen in 22 percent but did not correlate with neurological impairment",
+    "Benefit was observed in fragility fracture patients, not claimed for high-energy AO injuries"
+   ],
+   "breakdown_regime": "Non-randomized comparison inside a retrospective series, so selection of which patients received augmentation may confound the benefit",
+   "domain": "surgical safety series",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Reinforcing the weakest substrate produced outsized reliability gains in exactly the frail subgroup. The general mechanism is targeted reinforcement: identify the component whose material quality limits the whole construct and reinforce it, rather than upgrading the entire system uniformly.",
+    "source_operator": "cement_augmentation_ffp_benefit",
+    "telemetry": "Complication rate and length of stay by augmentation status within the fragility fracture subgroup"
+   }
+  },
+  {
+   "primitive_id": "cead_detection_yield_split_scan",
+   "name": "Mandatory dedicated head-and-neck CT angiography in a split-scan protocol finds cervical artery dissection in 5.2 percent of severely injured patients",
+   "verbatim_quote": "Of the 134 patients included, 7 patients had at least one cervical artery dissection (CeAD; 5.2%; 95% CI 1.5–9.0%).",
+   "page": "book p. 53 (article), text line 2903",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "134 consecutive trauma patients with ISS at least 16 at a level I center over 18 months",
+    "All underwent standardized whole-body CT with the dedicated head-and-neck angiogram as a single-bolus split-scan"
+   ],
+   "breakdown_regime": "The protocol generated false positives that needed MRI confirmation, and with 7 positive cases the confidence interval is wide (1.5 to 9.0 percent)",
+   "domain": "diagnostic imaging pathway",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Scheduled deep screening of every high-risk case finds a hidden, high-severity lesion at a 5.2 percent rate that symptom-driven workup misses. The engine analogue is running the expensive check on the whole at-risk class rather than only where surface signals point, when the cost of a miss is catastrophic.",
+    "source_operator": "cead_detection_yield_split_scan",
+    "telemetry": "Screening yield per cohort, plus false positives requiring confirmatory imaging (5 suspected cases ruled out by MRI in this study)"
+   }
+  },
+  {
+   "primitive_id": "cead_asymptomatic_on_admission",
+   "name": "No patient with cervical artery dissection showed attributable neurological symptoms on admission",
+   "verbatim_quote": "None of the patients showed any attributable neurologic symptoms on admission.",
+   "page": "book p. 53 (article), text line 2907",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Overall mortality in the dissection group was 14.3 percent and neurological morbidity 28.6 percent, so the silent lesions were consequential",
+    "The finding motivated a mandatory imaging pathway rather than symptom-triggered imaging"
+   ],
+   "breakdown_regime": "Seven dissection cases is a small base; the claim is about this cohort, though it agrees with the cited literature that most such dissections are initially asymptomatic",
+   "domain": "diagnostic reasoning",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Absence of symptoms carried zero information about a present, dangerous lesion. In state estimation terms, a missing or negative surface signal must be treated as uninformative, not as negative evidence, whenever the signal has known blind spots.",
+    "source_operator": "cead_asymptomatic_on_admission",
+    "telemetry": "Symptom status recorded at admission paired with imaging-confirmed lesion status"
+   }
+  },
+  {
+   "primitive_id": "insole_peak_force_asymmetry",
+   "name": "Insole force sensors show the fractured limb is loaded far less than the healthy limb in pelvic fragility fractures (59.78 vs 73.22 percent of bodyweight peak force)",
+   "verbatim_quote": "Especially the average peak force showed diﬀerences in loading, as the aﬀected limb was loaded signiﬁcantly less {59.78% (SD ± 16.15%) of the bodyweight vs. 73.22% (SD ± 14.84%) (p = <0.001, eﬀect size r = 0.58)}.",
+   "page": "book p. 63 (article), text line 3411",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "22 patients, mean age 84.1 years, measured during early mobilization after the index fracture",
+    "Loading also differed between FFP fracture patterns"
+   ],
+   "breakdown_regime": "Small single-cohort measurement study; it demonstrates detection feasibility, not yet that sensor-guided treatment changes outcomes",
+   "domain": "wearable load telemetry",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Instrumented load distribution exposes compensation that observation and self-report miss: the injured side silently offloads. The same telemetry logic applies to participation data: snap, route and carry shares reveal which side of a system is being protected after an injury, before any official status changes.",
+    "source_operator": "insole_peak_force_asymmetry",
+    "telemetry": "Per-limb peak force as percent of bodyweight during gait, measured by insole sensors during early mobilization"
+   }
+  },
+  {
+   "primitive_id": "minor_trauma_monitoring_null",
+   "name": "Slightly injured TRU patients show no significant AIS, MAIS or ISS increase during inpatient monitoring, suggesting prolonged monitoring may be unnecessary",
+   "verbatim_quote": "The data suggest that AIS, MAIS and ISS did not increase significantly in patients without a severe injury during inpatient treatment, regardless of the type of CT diagnostics performed in the TRU, suggesting that monitoring of these patients may be unnecessary.",
+   "page": "book p. 73 (article), text line 3946",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cohort restricted to adults with AIS at most 1, MAIS at most 1 and ISS at most 3 after TRU treatment, monitored at least 24 h",
+    "21 patients (18.75 percent) reported new complaints, but MAIS never rose above 2 and no intervention was needed"
+   ],
+   "breakdown_regime": "Single center, eight month window; the conclusion covers only patients already proven slightly injured after full TRU workup, not undifferentiated admissions",
+   "domain": "resource allocation null result",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A monitored null result is a stopping rule: when the tracked state variables demonstrably do not drift, continued monitoring spend is waste. The engine analogue is retiring a watch item after a defined observation window with no signal change, and reallocating attention to live risks.",
+    "source_operator": "minor_trauma_monitoring_null",
+    "telemetry": "Serial AIS, MAIS and ISS values across intermediate and normal care units for 112 patients"
+   }
+  },
+  {
+   "primitive_id": "ffp_type1_excess_mortality",
+   "name": "Isolated pubic ramus fractures (FFP Type I) carry 16.7 percent one-year mortality versus 5.9 and 4.0 percent population reference values",
+   "verbatim_quote": "One-year mortality was 16.7%. Reference values for the normal population of the same age are 5.9% for men and 4.0% for women.",
+   "page": "book p. 87 (article), text line 4665",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "89.1 percent of patients had comorbidities and 81.2 percent had cardiovascular disease",
+    "In-hospital complications occurred in 16.5 percent, mainly urinary tract infection and pneumonia"
+   ],
+   "breakdown_regime": "Retrospective single-region series; excess mortality is associational and reflects the frailty that also caused the fall, not an effect of the fracture alone",
+   "domain": "geriatric trauma outcomes",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A mechanically minor event acts as a sentinel for systemic frailty: the fracture itself is small, the mortality signal is fourfold. The engine analogue is sentinel-event logic, where a small observable (a minor injury, a missed practice) flags a large latent vulnerability that should re-rate the whole case.",
+    "source_operator": "ffp_type1_excess_mortality",
+    "telemetry": "One-year mortality, living condition, Parker Mobility Score and EQ-5D index in 138 patients, mean age 80.6 years"
+   }
+  },
+  {
+   "primitive_id": "flail_chest_stabilization_null_result",
+   "name": "Matched comparison finds no outcome difference between operative and conservative flail chest treatment, with longer ICU and hospital stay in the operative group",
+   "verbatim_quote": "In the present study cohort, there was no outcome diﬀerence between conservatively and operatively treated patients with the diagnosis of a ﬂail chest regarding the normal ward treatment duration, the invasive ventilation duration, the morphine equivalent dosage of the oral analgesia, and the pneumonia incidence",
+   "page": "book p. 99 (article), text line 5277",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Matching was on ISS and age; polytrauma was defined by ISS at least 16 plus the Berlin Definition",
+    "Operative patients stayed longer in ICU (25.18 vs 15.27 days, p = 0.021) and hospital (30.10 vs 20.91 days, p = 0.005)"
+   ],
+   "breakdown_regime": "Only 11 operative patients in one center; selection of who received surgery may still bias the comparison despite matching",
+   "domain": "matched cohort intervention test",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A matched case-control check overturned the expectation set by earlier randomized-trial meta-analysis. The transferable discipline is to demand a matched comparison on the actual population before crediting an intervention effect, and to treat a null result as a binding constraint on later claims.",
+    "source_operator": "flail_chest_stabilization_null_result",
+    "telemetry": "ICU and hospital stay, ventilation days, pneumonia incidence and discharge morphine dose in 11 matched pairs"
+   }
+  },
+  {
+   "primitive_id": "geriatric_hrqol_recovery_plateau",
+   "name": "Geriatric major trauma patients show no EQ-5D improvement from 6 to 24 months, unlike younger patients",
+   "verbatim_quote": "Contrary to patients <65, the EQ-5D Index of the geriatric patients did not improve at 12 and 24 months after trauma.",
+   "page": "book p. 109 (article), text line 5747",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Geriatric group (at least 65 years, n = 77) had a lower mean ISS (24) than the younger group (n = 328) yet reported more difficulties in every EQ dimension",
+    "Prospective multicenter registry-based cohort within the TraumaRegister DGU framework"
+   ],
+   "breakdown_regime": "Registry follow-up loses patients over 24 months, and the plateau describes the measured survivors, not those lost to follow-up or death",
+   "domain": "longitudinal recovery trajectory",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Recovery curves have subgroup-specific shapes: the older cohort plateaus instead of converging back to baseline. Modeling return-to-baseline with one shared recovery rate is therefore wrong; each subgroup needs its own asymptote and time constant, and a plateau is itself the finding.",
+    "source_operator": "geriatric_hrqol_recovery_plateau",
+    "telemetry": "EQ-5D-3L index at 6, 12 and 24 months in 405 registry patients with mean ISS 25.6"
+   }
+  },
+  {
+   "primitive_id": "intraoperative_ct_revision_avoidance",
+   "name": "Intraoperative CT for distal radius fixation: zero revision surgeries versus 4.2 percent with fluoroscopy, with screw repositioning in 25.3 percent of cases during the same operation",
+   "verbatim_quote": "In Group Conv, four (4.2%) patients required revision surgeries within 6 months, but in Group CT no revision surgery was required.",
+   "page": "book p. 123 (article), text line 6564",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "187 patients, 96 fluoroscopy and 91 CT, treated in 2011",
+    "The CT group had more severe fractures (AO type C 70.3 vs 39.6 percent), so the benefit appeared despite worse case mix"
+   ],
+   "breakdown_regime": "Retrospective single-year comparison; the CT group paid a significantly higher radiation dose, and group assignment was not randomized",
+   "domain": "in-process verification",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Verification moved inside the process converts later rework into immediate correction: a quarter of cases were fixed on the spot and the revision category emptied. The engine analogue is checking intermediate outputs during generation, because a defect caught in-process costs minutes and the same defect caught later costs a full revision cycle.",
+    "source_operator": "intraoperative_ct_revision_avoidance",
+    "telemetry": "Intraoperative correction rate, revision surgery rate within 6 months, surgery duration and radiation dose (6.9 vs 2.8 mGy)"
+   }
+  },
+  {
+   "primitive_id": "smi_equation",
+   "name": "Skeletal muscle index: L3 skeletal muscle mass divided by height squared",
+   "verbatim_quote": "Skeletal mass index (SMI), a derivative of the skeletal muscle mass (SMM) [21], was then calculated using the following equation:",
+   "page": "book p. 132 (article), text line 7034",
+   "latex": "\\mathrm{SMI} = \\frac{\\mathrm{SMM}}{h^{2}}",
+   "symbol_and_unit_ledger": {
+    "SMM": "skeletal muscle mass area at L3, cm^2",
+    "h": "height, m",
+    "SMI": "skeletal muscle index, cm^2/m^2"
+   },
+   "assumptions": [
+    "Muscle area was segmented semi-automatically with a tissue threshold of minus 30 to plus 110 Hounsfield Units",
+    "Two independent observers measured, with interobserver agreement assessed"
+   ],
+   "breakdown_regime": "The index inherits the error of a single-slice area as a proxy for whole-body muscle mass, and requires both an abdominal CT and a recorded height",
+   "domain": "body composition quantification",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A capacity stock becomes comparable only after normalization by a size denominator, and the measurement reuses imaging that already exists. The engine analogue is deriving normalized capacity indices (per snap, per route, per minute) from data already collected, instead of commissioning new measurement.",
+    "source_operator": "smi_equation",
+    "telemetry": "Cross-sectional skeletal muscle area at the third lumbar vertebra from routine abdominal CT, plus patient height"
+   }
+  },
+  {
+   "primitive_id": "smi_sarcopenia_cutoffs",
+   "name": "Sarcopenia cutoffs for SMI: 52.4 cm2/m2 for males and 38.5 cm2/m2 for females (Prado values)",
+   "verbatim_quote": "These values were determined at 52.4 cm2 /m2 and 38.5 cm2 /m2 for males and females, respectively.",
+   "page": "book p. 132 (article), text line 7040",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Cutoffs are taken from Prado et al. as cited by the study, not derived from the trauma cohort itself",
+    "Sarcopenia status from these cutoffs predicted 30-day mortality in the cohort"
+   ],
+   "breakdown_regime": "Imported cutoffs may misclassify in a new population; the study is a pilot and does not re-derive thresholds for trauma patients",
+   "domain": "risk classification thresholds",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A continuous measure becomes a decision only through a threshold, and the correct threshold is subgroup-specific. The engine analogue is calibrated cutoffs per subgroup (position, age band, role) instead of one universal line, with the threshold treated as a tunable, auditable parameter.",
+    "source_operator": "smi_sarcopenia_cutoffs",
+    "telemetry": "Proportion of each subgroup falling below its SMI threshold on admission imaging"
+   }
+  },
+  {
+   "primitive_id": "sarcopenia_prevalence_age_gradient",
+   "name": "Sarcopenia prevalence is 33.5 percent in polytrauma patients and reaches 82 percent over age 80",
+   "verbatim_quote": "Prevalence of sarcopenia was 33.5% in the total population but was even higher in older age groups (range 60–79 years), reaching 82 % in patients over 80 years old.",
+   "page": "book p. 131 (article), text line 6971",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Subjects were screened for availability of abdominal CT and height to compute the index",
+    "Sarcopenia was also related to age, ISS and Charlson comorbidity index in univariate analysis"
+   ],
+   "breakdown_regime": "Pilot study at one center; prevalence depends on the imported cutoffs and on which patients had usable CT and height data",
+   "domain": "hidden capacity loss",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Latent capacity loss is common, invisible on the surface, and rises steeply with age. The reasoning rule is to measure the stock directly in veteran populations instead of inferring condition from age or appearance, because the base rate of hidden degradation is high.",
+    "source_operator": "sarcopenia_prevalence_age_gradient",
+    "telemetry": "Sarcopenia prevalence by age band from admission CT and height records, 2015 to 2019, single level I center"
+   }
+  },
+  {
+   "primitive_id": "sarcopenia_mortality_prediction",
+   "name": "Sarcopenia is an independent predictor of 30-day mortality after polytrauma (log rank p = 0.032)",
+   "verbatim_quote": "Log rank analysis identiﬁed sarcopenia as an independent predictor of 30-day mortality (p = 0.032).",
+   "page": "book p. 131 (article), text line 6974",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Sarcopenia was related to 30-day or in-hospital mortality (p = 0.032) in univariate analysis",
+    "Multivariate regression was run on parameters identified in univariate analysis"
+   ],
+   "breakdown_regime": "Pilot sample; independence is within the measured covariate set, and unmeasured frailty components may still confound",
+   "domain": "prognostic marker",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A feature extracted from data already collected for other reasons carries independent outcome signal at zero extra acquisition cost. The engine analogue is mining existing data exhaust for predictive features before building any new collection pipeline.",
+    "source_operator": "sarcopenia_mortality_prediction",
+    "telemetry": "Survival curves and 30-day mortality stratified by sarcopenia status, with age, ISS and comorbidity index as covariates"
+   }
+  },
+  {
+   "primitive_id": "sci_tf_coagulation_persistence",
+   "name": "Tissue-factor-dependent coagulation activation does not decrease after four weeks of rehabilitation in spinal cord injury, regardless of time since injury",
+   "verbatim_quote": "No decrease in activation of TF-dependent coagulation was observed after a 4-week rehabilitation regardless of time elapsed since SCI.",
+   "page": "book p. 141 (article), text line 7533",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "78 inpatients in three groups by time since injury: 3 weeks to 3 months, 3 to 6 months, over 6 months",
+    "D-dimer did fall significantly after rehabilitation (p < 0.001), so the persistence is specific to the TF pathway, not global"
+   ],
+   "breakdown_regime": "No untreated control group, so persistence means no measured decrease under rehabilitation, not proof that rehabilitation can never affect the pathway",
+   "domain": "hemostasis after spinal cord injury",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Some activated states do not respond to a generic intervention dose and must be carried forward as persistent risk. The engine analogue is separating state variables into responsive and persistent classes: a persistent risk factor stays in the model at full weight after treatment, instead of being discounted because treatment occurred.",
+    "source_operator": "sci_tf_coagulation_persistence",
+    "telemetry": "TF, TFPI, TAT complex, D-dimer, antithrombin activity and platelet count on admission and after the rehabilitation block"
+   }
+  },
+  {
+   "primitive_id": "early_spinal_stabilization_type_dependence",
+   "name": "Early spinal stabilization benefits AOSpine B/C injuries, especially thoracic, while the benefit in A-type injuries is overemphasized",
+   "verbatim_quote": "Our data support the concept of early spinal stabilization in multiple-injured patients with AOSpine B-/C-type injuries, especially of the thoracic spine.",
+   "page": "book p. 153 (article), text line 8201",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Surgery within 24 h was associated with ICU stay 7.31 vs 14.56 days (p < 0.001) and less sepsis (p = 0.023)",
+    "Delay risk factors included higher ISS, thoracic injury, A-type injury and intact neurology"
+   ],
+   "breakdown_regime": "Retrospective two-center data; timing was chosen by treating teams, so sicker patients may have been systematically delayed",
+   "domain": "intervention timing policy",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "The value of acting early is conditional on category: the same timing rule helps one injury class and is questionable in another. The engine analogue is class-first decision trees, where the category of a case is resolved before any timing or urgency rule is applied.",
+    "source_operator": "early_spinal_stabilization_type_dependence",
+    "telemetry": "Time to spinal surgery with ICU stay, hospital stay, sepsis and MODS, stratified by AOSpine type in 113 patients"
+   }
+  },
+  {
+   "primitive_id": "neuronal_biomarker_kinetics",
+   "name": "Neuronal damage markers S100B, NSE and GFAP decrease time-dependently in all trauma cohorts and rise non-specifically after polytrauma, limiting their diagnostic value",
+   "verbatim_quote": "S100b, NSE, GFAP levels showed a time-dependent decrease in all cohorts.",
+   "page": "book p. 167 (article), text line 8900",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Marker expression was higher after multiple injuries than after isolated TBI (p = 0.038)",
+    "The authors conclude the markers have limited diagnostic value after severe trauma because of the undifferentiated increase"
+   ],
+   "breakdown_regime": "Retrospective analysis of prospectively collected data; kinetics are group-level curves, not individual diagnostic trajectories",
+   "domain": "biomarker kinetics",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A marker only means something relative to its sampling time and its confounding sources: the same proteins that signal brain injury also rise after multiple injuries without brain injury. The engine analogue is time-aware, source-aware signal interpretation, where a value is read against its decay curve and its alternative generators before it moves any estimate.",
+    "source_operator": "neuronal_biomarker_kinetics",
+    "telemetry": "Serial S100B, NSE and GFAP levels from arrival to day 5 in 445 patients with ISS at least 16, split into polytrauma, polytrauma plus TBI, and isolated TBI cohorts"
+   }
+  },
+  {
+   "primitive_id": "il6_il10_ratio_biphasic_peak",
+   "name": "The pro-inflammatory IL-6/IL-10 ratio peaks on day 2 with a second lower peak on day 4 in all trauma cohorts",
+   "verbatim_quote": "In all groups pro-inﬂammatory response (IL-6/-10 ratio) peaked on day 2 and at a lower level on day 4.",
+   "page": "book p. 167 (article), text line 8904",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Highest IL-6 and IL-10 levels were associated with polytrauma and lowest with isolated TBI (p < 0.001)",
+    "Severe TBI modulated the kinetic profile by reducing interleukin expression"
+   ],
+   "breakdown_regime": "Cohort-level kinetics in one dataset; the day 2 and day 4 structure may shift with different injury mixes or sampling schedules",
+   "domain": "immune response dynamics",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "The balance between two opposing signals follows a biphasic time course, so a single measurement cannot be interpreted without its phase. The engine analogue is tracking ratios of opposing forces over time and labeling the phase (primary peak, secondary peak, resolution) before drawing conclusions from the current value.",
+    "source_operator": "il6_il10_ratio_biphasic_peak",
+    "telemetry": "Serial IL-6 and IL-10 levels and their ratio from arrival to day 5"
+   }
+  },
+  {
+   "primitive_id": "knee_ligament_injury_risk_pattern",
+   "name": "Knee ligament injuries in the severely injured are predicted by mechanism and adjacent skeletal injuries, not by sex or overall injury severity",
+   "verbatim_quote": "Ligament injuries and knee dislocations are associated with high-risk mechanisms and concomitant skeletal injuries of the lower extremity, but are not predicted by general injury severity or sex.",
+   "page": "book p. 181 (article), text line 9864",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Dislocated knees carried peroneal nerve injury in 6.7 vs 0.4 percent and popliteal artery injury in 6.9 vs 0.3 percent versus controls",
+    "Data from TraumaRegister DGU, 2009 to 2016, Germany, Austria and Switzerland"
+   ],
+   "breakdown_regime": "Registry coding captures diagnosed injuries; the very detection problem the paper describes (missed knee injuries) means the outcome variable itself is undercounted",
+   "domain": "registry risk factor analysis",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "For a specific hidden outcome, local structural features beat the global severity score: pedestrian struck (OR 3.2), motorcycle (OR 3.0) and patella, tibia and femur fractures out-predicted ISS. The engine analogue is feature selection per target, where the global rating is often the weakest predictor of a specific event.",
+    "source_operator": "knee_ligament_injury_risk_pattern",
+    "telemetry": "Mechanism codes and associated injury flags for 139,462 registry patients, 4,411 with knee ligament injury and 1,153 with knee dislocation"
+   }
+  },
+  {
+   "primitive_id": "eswt_scar_hand_function_rct",
+   "name": "Sham-controlled RCT: extracorporeal shock wave therapy improves pain, scar thickness, vascularity and hand function in postburn hypertrophic hand scars",
+   "verbatim_quote": "ESWT improved the pain score (p = 0.001), scar thickness (p = 0.018), scar vascularity (p = 0.0015), and improved hand function (simulated card-turning, p = 0.02; picking up small objects, p = 0.004).",
+   "page": "book p. 193 (article), text line 10430",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "ESWT dose: energy flux density 0.05 to 0.30 mJ/mm2, 4 Hz, 1000 to 2000 impulses, four weekly treatments",
+    "Only the dominant right hand was studied"
+   ],
+   "breakdown_regime": "48 patients at one center and a four week horizon; several measured outcomes showed no difference between groups",
+   "domain": "rehabilitation trial",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A double-blinded sham control separates a real physical effect from attention and expectation, and the effect showed on objective measures (scar thickness by ultrasound) as well as subjective ones. The transferable rule is to demand a sham or placebo arm before crediting any intervention whose outcomes are partly subjective.",
+    "source_operator": "eswt_scar_hand_function_rct",
+    "telemetry": "Visual analogue pain score, Vancouver Scar Scale subscores, ultrasound scar thickness, Jebsen-Taylor and Purdue Pegboard results in 48 randomized patients"
+   }
+  },
+  {
+   "primitive_id": "c5a_tafi_sepsis_signature",
+   "name": "Admission signature of post-traumatic sepsis: C5a elevated (21.62 vs 13.40 ng/mL) and TAFI reduced (40,951 vs 61,865 ng/mL) in patients who later develop sepsis",
+   "verbatim_quote": "Septic patients had signiﬁcantly increased C5a levels (21.62 ± 3.14 vs. 13.40 ± 1.29 ng/mL; p < 0.05) and reduced TAFI levels upon admission to the ED (40,951 ± 5637 vs. 61,865 ± 4370 ng/mL; p < 0.05) compared to the no sepsis group.",
+   "page": "book p. 205 (article), text line 10966",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Groups were frequency matched on ISS, and overall injury severity was comparable (25.78 vs 23.46)",
+    "TAFI correlated negatively with C5a (p = 0.0104) and both correlated with the SOFA score"
+   ],
+   "breakdown_regime": "48 patients with 14 sepsis cases is a derivation-sized sample; the cutoffs need external validation before any clinical or engine use",
+   "domain": "sepsis early warning",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two markers from coupled pathways move in opposite directions at admission, days before the complication declares itself, and the joint signature predicts it (reported cutoffs give AUC 0.755 for TAFI and 0.729 for C5a). The engine analogue is paired-marker early warning: define the joint direction of two signals in advance instead of thresholding one signal alone.",
+    "source_operator": "c5a_tafi_sepsis_signature",
+    "telemetry": "Admission and daily C5a and TAFI levels for ten days in 48 patients with ISS at least 16, 14 of whom developed sepsis"
+   }
+  },
+  {
+   "primitive_id": "treg_il10_cd4_modulation",
+   "name": "After severe trauma, regulatory T cell frequency falls while their inductiveness rises, with CD4 modulation mediated via IL-10 but not the IL-10 receptor 1",
+   "verbatim_quote": "The frequency of Tregs in the CD4+ T lymphocyte population is reduced after trauma; however, their inductiveness is increased.",
+   "page": "book p. 221 (article), text line 11742",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "CD4+ CD25high and CD4+ CD25+ CD127- Treg frequencies were significantly decreased from admission through day 10",
+    "Neutralization experiments separated the IL-10 ligand effect from the IL-10R1 pathway"
+   ],
+   "breakdown_regime": "Ex vivo proliferation assays in 29 patients and 10 healthy volunteers; the in vivo weight of the mechanism among many parallel immune changes is not quantified",
+   "domain": "post-trauma immunology",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A control population can shrink while its per-unit action strengthens, so net control cannot be inferred from counts. The engine analogue is any regulator or damping component: measure functional effect, not headcount, because compensation hides inside the average.",
+    "source_operator": "treg_il10_cd4_modulation",
+    "telemetry": "Daily flow cytometry of Treg frequency and CD4 proliferation assays with and without Tregs and with IL-10 or IL-10R1 blockade, in 29 patients over ten days"
+   }
+  },
+  {
+   "primitive_id": "aaco_tibial_plateau_salvage",
+   "name": "Arthroscopy-assisted corrective osteotomy with strut allograft restores tibial plateau malunion and nonunion (Rasmussen clinical score 15.4 to 23.2)",
+   "verbatim_quote": "Mean clinical score improved from 15.4 ± 3.9 (pre-revision) to 23.2 ± 4.5 (post-revision).",
+   "page": "book p. 237 (article), text line 12470",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "56 of 58 fractures achieved union, mean union time 19.6 weeks",
+    "Secondary osteoarthritis was nonetheless present in 91 percent of injured knees and 5 cases later converted to total knee replacement"
+   ],
+   "breakdown_regime": "Retrospective case series without a comparison arm; the high osteoarthritis rate shows salvage restores alignment without restoring the joint surface history",
+   "domain": "revision surgery outcomes",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "A failed prior construction can be salvaged by reworking it under better visualization instead of replacing the whole structure. The transferable pattern is salvage before replacement: add sensing (arthroscopy) to a revision pass and correct the original geometry, reserving full replacement for failures of the salvage.",
+    "source_operator": "aaco_tibial_plateau_salvage",
+    "telemetry": "Rasmussen clinical and radiologic scores, union rate and time, and secondary osteoarthritis grading in 58 patients at mean 46.2 months follow-up"
+   }
+  },
+  {
+   "primitive_id": "mticcs_parsimonious_mt_prediction",
+   "name": "mTICCS predicts massive transfusion from three scene-available criteria (general severity, blood pressure, extent of injury), total score 2 to 16",
+   "verbatim_quote": "Compared to sophisticated systems, using a higher number of weighted variables, the newly developed mTICCS presents a useful tool to predict the need for an MT in a prehospital situation.",
+   "page": "book p. 251 (article), text line 13185",
+   "latex": "\\mathrm{mTICCS} = 2 + 5\\,\\mathbb{1}[\\mathrm{SBP} < 90] + \\sum_{r} w_r\\,\\mathbb{1}[\\text{significant injury in region } r]",
+   "symbol_and_unit_ledger": {
+    "SBP": "systolic blood pressure, mmHg; the indicator scores 5 if it fell below 90 at least once, else 0",
+    "w_r": "extent weight per region from Table 1: head and neck 1, upper extremity 1, lower extremity 1, torso 2, abdomen 2, pelvis 2",
+    "mTICCS": "total score, range 2 to 16 points"
+   },
+   "assumptions": [
+    "At a cutoff above 5 points, mTICCS showed sensitivity 77.5 percent and specificity 74.03 percent in 479 patients with an 8.4 percent massive transfusion rate",
+    "Components per the printed Table 1: resuscitation room activation 2 points, systolic pressure below 90 mmHg 5 points, extent points 1 to 2 per injured region"
+   ],
+   "breakdown_regime": "Retrospective single-center validation; the authors themselves call for prospective validation, and the score was derived in a different (2014 TICCS, 2017 validation) population",
+   "domain": "clinical prediction score",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A score built only from variables available at decision time nearly matches richer scores that need laboratory and imaging inputs. The engine analogue is a hard feature-availability constraint: a predictor that cannot be computed when the decision is made has zero operational value, whatever its accuracy.",
+    "source_operator": "mticcs_parsimonious_mt_prediction",
+    "telemetry": "Score components recorded at the scene and in the resuscitation room, against the outcome of 10 or more red cell units in 24 h"
+   }
+  },
+  {
+   "primitive_id": "transfusion_score_benchmark_auc",
+   "name": "Head-to-head benchmark of six massive transfusion scores on one cohort: TASH AUC 0.782, mTICCS 0.776, ETS most sensitive at 80 percent",
+   "verbatim_quote": "The TASH score had the highest overall accuracy as reﬂected by an AUC of 0.782 followed by the mTICCS (0.776).",
+   "page": "book p. 251 (article), text line 13181",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Scores compared: TASH, Prince of Wales Hospital, Larson, ABC, Emergency Transfusion Score and mTICCS",
+    "TASH had the highest specificity (82 percent) and the Prince of Wales score the lowest (51.83 percent)"
+   ],
+   "breakdown_regime": "All scores were computed retrospectively from hospital data, which can flatter scores whose inputs are recorded more completely in hospital than at the scene",
+   "domain": "predictor benchmarking",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Six candidate predictors were compared on a single cohort with a single metric family before any recommendation was made. The engine analogue is a bake-off discipline: all candidate signals are scored on the same held-out cases with the same metric, and adoption follows the table, not the narrative around any one candidate.",
+    "source_operator": "transfusion_score_benchmark_auc",
+    "telemetry": "AUC, sensitivity, specificity, positive and negative predictive values per score on 479 severely injured patients"
+   }
+  },
+  {
+   "primitive_id": "vr_burn_hand_rehabilitation",
+   "name": "Virtual reality rehabilitation is a viable treatment option for burned hands, matching or beating conventional rehabilitation on several function measures",
+   "verbatim_quote": "VR-based rehabilitation may be considered as a treatment option for patients with burned hands.",
+   "page": "book p. 261 (article), text line 13692",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "JTT picking up small objects and multiple MHQ domains were significantly higher in the VR group (p < 0.05)",
+    "Each intervention was applied to the affected hand for four weeks"
+   ],
+   "breakdown_regime": "Single-blind, single-center trial; the authors claim comparability to conventional care, not superiority across the board",
+   "domain": "rehabilitation modality trial",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "An interactive, game-like delivery mode matched conventional therapy and beat it on several function and satisfaction measures, which identifies adherence and engagement as effect modifiers of the same nominal dose. The engine analogue is that the delivery channel of any repeated intervention changes the dose actually received.",
+    "source_operator": "vr_burn_hand_rehabilitation",
+    "telemetry": "Jebsen-Taylor test, grasp and pinch power, Purdue Pegboard and Michigan Hand Outcomes Questionnaire scores in 57 randomized patients over four weeks"
+   }
+  },
+  {
+   "primitive_id": "pics_clinical_burden",
+   "name": "PICS after polytrauma is rare (4.7 per 1000) but consumes disproportionate resources: median stay 83 vs 40 days and 13 vs 3 surgical interventions",
+   "verbatim_quote": "In conclusion, patients who develop PICS experience recurrent infectious complications that lead to prolonged hospitalization, many surgical procedures and frequent readmissions.",
+   "page": "book p. 273 (article), text line 14257",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "PICS was identified two ways: clinical course with at least 3 infectious complications, and laboratory markers (CRP, lymphocytes) plus catabolism evidence",
+    "The laboratory marker definition had sensitivity 44 percent and specificity 73 percent against the clinical course"
+   ],
+   "breakdown_regime": "Retrospective single center over 11 years; the syndrome definition itself is not standardized, so incidence depends on the identification rule used",
+   "domain": "chronic critical illness",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "A rare state dominates total burden: low incidence, extreme per-case cost. The engine analogue is tail accounting, where expected cost is computed per state with its true per-case weight instead of being dismissed by low frequency.",
+    "source_operator": "pics_clinical_burden",
+    "telemetry": "Hospital stay, surgical intervention count, sepsis incidence (72 percent) and infection readmissions (67 percent) in 78 chronic critical illness patients, 2007 to 2017"
+   }
+  },
+  {
+   "primitive_id": "neuroendocrine_sas_hpa_activation",
+   "name": "Trauma and sepsis activate the sympatho-adrenergic system, massively increasing adrenaline and noradrenaline release, in parallel with HPA axis activation",
+   "verbatim_quote": "Activation of the sympatho-adrenergic system (SAS) leads to a massively increased release of the catecholamines adrenaline and noradrenaline into the circulation",
+   "page": "book p. 287 (article), text line 15017",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "Most immune cells carry alpha and beta adrenergic receptors and many can synthesize catecholamines themselves",
+    "Pro-inflammatory cytokines such as IL-6 and TNF-alpha further enhance catecholamine release"
+   ],
+   "breakdown_regime": "This is a narrative review chapter, not new data; it synthesizes mechanisms whose quantitative weights in individual patients remain unsettled",
+   "domain": "neuroendocrine immune modulation",
+   "layer2": {
+    "tag": "[ISOMORPHISM]",
+    "mapping": "Several stress axes fire in parallel and modulate the immune system bidirectionally, so single-pathway explanations of the post-event state fail. The engine analogue is modeling coupled control loops with cross-talk, where each loop's output is another loop's input, instead of a chain of independent causes.",
+    "source_operator": "neuroendocrine_sas_hpa_activation",
+    "telemetry": "Catecholamine, cortisol and ACTH behavior across the initial, acute and late phases of trauma and sepsis, as synthesized in the review"
+   }
+  },
+  {
+   "primitive_id": "dhea_cortisol_dissociation_mortality",
+   "name": "Dissociation of cortisol and DHEA in sepsis and trauma: depressed circulating DHEA levels are positively correlated with the risk of death",
+   "verbatim_quote": "depressed levels of circulating DHEA in patients with sepsis are positively correlated to the risk of death",
+   "page": "book p. 288 (article), text line 15054",
+   "latex": "",
+   "symbol_and_unit_ledger": {},
+   "assumptions": [
+    "DHEA and DHEA-S blood levels are significantly decreased in critically ill and septic patients",
+    "A positive correlation exists between cortisol level and severity of illness, per the review"
+   ],
+   "breakdown_regime": "Review-level synthesis of cited studies; the correlation with death risk is reported from prior cohorts, not measured in this volume",
+   "domain": "neuroendocrine immune modulation",
+   "layer2": {
+    "tag": "[DERIVED KERNEL]",
+    "mapping": "Two normally coupled indicators diverge, and the divergence itself is the severity signal: cortisol stays high while its counterweight DHEA falls. The engine analogue is divergence detection between coupled series, where the spread between them carries information neither series carries alone.",
+    "source_operator": "dhea_cortisol_dissociation_mortality",
+    "telemetry": "Paired cortisol and DHEA or DHEA-S levels with illness severity and mortality, as synthesized in the review"
+   }
+  }
+ ],
+ "reasoning_traces": [
+  {
+   "trace_id": "199a1502842fe09a-t1",
+   "think": "This volume is a reprint of a 2020 Journal of Clinical Medicine special issue: an editorial plus 25 articles on the care of the severely injured patient, edited by Frank Hildebrand and Klemens Horst of RWTH Aachen. It is not a textbook with a single argument. Its machinery is a layered clinical system, and the layers are worth separating because each one transfers differently to a reasoning engine. The first layer is quantification. Severity is compressed into auditable arithmetic: the Injury Severity Score sums the squares of the three worst AIS grades, body mass is normalized as weight over height squared, skeletal muscle is normalized as an L3 cross-sectional area over height squared with sex-specific sarcopenia cutoffs, and transfusion need is scored by mTICCS from three scene-available criteria. These are all deliberately simple, hand-computable reductions of a complex state, designed so that two clinicians looking at the same patient produce the same number. The second layer is detection of what the surface examination misses. Cervical artery dissections were present in 5.2 percent of severely injured patients and symptomatic in none of them, so the authors made the angiogram mandatory rather than symptom-triggered. Sarcopenia was present in a third of polytrauma patients and in 82 percent of those over 80, detectable only because someone measured muscle area on CT scans that already existed. Knee ligament injuries were predicted by mechanism and neighboring fractures, not by the global severity score, which means the detection rule is local and structural. The third layer is intervention, and it is strikingly honest about nulls. Surgical stabilization of flail chest, tested in a matched cohort, produced no benefit on ventilation, pneumonia or analgesia and longer stays. Prolonged monitoring of slightly injured patients produced no significant severity drift and is questioned as unnecessary. Against those nulls stand positive, mechanism-specific results: videolaryngoscopy raised first pass intubation success, intraoperative CT converted later revisions into immediate corrections, cement augmentation helped exactly the frail subgroup whose bone was weak, and early spinal stabilization helped B and C type injuries while its benefit in A type injuries is called overemphasized. The pattern is that interventions work conditionally, by class and by mechanism, not as blanket rules. The fourth layer is trajectory. The immune response is drawn as coupled time series: IL-6 and IL-10 with a ratio peaking on day 2 and again lower on day 4, neuronal markers decaying over five days but rising non-specifically after polytrauma, Treg frequency falling while Treg inductiveness rises, C5a up and TAFI down at admission in patients who will become septic, and the neuroendocrine axes firing in parallel with a cortisol to DHEA dissociation that tracks death risk. A single measurement in this layer is almost meaningless; the phase, the ratio and the divergence carry the information. The fifth layer is recovery and burden: geriatric patients plateau in quality of life instead of recovering, an isolated pubic ramus fracture marks a fourfold one-year mortality, and the rare PICS state consumes a median 83 hospital days and 13 operations per patient. Two design tradeoffs recur across chapters and deserve to be named as primitives of the volume's method. The first is parsimony against accuracy at the moment of decision. The transfusion chapter benchmarks six scores on one cohort and the winner on raw discrimination, TASH at AUC 0.782, needs laboratory values and imaging that do not exist at the roadside, while mTICCS at 0.776 needs a blood pressure reading, a severity impression and a body map. The authors' preference is clear: a slightly weaker instrument that can actually be computed when the decision is made dominates a stronger one that cannot, and the Emergency Transfusion Score's chart-topping sensitivity of 80 percent is likewise discounted by its input demands. The second tradeoff is screening breadth against false positive cost. The split-scan chapter accepts five false positive dissection suspicions, each consuming an MRI, as the price of not missing a lesion group with 14.3 percent mortality and 28.6 percent neurological morbidity, and the monitoring chapter runs the same calculation in reverse, withdrawing surveillance when the observed drift rate is too low to justify it. Screening is therefore not a virtue in itself; it is a priced instrument, expanded where the miss cost is catastrophic and contracted where surveillance has demonstrated emptiness. A sixth, quieter layer is salvage and secondary prevention: rehabilitation that measurably lowers D-dimer but leaves tissue factor activation untouched in spinal cord injury, shock wave and virtual reality therapies tested against sham and conventional controls for burned hands, and an arthroscopy-assisted salvage that restores a malunited tibial plateau in 56 of 58 cases while honestly reporting osteoarthritis in 91 percent of the salvaged knees. Even the successes are reported with their residue attached. For a reasoning engine, the volume's combined lesson is a discipline: score severity with simple auditable arithmetic, screen the whole at-risk class for hidden high-severity states, apply interventions conditionally by class, read signals against their time course and their alternative generators, prefer features that exist at decision time, and treat published nulls as binding constraints. Where it breaks: the evidence base is dominated by German registry and single-center retrospective data, several cohorts are small (33 patients for the ribonuclease study, 48 for the sepsis markers, 11 matched pairs for flail chest), the special issue format means uneven methods across chapters, and almost nothing here is a validated prospective prediction rule. The scores are arithmetic, not learned models, and their transport to other populations is asserted more often than it is tested.",
+   "retrocausal_genealogy": "The lineage runs through postwar trauma system building. The ABCDE sequence descends from the Advanced Trauma Life Support program of the American College of Surgeons, which the editorial takes as its frame. The ISS descends from the Abbreviated Injury Scale tradition of grading each body region separately and aggregating quadratically. Tonglet and colleagues introduced the TICCS score in 2014 and it was validated in 33,385 patients in 2017, which is the direct ancestor of the mTICCS validated here. Rommens and Hofmann proposed the fragility fracture of the pelvis classification in 2013, and the sarcopenia cutoffs come from Prado and colleagues. Sakaguchi identified the CD25 positive regulatory T cell population in 1995, founding the Treg line that the immunology chapter extends into trauma.",
+   "theory_of_mind": "The editors and authors write for practicing trauma clinicians who work inside guideline systems: ATLS in the resuscitation room, the German S3 guideline, the TraumaNetwork DGU and its registry. They assume the reader's bottleneck is not knowledge but decision quality under time pressure, so the prized outputs are a score computable at the scene, an imaging pathway that removes a judgment call, and a timing rule that can be protocolized. They also assume the reader trusts registry evidence and multicenter cohorts more than single opinions, and they write defensively, flagging retrospective designs and small samples themselves, because their audience will check. The patient in their model is a trajectory, not an event: what matters is the course over days in the ICU and over months of recovery.",
+   "cross_layer_veto": "Several findings veto conclusions that other layers would invite. The biomarker layer vetoes naive marker reading: S100B, NSE and GFAP rise after polytrauma without brain injury, so a detection rule built on them would fire falsely, and any engine importing them must condition on cohort. The intervention nulls veto enthusiasm: flail chest stabilization and prolonged monitoring both fail their tests, so a system that recommends action by default is overruled by matched evidence. The type-dependence of spinal stabilization vetoes blanket timing rules, and the mTICCS comparison vetoes rich feature sets for early decisions, because variables that arrive after the decision cannot inform it. Finally, the sarcopenia and PICS results veto frequency-based dismissal: common hidden states and rare expensive states both outrank their surface salience."
+  }
+ ],
+ "universal_lens": "Read generally, this volume is a manual for managing any complex damaged system under time pressure. Quantify the damage with simple arithmetic that independent observers can reproduce. Screen the entire at-risk class for the hidden lesions that surface checks structurally miss, and price the false positives honestly. Intervene conditionally, by class and mechanism, and let matched null results retire interventions that do not work. Track coupled control variables as ratios and divergences over time rather than as single readings. Measure recovery against subgroup-specific baselines, and account for burden in the tail, where a rare state can consume more resource than the common path. Any organization that runs incident response, infrastructure repair or crisis logistics is solving the same five problems in the same order.",
+ "gsi_mapping": "The Galaxy Sports Institute takes the measurement and study-design infrastructure. The registry pattern (a national trauma register with standardized severity coding feeding every later analysis) is the template for an athlete health registry. The score validation pattern, six candidate scores benchmarked head-to-head on one cohort with one metric family, is the template for evaluating any institute assessment. Sarcopenia screening from imaging that already exists, biomarker kinetics sampled on a fixed schedule with cohort-conditioned interpretation, and sham-controlled rehabilitation trials such as the shock wave study are directly reusable designs for return-to-play research, where the institute needs defensible evidence about interventions rather than testimonials.",
+ "gse_mapping": "The Galaxy Sports Edge engine takes the reasoning patterns, applied to availability and performance prediction. Quadratic severity aggregation says one critical absence outweighs several minor ones when rating a team's injury state. The ABCDE order becomes an input triage order: verify the highest-criticality availability facts before computing anything downstream. Conditional timing effects, biomarker-style signals that must be read against sampling time and alternative generators, paired-marker and divergence signatures, and the hard rule that only features existing at decision time may enter a pregame estimate all transfer directly. The matched null results are the standing warning against narrative-driven adjustments that have never survived a controlled comparison."
+}
