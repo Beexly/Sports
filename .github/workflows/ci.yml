@@ -578,3 +578,38 @@ jobs:
             __tests__/jarvis.test.ts \
             __tests__/cockpit-routes.test.ts \
             __tests__/trust-claims.test.ts
+
+  osv-polyglot-and-pre-sim-gate:
+    name: Polyglot OSV & Pre-Sim Total Intelligence Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python engine dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Polyglot OSV Offline Manifest Audit
+        run: node scripts/ops/osv-polyglot-audit.mjs --offline-manifest-check
+      - name: Pre-Sim Total Intelligence Gate
+        run: python scripts/guardrails/pre_sim_total_intelligence_gate.py --repo-root . --self-test
+
+  leapwork-checkout-unlock-e2e:
+    name: Leapwork Checkout & Unlock Storefront E2E
+    needs: osv-polyglot-and-pre-sim-gate
+    if: ${{ secrets.LEAPWORK_API_KEY != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Leapwork Checkout & Unlock Runlist
+        uses: leapwork/Github-action@v2
+        with:
+          leapworkControllerURL: ${{ vars.LEAPWORK_CONTROLLER_URL }}
+          leapworkApiKey: ${{ secrets.LEAPWORK_API_KEY }}
+          scheduleNames: "GSE-Storefront-Checkout-Unlock-Smoke"
+          executionTimeoutSeconds: 600

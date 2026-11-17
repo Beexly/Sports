@@ -119,6 +119,8 @@ export function buildGlobalSearchAndAiJsonLd(siteUrl: string = "https://galaxysp
         name: "Galaxy Sports Edge Verified NFL Picks, Player Props & Closing Line Value Ledger",
         description:
           `Verified public NFL settlement ledger. Official settled record, recomputed from the settlement database: ${PUBLIC_RECORD_LINE}. Settled closing line value (CLV) comparisons and conviction-band calibration are published at /calibration. The superseded 2026-11-02 all-in snapshot is not the record of record.`,
+        license: `${siteUrl}/terms`,
+        isAccessibleForFree: true,
         dateModified: PUBLIC_RECORD_AS_OF,
         url: `${siteUrl}/calibration`,
         creator: { "@id": `${siteUrl}/#organization` },

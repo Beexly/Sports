@@ -78,13 +78,15 @@ describe("public record manifests derive from the verified ledger", () => {
     expect(src).not.toMatch(/record[^"\n]{0,40}\d{1,3}\.\d%/i);
   });
 
-  it("the site-wide JSON-LD Dataset node carries the derived record and its artifact date", () => {
+  it("the site-wide JSON-LD Dataset node carries the derived record, license URL, and artifact date", () => {
     const graph = buildGlobalSearchAndAiJsonLd("https://www.galaxysportsedge.com")["@graph"];
     const dataset = graph.find((node) => (node as Record<string, unknown>)["@type"] === "Dataset") as
-      | { description: string; dateModified: string }
+      | { description: string; dateModified: string; license?: string; isAccessibleForFree?: boolean }
       | undefined;
     expect(dataset).toBeTruthy();
     expect(dataset!.description).toContain(PUBLIC_RECORD_LINE);
+    expect(dataset!.license).toBe("https://www.galaxysportsedge.com/terms");
+    expect(dataset!.isAccessibleForFree).toBe(true);
     expect(dataset!.dateModified).toBe(PUBLIC_RECORD_AS_OF);
     expect(JSON.stringify(dataset)).not.toMatch(/73\.5%/);
     expect(JSON.stringify(dataset)).not.toMatch(/36-13-1/);

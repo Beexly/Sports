@@ -116,6 +116,18 @@ export type RemoteModelOutcome = RemoteModelPrediction | RemoteModelFailure;
 /** Default per-call timeout when an endpoint does not specify its own. */
 export const DEFAULT_TIMEOUT_MS = 2000;
 
+/** Canonical ML sidecar endpoint paths (`/predict/etkf` & `/predict/tda`). */
+export const GSE_ML_PREDICT_ETKF_PATH = "/predict/etkf" as const;
+export const GSE_ML_PREDICT_TDA_PATH = "/predict/tda" as const;
+
+export function buildGseMlServiceEndpointUrl(
+  baseUrl: string,
+  path: typeof GSE_ML_PREDICT_ETKF_PATH | typeof GSE_ML_PREDICT_TDA_PATH,
+): string {
+  const cleanBase = baseUrl.trim().replace(/\/+$/, "");
+  return cleanBase ? `${cleanBase}${path}` : "";
+}
+
 export interface FetchModelPredictionDeps {
   readonly fetch?: typeof fetch;
 }

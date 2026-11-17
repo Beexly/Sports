@@ -11,7 +11,7 @@
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const prod = process.argv.includes("--prod");
@@ -73,8 +73,8 @@ const required = {
   "/api/cron/health-alert": "*/15 * * * *",
   "/api/cron/refresh-player-stats": "0,30 * * * *",
   "/api/cron/free-spine-health": "0 */2 * * *",
-  "/api/cron/reconcile-entitlements": "0 8 * * *",
-  "/api/cron/repair-checkout-attempts": "30 8 * * *",
+  "/api/cron/reconcile-entitlements": "45 * * * *",
+  "/api/cron/repair-checkout-attempts": "50 * * * *",
 };
 for (const [path, schedule] of Object.entries(required)) {
   if (cronMap[path] !== schedule) {
@@ -106,8 +106,22 @@ function sourceToRegex(source) {
   return new RegExp(`^${source.replace(/\/:\w+\*/g, "(?:/.*)?")}$`);
 }
 
+const prevNodeEnv = process.env.NODE_ENV;
+process.env.NODE_ENV = "production";
+const nextConfigMod = await import(
+  pathToFileURL(join(root, "apps/web/next.config.mjs")).href
+);
+process.env.NODE_ENV = prevNodeEnv;
+const nextHeaderRules = (await nextConfigMod.default?.headers?.()) ?? [];
+
 function cspFor(path) {
-  return (vercel.headers ?? [])
+  const fromVercel = (vercel.headers ?? [])
+    .filter((rule) => sourceToRegex(rule.source).test(path))
+    .flatMap((rule) => rule.headers ?? [])
+    .filter((h) => h.key.toLowerCase() === "content-security-policy")
+    .map((h) => h.value);
+  if (fromVercel.length > 0) return fromVercel;
+  return nextHeaderRules
     .filter((rule) => sourceToRegex(rule.source).test(path))
     .flatMap((rule) => rule.headers ?? [])
     .filter((h) => h.key.toLowerCase() === "content-security-policy")

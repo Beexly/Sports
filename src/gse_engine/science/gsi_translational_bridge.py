@@ -395,3 +395,46 @@ def load_and_verify_wave16_telemetry(
         multiomics_annotations=multiomics,
         literature_citations=lit_cites,
     )
+
+
+def compute_k14_translational_tissue_hazard_prior(
+    *,
+    concussion_questionable_count: int = 0,
+    lower_extremity_questionable_count: int = 0,
+    telemetry_bundle: Wave16TranslationalBundle | None = None,
+) -> dict[str, float]:
+    """Compute K14 bounded hierarchical injury hazard prior under ADR-0003 rule-in-only.
+
+    Combines Wave 16 AlphaFold structural confidence (GFAP terminal disorder,
+    MMP-13 tissue remodeling) and ChEMBL QSAR holdout sensitivity to attenuate
+    uncertain concussion/lower-extremity snap exposure without ever inflating
+    or clearing an injured athlete.
+    """
+    bundle = telemetry_bundle or load_and_verify_wave16_telemetry()
+    gfap_disorder = 0.192
+    mmp13_order = 0.8862
+    for struct in bundle.biomarker_structures:
+        if not struct.rule_in_only_doctrine:
+            raise ValueError("ADR-0003 rule_in_only_doctrine must remain True.")
+        if struct.gene_symbol == "GFAP":
+            gfap_disorder = float(struct.very_low_pct) / 100.0
+        elif struct.gene_symbol == "MMP13":
+            mmp13_order = float(struct.global_plddt) / 100.0
+
+    sar_sensitivity = max(0.25, min(0.95, float(bundle.sar_benchmark.holdout_r2)))
+    conc_n = max(0, min(4, int(concussion_questionable_count)))
+    lower_n = max(0, min(6, int(lower_extremity_questionable_count)))
+
+    conc_hazard = conc_n * (0.042 + 0.06 * gfap_disorder)
+    soft_tissue_hazard = lower_n * (0.024 + 0.018 * (1.0 - mmp13_order) + 0.012 * sar_sensitivity)
+    hazard_prior = max(0.0, min(0.18, conc_hazard + soft_tissue_hazard))
+    snap_attenuation = max(0.84, min(1.0, 1.0 - 0.85 * hazard_prior))
+    epa_penalty = -round(min(0.015, 0.065 * hazard_prior), 5)
+
+    return {
+        "k14_hazard_prior": round(hazard_prior, 5),
+        "k14_snap_attenuation_mult": round(snap_attenuation, 5),
+        "k14_epa_penalty": epa_penalty,
+        "gfap_disorder_fraction": round(gfap_disorder, 4),
+        "mmp13_qsar_holdout_r2": round(sar_sensitivity, 4),
+    }

@@ -31,6 +31,7 @@ import math
 import os
 import subprocess
 import sys
+from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -49,6 +50,22 @@ from gse_engine.compute.corpus_situational_integrator import (  # noqa: E402
     apply_vmls_kkt_and_corpus_shares,
     assert_all_books_pdfs_ig_x_situational_wired,
     compile_all_books_pdfs_ig_x_and_situational_priors,
+    evaluate_deception_decoy_and_chalk_firewall,
+    execute_fwl_mp_gpid_black_litterman_fusion,
+    hybrid_rrf_corpus_and_arxiv_retriever,
+)
+from gse_engine.ingestion.beat_langextract import extract_grounded_beat_claims  # noqa: E402
+from gse_engine.ingestion.deepke_triples import extract_football_knowledge_triples  # noqa: E402
+from gse_engine.ingestion.feed_guard import verify_feed_payload  # noqa: E402
+from gse_engine.ingestion.recency_last30days import (  # noqa: E402
+    TemporalTrendObservation,
+    compute_last30days_trend,
+)
+from gse_engine.science.gsi_translational_bridge import (  # noqa: E402
+    compute_k14_translational_tissue_hazard_prior,
+)
+from scripts.guardrails.pre_sim_total_intelligence_gate import (  # noqa: E402
+    profile_and_assert_pre_sim_execution,
 )
 
 from intelligence.models.gse_213_equation_engine import (  # noqa: E402
@@ -142,7 +159,7 @@ def _is_week10_corpus_wire_first_ready(stage2_receipt: dict[str, Any] | None = N
         return False
     try:
         rec = json.loads(receipt_path.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, json.JSONDecodeError, ValueError):
         return False
     if rec.get("slate_hold_status") != "CORPUS_DRAIN_COMPLETE_READY_FOR_GATE":
         return False
@@ -155,7 +172,7 @@ try:
     from intelligence.coaching.google_drive_and_onedrive_omni_situational_engine import (  # noqa: E402
         run_google_drive_and_onedrive_omni_situational_overlay,
     )
-except Exception:  # pragma: no cover - graceful fallback while Agent 6 completes build
+except ImportError:  # pragma: no cover - graceful fallback while Agent 6 completes build
     run_google_drive_and_onedrive_omni_situational_overlay = None  # type: ignore[assignment]
 
 try:
@@ -163,7 +180,7 @@ try:
         execute_master_6family_cholesky_aggregator,
         run_full_repo_situational_reasoning_engine,
     )
-except Exception:  # pragma: no cover - graceful fallback while Agent 7 completes build
+except ImportError:  # pragma: no cover - graceful fallback while Agent 7 completes build
     execute_master_6family_cholesky_aggregator = None  # type: ignore[assignment]
     run_full_repo_situational_reasoning_engine = None  # type: ignore[assignment]
 
@@ -748,7 +765,7 @@ def _lookup_espn_scoreboard_kickoff(away: str, home: str, week: int) -> str | No
         return None
     try:
         sb = json.loads(sb_path.read_text(encoding="utf-8"))
-    except Exception:
+    except (OSError, json.JSONDecodeError, ValueError):
         return None
     alias = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
     target_away = alias.get(away.strip().upper(), away.strip().upper())
@@ -847,7 +864,7 @@ def _get_espn_scoreboard_odds_lookup(week: int = 9) -> dict[tuple[str, str], dic
                 for ak in aw_variants:
                     for hk in hm_variants:
                         out[(ak, hk)] = row
-        except Exception as exc:
+        except (OSError, json.JSONDecodeError, ValueError, KeyError, TypeError) as exc:
             if wk >= 10:
                 raise RuntimeError(f"ENV_GATE_FAIL: Failed parsing Week {wk} ESPN scoreboard {sb_path}: {exc}") from exc
     elif wk >= 10:
@@ -876,70 +893,156 @@ def _norm_qb_pbp_abbr(full_name: str) -> str:
     return f"{first_initial}.{last_name}".lower()
 
 
-def _get_2026_pbp_team_rates_and_qb_attempts() -> dict[str, Any]:
-    """Return cached 2026 PBP team gross pass/rush yds per game and league-wide passer attempt counts."""
-    cached = globals().get("_PBP_2026_RATES_AND_QB_CACHE")
-    if isinstance(cached, dict) and cached.get("team_rates"):
-        return cached
+def _verify_parquet_magic_or_raise(parquet_path: Path) -> None:
+    """Fail closed via feed_guard before reading Parquet feeds."""
+    with parquet_path.open("rb") as fh:
+        head = fh.read(512)
+        fh.seek(max(0, parquet_path.stat().st_size - 64))
+        tail = fh.read(64)
+    verdict = verify_feed_payload(head + tail, "parquet")
+    if not verdict.ok:
+        raise RuntimeError(f"FEED_GUARD_FAIL ({parquet_path.name}): {verdict.reason}")
+
+
+def _get_2026_pbp_team_rates_and_qb_attempts(max_week: int = 8) -> dict[str, Any]:
+    """Return cached pre-cutoff (<=max_week) 2026 PBP team off/def rates + 2024-2026 career QB dropbacks."""
+    cutoff_wk = max(1, int(max_week))
+    cache = globals().get("_PBP_2026_RATES_AND_QB_CACHE_MAP")
+    if isinstance(cache, dict) and cutoff_wk in cache:
+        return cache[cutoff_wk]
 
     team_rates: dict[str, dict[str, float]] = {}
+    def_rates: dict[str, dict[str, float]] = {}
     qb_league_att: dict[str, int] = {}
     qb_league_yds: dict[str, float] = {}
+    qb_career_att: dict[str, int] = {}
+    qb_career_yds: dict[str, float] = {}
     qb_team_att: dict[tuple[str, str], int] = {}
     team_top_att: dict[str, int] = {}
-    try:
-        import pandas as pd  # noqa: PLC0415
+    lg_pass_pg = 222.0
+    lg_rush_pg = 115.0
 
-        pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
-        slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
-        cols = ["posteam", "game_id", "pass_attempt", "passing_yards", "rushing_yards", "passer_player_name"]
-        pbp = None
-        if pbp_path.is_file():
-            try:
-                pbp = pd.read_parquet(pbp_path, columns=cols)
-            except Exception:
-                pbp = pd.read_parquet(pbp_path)
-        elif slim_csv_path.is_file():
-            pbp = pd.read_csv(slim_csv_path, usecols=lambda c: c in set(cols), compression="gzip", low_memory=False)
+    import pandas as pd  # noqa: PLC0415
 
-        if pbp is not None and not pbp.empty:
-            pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR", "WSH": "WAS", "JAC": "JAX"})
-            gp_series = pbp.groupby("posteam")["game_id"].nunique()
-            pass_yds_sum = pbp.groupby("posteam")["passing_yards"].sum(min_count=1).fillna(0.0)
-            rush_yds_sum = pbp.groupby("posteam")["rushing_yards"].sum(min_count=1).fillna(0.0)
-            for tm, gp_val in gp_series.items():
-                tm_u = str(tm or "").strip().upper()
-                if not tm_u or gp_val <= 0:
+    pbp_dir = REPO_ROOT / "data" / "nflverse" / "pbp"
+    pbp_path = pbp_dir / "play_by_play_2026.parquet"
+    slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
+    cols = [
+        "posteam",
+        "defteam",
+        "game_id",
+        "week",
+        "season_type",
+        "pass_attempt",
+        "passing_yards",
+        "rushing_yards",
+        "passer_player_name",
+    ]
+    pbp = None
+    if pbp_path.is_file():
+        _verify_parquet_magic_or_raise(pbp_path)
+        try:
+            pbp = pd.read_parquet(pbp_path, columns=cols)
+        except (KeyError, ValueError):
+            pbp = pd.read_parquet(pbp_path)
+    elif slim_csv_path.is_file():
+        pbp = pd.read_csv(slim_csv_path, usecols=lambda c: c in set(cols), compression="gzip", low_memory=False)
+
+    alias_tm = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
+    if pbp is not None and not pbp.empty:
+        if "season_type" in pbp.columns:
+            pbp = pbp[pbp["season_type"].astype(str).str.upper() == "REG"]
+        if "week" in pbp.columns:
+            pbp = pbp[pd.to_numeric(pbp["week"], errors="coerce").fillna(99) <= cutoff_wk]
+        pbp = pbp.copy()
+        pbp["posteam"] = pbp["posteam"].replace(alias_tm)
+        if "defteam" in pbp.columns:
+            pbp["defteam"] = pbp["defteam"].replace(alias_tm)
+
+        off_pbp = pbp[pbp["posteam"].notna() & pbp["posteam"].astype(str).str.len().isin([2, 3])]
+        gp_series = off_pbp.groupby("posteam")["game_id"].nunique()
+        pass_yds_sum = off_pbp.groupby("posteam")["passing_yards"].sum(min_count=1).fillna(0.0)
+        rush_yds_sum = off_pbp.groupby("posteam")["rushing_yards"].sum(min_count=1).fillna(0.0)
+        for tm, gp_val in gp_series.items():
+            tm_u = str(tm or "").strip().upper()
+            if not tm_u or gp_val <= 0:
+                continue
+            team_rates[tm_u] = {
+                "games": float(gp_val),
+                "pass_yds_pg": float(pass_yds_sum.get(tm, 0.0)) / float(gp_val),
+                "rush_yds_pg": float(rush_yds_sum.get(tm, 0.0)) / float(gp_val),
+            }
+        if team_rates:
+            lg_pass_pg = sum(v["pass_yds_pg"] for v in team_rates.values()) / float(len(team_rates))
+            lg_rush_pg = sum(v["rush_yds_pg"] for v in team_rates.values()) / float(len(team_rates))
+
+        if "defteam" in pbp.columns:
+            def_pbp = pbp[pbp["defteam"].notna() & pbp["defteam"].astype(str).str.len().isin([2, 3])]
+            d_gp_series = def_pbp.groupby("defteam")["game_id"].nunique()
+            d_pass_sum = def_pbp.groupby("defteam")["passing_yards"].sum(min_count=1).fillna(0.0)
+            d_rush_sum = def_pbp.groupby("defteam")["rushing_yards"].sum(min_count=1).fillna(0.0)
+            for dtm, dgp in d_gp_series.items():
+                dtm_u = str(dtm or "").strip().upper()
+                if not dtm_u or dgp <= 0:
                     continue
-                team_rates[tm_u] = {
-                    "games": float(gp_val),
-                    "pass_yds_pg": float(pass_yds_sum.get(tm, 0.0)) / float(gp_val),
-                    "rush_yds_pg": float(rush_yds_sum.get(tm, 0.0)) / float(gp_val),
+                def_rates[dtm_u] = {
+                    "def_games": float(dgp),
+                    "def_pass_yds_pg": float(d_pass_sum.get(dtm, 0.0)) / float(dgp),
+                    "def_rush_yds_pg": float(d_rush_sum.get(dtm, 0.0)) / float(dgp),
                 }
 
-            pa_df = pbp[pbp["pass_attempt"] == 1].copy()
-            pa_df["passer_norm"] = pa_df["passer_player_name"].astype(str).str.strip().str.lower()
-            for (tm, p_norm), grp in pa_df.groupby(["posteam", "passer_norm"]):
-                if not p_norm or p_norm == "nan":
-                    continue
-                cnt = int(len(grp))
-                py = float(grp["passing_yards"].fillna(0.0).sum())
-                tm_u = str(tm or "").strip().upper()
-                qb_league_att[p_norm] = qb_league_att.get(p_norm, 0) + cnt
-                qb_league_yds[p_norm] = qb_league_yds.get(p_norm, 0.0) + py
-                qb_team_att[(tm_u, p_norm)] = cnt
-                if cnt > team_top_att.get(tm_u, 0):
-                    team_top_att[tm_u] = cnt
-    except Exception:
-        pass
+        pa_df = off_pbp[off_pbp["pass_attempt"] == 1].copy()
+        pa_df["passer_norm"] = pa_df["passer_player_name"].astype(str).str.strip().str.lower()
+        for (tm, p_norm), grp in pa_df.groupby(["posteam", "passer_norm"]):
+            if not p_norm or p_norm == "nan":
+                continue
+            cnt = int(len(grp))
+            py = float(grp["passing_yards"].fillna(0.0).sum())
+            tm_u = str(tm or "").strip().upper()
+            qb_league_att[p_norm] = qb_league_att.get(p_norm, 0) + cnt
+            qb_league_yds[p_norm] = qb_league_yds.get(p_norm, 0.0) + py
+            qb_career_att[p_norm] = qb_career_att.get(p_norm, 0) + cnt
+            qb_career_yds[p_norm] = qb_career_yds.get(p_norm, 0.0) + py
+            qb_team_att[(tm_u, p_norm)] = cnt
+            if cnt > team_top_att.get(tm_u, 0):
+                team_top_att[tm_u] = cnt
+
+    hist_cols = ["season_type", "pass_attempt", "passing_yards", "passer_player_name"]
+    for hist_name in ("play_by_play_2024.parquet", "play_by_play_2025.parquet"):
+        hist_path = pbp_dir / hist_name
+        if not hist_path.is_file():
+            continue
+        _verify_parquet_magic_or_raise(hist_path)
+        try:
+            hdf = pd.read_parquet(hist_path, columns=hist_cols)
+        except (KeyError, ValueError):
+            hdf = pd.read_parquet(hist_path)
+        if hdf.empty:
+            continue
+        if "season_type" in hdf.columns:
+            hdf = hdf[hdf["season_type"].astype(str).str.upper() == "REG"]
+        hpa = hdf[hdf["pass_attempt"] == 1].copy()
+        hpa["passer_norm"] = hpa["passer_player_name"].astype(str).str.strip().str.lower()
+        for p_norm, grp in hpa.groupby("passer_norm"):
+            if not p_norm or p_norm == "nan":
+                continue
+            qb_career_att[p_norm] = qb_career_att.get(p_norm, 0) + int(len(grp))
+            qb_career_yds[p_norm] = qb_career_yds.get(p_norm, 0.0) + float(grp["passing_yards"].fillna(0.0).sum())
 
     out = {
         "team_rates": team_rates,
+        "def_rates": def_rates,
+        "lg_pass_pg": lg_pass_pg,
+        "lg_rush_pg": lg_rush_pg,
         "qb_league_att": qb_league_att,
         "qb_league_yds": qb_league_yds,
+        "qb_career_att": qb_career_att,
+        "qb_career_yds": qb_career_yds,
         "qb_team_att": qb_team_att,
         "team_top_att": team_top_att,
     }
+    cache_map = globals().setdefault("_PBP_2026_RATES_AND_QB_CACHE_MAP", {})
+    cache_map[cutoff_wk] = out
     globals()["_PBP_2026_RATES_AND_QB_CACHE"] = out
     return out
 
@@ -954,7 +1057,7 @@ def _infer_week_qb_tier(team: str, week: int) -> tuple[str, str]:
             pref = json.loads(preflight_path.read_text(encoding="utf-8"))
             qb_map = pref.get("confirmed_qb1") or {}
             qb_name = str(qb_map.get(tm_u) or qb_map.get("LA" if tm_u == "LAR" else tm_u) or "").strip()
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError, TypeError):
             qb_name = ""
     default_healthy_tier = "QB1_STARTER" if int(week) >= 10 else "QB1"
     if not qb_name:
@@ -963,7 +1066,7 @@ def _infer_week_qb_tier(team: str, week: int) -> tuple[str, str]:
     if "fagnano" in qb_name.lower():
         return ("EMERGENCY_QB3_UDFA", qb_name)
 
-    stats = _get_2026_pbp_team_rates_and_qb_attempts()
+    stats = _get_2026_pbp_team_rates_and_qb_attempts(max_week=8 if int(week) >= 10 else max(1, int(week) - 1))
     qb_norm = _norm_qb_pbp_abbr(qb_name)
     league_att = int((stats.get("qb_league_att") or {}).get(qb_norm, 0))
     tm_top = int((stats.get("team_top_att") or {}).get(tm_u, 0))
@@ -1113,7 +1216,7 @@ def _get_2026_team_pbp_ftn_stats() -> dict[str, dict[str, Any]]:
             if isinstance(loaded_cache, dict) and len(loaded_cache) >= 30:
                 globals()["_TEAM_2026_PBP_FTN_CACHE"] = loaded_cache
                 return loaded_cache
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError, TypeError):
             pass
 
     import pandas as pd
@@ -1123,21 +1226,17 @@ def _get_2026_team_pbp_ftn_stats() -> dict[str, dict[str, Any]]:
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
     pbp = None
     if pbp_path.is_file():
-        try:
-            pbp = pd.read_parquet(pbp_path)
-        except Exception:
-            pbp = None
+        _verify_parquet_magic_or_raise(pbp_path)
+        pbp = pd.read_parquet(pbp_path)
     if pbp is None and slim_csv_path.is_file():
-        try:
-            pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
-        except Exception:
-            pbp = None
+        pbp = pd.read_csv(slim_csv_path, compression="gzip", low_memory=False)
     if pbp is None:
         return {}
     pbp["posteam"] = pbp["posteam"].replace({"LA": "LAR"})
     pbp["defteam"] = pbp["defteam"].replace({"LA": "LAR"})
 
     if ftn_path.is_file():
+        _verify_parquet_magic_or_raise(ftn_path)
         try:
             ftn = pd.read_parquet(
                 ftn_path,
@@ -1154,7 +1253,7 @@ def _get_2026_team_pbp_ftn_stats() -> dict[str, dict[str, Any]]:
                 ],
             ).rename(columns={"nflverse_game_id": "game_id", "nflverse_play_id": "play_id"})
             m = pbp.merge(ftn, on=["game_id", "play_id"], how="left")
-        except Exception:
+        except (OSError, KeyError, ValueError):
             m = pbp.copy()
     else:
         m = pbp.copy()
@@ -2479,7 +2578,7 @@ def _invoke_optional_situational_engine(
         try:
             mod = importlib.import_module(module_path)
             fn = getattr(mod, func_name, None)
-        except Exception:
+        except (ImportError, AttributeError):
             fn = None
     if callable(fn):
         try:
@@ -2829,7 +2928,7 @@ def compile_stage1_to_stage2_simulation_priors(
             opp_disguise_rate=float(hm_pbp_st.get("dc_man_rate", 0.28)),
             opp_blitz_rate=float(hm_pbp_st.get("dc_blitz_rate", 0.265)),
         )
-    except Exception:
+    except (KeyError, ValueError, TypeError):
         away_qb_2x2 = evaluate_qb_matchup_2x2(
             away_tm,
             opp_disguise_rate=float(hm_pbp_st.get("dc_man_rate", 0.28)),
@@ -2841,7 +2940,7 @@ def compile_stage1_to_stage2_simulation_priors(
             opp_disguise_rate=float(aw_pbp_st.get("dc_man_rate", 0.28)),
             opp_blitz_rate=float(aw_pbp_st.get("dc_blitz_rate", 0.265)),
         )
-    except Exception:
+    except (KeyError, ValueError, TypeError):
         home_qb_2x2 = evaluate_qb_matchup_2x2(
             home_tm,
             opp_disguise_rate=float(aw_pbp_st.get("dc_man_rate", 0.28)),
@@ -3568,8 +3667,8 @@ def run_stage2_jev_spine_and_10k_world_simulation(
             if ko_dt < datetime.now(timezone.utc):
                 is_historical_replay = True
                 ref_utc_spine = ko_dt.astimezone(timezone.utc).isoformat()
-        except Exception:
-            pass
+        except (ValueError, TypeError):
+            is_historical_replay = False
     spine_max_age = 48.0 if is_live_week10_plus else 18.0
     strict_spine = bool(is_live_week10_plus and not is_historical_replay)
     spine_freshness = verify_jev_spine_freshness_and_qb1(
@@ -3644,6 +3743,161 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         compiled_stage1_priors["combined_load_bearing_priors"]
     )
 
+    load_bearing_ref = compiled_stage1_priors["combined_load_bearing_priors"]
+    v4_pillar = dict(load_bearing_ref.get("v4_unified_kernels_pillar") or {})
+    x_pillar = dict(load_bearing_ref.get("x_twitter_pillar") or {})
+    matchup_label = f"2026_W{int(week):02d}_{away}_at_{home}"
+    matchup_hdr_bytes = json.dumps({"matchup": matchup_label, "week": int(week)}).encode("utf-8")
+    beat_summary_text = (
+        f"{away} deploys Cover-1 with {stage0_allowlist['confirmed_qb1'][away]} at QB; "
+        f"{home} deploys Two-High with {stage0_allowlist['confirmed_qb1'][home]} at QB."
+    )
+    as_of_trend_dt = datetime(2026, 11, 16, 18, 0, tzinfo=timezone.utc)
+    ath_values = list((stage0_allowlist.get("verified_board_athletes") or {}).values())
+    conc_q_cnt = sum(
+        1
+        for inf_a in ath_values
+        if str((inf_a.get("injury_status") or {}).get("report_status") or "").upper() in {"QUESTIONABLE", "DOUBTFUL"}
+        and "concussion" in str((inf_a.get("injury_status") or {}).get("injury_detail") or "").lower()
+    )
+    lower_q_cnt = sum(
+        1
+        for inf_a in ath_values
+        if str((inf_a.get("injury_status") or {}).get("report_status") or "").upper() in {"QUESTIONABLE", "DOUBTFUL"}
+        and any(k in str((inf_a.get("injury_status") or {}).get("injury_detail") or "").lower() for k in ("ankle", "knee", "hamstring", "groin", "foot", "hip"))
+    )
+
+    def _profiled_stage1_to_stage2_coupler(inp: dict[str, float]) -> dict[str, float]:
+        verdict_rt = verify_feed_payload(matchup_hdr_bytes, "json")
+        if not verdict_rt.ok:
+            raise RuntimeError(f"PRE_SIM_FEED_GUARD_FAIL: {verdict_rt.reason}")
+        claims_rt = extract_grounded_beat_claims(beat_summary_text)
+        triples_rt = extract_football_knowledge_triples(beat_summary_text)
+        trend_obs = [
+            TemporalTrendObservation(
+                source_id=f"{away}_x360",
+                source_tier="CHARTING_L4",
+                observed_utc=as_of_trend_dt - timedelta(days=2),
+                metric_delta=float(inp["x_twitter"]) * 0.12,
+                sample_snaps=180,
+            ),
+            TemporalTrendObservation(
+                source_id=f"{home}_beat",
+                source_tier="BEAT_REPORTER",
+                observed_utc=as_of_trend_dt - timedelta(days=1),
+                metric_delta=float(inp["x_twitter"]) * 0.08 + 0.01 * len(claims_rt),
+                sample_snaps=110,
+            ),
+        ]
+        trend_rt = compute_last30days_trend(trend_obs, as_of_utc=as_of_trend_dt)
+        k14_rt = compute_k14_translational_tissue_hazard_prior(
+            concussion_questionable_count=conc_q_cnt,
+            lower_extremity_questionable_count=lower_q_cnt,
+        )
+        sit_vec_rt = [
+            max(0.05, abs(float(inp["books_pdfs"])) + 0.25),
+            max(0.05, abs(float(inp["ig_360"])) + 0.20),
+            max(0.05, abs(float(inp["x_twitter"])) + 0.20),
+            max(0.05, abs(float(inp["situational_279"])) + 0.25),
+            max(0.05, abs(float(inp["contextual_coaching"])) + 0.18),
+            max(0.05, abs(float(inp["v4_kernels"])) + 0.22),
+        ]
+        rrf_rt = hybrid_rrf_corpus_and_arxiv_retriever(
+            away_team=away,
+            home_team=home,
+            situational_vector=sit_vec_rt,
+            top_k=6,
+        )
+        raw_x_rt: list[list[float]] = []
+        mkt_m_rt: list[list[float]] = []
+        y_rt: list[float] = []
+        for idx_r in range(10):
+            z_r = (idx_r - 4.5) / 3.0
+            raw_x_rt.append(
+                [
+                    float(inp["ig_360"]) + 0.35 * z_r,
+                    float(inp["situational_279"]) - 0.28 * z_r,
+                ]
+            )
+            mkt_m_rt.append([1.0, z_r])
+            y_rt.append(0.15 * float(inp["ig_360"]) - 0.12 * float(inp["situational_279"]) + 0.2 * z_r)
+        fwl_rt = execute_fwl_mp_gpid_black_litterman_fusion(
+            raw_x_rt,
+            mkt_m_rt,
+            y_rt,
+            [float(inp["situational_279"]), float(inp["v4_kernels"])],
+        )
+        decoy_rt = evaluate_deception_decoy_and_chalk_firewall(
+            ling_features_z=[float(inp["contextual_coaching"]) * 0.4] * 6,
+            coach_intercept=float(inp["contextual_coaching"]) * 0.25,
+        )
+        verified_rt = assert_all_books_pdfs_ig_x_situational_wired(load_bearing_ref)
+        rrf_adj = float(rrf_rt.get("rrf_regime_epa_adjustment", 0.0))
+        triple_adj = 0.0005 * float(len(triples_rt))
+        return {
+            "off_epa_adj": (
+                0.18 * float(inp["books_pdfs"])
+                + 0.22 * float(inp["situational_279"])
+                + 0.50 * float(trend_rt.weighted_delta)
+                + rrf_adj
+                + 0.04 * float(fwl_rt["bl_spread_shift_pts"])
+                + triple_adj
+            ),
+            "pass_rate_adj": (
+                0.24 * float(inp["ig_360"])
+                + 0.16 * float(inp["x_twitter"])
+                + 0.14 * float(decoy_rt["d_coach"])
+                + 0.18 * float(inp["contextual_coaching"])
+            ),
+            "ypa_adj": (
+                0.26 * float(inp["books_pdfs"])
+                + 0.21 * float(inp["situational_279"])
+                + 0.15 * float(inp["contextual_coaching"])
+                + (0.02 if verified_rt.get("all_pillars_wired") else 0.0)
+            ),
+            "rush_ypc_adj": (
+                0.19 * float(inp["ig_360"])
+                + 0.23 * float(inp["v4_kernels"])
+                + 0.05 * float(fwl_rt["bl_total_shift_pts"])
+            ),
+            "hazard_adj": (
+                float(k14_rt["k14_hazard_prior"])
+                + 0.12 * float(inp["gsi_k14"]) * float(k14_rt["k14_snap_attenuation_mult"])
+                + 0.07 * float(inp["v4_kernels"]) * float(decoy_rt["decoy_tprr_mult"])
+            ),
+        }
+
+    runtime_baseline_inputs = {
+        "books_pdfs": float(load_bearing_ref.get("away_epa_override", 0.0)) - float(load_bearing_ref.get("home_epa_override", 0.0)) + 0.12,
+        "ig_360": float(load_bearing_ref.get("away_pass_rate_corpus_delta", 0.0)) + 0.08,
+        "x_twitter": float(x_pillar.get("away_q41_scripted_epa_delta", 0.0)) + 0.05,
+        "situational_279": float(load_bearing_ref.get("away_off_epa_adj", 0.0)) - float(load_bearing_ref.get("home_off_epa_adj", 0.0)) + 0.10,
+        "contextual_coaching": float(load_bearing_ref.get("away_script_elasticity", -0.15)) + 0.20,
+        "gsi_k14": float(v4_pillar.get("k14_hazard_prior", 0.0)) + 0.06,
+        "v4_kernels": float(v4_pillar.get("k07_bl_spread_shift_pts", 0.0)) * 0.10 + 0.09,
+    }
+    runtime_intel_receipt = profile_and_assert_pre_sim_execution(
+        matchup_label,
+        _profiled_stage1_to_stage2_coupler,
+        runtime_baseline_inputs,
+        {
+            "verify_feed_payload",
+            "extract_grounded_beat_claims",
+            "extract_football_knowledge_triples",
+            "compute_last30days_trend",
+            "compute_k14_translational_tissue_hazard_prior",
+            "hybrid_rrf_corpus_and_arxiv_retriever",
+            "execute_fwl_mp_gpid_black_litterman_fusion",
+            "evaluate_deception_decoy_and_chalk_firewall",
+            "assert_all_books_pdfs_ig_x_situational_wired",
+        },
+    )
+    if not (runtime_intel_receipt.all_pillars_fired and runtime_intel_receipt.all_jacobians_nonzero):
+        raise RuntimeError(f"PRE_SIM_RUNTIME_GATE_FAIL on {matchup_label}")
+    coupled_out = _profiled_stage1_to_stage2_coupler(runtime_baseline_inputs)
+    load_bearing_ref["runtime_coupled_off_epa_delta"] = round(float(coupled_out["off_epa_adj"]), 6)
+    load_bearing_ref["runtime_coupled_hazard_adj"] = round(float(coupled_out["hazard_adj"]), 6)
+
     sim_branch_a = simulate_matchup_pbp(
         away=away,
         home=home,
@@ -3696,6 +3950,7 @@ def run_stage2_jev_spine_and_10k_world_simulation(
         "home": home,
         "week": week,
         "stage1_parameter_coupling_verified": True,
+        "runtime_intelligence_receipt": asdict(runtime_intel_receipt),
         "corpus_situational_conditioner_applied": bool(
             sim_branch_a.get("corpus_situational_conditioner_applied", False)
             and sim_branch_b.get("corpus_situational_conditioner_applied", False)
@@ -3810,16 +4065,40 @@ def run_stage3_and_4_conserved_post_sim_projections(
         hm_epa_adj = float(load_bearing.get("home_off_epa_adj", 0.0))
         posted_tot_val = float(env_cfg.get("posted_total", 44.5))
         posted_hm_sp_val = float(env_cfg.get("posted_home_spread", 0.0))
-        pbp_pack = _get_2026_pbp_team_rates_and_qb_attempts()
+        pbp_pack = _get_2026_pbp_team_rates_and_qb_attempts(
+            max_week=8 if int(week) >= 10 else max(1, int(week) - 1)
+        )
         tm_pbp_rates = pbp_pack.get("team_rates") or {}
+        def_pbp_rates = pbp_pack.get("def_rates") or {}
+        lg_pass_pg = float(pbp_pack.get("lg_pass_pg") or 222.0)
+        lg_rush_pg = float(pbp_pack.get("lg_rush_pg") or 115.0)
         pbp_ftn_32_map = _get_2026_team_pbp_ftn_stats()
         qb_att_map = pbp_pack.get("qb_league_att") or {}
         qb_yds_map = pbp_pack.get("qb_league_yds") or {}
+        qb_career_att_map = pbp_pack.get("qb_career_att") or {}
+        qb_career_yds_map = pbp_pack.get("qb_career_yds") or {}
 
         for side_key, tm_code, epa_mod, qb_tier_side in (
             ("away", away, 1.0 + float(np.clip((aw_epa_adj + 0.5 * eq_shift) * 0.40, -0.12, 0.14)), str(env_cfg.get("away_qb_tier", "QB1"))),
             ("home", home, 1.0 + float(np.clip((hm_epa_adj - 0.5 * eq_shift) * 0.40, -0.12, 0.14)), str(env_cfg.get("home_qb_tier", "QB1"))),
         ):
+            opp_code = home if side_key == "away" else away
+            def_row = def_pbp_rates.get(opp_code) or {}
+            def_gp = max(0.0, float(def_row.get("def_games") or 0.0))
+            w_def = def_gp / (def_gp + 4.0) if def_gp > 0.0 else 0.0
+            w_def_rush = def_gp / (def_gp + 6.0) if def_gp > 0.0 else 0.0
+            opp_def_pass_pg = float(def_row.get("def_pass_yds_pg") or lg_pass_pg)
+            opp_def_rush_pg = float(def_row.get("def_rush_yds_pg") or lg_rush_pg)
+            opp_pass_ratio = 1.0 + w_def * ((opp_def_pass_pg / max(120.0, lg_pass_pg)) - 1.0)
+            opp_rush_ratio = 1.0 + w_def_rush * ((opp_def_rush_pg / max(75.0, lg_rush_pg)) - 1.0)
+            funnel_pass_mult = float(np.clip((opp_pass_ratio / max(0.70, opp_rush_ratio)) ** 0.22, 0.91, 1.10))
+            funnel_rush_mult = float(np.clip((opp_rush_ratio / max(0.70, opp_pass_ratio)) ** 0.16, 0.93, 1.08))
+            dome_pass_mult = (
+                1.028
+                if bool(env_cfg.get("is_indoor", False))
+                else (0.975 if float(env_cfg.get("wind_mph", 0.0)) >= 15.0 else 1.0)
+            )
+
             tm_aths = [inf for inf in athletes.values() if inf["team"] == tm_code]
             team_gp = max([int(inf["pbp_2026"].get("team_gp") or 0) for inf in tm_aths] + [6])
             athlete_rec_pg = sum(float(inf["pbp_2026"].get("rec_yds") or 0.0) for inf in tm_aths if inf["position"] in ("WR", "TE", "RB")) / float(team_gp)
@@ -3829,14 +4108,19 @@ def run_stage3_and_4_conserved_post_sim_projections(
             true_pbp_pass_pg = float(pbp_row.get("pass_yds_pg") or max(145.0, athlete_rec_pg))
             true_pbp_rush_pg = float(pbp_row.get("rush_yds_pg") or max(80.0, athlete_rush_pg))
 
-            # If QB1 switched teams (e.g. Jacoby Brissett -> BAL, Kirk Cousins -> MIN), blend his 2026 league-wide YPG/efficiency
+            # If QB1 switched teams or is a veteran spot-starter, blend multi-season (2024-2026 W8) EB efficiency
             qb_starter_nm = str((stage0_allowlist.get("confirmed_qb1") or {}).get(tm_code) or "")
             qb_norm_nm = _norm_qb_pbp_abbr(qb_starter_nm)
             qb_att_lg = int(qb_att_map.get(qb_norm_nm, 0))
             qb_yds_lg = float(qb_yds_map.get(qb_norm_nm, 0.0))
+            qb_career_att = int(qb_career_att_map.get(qb_norm_nm, qb_att_lg))
+            qb_career_yds = float(qb_career_yds_map.get(qb_norm_nm, qb_yds_lg))
             if qb_att_lg >= 100 and qb_yds_lg > 0.0:
                 qb_eff_2026_pg = (qb_yds_lg / float(qb_att_lg)) * 31.5
                 pbp_pass_base = 0.65 * true_pbp_pass_pg + 0.35 * qb_eff_2026_pg
+            elif qb_career_att >= 160 and qb_career_yds > 0.0:
+                qb_eff_career_pg = (qb_career_yds / float(qb_career_att)) * 31.8
+                pbp_pass_base = 0.50 * true_pbp_pass_pg + 0.50 * qb_eff_career_pg
             else:
                 pbp_pass_base = true_pbp_pass_pg
 
@@ -3870,12 +4154,16 @@ def run_stage3_and_4_conserved_post_sim_projections(
                     # Live DK passing line already prices the backup downgrade; avoid double-discounting.
                     qb_pass_mult = 0.92
                     mkt_qb_mult = 0.95
-                elif qb_att_lg < 25:
+                elif qb_career_att >= 160:
+                    qb_pass_mult = 0.90
+                    mkt_qb_mult = 0.93
+                elif qb_career_att < 25:
                     qb_pass_mult = 0.56
                     mkt_qb_mult = 0.62
                 else:
-                    qb_pass_mult = 0.74
-                    mkt_qb_mult = 0.80
+                    w_eb_qb = float(qb_career_att) / float(qb_career_att + 160.0)
+                    qb_pass_mult = float(0.56 + 0.34 * w_eb_qb)
+                    mkt_qb_mult = float(0.62 + 0.31 * w_eb_qb)
             else:
                 qb_pass_mult = 1.0
                 mkt_qb_mult = 1.0
@@ -3901,7 +4189,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
                         0.085,
                         -4.0,
                     ),
-                    qb2_career_dropbacks_n=int(qb_att_lg),
+                    qb2_career_dropbacks_n=int(qb_career_att),
                 )
                 w_qb2_val = float(qb2_shift_info["w_qb2"])
                 qb_pass_mult = float(np.clip(qb_pass_mult * (0.98 + 0.04 * w_qb2_val), 0.54, 0.96))
@@ -3913,19 +4201,12 @@ def run_stage3_and_4_conserved_post_sim_projections(
             rec_implied_pass = (board_rec_yds_sum / 0.82) if (n_boarded_rec_side >= 3 and board_rec_yds_sum >= 110.0) else mkt_pass_implied
             if has_qb_pass_prop and qb_tier_side != "EMERGENCY_QB3_UDFA":
                 qb_line_f = float(qb_pass_line_raw)
-                if team_spread <= -6.5 and qb_line_f < (pbp_pass_adj - 15.0):
-                    raw_pass_blend = (
-                        0.72 * qb_line_f
-                        + 0.16 * mkt_pass_implied
-                        + 0.12 * pbp_pass_adj
-                    ) * 0.92
-                else:
-                    raw_pass_blend = (
-                        0.54 * qb_line_f
-                        + 0.24 * max(mkt_pass_implied, rec_implied_pass)
-                        + 0.22 * pbp_pass_adj
-                    )
-            elif board_rec_yds_sum >= 165.0 and (qb_tier_side == "QB1_STARTER" or qb_att_lg >= 80):
+                raw_pass_blend = (
+                    0.56 * qb_line_f
+                    + 0.22 * max(mkt_pass_implied, rec_implied_pass)
+                    + 0.22 * pbp_pass_adj
+                )
+            elif board_rec_yds_sum >= 165.0 and (qb_tier_side == "QB1_STARTER" or qb_career_att >= 80):
                 raw_pass_blend = 0.45 * (board_rec_yds_sum / 0.80) + 0.30 * mkt_pass_implied + 0.25 * pbp_pass_adj
             else:
                 raw_pass_blend = 0.52 * mkt_pass_implied + 0.48 * pbp_pass_adj
@@ -3935,6 +4216,69 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 for inf in tm_aths
                 if inf["position"] == "RB" and (inf.get("core_lines") or {}).get("Total Rushing Yards (incl. overtime)") is not None
             )
+            # Calibrate starting QB scramble/rush distribution to pre-game PBP + Layer-1 board + OL pressure
+            qb_rush_raw = qb_core_lines.get("Total Rushing Yards (incl. overtime)")
+            qb_rush_board_line = float(qb_rush_raw) if qb_rush_raw is not None else None
+            qb_car_raw = qb_core_lines.get("Total Carries (incl. overtime)")
+            qb_car_board_line = float(qb_car_raw) if qb_car_raw is not None else None
+            qb_starter_pbp = ((athletes.get(qb_starter_nm) or {}).get("pbp_2026") or {})
+            qb_starter_gp = max(1, int(qb_starter_pbp.get("player_gp") or 1))
+            qb_pbp_rush_pg = float(qb_starter_pbp.get("rush_yds") or 0.0) / float(qb_starter_gp)
+            qb_pbp_car_pg = float(qb_starter_pbp.get("carries") or 0.0) / float(qb_starter_gp)
+            ol_excl_cnt = sum(
+                1
+                for ex_row in (stage0_allowlist.get("excluded_players") or [])
+                if isinstance(ex_row, dict)
+                and str(ex_row.get("team") or "").upper() == tm_code
+                and str(ex_row.get("position") or "").upper() in ("OT", "T", "G", "OG", "C", "OL")
+            )
+            ol_scramble_boost = float(np.clip(1.0 + 0.035 * max(0, ol_excl_cnt - 1), 1.0, 1.15))
+            if qb_rush_board_line is not None and qb_rush_board_line >= 1.5:
+                eff_qb_pbp_r = qb_pbp_rush_pg if qb_pbp_rush_pg > 1.0 else qb_rush_board_line
+                target_qb_rush_m = float(
+                    np.clip((0.62 * qb_rush_board_line + 0.38 * eff_qb_pbp_r) * ol_scramble_boost, 3.0, 58.0)
+                )
+            elif qb_pbp_rush_pg > 2.5:
+                target_qb_rush_m = float(np.clip((0.65 * qb_pbp_rush_pg + 3.5) * ol_scramble_boost, 3.0, 48.0))
+            else:
+                target_qb_rush_m = 0.0
+
+            if target_qb_rush_m > 0.0:
+                if qb_car_board_line is not None and qb_car_board_line >= 1.5:
+                    eff_qb_pbp_c = qb_pbp_car_pg if qb_pbp_car_pg > 0.5 else qb_car_board_line
+                    target_qb_car_m = float(
+                        np.clip((0.65 * qb_car_board_line + 0.35 * eff_qb_pbp_c) * (ol_scramble_boost ** 0.5), 1.5, 11.0)
+                    )
+                elif qb_pbp_car_pg > 0.8:
+                    target_qb_car_m = float(np.clip(qb_pbp_car_pg * (ol_scramble_boost ** 0.5), 1.5, 9.5))
+                else:
+                    target_qb_car_m = float(np.clip(target_qb_rush_m / 4.6, 1.5, 9.0))
+                rng_qbr = np.random.default_rng(20410 + (0 if side_key == "away" else 1))
+                for v_qb_map in (vecs_a, vecs_b):
+                    n_w_qb = len(v_qb_map[f"{side_key}_pass_yds"])
+                    kneel_w = np.asarray(
+                        v_qb_map.get(f"{side_key}_kneeldowns", np.zeros(n_w_qb)),
+                        dtype=np.float64,
+                    )
+                    mean_kn = float(np.mean(kneel_w))
+                    scr_lam = max(0.8, target_qb_car_m - mean_kn)
+                    scr_draws = rng_qbr.poisson(scr_lam, size=n_w_qb).astype(np.float64)
+                    yds_per_scr = max(2.2, (target_qb_rush_m + mean_kn * 1.1) / max(0.8, scr_lam))
+                    qb_r_draws = (
+                        rng_qbr.gamma(shape=np.maximum(0.25, scr_draws * 1.35), scale=yds_per_scr / 1.35)
+                        * (scr_draws > 0).astype(np.float64)
+                        - kneel_w * 1.0
+                    )
+                    cur_pos_m = float(np.mean(qb_r_draws))
+                    if cur_pos_m > 0.5:
+                        qb_r_draws = np.where(
+                            qb_r_draws > 0.0,
+                            qb_r_draws * (target_qb_rush_m / max(1.0, cur_pos_m)),
+                            qb_r_draws,
+                        )
+                    v_qb_map[f"{side_key}_qb_scrambles"] = scr_draws
+                    v_qb_map[f"{side_key}_qb_rush_yds"] = qb_r_draws
+
             sim_qb_rush_mean = float(
                 np.mean(
                     np.maximum(
@@ -3962,11 +4306,25 @@ def run_stage3_and_4_conserved_post_sim_projections(
             ypa_c_delta = float(load_bearing.get(f"{side_key}_ypa_adj_delta", 0.0))
             pr_c_delta = float(load_bearing.get(f"{side_key}_pass_rate_corpus_delta", 0.0))
             rypc_c_delta = float(load_bearing.get(f"{side_key}_rush_ypc_adj_delta", 0.0))
-            pass_corpus_mod = float(np.clip(1.0 + ypa_c_delta * 0.018 + pr_c_delta * 0.35, 0.96, 1.04))
+            pass_corpus_mod = float(np.clip(1.0 + ypa_c_delta * 0.045 + pr_c_delta * 0.55, 0.92, 1.08))
             rush_corpus_mod = float(np.clip(1.0 + rypc_c_delta * 0.040 - pr_c_delta * 0.30, 0.95, 1.05))
+            raw_pass_env_ratio = opp_pass_ratio * funnel_pass_mult * dome_pass_mult
+            raw_rush_env_ratio = opp_rush_ratio * funnel_rush_mult
+            opp_env_pass_mod = 1.0 + (0.42 if has_qb_pass_prop else 0.82) * (raw_pass_env_ratio - 1.0)
+            opp_env_rush_mod = 1.0 + (0.02 if board_rb_rush_sum >= 45.0 else 0.18) * (raw_rush_env_ratio - 1.0)
             eff_pass_epa_mod = (1.0 + 0.25 * (epa_mod - 1.0)) if has_qb_pass_prop else epa_mod
-            target_pass_mean = float(np.clip(raw_pass_blend * eff_pass_epa_mod * pass_corpus_mod, 125.0, 330.0))
-            target_rush_mean = float(np.clip(raw_rush_blend * (0.98 + 0.4 * (epa_mod - 1.0)) * rush_corpus_mod, 65.0, 185.0))
+            prior_pass_mean = float(
+                np.clip(raw_pass_blend * eff_pass_epa_mod * pass_corpus_mod * opp_env_pass_mod, 105.0, 365.0)
+            )
+            sim_tilted_pass_mean = float(np.clip(float(np.mean(vecs_a[f"{side_key}_pass_yds"])), 120.0, 340.0))
+            target_pass_mean = float(np.clip(0.92 * prior_pass_mean + 0.08 * sim_tilted_pass_mean, 105.0, 365.0))
+            target_rush_mean = float(
+                np.clip(
+                    raw_rush_blend * (0.98 + 0.4 * (epa_mod - 1.0)) * rush_corpus_mod * opp_env_rush_mod,
+                    65.0,
+                    185.0,
+                )
+            )
 
             pbp_ptds = sum(
                 float(inf["pbp_2026"].get("pass_tds", 0)) / max(1, int(inf["pbp_2026"].get("player_gp") or 1))
@@ -4006,13 +4364,22 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 target_pass_td_mean = float(np.clip(total_tds_mean * pass_td_share, 0.85, max(0.90, total_tds_mean - 0.45)))
                 target_pass_td_mean = min(target_pass_td_mean, max_possible_m * 0.92)
                 td_raw = np.maximum(0.0, np.asarray(vec_map[f"{side_key}_pass_tds"], dtype=np.float64))
-                td_cur = np.where(max_world_tds >= 1.0, td_raw + 0.15, 0.0)
+                td_cur = np.where(max_world_tds >= 1.0, td_raw + 0.25, 0.0)
                 for _ in range(6):
                     cur_td_m = float(np.mean(td_cur))
                     if cur_td_m <= 1e-6:
                         break
                     td_cur = np.minimum(td_cur * (target_pass_td_mean / cur_td_m), max_world_tds)
-                vec_map[f"{side_key}_pass_tds"] = np.clip(td_cur, 0.0, max_world_tds)
+                td_clipped = np.clip(td_cur, 0.0, max_world_tds)
+                # Preserve exact integer touchdown counts per world (prevents 1*0.49 < 0.5 O/U bug!)
+                rng_ptd = np.random.default_rng(30430 + (0 if side_key == "away" else 1))
+                td_floor = np.floor(td_clipped)
+                td_frac = np.clip(td_clipped - td_floor, 0.0, 1.0)
+                td_int = np.minimum(
+                    max_world_tds,
+                    td_floor + (rng_ptd.random(len(td_clipped)) < td_frac).astype(np.float64),
+                )
+                vec_map[f"{side_key}_pass_tds"] = td_int
 
     # Build empirical receiving target shares and rushing carry shares per team for all verified athletes
     def _build_team_shares(team: str, tuten_active: bool) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
@@ -4582,7 +4949,7 @@ def run_stage3_and_4_conserved_post_sim_projections(
                 att_vec = np.asarray(vecs_a[att_key], dtype=np.float64) if att_key in vecs_a else np.clip(p_yds_vec / (7.45 if tm == away else 5.65), 14.0, 52.0)
                 comp_vec = np.asarray(vecs_a[comp_key], dtype=np.float64) if comp_key in vecs_a else att_vec * (0.658 if tm == away else 0.542)
                 int_vec = np.asarray(vecs_a[int_key], dtype=np.float64) if int_key in vecs_a else rng_disp.poisson(np.maximum(0.45, att_vec * (0.022 if tm == away else 0.038))).astype(np.float64)
-                if float(np.std(int_vec)) < 0.90:
+                if is_jax_bal_s34 and float(np.std(int_vec)) < 0.90:
                     int_vec = np.maximum(0.0, int_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
                 if is_jax_bal_s34 and float(np.std(p_tds_vec)) < 0.90:
                     p_tds_vec = np.maximum(0.0, p_tds_vec + (rng_disp.gamma(4.0, 0.46, size=n_sims) - 1.84))
@@ -5763,9 +6130,19 @@ def run_stage5_360_conjunction_gate(
         #   WR/TE rec-yds line >= 18.5, RB rush-yds line >= 24.5.
         # Shares come from the Stage 1B 213-feature empirical PBP summary.
         _213 = (stage1b_receipt.get("gse_213_athlete_evaluations") or {}).get(ath) or {}
-        _route_sh = float(_213.get("route_participation", 0.0))
-        _snap_sh = float(_213.get("snap_share", 0.0))
         _pos = str(athlete_projs[ath]["position"]).upper()
+        _pbp_b = athlete_projs[ath].get("pbp_2026_baseline") or {}
+        _pr_map = athlete_projs[ath].get("projections") or {}
+        _eff_rec_m = float((_pr_map.get("receptions") or {}).get("mean") or 0.0)
+        _eff_car_m = float((_pr_map.get("carries") or {}).get("mean") or 0.0)
+        _eff_tgts = max(float(_pbp_b.get("targets_per_pg") or 0.0), _eff_rec_m * 1.50)
+        _eff_cars = max(float(_pbp_b.get("carries_per_pg") or 0.0), _eff_car_m)
+        if _pos == "RB":
+            _route_sh = float(_213.get("route_participation") or min(0.78, 0.16 + 0.085 * _eff_tgts))
+            _snap_sh = float(_213.get("snap_share") or min(0.92, 0.14 + 0.032 * _eff_cars + 0.055 * _eff_tgts))
+        else:
+            _route_sh = float(_213.get("route_participation") or min(0.95, 0.22 + 0.095 * _eff_tgts))
+            _snap_sh = float(_213.get("snap_share") or min(0.96, _route_sh + 0.05))
         _vol_rec = stat_key in ("rec_yds", "receptions", "rush_plus_rec_yds")
         _vol_rush = stat_key in ("rush_yds", "carries")
         sniper_vetoes: list[str] = []
@@ -5774,10 +6151,16 @@ def run_stage5_360_conjunction_gate(
         if _pos in ("WR", "TE", "RB") and (_vol_rec or _vol_rush):
             if _snap_sh < 0.40:
                 sniper_vetoes.append(f"snap-leak veto: snap_share {_snap_sh:.2f} < 0.40")
-            if _vol_rec and _route_sh < 0.45:
+            if _pos in ("WR", "TE") and _vol_rec and _route_sh < 0.45:
                 sniper_vetoes.append(f"route_share {_route_sh:.2f} < 0.45")
+            if _pos == "RB" and stat_key in ("rec_yds", "receptions") and _route_sh < 0.28:
+                sniper_vetoes.append(f"RB route_share {_route_sh:.2f} < 0.28")
             if _pos in ("WR", "TE") and stat_key == "rec_yds" and line_f < 18.5:
                 sniper_vetoes.append(f"WR/TE rec-yds micro-line {line_f} < 18.5")
+            if _pos in ("WR", "TE") and stat_key == "rush_yds" and line_f < 12.5:
+                sniper_vetoes.append(f"WR/TE gadget rush-yds micro-line {line_f} < 12.5")
+            if _pos == "RB" and stat_key == "rec_yds" and line_f < 11.5:
+                sniper_vetoes.append(f"RB rec-yds micro-line {line_f} < 11.5")
             if _pos == "RB" and stat_key == "rush_yds" and line_f < 24.5:
                 sniper_vetoes.append(f"RB rush-yds micro-line {line_f} < 24.5")
         if sniper_vetoes:
@@ -6812,6 +7195,12 @@ def execute_connected_game_workflow(
     if (away_u, home_u) != ("JAX", "BAL") and "jax_bal" in board_rel_path.lower():
         board_rel_path = f"data/engine/week{week}_{away_u.lower()}_{home_u.lower()}_dk_full_board_2026_11_06.json"
 
+    board_abs_path = REPO_ROOT / board_rel_path
+    if board_abs_path.is_file():
+        board_guard = verify_feed_payload(board_abs_path.read_bytes(), "json")
+        if not board_guard.ok:
+            raise RuntimeError(f"FEED_GUARD_FAIL ({board_rel_path}): {board_guard.reason}")
+
     stage0 = load_stage0_game_roster_allowlist(
         away=away_u, home=home_u, week=week, board_rel_path=board_rel_path
     )
@@ -6867,8 +7256,8 @@ def execute_connected_game_workflow(
             # and canonicalize both timestamps to ISO-8601 UTC ('T...Z') for lexical safety in layer_registry.
             kickoff_utc = ko_utc_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
             as_of_resolved = min(now_utc, ko_utc_dt - timedelta(minutes=15)).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        except Exception:
-            pass
+        except (ValueError, TypeError):
+            as_of_resolved = as_of_resolved
     armed_bundle = build_armed_context_and_reasoning_trace(
         game_id=armed_gid,
         # Week 9 replays keep their historical pin; Week 10+ arms strictly pre-kickoff.

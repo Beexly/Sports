@@ -92,6 +92,11 @@ const GUARDS = [
   ["node-version-parity-test", ["node", "--test", "scripts/guardrails/node-version-parity.test.mjs"]],
   ["node-version-parity", ["node", "scripts/guardrails/node-version-parity.mjs"]],
   ["ingestion-source-clearance", ["node", "scripts/guardrails/ingestion-source-clearance.mjs"]],
+  ["osv-polyglot-audit", ["node", "scripts/ops/osv-polyglot-audit.mjs", "--offline-manifest-check"]],
+  [
+    "pre-sim-total-intelligence-gate",
+    ["python", "scripts/guardrails/pre_sim_total_intelligence_gate.py", "--repo-root", ".", "--self-test"],
+  ],
 ];
 
 /**

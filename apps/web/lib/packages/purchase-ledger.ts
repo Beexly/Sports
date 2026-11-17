@@ -24,6 +24,18 @@ const LEDGER_QUERY_TAKE = 500;
 const WEEKLY_PACK_TTL_MS = 8 * 24 * 60 * 60 * 1000;
 const SEASON_PASS_TTL_MS = 365 * 24 * 60 * 60 * 1000;
 
+export const FOUNDER_FAMILY_VIP_EMAILS = new Set<string>([
+  "baxley.garrett@gmail.com",
+  "dbax66@icloud.com",
+  "garrett@beexly.com",
+  "hq@galaxysportsedge.com",
+]);
+
+export function isFounderOrFamilyVipEmail(email?: string | null): boolean {
+  if (!email) return false;
+  return FOUNDER_FAMILY_VIP_EMAILS.has(email.trim().toLowerCase());
+}
+
 const TIER_RANK: Record<SubscriptionTier, number> = {
   FREE: 0,
   FANTASY: 1,
@@ -35,17 +47,28 @@ function isSeasonPassSlug(slug: string): boolean {
   return (
     slug === "vip-season-pass" ||
     slug === "season-membership" ||
-    slug === "season-membership-monthly"
+    slug === "season-membership-monthly" ||
+    slug === "global-multisport-pro"
   );
 }
 
 function isAllAccessBundleSlug(slug: string): boolean {
-  return slug === "week8-all-access" || slug === "vip-season-pass" || slug === "season-membership";
+  return (
+    slug === "week8-all-access" ||
+    slug === "vip-season-pass" ||
+    slug === "season-membership" ||
+    slug === "global-multisport-pro"
+  );
 }
 
 function tierForPackageSlug(slug: string): SubscriptionTier {
-  if (!slug || slug === "unmapped-pack") return "FREE";
-  if (slug === "vip-season-pass" || slug === "week8-all-access" || slug === "season-membership") {
+  if (!slug || slug === "unmapped-pack" || slug === "free-proof-room") return "FREE";
+  if (
+    slug === "vip-season-pass" ||
+    slug === "week8-all-access" ||
+    slug === "season-membership" ||
+    slug === "global-multisport-pro"
+  ) {
     return "ELITE";
   }
   if (slug === "redzone-dfs-pro-pack" || slug === "week8-sun-mon-dfs-expanded-pack") {
@@ -128,6 +151,23 @@ export async function checkPurchaseLedgerAccess(params: {
 }): Promise<{ unlocked: boolean; record?: PurchaseLedgerRecord }> {
   const { slug, sessionId, email, userId } = params;
 
+  if (isFounderOrFamilyVipEmail(email)) {
+    const cleanVip = email!.trim().toLowerCase();
+    return {
+      unlocked: true,
+      record: {
+        sessionId: `vip_founder_family_${cleanVip}`,
+        packageSlug: slug || "global-multisport-pro",
+        customerEmail: cleanVip,
+        userId: userId || null,
+        amountCents: 0,
+        currency: "usd",
+        timestamp: new Date().toISOString(),
+        metadata: { provider: "whop_founder_family_vip", permanentAllAccess: true },
+      },
+    };
+  }
+
   if (sessionId && IN_MEMORY_PURCHASE_CACHE.has(sessionId)) {
     const rec = IN_MEMORY_PURCHASE_CACHE.get(sessionId)!;
     if (!slug || rec.packageSlug === slug || isAllAccessBundleSlug(rec.packageSlug)) {
@@ -208,6 +248,9 @@ export async function resolvePackEntitlementTier(params: {
 }): Promise<SubscriptionTier> {
   const userId = params.userId?.trim() || null;
   const email = params.email?.trim().toLowerCase() || null;
+  if (isFounderOrFamilyVipEmail(email)) {
+    return "ELITE";
+  }
   if (!userId && !email) {
     return "FREE";
   }

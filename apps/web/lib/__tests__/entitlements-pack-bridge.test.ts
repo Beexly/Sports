@@ -14,8 +14,10 @@ vi.mock("@sports/db", () => ({
 
 import { getUserEntitlements } from "@/lib/entitlements";
 import {
+  checkPurchaseLedgerAccess,
   clearPurchaseLedgerCacheForTests,
   recordPurchaseLedgerEntry,
+  resolvePackEntitlementTier,
 } from "@/lib/packages/purchase-ledger";
 
 describe("entitlements bridge for one-time package purchases", () => {
@@ -81,5 +83,44 @@ describe("entitlements bridge for one-time package purchases", () => {
     expect(ent.canSeePremiumPicks).toBe(true);
     expect(ent.canSeeConfidence).toBe(true);
     expect(ent.dailyPickLimit).toBeNull();
+  });
+
+  it("keeps free-proof-room / pre-lock visitor capture on FREE tier with proof room access", async () => {
+    await recordPurchaseLedgerEntry({
+      sessionId: "cs_test_free_proof_room_1",
+      packageSlug: "free-proof-room",
+      customerEmail: "visitor@example.com",
+      userId: "user_visitor_1",
+      amountCents: 0,
+      currency: "usd",
+    });
+
+    const ent = await getUserEntitlements("user_visitor_1", "visitor@example.com");
+    expect(ent.tier).toBe("FREE");
+    expect(ent.canSeePremiumPicks).toBe(false);
+  });
+
+  it("grants permanent ELITE and all-pack Whop access to founder (baxley.garrett@gmail.com) and dad (dbax66@icloud.com)", async () => {
+    for (const vipEmail of ["baxley.garrett@gmail.com", "dbax66@icloud.com"]) {
+      const ent = await getUserEntitlements("user_any", vipEmail);
+      expect(ent.tier).toBe("ELITE");
+      expect(ent.canSeePremiumPicks).toBe(true);
+      expect(ent.canSeeConfidence).toBe(true);
+      expect(ent.canUseFantasyFull).toBe(true);
+
+      const packTier = await resolvePackEntitlementTier({ email: vipEmail });
+      expect(packTier).toBe("ELITE");
+
+      for (const slug of [
+        "global-multisport-pro",
+        "week8-all-access",
+        "redzone-dfs-pro-pack",
+        "sgp-correlation-basket",
+        "sunday-nfl-5pct-slate",
+      ]) {
+        const access = await checkPurchaseLedgerAccess({ slug, email: vipEmail });
+        expect(access.unlocked).toBe(true);
+      }
+    }
   });
 });

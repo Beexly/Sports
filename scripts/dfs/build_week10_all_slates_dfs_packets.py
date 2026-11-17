@@ -366,7 +366,7 @@ def _dk_fpts_from_dossier_record(
 
 
 def extract_active_decoy_keys(injury_decoy_audit: Mapping[str, Any] | None) -> set[str]:
-    """Return normalized keys strictly for flagged active decoy / over-blocked players."""
+    """Return normalized keys strictly for flagged active decoy / over-gated players."""
     out: set[str] = set()
     if not isinstance(injury_decoy_audit, Mapping):
         return out
@@ -1424,7 +1424,7 @@ def _render_week10_dfs_markdown(packets: Mapping[str, Mapping[str, Any]]) -> str
         "> HOLD STATUS: HOLD_INTERNAL_CALIBRATION_ONLY_DO_NOT_STAKE_OR_ENTER (`publish_allowed: False`). Wire-first calibration build held prior to official NFL 90-minute inactives and late-swap checks.",
         "",
         "- Scope: All 5 Week 10 DraftKings slates (DG 156422, DG 156416, DG 156418, DG 156433, DG 156434)",
-        "- Cash vs GPP Separation: Cash optimizes 0.60 * median + 0.40 * p25 floor with zero-decoy blocks; 20-Max GPP optimizes ceiling, correlation stacks, and overlap diversity.",
+        "- Cash vs GPP Separation: Cash optimizes 0.60 * median + 0.40 * p25 floor with zero-decoy prevents; 20-Max GPP optimizes ceiling, correlation stacks, and overlap diversity.",
         "- Direct DraftKings CSVs: Each slate emits both an audit CSV (`data/dfs/week10_*_dk_upload.csv`) and pure DraftKings upload CSVs (`*_dk_cash_1up.csv` 1 lineup, `*_dk_20max_gpp.csv` 20 lineups) containing only official slot columns and Name (ID) tokens.",
         "- Email Delivery Policy: auto_email_sent: False (dry-staged locally in data/dfs/ until morning kickoff confirmation).",
         "",

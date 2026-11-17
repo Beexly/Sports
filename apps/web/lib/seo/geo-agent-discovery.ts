@@ -267,6 +267,8 @@ export function buildGeoAndA2aAgentDiscoveryManifest(params: {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: `Galaxy Sports Edge — ${params.headline}`,
+    license: "https://www.galaxysportsedge.com/terms",
+    isAccessibleForFree: true,
     identifier: params.matchupSlug,
     VerifiedNewEngineLedger: params.verifiedRecordDisplay,
     geoCitationLiftExpectedPct: 40.0, // Aggarwal et al. (2024, KDD arXiv:2311.09735v3)

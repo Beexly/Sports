@@ -163,11 +163,13 @@ describe("next.config.mjs — security policy", () => {
     expect(csp!, `${csp} must not include unsafe-eval`).not.toContain("unsafe-eval");
   });
 
-  it("production CSP allows Sentry ingest endpoints in connect-src", async () => {
+  it("production CSP allows Sentry and PostHog US cloud endpoints", async () => {
     const csp = cspForNonEmbed(await prodRules());
     expect(csp).toBeDefined();
     expect(csp!).toContain("*.ingest.sentry.io");
     expect(csp!).toContain("*.ingest.us.sentry.io");
+    expect(csp!).toContain("https://us.i.posthog.com");
+    expect(csp!).toContain("https://us-assets.i.posthog.com");
   });
 
   it("production CSP allows the Cloudflare Insights beacon script in script-src", async () => {

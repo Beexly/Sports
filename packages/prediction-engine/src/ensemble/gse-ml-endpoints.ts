@@ -14,7 +14,10 @@
  */
 
 import {
+  buildGseMlServiceEndpointUrl,
   createCircuitBreaker,
+  GSE_ML_PREDICT_ETKF_PATH,
+  GSE_ML_PREDICT_TDA_PATH,
   isRemoteModelFailure,
   locationIsInternalTargetLocation,
   validateEndpointUrl,
@@ -123,7 +126,7 @@ export function buildGseMlEndpoints(
   return [
     {
       name: "gse-etkf",
-      url: `${raw}/predict/etkf`,
+      url: buildGseMlServiceEndpointUrl(raw, GSE_ML_PREDICT_ETKF_PATH),
       enabled: check.ok,
       timeoutMs,
     },
@@ -142,7 +145,7 @@ export function buildTdaFeatureEndpoint(
   const check = validateEndpointUrl(raw);
   return {
     name: "gse-tda-features",
-    url: `${raw}/predict/tda`,
+    url: buildGseMlServiceEndpointUrl(raw, GSE_ML_PREDICT_TDA_PATH),
     enabled: check.ok,
     timeoutMs,
   };

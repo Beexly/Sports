@@ -44,9 +44,12 @@ export function initPostHogClient(): boolean {
   try {
     posthog.init(token, {
       api_host: host,
+      ui_host: "https://us.posthog.com",
       person_profiles: "identified_only",
       capture_pageview: true,
       capture_pageleave: true,
+      // Prevent dynamic remote <script> injection on Mobile Safari / ITP blockers.
+      disable_external_dependency_loading: true,
       // Respect explicit opt-out; never persist beyond the session choice.
       respect_dnt: true,
     });

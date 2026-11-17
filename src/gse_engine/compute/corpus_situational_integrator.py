@@ -29,6 +29,7 @@ import json
 import math
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -41,8 +42,16 @@ from gse_engine.fabric.registry_hotswap import (
     HotSwapInferenceEngine,
     verify_champion_bundle,
 )
+from gse_engine.ingestion.beat_langextract import extract_grounded_beat_claims
+from gse_engine.ingestion.deepke_triples import extract_football_knowledge_triples
 from gse_engine.ingestion.multimodal_vlm_and_provenance import (
+    HawkesSocialPost,
     compute_morlet_wavelet_scattering_intermittency,
+    evaluate_hawkes_dawid_skene_provenance,
+)
+from gse_engine.ingestion.recency_last30days import (
+    TemporalTrendObservation,
+    compute_last30days_trend,
 )
 from gse_engine.observability.kernel_registry_and_antipatterns import (
     run_all_antipattern_guards,
@@ -51,12 +60,17 @@ from gse_engine.observability.skill_registry_router import (
     CapabilityDomain,
     route_gse_capability_domain,
 )
-from gse_engine.science.gsi_translational_bridge import load_and_verify_wave16_telemetry
+from gse_engine.science.gsi_translational_bridge import (
+    compute_k14_translational_tissue_hazard_prior,
+    load_and_verify_wave16_telemetry,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MANIFEST_877_PATH = REPO_ROOT / "data" / "sports_research_papers" / "manifest_877_pdfs.json"
 LESSONS_LEDGER_PATH = REPO_ROOT / "data" / "engine" / "lessons_learned_permanent_ledger.jsonl"
 FOUNDRY_INDEX_PATH = REPO_ROOT / "data" / "engine" / "foundry_compound_corpus_index_2026.json"
+THOUSAND_EQ_PATH = REPO_ROOT / "data" / "engine" / "thousand_equation_matrix_2026.json"
+SOVEREIGN_SHARD_DIR = REPO_ROOT / "brain" / "feeds" / "2026-11-14"
 GSI_TELEMETRY_PATH = (
     REPO_ROOT / "data" / "engine" / "gsi_wave16_translational_and_datascience_telemetry_2026.json"
 )
@@ -69,6 +83,8 @@ _STATIC_CORPUS_CANDIDATES_CACHE: list[dict[str, Any]] | None = None
 _LESSONS_INDEXED_COUNT_CACHE: int = 0
 _FOUNDRY_SWEPT_FILES_CACHE: int = 0
 _FOUNDRY_PRIMITIVES_COUNT_CACHE: int = 0
+_EQUATIONS_9875_COUNT_CACHE: int = 0
+_SOVEREIGN_PRIMITIVES_COUNT_CACHE: int = 0
 _PBP_TEAM_SIGNALS_CACHE: dict[str, Any] | None = None
 _ELASTICITY_TEAM_CACHE: dict[str, float] | None = None
 _DIRE_TEAM_CACHE: dict[str, dict[str, Any]] | None = None
@@ -76,6 +92,9 @@ _BOOKS_RAW_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
 _OPENAI_721_CACHE: dict[tuple[str, str, float, int], dict[str, Any]] = {}
 _COACH_PA_CACHE: dict[str, float] = {}
 _GSI_FABRIC_PILLAR_CACHE: dict[str, Any] | None = None
+_HIDDEN_GAME_CACHE: dict[tuple[str, str], dict[str, Any]] = {}
+_CHARTING_360_LIVE_CACHE: dict[tuple[str, str, int], dict[str, Any]] = {}
+_BEAT_NLP_CACHE: dict[tuple[str, str], tuple[Any, Any, Any, Any]] = {}
 
 
 @dataclass(frozen=True, slots=True)
@@ -207,29 +226,22 @@ def _orthogonalize_and_js_shrink_6families(
     market_prob: float,
 ) -> dict[str, Any]:
     """Run live 6-family Cholesky whitening + Positive-Part James-Stein shrinkage."""
-    try:
-        agg_fn = _load_attr(
-            "intelligence.coaching.full_repo_279_family_situational_reasoning_matrix",
-            "execute_master_6family_cholesky_aggregator",
-        )
-        res = dict(agg_fn(family_deltas=dict(family_deltas), market_prob=market_prob))
-        whitened = {
-            str(k): float(v) for k, v in (res.get("whitened_family_deltas") or {}).items()
-        }
-        norm_sq = sum(v * v for v in whitened.values())
-        js_shrink = max(0.0, 1.0 - (4.0 * 0.0004) / max(1e-6, norm_sq))
-        raw_clamped = float(res.get("clamped_prob_delta", 0.0))
-        return {
-            "whitened_family_deltas": {k: round(v, 5) for k, v in whitened.items()},
-            "positive_part_js_shrinkage_factor": round(js_shrink, 5),
-            "shrunk_prob_delta": round(raw_clamped * js_shrink, 5),
-        }
-    except Exception:
-        return {
-            "whitened_family_deltas": {str(k): float(v) for k, v in family_deltas.items()},
-            "positive_part_js_shrinkage_factor": 1.0,
-            "shrunk_prob_delta": 0.0,
-        }
+    agg_fn = _load_attr(
+        "intelligence.coaching.full_repo_279_family_situational_reasoning_matrix",
+        "execute_master_6family_cholesky_aggregator",
+    )
+    res = dict(agg_fn(family_deltas=dict(family_deltas), market_prob=market_prob))
+    whitened = {
+        str(k): float(v) for k, v in (res.get("whitened_family_deltas") or {}).items()
+    }
+    norm_sq = sum(v * v for v in whitened.values())
+    js_shrink = max(0.0, 1.0 - (4.0 * 0.0004) / max(1e-6, norm_sq))
+    raw_clamped = float(res.get("clamped_prob_delta", 0.0))
+    return {
+        "whitened_family_deltas": {k: round(v, 5) for k, v in whitened.items()},
+        "positive_part_js_shrinkage_factor": round(js_shrink, 5),
+        "shrunk_prob_delta": round(raw_clamped * js_shrink, 5),
+    }
 
 
 def _read_manifest_877_summary() -> dict[str, Any]:
@@ -285,9 +297,10 @@ def _embed_6d_topic_vector(text: str) -> list[float]:
 
 
 def _read_static_corpus_candidates() -> list[dict[str, Any]]:
-    """Cache normalized 877-PDF manifest, ledger & Foundry primitives RRF candidates."""
+    """Cache 877-PDF manifest, ledger, Foundry, 9,875 equations & 58k Sovereign primitives."""
     global _STATIC_CORPUS_CANDIDATES_CACHE, _LESSONS_INDEXED_COUNT_CACHE
     global _FOUNDRY_SWEPT_FILES_CACHE, _FOUNDRY_PRIMITIVES_COUNT_CACHE
+    global _EQUATIONS_9875_COUNT_CACHE, _SOVEREIGN_PRIMITIVES_COUNT_CACHE
     if _STATIC_CORPUS_CANDIDATES_CACHE is not None:
         return _STATIC_CORPUS_CANDIDATES_CACHE
 
@@ -320,6 +333,7 @@ def _read_static_corpus_candidates() -> list[dict[str, Any]]:
                 "vec_6d": _embed_6d_topic_vector(txt_l),
                 "bm25f_score": 0.0,
                 "authority_prior": auth_p,
+                "signed_prior_delta": 0.002 if auth_p >= 0.86 else 0.0,
             }
         )
 
@@ -330,10 +344,7 @@ def _read_static_corpus_candidates() -> list[dict[str, Any]]:
             line = raw_ln.strip()
             if not line:
                 continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError:
-                continue
+            row = json.loads(line)
             if not isinstance(row, dict):
                 continue
             lid = str(row.get("lesson_id") or "").strip()
@@ -358,6 +369,7 @@ def _read_static_corpus_candidates() -> list[dict[str, Any]]:
                     "vec_6d": _embed_6d_topic_vector(txt_l),
                     "bm25f_score": bm_sc,
                     "authority_prior": auth_p,
+                    "signed_prior_delta": 0.003 if sev == "CRITICAL" else 0.001,
                 }
             )
             lessons_count += 1
@@ -365,39 +377,101 @@ def _read_static_corpus_candidates() -> list[dict[str, Any]]:
     foundry_swept = 0
     foundry_prims = 0
     if FOUNDRY_INDEX_PATH.is_file():
-        try:
-            f_data = json.loads(FOUNDRY_INDEX_PATH.read_text(encoding="utf-8"))
-            foundry_swept = int(f_data.get("files_swept") or 0)
-            foundry_prims = int(f_data.get("primitives_extracted_total") or 0)
-            for row in f_data.get("curated_rrf_candidates") or []:
-                if not isinstance(row, dict):
-                    continue
-                txt = str(row.get("text") or row.get("doc_id") or "")
-                txt_l = txt.lower()
-                raw_vec = row.get("vec_6d")
-                vec_6d = (
-                    [float(v) for v in raw_vec[:6]]
-                    if isinstance(raw_vec, list) and len(raw_vec) == 6
-                    else _embed_6d_topic_vector(txt_l)
-                )
-                items.append(
-                    {
-                        "doc_id": str(row.get("doc_id") or "foundry_prim"),
-                        "source_type": "foundry_book_primitive",
-                        "text": txt,
-                        "txt_l": txt_l,
-                        "vec_6d": vec_6d,
-                        "bm25f_score": 1.4,
-                        "authority_prior": float(row.get("authority_prior") or 0.85),
-                    }
-                )
-        except Exception:
-            foundry_swept = 0
-            foundry_prims = 0
+        f_data = json.loads(FOUNDRY_INDEX_PATH.read_text(encoding="utf-8"))
+        foundry_swept = int(f_data.get("files_swept") or 0)
+        foundry_prims = int(f_data.get("primitives_extracted_total") or 0)
+        for row in f_data.get("curated_rrf_candidates") or []:
+            if not isinstance(row, dict):
+                continue
+            txt = str(row.get("text") or row.get("doc_id") or "")
+            txt_l = txt.lower()
+            raw_vec = row.get("vec_6d")
+            vec_6d = (
+                [float(v) for v in raw_vec[:6]]
+                if isinstance(raw_vec, list) and len(raw_vec) == 6
+                else _embed_6d_topic_vector(txt_l)
+            )
+            items.append(
+                {
+                    "doc_id": str(row.get("doc_id") or "foundry_prim"),
+                    "source_type": "foundry_book_primitive",
+                    "text": txt,
+                    "txt_l": txt_l,
+                    "vec_6d": vec_6d,
+                    "bm25f_score": 1.4,
+                    "authority_prior": float(row.get("authority_prior") or 0.85),
+                    "signed_prior_delta": float(row.get("raw_log_odds_delta") or 0.002),
+                }
+            )
+
+    eq_count = 0
+    if THOUSAND_EQ_PATH.is_file():
+        eq_data = json.loads(THOUSAND_EQ_PATH.read_text(encoding="utf-8"))
+        eq_rows = eq_data.get("equations") or []
+        eq_count = int(eq_data.get("total_equations") or len(eq_rows))
+        # Stratify deterministically across families (step sampling high load-bearing equations)
+        stride = max(1, len(eq_rows) // 240)
+        for eq_i in range(0, len(eq_rows), stride):
+            row = eq_rows[eq_i]
+            if not isinstance(row, dict):
+                continue
+            txt = f"{row.get('id', '')} {row.get('title', '')} {row.get('category', '')}"
+            txt_l = txt.lower()
+            raw_lo = float(row.get("rawLogOddsDelta") or 0.0)
+            wt = float(row.get("priorWeight") or 0.5)
+            items.append(
+                {
+                    "doc_id": str(row.get("id") or f"eq_{eq_i}"),
+                    "source_type": "thousand_equation_matrix",
+                    "text": txt,
+                    "txt_l": txt_l,
+                    "vec_6d": _embed_6d_topic_vector(txt_l),
+                    "bm25f_score": 1.6 if row.get("load_bearing") else 0.9,
+                    "authority_prior": _clip(0.80 + 0.16 * wt, 0.72, 0.98),
+                    "signed_prior_delta": _clip(raw_lo * 0.05, -0.008, 0.008),
+                }
+            )
+
+    sov_count = 0
+    if SOVEREIGN_SHARD_DIR.is_dir():
+        shard_parts = sorted(SOVEREIGN_SHARD_DIR.glob("arxiv_sovereign_and_shard_b_*.jsonl"))
+        bucket_counts: dict[str, int] = {}
+        for part_p in shard_parts:
+            with part_p.open("r", encoding="utf-8", errors="replace") as fh:
+                for raw_line in fh:
+                    if not raw_line.strip():
+                        continue
+                    sov_count += 1
+                    if sov_count % 240 != 1:
+                        continue
+                    s_row = json.loads(raw_line)
+                    dom_key = str(s_row.get("record_type") or s_row.get("domain") or "sovereign")
+                    if bucket_counts.get(dom_key, 0) >= 80:
+                        continue
+                    bucket_counts[dom_key] = bucket_counts.get(dom_key, 0) + 1
+                    txt = (
+                        f"{s_row.get('record_id', '')} {dom_key} "
+                        f"{s_row.get('title', '')} {s_row.get('equation_or_claim', '')}"
+                    )
+                    txt_l = txt.lower()
+                    items.append(
+                        {
+                            "doc_id": str(s_row.get("record_id") or f"sov_{sov_count}"),
+                            "source_type": "sovereign_book_primitive",
+                            "text": txt[:260],
+                            "txt_l": txt_l[:260],
+                            "vec_6d": _embed_6d_topic_vector(txt_l),
+                            "bm25f_score": 1.35,
+                            "authority_prior": 0.89,
+                            "signed_prior_delta": 0.0015,
+                        }
+                    )
 
     _LESSONS_INDEXED_COUNT_CACHE = lessons_count
     _FOUNDRY_SWEPT_FILES_CACHE = foundry_swept
     _FOUNDRY_PRIMITIVES_COUNT_CACHE = foundry_prims
+    _EQUATIONS_9875_COUNT_CACHE = eq_count
+    _SOVEREIGN_PRIMITIVES_COUNT_CACHE = sov_count
     _STATIC_CORPUS_CANDIDATES_CACHE = items
     return items
 
@@ -488,8 +562,14 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
     fused.sort(key=lambda x: (-x[0], x[1]))
 
     top_items: list[dict[str, Any]] = []
+    signed_weighted_sum = 0.0
+    signed_weight_tot = 0.0
     for score, idx in fused[:top_k]:
         c = candidates[idx]
+        s_delta = float(c.get("signed_prior_delta") or 0.0)
+        d_align = sum(a * b for a, b in zip(q_unit, c["vec_6d"], strict=True))
+        signed_weighted_sum += score * s_delta * (0.5 + d_align)
+        signed_weight_tot += score
         top_items.append(
             {
                 "doc_id": c["doc_id"],
@@ -506,12 +586,20 @@ def hybrid_rrf_corpus_and_arxiv_retriever(
         0.0,
         1.0,
     )
+    rrf_regime_adj = _clip(
+        (signed_weighted_sum / max(1e-9, signed_weight_tot)) * (0.6 + 0.4 * coherence),
+        -0.012,
+        0.012,
+    )
     return {
         "matchup": f"{away_team} @ {home_team}",
         "fusion_method": "reciprocal_rank_fusion_3way_k60",
         "candidates_evaluated": len(candidates),
         "lessons_ledger_indexed": _LESSONS_INDEXED_COUNT_CACHE,
+        "equations_matrix_indexed": _EQUATIONS_9875_COUNT_CACHE,
+        "sovereign_primitives_indexed": _SOVEREIGN_PRIMITIVES_COUNT_CACHE,
         "rrf_coherence_score": round(coherence, 4),
+        "rrf_regime_epa_adjustment": round(rrf_regime_adj, 5),
         "top_fused_citations": top_items,
     }
 
@@ -604,56 +692,50 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
         )
         pbp = pbp.merge(ftn, on=["game_id", "play_id"], how="left")
 
-    try:
-        compute_dire = _load_attr(
-            "intelligence.coaching.drive_dire_situations",
-            "compute_dire_situation_drive_efficiency",
-        )
-        dire_res = compute_dire(pbp)
-        for row in dire_res.get("teams") or []:
-            tm_d = _norm_team(str(row.get("team") or ""))
-            if tm_d:
-                dire_by_team[tm_d] = row
-    except Exception:
-        pass
+    compute_dire = _load_attr(
+        "intelligence.coaching.drive_dire_situations",
+        "compute_dire_situation_drive_efficiency",
+    )
+    dire_res = compute_dire(pbp)
+    for row in dire_res.get("teams") or []:
+        tm_d = _norm_team(str(row.get("team") or ""))
+        if tm_d:
+            dire_by_team[tm_d] = row
 
     sched_epa_by_team: dict[str, dict[str, Any]] = {}
     pgwe_by_team: dict[str, dict[str, Any]] = {}
     recent_adot_drop_teams: set[str] = set()
-    try:
-        fn_sched_epa = _load_attr(
-            "intelligence.coaching.schedule_cleaned_epa",
-            "compute_schedule_adjusted_epa",
-        )
-        fn_paired_adot = _load_attr(
-            "intelligence.coaching.schedule_cleaned_epa",
-            "detect_paired_adot_drop",
-        )
-        fn_pgwe = _load_attr(
-            "intelligence.coaching.pgwe_luck_audit",
-            "compute_pgwe_luck_delta",
-        )
-        tm_ok = pbp["posteam"].str.len().isin([2, 3]) & pbp["defteam"].str.len().isin([2, 3])
-        valid_tm = pbp[tm_ok]
-        sc_res = fn_sched_epa(valid_tm)
-        for row in sc_res.get("teams") or []:
-            tm_s = _norm_team(str(row.get("team") or ""))
-            if tm_s:
-                sched_epa_by_team[tm_s] = row
-        ad_res = fn_paired_adot(valid_tm)
-        max_wk = int(valid_tm["week"].max()) if len(valid_tm) else 0
-        for flag in ad_res.get("flags") or []:
-            if int(flag.get("week") or 0) >= max(1, max_wk - 1):
-                tm_f = _norm_team(str(flag.get("team") or ""))
-                if tm_f:
-                    recent_adot_drop_teams.add(tm_f)
-        pg_res = fn_pgwe(valid_tm)
-        for row in pg_res.get("teams") or []:
-            tm_p = _norm_team(str(row.get("team") or ""))
-            if tm_p:
-                pgwe_by_team[tm_p] = row
-    except Exception:
-        pass
+    fn_sched_epa = _load_attr(
+        "intelligence.coaching.schedule_cleaned_epa",
+        "compute_schedule_adjusted_epa",
+    )
+    fn_paired_adot = _load_attr(
+        "intelligence.coaching.schedule_cleaned_epa",
+        "detect_paired_adot_drop",
+    )
+    fn_pgwe = _load_attr(
+        "intelligence.coaching.pgwe_luck_audit",
+        "compute_pgwe_luck_delta",
+    )
+    tm_ok = pbp["posteam"].str.len().isin([2, 3]) & pbp["defteam"].str.len().isin([2, 3])
+    valid_tm = pbp[tm_ok]
+    sc_res = fn_sched_epa(valid_tm)
+    for row in sc_res.get("teams") or []:
+        tm_s = _norm_team(str(row.get("team") or ""))
+        if tm_s:
+            sched_epa_by_team[tm_s] = row
+    ad_res = fn_paired_adot(valid_tm)
+    max_wk = int(valid_tm["week"].max()) if len(valid_tm) else 0
+    for flag in ad_res.get("flags") or []:
+        if int(flag.get("week") or 0) >= max(1, max_wk - 1):
+            tm_f = _norm_team(str(flag.get("team") or ""))
+            if tm_f:
+                recent_adot_drop_teams.add(tm_f)
+    pg_res = fn_pgwe(valid_tm)
+    for row in pg_res.get("teams") or []:
+        tm_p = _norm_team(str(row.get("team") or ""))
+        if tm_p:
+            pgwe_by_team[tm_p] = row
 
     x_mod = "intelligence.coaching.x_sweep_production_signals"
     fn_hidden_yds = _load_attr(x_mod, "compute_hidden_yardage_and_penalty_profile")
@@ -677,10 +759,7 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
     ]
     pen_rows = pbp[pbp["penalty_team"].isin(all_teams)][pen_cols].to_dict("records")
 
-    try:
-        get_elast = _load_attr("intelligence.coaching.script_elasticity", "get_elasticity")
-    except Exception:
-        get_elast = None
+    get_elast = _load_attr("intelligence.coaching.script_elasticity", "get_elasticity")
 
     for tm in all_teams:
         off = plays_pr[plays_pr["posteam"] == tm]
@@ -778,12 +857,7 @@ def _compute_cached_2026_pbp_production_tables() -> dict[str, Any]:
             else 0.045
         )
 
-        el_row = None
-        if callable(get_elast):
-            try:
-                el_row = get_elast(2026, tm)
-            except Exception:
-                el_row = None
+        el_row = get_elast(2026, tm) if callable(get_elast) else None
         if isinstance(el_row, dict) and el_row.get("beta_script") is not None:
             elasticity_by_team[tm] = float(el_row["beta_script"])
         elif "score_differential" in off.columns and len(off) >= 30:
@@ -924,14 +998,11 @@ def _get_cached_pressure_answer_delta(
     if tm_u in _COACH_PA_CACHE:
         return _COACH_PA_CACHE[tm_u]
     for yr in (2026, 2025):
-        try:
-            res = pa_prof_fn(yr, tm_u)
-            val = res.get("mean_answer_delta")
-            if val is not None:
-                _COACH_PA_CACHE[tm_u] = float(val)
-                return _COACH_PA_CACHE[tm_u]
-        except Exception:
-            continue
+        res = pa_prof_fn(yr, tm_u)
+        val = res.get("mean_answer_delta") if isinstance(res, Mapping) else None
+        if val is not None:
+            _COACH_PA_CACHE[tm_u] = float(val)
+            return _COACH_PA_CACHE[tm_u]
     _COACH_PA_CACHE[tm_u] = 0.0
     return 0.0
 
@@ -1340,16 +1411,44 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         (markov_blk.get(home_u) or {}).get("from_redzone_opp15_zone4", {}).get("p_td", 0.54)
     )
 
-    # Pillar 2: Instagram 360 Charting
+    # Pillar 1b: Wave 8 Hidden Game + Eager-Erickson Kernel (cached by matchup)
+    hg_key = (away_u, home_u)
+    hidden_game_kernel = _HIDDEN_GAME_CACHE.get(hg_key)
+    if hidden_game_kernel is None:
+        run_hidden_game_fn = _load_attr(
+            "intelligence.coaching.wave8_hidden_game_eager_and_sports_quant_engine",
+            "run_hidden_game_of_football_kernel",
+        )
+        hidden_game_kernel = dict(run_hidden_game_fn(away_team=away_u, home_team=home_u) or {})
+        _HIDDEN_GAME_CACHE[hg_key] = hidden_game_kernel
+    hg_edge = float(
+        ((hidden_game_kernel.get("linear_weights_ep_curve") or {}).get("midfield_50_1st_10", 2.0))
+        - 2.0
+    )
+
+    # Pillar 2: Instagram 360 Charting (cached live 32-team fallback)
     dl_mod = "intelligence.coaching.downloads_social_radio_and_dfs_signals"
     funnel_rpt = _load_attr(dl_mod, "STATRANKINGS_FUNNEL_REPORT")
     pass_funnels = set(funnel_rpt.get("pass_funnel_top5", []))
     run_funnels = set(funnel_rpt.get("run_funnel_top5", []))
     stuff_top10 = _load_attr(dl_mod, "PATTON_STATRANKINGS_DEF_STUFF_RATE_TOP10")
 
-    aw_360 = dict(x_and_ig_360_charting.get("away_360_charting") or {})
-    hm_360 = dict(x_and_ig_360_charting.get("home_360_charting") or {})
-    synth_360 = dict(x_and_ig_360_charting.get("matchup_synthesis") or {})
+    c360_key = (away_u, home_u, int(week))
+    charting_360_live = _CHARTING_360_LIVE_CACHE.get(c360_key)
+    if charting_360_live is None:
+        eval_360 = _load_attr(
+            "intelligence.situational.x_and_ig_360_charting_32teams",
+            "evaluate_x_and_ig_360_matchup",
+        )
+        charting_360_live = dict(eval_360(away_team=away_u, home_team=home_u, week=int(week)) or {})
+        _CHARTING_360_LIVE_CACHE[c360_key] = charting_360_live
+    charting_360 = dict(x_and_ig_360_charting) if x_and_ig_360_charting else dict(charting_360_live)
+    if not (charting_360.get("away_360_charting") and charting_360.get("home_360_charting")):
+        charting_360 = dict(charting_360_live)
+
+    aw_360 = dict(charting_360.get("away_360_charting") or {})
+    hm_360 = dict(charting_360.get("home_360_charting") or {})
+    synth_360 = dict(charting_360.get("matchup_synthesis") or {})
 
     aw_sr = dict(aw_360.get("statrankings_magicsportsbreakdown") or {})
     hm_sr = dict(hm_360.get("statrankings_magicsportsbreakdown") or {})
@@ -1511,8 +1610,12 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "uncompressed_25k_books_count": int(census.get("canonical_textbooks_count", 12)),
         "wave8_local_pdfs_wired": wave8_local_pdfs,
         "wave8_github_repos_wired": wave8_gh_repos,
+        "wave8_hidden_game_wired": bool(hidden_game_kernel),
+        "wave8_hidden_game_ep_midfield": round(hg_edge, 4),
         "foundry_books_swept_count": _FOUNDRY_SWEPT_FILES_CACHE,
         "foundry_primitives_indexed_count": _FOUNDRY_PRIMITIVES_COUNT_CACHE,
+        "thousand_equations_indexed_count": _EQUATIONS_9875_COUNT_CACHE,
+        "sovereign_primitives_indexed_count": _SOVEREIGN_PRIMITIVES_COUNT_CACHE,
         "openai_math_manuscripts_wired": int(openai_math_res.get("manuscripts_wired", 721)),
         "openai_math_pre_proj_epa_delta": float(
             openai_math_res.get("pre_projection_epa_delta", 0.0)
@@ -1655,7 +1758,7 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         },
     }
 
-    beat_blk = x_and_ig_360_charting.get("beat_desk_and_narrative_tracker") or {}
+    beat_blk = charting_360.get("beat_desk_and_narrative_tracker") or {}
     active_narrs = list(beat_blk.get("active_narrative_entries") or [])
     tm_profs = (stage1a_receipt or {}).get("team_coaching_mind_profiles") or {}
 
@@ -1670,8 +1773,103 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         ]
         return " ".join(matched) or "clean preparation full execution"
 
-    aw_probe = coach_probe_fn(_beat_text(away_u), speaker=f"{away_u}_HC", role="HEAD_COACH")
-    hm_probe = coach_probe_fn(_beat_text(home_u), speaker=f"{home_u}_HC", role="HEAD_COACH")
+    aw_beat_str = _beat_text(away_u)
+    hm_beat_str = _beat_text(home_u)
+    aw_probe = coach_probe_fn(aw_beat_str, speaker=f"{away_u}_HC", role="HEAD_COACH")
+    hm_probe = coach_probe_fn(hm_beat_str, speaker=f"{home_u}_HC", role="HEAD_COACH")
+
+    # Stage-1 Ingestion Grounding: LangExtract spans, DeepKE triples, 30d recency & K17 Hawkes-DS
+    nlp_key = (aw_beat_str, hm_beat_str)
+    cached_nlp = _BEAT_NLP_CACHE.get(nlp_key)
+    if cached_nlp is None:
+        cached_nlp = (
+            extract_grounded_beat_claims(aw_beat_str),
+            extract_grounded_beat_claims(hm_beat_str),
+            extract_football_knowledge_triples(aw_beat_str),
+            extract_football_knowledge_triples(hm_beat_str),
+        )
+        _BEAT_NLP_CACHE[nlp_key] = cached_nlp
+    aw_claims, hm_claims, aw_triples, hm_triples = cached_nlp
+    as_of_recency = datetime(2026, 11, 16, 18, 0, tzinfo=UTC)
+    ko_raw_s = str(env_cfg.get("kickoff_utc") or "").strip()
+    if ko_raw_s:
+        try:
+            ko_dt = datetime.fromisoformat(ko_raw_s.replace("Z", "+00:00"))
+            ko_utc = ko_dt.replace(tzinfo=UTC) if ko_dt.tzinfo is None else ko_dt
+            as_of_recency = ko_utc - timedelta(minutes=15)
+        except ValueError:
+            pass
+    aw_recency_obs = [
+        TemporalTrendObservation(
+            source_id=f"{away_u}_sched_epa",
+            source_tier="CHARTING_L4",
+            observed_utc=as_of_recency - timedelta(days=3),
+            metric_delta=aw_sig.sched_delta,
+            sample_snaps=180,
+        ),
+        TemporalTrendObservation(
+            source_id=f"{away_u}_360_epa",
+            source_tier="BEAT_REPORTER",
+            observed_utc=as_of_recency - timedelta(days=1),
+            metric_delta=aw_epa_delta_360,
+            sample_snaps=120,
+        ),
+    ]
+    hm_recency_obs = [
+        TemporalTrendObservation(
+            source_id=f"{home_u}_sched_epa",
+            source_tier="CHARTING_L4",
+            observed_utc=as_of_recency - timedelta(days=3),
+            metric_delta=hm_sig.sched_delta,
+            sample_snaps=180,
+        ),
+        TemporalTrendObservation(
+            source_id=f"{home_u}_360_epa",
+            source_tier="BEAT_REPORTER",
+            observed_utc=as_of_recency - timedelta(days=1),
+            metric_delta=hm_epa_delta_360,
+            sample_snaps=120,
+        ),
+    ]
+    aw_recency_sum = compute_last30days_trend(aw_recency_obs, as_of_utc=as_of_recency)
+    hm_recency_sum = compute_last30days_trend(hm_recency_obs, as_of_utc=as_of_recency)
+    k17_posts = [
+        HawkesSocialPost(
+            post_id=f"k17_{away_u}_beat",
+            author_id=f"{away_u}_beat",
+            t_hours=10.0,
+            mu_immigrant_rate=0.8,
+            embedding=(1.0, 0.0),
+            acct_age_days=1200.0,
+            is_credentialed_beat=True,
+            author_brier_rep=1.05,
+            expected_claim_impact=float(aw_probe.get("deflection_score", 0.5)) - 0.5,
+            sharp_line_delta=0.0,
+            state_label_idx=2 if float(aw_probe.get("deflection_score", 0.5)) > 0.65 else 0,
+        ),
+        HawkesSocialPost(
+            post_id=f"k17_{home_u}_beat",
+            author_id=f"{home_u}_beat",
+            t_hours=11.0,
+            mu_immigrant_rate=0.8,
+            embedding=(0.0, 1.0),
+            acct_age_days=1200.0,
+            is_credentialed_beat=True,
+            author_brier_rep=1.05,
+            expected_claim_impact=float(hm_probe.get("deflection_score", 0.5)) - 0.5,
+            sharp_line_delta=0.0,
+            state_label_idx=2 if float(hm_probe.get("deflection_score", 0.5)) > 0.65 else 0,
+        ),
+    ]
+    k17_ds_res = evaluate_hawkes_dawid_skene_provenance(k17_posts, t_eval_hours=12.0)
+    x_twitter_pillar["langextract_claims_count"] = len(aw_claims) + len(hm_claims)
+    x_twitter_pillar["deepke_triples_count"] = len(aw_triples) + len(hm_triples)
+    x_twitter_pillar["away_last30days_weighted_delta"] = aw_recency_sum.weighted_delta
+    x_twitter_pillar["home_last30days_weighted_delta"] = hm_recency_sum.weighted_delta
+    x_twitter_pillar["k17_dawid_skene_active_decoy_prob"] = float(
+        k17_ds_res.state_posteriors.get("ActiveDecoy", 0.08)
+    )
+    x_twitter_pillar["k17_critique_damping_mult"] = k17_ds_res.critique_damping_mult
 
     aw_gp = float(aw_360.get("games_played_2026") or 9.0)
     hm_gp = float(hm_360.get("games_played_2026") or 9.0)
@@ -1761,14 +1959,83 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
             player_mults[nm] = round(_clip(mult_p, 0.88, 1.08), 4)
 
     math_epa = float(openai_math_res.get("pre_projection_epa_delta", 0.0))
-    away_epa_corpus_delta = _compute_team_epa_corpus_delta(
-        aw_sig, math_epa=math_epa, epa_delta_360=aw_epa_delta_360, probe=aw_probe
+    rrf_epa_adj = float(hybrid_rrf_res.get("rrf_regime_epa_adjustment", 0.0))
+    aw_recency_d = float(aw_recency_sum.weighted_delta)
+    hm_recency_d = float(hm_recency_sum.weighted_delta)
+    conc_q_cnt = 0
+    lower_q_cnt = 0
+    if verified_athletes_map:
+        for inf in verified_athletes_map.values():
+            inj_b = inf.get("injury_status") or {}
+            rep_s = str(inj_b.get("report_status") or "").upper()
+            det_s = str(inj_b.get("injury_detail") or inj_b.get("injury_note") or "").lower()
+            if rep_s in {"QUESTIONABLE", "DOUBTFUL"}:
+                if "concussion" in det_s or "head" in det_s:
+                    conc_q_cnt += 1
+                elif any(
+                    k in det_s for k in ("ankle", "knee", "hamstring", "groin", "foot", "hip")
+                ):
+                    lower_q_cnt += 1
+            player_mults = dict(player_mults)
+    v4_unified_kernels_pillar = _compile_v4_unified_kernels_pillar(
+        away_u=away_u,
+        home_u=home_u,
+        aw_sig=aw_sig,
+        hm_sig=hm_sig,
+        aw_probe=aw_probe,
+        hm_probe=hm_probe,
+        posted_spread=float(aw_360.get("posted_home_spread") or 0.0),
+        posted_total=float(aw_360.get("posted_total") or 44.5),
+        max_spine_outs=int(aw_360.get("opp_def_spine_outs") or 0)
+        + int(hm_360.get("opp_def_spine_outs") or 0),
+        concussion_q_count=conc_q_cnt,
+        lower_extremity_q_count=lower_q_cnt,
     )
-    home_epa_corpus_delta = _compute_team_epa_corpus_delta(
-        hm_sig, math_epa=math_epa, epa_delta_360=hm_epa_delta_360, probe=hm_probe
+    k07_sp_shift = float(v4_unified_kernels_pillar.get("k07_bl_spread_shift_pts", 0.0))
+    k14_epa_pen = float(v4_unified_kernels_pillar.get("k14_epa_penalty", 0.0))
+    k14_snap_mult = float(v4_unified_kernels_pillar.get("k14_snap_attenuation_mult", 1.0))
+    k20_alpha = float(v4_unified_kernels_pillar.get("k20_alpha_priced", 0.0))
+    ws13_iscat = float(v4_unified_kernels_pillar.get("ws13_i_scat_wr", 0.28))
+
+    away_epa_corpus_delta = _clip(
+        _compute_team_epa_corpus_delta(
+            aw_sig, math_epa=math_epa, epa_delta_360=aw_epa_delta_360, probe=aw_probe
+        )
+        + rrf_epa_adj
+        + 0.20 * aw_recency_d
+        + 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
+        + 0.5 * k14_epa_pen
+        + 0.002 * hg_edge,
+        -0.055,
+        0.055,
     )
-    away_pass_rate_eff_delta = _clip(aw_sig.pass_funnel + aw_pr_delta_360 * 0.45, -0.04, 0.04)
-    home_pass_rate_eff_delta = _clip(hm_sig.pass_funnel + hm_pr_delta_360 * 0.45, -0.04, 0.04)
+    home_epa_corpus_delta = _clip(
+        _compute_team_epa_corpus_delta(
+            hm_sig, math_epa=math_epa, epa_delta_360=hm_epa_delta_360, probe=hm_probe
+        )
+        + rrf_epa_adj
+        + 0.20 * hm_recency_d
+        - 0.004 * k07_sp_shift * (1.0 - 0.35 * k20_alpha)
+        + 0.5 * k14_epa_pen
+        + 0.002 * hg_edge,
+        -0.055,
+        0.055,
+    )
+    away_pass_rate_eff_delta = _clip(
+        aw_sig.pass_funnel + aw_pr_delta_360 * 0.45 + (ws13_iscat - 0.28) * 0.04,
+        -0.045,
+        0.045,
+    )
+    home_pass_rate_eff_delta = _clip(
+        hm_sig.pass_funnel + hm_pr_delta_360 * 0.45 + (ws13_iscat - 0.28) * 0.04,
+        -0.045,
+        0.045,
+    )
+    for p_nm, inf in (verified_athletes_map or {}).items():
+        if p_nm in player_mults:
+            inj_st_p = str((inf.get("injury_status") or {}).get("report_status") or "").upper()
+            if inj_st_p in {"QUESTIONABLE", "DOUBTFUL"}:
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.80, 1.0), 4)
 
     contextual_coaching_pillar = {
         "wired": True,
@@ -1823,18 +2090,6 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "blinkenbar_stealth_86_12_green": all(v.wiring_score == 86.12 for v in cap_verdicts),
     }
     gsi_and_compound_fabric_pillar = _compile_gsi_and_compound_fabric_pillar(max_log_odds)
-    v4_unified_kernels_pillar = _compile_v4_unified_kernels_pillar(
-        away_u=away_u,
-        home_u=home_u,
-        aw_sig=aw_sig,
-        hm_sig=hm_sig,
-        aw_probe=aw_probe,
-        hm_probe=hm_probe,
-        posted_spread=float(aw_360.get("posted_home_spread") or 0.0),
-        posted_total=float(aw_360.get("posted_total") or 44.5),
-        max_spine_outs=int(aw_360.get("opp_def_spine_outs") or 0)
-        + int(hm_360.get("opp_def_spine_outs") or 0),
-    )
 
     payload: dict[str, Any] = {
         "books_and_pdfs_pillar": books_and_pdfs_pillar,
@@ -2152,14 +2407,18 @@ def _compile_v4_unified_kernels_pillar(
     posted_spread: float,
     posted_total: float,
     max_spine_outs: int,
+    concussion_q_count: int = 0,
+    lower_extremity_q_count: int = 0,
 ) -> dict[str, Any]:
-    """Execute K01/K07/K17/K19/K20/K23 + AP-01..AP-13 live matchup kernel synthesis."""
+    """Execute K01/K07/K14/K17/K19/K20/K23 + AP-01..AP-13 live matchup kernel synthesis."""
     cache_key = (
         away_u,
         home_u,
         round(float(posted_spread), 4),
         round(float(posted_total), 4),
         int(max_spine_outs),
+        int(concussion_q_count),
+        int(lower_extremity_q_count),
         round(aw_sig.shrunk_prob_delta, 6),
         round(hm_sig.shrunk_prob_delta, 6),
         round(float(aw_probe.get("deflection_score", 0.5)), 6),
@@ -2246,6 +2505,11 @@ def _compile_v4_unified_kernels_pillar(
         kneeldown_applied=True,
     )
 
+    k14_prior = compute_k14_translational_tissue_hazard_prior(
+        concussion_questionable_count=concussion_q_count,
+        lower_extremity_questionable_count=lower_extremity_q_count,
+    )
+
     out_v4 = {
         "wired": True,
         "matchup": f"{away_u} @ {home_u}",
@@ -2255,6 +2519,11 @@ def _compile_v4_unified_kernels_pillar(
         "k07_fwl_orth_err": fwl_res["market_orthogonality_max_err"],
         "k07_lowdin_err": fwl_res["lowdin_whitening_max_err"],
         "k07_synergy_retained": fwl_res["synergy_retained"],
+        "k07_bl_spread_shift_pts": fwl_res["bl_spread_shift_pts"],
+        "k07_bl_total_shift_pts": fwl_res["bl_total_shift_pts"],
+        "k14_hazard_prior": k14_prior["k14_hazard_prior"],
+        "k14_snap_attenuation_mult": k14_prior["k14_snap_attenuation_mult"],
+        "k14_epa_penalty": k14_prior["k14_epa_penalty"],
         "k20_alpha_priced": filt.alpha_priced,
         "k23_away_d_coach": aw_decoy["d_coach"],
         "k23_home_d_coach": hm_decoy["d_coach"],
@@ -2282,16 +2551,13 @@ def apply_vmls_kkt_and_corpus_shares(
     ]
     total_raw = sum(adjusted) or 1.0
     prior_shares = [v / total_raw for v in adjusted]
-    try:
-        kkt_fn = _load_attr(
-            "intelligence.coaching.live_books_and_pdfs_executable_engine",
-            "vmls_kkt_constrained_boxscore_reconciler",
-        )
-        res = kkt_fn(prior_shares=prior_shares, team_total_target=1.0, reg_lambda=0.08)
-        vec = res.get("reconciled_vector") or res.get("reconciled_shares") or prior_shares
-        solved = [max(1e-7, float(x)) for x in vec]
-    except Exception:
-        solved = prior_shares
+    kkt_fn = _load_attr(
+        "intelligence.coaching.live_books_and_pdfs_executable_engine",
+        "vmls_kkt_constrained_boxscore_reconciler",
+    )
+    res = kkt_fn(prior_shares=prior_shares, team_total_target=1.0, reg_lambda=0.08)
+    vec = res.get("reconciled_vector") or res.get("reconciled_shares") or prior_shares
+    solved = [max(1e-7, float(x)) for x in vec]
     s_tot = sum(solved) or 1.0
     return {n: float(val / s_tot) for n, val in zip(names, solved, strict=True)}
 

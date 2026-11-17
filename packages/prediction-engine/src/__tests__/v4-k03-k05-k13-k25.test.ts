@@ -11,6 +11,11 @@ import {
   highamNearestCorrelation,
 } from "../nfl/sgp-copula";
 import {
+  buildGseMlServiceEndpointUrl,
+  GSE_ML_PREDICT_ETKF_PATH,
+  GSE_ML_PREDICT_TDA_PATH,
+} from "../ensemble/remote-model-client";
+import {
   fetchEtkfWinProbability,
   type EtkfDmaBusReadoutOptional,
   type EtkfPredictionSuccess,
@@ -202,5 +207,14 @@ describe("Master Plan v4.0 TypeScript Parity & Property Tests (K03/K05/K13/K25)"
       expect(withOptionalBus.dmaBusOptional?.split_brain_gap).toBe(0);
       expect(withOptionalBus.dmaBusOptional?.state_vector_dim).toBe(312);
     }
+
+    expect(GSE_ML_PREDICT_ETKF_PATH).toBe("/predict/etkf");
+    expect(GSE_ML_PREDICT_TDA_PATH).toBe("/predict/tda");
+    expect(
+      buildGseMlServiceEndpointUrl("https://ml.galaxysportsedge.example/", GSE_ML_PREDICT_ETKF_PATH),
+    ).toBe("https://ml.galaxysportsedge.example/predict/etkf");
+    expect(
+      buildGseMlServiceEndpointUrl("https://ml.galaxysportsedge.example/", GSE_ML_PREDICT_TDA_PATH),
+    ).toBe("https://ml.galaxysportsedge.example/predict/tda");
   });
 });

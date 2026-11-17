@@ -198,11 +198,16 @@ _ACTIVE_2026_TEAM_EXEMPTIONS: dict[str, str] = {
 
 
 def _strip_name_suffix(name_low: str) -> str:
-    """Strip common generational suffixes when matching duplicate roster rows."""
-    for suffix in (" jr.", " sr.", " iii", " ii", " iv", " jr", " sr", " v"):
-        if name_low.endswith(suffix):
-            return name_low[: -len(suffix)].strip()
-    return name_low
+    """Strip generational suffixes, apostrophes/periods, and Matthew->Matt aliases."""
+    cleaned = re.sub(r"['\u2019.]+", "", name_low.strip().lower())
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    if cleaned.startswith("matthew "):
+        cleaned = "matt " + cleaned[len("matthew ") :]
+    for suffix in (" jr", " sr", " iii", " ii", " iv", " v"):
+        if cleaned.endswith(suffix):
+            cleaned = cleaned[: -len(suffix)].strip()
+            break
+    return cleaned
 
 
 def _effective_hallucination_denylist(away: str, home: str, week: int = 9) -> dict[str, str]:

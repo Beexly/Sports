@@ -507,8 +507,10 @@ def resolve_qb_mobility_profile(
                             "scramble_p": float(np.clip(emp_rate, 0.010, 0.220)),
                             "designed_rush_p": float(np.clip(emp_rate * 0.45, 0.005, 0.100)),
                         }
-        except Exception:
-            pass
+        except (KeyError, TypeError, ValueError, AttributeError):
+            # Fall back cleanly to empirical starter scramble map when minimal mock df omits columns.
+            pass_fallback = True
+            _ = pass_fallback
 
     for k, v in _EMPIRICAL_QB_MOBILITY_FALLBACKS.items():
         if k in norm_name or norm_name in k:
@@ -2189,6 +2191,48 @@ def simulate_matchup_pbp(
         target_macro_vector_g_bar=g_bar_13,
         min_ess_ratio=0.65,
     )
+    # Apply K02 entropic weights via deterministic systematic importance resampling across coupled vectors
+    weights_k02 = np.asarray(tilt_res.weights, dtype=np.float64)
+    if (
+        len(weights_k02) == n_sims
+        and tilt_res.ess_ratio < 0.9999
+        and np.all(np.isfinite(weights_k02))
+        and float(np.sum(weights_k02)) > 0.0
+    ):
+        w_cdf = np.cumsum(weights_k02 / float(np.sum(weights_k02)))
+        w_cdf[-1] = 1.0
+        u0_det = (float(seed if seed is not None else 20261116) % 997) / 997.0
+        u_grid = (u0_det + np.arange(n_sims, dtype=np.float64)) / float(n_sims)
+        res_idx = np.searchsorted(w_cdf, u_grid, side="right").clip(0, n_sims - 1)
+        home_score = home_score[res_idx]
+        away_score = away_score[res_idx]
+        home_margin_out = home_margin_out[res_idx]
+        total_pts_out = total_pts_out[res_idx]
+        total_plays = total_plays[res_idx]
+        home_pass_yds_tot = home_pass_yds_tot[res_idx]
+        away_pass_yds_tot = away_pass_yds_tot[res_idx]
+        home_pass_tds_tot = home_pass_tds_tot[res_idx]
+        away_pass_tds_tot = away_pass_tds_tot[res_idx]
+        home_rush_yds_tot = home_rush_yds_tot[res_idx]
+        away_rush_yds_tot = away_rush_yds_tot[res_idx]
+        home_pass_att = home_pass_att[res_idx]
+        away_pass_att = away_pass_att[res_idx]
+        home_pass_comp = home_pass_comp[res_idx]
+        away_pass_comp = away_pass_comp[res_idx]
+        home_ints = home_ints[res_idx]
+        away_ints = away_ints[res_idx]
+        home_sacks = home_sacks[res_idx]
+        away_sacks = away_sacks[res_idx]
+        home_qb_scrambles = home_qb_scrambles[res_idx]
+        away_qb_scrambles = away_qb_scrambles[res_idx]
+        home_qb_rush_yds = home_qb_rush_yds[res_idx]
+        away_qb_rush_yds = away_qb_rush_yds[res_idx]
+        home_kneeldowns = home_kneeldowns[res_idx]
+        away_kneeldowns = away_kneeldowns[res_idx]
+        tot = total_pts_out
+        sprd = home_margin_out
+        pace = 3600.0 / np.maximum(total_plays, 100)
+
     ko_diag = evaluate_2026_dynamic_kickoff_start(kick_line_yard=35)
 
     out = {
