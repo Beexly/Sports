@@ -295,6 +295,16 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave34_holistic_combine_cognition_bioenergetics_crosssport_engine",
         "src/gse_engine/biometrics/wave34_holistic_combine_cognition_bioenergetics_crosssport_engine.py",
     ),
+    (
+        "Pillar1_Wave35_GSI_Lifesaving_NeuroCardiac_Tissue_Phase",
+        "wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine",
+        "src/gse_engine/science/wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine.py",
+    ),
+    (
+        "Pillar1_Wave35_GSE_PlayerMicro_Metrics_Matchups_AST",
+        "wave35_player_micro_metrics_and_matchup_physics_engine",
+        "src/gse_engine/tracking/wave35_player_micro_metrics_and_matchup_physics_engine.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (

@@ -27,6 +27,9 @@ from gse_engine.memory.wave22_google_research_sde_tabfm_rliable_suite import (
 )
 from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import fwl_partial_coefficient
 from gse_engine.science.gsi_translational_bridge import evaluate_paired_projection_progression
+from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
+    evaluate_wave35_player_micro_matchup_suite,
+)
 
 _TEAM_ALIAS: dict[str, str] = {"LA": "LAR", "WSH": "WAS", "JAC": "JAX"}
 
@@ -828,14 +831,58 @@ def run_weeks1_to_10_walk_forward_ablation(repo_root: Path) -> dict[str, Any]:
             w34_diff = float(w34_g["stage2_deltas"]["home_epa_delta"]) - float(
                 w34_g["stage2_deltas"]["away_epa_delta"]
             )
+            w35_g = evaluate_wave35_player_micro_matchup_suite(
+                away_team=g.away_team,
+                home_team=g.home_team,
+                as_of_week=int(wk),
+                is_indoor=bool(g.is_indoor),
+                repo_root=repo_root,
+            )
+            w35_rb = w35_g["rb_speed_vs_lb_gap_fill"]
+            w35_qb = w35_g["qb_air_yards_and_catchables"]
+            w35_wr = w35_g["wr_separation_vs_db_coverage"]
+            w35_gsi = w35_g["gsi_safety_and_skill_channels"]
+            w35_sig = (
+                1.2
+                * (
+                    float(w35_rb["away_rb_time_to_los_sec"])
+                    - float(w35_rb["home_rb_time_to_los_sec"])
+                )
+                + 1.0
+                * (
+                    float(w35_wr["home_wr_vs_away_db"]["wr_avg_separation_yds"])
+                    - float(w35_wr["away_wr_vs_home_db"]["wr_avg_separation_yds"])
+                )
+                + 2.0
+                * (
+                    float(w35_rb["home_def_front_stuff_rate"])
+                    - float(w35_rb["away_def_front_stuff_rate"])
+                )
+                + 1.5
+                * (
+                    float(w35_rb["home_def_lb_gap_fill_pct"])
+                    - float(w35_rb["away_def_lb_gap_fill_pct"])
+                )
+                + 2.0
+                * (
+                    float(w35_qb["home"]["catchable_balls_per_attempt"])
+                    - float(w35_qb["away"]["catchable_balls_per_attempt"])
+                )
+                + 0.4
+                * (
+                    float(w35_gsi["away_tissue_channels"]["max_non_contact_rupture_chi"])
+                    - float(w35_gsi["home_tissue_channels"]["max_non_contact_rupture_chi"])
+                )
+            )
 
-            # Layer-1 market foundation + Wave 32/34 FWL-damped orthogonal situational shift
+            # Layer-1 market foundation + Wave 32/34/35 FWL-damped orthogonal situational shift
             epa_edge_pts = (
                 (hm_shrunk_net - aw_shrunk_net) * 18.0
                 + 0.10 * (hm_aux_sc - aw_aux_sc) * 14.0
                 + 0.45 * (hm_bye - aw_bye)
                 + alt_edge
                 + 40.0 * w34_diff
+                + 2.0 * w35_sig
             )
             mkt_implied_edge = g.expected_home_margin_mkt
             orth_resid = epa_edge_pts - 0.55 * mkt_implied_edge

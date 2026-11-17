@@ -3,6 +3,25 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 35 GSI Life-Saving Phase-Transition Physics & GSE Granular Player-vs-Defender Micro-Metrics (`252+24` RLVR)
+
+- **What changed**:
+  - **GSI ADR-0003 Phase-Transition Sports Medicine (`src/gse_engine/science/wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine.py`)**:
+    - Implemented 3-mode Prony (`0.05s/2.5s/65.0s`) + Ogden (`alpha=4.2`) + sulcal waveguide + `D(S_3)` CTE axonal shear hysteresis over `nfl_10hz_kinematics_stream.bin` (`175` frames) & CARE RUO biomarker kinetics (`clinical_ruo_sports_weight=0.0`, `adr0003_rule_in_only_doctrine=True`), proving hurry-up `dt=35s` (`48.951 kPa`) exceeds rested `dt=300s` (`29.593 kPa`).
+    - Implemented Koopman EDMD + Takens `500 Hz` 8-lead ECG V-Fib interception (`mimic_ecg_500hz_stream.bin` `500` frames, `koopman_spectral_radius=1.00015`, circular phase resultant `R=0.1746`) + Stull WBGT & barometric altitude `pO2` exertional safety.
+    - Mapped `15,400` longitudinal `2024-2026` NFL injury/practice rows + synthetic-turf `1.18x` torque into Weibull non-contact rupture hazard `chi` and `6` orthogonal biomechanical skill channels (`burst_speed_to_los_mult`, `lateral_cut_separation_mult`, `deep_ball_velocity_air_yds_mult`, `contact_elusiveness_mult`, `gap_fill_leverage_mult`, `ball_security_fumble_hazard_mult`), replacing snapshare reductionism.
+  - **GSE Granular Player-vs-Defender Micro-Metrics & Live ASTs (`src/gse_engine/tracking/wave35_player_micro_metrics_and_matchup_physics_engine.py`)**:
+    - Hydrated `9` official `nflverse` files (`ngs_rushing.csv.gz` `6,409x22`, `ngs_passing.csv.gz` `6,273x29`, `ngs_receiving_2016_2026.csv.gz` `15,544x23`, `advstats_week_{pass,rush,rec,def}_2025.parquet` `15,498` rows, `ftn_charting_2025.parquet` `47,316x29`, `pbp_participation_2025.parquet` `45,184x26`).
+    - Built strictly causal (`week < as_of_week`) RB speed-to-LOS & elusiveness vs. opposing LB A/B/C/D-gap fill % (`yards<=2` across `middle`/`guard`/`tackle`/`end`) and front stuff rate; QB intended air yards, tight-window aggressiveness & FTN catchable balls per attempt; WR NGS separation/cushion vs. opposing DB `yds_per_tgt_allowed` & Man/Zone shells (`173,150` BDB26 Sumer defender rows); repo-wide `2,584` `docs/` CSV bitemporal sweep (`247` pre-W3, `2,221` pre-W10); and `6/6` `PARSED_EVALUATED` live `HonestEquationExecutor` ASTs (`zero_fabricated_bindings=True`).
+  - **End-to-End Pipeline & RLVR Expansion (`LL-2026-11-17-055`)**:
+    - Coupled into `wave32_unified_sports_situational_live_fusion.py`, `corpus_situational_integrator.py` (`wave35_gsi_and_micro_wired=True`), `walk_forward_ablation.py`, `gse_coach_mind_simulator.py`, and `pre_sim_total_intelligence_gate.py`; expanded RLVR feeds to `252` compiled + `24` standalone = `276` zero-odds trajectories and added `test_wave35_gsi_lifesaving_and_player_micro_metrics.py` + `deep-research-wave35-gsi-lifesaving-phase-physics-and-granular-player-matchup-engine.md`.
+- **What was proven**:
+  - Causal OOS player MAEs improved (`QB 56.85->56.64 <= 58.77`, `RB 24.61->24.29 <= 25.87`, `Skill 24.79->24.72 <= 25.29`); `147`-game OOS ablation improved (`CRPS 7.0889->7.0761`, `Margin MAE 9.7612->9.7443`, `Brier 0.21975->0.21967`, `ECE 0.07084 < 0.07171` close, `FWL slope 1.40949->1.411127`); `43.225M`-snap PBP simulation CRPS `6.9913` beats close `7.0108`; `ruff`, `mypy --strict src/gse_engine`, `pre_sim_total_intelligence_gate.py --self-test` (`PASS`), guardrails, and all `pytest` suites pass.
+- **What was not proven**:
+  - NFL Week `11+` simulations remain gated under `OPERATOR_SIM_HOLD`, `real_money_stake_cleared` remains `False` (`0.0` live stake), ADR-0003 K14/Pose2Sim & CARE/ECG kernels stay rule-in-only, clinical RUO weights remain `0.0`, and `brain/mind.jsonl` remains single-writer untouched.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Wave 34 Holistic Combine Trenches, Age Curves, QB Neuro-Cognition, Bio-Energetics & Cross-Sport Transfers (`242+24` RLVR)
 
 - **What changed**:

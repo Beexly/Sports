@@ -1,4 +1,4 @@
-"""Tracking telemetry, Kafka DAGs, 14-cube storage & AWS Next Gen Stats Going Deep suite."""
+"""Tracking telemetry, Kafka DAGs, 14-cube, AWS NGS Going Deep & Wave 35 micro-metrics."""
 
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     AWS_NGS_GOING_DEEP_SOURCES,
@@ -33,6 +33,16 @@ from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
     verify_nonzero_stage2_jacobians,
 )
+from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (
+    WAVE35_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_causal_player_week_micro_features,
+    evaluate_dated_csv_and_live_ast_equations,
+    evaluate_qb_air_yards_and_catchable_accuracy,
+    evaluate_rb_speed_elusiveness_vs_lb_gap_fill,
+    evaluate_wave35_player_micro_matchup_suite,
+    evaluate_wr_separation_vs_db_coverage,
+    run_wave35_gsi_and_micro_metrics_benchmark,
+)
 
 __all__ = [
     "AWS_NGS_GOING_DEEP_SOURCES",
@@ -40,6 +50,7 @@ __all__ = [
     "DYNAMIC_ANALYTICAL_CUBE_COUNT",
     "LIVE_STAKE_FRACTION",
     "REAL_MONEY_STAKE_CLEARED",
+    "WAVE35_TRACKING_RLVR_TRAJECTORIES",
     "ChalkContaminationError",
     "ClusterScalingPlan",
     "DualEpauletKinematics",
@@ -65,5 +76,12 @@ __all__ = [
     "assert_week11_simulation_hold",
     "audit_and_optimize_real_2026_snaps_going_deep",
     "evaluate_aws_ngs_going_deep_stage2_bridge",
+    "evaluate_causal_player_week_micro_features",
+    "evaluate_dated_csv_and_live_ast_equations",
+    "evaluate_qb_air_yards_and_catchable_accuracy",
+    "evaluate_rb_speed_elusiveness_vs_lb_gap_fill",
+    "evaluate_wave35_player_micro_matchup_suite",
+    "evaluate_wr_separation_vs_db_coverage",
+    "run_wave35_gsi_and_micro_metrics_benchmark",
     "verify_nonzero_stage2_jacobians",
 ]

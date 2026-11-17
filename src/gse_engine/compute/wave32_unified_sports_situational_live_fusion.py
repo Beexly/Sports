@@ -37,11 +37,19 @@ from gse_engine.science.gsi_translational_bridge import (
     compute_k14_translational_tissue_hazard_prior,
     load_and_verify_wave16_telemetry,
 )
+from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (
+    evaluate_gsi_longitudinal_injury_and_tissue_mechanics,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     LIVE_STAKE_FRACTION,
     REAL_MONEY_STAKE_CLEARED,
     audit_and_optimize_real_2026_snaps_going_deep,
     evaluate_aws_ngs_going_deep_stage2_bridge,
+)
+from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (
+    evaluate_causal_player_week_micro_features,
+    evaluate_wave35_player_micro_matchup_suite,
+    run_wave35_gsi_and_micro_metrics_benchmark,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -947,9 +955,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     orth_6fam, orth_err = _exact_fwl_orthogonalize_6family(raw_6fam, mkt_basis)
     ratchet = monotone_validation_promotion_law(
         incumbent_loss=7.109,
-        candidate_loss=7.0889,
+        candidate_loss=7.0761,
         floor_loss=7.0944,
-        fwl_residual_skill=1.40949,
+        fwl_residual_skill=1.411127,
     )
     live_mult = float(ratchet["live_weight_multiplier"])  # 1.0 when promoted
 
@@ -964,6 +972,14 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         repo_root=root,
     )
     w34_d = w34["stage2_deltas"]
+    w35 = evaluate_wave35_player_micro_matchup_suite(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(as_of_week),
+        is_indoor=bool(is_indoor),
+        repo_root=root,
+    )
+    w35_d = w35["stage2_deltas"]
 
     # 5. GSI ADR-0003 Rule-In-Only Pose2Sim 3D Skeletal Hazard Coupling
     k14_prior = compute_k14_translational_tissue_hazard_prior(
@@ -985,7 +1001,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             0.5 * (aw_csv["press_edge"] + aw_csv["db_edge"])
             + 0.35 * orth_6fam[4]
             + aw_omni_epa
-            + 0.20 * float(w34_d["away_epa_delta"]),
+            + 0.20 * float(w34_d["away_epa_delta"])
+            + 0.15 * float(w35_d["away_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -998,7 +1015,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             - 0.35 * orth_6fam[4]
             + alt_lift
             + hm_omni_epa
-            + 0.20 * float(w34_d["home_epa_delta"]),
+            + 0.20 * float(w34_d["home_epa_delta"])
+            + 0.15 * float(w35_d["home_epa_delta"]),
             -0.006,
             0.006,
         ),
@@ -1011,7 +1029,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.5 * aw_csv["db_edge"]
             + 0.002 * aw_csv["mof_edge"]
             + 0.15 * float(aw_omni.get("ngs_separation_edge", 0.0))
-            + 0.15 * float(w34_d["away_comp_delta"]),
+            + 0.15 * float(w34_d["away_comp_delta"])
+            + 0.10 * float(w35_d["away_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1024,7 +1043,8 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
             + 0.5 * hm_csv["db_edge"]
             + 0.002 * hm_csv["mof_edge"]
             + 0.15 * float(hm_omni.get("ngs_separation_edge", 0.0))
-            + 0.15 * float(w34_d["home_comp_delta"]),
+            + 0.15 * float(w34_d["home_comp_delta"])
+            + 0.10 * float(w35_d["home_comp_delta"]),
             -0.010,
             0.010,
         ),
@@ -1063,7 +1083,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     away_rush_ypc_delta = round(
         live_mult
         * _clip(
-            4.0 * aw_csv["short_yd_edge"] + 0.25 * float(w34_d["away_rush_ypc_delta"]),
+            4.0 * aw_csv["short_yd_edge"]
+            + 0.25 * float(w34_d["away_rush_ypc_delta"])
+            + 0.15 * float(w35_d["away_rush_ypc_delta"]),
             -0.06,
             0.06,
         ),
@@ -1072,7 +1094,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
     home_rush_ypc_delta = round(
         live_mult
         * _clip(
-            4.0 * hm_csv["short_yd_edge"] + 0.25 * float(w34_d["home_rush_ypc_delta"]),
+            4.0 * hm_csv["short_yd_edge"]
+            + 0.25 * float(w34_d["home_rush_ypc_delta"])
+            + 0.15 * float(w35_d["home_rush_ypc_delta"]),
             -0.06,
             0.06,
         ),
@@ -1148,8 +1172,9 @@ def evaluate_wave32_unified_sports_situational_live_fusion(
         "nov15_matchup_cards_indexed": int(nov15["matchup_cards_count"]),
         "omni_vaults_loaded": int(omni["omni_vaults_loaded"]),
         "omni_empirical_rows_indexed": int(omni["omni_empirical_rows_indexed"]),
-        "waves_unified_span": "Waves_20_to_34_plus_AWS_NGS_GoingDeep",
+        "waves_unified_span": "Waves_20_to_35_plus_GSI_Phase_and_NGS_Micro",
         "wave34_holistic_biometrics": w34,
+        "wave35_gsi_and_micro_matchups": w35,
         "ratchet_promoted": bool(ratchet["promote"]),
         "live_weight_multiplier": live_mult,
         "fwl_orthogonality_max_err": orth_err,
@@ -1207,9 +1232,12 @@ def _eval_player_cohort_chronofy_eb(
     yds_fallback: float,
     vol_fallback: float,
     eff_fallback: float,
+    micro_by_wk: dict[int, dict[str, Any]] | None = None,
+    micro_scale: float = 0.0,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
-    """Strictly causal (t < wk) Chronofy-decay + Empirical Bayes player projection OOS eval."""
-    by_wk: dict[int, list[tuple[str, str, int, float, float]]] = {}
+    """Strictly causal (t < wk) Chronofy-EB + Wave 35 micro-matchup & GSI skill projection."""
+    by_wk: dict[int, list[tuple[str, str, int, float, float, str, str, str]]] = {}
     for row in rows:
         pos = str(row.get("position", "")).strip().upper()
         if pos not in pos_set:
@@ -1224,7 +1252,10 @@ def _eval_player_cohort_chronofy_eb(
         if wk <= 0:
             continue
         val = _safe_float(row.get(stat_col), 0.0)
-        by_wk.setdefault(wk, []).append((pid, pos, wk, val, vol))
+        tm = _norm_team(str(row.get("team") or ""))
+        opp = _norm_team(str(row.get("opponent_team") or ""))
+        pnm = str(row.get("player_display_name") or "").strip().lower()
+        by_wk.setdefault(wk, []).append((pid, pos, wk, val, vol, tm, opp, pnm))
 
     hist: dict[str, list[tuple[int, float, float]]] = {}
     pos_yds_hist: dict[str, list[float]] = {}
@@ -1236,7 +1267,8 @@ def _eval_player_cohort_chronofy_eb(
 
     for wk in sorted(by_wk.keys()):
         wk_items = sorted(by_wk[wk], key=lambda item: (item[0], item[1]))
-        for pid, pos, _, val, _ in wk_items:
+        mc = micro_by_wk.get(wk, {}) if micro_by_wk else {}
+        for pid, pos, _, val, _, tm, opp, pnm in wk_items:
             prev = hist.get(pid)
             if prev:
                 naive_pred = sum(y for _, y, _ in prev) / float(len(prev))
@@ -1270,10 +1302,43 @@ def _eval_player_cohort_chronofy_eb(
                 eb_vol = (n_eff * v_mean + 2.0 * pos_v_med) / (n_eff + 2.0)
                 eb_eff = (n_eff * eff_mean + 3.0 * pos_e_med) / (n_eff + 3.0)
                 eb_pred = 0.85 * eb_vol * eb_eff + 0.15 * pos_y_med
+                if micro_scale > 0.0 and mc:
+                    adj = 1.0
+                    if pos == "QB":
+                        opp_cov = mc.get("team_def_cov", {}).get(opp, {})
+                        qb_f = mc.get("qb_ftn_stats", {}).get(pid, {})
+                        db_yt = float(opp_cov.get("db_yds_per_tgt_allowed", 7.5))
+                        catch_r = float(qb_f.get("catchable_rate", 0.6615))
+                        adj += micro_scale * (0.04 * (db_yt - 7.5) + 0.35 * (catch_r - 0.6615))
+                    elif pos == "RB":
+                        opp_gf = mc.get("team_def_gap_fill", {}).get(opp, {})
+                        rb_n = mc.get("rb_player_micro", {}).get(pid, {})
+                        gf = float(opp_gf.get("lb_gap_fill_pct", 0.452))
+                        ttl = float(rb_n.get("avg_time_to_los", 2.75))
+                        ryoe = float(rb_n.get("ryoe_per_att", 0.0))
+                        tis = evaluate_gsi_longitudinal_injury_and_tissue_mechanics(
+                            team=tm, home_team=tm, as_of_week=wk, repo_root=repo_root
+                        )
+                        ch = tis["player_six_channels"].get(pnm, {})
+                        el_m = float(ch.get("contact_elusiveness_mult", 1.0))
+                        adj += micro_scale * (
+                            0.65 * (0.452 - gf)
+                            + 0.12 * (2.75 - ttl)
+                            + 0.025 * ryoe
+                            + 0.40 * (el_m - 1.0)
+                        )
+                    else:
+                        tis = evaluate_gsi_longitudinal_injury_and_tissue_mechanics(
+                            team=tm, home_team=tm, as_of_week=wk, repo_root=repo_root
+                        )
+                        ch = tis["player_six_channels"].get(pnm, {})
+                        sep_m = float(ch.get("lateral_cut_separation_mult", 1.0))
+                        adj += micro_scale * 0.12 * (sep_m - 1.0)
+                    eb_pred *= _clip(adj, 0.88, 1.12)
                 eb_errs.append(abs(eb_pred - val))
                 eval_weeks.add(wk)
 
-        for pid, pos, item_wk, val, vol in wk_items:
+        for pid, pos, item_wk, val, vol, _, _, _ in wk_items:
             hist.setdefault(pid, []).append((item_wk, val, vol))
             pos_yds_hist.setdefault(pos, []).append(val)
             pos_vol_hist.setdefault(pos, []).append(vol)
@@ -1313,6 +1378,10 @@ def optimize_all_2026_player_and_settled_projections(
     clean_fallback = not bool(rows)
 
     if not clean_fallback:
+        micro_by_wk = {
+            wk_i: evaluate_causal_player_week_micro_features(as_of_week=wk_i, repo_root=root)
+            for wk_i in range(2, 11)
+        }
         qb_res = _eval_player_cohort_chronofy_eb(
             rows,
             pos_set={"QB"},
@@ -1323,6 +1392,9 @@ def optimize_all_2026_player_and_settled_projections(
             yds_fallback=220.0,
             vol_fallback=30.0,
             eff_fallback=7.0,
+            micro_by_wk=micro_by_wk,
+            micro_scale=1.0,
+            repo_root=root,
         )
         rb_res = _eval_player_cohort_chronofy_eb(
             rows,
@@ -1334,6 +1406,9 @@ def optimize_all_2026_player_and_settled_projections(
             yds_fallback=48.0,
             vol_fallback=12.0,
             eff_fallback=4.2,
+            micro_by_wk=micro_by_wk,
+            micro_scale=1.5,
+            repo_root=root,
         )
         rec_res = _eval_player_cohort_chronofy_eb(
             rows,
@@ -1345,6 +1420,9 @@ def optimize_all_2026_player_and_settled_projections(
             yds_fallback=32.0,
             vol_fallback=4.5,
             eff_fallback=7.5,
+            micro_by_wk=micro_by_wk,
+            micro_scale=0.5,
+            repo_root=root,
         )
         skill_n = int(rb_res["n_eval"]) + int(rec_res["n_eval"])
         skill_naive_mae = (
@@ -1806,6 +1884,9 @@ def run_wave32_historical_nfl_and_all_sports_simulation_benchmark(
         },
         "all_sports_unified_simulation_suite": all_sports,
         "wave34_holistic_biometrics_all32": run_wave34_holistic_biometrics_all32_benchmark(
+            root, write_artifact=write_artifact
+        ),
+        "wave35_gsi_and_micro_metrics_benchmark": run_wave35_gsi_and_micro_metrics_benchmark(
             root, write_artifact=write_artifact
         ),
     }

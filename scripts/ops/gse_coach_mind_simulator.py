@@ -1317,6 +1317,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
     conditioners["wave32_mctx_4th_down_edge"] = float(conditioners["double_dqn_4th_down_conv_boost"])
     conditioners["wave32_gsi_pose2sim_snap_cap"] = float(wave32_fusion["gsi_k14_pose2sim_snap_cap"])
     conditioners["wave34_holistic_biometrics_coupled"] = True
+    conditioners["wave35_gsi_safety_and_micro_metrics_coupled"] = True
 
     result = {
         "schema": "gse_pre_projection_universal_and_deep_non_stationary_priors_v1",
@@ -1339,6 +1340,7 @@ def compute_pre_projection_universal_and_deep_non_stationary_priors(
         "spatial_micro_pbp_conditioners": spatial_micro_bundle,
         "wave32_unified_sports_situational_fusion": wave32_fusion,
         "wave34_holistic_biometrics": wave32_fusion["wave34_holistic_biometrics"],
+        "wave35_gsi_and_micro_matchups": wave32_fusion["wave35_gsi_and_micro_matchups"],
         "trajectory_conditioners": conditioners,
         "simulation_trajectory_conditioners": conditioners,
     }

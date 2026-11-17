@@ -122,8 +122,14 @@ from gse_engine.science.gsi_translational_bridge import (
     compute_k14_translational_tissue_hazard_prior,
     load_and_verify_wave16_telemetry,
 )
+from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (  # noqa: E501
+    evaluate_wave35_gsi_safety_and_skill_channels,
+)
 from gse_engine.tracking.aws_ngs_going_deep_gse_gsi_suite import (
     evaluate_aws_ngs_going_deep_stage2_bridge,
+)
+from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
+    evaluate_wave35_player_micro_matchup_suite,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -2494,6 +2500,17 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         _clip(home_q4_fatigue_decay + float(w32_deltas["home_q4_fatigue_delta"]), -0.055, 0.0),
         5,
     )
+    w35_gsi_safety = evaluate_wave35_gsi_safety_and_skill_channels(
+        away_team=away_u,
+        home_team=home_u,
+        as_of_week=int(week),
+        is_indoor=bool(is_indoor),
+        repo_root=REPO_ROOT,
+    )
+    w35_pl_channels: dict[str, dict[str, float]] = {
+        **dict(w35_gsi_safety["away_tissue_channels"].get("player_six_channels", {})),
+        **dict(w35_gsi_safety["home_tissue_channels"].get("player_six_channels", {})),
+    }
     for p_nm, inf in (verified_athletes_map or {}).items():
         if p_nm in player_mults:
             pos_nm = str(inf.get("position") or "").upper()
@@ -2505,12 +2522,23 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
                     repo_root=REPO_ROOT,
                 )
                 player_mults[p_nm] = round(_clip(player_mults[p_nm] * nv_boost, 0.88, 1.08), 4)
+            ch_p = w35_pl_channels.get(str(p_nm).strip().lower())
+            if ch_p is not None:
+                if pos_nm in {"WR", "TE"}:
+                    ch_mult = float(ch_p.get("lateral_cut_separation_mult", 1.0))
+                elif pos_nm == "RB":
+                    ch_mult = float(ch_p.get("contact_elusiveness_mult", 1.0))
+                elif pos_nm == "QB":
+                    ch_mult = float(ch_p.get("deep_ball_velocity_air_yds_mult", 1.0))
+                else:
+                    ch_mult = float(ch_p.get("gap_fill_leverage_mult", 1.0))
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * ch_mult, 0.72, 1.06), 4)
             if inj_st_p in {"QUESTIONABLE", "DOUBTFUL"}:
-                player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.80, 1.0), 4)
+                player_mults[p_nm] = round(_clip(player_mults[p_nm] * k14_snap_mult, 0.72, 1.0), 4)
                 player_mults[p_nm] = round(
                     _clip(
                         min(player_mults[p_nm], float(wave32_res["gsi_k14_pose2sim_snap_cap"])),
-                        0.78,
+                        0.72,
                         1.0,
                     ),
                     4,
@@ -2579,15 +2607,25 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "gsi_and_compound_fabric_pillar": gsi_and_compound_fabric_pillar,
         "v4_unified_kernels_pillar": v4_unified_kernels_pillar,
         "wave32_unified_live_fusion_pillar": wave32_res,
-        "wave34_holistic_biometrics_pillar": wave32_res.get(
-            "wave34_holistic_biometrics",
-            evaluate_wave34_holistic_matchup_biometrics_and_science(
+        "wave34_holistic_biometrics_pillar": (
+            wave32_res.get("wave34_holistic_biometrics")
+            or evaluate_wave34_holistic_matchup_biometrics_and_science(
                 away_team=away_u,
                 home_team=home_u,
                 as_of_week=int(week),
                 is_indoor=bool(is_indoor),
                 repo_root=REPO_ROOT,
-            ),
+            )
+        ),
+        "wave35_gsi_and_micro_matchup_pillar": (
+            wave32_res.get("wave35_gsi_and_micro_matchups")
+            or evaluate_wave35_player_micro_matchup_suite(
+                away_team=away_u,
+                home_team=home_u,
+                as_of_week=int(week),
+                is_indoor=bool(is_indoor),
+                repo_root=REPO_ROOT,
+            )
         ),
         "nvidia_hermes_capability_routes": nvidia_hermes_routes,
         "away_epa_corpus_delta": round(away_epa_corpus_delta, 5),
@@ -3119,6 +3157,18 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         else:
             w34_wired = True
 
+    w35_blk = priors.get("wave35_gsi_and_micro_matchup_pillar")
+    w35_wired = False
+    if w35_blk is not None:
+        if (
+            not isinstance(w35_blk, Mapping)
+            or w35_blk.get("wired") is not True
+            or w35_blk.get("real_money_stake_cleared") is not False
+        ):
+            missing_or_unwired.append("wave35_gsi_and_micro_matchup_pillar")
+        else:
+            w35_wired = True
+
     required_scalars = (
         "away_epa_corpus_delta",
         "home_epa_corpus_delta",
@@ -3171,6 +3221,7 @@ def assert_all_books_pdfs_ig_x_situational_wired(priors: Mapping[str, Any]) -> d
         "v4_unified_kernels_wired": v4_wired,
         "wave32_unified_live_fusion_wired": w32_wired,
         "wave34_holistic_biometrics_wired": w34_wired,
+        "wave35_gsi_and_micro_wired": w35_wired,
         "pillars_verified": list(required_pillars),
         "scalars_verified_count": len(required_scalars),
         "player_multipliers_count": len(priors.get("player_target_and_carry_multipliers") or {}),

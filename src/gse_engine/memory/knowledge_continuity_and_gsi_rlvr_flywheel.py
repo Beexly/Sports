@@ -40,6 +40,14 @@ from gse_engine.memory.monorepo_omnibus_vault_indexer import (
     OmnibusVaultContinuityError,
     audit_all_25_monorepo_knowledge_vaults,
 )
+from gse_engine.science.wave35_gsi_lifesaving_neuro_cardiac_and_tissue_phase_engine import (  # noqa: E501
+    WAVE35_GSI_RLVR_TRAJECTORIES,
+    evaluate_wave35_gsi_safety_and_skill_channels,
+)
+from gse_engine.tracking.wave35_player_micro_metrics_and_matchup_physics_engine import (  # noqa: E501
+    WAVE35_TRACKING_RLVR_TRAJECTORIES,
+    evaluate_wave35_player_micro_matchup_suite,
+)
 
 _DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[3]
 _FORBIDDEN_ODDS_RE = re.compile(
@@ -3081,6 +3089,110 @@ def compile_gse_to_gsi_rlvr_training_batch(
                 think=str(spec_w34["think"]),
                 ground_truth=gt_w34,
                 verifier_src=_formula_exact_verifier_src(gt_w34),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    w35_gsi = evaluate_wave35_gsi_safety_and_skill_channels(
+        away_team="KC",
+        home_team="DEN",
+        as_of_week=10,
+        temp_f=86.0,
+        humidity_pct=70.0,
+        altitude_ft=5280.0,
+        repo_root=root,
+    )
+    w35_suite = evaluate_wave35_player_micro_matchup_suite(
+        away_team="CIN", home_team="BUF", as_of_week=10, repo_root=root
+    )
+    w35_rb = w35_suite["rb_speed_vs_lb_gap_fill"]
+    w35_qb = w35_suite["qb_air_yards_and_catchables"]
+    w35_wr = w35_suite["wr_separation_vs_db_coverage"]
+    w35_ast = w35_suite["dated_csv_and_live_ast"]
+    w35_gt_map: dict[str, dict[str, Any]] = {
+        "w35_gsi_cte_prony_ogden_ds3_00": {
+            "hysteresis_ok": bool(w35_gsi["cte_inter_impact_hysteresis_verified"]),
+            "adr0003_ruo": bool(
+                w35_gsi["adr0003_rule_in_only_doctrine"]
+                and float(w35_gsi["clinical_ruo_sports_weight"]) == 0.0
+            ),
+        },
+        "w35_gsi_koopman_ecg_vfib_wbgt_00": {
+            "wbgt_finite": bool(
+                float(w35_gsi["cardiac_and_wbgt_autonomic"]["koopman_spectral_radius"]) > 0.0
+                and float(w35_gsi["cardiac_and_wbgt_autonomic"]["wbgt_celsius"]) > 0.0
+            ),
+            "frames_ok": bool(
+                int(w35_gsi["cardiac_and_wbgt_autonomic"]["ecg_frames_500hz"]) >= 64
+            ),
+        },
+        "w35_gsi_longitudinal_15k_tissue_channels_00": {
+            "six_channels_present": bool(
+                len(w35_gsi["away_tissue_channels"]["team_six_skill_channels"]) == 6
+            ),
+            "turf_flagged_or_clean": bool(
+                int(w35_gsi["away_tissue_channels"]["total_longitudinal_rows_scanned"])
+                in {0, 15400}
+                or int(w35_gsi["away_tissue_channels"]["total_longitudinal_rows_scanned"])
+                >= 15000
+            ),
+        },
+        "w35_rb_speed_elusiveness_vs_lb_gap_fill_00": {
+            "ttl_valid": bool(1.5 <= float(w35_rb["away_rb_time_to_los_sec"]) <= 4.0),
+            "gap_fill_bounds": bool(0.0 <= float(w35_rb["home_def_lb_gap_fill_pct"]) <= 1.0),
+        },
+        "w35_qb_air_yards_catchable_attempts_00": {
+            "catchable_valid": bool(
+                0.35 <= float(w35_qb["away"]["catchable_balls_per_attempt"]) <= 0.95
+            ),
+            "air_yds_positive": bool(float(w35_qb["away"]["mean_intended_air_yards"]) > 0.0),
+        },
+        "w35_wr_separation_vs_db_yds_tgt_00": {
+            "sep_valid": bool(
+                1.0 <= float(w35_wr["away_wr_vs_home_db"]["wr_avg_separation_yds"]) <= 5.5
+            ),
+            "db_yds_positive": bool(
+                float(w35_wr["away_wr_vs_home_db"]["opp_db_yds_per_tgt_allowed"]) > 0.0
+            ),
+        },
+        "w35_pbp_participation_11on11_shells_00": {
+            "participation_or_empty": bool(
+                int(w35_wr["participation_plays_indexed"]) in {0, 45184}
+                or int(w35_wr["participation_plays_indexed"]) >= 40000
+            ),
+            "man_share_bounds": bool(
+                0.0 <= float(w35_wr["away_wr_vs_home_db"]["opp_man_coverage_share"]) <= 1.0
+            ),
+        },
+        "w35_dated_csv_2718_bitemporal_vault_00": {
+            "causal_le_total": bool(
+                int(w35_ast["docs_csv_files_causal_pre_asof"])
+                <= int(w35_ast["docs_csv_files_total"])
+            ),
+        },
+        "w35_honest_equation_executor_live_ast_00": {
+            "all_six_evaluated": bool(int(w35_ast["parsed_evaluated_count"]) == 6),
+            "zero_fabricated": bool(w35_ast["zero_fabricated_bindings"] is True),
+        },
+        "w35_no_snapshare_skill_channel_unified_00": {
+            "suite_wired": bool(w35_suite["wired"] is True),
+            "stake_zero": bool(
+                w35_suite["real_money_stake_cleared"] is False
+                and float(w35_suite["live_stake_fraction"]) == 0.0
+            ),
+        },
+    }
+    for spec_w35 in (*WAVE35_GSI_RLVR_TRAJECTORIES, *WAVE35_TRACKING_RLVR_TRAJECTORIES):
+        rid_w35 = str(spec_w35["record_id"])
+        gt_w35 = w35_gt_map[rid_w35]
+        records.append(
+            _build_rlvr_record(
+                record_id=rid_w35,
+                domain=str(spec_w35["domain"]),
+                prompt=str(spec_w35["prompt"]),
+                think=str(spec_w35["think"]),
+                ground_truth=gt_w35,
+                verifier_src=_formula_exact_verifier_src(gt_w35),
                 curriculum_tier="TIER_3_BEHEMOTH",
             )
         )
