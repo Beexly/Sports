@@ -102,6 +102,13 @@ class GamePreSnapVisionDossier:
 class NFLMultiHorizonTrendsAndPreGameVisionEngine:
     """Evaluates multi-horizon trend families T-01..T-12 from Nov 8 morning sweep tables."""
 
+    def __init__(self, log_odds_cap: float = 0.35) -> None:
+        # Construction contract consumed by the unified trend engine
+        # (``UnifiedScores24PfrPffNgsTrendEngine.__init__``), which instantiates this
+        # engine with ``log_odds_cap=``. Clamped to the same [0.05, 0.35] band the
+        # sibling Scores24 engine uses so the two producers stay in lock-step.
+        self.log_odds_cap = max(0.05, min(0.35, float(log_odds_cap)))
+
     def evaluate_game_vision(self, game: Dict[str, Any]) -> GamePreSnapVisionDossier:
         gid = str(game["game_id"])
         matchup = str(game["matchup"])
