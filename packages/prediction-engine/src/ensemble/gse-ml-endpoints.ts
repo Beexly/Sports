@@ -104,7 +104,12 @@ export interface GseMlCallFailure {
 }
 
 function resolveBaseUrl(override?: string | null): string {
-  return (override ?? process.env["GSE_ML_SERVICE_URL"] ?? "").trim().replace(/\/+$/, "");
+  const trimmed = (override ?? process.env["GSE_ML_SERVICE_URL"] ?? "").trim();
+  let end = trimmed.length;
+  while (end > 0 && trimmed.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return trimmed.slice(0, end);
 }
 
 /**

@@ -50,6 +50,67 @@ export interface CollaborativeSlateSection {
 }
 
 /**
+ * Linear-time fixed-point HTML and script-tag stripper immune to nested tag bypasses.
+ */
+function stripScriptAndHtmlLinear(raw: string): string {
+  let out = raw;
+  for (;;) {
+    const startLen = out.length;
+
+    for (;;) {
+      const lower = out.toLowerCase();
+      const start = lower.indexOf("<script");
+      if (start < 0) {
+        break;
+      }
+      const openEnd = out.indexOf(">", start + 7);
+      if (openEnd < 0) {
+        out = out.slice(0, start);
+        continue;
+      }
+      const closeStart = lower.indexOf("</script", openEnd + 1);
+      if (closeStart < 0) {
+        out = out.slice(0, start);
+        continue;
+      }
+      const closeEnd = out.indexOf(">", closeStart + 8);
+      out =
+        closeEnd < 0
+          ? out.slice(0, start)
+          : `${out.slice(0, start)}${out.slice(closeEnd + 1)}`;
+    }
+
+    for (;;) {
+      const lt = out.indexOf("<");
+      if (lt < 0) {
+        break;
+      }
+      const gt = out.indexOf(">", lt + 1);
+      if (gt < 0) {
+        break;
+      }
+      out = `${out.slice(0, lt)}${out.slice(gt + 1)}`;
+    }
+
+    if (out.includes("<") || out.includes(">")) {
+      let clean = "";
+      for (let i = 0; i < out.length; i++) {
+        const ch = out.charAt(i);
+        if (ch !== "<" && ch !== ">") {
+          clean += ch;
+        }
+      }
+      out = clean;
+    }
+
+    if (out.length === startLen) {
+      break;
+    }
+  }
+  return out;
+}
+
+/**
  * Builds a sanitized collaborative workspace note bound to an issue tracker key.
  */
 export function buildCollaborativeSlateDocSection(params: {
@@ -61,15 +122,15 @@ export function buildCollaborativeSlateDocSection(params: {
   if (!params.mcpGatewayVerified) {
     throw new Error("Collaborative slate writes require zero-trust MCP gateway verification.");
   }
-  const stripped = params.rawMarkdown
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+  const stripped = stripScriptAndHtmlLinear(params.rawMarkdown)
     .replace(/\u2014|\u2013/g, "-")
     .trim();
+  const hasTagChars = stripped.includes("<") || stripped.includes(">");
   return {
     sectionId: params.sectionId.trim(),
     trackerKey: params.trackerKey.trim().toUpperCase(),
     mcpGatewayVerified: true,
-    sanitizeHtmlFree: !/<[a-z][\s\S]*>/i.test(stripped),
+    sanitizeHtmlFree: !hasTagChars,
     markdownSummary: stripped,
   };
 }

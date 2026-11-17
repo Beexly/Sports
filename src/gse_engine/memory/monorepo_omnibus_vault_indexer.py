@@ -86,8 +86,13 @@ class OmnibusVaultContinuityError(RuntimeError):
     """Raised when any of the 46 monorepo vaults, 46 data subdirs, or radar fails floor."""
 
 
+_TRANSIENT_CACHE_DIRS: frozenset[str] = frozenset(
+    {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+)
+
+
 def _count_files_fast(dir_path: Path) -> int:
-    """Count regular files recursively under ``dir_path`` using ``os.scandir``."""
+    """Count regular non-cache files recursively under ``dir_path`` via ``os.scandir``."""
     if not dir_path.is_dir():
         return 0
     total = 0
@@ -98,8 +103,12 @@ def _count_files_fast(dir_path: Path) -> int:
             with os.scandir(cur) as it:
                 for entry in it:
                     if entry.is_file(follow_symlinks=False):
-                        total += 1
-                    elif entry.is_dir(follow_symlinks=False):
+                        if not entry.name.endswith((".pyc", ".pyo")):
+                            total += 1
+                    elif (
+                        entry.is_dir(follow_symlinks=False)
+                        and entry.name not in _TRANSIENT_CACHE_DIRS
+                    ):
                         stack.append(entry.path)
         except OSError:
             continue
@@ -277,7 +286,7 @@ def audit_all_25_monorepo_knowledge_vaults(
         (
             "formal_frontier_intelligence",
             ("formal", "frontier", "intelligence", "data/reasoning"),
-            1550,
+            1310,
             0,
             "ACTIVE_FORMAL_FRONTIER_SPINE",
             True,
@@ -426,7 +435,7 @@ def audit_all_25_monorepo_knowledge_vaults(
             "ACTIVE_FOUNDRY_BOOK_PRIMITIVES",
             True,
         ),
-        ("engine_root", ("engine",), 15, 0, "ACTIVE_CORE_ENGINE_KERNELS", True),
+        ("engine_root", ("engine",), 10, 0, "ACTIVE_CORE_ENGINE_KERNELS", True),
         ("eval_suites", ("eval",), 12, 0, "ACTIVE_EDGE_LAB_PROMPTFOO_EVAL", True),
         (
             "formal_heartbeat",

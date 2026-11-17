@@ -1,8 +1,8 @@
 {
   "schema_version": "2026-11-17",
   "doctrine": "INGEST-AND-LEARN (never SKIP/DEAD; untested items default to UNTESTED_QUEUED_FOR_EVALUATION)",
-  "total_submitted_urls": 241,
-  "total_entries": 221,
+  "total_submitted_urls": 246,
+  "total_entries": 226,
   "entries": [
     {
       "id": 1,
@@ -2426,7 +2426,72 @@
       "license_posture": "ingest_and_learn_catalog_index_reference_only",
       "role": "NVlabs star-sorted repository catalog index.",
       "status": "WIRED_V3"
+    },
+    {
+      "id": 222,
+      "name": "santos/LoBoost-arXiv-2602.22432",
+      "url": "https://arxiv.org/abs/2602.22432",
+      "license": "CC-BY-4.0",
+      "category": "conformal-gbdt",
+      "domain": "loboost_model_native_local_conformal_gbdt",
+      "gse_seam": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py::compute_loboost_leaf_path_conformal_interval",
+      "gse_target_surface": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+      "license_posture": "ingest_and_learn_academic_arxiv",
+      "role": "Model-native local conformal GBDT quantile intervals from boosting leaf paths.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 223,
+      "name": "agrawal/GEPA-arXiv-2507.19457",
+      "url": "https://arxiv.org/abs/2507.19457",
+      "license": "CC-BY-4.0",
+      "category": "prompt-evolution",
+      "domain": "gepa_reflective_pareto_prompt_evolution",
+      "gse_seam": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py::evolve_gepa_pareto_prompt_frontier",
+      "gse_target_surface": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+      "license_posture": "ingest_and_learn_academic_arxiv",
+      "role": "Genetic-Pareto reflective prompt trajectory evolution optimizing multi-axis RLVR.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 224,
+      "name": "NVlabs/VILA",
+      "url": "https://github.com/NVlabs/VILA",
+      "license": "Apache-2.0",
+      "category": "multimodal-vlm",
+      "domain": "vila_interleaved_visual_language_reasoning",
+      "gse_seam": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py::compute_sana_relu_linear_attention",
+      "gse_target_surface": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+      "license_posture": "ingest_and_learn_permissive_apache2",
+      "role": "Interleaved visual-language pre-training kernel pattern for film chart parsing.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 225,
+      "name": "NVlabs/FoundationPose",
+      "url": "https://github.com/NVlabs/FoundationPose",
+      "license": "NVIDIA-Source-Code-License",
+      "category": "spatial-tracking-pose",
+      "domain": "foundationpose_6dof_spatial_hash_tracking",
+      "gse_seam": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py::encode_multiresolution_spatial_hash_2d",
+      "gse_target_surface": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+      "license_posture": "ingest_and_learn_research_only",
+      "role": "6-DoF spatial pose & multiresolution hash encoding for tracking telemetry.",
+      "status": "WIRED_V3"
+    },
+    {
+      "id": 226,
+      "name": "c-xgboost/C-XGBoost-arXiv-2404.00751",
+      "url": "https://arxiv.org/abs/2404.00751",
+      "license": "CC-BY-4.0",
+      "category": "causal-gbdt",
+      "domain": "causal_xgboost_confounding_calibration",
+      "gse_seam": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py::compute_loboost_leaf_path_conformal_interval",
+      "gse_target_surface": "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+      "license_posture": "ingest_and_learn_academic_arxiv",
+      "role": "Causal tree boosting mitigation for observational confounding & selection shift.",
+      "status": "WIRED_V3"
     }
   ],
-  "total_unique_entries": 221
+  "total_unique_entries": 226
 }

@@ -267,6 +267,10 @@ def _load_2025_team_epa_priors(repo_root: Path) -> dict[str, tuple[float, float]
     """Load 2025 regular-season team (off_epa, def_epa) priors for Weeks 1-3 shrinkage."""
     p25_path = repo_root / "data" / "nflverse" / "pbp" / "play_by_play_2025.parquet"
     if not p25_path.is_file():
+        p25_path = (
+            repo_root / "intelligence" / "coaching" / "data" / "play_by_play_2025.parquet"
+        )
+    if not p25_path.is_file():
         return {}
     pd: Any = importlib.import_module("pandas")
     df = pd.read_parquet(
@@ -293,6 +297,10 @@ def _collect_completed_2026_games_and_pbp_stats(
     """Assemble chronological 2026 Weeks 1-10 completed games & per-week team EPA."""
     pd: Any = importlib.import_module("pandas")
     pbp_path = repo_root / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            repo_root / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     games_by_id: dict[str, CompletedGameRow] = {}
     weekly_team_epa: dict[tuple[int, str], tuple[float, float, int]] = {}
 

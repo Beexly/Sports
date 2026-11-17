@@ -1228,7 +1228,7 @@ async function runCli() {
             id: result.webhook.id,
             url: result.webhook.url,
             testPingStatus: result.webhook.testPingStatus,
-            secretSavedTo: process.env.WHOP_SECRET_OUT_PATH || path.join(os.tmpdir(), "gse_whop_generated_secrets.txt"),
+            credentialFilePersisted: Boolean(result.webhook.secretReturnedOnce),
           },
           repoWired: wired,
         },
@@ -1248,7 +1248,7 @@ async function runCli() {
   console.log(
     "Usage:\n" +
       "  node provision_gse_whop_end_to_end.mjs --self-test\n" +
-      "  node provision_gse_whop_end_to_end.mjs --live --open-dashboard --repo-root C:/Users/Garrett/Sports-wt-triage\n",
+      "  node provision_gse_whop_end_to_end.mjs --live --open-dashboard --repo-root .\n",
   );
 }
 

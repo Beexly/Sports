@@ -590,6 +590,10 @@ def tukey_huff_levitin_game_theory_and_markov_drive_engine(
        N = (I - Q)^(-1), B = N R for exact drive absorption probabilities P(TD), P(FG), P(Punt), P(Turnover).
     """
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     tukey_summary: dict[str, Any] = {}
     simpsons_paradox_audit: dict[str, Any] = {}
 

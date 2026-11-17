@@ -1424,6 +1424,228 @@ def compile_gse_to_gsi_rlvr_training_batch(
             )
         )
 
+    # 3D. Wave 28 Deep Research kernels (LoBoost, GEPA, llm-d EPP, ERA FUTS, Sana linear attn)
+    from gse_engine.memory.wave28_loboost_gepa_llmd_and_world_attention_suite import (
+        compute_loboost_leaf_path_conformal_interval,
+        compute_sana_relu_linear_attention,
+        encode_multiresolution_spatial_hash_2d,
+        evolve_gepa_pareto_prompt_frontier,
+        schedule_llmd_disaggregated_prefill_decode,
+        select_era_futs_ucb_candidate,
+    )
+
+    for idx in range(3):
+        pt_pred = round(2.5 + 1.5 * idx, 3)
+        lb_out = compute_loboost_leaf_path_conformal_interval(
+            calib_leaf_paths=[
+                [1, 3, 7, 2],
+                [1, 3, 7, 5],
+                [1, 3, 4, 2],
+                [1, 2, 7, 2],
+                [1, 3, 7, 2],
+                [2, 5, 1, 9],
+            ],
+            calib_residuals=[1.6 + 0.3 * idx, -2.2, 3.0, -3.8, 2.1, 6.4],
+            query_leaf_path=[1, 3, 7, 2],
+            point_pred=pt_pred,
+            alpha=0.10,
+            min_local_support=5,
+        )
+        gt_lb = {
+            "loboost_case": idx,
+            "q_radius": float(lb_out["q_radius"]),
+            "local_support": int(lb_out["local_support"]),
+            "fallback_to_global": bool(lb_out["fallback_to_global"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w28_loboost_conformal_{idx:02d}",
+                domain="loboost_local_conformal_gbdt",
+                prompt=(
+                    f"Compute LoBoost leaf-path local conformal quantile for point_pred="
+                    f"{pt_pred} with min_local_support=5 and alpha=0.10 on case #{idx}. "
+                    "Output JSON with loboost_case, q_radius, local_support, fallback_to_global."
+                ),
+                think=(
+                    f"Select >=50pct shared tree-leaf calibration neighbors yielding support="
+                    f"{gt_lb['local_support']} and q_radius={gt_lb['q_radius']}."
+                ),
+                ground_truth=gt_lb,
+                verifier_src=_formula_exact_verifier_src(gt_lb),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(3):
+        pass_r = round(0.92 + 0.02 * idx, 4)
+        gepa_out = evolve_gepa_pareto_prompt_frontier(
+            [
+                {
+                    "candidate_id": f"c0_{idx}",
+                    "verifier_pass_rate": 0.85,
+                    "neg_brier_score": -0.25,
+                    "conciseness_score": 0.60,
+                    "failure_modes": ["brier"],
+                },
+                {
+                    "candidate_id": f"c1_{idx}",
+                    "verifier_pass_rate": pass_r,
+                    "neg_brier_score": -0.15,
+                    "conciseness_score": 0.82,
+                    "failure_modes": ["wind_tail"],
+                },
+                {
+                    "candidate_id": f"c2_{idx}",
+                    "verifier_pass_rate": 0.90,
+                    "neg_brier_score": -0.11,
+                    "conciseness_score": 0.91,
+                    "failure_modes": ["conciseness"],
+                },
+            ]
+        )
+        gt_gepa = {
+            "gepa_case": idx,
+            "best_candidate_id": str(gepa_out["best_candidate_id"]),
+            "frontier_size": int(gepa_out["frontier_size"]),
+            "dominated_count": int(gepa_out["dominated_count"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w28_gepa_pareto_{idx:02d}",
+                domain="gepa_reflective_prompt_pareto",
+                prompt=(
+                    f"Compute non-dominated GEPA Pareto frontier over 3 prompt candidates with "
+                    f"pass_rate={pass_r} for group #{idx}. Output JSON with gepa_case, "
+                    "best_candidate_id, frontier_size, dominated_count."
+                ),
+                think=(
+                    f"Filter dominated candidates leaving frontier_size={gt_gepa['frontier_size']}"
+                    f" and best={gt_gepa['best_candidate_id']}."
+                ),
+                ground_truth=gt_gepa,
+                verifier_src=_formula_exact_verifier_src(gt_gepa),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        toks = 1200 + 400 * idx
+        llmd_out = schedule_llmd_disaggregated_prefill_decode(
+            prefill_pods=[
+                {
+                    "pod_id": f"p_hit_{idx}",
+                    "kv_utilization": 0.45,
+                    "queue_ms": 2.5,
+                    "cached_prefixes": ["sig_pref"],
+                },
+                {
+                    "pod_id": f"p_miss_{idx}",
+                    "kv_utilization": 0.40,
+                    "queue_ms": 5.0,
+                    "cached_prefixes": [],
+                },
+            ],
+            decode_pods=[
+                {
+                    "pod_id": f"dec_fast_{idx}",
+                    "kv_utilization": 0.30,
+                    "nixl_rdma_ms": 1.2,
+                    "itl_ms": 9.5,
+                },
+            ],
+            prefix_hash="sig_pref",
+            prompt_tokens=toks,
+        )
+        gt_llmd = {
+            "llmd_case": idx,
+            "admitted": bool(llmd_out["admitted"]),
+            "prefix_cache_hit": bool(llmd_out["prefix_cache_hit"]),
+            "predicted_ttft_ms": float(llmd_out["predicted_ttft_ms"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w28_llmd_epp_nixl_{idx:02d}",
+                domain="llmd_disaggregated_kv_routing",
+                prompt=(
+                    f"Schedule llm-d v0.9 EPP disaggregated prefill/decode pods with NIXL transfer "
+                    f"on prefix_hash='sig_pref' and prompt_tokens={toks} (case #{idx}). Output "
+                    "JSON with llmd_case, admitted, prefix_cache_hit, predicted_ttft_ms."
+                ),
+                think=(
+                    f"Select prefix-cached prefill pod + low-ITL decode pod yielding TTFT="
+                    f"{gt_llmd['predicted_ttft_ms']} ms."
+                ),
+                ground_truth=gt_llmd,
+                verifier_src=_formula_exact_verifier_src(gt_llmd),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        era_out = select_era_futs_ucb_candidate(
+            [
+                {"node_id": "n_a", "visits": 5 + idx, "value_sum": 4.2 + idx, "prior": 0.50},
+                {"node_id": "n_b", "visits": 2, "value_sum": 1.4, "prior": 0.30},
+                {"node_id": "n_c", "visits": 1, "value_sum": 0.5, "prior": 0.20},
+            ],
+            c_puct=1.25,
+        )
+        gt_era = {
+            "era_case": idx,
+            "selected_node_id": str(era_out["selected_node_id"]),
+            "ucb_score": float(era_out["ucb_score"]),
+            "total_visits": int(era_out["total_visits"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w28_era_futs_{idx:02d}",
+                domain="era_flat_ucb_tree_search",
+                prompt=(
+                    f"Select next ERA Flat UCB Tree Search node under c_puct=1.25 for step #{idx}"
+                    ". Output JSON with era_case, selected_node_id, ucb_score, total_visits."
+                ),
+                think=(
+                    f"Maximize Q + c_puct*prior*sqrt(N)/(1+n) selecting "
+                    f"{gt_era['selected_node_id']} at ucb={gt_era['ucb_score']}."
+                ),
+                ground_truth=gt_era,
+                verifier_src=_formula_exact_verifier_src(gt_era),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
+    for idx in range(2):
+        sana_out = compute_sana_relu_linear_attention(
+            [[1.0 + 0.2 * idx, 0.4, 0.2], [0.3, 1.1, 0.7]],
+            [[0.9, 0.5, 0.1], [0.2, 1.0, 0.8]],
+            [[0.6, -0.1], [0.8, 0.5]],
+        )
+        hash_out = encode_multiresolution_spatial_hash_2d(0.25 + 0.2 * idx, 0.35)
+        gt_sana = {
+            "sana_case": idx,
+            "mean_output_value": float(sana_out["mean_output_value"]),
+            "hash_l2_norm": float(hash_out["l2_norm"]),
+            "linear_time_associative": bool(sana_out["linear_time_associative"]),
+        }
+        records.append(
+            _build_rlvr_record(
+                record_id=f"w28_sana_tcnn_{idx:02d}",
+                domain="sana_linear_attention_and_hash",
+                prompt=(
+                    f"Compute O(N) associative Sana ReLU linear attention and 2D tiny-cuda-nn "
+                    f"prime-XOR hash norm for case #{idx}. Output JSON with sana_case, "
+                    "mean_output_value, hash_l2_norm, linear_time_associative."
+                ),
+                think=(
+                    f"Evaluate ReLU(K)^T V associative product mean={gt_sana['mean_output_value']}"
+                    f" and hash L2 norm={gt_sana['hash_l2_norm']}."
+                ),
+                ground_truth=gt_sana,
+                verifier_src=_formula_exact_verifier_src(gt_sana),
+                curriculum_tier="TIER_3_BEHEMOTH",
+            )
+        )
+
     # Substring dedup + monotone tier curriculum sort (TIER_1 -> TIER_2 -> TIER_3)
     corpus_texts = [f"{r['domain']}::{r['prompt']}::{r['think']}" for r in records]
     kept_idxs = exact_substring_dedup(corpus_texts, k=16, w=16)

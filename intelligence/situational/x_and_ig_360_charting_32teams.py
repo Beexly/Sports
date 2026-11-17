@@ -129,6 +129,10 @@ def build_all_32_teams_x_and_ig_360_charting(force_rebuild: bool = False) -> Dic
     import pandas as pd
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
 
     pbp = pd.read_parquet(pbp_path)

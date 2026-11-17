@@ -90,6 +90,9 @@ from gse_engine.memory.wave24_theorem_ast_dependency_graph_suite import (
 from gse_engine.memory.wave25_situational_tracking_biomech_fwl_suite import (
     evaluate_wave25_workstreams_bridge,
 )
+from gse_engine.memory.wave28_loboost_gepa_llmd_and_world_attention_suite import (
+    evaluate_wave28_deep_research_bridge,
+)
 from gse_engine.multisport.daily_multisport_slate_engine import (
     BcAciState,
     predict_bc_aci_band,
@@ -116,7 +119,13 @@ SOVEREIGN_SHARD_DIR = REPO_ROOT / "brain" / "feeds" / "2026-11-14"
 GSI_TELEMETRY_PATH = (
     REPO_ROOT / "data" / "engine" / "gsi_wave16_translational_and_datascience_telemetry_2026.json"
 )
-PBP_2026_PATH = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+_PRIMARY_PBP_2026_PATH = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+_FALLBACK_PBP_2026_PATH = (
+    REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+)
+PBP_2026_PATH = (
+    _PRIMARY_PBP_2026_PATH if _PRIMARY_PBP_2026_PATH.is_file() else _FALLBACK_PBP_2026_PATH
+)
 FTN_2026_PATH = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
 
 _MANIFEST_CACHE: dict[str, Any] | None = None
@@ -1781,6 +1790,12 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         is_short_week=is_short_week,
         is_indoor=bool(env_cfg.get("is_indoor", False)),
     )
+    wave28_res = evaluate_wave28_deep_research_bridge(
+        away_clean_epa=aw_sig.clean_epa,
+        home_clean_epa=hm_sig.clean_epa,
+        effective_wind_mph=eff_wind,
+        is_short_week=is_short_week,
+    )
     corpus_total_artifacts_indexed = (
         int(manifest_877.get("total_pdfs", 0))
         + int(_FOUNDRY_SWEPT_FILES_CACHE)
@@ -1835,6 +1850,11 @@ def compile_all_books_pdfs_ig_x_and_situational_priors(
         "wave25_fwl_orthogonal_verified": bool(wave25_res["fwl_orthogonal_verified"]),
         "wave25_k14_rule_in_only": bool(wave25_res["k14_rule_in_only"]),
         "wave25_live_stage2_weight": float(wave25_res["live_stage2_weight"]),
+        "wave28_deep_research_wired": bool(wave28_res["wave28_wired"]),
+        "wave28_scalars_verified_count": int(wave28_res["scalars_verified_count"]),
+        "wave28_harness2_weights_frozen": bool(wave28_res["harness2_weights_frozen"]),
+        "wave28_google_health_ruo_weight": float(wave28_res["google_health_ruo_weight"]),
+        "wave28_live_stage2_weight": float(wave28_res["live_stage2_weight"]),
         "monorepo_vaults_verified": int(omnibus_res["vaults_verified"]),
         "all_46_data_subdirs_verified": int(omnibus_res["data_subdirs_verified_count"]) == 46,
         "complete_503_books_verified": int(omnibus_res["complete_corpus_books"]) >= 503,

@@ -124,7 +124,12 @@ export function buildGseMlServiceEndpointUrl(
   baseUrl: string,
   path: typeof GSE_ML_PREDICT_ETKF_PATH | typeof GSE_ML_PREDICT_TDA_PATH,
 ): string {
-  const cleanBase = baseUrl.trim().replace(/\/+$/, "");
+  const trimmed = baseUrl.trim();
+  let end = trimmed.length;
+  while (end > 0 && trimmed.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  const cleanBase = trimmed.slice(0, end);
   return cleanBase ? `${cleanBase}${path}` : "";
 }
 

@@ -100,6 +100,7 @@ MASTER_PLAN_V3_REQUIRED_ARTIFACTS: dict[str, list[str]] = {
         "src/gse_engine/memory/wave23_boosting_graph_literature_and_spoof_quarantine_suite.py",
         "src/gse_engine/memory/wave24_theorem_ast_dependency_graph_suite.py",
         "src/gse_engine/memory/wave25_situational_tracking_biomech_fwl_suite.py",
+        "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
         "src/gse_engine/cli.py",
         "packages/prediction-engine/src/ensemble/remote-model-client.ts",
     ],
@@ -263,6 +264,11 @@ PRE_SIM_MANDATORY_SIGNAL_MODULES: tuple[tuple[str, str, str], ...] = (
         "wave25_situational_tracking_biomech_fwl_suite",
         "src/gse_engine/memory/wave25_situational_tracking_biomech_fwl_suite.py",
     ),
+    (
+        "Pillar1_Wave28_LoBoost_GEPA_LLMd_WorldAttention",
+        "wave28_loboost_gepa_llmd_and_world_attention_suite",
+        "src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py",
+    ),
 )
 
 CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
@@ -275,7 +281,7 @@ CORPUS_DATA_MANIFESTS: tuple[tuple[str, str, int], ...] = (
     (
         "OSS_Ecosystem_Registry",
         "docs/data-sources/research/2026-11-15/oss-corpus-registry.json",
-        221,
+        226,
     ),
     ("Permanent_Lessons_Ledger", "data/engine/lessons_learned_permanent_ledger.jsonl", 20),
     (

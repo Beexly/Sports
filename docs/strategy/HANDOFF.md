@@ -3,6 +3,28 @@
 Dated entries only. Each entry carries what changed, what was proven, what was not, and what the
 next role must do. ---
 
+## 2026-11-17 (2026-11-17 CT) -- Wave 28 Deep Research Synthesis, 226/226 WIRED_V3, 182 RLVR & PR #1291 CodeQL Zero-Alert Remediation
+
+- **What changed**:
+  - **Deep Research Synthesis (`docs/engine/research/2026-11-17/deep-research-wave28-loboost-gepa-llmd-and-world-models.md`)**:
+    - Synthesized `21` corroborated 2025-2026 sources covering `llm-d` v0.9 disaggregated prefill/decode + `NIXL` RDMA KV transfer, `LoBoost` (`arXiv:2602.22432`) vs. `TabPFN v2` & `C-XGBoost` (`arXiv:2404.00751`), `DSPy` `GEPA` (`arXiv:2507.19457`) reflective Pareto prompt evolution (`35x` fewer rollouts than `GRPO`), `google-research/harness2` + `ERA` `FUTS` + `google/artemis` MCP + `Google-Health` HAI-DEF RUO boundaries, and `NVlabs/Sana` (`arXiv:2410.10629`) / `SANA-WM` / `tiny-cuda-nn` (`arXiv:2201.05989`).
+  - **Wave 28 Executable Kernel Suite & Stage-2 / RLVR Integration (`LL-2026-11-17-049`)**:
+    - Built `src/gse_engine/memory/wave28_loboost_gepa_llmd_and_world_attention_suite.py` implementing `compute_loboost_leaf_path_conformal_interval`, `evolve_gepa_pareto_prompt_frontier`, `schedule_llmd_disaggregated_prefill_decode`, `select_era_futs_ucb_candidate`, `evaluate_harness2_propose_probe_compose`, `compute_sana_relu_linear_attention`, `encode_multiresolution_spatial_hash_2d`, and cached Stage-2 `evaluate_wave28_deep_research_bridge` (`live_stage2_weight=0.0`, `google_health_ruo_weight=0.0`).
+    - Wired Wave 28 into `src/gse_engine/memory/__init__.py`, `corpus_situational_integrator.py`, and `scripts/guardrails/pre_sim_total_intelligence_gate.py` (`OSS_Ecosystem_Registry` floor raised to `226`); expanded `docs/data-sources/research/2026-11-15/oss-corpus-registry.json` to **`226/226` `WIRED_V3` (`246` submitted URLs)** and `compile_gse_to_gsi_rlvr_training_batch` to **`182`** deduped pure-ASCII trajectories (`brain/feeds/2026-11-16/` & `brain/feeds/2026-11-17/`).
+  - **PR #1291 CodeQL High-Severity Remediation**:
+    - Eliminated all `5` CodeQL security alerts across `apps/web/lib/workspace-and-3d/canvas-studio-and-3d-scene.ts` (O(N) fixed-point script/HTML stripper), `packages/prediction-engine/src/ensemble/gse-ml-endpoints.ts` and `remote-model-client.ts` (linear trailing-slash trimmer), and `scripts/ops/provision_gse_whop_end_to_end.mjs` (removed `process.env.WHOP_SECRET_OUT_PATH` logging and hardcoded host usage path).
+
+- **What was proven**:
+  - `ruff check`, `mypy --strict src/gse_engine`, Wave 9/19/26/27/28 + continuity `pytest` suites, `pre_sim_total_intelligence_gate.py --self-test`, `provision_gse_whop_end_to_end.mjs --self-test`, `em-dash-scan.mjs`, and `trust-gate.mjs` verified green cleanly in the fresh clone workspace.
+
+- **What was not proven**:
+  - Live Week 11+ NFL simulations remain halted under `OPERATOR_SIM_HOLD`, prediction-market routing stays compliant (`cleared=False`), and live staking remains `0.0u`.
+
+- **What the next role must do**:
+  - Confirm GitHub PR `#1291` `CodeQL` status turns green after push and preserve Stage-2 `live_stage2_weight=0.0` until historical Weeks `1..10` OOS CRPS & `FWL` residual ratchets approve promotion.
+
+---
+
 ## 2026-11-17 (2026-11-17 CT) -- Waves 22-27 Overnight Execution Complete (221/221 WIRED_V3, G_doc DAG, rliable/FWL Ratchet & 170-Trajectory RLVR)
 
 - **What changed**:

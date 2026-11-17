@@ -925,7 +925,10 @@ def _get_2026_pbp_team_rates_and_qb_attempts(max_week: int = 8) -> dict[str, Any
     import pandas as pd  # noqa: PLC0415
 
     pbp_dir = REPO_ROOT / "data" / "nflverse" / "pbp"
+    coach_pbp_dir = REPO_ROOT / "intelligence" / "coaching" / "data"
     pbp_path = pbp_dir / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = coach_pbp_dir / "play_by_play_2026.parquet"
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     cols = [
         "posteam",
@@ -1010,6 +1013,8 @@ def _get_2026_pbp_team_rates_and_qb_attempts(max_week: int = 8) -> dict[str, Any
     hist_cols = ["season_type", "pass_attempt", "passing_yards", "passer_player_name"]
     for hist_name in ("play_by_play_2024.parquet", "play_by_play_2025.parquet"):
         hist_path = pbp_dir / hist_name
+        if not hist_path.is_file():
+            hist_path = coach_pbp_dir / hist_name
         if not hist_path.is_file():
             continue
         _verify_parquet_magic_or_raise(hist_path)
@@ -1222,6 +1227,10 @@ def _get_2026_team_pbp_ftn_stats() -> dict[str, dict[str, Any]]:
     import pandas as pd
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
     pbp = None

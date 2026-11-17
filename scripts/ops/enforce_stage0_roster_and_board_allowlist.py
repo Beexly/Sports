@@ -699,6 +699,10 @@ def load_stage0_game_roster_allowlist(
     matchup_key = f"{away}@{home}"
 
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     slim_csv_path = REPO_ROOT / "data" / "nflverse" / "pbp_2026_slim_clean_checkout.csv.gz"
     wh_pbp_path = REPO_ROOT / "data" / "warehouse" / "v1" / "pbp_normalized.parquet"
     pbp: Any = None

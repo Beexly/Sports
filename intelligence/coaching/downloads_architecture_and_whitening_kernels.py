@@ -831,6 +831,10 @@ def run_load_scaling_and_scheme_effects_kernel(
     + `play_by_play_2026.parquet`), and `FOUR_ASKS_2026-10-27.md` log-stabilized Sinkhorn.
     """
     pbp_path = REPO_ROOT / "data" / "nflverse" / "pbp" / "play_by_play_2026.parquet"
+    if not pbp_path.is_file():
+        pbp_path = (
+            REPO_ROOT / "intelligence" / "coaching" / "data" / "play_by_play_2026.parquet"
+        )
     ftn_path = REPO_ROOT / "data" / "nflverse" / "ftn_charting_2026.parquet"
 
     pbp = pd.read_parquet(

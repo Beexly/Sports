@@ -45,6 +45,15 @@ describe("3D Redline budget, collaborative slate sections & Content-OS CWV cards
     expect(section.trackerKey).toBe("GSE-102");
     expect(section.sanitizeHtmlFree).toBe(true);
 
+    const nestedScript = buildCollaborativeSlateDocSection({
+      sectionId: "sec-3",
+      trackerKey: "gse-103",
+      mcpGatewayVerified: true,
+      rawMarkdown: "Clean note <scr<script>ipt>alert(2)</script > end",
+    });
+    expect(nestedScript.sanitizeHtmlFree).toBe(true);
+    expect(nestedScript.markdownSummary.toLowerCase()).not.toContain("<script");
+
     const blockedPickCard = buildContentOsCrewSlateAndSeoCard({
       slateId: "w10-sun",
       directorNote: "Includes free environment tempo highlights.",
