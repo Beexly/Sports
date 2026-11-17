@@ -70,6 +70,20 @@ GDOCS_LAUNCHER = Path("/opt/antigravity/plugins/gdocs/skills/gdocs/scripts/gdocs
 GDRIVE_LAUNCHER = Path("/opt/antigravity/plugins/gdrive/skills/gdrive/scripts/gdrive")
 GH_LAUNCHER = Path("/opt/antigravity/plugins/github/skills/github/scripts/gh")
 
+# Host-installation prerequisites.
+# The three suites below assert the on-disk layout of a specific Linux agent
+# container: the antigravity CLI/plugins baked at ``/opt/antigravity`` and the
+# shared skills + secret stores under ``/shared/user/.gemini``. Those paths do
+# not exist on a portable CI runner (or a Windows dev box), so every assertion
+# in them is a guaranteed ``FileNotFoundError`` there. They are real
+# invariants *of that host*, so rather than delete or weaken them we gate them
+# on the host being present: they run unchanged where the install exists, and
+# report an explicit skip where it does not. The trust-gate class above needs
+# none of this host state and always runs.
+HOST_ANTIGRAVITY_PLUGINS_PRESENT = GDOCS_LAUNCHER.exists() or GH_LAUNCHER.exists()
+HOST_SHARED_ANTIGRAVITY_SKILLS_PRESENT = AGY_CLI_JS.exists()
+HOST_MONGODB_SECRET_PRESENT = MONGODB_SECRET_FILE.exists()
+
 
 def _run_trust_gate_on_synthetic_repo(files: Dict[str, str]) -> Tuple[int, str]:
     """Create a temporary repo layout with `files` and run `trust-gate.mjs` against it."""
@@ -214,6 +228,10 @@ class TestTier5AdversarialTrustGateAndM1Guardrails(unittest.TestCase):
             self.assertIn(f'"{mod}"', bridge_src)
 
 
+@unittest.skipUnless(
+    HOST_ANTIGRAVITY_PLUGINS_PRESENT,
+    "requires the local antigravity plugin install at /opt/antigravity (absent on a portable CI runner)",
+)
 class TestTier5AdversarialPluginLaunchers(unittest.TestCase):
     """White-box stress tests for `gdocs`, `gdrive`, and `gh` launchers under adverse env/symlink conditions."""
 
@@ -487,6 +505,10 @@ class TestTier5AdversarialPluginLaunchers(unittest.TestCase):
                         )
 
 
+@unittest.skipUnless(
+    HOST_SHARED_ANTIGRAVITY_SKILLS_PRESENT,
+    "requires the local antigravity skills CLI at /shared/user/.gemini/config/plugins/antigravity-skills (absent on a portable CI runner)",
+)
 class TestTier5AdversarialAntigravitySkillsAndValidator(unittest.TestCase):
     """White-box stress tests for `rmyndharis/antigravity-skills` CLI search, aliases, installer, and `validate-skills.js --strict`."""
 
@@ -831,6 +853,10 @@ class TestTier5AdversarialAntigravitySkillsAndValidator(unittest.TestCase):
             self.assertIn("over-500-lines-skill", proc.stderr)
 
 
+@unittest.skipUnless(
+    HOST_MONGODB_SECRET_PRESENT,
+    "requires the shared MongoDB Atlas secret file at /shared/user/.gemini/secrets/mongodb_atlas.env (absent on a portable CI runner)",
+)
 class TestTier5AdversarialMongoDBCredentialsAndSecretHygiene(unittest.TestCase):
     """White-box stress tests for `MongoDBDossierArchiveAdapter` credential precedence and zero secret leakage."""
 
